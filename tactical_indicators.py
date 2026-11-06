@@ -1,120 +1,63 @@
+"""Conservative tactical indicators derived only from returned match statistics."""
+from __future__ import annotations
+from typing import Any
 
-def analyze_tactics(stats):
-    """
-    Expected statistics:
-    possession, shots, shots_on_target,
-    big_chances, pass_accuracy, tackles,
-    interceptions, blocked_shots
-    """
 
-    if not stats:
-        return {
-            "attack_score": None,
-            "defence_score": None,
-            "data_coverage": 0
-        }
-
-    def get_value(key):
+def _number(stats: dict, *keys: str) -> float | None:
+    for key in keys:
         value = stats.get(key)
+        if value is not None:
+            try:
+                return float(str(value).replace("%", "").replace(",", ""))
+            except (TypeError, ValueError):
+                pass
+    return None
 
-        if isinstance(value, (int, float)):
-            return value
 
+def _mean(values: list[float | None]) -> float | None:
+    known = [v for v in values if v is not None]
+    return sum(known) / len(known) if known else None
+
+
+def _scale(value: float | None, low: float, high: float, inverse: bool = False) -> float | None:
+    if value is None:
         return None
+    score = max(0.0, min(100.0, (value - low) / (high - low) * 100))
+    return round(100 - score if inverse else score, 1)
 
-    metrics = {
-        "possession": get_value("possession"),
-        "shots": get_value("shots"),
-        "shots_on_target": get_value("shots_on_target"),
-        "big_chances": get_value("big_chances"),
-        "pass_accuracy": get_value("pass_accuracy"),
-        "tackles": get_value("tackles"),
-        "interceptions": get_value("interceptions"),
-        "blocked_shots": get_value("blocked_shots")
-    }
 
-    attack_weights = {
-        "shots": 0.25,
-        "shots_on_target": 0.35,
-        "big_chances": 0.25,
-        "pass_accuracy": 0.15
-    }
+def analyze_tactics(matches: list[dict]) -> dict[str, Any]:
+    stats = [m.get("statistics") or {} for m in matches[:10]]
+    possession = _mean([_number(s, "Ball Possession", "ball_possession") for s in stats])
+    pass_accuracy = _mean([_number(s, "Passes %", "Passes accuracy", "passes_accuracy") for s in stats])
+    shots = _mean([_number(s, "Total Shots", "total_shots") for s in stats])
+    shots_on_target = _mean([_number(s, "Shots on Goal", "Shots on Target", "shots_on_target") for s in stats])
+    tackles = _mean([_number(s, "Tackles", "tackles") for s in stats])
+    interceptions = _mean([_number(s, "Interceptions", "interceptions") for s in stats])
+    blocks = _mean([_number(s, "Blocked Shots", "blocked_shots") for s in stats])
+    corners = _mean([_number(s, "Corner Kicks", "corners") for s in stats])
 
-    defence_weights = {
-        "tackles": 0.30,
-        "interceptions": 0.30,
-        "blocked_shots": 0.20,
-        "possession": 0.20
-    }
-
-    def calculate_score(weights):
-        available = [
-            key for key in weights
-            if metrics[key] is not None
-        ]
-
-        if not available:
-            return None
-
-        total_weight = sum(
-            weights[key] for key in available
-        )
-
-        score = sum(
-            min(max(metrics[key], 0), 100)
-            * weights[key]
-            for key in available
-        )
-
-        return round(score / total_weight, 2)
-
-    coverage = sum(
-        value is not None for value in metrics.values()
-    )
-
+    style_parts = [_scale(possession, 30, 70), _scale(pass_accuracy, 60, 95)]
+    attack_parts = [_scale(shots, 5, 22), _scale(shots_on_target, 1, 9), _scale(corners, 1, 9)]
+    defence_parts = [_scale(tackles, 8, 28), _scale(interceptions, 3, 18), _scale(blocks, 0, 8)]
+    style = _mean(style_parts)
+    attack = _mean(attack_parts)
+    defence = _mean(defence_parts)
+    coverage = sum(v is not None for v in [possession, pass_accuracy, shots, shots_on_target, tackles, interceptions, blocks, corners])
     return {
-        "attack_score": calculate_score(attack_weights),
-        "defence_score": calculate_score(defence_weights),
-        "data_coverage": round(coverage / 8 * 100, 2),
-        "raw_statistics": metrics
-    }
-def normalize_fixture_statistics(api_data, team_id):
-    """Convert API-Football statistics into our format."""
-
-    team_data = next(
-        (
-            item for item in api_data
-            if item.get("team", {}).get("id") == team_id
-        ),
-        None
-    )
-
-    if not team_data:
-        return {}
-
-    raw = {
-        item["type"]: item["value"]
-        for item in team_data.get("statistics", [])
-    }
-
-    def number(value):
-        if value is None:
-            return None
-
-        if isinstance(value, str):
-            value = value.replace("%", "").strip()
-
-        try:
-            return float(value)
-        except (ValueError, TypeError):
-            return None
-
-    return {
-        "possession": number(raw.get("Ball Possession")),
-        "shots": number(raw.get("Total Shots")),
-        "shots_on_target": number(raw.get("Shots on Goal")),
-        "pass_accuracy": number(raw.get("Passes %")),
-        "tackles": number(raw.get("Tackles")),
-        "interceptions": number(raw.get("Interceptions")),
-        "blocked_shots": number(raw.get("Blocked Shots"))
+        "playing_style": style,
+        "attacking_approach": attack,
+        "defensive_structure": defence,
+        "coverage_metrics": coverage,
+        "available_metrics": {
+            "average_possession": round(possession, 1) if possession is not None else None,
+            "average_pass_accuracy": round(pass_accuracy, 1) if pass_accuracy is not None else None,
+            "average_shots": round(shots, 1) if shots is not None else None,
+            "average_shots_on_target": round(shots_on_target, 1) if shots_on_target is not None else None,
+            "average_tackles": round(tackles, 1) if tackles is not None else None,
+            "average_interceptions": round(interceptions, 1) if interceptions is not None else None,
+            "average_blocked_shots": round(blocks, 1) if blocks is not None else None,
+            "average_corners": round(corners, 1) if corners is not None else None,
+        },
+        "note": "Tactical ratings are shown only when the underlying statistics are present; unavailable metrics remain unknown.",
     }

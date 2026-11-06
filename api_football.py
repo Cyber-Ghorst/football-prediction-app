@@ -1,135 +1,82 @@
-
+"""API-Football v3 client. API key is read from environment or Streamlit secrets."""
+from __future__ import annotations
+import os
 import requests
-import streamlit as st
+from typing import Any
 
+BASE_URL = "https://v3.football.api-sports.io"
 
 class APIFootballError(RuntimeError):
-    """Raised when API-Football returns an error or request fails."""
-
+    pass
 
 class APIFootballClient:
-    BASE_URL = "https://v3.football.api-sports.io"
-
-    def __init__(self, api_key=None):
-        self.api_key = api_key or self._get_api_key()
-
+    def __init__(self, api_key: str | None = None, timeout: int = 25):
+        self.api_key = api_key or os.getenv("API_FOOTBALL_KEY")
         if not self.api_key:
-            raise APIFootballError(
-                "API-Football key not found. "
-                "Add API_FOOTBALL_KEY to Streamlit Secrets."
-            )
-
+            try:
+                import streamlit as st
+                self.api_key = st.secrets.get("API_FOOTBALL_KEY")
+            except Exception:
+                self.api_key = None
+        if not self.api_key:
+            raise APIFootballError("API_FOOTBALL_KEY is not configured. Add it to Streamlit Secrets.")
+        self.timeout = timeout
         self.session = requests.Session()
-        self.session.headers.update({
-            "x-apisports-key": self.api_key
-        })
+        self.session.headers.update({"x-apisports-key": self.api_key})
 
-    @staticmethod
-    def _get_api_key():
+    def get(self, endpoint: str, **params: Any) -> list[dict]:
         try:
-            return st.secrets["API_FOOTBALL_KEY"]
-        except Exception:
-            return None
-
-    def get(self, endpoint, params=None):
-        url = f"{self.BASE_URL}/{endpoint.lstrip('/')}"
-
-        try:
-            response = self.session.get(
-                url,
-                params=params or {},
-                timeout=30
-            )
+            response = self.session.get(f"{BASE_URL}/{endpoint.lstrip('/')}", params=params, timeout=self.timeout)
             response.raise_for_status()
-            data = response.json()
-
+            payload = response.json()
         except requests.RequestException as exc:
-            raise APIFootballError(
-                f"API request failed: {exc}"
-            ) from exc
-
-        except ValueError as exc:
-            raise APIFootballError(
-                "API returned an invalid JSON response."
-            ) from exc
-
-        errors = data.get("errors")
-
+            raise APIFootballError(f"API-Football request failed: {exc}") from exc
+        errors = payload.get("errors") or {}
         if errors:
-            raise APIFootballError(
-                f"API-Football error: {errors}"
-            )
+            raise APIFootballError(f"API-Football returned an error: {errors}")
+        return payload.get("response") or []
 
-        return data.get("response", [])
-
-    def leagues(self, country=None, season=None):
-        params = {}
-
+    def leagues(self, season: int, country: str | None = None) -> list[dict]:
+        params = {"season": season}
         if country:
             params["country"] = country
+        return self.get("leagues", **params)
 
-        if season:
-            params["season"] = season
+    def teams(self, league_id: int, season: int) -> list[dict]:
+        return self.get("teams", league=league_id, season=season)
 
-        return self.get("leagues", params)
+    def standings(self, league_id: int, season: int) -> dict[int, float]:
+        rows = self.get("standings", league=league_id, season=season)
+        result: dict[int, float] = {}
+        try:
+            table = rows[0]["league"]["standings"][0]
+        except (IndexError, KeyError, TypeError):
+            return result
+        points = [int(x.get("points", 0)) for x in table if x.get("points") is not None]
+        maximum = max(points) if points else 0
+        if maximum <= 0:
+            return result
+        for item in table:
+            tid = item.get("team", {}).get("id")
+            pts = item.get("points")
+            if tid is not None and pts is not None:
+                result[int(tid)] = round(float(pts) / maximum * 100, 1)
+        return result
 
-    def teams(self, league_id, season):
-        return self.get(
-            "teams",
-            {
-                "league": league_id,
-                "season": season
-            }
-        )
+    def last_fixtures(self, team_id: int, season: int, last: int = 10) -> list[dict]:
+        return self.get("fixtures", team=team_id, season=season, last=last)
 
-    def standings(self, league_id, season):
-        return self.get(
-            "standings",
-            {
-                "league": league_id,
-                "season": season
-            }
-        )
+    def next_fixture(self, team_id: int, season: int) -> list[dict]:
+        return self.get("fixtures", team=team_id, season=season, next=1)
 
-    def last_fixtures(self, team_id, season, count=10):
-        return self.get(
-            "fixtures",
-            {
-                "team": team_id,
-                "season": season,
-                "last": count
-            }
-        )
+    def fixture_statistics(self, fixture_id: int) -> list[dict]:
+        return self.get("fixtures/statistics", fixture=fixture_id)
 
-    def next_fixture(self, team_id, count=1):
-        return self.get(
-            "fixtures",
-            {
-                "team": team_id,
-                "next": count
-            }
-        )
+    def injuries(self, team_id: int, season: int, fixture_id: int | None = None) -> list[dict]:
+        params = {"team": team_id, "season": season}
+        if fixture_id is not None:
+            params["fixture"] = fixture_id
+        return self.get("injuries", **params)
 
-    def fixture_statistics(self, fixture_id):
-        return self.get(
-            "fixtures/statistics",
-            {
-                "fixture": fixture_id
-            }
-        )
-
-    def injuries(self, fixture_id):
-        return self.get(
-            "injuries",
-            {
-                "fixture": fixture_id
-            }
-        )
-
-    def fixture_lineups(self, fixture_id):
-        return self.get(
-            "fixtures/lineups",
-            {
-                "fixture": fixture_id
-            }
-        )
+    def fixture_lineups(self, fixture_id: int) -> list[dict]:
+        return self.get("fixtures/lineups", fixture=fixture_id)
