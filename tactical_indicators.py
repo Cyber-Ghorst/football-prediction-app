@@ -78,3 +78,43 @@ def analyze_tactics(stats):
         "data_coverage": round(coverage / 8 * 100, 2),
         "raw_statistics": metrics
     }
+def normalize_fixture_statistics(api_data, team_id):
+    """Convert API-Football statistics into our format."""
+
+    team_data = next(
+        (
+            item for item in api_data
+            if item.get("team", {}).get("id") == team_id
+        ),
+        None
+    )
+
+    if not team_data:
+        return {}
+
+    raw = {
+        item["type"]: item["value"]
+        for item in team_data.get("statistics", [])
+    }
+
+    def number(value):
+        if value is None:
+            return None
+
+        if isinstance(value, str):
+            value = value.replace("%", "").strip()
+
+        try:
+            return float(value)
+        except (ValueError, TypeError):
+            return None
+
+    return {
+        "possession": number(raw.get("Ball Possession")),
+        "shots": number(raw.get("Total Shots")),
+        "shots_on_target": number(raw.get("Shots on Goal")),
+        "pass_accuracy": number(raw.get("Passes %")),
+        "tackles": number(raw.get("Tackles")),
+        "interceptions": number(raw.get("Interceptions")),
+        "blocked_shots": number(raw.get("Blocked Shots"))
+    }
