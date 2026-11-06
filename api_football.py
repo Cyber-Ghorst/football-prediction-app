@@ -170,7 +170,7 @@ class APIFootballClient:
     Return league objects compatible with app.py.
     """
 
-    return [
+        return [
         {
             "id": league,
             "name": league.upper(),
