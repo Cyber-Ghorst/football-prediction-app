@@ -1,0 +1,250 @@
+{
+  "Arsenal": {
+    "name": "Arsenal",
+    "home_rating": 88,
+    "away_rating": 84,
+    "player_availability": 92,
+    "playing_style": 88,
+    "defensive_structure": 86,
+    "attacking_approach": 90,
+    "tactical_compatibility": 78,
+    "matches": [
+      {
+        "goals_for": 2,
+        "goals_against": 0,
+        "opponent_strength": 82
+      },
+      {
+        "goals_for": 3,
+        "goals_against": 1,
+        "opponent_strength": 76
+      },
+      {
+        "goals_for": 1,
+        "goals_against": 1,
+        "opponent_strength": 85
+      },
+      {
+        "goals_for": 2,
+        "goals_against": 1,
+        "opponent_strength": 72
+      },
+      {
+        "goals_for": 2,
+        "goals_against": 0,
+        "opponent_strength": 80
+      },
+      {
+        "goals_for": 1,
+        "goals_against": 0,
+        "opponent_strength": 70
+      },
+      {
+        "goals_for": 1,
+        "goals_against": 2,
+        "opponent_strength": 88
+      },
+      {
+        "goals_for": 3,
+        "goals_against": 0,
+        "opponent_strength": 68
+      },
+      {
+        "goals_for": 2,
+        "goals_against": 2,
+        "opponent_strength": 79
+      },
+      {
+        "goals_for": 2,
+        "goals_against": 1,
+        "opponent_strength": 74
+      }
+    ]
+  },
+  "Manchester City": {
+    "name": "Manchester City",
+    "home_rating": 86,
+    "away_rating": 89,
+    "player_availability": 88,
+    "playing_style": 91,
+    "defensive_structure": 84,
+    "attacking_approach": 93,
+    "tactical_compatibility": 82,
+    "matches": [
+      {
+        "goals_for": 2,
+        "goals_against": 1,
+        "opponent_strength": 83
+      },
+      {
+        "goals_for": 2,
+        "goals_against": 0,
+        "opponent_strength": 78
+      },
+      {
+        "goals_for": 3,
+        "goals_against": 1,
+        "opponent_strength": 81
+      },
+      {
+        "goals_for": 1,
+        "goals_against": 1,
+        "opponent_strength": 86
+      },
+      {
+        "goals_for": 4,
+        "goals_against": 1,
+        "opponent_strength": 75
+      },
+      {
+        "goals_for": 2,
+        "goals_against": 1,
+        "opponent_strength": 80
+      },
+      {
+        "goals_for": 1,
+        "goals_against": 0,
+        "opponent_strength": 73
+      },
+      {
+        "goals_for": 2,
+        "goals_against": 2,
+        "opponent_strength": 84
+      },
+      {
+        "goals_for": 3,
+        "goals_against": 0,
+        "opponent_strength": 71
+      },
+      {
+        "goals_for": 1,
+        "goals_against": 1,
+        "opponent_strength": 79
+      }
+    ]
+  },
+  "Liverpool": {
+    "name": "Liverpool",
+    "home_rating": 90,
+    "away_rating": 85,
+    "player_availability": 86,
+    "playing_style": 90,
+    "defensive_structure": 82,
+    "attacking_approach": 92,
+    "tactical_compatibility": 80,
+    "matches": [
+      {
+        "goals_for": 3,
+        "goals_against": 1,
+        "opponent_strength": 80
+      },
+      {
+        "goals_for": 2,
+        "goals_against": 0,
+        "opponent_strength": 77
+      },
+      {
+        "goals_for": 2,
+        "goals_against": 1,
+        "opponent_strength": 84
+      },
+      {
+        "goals_for": 1,
+        "goals_against": 0,
+        "opponent_strength": 74
+      },
+      {
+        "goals_for": 3,
+        "goals_against": 2,
+        "opponent_strength": 86
+      },
+      {
+        "goals_for": 2,
+        "goals_against": 1,
+        "opponent_strength": 79
+      },
+      {
+        "goals_for": 1,
+        "goals_against": 1,
+        "opponent_strength": 82
+      },
+      {
+        "goals_for": 4,
+        "goals_against": 0,
+        "opponent_strength": 69
+      },
+      {
+        "goals_for": 2,
+        "goals_against": 2,
+        "opponent_strength": 81
+      },
+      {
+        "goals_for": 1,
+        "goals_against": 0,
+        "opponent_strength": 73
+      }
+    ]
+  },
+  "Chelsea": {
+    "name": "Chelsea",
+    "home_rating": 78,
+    "away_rating": 75,
+    "player_availability": 80,
+    "playing_style": 79,
+    "defensive_structure": 74,
+    "attacking_approach": 81,
+    "tactical_compatibility": 68,
+    "matches": [
+      {
+        "goals_for": 2,
+        "goals_against": 1,
+        "opponent_strength": 78
+      },
+      {
+        "goals_for": 1,
+        "goals_against": 1,
+        "opponent_strength": 82
+      },
+      {
+        "goals_for": 2,
+        "goals_against": 2,
+        "opponent_strength": 80
+      },
+      {
+        "goals_for": 1,
+        "goals_against": 0,
+        "opponent_strength": 73
+      },
+      {
+        "goals_for": 1,
+        "goals_against": 2,
+        "opponent_strength": 85
+      },
+      {
+        "goals_for": 2,
+        "goals_against": 1,
+        "opponent_strength": 76
+      },
+      {
+        "goals_for": 0,
+        "goals_against": 1,
+        "opponent_strength": 81
+      },
+      {
+        "goals_for": 3,
+        "goals_against": 1,
+        "opponent_strength": 72
+      },
+      {
+        "goals_for": 1,
+        "goals_against": 1,
+        "opponent_strength": 79
+      },
+      {
+        "goals_for": 2,
+        "goals_against": 2,
+        "opponent_strength": 75
+      }
+    ]
+  }
+}
