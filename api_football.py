@@ -88,7 +88,7 @@ class APIFootballClient:
     # CORE REQUEST HANDLER
     # --------------------------------------------------
 
-    def _request(
+        def _request(
         self,
         endpoint: str,
         params: Optional[Dict[str, Any]] = None
@@ -104,9 +104,7 @@ class APIFootballClient:
             )
 
             if response.status_code == 401:
-                raise APIFootballError(
-                    "Invalid API Ninjas API key."
-                )
+                raise APIFootballError("Invalid API Ninjas API key.")
 
             if response.status_code == 403:
                 raise APIFootballError(
@@ -115,22 +113,31 @@ class APIFootballClient:
 
             if response.status_code == 429:
                 raise APIFootballError(
-                    "API request limit exceeded. "
-                    "Check your API Ninjas quota."
+                    "API request limit exceeded."
                 )
 
             response.raise_for_status()
-
             data = response.json()
-
-            if isinstance(data, list):
-                return data
 
             if isinstance(data, dict):
                 if "error" in data:
                     raise APIFootballError(str(data["error"]))
 
                 return [data]
+
+            if isinstance(data, list):
+                invalid_items = [
+                    item for item in data
+                    if not isinstance(item, dict)
+                ]
+
+                if invalid_items:
+                    raise APIFootballError(
+                        "API returned records that are not "
+                        "JSON objects. Check the endpoint response."
+                    )
+
+                return data
 
             raise APIFootballError(
                 "Unexpected API response format."
@@ -147,10 +154,10 @@ class APIFootballClient:
             )
 
         except requests.exceptions.HTTPError as exc:
-            message = ""
-
-            if exc.response is not None:
-                message = exc.response.text[:500]
+            message = (
+                exc.response.text[:500]
+                if exc.response is not None else ""
+            )
 
             raise APIFootballError(
                 f"API HTTP error: {exc}. {message}"
@@ -244,19 +251,13 @@ class APIFootballClient:
     # UPCOMING MATCHES
     # --------------------------------------------------
 
-    def upcoming_matches(
+        def upcoming_matches(
         self,
         league: str = "epl",
         days: int = 7,
         date_from: Optional[str] = None,
         season: Optional[int] = None
-    ) -> List[Dict[str, Any]]:
-        """
-        Retrieve upcoming fixtures across a date range.
-
-        Requests each date separately because the API's
-        date parameter returns matches for one match day.
-        """
+    ):
 
         if days < 1 or days > 31:
             raise APIFootballError(
@@ -273,7 +274,7 @@ class APIFootballClient:
                     "date_from must use YYYY-MM-DD format."
                 )
         else:
-            start = date.today()
+            start = datetime.today().date()
 
         all_matches = []
 
@@ -289,9 +290,10 @@ class APIFootballClient:
                 season=season
             )
 
-            all_matches.extend(results)
+            for match in results:
+                if isinstance(match, dict):
+                    all_matches.append(match)
 
-        # Remove duplicate games
         unique_matches = {}
 
         for match in all_matches:
@@ -302,7 +304,7 @@ class APIFootballClient:
 
         return sorted(
             unique_matches.values(),
-            key=lambda match: match.get("start_time", "")
+            key=lambda match: match.get("start_time") or ""
         )
 
     # --------------------------------------------------
