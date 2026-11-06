@@ -166,16 +166,16 @@ class APIFootballClient:
     # --------------------------------------------------
 
     def leagues(self, season=None):
-    """
-    Return league objects compatible with app.py.
-    """
+        """
+        Return league objects compatible with app.py.
+        """
 
         return [
-        {
+          {
             "id": league,
             "name": league.upper(),
             "code": league
-        }
+          }
         for league in self.LEAGUES
     ]
 
