@@ -13,7 +13,7 @@ st.caption("Layer 2 • Automatic API-Football data collection + weighted predic
 
 @st.cache_data(ttl=3600, show_spinner=False)
 def get_leagues(_client, season):
-    return _client.leagues(season)
+    return _client.leagues()
 
 @st.cache_data(ttl=3600, show_spinner=False)
 def get_teams(_client, league_id, season):
