@@ -152,8 +152,8 @@ class APIFootball:
                 else "L"
             )
         }
-def fixture_statistics(self, fixture_id):
-    return self.request(
-        "fixtures/statistics",
-        {"fixture": fixture_id}
-    )
+    def fixture_statistics(self, fixture_id):
+        return self.request(
+            "fixtures/statistics",
+            {"fixture": fixture_id}
+        )
