@@ -1,193 +1,159 @@
+"""Football Prediction Lab — Layer 2 automatic data collection."""
+from __future__ import annotations
 import json
 import streamlit as st
+from api_football import APIFootballClient, APIFootballError
+from data_layer2 import collect_team_profile
 from engine import predict_match, WEIGHTS
-from tvd import MATCHUPS, run_tvd
+from tvd import run_tvd
 
 st.set_page_config(page_title="Football Prediction Lab", page_icon="⚽", layout="wide")
 st.title("⚽ Football Prediction Lab")
-st.caption("Layer 1 • Weighted match-rating engine + Poisson score model + Tactical Vulnerability Detector")
+st.caption("Layer 2 • Automatic API-Football data collection + weighted prediction engine + TVD")
 
-with open("sample_teams.json", "r", encoding="utf-8") as f:
-    teams = json.load(f)
+@st.cache_data(ttl=3600, show_spinner=False)
+def get_leagues(_client, season):
+    return _client.leagues(season)
 
-st.info("Demo profiles are included so the app works immediately. Replace sample_teams.json with verified, current data before relying on predictions. Automatic data feeds are planned for Layer 2.")
+@st.cache_data(ttl=3600, show_spinner=False)
+def get_teams(_client, league_id, season):
+    return _client.teams(league_id, season)
 
-c1, c2 = st.columns(2)
-names = list(teams.keys())
-with c1:
-    home_name = st.selectbox("Home team", names, index=0)
-with c2:
-    away_options = [n for n in names if n != home_name]
-    away_name = st.selectbox("Away team", away_options, index=0)
+@st.cache_data(ttl=1800, show_spinner=False)
+def get_standings(_client, league_id, season):
+    return _client.standings(league_id, season)
 
-st.subheader("Optional match-specific adjustments")
-st.write("These manual ratings remain available as a fallback when TVD inputs are missing.")
-a, b = st.columns(2)
-with a:
-    home_avail = st.slider(f"{home_name} player availability", 0, 100, int(teams[home_name]["player_availability"]))
-    home_compat = st.slider(f"{home_name} tactical matchup fallback", 0, 100, int(teams[home_name]["tactical_compatibility"]))
-with b:
-    away_avail = st.slider(f"{away_name} player availability", 0, 100, int(teams[away_name]["player_availability"]))
-    away_compat = st.slider(f"{away_name} tactical matchup fallback", 0, 100, int(teams[away_name]["tactical_compatibility"]))
+@st.cache_data(ttl=1800, show_spinner=False)
+def get_profile(_client, team, league_id, season, standings, include_stats):
+    return collect_team_profile(_client, team, league_id, season, standings, include_stats)
 
-# TVD input labels and keys. Vulnerability scores increase with weakness;
-# weapon scores increase with attacking capability.
-VULNERABILITIES = [
-    ("space_behind", "Space behind defensive line"),
-    ("press_resistance", "Poor press resistance"),
-    ("aerial_defence", "Weak aerial defense"),
-    ("transition_recovery", "Slow defensive recovery"),
-    ("central_compactness", "Weak central compactness"),
-    ("wide_defending", "Poor wide defending"),
-    ("central_penetration", "Vulnerability between the lines"),
-]
-WEAPONS = [
-    ("pace_through_balls", "Pace and through balls"),
-    ("pressing_intensity", "Pressing intensity"),
-    ("aerial_threat", "Aerial threat"),
-    ("counterattack_threat", "Counterattack threat"),
-    ("midfield_overloads", "Midfield overloads"),
-    ("wing_threat", "Wing threat"),
-    ("between_lines_threat", "Central penetration threat"),
-]
+with st.sidebar:
+    st.header("Data configuration")
+    season = st.number_input("Season start year", min_value=2015, max_value=2035, value=2026, step=1,
+                             help="For a 2026/27 season, enter 2026. Use the season year supported by your API plan.")
+    include_stats = st.checkbox("Fetch match statistics (more API requests)", value=True)
+    st.caption("Add API_FOOTBALL_KEY in Streamlit app Settings → Secrets. Never paste the key into public code.")
 
-def collect_tvd_profile(team_name: str, side: str):
-    """Collect optional TVD ratings; blank fields remain unknown."""
-    profile = {"name": team_name, "vulnerabilities": {}, "weapons": {}}
-    confidence = st.slider(
-        f"{team_name}: evidence confidence for these ratings",
-        min_value=0, max_value=100, value=60, step=5,
-        key=f"{side}_tvd_confidence",
-        help="Use lower confidence for estimates or incomplete evidence; higher confidence for verified match/video data."
-    )
-    left, right = st.columns(2)
-    with left:
-        st.markdown("**Defensive vulnerabilities**")
-        for key, label in VULNERABILITIES:
-            value = st.number_input(
-                label, min_value=0, max_value=100, value=None,
-                placeholder="Unknown", step=5,
-                key=f"{side}_vuln_{key}",
-                help="0 = no clear weakness; 100 = severe weakness. Leave blank if unknown."
-            )
-            if value is not None:
-                profile["vulnerabilities"][key] = {"score": value, "confidence": confidence}
-    with right:
-        st.markdown("**Attacking weapons**")
-        for key, label in WEAPONS:
-            value = st.number_input(
-                label, min_value=0, max_value=100, value=None,
-                placeholder="Unknown", step=5,
-                key=f"{side}_weapon_{key}",
-                help="0 = no meaningful weapon; 100 = elite threat. Leave blank if unknown."
-            )
-            if value is not None:
-                profile["weapons"][key] = {"score": value, "confidence": confidence}
-    return profile
+try:
+    client = APIFootballClient()
+except APIFootballError as exc:
+    st.error(str(exc))
+    st.markdown("**Setup:** create an API-Football key, then add this to Streamlit Secrets:\n```toml\nAPI_FOOTBALL_KEY = \"YOUR_KEY_HERE\"\n```")
+    st.stop()
 
-use_tvd = st.checkbox("Enable Tactical Vulnerability Detector (TVD)", value=False)
-tvd_profiles = None
-if use_tvd:
-    st.markdown("TVD checks whether one team's attacking strengths match the opponent's defensive weaknesses. Enter only ratings supported by evidence; blank fields are excluded.")
-    tab_home, tab_away = st.tabs([f"{home_name} profile", f"{away_name} profile"])
-    with tab_home:
-        home_tvd = collect_tvd_profile(home_name, "home")
-    with tab_away:
-        away_tvd = collect_tvd_profile(away_name, "away")
-    t1, t2 = st.columns(2)
-    with t1:
-        st.caption("TVD evaluates this team's weapons against the opponent's vulnerabilities.")
-    with t2:
-        st.caption("Confidence is currently entered once per team and applied to its supplied metrics.")
-    tvd_profiles = (home_tvd, away_tvd)
+try:
+    leagues = get_leagues(client, int(season))
+    league_options = {f"{x['league']['name']} — {x.get('country',{}).get('name','')}": x['league']['id']
+                      for x in leagues if x.get('league',{}).get('id')}
+    if not league_options:
+        st.warning("No competitions were returned for this season under the current API plan.")
+        st.stop()
+    selected_league = st.selectbox("Competition", list(league_options))
+    league_id = int(league_options[selected_league])
+    team_rows = get_teams(client, league_id, int(season))
+    team_map = {x['team']['name']: x['team'] for x in team_rows if x.get('team',{}).get('id')}
+    if len(team_map) < 2:
+        st.warning("The provider returned fewer than two teams for this competition.")
+        st.stop()
+    c1,c2 = st.columns(2)
+    with c1: home_name = st.selectbox("Home team", list(team_map))
+    with c2:
+        away_name = st.selectbox("Away team", [x for x in team_map if x != home_name])
+    # TVD inputs are collected before the action button so Streamlit reruns retain them.
+    use_tvd = st.checkbox("Use manually evidenced TVD ratings for this matchup", value=False)
+    tvd_profiles = None
+    if use_tvd:
+        st.info("Enter evidence-backed scores only. Blank fields remain unknown and are excluded.")
+        vulnerabilities = ["space_behind","press_resistance","aerial_defence","transition_recovery","central_compactness","wide_defending","central_penetration"]
+        weapons = ["pace_through_balls","pressing_intensity","aerial_threat","counterattack_threat","midfield_overloads","wing_threat","between_lines_threat"]
+        def profile_inputs(name, prefix):
+            profile={"name":name,"vulnerabilities":{},"weapons":{}}
+            confidence=st.slider(f"{name} TVD evidence confidence",0,100,60,5,key=f"{prefix}_conf")
+            left,right=st.columns(2)
+            with left:
+                st.markdown("**Defensive vulnerabilities**")
+                for key in vulnerabilities:
+                    value=st.number_input(f"{key}",min_value=0,max_value=100,value=None,placeholder="Unknown",key=f"{prefix}_v_{key}")
+                    if value is not None: profile["vulnerabilities"][key]={"score":value,"confidence":confidence}
+            with right:
+                st.markdown("**Attacking weapons**")
+                for key in weapons:
+                    value=st.number_input(f"{key}",min_value=0,max_value=100,value=None,placeholder="Unknown",key=f"{prefix}_w_{key}")
+                    if value is not None: profile["weapons"][key]={"score":value,"confidence":confidence}
+            return profile
+        left,right=st.columns(2)
+        with left: home_tvd=profile_inputs(home_name,"home")
+        with right: away_tvd=profile_inputs(away_name,"away")
+        tvd_profiles=(home_tvd,away_tvd)
 
-if st.button("Predict match", type="primary", use_container_width=True):
-    home = json.loads(json.dumps(teams[home_name]))
-    away = json.loads(json.dumps(teams[away_name]))
-    home["player_availability"], away["player_availability"] = home_avail, away_avail
-
-    tvd_result = None
-    compatibility_override = {"home": home_compat, "away": away_compat}
-    if use_tvd and tvd_profiles:
+    if st.button("Collect data and predict", type="primary", use_container_width=True):
+        with st.spinner("Collecting recent results, standings and available match statistics..."):
+            standings = get_standings(client, league_id, int(season))
+            home = get_profile(client, team_map[home_name], league_id, int(season), standings, include_stats)
+            away = get_profile(client, team_map[away_name], league_id, int(season), standings, include_stats)
+        st.subheader("Data validation")
+        for profile in (home, away):
+            quality = profile["data_quality"]
+            st.write(f"**{profile['name']}** — {quality['matches_returned']} completed matches; {quality['opponent_strength_matches']} with opponent-strength data; {quality['statistics_matches']} with match statistics.")
+            if quality["matches_returned"] < 5:
+                st.error(f"{profile['name']}: fewer than five completed matches. Prediction stopped; no data was fabricated.")
+                st.stop()
+        st.subheader("Recent form and data coverage")
+        st.json({home_name:home["form_summary"], away_name:away["form_summary"]})
+        tvd_result = run_tvd(tvd_profiles[0],tvd_profiles[1]) if tvd_profiles else None
+        overrides = {}
+        if tvd_result:
+            home_score=tvd_result["team_a_attacks_b"]["compatibility_score"]
+            away_score=tvd_result["team_b_attacks_a"]["compatibility_score"]
+            if home_score is not None: overrides["home"]=home_score
+            if away_score is not None: overrides["away"]=away_score
         try:
-            tvd_result = run_tvd(tvd_profiles[0], tvd_profiles[1])
-            home_tvd_score = tvd_result["team_a_attacks_b"]["compatibility_score"]
-            away_tvd_score = tvd_result["team_b_attacks_a"]["compatibility_score"]
-            if home_tvd_score is not None:
-                compatibility_override["home"] = home_tvd_score
-            if away_tvd_score is not None:
-                compatibility_override["away"] = away_tvd_score
+            result=predict_match(home,away,tactical_compatibility=overrides)
         except ValueError as exc:
-            st.error(f"TVD input error: {exc}")
-            st.stop()
-
-    try:
-        result = predict_match(home, away, tactical_compatibility=compatibility_override)
-        st.subheader(f'{home_name} vs {away_name}')
-        p = result["probabilities"]
-        cols = st.columns(3)
-        cols[0].metric(f"{home_name} win", f'{p["home_win"]}%')
-        cols[1].metric("Draw", f'{p["draw"]}%')
-        cols[2].metric(f"{away_name} win", f'{p["away_win"]}%')
+            st.error(str(exc)); st.stop()
+        st.subheader(f"{home_name} vs {away_name}")
+        probabilities=result["probabilities"]; cols=st.columns(3)
+        cols[0].metric(f"{home_name} win",f"{probabilities['home_win']}%")
+        cols[1].metric("Draw",f"{probabilities['draw']}%")
+        cols[2].metric(f"{away_name} win",f"{probabilities['away_win']}%")
         st.subheader("Goals market")
-        cols = st.columns(4)
-        cols[0].metric("Home expected goals", result["home_expected_goals"])
-        cols[1].metric("Away expected goals", result["away_expected_goals"])
-        cols[2].metric("Over 2.5 goals", f'{p["over_2_5"]}%')
-        cols[3].metric("BTTS — Yes", f'{p["btts_yes"]}%')
+        cols=st.columns(4)
+        cols[0].metric("Home expected goals",result["home_expected_goals"])
+        cols[1].metric("Away expected goals",result["away_expected_goals"])
+        cols[2].metric("Over 2.5 goals",f"{probabilities['over_2_5']}%")
+        cols[3].metric("BTTS — Yes",f"{probabilities['btts_yes']}%")
         st.subheader("Most likely correct scores")
-        st.dataframe(result["most_likely_scores"], use_container_width=True, hide_index=True)
-        st.subheader("Team ratings")
-        cols = st.columns(2)
-        cols[0].metric(f"{home_name} model rating", result["home_rating"])
-        cols[1].metric(f"{away_name} model rating", result["away_rating"])
-
+        st.dataframe(result["most_likely_scores"],use_container_width=True,hide_index=True)
+        st.subheader("Team ratings and coverage")
+        left,right=st.columns(2)
+        left.metric(f"{home_name} rating",result["home_rating"],f"Known model weight: {result['data_coverage']['home_known_weight']*100:.0f}%")
+        right.metric(f"{away_name} rating",result["away_rating"],f"Known model weight: {result['data_coverage']['away_known_weight']*100:.0f}%")
+        st.caption(result["note"])
+        with st.expander("Detailed component ratings"):
+            st.json(result["component_ratings"]); st.json(result["tactical_component_ratings"])
+        with st.expander("Tactical indicators and match statistics"):
+            st.json({home_name:home["tactical_summary"],away_name:away["tactical_summary"]})
+        with st.expander("Reported injuries and next-match lineups (when provider data exists)"):
+            st.json({home_name:{"injuries":home["availability"],"lineups":home["lineups"]},away_name:{"injuries":away["availability"],"lineups":away["lineups"]}})
         if tvd_result:
             st.subheader("Tactical Vulnerability Detector")
-            st.caption("These are tactical matchup ratings, not win probabilities. TVD scores replace the tactical compatibility input only where enough data is available; otherwise the manual fallback is used.")
-            d1, d2 = st.columns(2)
-            for col, title, direction in [
-                (d1, f"{home_name} attacks {away_name}", tvd_result["team_a_attacks_b"]),
-                (d2, f"{away_name} attacks {home_name}", tvd_result["team_b_attacks_a"]),
-            ]:
-                with col:
-                    if direction["compatibility_score"] is None:
-                        st.metric(title, "Insufficient data")
-                    else:
-                        st.metric(title, f'{direction["compatibility_score"]}/100', direction["risk_level"])
-                    st.caption(f'Coverage: {direction["data_coverage"]}% • Missing pairings: {direction["missing_pairings"]}/7')
-                    if direction["findings"]:
-                        rows = [{
-                            "Defensive weakness": x["vulnerability"],
-                            "Opponent weapon": x["attacking_weapon"],
-                            "Matchup": x["matchup_score"],
-                            "Risk": x["risk"],
-                            "Confidence": x["confidence"],
-                        } for x in direction["findings"]]
-                        st.dataframe(rows, use_container_width=True, hide_index=True)
-                    else:
-                        st.info("No complete vulnerability/weapon pairings were supplied for this direction.")
-            st.write("Stronger tactical matchup:", tvd_result["stronger_tactical_matchup"])
+            st.json(tvd_result)
+        st.caption(f"Model weights: {WEIGHTS}. Latest five matches carry 60% of recent-history weight; previous five carry 40%.")
 
-        with st.expander("Model breakdown and weights"):
-            st.write("Weights:", WEIGHTS)
-            st.json(result["component_ratings"])
-            st.write("Tactical compatibility actually used:", result["tactical_compatibility_used"])
-        st.caption(result["note"])
-    except (ValueError, KeyError) as exc:
-        st.error(str(exc))
+except APIFootballError as exc:
+    st.error(f"Data provider error: {exc}")
+except Exception as exc:
+    st.error(f"Unexpected data-collection error: {exc}")
 
-with st.expander("How the model works"):
+with st.expander("Layer 2 data rules"):
     st.markdown("""
-    - Recent form: **20%**
-    - Goals scored: **10%**
-    - Goals conceded: **10%**
-    - Home/away performance: **10%**
-    - Strength of schedule: **15%**
-    - Player availability: **5%**
-    - Tactical analysis: **30%** (style 6%, defence 7%, attack 7%, matchup compatibility 10%)
-
-    The last 10 matches are used, with the latest five weighted 1.5 times more heavily.
-    TVD evaluates seven weakness-versus-weapon matchups in both directions. Unknown inputs are excluded rather than assumed to be average.
-    Score probabilities are estimated using independent Poisson goal distributions.
+    - Data provider: API-Football v3. API key is stored in Streamlit Secrets.
+    - Ten most recent completed matches are requested per team.
+    - Latest five matches carry 60% of history weight; matches 6–10 carry 40%.
+    - Home and away performance are calculated from matches at that venue.
+    - Opponent strength is derived from competition standings; unavailable ranks stay unknown.
+    - Injuries are displayed, but no arbitrary availability score is assigned.
+    - Tactical indicators use returned statistics only; absent metrics remain unknown.
+    - Existing Layer 1 component weights and TVD logic are retained.
+    - Missing components are excluded and the known weights are normalized for the rating.
     """)
