@@ -165,19 +165,22 @@ class APIFootballClient:
     # LEAGUES
     # --------------------------------------------------
 
-    def leagues(self, season: Optional[int] = None):
-        """
-        Returns supported football competitions.
+    def leagues(self, season=None):
+    """
+    Return league objects compatible with app.py.
+    """
 
-        Season is retained for compatibility with app.py.
-        API Ninjas does not have a separate leagues endpoint.
-        """
+    return [
+        {
+            "id": league,
+            "name": league.upper(),
+            "code": league
+        }
+        for league in self.LEAGUES
+    ]
 
-        return self.LEAGUES.copy()
-
-    def get_leagues(self, season: Optional[int] = None):
-        return self.leagues(season)
-
+def get_leagues(self, season=None):
+    return self.leagues(season)
     # --------------------------------------------------
     # MATCHES / FIXTURES
     # --------------------------------------------------
