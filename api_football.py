@@ -537,7 +537,7 @@ class APIFootballClient:
                     if (
                         fixture_id is not None
                         and not normalized.get("is_finished")
-                        and normalized.get("status", "").casefold()
+                        and str(normalized.get("status") or "").casefold()
                         not in {
                             "cancelled",
                             "postponed",
