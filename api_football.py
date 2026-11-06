@@ -223,7 +223,18 @@ class APIFootballClient:
                 str(status).lower() in cls.FINISHED_STATES
             ),
         }
+    # --------------------------------------------------
+    # LEAGUES
+    # --------------------------------------------------
 
+    def leagues(self):
+        """
+        Retrieve available football leagues from Highlightly.
+        """
+
+        response = self.request("/leagues")
+
+        return self.extract_data(response)
     # --------------------------------------------------
     # TEAM SEARCH
     # --------------------------------------------------
