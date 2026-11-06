@@ -3,14 +3,19 @@
 Highlightly Football API Client
 Football Prediction App - Layer 2
 
-Keeps the existing APIFootballClient class name so app.py
-can continue importing it without changing the import statement.
+Compatible with:
+- app.py
+- engine.py
+- TVD module
+
+API provider: Highlightly
+Base URL: https://soccer.highlightly.net
 """
 
 import os
 import requests
 
-from datetime import datetime, date, timedelta
+from datetime import date, datetime, timedelta
 from typing import Any, Dict, List, Optional
 
 
@@ -36,6 +41,7 @@ class APIFootballClient:
         base_url: Optional[str] = None,
         timeout: int = 25,
     ):
+
         self.api_key = (
             api_key
             or os.getenv("HIGHLIGHTLY_API_KEY")
@@ -49,9 +55,8 @@ class APIFootballClient:
             )
 
         self.base_url = (
-            base_url or os.getenv(
-                "HIGHLIGHTLY_BASE_URL", self.BASE_URL
-            )
+            base_url
+            or os.getenv("HIGHLIGHTLY_BASE_URL", self.BASE_URL)
         ).rstrip("/")
 
         self.timeout = timeout
@@ -88,22 +93,28 @@ class APIFootballClient:
                     "Access denied. Check your Highlightly subscription."
                 )
 
+            if response.status_code == 404:
+                raise APIFootballError(
+                    f"Highlightly endpoint or resource not found: {endpoint}"
+                )
+
             if response.status_code == 429:
                 raise APIFootballError(
-                    "Highlightly API rate limit exceeded."
+                    "Highlightly API rate limit exceeded. Try again later."
                 )
 
             if response.status_code >= 400:
                 raise APIFootballError(
-                    f"Highlightly API error "
-                    f"{response.status_code}: {response.text[:500]}"
+                    f"Highlightly API error {response.status_code}: "
+                    f"{response.text[:500]}"
                 )
 
             try:
                 return response.json()
+
             except ValueError:
                 raise APIFootballError(
-                    "Highlightly returned an invalid JSON response."
+                    "Highlightly returned invalid JSON."
                 )
 
         except requests.exceptions.Timeout:
@@ -130,6 +141,7 @@ class APIFootballClient:
             return response
 
         if isinstance(response, dict):
+
             data = response.get("data")
 
             if isinstance(data, list):
@@ -138,6 +150,7 @@ class APIFootballClient:
             if isinstance(data, dict):
                 return [data]
 
+            # Support single-object responses.
             return [response]
 
         return []
@@ -148,7 +161,7 @@ class APIFootballClient:
         if isinstance(score, dict):
             score = score.get("current")
 
-        if not score or not isinstance(score, str):
+        if not isinstance(score, str) or not score.strip():
             return None, None
 
         try:
@@ -157,10 +170,34 @@ class APIFootballClient:
             if len(parts) != 2:
                 return None, None
 
-            return int(parts[0].strip()), int(parts[1].strip())
+            return (
+                int(parts[0].strip()),
+                int(parts[1].strip()),
+            )
 
         except (ValueError, TypeError):
             return None, None
+
+    @staticmethod
+    def _get_date_key(value):
+
+        if not value:
+            return ""
+
+        try:
+            return datetime.fromisoformat(
+                str(value).replace("Z", "+00:00")
+            ).timestamp()
+
+        except (ValueError, TypeError, OverflowError):
+            return 0
+
+    @staticmethod
+    def _is_finished(status):
+
+        return str(status or "").strip().casefold() in (
+            APIFootballClient.FINISHED_STATES
+        )
 
     # --------------------------------------------------
     # NORMALIZE MATCH DATA
@@ -175,66 +212,126 @@ class APIFootballClient:
         home = match.get("homeTeam") or {}
         away = match.get("awayTeam") or {}
         league = match.get("league") or {}
+
         state = match.get("state") or {}
+
+        if not isinstance(home, dict):
+            home = {}
+
+        if not isinstance(away, dict):
+            away = {}
+
+        if not isinstance(league, dict):
+            league = {}
+
+        if not isinstance(state, dict):
+            state = {}
 
         score_data = state.get("score") or {}
 
-        home_goals, away_goals = cls.parse_score(
+        if not isinstance(score_data, dict):
+            score_data = {}
+
+        current_score = (
             score_data.get("current")
+            or match.get("score")
         )
 
-        # Support alternative response formats where available.
+        home_goals, away_goals = cls.parse_score(
+            current_score
+        )
+
         if home_goals is None:
             home_goals = match.get("homeGoals")
 
         if away_goals is None:
             away_goals = match.get("awayGoals")
 
-        status = state.get("description")
+        status = (
+            state.get("description")
+            or match.get("status")
+            or match.get("statusShort")
+        )
 
         return {
-            "fixture_id": match.get("id"),
+
+            "fixture_id": (
+                match.get("id")
+                or match.get("fixture_id")
+            ),
+
             "date": match.get("date"),
+
             "timestamp": match.get("date"),
 
-            "home_team": home.get("name"),
-            "away_team": away.get("name"),
+            "home_team": (
+                home.get("name")
+                or match.get("home_team")
+            ),
 
-            "home_team_id": home.get("id"),
-            "away_team_id": away.get("id"),
+            "away_team": (
+                away.get("name")
+                or match.get("away_team")
+            ),
+
+            "home_team_id": (
+                home.get("id")
+                or match.get("home_team_id")
+            ),
+
+            "away_team_id": (
+                away.get("id")
+                or match.get("away_team_id")
+            ),
 
             "home_team_logo": home.get("logo"),
+
             "away_team_logo": away.get("logo"),
 
             "league": league.get("name"),
+
             "league_id": league.get("id"),
+
             "season": league.get("season"),
 
             "status": status,
 
             "home_goals": home_goals,
+
             "away_goals": away_goals,
 
-            "score": score_data.get("current"),
+            "score": current_score,
 
             "round": match.get("round"),
 
-            "is_finished": (
-                str(status).lower() in cls.FINISHED_STATES
-            ),
+            "is_finished": cls._is_finished(status),
         }
+
     # --------------------------------------------------
     # LEAGUES
     # --------------------------------------------------
 
-    def leagues(self):
+    def leagues(self, season=None):
         """
-        Retrieve available football leagues from Highlightly.
+        Retrieve available leagues.
+
+        Supports:
+            client.leagues()
+            client.leagues(season)
         """
 
-        response = self.request("/leagues")
+        params = {}
+
+        if season is not None:
+            params["season"] = season
+
+        response = self.request(
+            "/leagues",
+            params=params,
+        )
 
         return self.extract_data(response)
+
     # --------------------------------------------------
     # TEAM SEARCH
     # --------------------------------------------------
@@ -242,7 +339,9 @@ class APIFootballClient:
     def search_team(self, team_name):
 
         if not team_name:
-            raise APIFootballError("Team name is required.")
+            raise APIFootballError(
+                "Team name is required."
+            )
 
         response = self.request(
             "/teams",
@@ -250,6 +349,7 @@ class APIFootballClient:
                 "name": team_name,
                 "type": "club",
                 "limit": 20,
+                "offset": 0,
             },
         )
 
@@ -264,9 +364,9 @@ class APIFootballClient:
         if not team_id:
             raise APIFootballError("Team ID is required.")
 
-        response = self.request(f"/teams/{team_id}")
-
-        return response
+        return self.request(
+            f"/teams/{team_id}"
+        )
 
     # --------------------------------------------------
     # RECENT MATCHES
@@ -282,17 +382,23 @@ class APIFootballClient:
         if not team_id:
             raise APIFootballError("Team ID is required.")
 
-        today = date.today()
+        if last <= 0:
+            raise APIFootballError(
+                "Number of recent matches must be positive."
+            )
 
-        current_season = season or today.year
+        current_season = season or date.today().year
 
         matches = []
 
-        # First obtain the official last-five form guide.
+        # Official Highlightly last-five endpoint.
         try:
+
             response = self.request(
                 "/last-five-games",
-                params={"teamId": team_id},
+                params={
+                    "teamId": team_id,
+                },
             )
 
             matches.extend(
@@ -300,9 +406,10 @@ class APIFootballClient:
             )
 
         except APIFootballError:
+            # Continue with the matches endpoint.
             pass
 
-        # Obtain additional match history through the matches endpoint.
+        # Retrieve additional historical matches.
         seasons = [
             current_season,
             current_season - 1,
@@ -310,7 +417,10 @@ class APIFootballClient:
 
         for year in seasons:
 
-            for side in ("homeTeamId", "awayTeamId"):
+            for side in (
+                "homeTeamId",
+                "awayTeamId",
+            ):
 
                 response = self.request(
                     "/matches",
@@ -326,10 +436,13 @@ class APIFootballClient:
                     self.extract_data(response)
                 )
 
-        # Remove duplicates.
+        # Remove duplicate fixtures.
         unique_matches = {}
 
         for match in matches:
+
+            if not isinstance(match, dict):
+                continue
 
             match_id = match.get("id")
 
@@ -341,16 +454,22 @@ class APIFootballClient:
             for match in unique_matches.values()
         ]
 
-        # Only completed matches with actual scores.
+        # Keep completed matches with actual scores.
         normalized = [
-            match for match in normalized
-            if match.get("is_finished")
-            and match.get("home_goals") is not None
-            and match.get("away_goals") is not None
+            match
+            for match in normalized
+            if (
+                match.get("is_finished")
+                and match.get("home_goals") is not None
+                and match.get("away_goals") is not None
+            )
         ]
 
+        # Sort newest first.
         normalized.sort(
-            key=lambda x: x.get("date") or "",
+            key=lambda x: self._get_date_key(
+                x.get("date")
+            ),
             reverse=True,
         )
 
@@ -365,6 +484,11 @@ class APIFootballClient:
         team_id=None,
         days=14,
     ):
+
+        if days < 0:
+            raise APIFootballError(
+                "Days cannot be negative."
+            )
 
         matches = {}
 
@@ -381,6 +505,7 @@ class APIFootballClient:
             ]
 
             if team_id:
+
                 filters = [
                     {
                         "date": match_date,
@@ -401,19 +526,32 @@ class APIFootballClient:
 
                 for match in self.extract_data(response):
 
-                    normalized = self.normalize_match(match)
+                    normalized = self.normalize_match(
+                        match
+                    )
+
+                    fixture_id = normalized.get(
+                        "fixture_id"
+                    )
 
                     if (
-                        normalized.get("fixture_id") is not None
+                        fixture_id is not None
                         and not normalized.get("is_finished")
+                        and normalized.get("status", "").casefold()
+                        not in {
+                            "cancelled",
+                            "postponed",
+                            "abandoned",
+                        }
                     ):
-                        matches[
-                            normalized["fixture_id"]
-                        ] = normalized
+
+                        matches[fixture_id] = normalized
 
         return sorted(
             matches.values(),
-            key=lambda x: x.get("date") or "",
+            key=lambda x: self._get_date_key(
+                x.get("date")
+            ),
         )
 
     # --------------------------------------------------
@@ -423,17 +561,20 @@ class APIFootballClient:
     def fixture_details(self, fixture_id):
 
         if not fixture_id:
-            raise APIFootballError("Fixture ID is required.")
+            raise APIFootballError(
+                "Fixture ID is required."
+            )
 
         response = self.request(
             f"/matches/{fixture_id}"
         )
 
-        if isinstance(response, dict):
-            if isinstance(response.get("data"), dict):
-                response = response["data"]
+        data = self.extract_data(response)
 
-        return self.normalize_match(response)
+        if not data:
+            return {}
+
+        return self.normalize_match(data[0])
 
     # --------------------------------------------------
     # MATCH STATISTICS
@@ -442,13 +583,13 @@ class APIFootballClient:
     def fixture_statistics(self, fixture_id):
 
         if not fixture_id:
-            raise APIFootballError("Fixture ID is required.")
+            raise APIFootballError(
+                "Fixture ID is required."
+            )
 
-        response = self.request(
+        return self.request(
             f"/statistics/{fixture_id}"
         )
-
-        return response
 
     # --------------------------------------------------
     # TEAM STATISTICS
@@ -461,22 +602,23 @@ class APIFootballClient:
     ):
 
         if not team_id:
-            raise APIFootballError("Team ID is required.")
+            raise APIFootballError(
+                "Team ID is required."
+            )
 
         if from_date is None:
+
             from_date = (
                 date.today() - timedelta(days=365)
             ).isoformat()
 
-        response = self.request(
+        return self.request(
             f"/teams/statistics/{team_id}",
             params={
                 "fromDate": from_date,
                 "timezone": "Africa/Nairobi",
             },
         )
-
-        return response
 
     # --------------------------------------------------
     # MATCH LINEUPS
@@ -485,38 +627,40 @@ class APIFootballClient:
     def fixture_lineups(self, fixture_id):
 
         if not fixture_id:
-            raise APIFootballError("Fixture ID is required.")
+            raise APIFootballError(
+                "Fixture ID is required."
+            )
 
-        response = self.request(
+        return self.request(
             f"/lineups/{fixture_id}"
         )
-
-        return response
 
     # --------------------------------------------------
     # INJURIES / PLAYER AVAILABILITY
     # --------------------------------------------------
 
-    def injuries(self, fixture_id=None, team_id=None):
-
+    def injuries(
+        self,
+        fixture_id=None,
+        team_id=None,
+    ):
         """
-        Highlightly's documented football endpoints do not
-        provide a dedicated injuries endpoint.
+        Do not invent injury information.
 
-        Return None rather than inventing injury information
-        or treating unavailable information as zero injuries.
+        Return None when injury data is unavailable.
         """
 
         return None
 
     # --------------------------------------------------
-    # VALIDATE DATA
+    # VALIDATE MATCH DATA
     # --------------------------------------------------
 
     @staticmethod
     def validate_match_data(matches):
 
         if not matches:
+
             return {
                 "valid": False,
                 "message": "No match history available.",
@@ -535,20 +679,31 @@ class APIFootballClient:
 
         for index, match in enumerate(matches):
 
+            if not isinstance(match, dict):
+
+                missing.append(
+                    f"Match {index + 1}: invalid_match_object"
+                )
+
+                continue
+
             for field in required_fields:
 
                 if match.get(field) is None:
+
                     missing.append(
                         f"Match {index + 1}: {field}"
                     )
 
         return {
             "valid": len(missing) == 0,
+
             "message": (
                 "Match data validated."
                 if not missing
                 else "Some match data is missing."
             ),
+
             "missing_fields": missing,
         }
 
@@ -557,4 +712,6 @@ class APIFootballClient:
     # --------------------------------------------------
 
     def close(self):
+
         self.session.close()
+
