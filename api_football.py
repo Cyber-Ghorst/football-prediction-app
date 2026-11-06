@@ -179,8 +179,8 @@ class APIFootballClient:
         for league in self.LEAGUES
     ]
 
-def get_leagues(self, season=None):
-    return self.leagues(season)
+    def get_leagues(self, season=None):
+        return self.leagues(season)
     # --------------------------------------------------
     # MATCHES / FIXTURES
     # --------------------------------------------------
