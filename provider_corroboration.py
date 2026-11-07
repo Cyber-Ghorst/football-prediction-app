@@ -16,6 +16,7 @@ from canonical_data import (
 )
 from competition_crosswalk import normalize_competition_name, normalize_country
 from multi_source_reconciliation import reconcile_match_records
+from provider_core import normalize_team_name
 
 
 def competition_key(name: str, country: str | None = None) -> str:
@@ -146,7 +147,7 @@ def collect_recent_result_corroboration(
                 if league_name and normalize_competition_name(league_name) != normalize_competition_name(competition):
                     continue
                 row_country = (league.get("country") or {}).get("name") if isinstance(league.get("country"), Mapping) else league.get("countryName")
-                if country and row_country and normalize_country(row_country) != normalize_country(country):
+                if country and (not row_country or normalize_country(row_country) != normalize_country(country)):
                     continue
                 try:
                     normalized.append(canonicalize_highlightly_match(
@@ -182,6 +183,9 @@ def collect_recent_result_corroboration(
                         seen.add(match_id)
                     if str(row.get("league") or league_slug) != league_slug:
                         continue
+                    row_season = row.get("season")
+                    if row_season is not None and str(row_season) != str(int(season)):
+                        continue
                     try:
                         normalized.append(canonicalize_api_ninjas_match(
                             row, competition_key=key, season=int(season)
@@ -195,7 +199,7 @@ def collect_recent_result_corroboration(
             errors["api_ninjas"] = str(exc)
 
     # Restrict the diagnostic to fixtures involving either selected team.
-    selected = {normalize_competition_name(home_team_name), normalize_competition_name(away_team_name)}
+    selected = {normalize_team_name(home_team_name), normalize_team_name(away_team_name)}
     target_fixtures = []
     for fixture in sportmonks_fixtures:
         canonical = canonicalize_sportmonks_fixture(
@@ -203,8 +207,8 @@ def collect_recent_result_corroboration(
         )
         if canonical is None:
             continue
-        if (canonical["home"]["name"] in {home_team_name, away_team_name}
-                or canonical["away"]["name"] in {home_team_name, away_team_name}):
+        if (normalize_team_name(canonical["home"]["name"]) in selected
+                or normalize_team_name(canonical["away"]["name"]) in selected):
             target_fixtures.append(canonical)
 
     all_alternates = home_records
