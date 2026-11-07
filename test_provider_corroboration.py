@@ -132,6 +132,33 @@ class ProviderCorroborationTests(unittest.TestCase):
         self.assertEqual(len(ninjas.calls), 2)
         self.assertEqual(highlightly.calls[0]["leagueName"], "Premier League")
 
+    def test_team_history_check_flags_unmatched_highlightly_results_without_adding_them(self):
+        extra = highlightly_match()
+        extra.update({
+            "id": 9002,
+            "date": "2026-11-05T15:00:00Z",
+            "homeTeam": {"id": 11, "name": "Arsenal"},
+            "awayTeam": {"id": 13, "name": "Everton"},
+            "state": {"description": "Finished", "score": {"current": "1 - 0"}},
+        })
+        report = collect_recent_result_corroboration(
+            sportmonks_fixtures=[sportmonks_fixture()],
+            competition="Premier League", country="England", season=2026,
+            home_team_name="Arsenal", away_team_name="Chelsea",
+            highlightly_client=FakeHighlightly([highlightly_match(), extra]), now=NOW,
+        )
+        arsenal = report["team_history_coverage"]["Arsenal"]
+        self.assertEqual(arsenal["highlightly_completed_score_valid"], 2)
+        self.assertEqual(arsenal["sportmonks_completed_score_valid"], 1)
+        self.assertEqual(arsenal["exact_matches_across_sources"], 1)
+        self.assertEqual(arsenal["highlightly_results_not_found_in_sportmonks"], 1)
+        self.assertEqual(arsenal["unmatched_completed_candidates"][0]["highlightly_match_id"], "9002")
+        self.assertEqual(
+            arsenal["unmatched_completed_candidates"][0]["review_status"],
+            "candidate_only_not_added_to_prediction_history",
+        )
+        self.assertEqual(len(report["matches"]), 1)
+
     def test_wrong_country_or_competition_is_not_joined(self):
         highlightly = FakeHighlightly([highlightly_match(country="Spain")])
         report = collect_recent_result_corroboration(
