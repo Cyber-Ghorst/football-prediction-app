@@ -1,4 +1,3 @@
-
 """
 API Ninjas Football API Client
 Football Prediction App - Layer 2
@@ -12,12 +11,12 @@ Required secret:
     API_NINJAS_API_KEY
 """
 
+from __dotenv import load_dotenv  # Optional if using dotenv locally
 import os
 import requests
 
 from datetime import date, datetime, timedelta
 from typing import Any, Dict, List, Optional
-
 
 
 class APIFootballError(Exception):
@@ -56,7 +55,6 @@ class APIFootballClient:
         api_key: Optional[str] = None,
         timeout: int = 25
     ):
-
         self.api_key = (
             api_key
             or os.getenv("API_NINJAS_API_KEY")
@@ -96,33 +94,32 @@ class APIFootballClient:
     # --------------------------------------------------
 
     def _request(
-    self,
-    endpoint: str,
-    params: Optional[Dict[str, Any]] = None
-) -> Any:
+        self,
+        endpoint: str,
+        params: Optional[Dict[str, Any]] = None
+    ) -> Any:
+        url = f"{self.BASE_URL}/{endpoint.lstrip('/')}"
 
-    url = f"{self.BASE_URL}/{endpoint.lstrip('/')}"
+        try:
+            response = self.session.get(
+                url,
+                params=params or {},
+                timeout=self.timeout
+            )
 
-    try:
-        response = self.session.get(
-            url,
-            params=params or {},
-            timeout=self.timeout
-        )
+            response.raise_for_status()
 
-        response.raise_for_status()
+            return response.json()
 
-        return response.json()
+        except requests.RequestException as exc:
+            raise APIFootballError(
+                f"Football API request failed: {exc}"
+            ) from exc
 
-    except requests.RequestException as exc:
-        raise APIFootballError(
-            f"Football API request failed: {exc}"
-        ) from exc
-
-    except ValueError as exc:
-        raise APIFootballError(
-            "Invalid JSON returned by API."
-        ) from exc
+        except ValueError as exc:
+            raise APIFootballError(
+                "Invalid JSON returned by API."
+            ) from exc
 
     # --------------------------------------------------
     # RESPONSE NORMALIZATION
@@ -130,7 +127,6 @@ class APIFootballClient:
 
     @staticmethod
     def _as_list(data: Any) -> List[Dict[str, Any]]:
-
         if isinstance(data, list):
             return [
                 item for item in data
@@ -138,7 +134,6 @@ class APIFootballClient:
             ]
 
         if isinstance(data, dict):
-
             for key in (
                 "results",
                 "data",
@@ -147,7 +142,6 @@ class APIFootballClient:
                 "teams",
                 "players"
             ):
-
                 value = data.get(key)
 
                 if isinstance(value, list):
@@ -162,7 +156,6 @@ class APIFootballClient:
 
     @staticmethod
     def _normalize_match(match: Dict[str, Any]) -> Dict[str, Any]:
-
         result = dict(match)
 
         home = result.get("home_team")
@@ -188,11 +181,9 @@ class APIFootballClient:
     # --------------------------------------------------
 
     def leagues(self, season: Optional[int] = None):
-
         return [dict(league) for league in self.LEAGUES]
 
     def get_leagues(self, season: Optional[int] = None):
-
         return self.leagues(season)
 
     # --------------------------------------------------
@@ -209,14 +200,13 @@ class APIFootballClient:
         status: Optional[str] = None,
         **kwargs
     ):
-
         params = {}
 
         if league:
             params["league"] = league
 
         if date:
-            if isinstance(date, (datetime,)):
+            if isinstance(date, datetime):
                 date = date.date()
 
             if isinstance(date, date):
@@ -253,15 +243,12 @@ class APIFootballClient:
         ]
 
     def get_matches(self, *args, **kwargs):
-
         return self.matches(*args, **kwargs)
 
     def fixtures(self, *args, **kwargs):
-
         return self.matches(*args, **kwargs)
 
     def get_fixtures(self, *args, **kwargs):
-
         return self.matches(*args, **kwargs)
 
     # --------------------------------------------------
@@ -275,7 +262,6 @@ class APIFootballClient:
         date_from: Optional[Any] = None,
         season: Optional[int] = None
     ):
-
         if not league:
             raise APIFootballError(
                 "League identifier is required."
@@ -298,7 +284,6 @@ class APIFootballClient:
         collected = {}
 
         for offset in range(days):
-
             match_date = start_date + timedelta(days=offset)
 
             daily_matches = self.matches(
@@ -308,7 +293,6 @@ class APIFootballClient:
             )
 
             for match in daily_matches:
-
                 game_id = (
                     match.get("game_id")
                     or match.get("fixture_id")
@@ -331,7 +315,6 @@ class APIFootballClient:
         ]
 
     def get_upcoming_matches(self, *args, **kwargs):
-
         return self.upcoming_matches(*args, **kwargs)
 
     # --------------------------------------------------
@@ -344,7 +327,6 @@ class APIFootballClient:
         season: Optional[int] = None,
         league: Optional[str] = None
     ):
-
         if not team:
             raise APIFootballError(
                 "Team name or team ID is required."
@@ -379,7 +361,6 @@ class APIFootballClient:
         return results
 
     def get_team_matches(self, *args, **kwargs):
-
         return self.team_matches(*args, **kwargs)
 
     def last_fixtures(
@@ -389,7 +370,6 @@ class APIFootballClient:
         league: Optional[str] = None,
         season: Optional[int] = None
     ):
-
         fixtures = self.team_matches(
             team=team,
             league=league,
@@ -411,7 +391,6 @@ class APIFootballClient:
         league: Optional[str] = None,
         season: Optional[int] = None
     ):
-
         fixtures = self.team_matches(
             team=team,
             league=league,
@@ -426,7 +405,6 @@ class APIFootballClient:
         return upcoming[0] if upcoming else None
 
     def match_details(self, game_id: str):
-
         if not game_id:
             raise APIFootballError("Game ID is required.")
 
@@ -453,7 +431,6 @@ class APIFootballClient:
         tournament: Optional[str] = None,
         conference: Optional[str] = None
     ):
-
         if not league:
             raise APIFootballError(
                 "League identifier is required."
@@ -480,7 +457,6 @@ class APIFootballClient:
         return self._as_list(data)
 
     def get_standings(self, *args, **kwargs):
-
         return self.standings(*args, **kwargs)
 
     # --------------------------------------------------
@@ -493,7 +469,6 @@ class APIFootballClient:
         team: Optional[str] = None,
         active: Optional[bool] = None
     ):
-
         params = {}
 
         if league:
@@ -513,11 +488,9 @@ class APIFootballClient:
         return self._as_list(data)
 
     def get_clubs(self, *args, **kwargs):
-
         return self.clubs(*args, **kwargs)
 
     def teams(self, *args, **kwargs):
-
         return self.clubs(*args, **kwargs)
 
     # --------------------------------------------------
@@ -532,7 +505,6 @@ class APIFootballClient:
         player_id: Optional[str] = None,
         position: Optional[str] = None
     ):
-
         params = {}
 
         if league:
@@ -558,7 +530,6 @@ class APIFootballClient:
         return self._as_list(data)
 
     def get_players(self, *args, **kwargs):
-
         return self.players(*args, **kwargs)
 
     def team_squad(
@@ -566,7 +537,6 @@ class APIFootballClient:
         team: str,
         league: Optional[str] = None
     ):
-
         return self.players(
             team=team,
             league=league
@@ -577,7 +547,6 @@ class APIFootballClient:
     # --------------------------------------------------
 
     def fixture_statistics(self, fixture_id: Any):
-
         self.last_warning = (
             "API Ninjas does not currently provide detailed "
             "fixture statistics such as possession, shots and corners."
@@ -586,7 +555,6 @@ class APIFootballClient:
         return []
 
     def get_fixture_statistics(self, fixture_id: Any):
-
         return self.fixture_statistics(fixture_id)
 
     def injuries(
@@ -594,7 +562,6 @@ class APIFootballClient:
         team: Optional[str] = None,
         fixture_id: Any = None
     ):
-
         self.last_warning = (
             "Injury reports are not available through the "
             "current API Ninjas football endpoints."
@@ -603,11 +570,9 @@ class APIFootballClient:
         return []
 
     def get_injuries(self, *args, **kwargs):
-
         return self.injuries(*args, **kwargs)
 
     def fixture_lineups(self, fixture_id: Any):
-
         self.last_warning = (
             "Confirmed match lineups are not available through "
             "the current API Ninjas football endpoints."
@@ -616,7 +581,6 @@ class APIFootballClient:
         return []
 
     def get_lineups(self, fixture_id: Any):
-
         return self.fixture_lineups(fixture_id)
 
     # --------------------------------------------------
@@ -624,7 +588,6 @@ class APIFootballClient:
     # --------------------------------------------------
 
     def test_connection(self):
-
         self._request(
             "soccermatches",
             {
@@ -640,13 +603,10 @@ class APIFootballClient:
     # --------------------------------------------------
 
     def close(self):
-
         self.session.close()
 
     def __enter__(self):
-
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
-
         self.close()
