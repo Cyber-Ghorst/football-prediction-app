@@ -145,6 +145,9 @@ class SportmonksClient:
     def seasons(self, **params: Any) -> list[dict[str, Any]]:
         return self._rows(self._get("seasons", params))
 
+    def available_seasons(self, **params: Any) -> list[dict[str, Any]]:
+        return self._all_pages("seasons", **params)
+
     def teams(self, **params: Any) -> list[dict[str, Any]]:
         return self._rows(self._get("teams", params))
 
