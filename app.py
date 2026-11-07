@@ -525,6 +525,29 @@ try:
             quality = profile["data_quality"]
             st.write(f"**{profile['name']}** — source: {quality.get('provider', 'api_football')}; {quality['matches_returned']} completed matches; {quality['opponent_strength_matches']} with opponent-strength data; {quality['statistics_matches']} with match statistics; {quality.get('statistics_observations', 0)} normalized statistic observations.")
 
+        with st.expander("History Collection Diagnostics", expanded=True):
+            st.caption(
+                "Shows how each selected team's season fixtures were screened. "
+                "Counters follow the collection pipeline; missing season IDs are reported separately "
+                "and are not silently described as confirmed same-season records."
+            )
+            history_columns = st.columns(2)
+            for column, profile in zip(history_columns, (home, away)):
+                with column:
+                    st.markdown(f"**{profile['name']}**")
+                    history_report = profile.get("history_collection_diagnostics")
+                    if history_report:
+                        st.metric(
+                            "Valid completed matches",
+                            f"{history_report.get('fixtures_with_valid_scores', 0)}",
+                            help="Finished fixtures for this team with both home and away scores available.",
+                        )
+                        st.json(history_report)
+                    else:
+                        st.info(
+                            "Detailed fixture-screening counters are not supplied by this data path."
+                        )
+
         readiness = build_prediction_readiness(
             home,
             away,
