@@ -142,3 +142,34 @@ The first canonical match-normalization layer is now implemented in `canonical_d
 The normalizers currently cover LiveScoreFootball and API-Football v3. API Ninjas and Highlightly remain isolated adapters until their actual response shapes are captured in fixtures and independently tested. The new canonical layer is not yet switched into the Streamlit prediction flow: automatic fallback requires an explicit competition/season crosswalk, team alias validation, and freshness checks against the LiveScoreFootball metadata endpoint. This is intentional fail-closed behavior, not a missing-data workaround.
 
 Tests are in `test_canonical_data.py`; the existing provider priority and Layer 1/TVD tests remain in place.
+
+
+## Competition crosswalk and health validation milestone (2026-11-07)
+
+### Competition crosswalk
+
+`competition_crosswalk.py` creates runtime mappings from the API-Football league catalogue to the LiveScoreFootball public league catalogue. No API-Football numeric IDs or LiveScore slugs are guessed or hardcoded. A mapping is verified only when:
+
+1. Competition names match exactly after conservative Unicode/punctuation normalization.
+2. Country names match after a small explicit country-alias normalization.
+3. Exactly one LiveScoreFootball catalogue candidate exists.
+4. The LiveScoreFootball competition is active and `coverage.hasData` is true.
+5. The LiveScoreFootball season year is present and equals the requested season.
+
+No fuzzy matching is used. Ambiguous, inactive, empty, missing-season or mismatched-season records are rejected. `verified_livescore_slug` returns a slug only for a single verified mapping.
+
+### Provider health and freshness
+
+`provider_health.py` separates transport/account status from data freshness:
+
+- LiveScoreFootball metadata is checked using the documented `service.dataSource`, `coverage`, and `lastSuccessfulSyncAt` fields. Its global latest sync is only a service-level indicator; competition-level `lastSyncedAt` remains the stronger signal when present.
+- API-Football uses its documented `/status` endpoint to inspect active subscription and daily request usage/remaining quota. Account identity fields are deliberately discarded.
+- Highlightly and API Ninjas remain credential/readiness-only until their provider-specific health contracts are verified; no undocumented endpoints are probed.
+- Freshness thresholds are domain-specific (live scores, fixtures/results, standings, statistics, injuries/lineups, player/squad data). Missing or invalid source timestamps are `unknown`, future timestamps are invalid, and stale data is ineligible.
+- The Streamlit sidebar has an opt-in provider health and coverage diagnostic. It does not run automatically on every app rerun and does not activate fallback.
+
+### Current safety boundary
+
+The crosswalk and health diagnostics are implemented and unit-tested. The app still uses API-Football as its active Layer 2 data provider. LiveScoreFootball is not yet used as a fallback because match-level source timestamps, team identity mapping, and canonical record validation must be applied to each candidate match before integration. API Ninjas and Highlightly remain isolated adapters. This is deliberate: no provider is promoted on catalogue presence alone.
+
+The prediction engine, Layer 1 behavior, `tvd.py`, all existing component weights, and 60/40 recency weighting remain unchanged.
