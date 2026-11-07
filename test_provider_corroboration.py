@@ -112,8 +112,8 @@ class ProviderCorroborationTests(unittest.TestCase):
         self.assertEqual(observed, {"sportmonks": 2, "highlightly": 3, "api_ninjas": 2})
         self.assertTrue(all(row.get("fetched_at") for row in match["reconciliation"]["home_score"]["observations"]))
         self.assertEqual(set(match["source_ids"]), {"sportmonks", "highlightly", "api_ninjas"})
-        self.assertEqual(match["agreement_fields"], ["status", "away_score", "kickoff_utc"])
-        self.assertEqual(match["conflict_fields"], ["home_score"])
+        self.assertEqual(match["agreement_fields"], ["status", "away_score"])
+        self.assertEqual(match["conflict_fields"], ["home_score", "kickoff_utc"])
         self.assertEqual(match["diagnostic_status"], "agreement_and_conflict")
         home_score_rows = [row for row in match["field_observations"] if row["field"] == "home_score"]
         self.assertEqual(
