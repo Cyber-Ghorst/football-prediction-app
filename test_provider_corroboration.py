@@ -169,6 +169,18 @@ class ProviderCorroborationTests(unittest.TestCase):
         )
         self.assertEqual(report["fixtures_matched_across_sources"], 0)
 
+    def test_wrong_reported_season_is_excluded_from_history_check(self):
+        wrong = highlightly_match()
+        wrong["league"]["season"] = 2025
+        report = collect_recent_result_corroboration(
+            sportmonks_fixtures=[sportmonks_fixture()],
+            competition="Premier League", country="England", season=2026,
+            home_team_name="Arsenal", away_team_name="Chelsea",
+            highlightly_client=FakeHighlightly([wrong]), now=NOW,
+        )
+        self.assertEqual(report["provider_records_returned"]["highlightly"], 0)
+        self.assertEqual(report["team_history_coverage"]["Arsenal"]["highlightly_completed_score_valid"], 0)
+
     def test_missing_source_client_does_not_invent_corroboration(self):
         report = collect_recent_result_corroboration(
             sportmonks_fixtures=[sportmonks_fixture()],
