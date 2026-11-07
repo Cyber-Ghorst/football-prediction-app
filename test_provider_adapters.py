@@ -179,6 +179,49 @@ class ProviderAdapterTests(unittest.TestCase):
         self.assertNotIn("secret-token", str(raised.exception))
         client.close()
 
+    def test_highlightly_matches_reports_data_envelope_metadata(self):
+        client = HighlightlyClient(api_key="test-only")
+        response = Mock()
+        response.status_code = 200
+        response.json.return_value = {"data": [{"id": 1}], "pagination": {"hasMore": False}}
+        response.headers = {"x-ratelimit-requests-remaining": "9"}
+        response.raise_for_status.return_value = None
+        client.session.get = Mock(return_value=response)
+        self.assertEqual(client.matches(limit=1), [{"id": 1}])
+        self.assertEqual(client.last_metadata["rows_envelope"], "data_list")
+        self.assertEqual(client.last_metadata["extracted_rows_count"], 1)
+        self.assertEqual(client.last_metadata["response_top_level_keys"], ["data", "pagination"])
+        self.assertEqual(client.last_metadata["requests_remaining"], "9")
+        self.assertNotIn("test-only", str(client.last_metadata))
+        client.close()
+
+    def test_highlightly_matches_reports_unrecognized_response_envelope(self):
+        client = HighlightlyClient(api_key="test-only")
+        response = Mock()
+        response.status_code = 200
+        response.json.return_value = {"data": {"matches": [{"id": 1}]}}
+        response.headers = {}
+        response.raise_for_status.return_value = None
+        client.session.get = Mock(return_value=response)
+        self.assertEqual(client.matches(limit=1), [])
+        self.assertEqual(client.last_metadata["rows_envelope"], "unrecognized")
+        self.assertEqual(client.last_metadata["response_data_type"], "dict")
+        self.assertEqual(client.last_metadata["extracted_rows_count"], 0)
+        client.close()
+
+    def test_highlightly_matches_reports_top_level_array_envelope(self):
+        client = HighlightlyClient(api_key="test-only")
+        response = Mock()
+        response.status_code = 200
+        response.json.return_value = [{"id": 1}]
+        response.headers = {}
+        response.raise_for_status.return_value = None
+        client.session.get = Mock(return_value=response)
+        self.assertEqual(client.matches(limit=1), [{"id": 1}])
+        self.assertEqual(client.last_metadata["rows_envelope"], "top_level_list")
+        self.assertEqual(client.last_metadata["extracted_rows_count"], 1)
+        client.close()
+
     def test_highlightly_unwraps_paginated_data(self):
         self.assertEqual(
             HighlightlyClient._rows({"data": [{"id": 1}], "pagination": {}, "plan": {}}),
