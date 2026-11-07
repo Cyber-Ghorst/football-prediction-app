@@ -7,6 +7,7 @@ collection is wired to Layer 2 with strict season/team identity and completeness
 from __future__ import annotations
 
 import os
+from datetime import datetime, timezone
 from typing import Any, Mapping
 
 import requests
@@ -171,6 +172,29 @@ class SportmonksClient:
         return ids
 
     @staticmethod
+    def _fixture_kickoff_timestamp(fixture: dict[str, Any]) -> int | None:
+        """Parse fixture kickoff into UTC epoch seconds for reliable ordering."""
+        raw_timestamp = fixture.get("starting_at_timestamp")
+        if raw_timestamp is not None:
+            try:
+                value = float(raw_timestamp)
+                if value > 100_000_000_000:
+                    value /= 1000
+                return int(value)
+            except (TypeError, ValueError, OverflowError):
+                pass
+        raw_date = fixture.get("starting_at")
+        if not raw_date:
+            return None
+        try:
+            parsed = datetime.fromisoformat(str(raw_date).strip().replace("Z", "+00:00"))
+            if parsed.tzinfo is None:
+                parsed = parsed.replace(tzinfo=timezone.utc)
+            return int(parsed.astimezone(timezone.utc).timestamp())
+        except (TypeError, ValueError, OverflowError):
+            return None
+
+    @staticmethod
     def _fixture_is_completed(fixture: dict[str, Any]) -> bool:
         """Recognize completed fixtures from either Sportmonks state IDs or labels."""
         try:
@@ -241,7 +265,10 @@ class SportmonksClient:
             for team_fixtures in recent_by_team.values():
                 ordered = sorted(
                     team_fixtures,
-                    key=lambda row: str(row.get("starting_at") or ""),
+                    key=lambda row: (
+                        SportmonksClient._fixture_kickoff_timestamp(row) is not None,
+                        SportmonksClient._fixture_kickoff_timestamp(row) or 0,
+                    ),
                     reverse=True,
                 )
                 for fixture in ordered[:10]:
@@ -263,6 +290,12 @@ class SportmonksClient:
                     base = chosen.get(fixture_id)
                     if base is not None:
                         base.update(detail)
+
+        # This is the retrieval time for the complete schedule/detail collection,
+        # distinct from Sportmonks' provider-side updated_at timestamps.
+        collection_fetched_at = datetime.now(timezone.utc).isoformat()
+        for fixture in fixtures:
+            fixture["collection_fetched_at"] = collection_fetched_at
         return fixtures
 
     def seasons(self, **params: Any) -> list[dict[str, Any]]:
