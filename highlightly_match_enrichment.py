@@ -6,7 +6,7 @@ season, home/away orientation and kickoff within five minutes.
 """
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Any, Mapping
 
 from canonical_data import canonicalize_highlightly_match, match_identity
@@ -324,33 +324,45 @@ def collect_highlightly_match_enrichment(
 
     lineup_report = None
     lineup_requests = 0
+    lineup_not_requested_reason = None
     if selected_upcoming_fixture is not None:
         selected_canonical = canonicalize_sportmonks_fixture(
             selected_upcoming_fixture,
             competition=competition, country=country, season=int(season),
         )
         if selected_canonical and selected_canonical["status"] == "scheduled":
-            matched = next(
-                (item for item in rows if match_identity(selected_canonical, item["canonical"])),
-                None,
+            kickoff = datetime.fromisoformat(
+                str(selected_canonical["kickoff_utc"]).replace("Z", "+00:00")
             )
-            if matched is not None and matched["raw"].get("id") is not None:
-                highlightly_id = matched["raw"]["id"]
-                try:
-                    payload = client.lineups(highlightly_id)
-                    lineup_requests += 1
-                    if payload:
-                        lineup_report = normalize_highlightly_lineups(
-                            payload,
-                            expected_home=home_team_name,
-                            expected_away=away_team_name,
-                            match_id=highlightly_id,
-                        )
-                        lineup_report["sportmonks_fixture_id"] = str(selected_upcoming_fixture.get("id"))
-                        lineup_report["highlightly_match_id"] = str(highlightly_id)
-                        lineup_report["kickoff_utc"] = selected_canonical["kickoff_utc"]
-                except Exception as exc:
-                    errors[f"lineups:{highlightly_id}"] = str(exc)
+            if kickoff.tzinfo is None:
+                kickoff = kickoff.replace(tzinfo=timezone.utc)
+            in_lineup_window = kickoff - timedelta(minutes=40) <= fetched <= kickoff + timedelta(minutes=120)
+            if not in_lineup_window:
+                lineup_not_requested_reason = "Highlightly lineups are queried only from 40 minutes before kickoff until 120 minutes after kickoff."
+            else:
+                matched = next(
+                    (item for item in rows if match_identity(selected_canonical, item["canonical"])),
+                    None,
+                )
+                if matched is not None and matched["raw"].get("id") is not None:
+                    highlightly_id = matched["raw"]["id"]
+                    try:
+                        payload = client.lineups(highlightly_id)
+                        lineup_requests += 1
+                        if payload:
+                            lineup_report = normalize_highlightly_lineups(
+                                payload,
+                                expected_home=home_team_name,
+                                expected_away=away_team_name,
+                                match_id=highlightly_id,
+                            )
+                            lineup_report["sportmonks_fixture_id"] = str(selected_upcoming_fixture.get("id"))
+                            lineup_report["highlightly_match_id"] = str(highlightly_id)
+                            lineup_report["kickoff_utc"] = selected_canonical["kickoff_utc"]
+                    except Exception as exc:
+                        errors[f"lineups:{highlightly_id}"] = str(exc)
+                else:
+                    lineup_not_requested_reason = "No exact Highlightly fixture identity match was found."
 
     all_comparisons = [
         comparison
@@ -369,6 +381,7 @@ def collect_highlightly_match_enrichment(
         "statistics_metric_conflicts": sum(x["status"] == "conflict" for x in all_comparisons),
         "upcoming_lineup_match_found": lineup_report is not None,
         "lineup_requests": lineup_requests,
+        "lineup_not_requested_reason": lineup_not_requested_reason,
         "fetched_at": fetched.isoformat(),
         "statistics": stats_reports,
         "lineups": lineup_report,
