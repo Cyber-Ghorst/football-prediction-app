@@ -84,6 +84,8 @@ def collect_highlightly_player_enrichment(
         "diagnostic_only": True,
         "player_requests": 0,
         "team_requests": 0,
+        "player_statistics_status": "unknown",
+        "team_statistics_status": "unknown",
         "players": [],
         "teams": {},
         "errors": {},
@@ -136,8 +138,8 @@ def collect_highlightly_player_enrichment(
             report["errors"][f"team_stats:{side}"] = "Highlightly team ID missing."
             continue
         try:
-            raw = client.team_statistics(team_id, fromDate=start_date, timezone=timezone_name)
             report["team_requests"] += 1
+            raw = client.team_statistics(team_id, fromDate=start_date, timezone=timezone_name)
             matches = _exact_competition_rows(_rows(raw), competition, int(season))
             team["season_statistics"] = matches
             team["status"] = "matched" if matches else "unknown_no_exact_competition_season_row"
@@ -147,8 +149,8 @@ def collect_highlightly_player_enrichment(
     for side, player in unique_jobs:
         player_id = player["player_id"]
         try:
-            raw = client.player_statistics(player_id)
             report["player_requests"] += 1
+            raw = client.player_statistics(player_id)
             payload_rows = _rows(raw)
             stats_rows = []
             for payload in payload_rows:
@@ -179,7 +181,17 @@ def collect_highlightly_player_enrichment(
             report["errors"][f"player_stats:{player_id}"] = str(exc)
 
     report["fetched_at"] = datetime.now(timezone.utc).isoformat()
-    report["availability"] = "collected" if report["players"] or any(
-        team.get("season_statistics") for team in report["teams"].values()
-    ) else "unknown_no_matching_statistics"
+    report["player_statistics_status"] = (
+        "collected" if report["players"] else "unknown_no_matching_player_statistics"
+    )
+    matched_team_count = sum(
+        1 for team in report["teams"].values()
+        if team.get("season_statistics")
+    )
+    report["team_statistics_status"] = (
+        "collected" if matched_team_count else "unknown_no_matching_team_statistics"
+    )
+    # Overall availability must not imply player-level records exist when
+    # only team-season rows were returned.
+    report["availability"] = report["player_statistics_status"]
     return report
