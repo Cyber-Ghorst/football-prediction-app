@@ -220,6 +220,11 @@ def collect_recent_result_corroboration(
     selected = {normalize_team_name(home_team_name), normalize_team_name(away_team_name)}
     target_fixtures = []
     for fixture in sportmonks_fixtures:
+        try:
+            if int(fixture.get("season_id")) != int(season):
+                continue
+        except (TypeError, ValueError):
+            continue
         canonical = canonicalize_sportmonks_fixture(
             fixture, competition=competition, country=country, season=season
         )
