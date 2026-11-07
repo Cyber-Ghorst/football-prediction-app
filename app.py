@@ -63,9 +63,10 @@ def get_sm_standings(season_id):
     with SportmonksClient() as sm:
         return sm.standings_by_season(season_id, include="participant")
 
-@st.cache_data(ttl=1800, show_spinner=False)
-def get_sm_fixtures(season_id, include_stats, team_ids, cache_version="fixture-verification-v2"):
-    # The version argument deliberately invalidates cached pre-fix schedule payloads.
+@st.cache_data(ttl=300, show_spinner=False)
+def get_sm_fixtures(season_id, include_stats, team_ids, cache_version="fixture-history-refresh-v3"):
+    # Five-minute TTL: the next collection after expiry rechecks newly completed fixtures.
+    # The version argument invalidates older cached schedule/history payloads.
     _ = cache_version
     with SportmonksClient() as sm:
         return sm.fixtures_by_season(
@@ -95,6 +96,10 @@ with st.sidebar:
         help="Uses exact selected-fixture starters. Performs a quota preflight and skips collection when remaining requests are unknown or insufficient. Maximum 22 player-stat requests plus two team-stat requests. Diagnostic only.",
     )
     st.caption("For 2022–2024 add APISPORTS_API_KEY; for 2025+ add SPORTMONKS_API_TOKEN in Streamlit Secrets. Never paste keys into public code.")
+    st.caption("Sportmonks fixture/history data refreshes automatically after a five-minute cache window when you collect data.")
+    if st.button("Refresh fixture/history data now", use_container_width=True):
+        get_sm_fixtures.clear()
+        st.rerun()
     with st.expander("Provider readiness", expanded=True):
         for provider in provider_readiness():
             credential = ("not required" if provider.get("credential_required") is False else ("configured" if provider["credential_configured"] else "not configured"))
@@ -641,6 +646,7 @@ try:
             st.subheader("Tactical Vulnerability Detector")
             st.json(tvd_result)
         st.caption(f"Model weights: {WEIGHTS}. Latest five matches carry 60% of recent-history weight; previous five carry 40%.")
+        st.caption("History is sorted newest-first by parsed UTC kickoff. Collection timestamps identify when the current Sportmonks schedule/details were retrieved.")
 
 except APIFootballError as exc:
     st.error(f"Data provider error: {exc}")
