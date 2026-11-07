@@ -215,6 +215,12 @@ def merge_prediction_records(
             merged[key] = record
             continue
         for field, value in record.items():
-            if value not in (None, ""):
-                merged[key][field] = value
+            if value is None or value == "":
+                continue
+            try:
+                if value != value:  # pandas/numpy NaN from imported CSV cells
+                    continue
+            except (TypeError, ValueError):
+                pass
+            merged[key][field] = value
     return list(merged.values())
