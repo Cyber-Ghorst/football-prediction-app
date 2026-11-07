@@ -636,12 +636,12 @@ try:
                         hide_index=True,
                     )
                     if report["unmapped_statistics"]:
-                        with st.expander(f"{profile['name']}: unmapped provider statistics"):
-                            st.dataframe(
-                                pd.DataFrame(report["unmapped_statistics"]),
-                                use_container_width=True,
-                                hide_index=True,
-                            )
+                        st.markdown("**Unmapped provider statistic names**")
+                        st.dataframe(
+                            pd.DataFrame(report["unmapped_statistics"]),
+                            use_container_width=True,
+                            hide_index=True,
+                        )
                     else:
                         st.caption("No unmapped raw statistic names were reported in this sample.")
             st.caption("Only the eight existing tactical model inputs are counted in the core coverage score. Other provider statistics remain visible as diagnostics and are not automatically added to the prediction model.")
