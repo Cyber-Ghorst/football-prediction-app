@@ -479,10 +479,14 @@ try:
                         if highlightly_enrichment is not None:
                             try:
                                 with HighlightlyClient() as player_client:
-                                    quota_preflight = player_client.test_connection()
+                                    selected_lineups = highlightly_enrichment.get("lineups")
+                                    quota_preflight = (
+                                        player_client.test_connection()
+                                        if selected_lineups else {"metadata": {}}
+                                    )
                                     player_report = collect_highlightly_player_enrichment(
                                         client=player_client,
-                                        lineups=highlightly_enrichment.get("lineups"),
+                                        lineups=selected_lineups,
                                         competition=str(selected_league_row.get("name") or selected_league),
                                         season=int(season),
                                         home_team_name=home_name,
