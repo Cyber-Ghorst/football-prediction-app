@@ -276,7 +276,7 @@ def collect_highlightly_match_enrichment(
         for fixture, canonical in sportmonks_records:
             home_norm = normalize_team_name(canonical["home"]["name"])
             away_norm = normalize_team_name(canonical["away"]["name"])
-            if team_name in {home_norm, away_norm} and count < max(1, int(history_per_team)):
+            if team_name in {home_norm, away_norm} and count < max(0, int(history_per_team)):
                 selected_fixture_ids.add(str(fixture.get("id")))
                 count += 1
 
