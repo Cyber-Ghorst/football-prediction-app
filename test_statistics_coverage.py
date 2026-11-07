@@ -43,7 +43,7 @@ class StatisticsCoverageTests(unittest.TestCase):
 
         self.assertEqual(report["fixtures_checked"], 2)
         self.assertEqual(report["core_metrics_with_any_data"], 8)
-        self.assertEqual(report["core_metrics_complete"], 5)
+        self.assertEqual(report["core_metrics_complete"], 6)
         self.assertEqual(by_name["Ball Possession"]["coverage_pct"], 100.0)
         self.assertEqual(by_name["Passes %"]["coverage_pct"], 50.0)
         self.assertEqual(by_name["Shots on Target / Goal"]["fixtures_available"], 2)
