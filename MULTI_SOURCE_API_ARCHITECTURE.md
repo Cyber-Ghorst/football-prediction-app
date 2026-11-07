@@ -112,9 +112,9 @@ No prediction weights, TVD rules or production branch files are changed by this 
 - data_layer2.py now consumes API-Football v3 response structures, converts standings to competition-season-relative opponent-strength scores, and handles a single upcoming fixture object.
 - test_provider_adapters.py adds adapter contract and credential-redaction tests; .github/workflows/tests.yml runs the unit suite in CI.
 - The Streamlit prediction flow currently uses API-Football v3 only. API Ninjas and Highlightly are isolated adapters, not yet active fallbacks in a live multi-source registry.
-- No LiveScoreFootball adapter has been added: the provider name has not been matched to a verifiable official API documentation/base URL. Do not send credentials or assume coverage until the exact official product URL is confirmed.
+- LiveScoreFootball has a read-only adapter for the documented public database-backed API at https://worldcup26.ir. Its public read endpoints do not require an API key. The adapter remains outside the automatic prediction fallback until runtime competition mapping, sync freshness and per-match identity checks pass.
 - Credentials are never displayed. Configure APISPORTS_API_KEY for API-Football, API_NINJAS_API_KEY for API Ninjas, and HIGHLIGHTLY_API_KEY for Highlightly. The Highlightly client retains API_FOOTBALL_KEY as a legacy fallback only.
-- Live provider health, quota, account coverage and deployed Streamlit configuration remain unverified until credentials and runtime access are available.
+- API-Football account status/quota and LiveScoreFootball health/sync diagnostics are now implemented in an opt-in Streamlit check. Actual deployment credentials and live endpoint responses still need to be checked from the running app.
 
 
 ## LiveScoreFootball provider identification and adapter
