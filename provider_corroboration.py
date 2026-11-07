@@ -125,6 +125,7 @@ def collect_recent_result_corroboration(
     away_records: list[dict[str, Any]] = []
     errors: dict[str, str] = {}
     provider_counts: dict[str, int] = {}
+    highlightly_records: list[dict[str, Any]] = []
 
     if highlightly_client is not None:
         try:
@@ -156,12 +157,22 @@ def collect_recent_result_corroboration(
                 )
                 if country and (not row_country or normalize_country(row_country) != normalize_country(country)):
                     continue
+                reported_season = league.get("season") or row.get("season")
+                if isinstance(reported_season, Mapping):
+                    reported_season = reported_season.get("year") or reported_season.get("start")
+                if reported_season is not None:
+                    try:
+                        if int(reported_season) != int(season):
+                            continue
+                    except (TypeError, ValueError):
+                        continue
                 try:
                     normalized.append(canonicalize_highlightly_match(
                         row, competition_key=key, season=int(season)
                     ))
                 except (ValueError, TypeError, KeyError):
                     continue
+            highlightly_records = normalized
             home_records.extend(normalized)
             away_records.extend(normalized)
             provider_counts["highlightly"] = len(normalized)
@@ -209,6 +220,11 @@ def collect_recent_result_corroboration(
     selected = {normalize_team_name(home_team_name), normalize_team_name(away_team_name)}
     target_fixtures = []
     for fixture in sportmonks_fixtures:
+        try:
+            if int(fixture.get("season_id")) != int(season):
+                continue
+        except (TypeError, ValueError):
+            continue
         canonical = canonicalize_sportmonks_fixture(
             fixture, competition=competition, country=country, season=season
         )
@@ -221,6 +237,72 @@ def collect_recent_result_corroboration(
             target_fixtures.append(canonical)
     target_fixtures.sort(key=lambda row: row["kickoff_utc"], reverse=True)
     target_fixtures = target_fixtures[:20]
+
+    # Compare each selected team's completed Highlightly results with the
+    # primary provider's completed, score-valid fixtures. Unmatched records are
+    # review candidates only; they are never appended to prediction history.
+    team_history_coverage: dict[str, dict[str, Any]] = {}
+    for team_name in (home_team_name, away_team_name):
+        team_key = normalize_team_name(team_name)
+        primary_team = [
+            row for row in target_fixtures
+            if team_key in {
+                normalize_team_name(row["home"]["name"]),
+                normalize_team_name(row["away"]["name"]),
+            }
+        ]
+        secondary_team = []
+        seen_secondary: set[str] = set()
+        for row in highlightly_records:
+            if row.get("season") != int(season) or row.get("competition_key") != key:
+                continue
+            if team_key not in {
+                normalize_team_name(row.get("home", {}).get("name", "")),
+                normalize_team_name(row.get("away", {}).get("name", "")),
+            }:
+                continue
+            if row.get("status") != "finished" or row.get("home_score") is None or row.get("away_score") is None:
+                continue
+            source_id = str((row.get("source_ids") or {}).get("highlightly") or "")
+            identity_key = source_id or "|".join((
+                str(row.get("kickoff_utc") or ""),
+                normalize_team_name(row.get("home", {}).get("name", "")),
+                normalize_team_name(row.get("away", {}).get("name", "")),
+            ))
+            if identity_key in seen_secondary:
+                continue
+            seen_secondary.add(identity_key)
+            secondary_team.append(row)
+        secondary_team.sort(key=lambda row: str(row.get("kickoff_utc") or ""), reverse=True)
+        unmatched = [
+            row for row in secondary_team
+            if not any(match_identity(row, primary) for primary in primary_team)
+        ]
+        team_history_coverage[team_name] = {
+            "highlightly_completed_score_valid": len(secondary_team),
+            "sportmonks_completed_score_valid": len(primary_team),
+            "exact_matches_across_sources": len(secondary_team) - len(unmatched),
+            "highlightly_results_not_found_in_sportmonks": len(unmatched),
+            "latest_highlightly_completed_match": ({
+                "kickoff_utc": secondary_team[0].get("kickoff_utc"),
+                "home": secondary_team[0].get("home", {}).get("name"),
+                "away": secondary_team[0].get("away", {}).get("name"),
+                "score": [secondary_team[0].get("home_score"), secondary_team[0].get("away_score")],
+                "highlightly_match_id": (secondary_team[0].get("source_ids") or {}).get("highlightly"),
+            } if secondary_team else None),
+            "unmatched_completed_candidates": [{
+                "kickoff_utc": row.get("kickoff_utc"),
+                "home": row.get("home", {}).get("name"),
+                "away": row.get("away", {}).get("name"),
+                "score": [row.get("home_score"), row.get("away_score")],
+                "highlightly_match_id": (row.get("source_ids") or {}).get("highlightly"),
+                "review_status": "candidate_only_not_added_to_prediction_history",
+            } for row in unmatched[:5]],
+            "interpretation": (
+                "An unmatched Highlightly result is a review candidate, not an accepted extra match. "
+                "Exact competition, season, home/away teams and kickoff must match before joining."
+            ),
+        }
 
     all_alternates = home_records
     reconciled: list[dict[str, Any]] = []
@@ -307,6 +389,7 @@ def collect_recent_result_corroboration(
         "season": int(season),
         "sportmonks_fixtures_checked": len(target_fixtures),
         "provider_records_returned": provider_counts,
+        "team_history_coverage": team_history_coverage,
         "fixtures_matched_across_sources": len(reconciled),
         "fixtures_with_agreement": corroborated,
         "fixtures_with_conflicts": conflicts,
