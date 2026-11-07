@@ -22,12 +22,15 @@ Tactical sub-weights remain: playing style 6%, defensive structure 7%, attacking
 
 Provider roles are domain-specific. A provider is not assumed to be authoritative for every field.
 
-| Provider | Intended role | Important limitation |
-|---|---|---|
-| LiveScoreFootball public API | Primary fixtures, results and standings where verified coverage exists | Public documentation currently identifies England and Spain as its initial verified coverage; do not use it as a global source without verifying league coverage |
-| API Ninjas | Independent corroboration and fallback for fixtures, results, standings, clubs and squads | Does not provide the detailed fixture statistics, injuries or lineups required for all Layer 2 tactical/availability inputs |
-| Highlightly | Supplementary match detail, statistics and player data | Plan-dependent coverage, quotas and returned fields must be checked |
-| API-Football v3 | Supplementary fixture statistics, injuries and lineups; secondary fixtures/standings source | Competition/season coverage flags and plan limits must be checked before treating a missing field as a real absence |
+| Rank | Provider | Assigned role | Eligible data domains | Main limitation / activation gate |
+|---:|---|---|---|---|
+| 1 | **Sportmonks Football API v3** | Primary current-season source | Fixtures, results, standings, match statistics, injuries, lineups, players and squads, where returned | Account-enabled competitions/seasons only. Current-season Layer 2 path is active; selected competition still must pass history and data-quality checks. |
+| 2 | **Highlightly** | Independent current-season corroboration and secondary source | Fixtures, results, standings, statistics, injuries, lineups, players and squads, where explicitly supplied | Plan-dependent coverage, fields, quotas and refresh interval. Adapter, smoke test and canonical normalizer exist; records are not yet active in Layer 2 reconciliation. |
+| 3 | **API-Football v3** | Historical specialist source; secondary detail source where season access is confirmed | Fixtures, results, standings, statistics, injuries, lineups, players and squads | This account is limited to seasons 2022–2024. Current historical Layer 2 path is active; do not request unsupported newer seasons. |
+| 4 | **API Ninjas** | Independent fixtures/results/standings and club/squad corroboration | Fixtures, results, standings, clubs and squads | Current adapter does not supply detailed fixture statistics, injuries or lineups. Adapter, smoke test and canonical normalizer exist; records are not yet active in Layer 2 reconciliation. |
+| 5 | **LiveScoreFootball** | Conditional competition-specific corroboration | Fixtures, results and standings only | Database-backed snapshots can be delayed. Requires exact competition/season crosswalk and fresh sync metadata; automatic fallback remains disabled. |
+
+The rank is a practical role assignment, not a claim that one provider has universal coverage or is always freshest. Domain-specific priorities in `provider_core.py` remain authoritative. A source is eligible only when its account coverage, identity, timestamps and record validation pass.
 
 The provider clients must be optional. The application must continue to operate when one provider is not configured or is temporarily unavailable, provided minimum validated match-history requirements are met.
 
@@ -57,13 +60,28 @@ Canonical match identity should include competition, season, kickoff time, home 
 
 Do not join two fixtures solely because their numeric IDs match. Team aliases and competition IDs require an explicit cross-provider mapping table or a verified identity match.
 
-## Domain-specific priority
+## Domain-specific source priority
 
-- Fixtures/results/standings: LiveScoreFootball first only for leagues whose coverage has been verified; API Ninjas and Highlightly are independent corroboration/fallback sources. API-Football is an additional fallback.
-- Detailed match statistics: API-Football and Highlightly, subject to per-competition coverage. Missing statistics remain unknown.
-- Injuries/lineups: API-Football first where coverage is enabled; Highlightly may supplement only when the field is explicitly present and can be mapped to the correct fixture/team.
-- Player profile/statistics: Highlightly first; API Ninjas squad data and API-Football player data may supplement where supported.
-- Opponent strength: use a validated standings table from the same competition and season as the match. Never compare raw ranks across different competitions without normalization.
+The default priority is encoded in `provider_core.py`:
+
+| Data domain | Priority order |
+|---|---|
+| Fixtures, results, standings | Sportmonks → Highlightly → API Ninjas → API-Football; LiveScoreFootball is prepended only with explicit per-competition verification |
+| Match statistics | Sportmonks → Highlightly → API-Football |
+| Injuries | Sportmonks → Highlightly → API-Football |
+| Lineups | Sportmonks → Highlightly → API-Football |
+| Player profiles/statistics | Sportmonks → Highlightly → API-Football → API Ninjas |
+| Squads | Sportmonks → Highlightly → API Ninjas → API-Football |
+
+These priorities are selection order, not automatic permission to substitute. A provider must return the requested field for the exact fixture/competition/season, with valid identity and acceptable freshness. API Ninjas is not a statistics, injury or lineup source in the current adapter. LiveScoreFootball is never eligible for those domains. Opponent strength must use a validated standings table from the same competition and season; raw ranks from different competitions must not be compared without normalization.
+
+### Activation status (2026-11-07)
+
+- **Active prediction paths:** Sportmonks for current seasons after 2024; API-Football for historical seasons supported by the account (2022–2024).
+- **Diagnostic/canonicalization only:** Highlightly and API Ninjas. They are not yet wired into live Layer 2 field-level reconciliation.
+- **Conditional corroboration only:** LiveScoreFootball. It remains outside automatic Layer 2 fallback until exact competition, season, team identity and source freshness checks pass.
+- **Reconciliation foundation:** canonical normalizers and field-level conflict/provenance logic exist. The next integration milestone is to fetch records from each provider, apply validated crosswalks and timestamps, reconcile them, and surface provenance/conflicts in Streamlit.
+- **No model changes:** no provider issue authorizes changes to prediction weights, TVD rules, or 60/40 recency weighting. Missing data remains unknown; disagreements remain visible and are never averaged.
 
 ## Repository audit: blockers to fix before enabling the providers
 
