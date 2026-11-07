@@ -95,6 +95,36 @@ class SportmonksLayer2Tests(unittest.TestCase):
         self.assertEqual(quality["excluded_missing_scores"], 1)
         self.assertEqual(quality["history_shortfall"], 9)
 
+    def test_history_is_sorted_by_parsed_utc_kickoff_not_iso_text(self):
+        older = fixture(1, 10, 20, 1, 0)
+        older["starting_at"] = "2026-10-01T20:00:00+03:00"
+        newer = fixture(2, 10, 20, 2, 0)
+        # 18:30 UTC is later than the older fixture's 17:00 UTC despite
+        # the local clock text being earlier.
+        newer["starting_at"] = "2026-10-01T18:30:00Z"
+        newest = fixture(3, 10, 20, 3, 0)
+        newest["starting_at"] = "2026-10-02T10:00:00Z"
+        for row in (older, newer, newest):
+            row["collection_fetched_at"] = "2026-11-07T12:00:00+00:00"
+
+        profile = collect_sportmonks_team_profile(
+            {"id": 10, "name": "Home FC"}, 2026,
+            [older, newest, newer], [],
+        )
+        self.assertEqual([m["fixture_id"] for m in profile["matches"]], [3, 2, 1])
+        self.assertEqual(
+            profile["data_quality"]["history_order"],
+            "newest_first_by_parsed_utc_kickoff",
+        )
+        self.assertEqual(
+            profile["data_quality"]["history_collection_fetched_at"],
+            "2026-11-07T12:00:00+00:00",
+        )
+        self.assertTrue(all(
+            m["collection_fetched_at"] == "2026-11-07T12:00:00+00:00"
+            for m in profile["matches"]
+        ))
+
     def test_wrong_season_fixture_is_excluded(self):
         row = fixture(1, 10, 20, 1, 0)
         row["season_id"] = 999
