@@ -176,7 +176,7 @@ class SportmonksClient:
             "records_returned": len(rows),
             "metadata": dict(self.last_metadata),
             "fallback_enabled": False,
-            "note": "Connection verified; Sportmonks is not yet wired into Layer 2 prediction collection.",
+            "note": "Connection verified; Layer 2 integration is present. Selected competition and season coverage must still be validated before use.",
         }
 
     def close(self) -> None:
