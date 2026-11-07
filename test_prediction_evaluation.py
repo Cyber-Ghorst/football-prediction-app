@@ -70,6 +70,43 @@ class PredictionEvaluationTests(unittest.TestCase):
         report = evaluate_prediction_ledger([row])
         self.assertEqual(report["completed_pre_match_predictions"], 0)
 
+    def test_evaluator_recomputes_pre_kickoff_status_instead_of_trusting_csv_flag(self):
+        row = self._record()
+        row["prediction_before_kickoff"] = True
+        row["predicted_at"] = "2026-11-07T13:00:00+00:00"
+        row.update(actual_home_goals="2", actual_away_goals="0")
+        report = evaluate_prediction_ledger([row])
+        self.assertEqual(report["pre_match_predictions"], 0)
+        self.assertEqual(report["completed_pre_match_predictions"], 0)
+
+    def test_repeated_fixture_predictions_count_once_using_latest_pre_match_row(self):
+        earlier = self._record()
+        later = dict(earlier)
+        later["record_id"] = "later-record"
+        later["predicted_at"] = "2026-11-07T11:00:00+00:00"
+        later["model_home_win"] = 20
+        later["model_draw"] = 30
+        later["model_away_win"] = 50
+        earlier.update(actual_home_goals="2", actual_away_goals="0")
+        later.update(actual_home_goals="2", actual_away_goals="0")
+        report = evaluate_prediction_ledger([earlier, later])
+        self.assertEqual(report["pre_match_prediction_records"], 2)
+        self.assertEqual(report["pre_match_predictions"], 1)
+        self.assertEqual(report["duplicate_records_excluded"], 1)
+        self.assertEqual(report["model"]["matches"], 1)
+        self.assertEqual(report["model"]["accuracy_pct"], 0.0)
+
+    def test_snapshot_counts_recompute_timestamp_and_require_serialized_records(self):
+        row = self._record()
+        row["player_snapshot_before_kickoff"] = True
+        row["player_snapshot_at"] = "2026-11-07T13:00:00+00:00"
+        report = evaluate_prediction_ledger([row])
+        self.assertEqual(report["player_snapshots_pre_kickoff"], 0)
+        row["player_snapshot_at"] = "2026-11-07T09:30:00+00:00"
+        row["player_snapshot_players_json"] = "[]"
+        report = evaluate_prediction_ledger([row])
+        self.assertEqual(report["player_snapshots_pre_kickoff"], 0)
+
     def test_invalid_probability_sum_is_rejected(self):
         with self.assertRaises(ValueError):
             self._record(probabilities={"home_win": 60, "draw": 20, "away_win": 10})
