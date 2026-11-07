@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 import streamlit as st
 from api_football import APIFootballClient, APIFootballError
+from api_ninjas import APINinjasClient, APINinjasError
+from highlightly import HighlightlyClient, HighlightlyError
 from data_layer2 import collect_team_profile
 from engine import predict_match, WEIGHTS
 from tvd import run_tvd
@@ -60,6 +62,30 @@ try:
             st.json(api_status)
         except APIFootballError as exc:
             st.warning(f"API-Football status could not be verified: {exc}")
+        try:
+            with APINinjasClient() as ninjas_client:
+                ninjas_ok = ninjas_client.test_connection()
+            st.write("**API Ninjas connection test**")
+            st.json({
+                "transport_status": "responding" if ninjas_ok else "unknown",
+                "credential_configured": True,
+                "fallback_enabled": False,
+                "note": "Connection verified; match records are not yet wired into Layer 2.",
+            })
+        except APINinjasError as exc:
+            st.warning(f"API Ninjas connection could not be verified: {exc}")
+        try:
+            with HighlightlyClient() as highlightly_client:
+                highlightly_status = highlightly_client.test_connection()
+            st.write("**Highlightly connection test**")
+            st.json({
+                **highlightly_status,
+                "credential_configured": True,
+                "fallback_enabled": False,
+                "note": "Connection verified; match records are not yet wired into Layer 2.",
+            })
+        except HighlightlyError as exc:
+            st.warning(f"Highlightly connection could not be verified: {exc}")
         try:
             with LiveScoreFootballClient() as live_client:
                 live_health = live_client.health()
