@@ -139,8 +139,9 @@ def _score_records(records: Iterable[Mapping[str, Any]], prefix: str) -> dict[st
         briers.append(sum((pi - yi) ** 2 for pi, yi in zip(p, y)))
         actual_probability = probs["home_win"] if actual == "home" else probs["draw"] if actual == "draw" else probs["away_win"]
         log_losses.append(-log(max(actual_probability, 1e-15)))
-        picked = max(probs, key=probs.get)
-        confidence = probs[picked]
+        picked_key = max(probs, key=probs.get)
+        picked = {"home_win": "home", "draw": "draw", "away_win": "away"}[picked_key]
+        confidence = probs[picked_key]
         confidences.append(confidence)
         confidence_hits.append(1.0 if picked == actual else 0.0)
         correct.append(picked == actual)
