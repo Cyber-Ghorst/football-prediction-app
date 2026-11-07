@@ -1,28 +1,26 @@
- 
+
 """
 API Ninjas Football API Client
 Football Prediction App - Layer 2
 
-Compatible class names:
-    APIFootballClient
-    APIFootballError
+Provider: https://api.api-ninjas.com/v1
 
-API provider:
-    https://api.api-ninjas.com
+Compatible imports:
+    from api_football import APIFootballClient, APIFootballError
 
-Environment variable:
+Required secret:
     API_NINJAS_API_KEY
 """
 
 import os
-import requests
-
 from datetime import date, datetime, timedelta
 from typing import Any, Dict, List, Optional
 
+import requests
+
 
 class APIFootballError(Exception):
-    """Raised when API Ninjas requests fail."""
+    """Football API request error."""
     pass
 
 
@@ -30,39 +28,34 @@ class APIFootballClient:
 
     BASE_URL = "https://api.api-ninjas.com/v1"
 
-    # Competitions supported by API Ninjas
     LEAGUES = [
-        "epl",
-        "laliga",
-        "bundesliga",
-        "seriea",
-        "ligue1",
-        "ucl",
-        "uel",
-        "uecl",
-        "mls",
-        "championship",
-        "leagueone",
-        "leaguetwo",
-        "scottishpremiership",
-        "eredivisie",
-        "primeiraliga",
-        "superlig",
-        "belgianproleague",
-        "greeksuperleague",
-        "saudiproleague",
-        "brasileirao",
-        "ligamx",
-        "afcon",
-        "worldcup",
-        "friendlies",
+        {"id": "epl", "name": "Premier League"},
+        {"id": "laliga", "name": "La Liga"},
+        {"id": "bundesliga", "name": "Bundesliga"},
+        {"id": "seriea", "name": "Serie A"},
+        {"id": "ligue1", "name": "Ligue 1"},
+        {"id": "ucl", "name": "Champions League"},
+        {"id": "uel", "name": "Europa League"},
+        {"id": "uecl", "name": "Conference League"},
+        {"id": "mls", "name": "MLS"},
+        {"id": "championship", "name": "Championship"},
+        {"id": "eredivisie", "name": "Eredivisie"},
+        {"id": "primeiraliga", "name": "Primeira Liga"},
+        {"id": "scottishpremiership", "name": "Scottish Premiership"},
+        {"id": "superlig", "name": "Turkish Super Lig"},
+        {"id": "saudiproleague", "name": "Saudi Pro League"},
+        {"id": "brasileirao", "name": "Brasileirao"},
+        {"id": "ligamx", "name": "Liga MX"},
+        {"id": "afcon", "name": "Africa Cup of Nations"},
+        {"id": "worldcup", "name": "World Cup"},
     ]
 
     def __init__(
         self,
         api_key: Optional[str] = None,
-        timeout: int = 30
+        timeout: int = 25
     ):
+
         self.api_key = (
             api_key
             or os.getenv("API_NINJAS_API_KEY")
@@ -70,12 +63,25 @@ class APIFootballClient:
         )
 
         if not self.api_key:
+            try:
+                import streamlit as st
+
+                self.api_key = (
+                    st.secrets.get("API_NINJAS_API_KEY")
+                    or st.secrets.get("API_NINJAS_KEY")
+                )
+
+            except Exception:
+                self.api_key = None
+
+        if not self.api_key:
             raise APIFootballError(
-                "API Ninjas API key is missing. "
-                "Set API_NINJAS_API_KEY in your environment."
+                "API key missing. Configure API_NINJAS_API_KEY "
+                "in Streamlit Secrets."
             )
 
         self.timeout = timeout
+        self.last_warning = None
 
         self.session = requests.Session()
 
@@ -88,15 +94,16 @@ class APIFootballClient:
     # CORE REQUEST HANDLER
     # --------------------------------------------------
 
-        def _request(
+    def _request(
         self,
         endpoint: str,
         params: Optional[Dict[str, Any]] = None
-    ) -> List[Dict[str, Any]]:
+    ) -> Any:
 
-             url = f"{self.BASE_URL}/{endpoint}"
+        url = f"{self.BASE_URL}/{endpoint.lstrip('/')}"
 
         try:
+
             response = self.session.get(
                 url,
                 params=params or {},
@@ -104,7 +111,9 @@ class APIFootballClient:
             )
 
             if response.status_code == 401:
-                raise APIFootballError("Invalid API Ninjas API key.")
+                raise APIFootballError(
+                    "Invalid API key. Check API_NINJAS_API_KEY."
+                )
 
             if response.status_code == 403:
                 raise APIFootballError(
@@ -113,103 +122,111 @@ class APIFootballClient:
 
             if response.status_code == 429:
                 raise APIFootballError(
-                    "API request limit exceeded."
+                    "API request limit reached."
                 )
 
             response.raise_for_status()
-            data = response.json()
 
-            if isinstance(data, dict):
-                if "error" in data:
-                    raise APIFootballError(str(data["error"]))
+            return response.json()
 
-                return [data]
+        except APIFootballError:
+            raise
 
-            if isinstance(data, list):
-                invalid_items = [
-                    item for item in data
-                    if not isinstance(item, dict)
-                ]
-
-                if invalid_items:
-                    raise APIFootballError(
-                        "API returned records that are not "
-                        "JSON objects. Check the endpoint response."
-                    )
-
-                return data
-
+        except requests.RequestException as exc:
             raise APIFootballError(
-                "Unexpected API response format."
-            )
+                f"Football API connection failed: {exc}"
+            ) from exc
 
-        except requests.exceptions.Timeout:
+        except ValueError as exc:
             raise APIFootballError(
-                "API Ninjas request timed out."
-            )
+                "Football API returned invalid JSON."
+            ) from exc
 
-        except requests.exceptions.ConnectionError:
-            raise APIFootballError(
-                "Unable to connect to API Ninjas."
-            )
+    # --------------------------------------------------
+    # RESPONSE NORMALIZATION
+    # --------------------------------------------------
 
-        except requests.exceptions.HTTPError as exc:
-            message = (
-                exc.response.text[:500]
-                if exc.response is not None else ""
-            )
+    @staticmethod
+    def _as_list(data: Any) -> List[Dict[str, Any]]:
 
-            raise APIFootballError(
-                f"API HTTP error: {exc}. {message}"
-            )
+        if isinstance(data, list):
+            return [
+                item for item in data
+                if isinstance(item, dict)
+            ]
 
-        except ValueError:
-            raise APIFootballError(
-                "API Ninjas returned invalid JSON."
-            )
+        if isinstance(data, dict):
+
+            for key in (
+                "results",
+                "data",
+                "matches",
+                "standings",
+                "teams",
+                "players"
+            ):
+
+                value = data.get(key)
+
+                if isinstance(value, list):
+                    return [
+                        item for item in value
+                        if isinstance(item, dict)
+                    ]
+
+            return [data]
+
+        return []
+
+    @staticmethod
+    def _normalize_match(match: Dict[str, Any]) -> Dict[str, Any]:
+
+        result = dict(match)
+
+        home = result.get("home_team")
+        away = result.get("away_team")
+
+        if isinstance(home, dict):
+            result["home_team_name"] = home.get("name")
+        elif home is not None:
+            result["home_team_name"] = str(home)
+
+        if isinstance(away, dict):
+            result["away_team_name"] = away.get("name")
+        elif away is not None:
+            result["away_team_name"] = str(away)
+
+        result.setdefault("fixture_id", result.get("game_id"))
+        result.setdefault("id", result.get("game_id"))
+
+        return result
 
     # --------------------------------------------------
     # LEAGUES
     # --------------------------------------------------
 
-    def leagues(self, season=None):
-        """
-        Return league objects compatible with app.py.
-        """
+    def leagues(self, season: Optional[int] = None):
 
-        return [
-          {
-            "id": league,
-            "name": league.upper(),
-            "code": league
-          }
-        for league in self.LEAGUES
-    ]
+        return [dict(league) for league in self.LEAGUES]
 
-    def get_leagues(self, season=None):
+    def get_leagues(self, season: Optional[int] = None):
+
         return self.leagues(season)
+
     # --------------------------------------------------
-    # MATCHES / FIXTURES
+    # MATCHES AND FIXTURES
     # --------------------------------------------------
 
     def matches(
         self,
         league: Optional[str] = None,
-        date: Optional[str] = None,
+        date: Optional[Any] = None,
         team: Optional[str] = None,
         season: Optional[int] = None,
-        status: Optional[str] = None,
         game_id: Optional[str] = None,
-        offset: int = 0
-    ) -> List[Dict[str, Any]]:
-        """
-        Retrieve fixtures, live scores and completed matches.
-
-        Supply at least one of:
-            league, team or game_id.
-
-        Date format: YYYY-MM-DD
-        """
+        status: Optional[str] = None,
+        **kwargs
+    ):
 
         params = {}
 
@@ -217,7 +234,13 @@ class APIFootballClient:
             params["league"] = league
 
         if date:
-            params["date"] = date
+            if isinstance(date, (datetime,)):
+                date = date.date()
+
+            if isinstance(date, date):
+                date = date.isoformat()
+
+            params["date"] = str(date)
 
         if team:
             params["team"] = team
@@ -225,27 +248,39 @@ class APIFootballClient:
         if season is not None:
             params["season"] = season
 
-        if status:
-            params["status"] = status
-
         if game_id:
             params["game_id"] = game_id
 
-        if offset:
-            params["offset"] = offset
+        if status:
+            params["status"] = status
 
-        if not any([league, team, game_id]):
-            raise APIFootballError(
-                "A league, team or game_id is required."
-            )
+        params.update({
+            key: value
+            for key, value in kwargs.items()
+            if value is not None
+        })
 
-        return self._request(
+        data = self._request(
             "soccermatches",
             params
         )
 
-    def get_matches(self, **kwargs):
-        return self.matches(**kwargs)
+        return [
+            self._normalize_match(match)
+            for match in self._as_list(data)
+        ]
+
+    def get_matches(self, *args, **kwargs):
+
+        return self.matches(*args, **kwargs)
+
+    def fixtures(self, *args, **kwargs):
+
+        return self.matches(*args, **kwargs)
+
+    def get_fixtures(self, *args, **kwargs):
+
+        return self.matches(*args, **kwargs)
 
     # --------------------------------------------------
     # UPCOMING MATCHES
@@ -255,57 +290,67 @@ class APIFootballClient:
         self,
         league: str = "epl",
         days: int = 7,
-        date_from: Optional[str] = None,
+        date_from: Optional[Any] = None,
         season: Optional[int] = None
     ):
 
-        if days < 1 or days > 31:
+        if not league:
             raise APIFootballError(
-                "Days must be between 1 and 31."
+                "League identifier is required."
             )
 
-        if date_from:
-            try:
-                start = datetime.strptime(
-                    date_from, "%Y-%m-%d"
-                ).date()
-            except ValueError:
-                raise APIFootballError(
-                    "date_from must use YYYY-MM-DD format."
-                )
+        if isinstance(date_from, datetime):
+            start_date = date_from.date()
+
+        elif isinstance(date_from, date):
+            start_date = date_from
+
+        elif date_from:
+            start_date = date.fromisoformat(str(date_from))
+
         else:
-            start = datetime.today().date()
+            start_date = date.today()
 
-        all_matches = []
+        days = max(1, min(int(days), 60))
 
-        for day_number in range(days):
+        collected = {}
 
-            match_date = (
-                start + timedelta(days=day_number)
-            ).isoformat()
+        for offset in range(days):
 
-            results = self.matches(
+            match_date = start_date + timedelta(days=offset)
+
+            daily_matches = self.matches(
                 league=league,
-                date=match_date,
+                date=match_date.isoformat(),
                 season=season
             )
 
-            for match in results:
-                if isinstance(match, dict):
-                    all_matches.append(match)
+            for match in daily_matches:
 
-        unique_matches = {}
+                game_id = (
+                    match.get("game_id")
+                    or match.get("fixture_id")
+                )
 
-        for match in all_matches:
-            game_id = match.get("game_id")
+                if game_id:
+                    collected[str(game_id)] = match
 
-            if game_id:
-                unique_matches[game_id] = match
+        results = list(collected.values())
 
-        return sorted(
-            unique_matches.values(),
-            key=lambda match: match.get("start_time") or ""
+        results.sort(
+            key=lambda x: str(
+                x.get("start_time") or x.get("date") or ""
+            )
         )
+
+        return [
+            match for match in results
+            if match.get("status") == "scheduled"
+        ]
+
+    def get_upcoming_matches(self, *args, **kwargs):
+
+        return self.upcoming_matches(*args, **kwargs)
 
     # --------------------------------------------------
     # TEAM MATCH HISTORY
@@ -316,57 +361,107 @@ class APIFootballClient:
         team: str,
         season: Optional[int] = None,
         league: Optional[str] = None
-    ) -> List[Dict[str, Any]]:
+    ):
 
         if not team:
             raise APIFootballError(
-                "Team identifier is required."
+                "Team name or team ID is required."
             )
 
-        matches = self.matches(
-            team=team,
-            season=season
-        )
+        params = {
+            "team": team
+        }
+
+        if season is not None:
+            params["season"] = season
 
         if league:
-            matches = [
-                match for match in matches
-                if match.get("league") == league
-            ]
+            params["league"] = league
 
-        return sorted(
-            matches,
-            key=lambda match: match.get("start_time", "")
+        data = self._request(
+            "soccermatches",
+            params
         )
 
-    def get_team_matches(self, team, season=None):
-        return self.team_matches(
+        results = [
+            self._normalize_match(match)
+            for match in self._as_list(data)
+        ]
+
+        results.sort(
+            key=lambda x: str(
+                x.get("start_time") or x.get("date") or ""
+            )
+        )
+
+        return results
+
+    def get_team_matches(self, *args, **kwargs):
+
+        return self.team_matches(*args, **kwargs)
+
+    def last_fixtures(
+        self,
+        team: str,
+        count: int = 10,
+        league: Optional[str] = None,
+        season: Optional[int] = None
+    ):
+
+        fixtures = self.team_matches(
             team=team,
+            league=league,
             season=season
         )
 
-    # --------------------------------------------------
-    # SINGLE MATCH
-    # --------------------------------------------------
+        completed = [
+            match for match in fixtures
+            if match.get("status") == "final"
+        ]
 
-    def match_details(
+        completed.reverse()
+
+        return completed[:max(1, int(count))]
+
+    def next_fixture(
         self,
-        game_id: str
-    ) -> Optional[Dict[str, Any]]:
+        team: str,
+        league: Optional[str] = None,
+        season: Optional[int] = None
+    ):
 
-        if not game_id:
-            raise APIFootballError(
-                "Game ID is required."
-            )
-
-        results = self.matches(
-            game_id=game_id
+        fixtures = self.team_matches(
+            team=team,
+            league=league,
+            season=season
         )
 
-        return results[0] if results else None
+        upcoming = [
+            match for match in fixtures
+            if match.get("status") == "scheduled"
+        ]
+
+        return upcoming[0] if upcoming else None
+
+    def match_details(self, game_id: str):
+
+        if not game_id:
+            raise APIFootballError("Game ID is required.")
+
+        data = self._request(
+            "soccermatches",
+            {"game_id": game_id}
+        )
+
+        results = self._as_list(data)
+
+        if not results:
+            return None
+
+        return self._normalize_match(results[0])
 
     # --------------------------------------------------
-    # LEAGUE STANDINGS
+    # STANDINGS
     # --------------------------------------------------
 
     def standings(
@@ -375,11 +470,11 @@ class APIFootballClient:
         season: Optional[int] = None,
         tournament: Optional[str] = None,
         conference: Optional[str] = None
-    ) -> List[Dict[str, Any]]:
+    ):
 
         if not league:
             raise APIFootballError(
-                "League is required for standings."
+                "League identifier is required."
             )
 
         params = {
@@ -395,16 +490,16 @@ class APIFootballClient:
         if conference:
             params["conference"] = conference
 
-        return self._request(
+        data = self._request(
             "soccerstandings",
             params
         )
 
-    def get_standings(self, league, season=None):
-        return self.standings(
-            league=league,
-            season=season
-        )
+        return self._as_list(data)
+
+    def get_standings(self, *args, **kwargs):
+
+        return self.standings(*args, **kwargs)
 
     # --------------------------------------------------
     # CLUBS / TEAMS
@@ -415,7 +510,7 @@ class APIFootballClient:
         league: Optional[str] = None,
         team: Optional[str] = None,
         active: Optional[bool] = None
-    ) -> List[Dict[str, Any]]:
+    ):
 
         params = {}
 
@@ -425,19 +520,23 @@ class APIFootballClient:
         if team:
             params["team"] = team
 
-        if active is not None:
-            params["active"] = str(active).lower()
+        if active is False:
+            params["active"] = "false"
 
-        return self._request(
+        data = self._request(
             "soccerclubs",
             params
         )
 
-    def get_clubs(self, league=None, team=None):
-        return self.clubs(
-            league=league,
-            team=team
-        )
+        return self._as_list(data)
+
+    def get_clubs(self, *args, **kwargs):
+
+        return self.clubs(*args, **kwargs)
+
+    def teams(self, *args, **kwargs):
+
+        return self.clubs(*args, **kwargs)
 
     # --------------------------------------------------
     # PLAYERS / SQUADS
@@ -449,9 +548,8 @@ class APIFootballClient:
         team: Optional[str] = None,
         name: Optional[str] = None,
         player_id: Optional[str] = None,
-        position: Optional[str] = None,
-        offset: int = 0
-    ) -> List[Dict[str, Any]]:
+        position: Optional[str] = None
+    ):
 
         params = {}
 
@@ -470,27 +568,22 @@ class APIFootballClient:
         if position:
             params["position"] = position
 
-        if offset:
-            params["offset"] = offset
-
-        if not any([team, name, player_id]):
-            raise APIFootballError(
-                "Provide a team, player name or player_id."
-            )
-
-        return self._request(
+        data = self._request(
             "soccerplayers",
             params
         )
 
-    def get_players(self, **kwargs):
-        return self.players(**kwargs)
+        return self._as_list(data)
+
+    def get_players(self, *args, **kwargs):
+
+        return self.players(*args, **kwargs)
 
     def team_squad(
         self,
         team: str,
         league: Optional[str] = None
-    ) -> List[Dict[str, Any]]:
+    ):
 
         return self.players(
             team=team,
@@ -498,26 +591,80 @@ class APIFootballClient:
         )
 
     # --------------------------------------------------
+    # LAYER 2 OPTIONAL DATA
+    # --------------------------------------------------
+
+    def fixture_statistics(self, fixture_id: Any):
+
+        self.last_warning = (
+            "API Ninjas does not currently provide detailed "
+            "fixture statistics such as possession, shots and corners."
+        )
+
+        return []
+
+    def get_fixture_statistics(self, fixture_id: Any):
+
+        return self.fixture_statistics(fixture_id)
+
+    def injuries(
+        self,
+        team: Optional[str] = None,
+        fixture_id: Any = None
+    ):
+
+        self.last_warning = (
+            "Injury reports are not available through the "
+            "current API Ninjas football endpoints."
+        )
+
+        return []
+
+    def get_injuries(self, *args, **kwargs):
+
+        return self.injuries(*args, **kwargs)
+
+    def fixture_lineups(self, fixture_id: Any):
+
+        self.last_warning = (
+            "Confirmed match lineups are not available through "
+            "the current API Ninjas football endpoints."
+        )
+
+        return []
+
+    def get_lineups(self, fixture_id: Any):
+
+        return self.fixture_lineups(fixture_id)
+
+    # --------------------------------------------------
     # CONNECTION TEST
     # --------------------------------------------------
 
-    def test_connection(self) -> bool:
-        """
-        Tests the API connection using the clubs endpoint.
-        """
+    def test_connection(self):
 
-        try:
-            self.clubs(
-                league="epl"
-            )
-            return True
+        self._request(
+            "soccermatches",
+            {
+                "league": "epl",
+                "date": date.today().isoformat()
+            }
+        )
 
-        except APIFootballError:
-            return False
+        return True
 
     # --------------------------------------------------
-    # CLEANUP
+    # CLOSE CONNECTION
     # --------------------------------------------------
 
     def close(self):
+
         self.session.close()
+
+    def __enter__(self):
+
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+
+        self.close()
