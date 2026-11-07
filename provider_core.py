@@ -13,16 +13,19 @@ from typing import Any, Iterable
 
 # LiveScoreFootball is deliberately absent from the default order. Its public
 # catalogue is only eligible for a competition after exact name/country,
-# active-state, stored-data and season checks have passed.
+# active-state, stored-data and season checks have passed. Sportmonks is the
+# intended current-season primary source once that exact league is enabled in
+# the account and match-level coverage has been validated. API-Football remains
+# a historical/secondary source within the seasons allowed by its subscription.
 PROVIDER_ORDER = {
-    "fixtures": ("api_ninjas", "highlightly", "api_football"),
-    "results": ("api_ninjas", "highlightly", "api_football"),
-    "standings": ("api_ninjas", "highlightly", "api_football"),
-    "statistics": ("api_football", "highlightly"),
-    "injuries": ("api_football", "highlightly"),
-    "lineups": ("api_football", "highlightly"),
-    "players": ("highlightly", "api_football", "api_ninjas"),
-    "squads": ("api_ninjas", "highlightly", "api_football"),
+    "fixtures": ("sportmonks", "highlightly", "api_ninjas", "api_football"),
+    "results": ("sportmonks", "highlightly", "api_ninjas", "api_football"),
+    "standings": ("sportmonks", "highlightly", "api_ninjas", "api_football"),
+    "statistics": ("sportmonks", "highlightly", "api_football"),
+    "injuries": ("sportmonks", "highlightly", "api_football"),
+    "lineups": ("sportmonks", "highlightly", "api_football"),
+    "players": ("sportmonks", "highlightly", "api_football", "api_ninjas"),
+    "squads": ("sportmonks", "highlightly", "api_ninjas", "api_football"),
 }
 
 
