@@ -1,0 +1,62 @@
+import unittest
+from datetime import datetime, timedelta, timezone
+
+from provider_core import Observation, resolve_field, match_identity_key
+
+
+NOW = datetime(2026, 11, 7, 12, 0, tzinfo=timezone.utc)
+
+
+class ProviderCoreTests(unittest.TestCase):
+    def obs(self, provider, value, **kwargs):
+        return Observation(provider=provider, value=value, fetched_at=NOW, **kwargs)
+
+    def test_primary_provider_wins_without_averaging_conflicts(self):
+        result = resolve_field("results", [
+            self.obs("api_ninjas", {"home": 2, "away": 1}),
+            self.obs("livescore_football", {"home": 1, "away": 1}),
+        ], now=NOW)
+        self.assertEqual(result.value, {"home": 1, "away": 1})
+        self.assertEqual(result.provider, "livescore_football")
+        self.assertEqual(result.status, "conflict")
+        self.assertEqual(result.conflicting_providers, ("api_ninjas",))
+
+    def test_agreement_is_reported_as_corroborated(self):
+        result = resolve_field("standings", [
+            self.obs("api_ninjas", 1),
+            self.obs("livescore_football", 1),
+        ], now=NOW)
+        self.assertEqual(result.value, 1)
+        self.assertEqual(result.status, "corroborated")
+        self.assertEqual(result.corroborating_providers, ("api_ninjas",))
+
+    def test_statistics_use_api_football_priority(self):
+        result = resolve_field("statistics", [
+            self.obs("highlightly", 14),
+            self.obs("api_football", 12),
+        ], now=NOW)
+        self.assertEqual(result.value, 12)
+        self.assertEqual(result.provider, "api_football")
+        self.assertEqual(result.status, "conflict")
+
+    def test_invalid_null_and_stale_values_are_excluded(self):
+        result = resolve_field("results", [
+            self.obs("livescore_football", None),
+            Observation("api_ninjas", 3, NOW - timedelta(days=4)),
+            Observation("highlightly", 2, NOW, valid=False),
+        ], now=NOW, max_age_seconds=3600)
+        self.assertIsNone(result.value)
+        self.assertEqual(result.status, "unknown")
+
+    def test_unknown_provider_is_not_used(self):
+        result = resolve_field("results", [self.obs("unknown_source", 4)], now=NOW)
+        self.assertIsNone(result.value)
+
+    def test_match_identity_normalizes_team_names_and_timezone(self):
+        a = match_identity_key("EPL", 2026, "2026-11-07T15:00:30Z", "Arsenal FC", "Chelsea")
+        b = match_identity_key("epl", "2026", "2026-11-07T15:00:00+00:00", "arsenal-fc", "Chelsea")
+        self.assertEqual(a, b)
+
+
+if __name__ == "__main__":
+    unittest.main()
