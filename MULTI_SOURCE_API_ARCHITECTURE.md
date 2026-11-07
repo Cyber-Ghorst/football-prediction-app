@@ -344,3 +344,11 @@ An opt-in diagnostic path now uses the exact selected-fixture Highlightly lineup
 - The app does not scrape Opta, reverse engineer its proprietary model, or copy its probabilities into our model inputs.
 - Licensed Opta data feeds/APIs remain a later commercial integration option, subject to coverage, demo access, pricing, redistribution rights and written licensing terms.
 - Benchmark scores are reported only on the same fixture set as our own forecasts.
+
+
+### Snapshot validation coverage correction (2026-11-07)
+- Player-level and team-season statistics are now counted separately in the prediction ledger.
+- A team-only statistics response cannot be mislabeled as a player-stat snapshot.
+- Both snapshot types must have completed before the selected fixture kickoff to count toward pre-match coverage.
+- API request counters increment when a request is attempted, including failed calls, so quota diagnostics do not undercount exceptions.
+- The app reports player-stat and team-season snapshot counts independently.
