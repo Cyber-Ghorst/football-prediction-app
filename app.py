@@ -299,23 +299,22 @@ try:
         with st.spinner("Collecting recent results, standings and available match statistics..."):
             if sportmonks_mode:
                 try:
-                    try:
-                        standings = get_sm_standings(selected_season_id)
-                    except SportmonksError as exc:
-                        st.error(f"Sportmonks standings collection failed: {exc}")
-                        st.stop()
-                    try:
-                        fixtures = get_sm_fixtures(
-                            selected_season_id,
-                            include_stats,
-                            [
-                                int(team_map[home_name]["id"]),
-                                int(team_map[away_name]["id"]),
-                            ],
-                        )
-                    except SportmonksError as exc:
-                        st.error(f"Sportmonks fixture collection failed: {exc}")
-                        st.stop()
+                    standings = get_sm_standings(selected_season_id)
+                except SportmonksError as exc:
+                    st.error(f"Sportmonks standings collection failed: {exc}")
+                    st.stop()
+                try:
+                    fixtures = get_sm_fixtures(
+                        selected_season_id,
+                        include_stats,
+                        [
+                            int(team_map[home_name]["id"]),
+                            int(team_map[away_name]["id"]),
+                        ],
+                    )
+                except SportmonksError as exc:
+                    st.error(f"Sportmonks fixture collection failed: {exc}")
+                    st.stop()
                 home = collect_sportmonks_team_profile(team_map[home_name], selected_season_id, fixtures, standings)
                 away = collect_sportmonks_team_profile(team_map[away_name], selected_season_id, fixtures, standings)
 
