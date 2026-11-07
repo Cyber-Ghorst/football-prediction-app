@@ -293,7 +293,7 @@ try:
                             away["availability"] = match_details["availability"]["away"]
                         else:
                             st.info("Sportmonks returned no detail record for the exact selected fixture; lineups and player availability remain unknown.")
-                    except (SportmonksError, ValueError) as exc:
+                    except Exception as exc:
                         st.warning(f"Fixture-specific Sportmonks lineups/sidelined data unavailable: {exc}. Prediction inputs remain unchanged.")
                 else:
                     st.info("No exact upcoming Sportmonks fixture was found for this home/away pairing. Lineups and player availability remain unknown.")
