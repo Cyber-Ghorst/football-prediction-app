@@ -442,7 +442,7 @@ try:
                                 with st.expander("Team season statistics"):
                                     st.json(player_report.get("teams", {}))
                                 if player_report.get("unknown_players"):
-                                    st.info({"players_without_exact_statistics": player_report["unknown_players"]})
+                                    st.json({"players_without_exact_statistics": player_report["unknown_players"]})
                                 if player_report.get("errors"):
                                     st.warning(player_report["errors"])
                             except Exception as exc:
