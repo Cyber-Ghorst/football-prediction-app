@@ -171,6 +171,35 @@ class ProviderCorroborationTests(unittest.TestCase):
         )
         self.assertEqual(len(report["matches"]), 1)
 
+    def test_documented_top_level_country_object_is_accepted(self):
+        row = highlightly_match()
+        row["country"] = {"code": "GB", "name": "England", "logo": ""}
+        del row["league"]["country"]
+        report = collect_recent_result_corroboration(
+            sportmonks_fixtures=[sportmonks_fixture()],
+            competition="Premier League", country="England", season=2026,
+            home_team_name="Arsenal", away_team_name="Chelsea",
+            highlightly_client=FakeHighlightly([row]), now=NOW,
+        )
+        self.assertEqual(report["provider_records_returned"]["highlightly"], 1)
+        self.assertEqual(report["highlightly_diagnostics"]["rejected_country_missing"], 0)
+        self.assertEqual(report["highlightly_diagnostics"]["rejected_country_mismatch"], 0)
+        self.assertEqual(report["highlightly_diagnostics"]["completed_score_valid_records"], 1)
+
+    def test_documented_top_level_country_mismatch_is_rejected(self):
+        row = highlightly_match()
+        row["country"] = {"code": "ES", "name": "Spain", "logo": ""}
+        del row["league"]["country"]
+        report = collect_recent_result_corroboration(
+            sportmonks_fixtures=[sportmonks_fixture()],
+            competition="Premier League", country="England", season=2026,
+            home_team_name="Arsenal", away_team_name="Chelsea",
+            highlightly_client=FakeHighlightly([row]), now=NOW,
+        )
+        self.assertEqual(report["provider_records_returned"]["highlightly"], 0)
+        self.assertEqual(report["highlightly_diagnostics"]["rejected_country_mismatch"], 1)
+        self.assertEqual(report["highlightly_diagnostics"]["rejected_country_missing"], 0)
+
     def test_wrong_country_or_competition_is_not_joined(self):
         highlightly = FakeHighlightly([highlightly_match(country="Spain")])
         report = collect_recent_result_corroboration(
