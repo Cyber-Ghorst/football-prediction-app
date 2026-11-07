@@ -17,7 +17,7 @@ class Layer2NormalizationTests(unittest.TestCase):
         }]
         result = _standings_rank_map(rows)
         self.assertEqual(result[10], 100.0)
-        self.assertEqual(result[20], 200.0 / 3)
+        self.assertAlmostEqual(result[20], 200.0 / 3)
         self.assertAlmostEqual(result[30], 100.0 / 3)
 
     def test_non_final_fixtures_are_excluded(self):
