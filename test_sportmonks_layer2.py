@@ -71,6 +71,39 @@ class SportmonksLayer2Tests(unittest.TestCase):
         self.assertEqual(profile["matches"][0]["statistics_provenance"][0]["fixture_id"], 6)
         self.assertIsNone(profile["player_availability"])
 
+    def test_history_collection_diagnostics_explain_fixture_exclusions(self):
+        valid = fixture(1, 10, 20, 2, 1)
+        wrong_season = fixture(2, 10, 20, 1, 0)
+        wrong_season["season_id"] = 2025
+        missing_participants = {"id": 3, "season_id": 2026, "participants": []}
+        other_team = fixture(4, 30, 40, 1, 0)
+        not_completed = fixture(5, 10, 20, 0, 0, state="NS")
+        missing_scores = fixture(6, 10, 20, 1, 0)
+        missing_scores["scores"] = []
+        missing_season_id = fixture(7, 10, 20, 3, 2)
+        missing_season_id.pop("season_id")
+
+        profile = collect_sportmonks_team_profile(
+            {"id": 10, "name": "Home FC"},
+            2026,
+            [valid, wrong_season, missing_participants, other_team,
+             not_completed, missing_scores, missing_season_id],
+            [],
+        )
+        report = profile["history_collection_diagnostics"]
+        self.assertEqual(report["fixtures_scanned"], 7)
+        self.assertEqual(report["same_season_fixtures"], 5)
+        self.assertEqual(report["season_eligible_fixtures"], 6)
+        self.assertEqual(report["fixtures_missing_season_id"], 1)
+        self.assertEqual(report["team_fixtures"], 4)
+        self.assertEqual(report["completed_fixtures"], 3)
+        self.assertEqual(report["fixtures_with_valid_scores"], 2)
+        self.assertEqual(report["excluded_wrong_season"], 1)
+        self.assertEqual(report["excluded_missing_participants"], 1)
+        self.assertEqual(report["excluded_other_team"], 1)
+        self.assertEqual(report["excluded_not_completed"], 1)
+        self.assertEqual(report["excluded_missing_scores"], 1)
+
     def test_statistics_are_team_specific(self):
         row = fixture(1, 10, 20, 1, 0)
         profile = collect_sportmonks_team_profile({"id": 10, "name": "Home FC"}, 2026, [row], [])
