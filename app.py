@@ -5,6 +5,7 @@ import streamlit as st
 from api_football import APIFootballClient, APIFootballError
 from api_ninjas import APINinjasClient, APINinjasError
 from highlightly import HighlightlyClient, HighlightlyError
+from sportmonks import SportmonksClient, SportmonksError
 from data_layer2 import collect_team_profile
 from engine import predict_match, WEIGHTS
 from tvd import run_tvd
@@ -86,6 +87,17 @@ try:
             })
         except HighlightlyError as exc:
             st.warning(f"Highlightly connection could not be verified: {exc}")
+        try:
+            with SportmonksClient() as sportmonks_client:
+                sportmonks_status = sportmonks_client.test_connection()
+            st.write("**Sportmonks Football API v3 connection test**")
+            st.json({
+                **sportmonks_status,
+                "credential_configured": True,
+                "current_season_primary": "candidate; validate selected league and season before use",
+            })
+        except SportmonksError as exc:
+            st.warning(f"Sportmonks connection could not be verified: {exc}")
         try:
             with LiveScoreFootballClient() as live_client:
                 live_health = live_client.health()
