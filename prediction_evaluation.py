@@ -107,7 +107,12 @@ def build_prediction_record(
         "player_snapshot_at": snapshot.get("fetched_at") or "",
         "player_snapshot_before_kickoff": bool(
             kickoff and snapshot_at and snapshot_at < kickoff
-            and snapshot.get("availability") == "collected"
+            and bool(snapshot.get("players"))
+        ),
+        "team_snapshot_before_kickoff": bool(
+            kickoff and snapshot_at and snapshot_at < kickoff
+            and any(team.get("season_statistics") for team in
+                    (snapshot.get("teams") or {}).values())
         ),
         "player_snapshot_availability": snapshot.get("availability", "unknown"),
         "player_records_count": len(snapshot.get("players") or []),
@@ -175,11 +180,16 @@ def evaluate_prediction_ledger(records: Iterable[Mapping[str, Any]]) -> dict[str
     player_snapshots = [row for row in eligible if str(
         row.get("player_snapshot_before_kickoff", "")
     ).lower() in ("true", "1")]
+    team_snapshots = [row for row in eligible if str(
+        row.get("team_snapshot_before_kickoff", "")
+    ).lower() in ("true", "1")]
     return {
         "records_total": len(rows),
         "pre_match_predictions": len(eligible),
         "completed_pre_match_predictions": len(completed),
         "player_snapshots_pre_kickoff": len(player_snapshots),
+        "team_snapshots_pre_kickoff": len(team_snapshots),
+        "team_snapshot_competitions": len({str(row.get("competition") or "") for row in team_snapshots}),
         "player_snapshot_competitions": len({
             str(row.get("competition") or "") for row in player_snapshots
         }),
