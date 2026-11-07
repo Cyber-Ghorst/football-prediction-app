@@ -44,3 +44,8 @@ See MULTI_SOURCE_API_ARCHITECTURE.md for provider responsibilities, reconciliati
 ## LiveScoreFootball read-only source
 
 The project includes a read-only adapter for the public [LiveScoreFootball API](https://github.com/rezarahiminia/livescoreFootball), hosted at https://worldcup26.ir. Its documented public endpoints currently require no API key. Set LIVESCORE_FOOTBALL_BASE_URL only when using a different compatible deployment. The API reads stored MongoDB snapshots fed by a separate listener, so it is not a guaranteed real-time feed. Current documented coverage focuses on verified England and Spain competitions. The adapter is implemented but is not yet enabled as an automatic Layer 2 fallback. See MULTI_SOURCE_API_ARCHITECTURE.md.
+
+
+## Canonical provider reconciliation
+
+The repository now includes `canonical_data.py`, which normalizes LiveScoreFootball and API-Football v3 match records into a common schema and reconciles matched fields with provider priority and conflict provenance. Cross-provider matching requires an explicit shared competition key, season, home/away team identity and a close kickoff time. Source IDs remain namespaced. The layer is covered by `test_canonical_data.py` and is not yet enabled as automatic fallback in the Streamlit app pending verified competition mappings and source freshness checks.
