@@ -173,3 +173,14 @@ No fuzzy matching is used. Ambiguous, inactive, empty, missing-season or mismatc
 The crosswalk and health diagnostics are implemented and unit-tested. The app still uses API-Football as its active Layer 2 data provider. LiveScoreFootball is not yet used as a fallback because match-level source timestamps, team identity mapping, and canonical record validation must be applied to each candidate match before integration. API Ninjas and Highlightly remain isolated adapters. This is deliberate: no provider is promoted on catalogue presence alone.
 
 The prediction engine, Layer 1 behavior, `tvd.py`, all existing component weights, and 60/40 recency weighting remain unchanged.
+
+
+## Provider diagnostics and canonical adapter milestone (2026-11-07)
+
+- The Streamlit provider health action now performs authenticated smoke tests for API Ninjas and Highlightly in addition to the existing API-Football and LiveScoreFootball checks. The checks report transport/HTTP metadata only; they do not expose credentials or imply that the providers are already used for prediction inputs.
+- API Ninjas and Highlightly match records now have separate canonical normalizers. API Ninjas uses its documented UTC `start_time`, namespaced `game_id` and team IDs, status, and score fields. Highlightly uses its documented match `date`, `homeTeam`, `awayTeam`, `league.season`, state description, and displayed current score.
+- Source update timestamps remain unknown when a provider does not supply them; scheduled kickoff is never mislabelled as a source-update timestamp.
+- API Ninjas date handling was corrected for both Python `date` inputs and its connection test.
+- Canonical reconciliation now requires an explicit `livescore_verified=True` signal before LiveScoreFootball can take priority. The default resolver excludes LiveScoreFootball, so catalogue presence alone cannot activate it.
+- Unit tests were added for the two new match normalizers, unknown scores, strict identity matching, provider connection diagnostics, and the LiveScore verification gate.
+- API Ninjas and Highlightly remain diagnostic/canonicalization sources only at this milestone. They are not yet wired to replace Layer 2's API-Football histories. The next integration step is runtime competition/team matching and field-level corroboration with provenance, followed by end-to-end tests. Prediction weights, recency weighting, and TVD remain unchanged.
