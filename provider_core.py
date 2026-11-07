@@ -153,7 +153,7 @@ def normalize_team_name(name: str) -> str:
     """Conservative display-name normalization for candidate matching only."""
     import re
     normalized = re.sub(r"[^a-z0-9]+", " ", str(name).casefold()).strip()
-    return re.sub(r"\\s+", " ", normalized)
+    return re.sub(r"\s+", " ", normalized)
 
 
 def match_identity_key(
