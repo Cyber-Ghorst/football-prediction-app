@@ -75,7 +75,29 @@ class HighlightlyClient:
         return self._rows(self._get("teams", params))
 
     def matches(self, **params: Any) -> list[dict[str, Any]]:
-        return self._rows(self._get("matches", params))
+        payload = self._get("matches", params)
+        rows = self._rows(payload)
+        if isinstance(payload, list):
+            envelope = "top_level_list"
+            data_type = None
+            top_level_keys: list[str] = []
+        elif isinstance(payload, dict):
+            data = payload.get("data")
+            envelope = "data_list" if isinstance(data, list) else "unrecognized"
+            data_type = type(data).__name__ if "data" in payload else None
+            top_level_keys = sorted(str(key) for key in payload.keys())
+        else:
+            envelope = "unrecognized"
+            data_type = None
+            top_level_keys = []
+        self.last_metadata.update({
+            "response_payload_type": type(payload).__name__,
+            "response_top_level_keys": top_level_keys,
+            "response_data_type": data_type,
+            "rows_envelope": envelope,
+            "extracted_rows_count": len(rows),
+        })
+        return rows
 
     def match(self, match_id: int | str) -> dict[str, Any] | None:
         payload = self._get(f"matches/{match_id}")
