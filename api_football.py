@@ -96,52 +96,33 @@ class APIFootballClient:
     # --------------------------------------------------
 
     def _request(
-        self,
-        endpoint: str,
-        params: Optional[Dict[str, Any]] = None
-    ) -> Any:
+    self,
+    endpoint: str,
+    params: Optional[Dict[str, Any]] = None
+) -> Any:
 
-        url = f"{self.BASE_URL}/{endpoint.lstrip('/')}"
+    url = f"{self.BASE_URL}/{endpoint.lstrip('/')}"
 
-        try:
+    try:
+        response = self.session.get(
+            url,
+            params=params or {},
+            timeout=self.timeout
+        )
 
-            response = self.session.get(
-                url,
-                params=params or {},
-                timeout=self.timeout
-            )
+        response.raise_for_status()
 
-            if response.status_code == 401:
-                raise APIFootballError(
-                    "Invalid API key. Check API_NINJAS_API_KEY."
-                )
+        return response.json()
 
-            if response.status_code == 403:
-                raise APIFootballError(
-                    "API access denied. Check your subscription."
-                )
+    except requests.RequestException as exc:
+        raise APIFootballError(
+            f"Football API request failed: {exc}"
+        ) from exc
 
-            if response.status_code == 429:
-                raise APIFootballError(
-                    "API request limit reached."
-                )
-
-            response.raise_for_status()
-
-            return response.json()
-
-        except APIFootballError:
-            raise
-
-        except requests.RequestException as exc:
-            raise APIFootballError(
-                f"Football API connection failed: {exc}"
-            ) from exc
-
-        except ValueError as exc:
-            raise APIFootballError(
-                "Football API returned invalid JSON."
-            ) from exc
+    except ValueError as exc:
+        raise APIFootballError(
+            "Invalid JSON returned by API."
+        ) from exc
 
     # --------------------------------------------------
     # RESPONSE NORMALIZATION
