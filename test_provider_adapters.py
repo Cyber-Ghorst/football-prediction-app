@@ -76,6 +76,15 @@ class ProviderAdapterTests(unittest.TestCase):
     def test_sportmonks_unwraps_data_envelope(self):
         self.assertEqual(SportmonksClient._rows({"data": [{"id": 42}]}), [{"id": 42}])
 
+    def test_sportmonks_statistics_include_can_be_disabled(self):
+        client = SportmonksClient(api_token="test-only")
+        client._all_pages = Mock(return_value=[])
+        client.fixtures_by_season(123, include_statistics=False)
+        args, kwargs = client._all_pages.call_args
+        self.assertEqual(args[0], "fixtures/seasons/123")
+        self.assertEqual(kwargs["include"], "participants;scores;state")
+        client.close()
+
     def test_sportmonks_paginates_complete_season_collections(self):
         client = SportmonksClient(api_token="test-only")
         client._get = Mock(side_effect=[
