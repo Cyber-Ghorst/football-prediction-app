@@ -14,8 +14,9 @@ from tactical_indicators import analyze_tactics
 _COMPLETED = {"finished", "ft", "aet", "penalties", "after extra time", "after penalties"}
 _STAT_ALIASES = {
     "ball possession": "Ball Possession",
-    "passes": "Passes %",
     "pass accuracy": "Passes %",
+    "passes %": "Passes %",
+    "shots on goal": "Shots on Goal",
     "total shots": "Total Shots",
     "shots on target": "Shots on Target",
     "shots off target": "Shots off Target",
