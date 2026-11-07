@@ -31,6 +31,11 @@ class PredictionEvaluationTests(unittest.TestCase):
         late = self._record(predicted_at="2026-11-07T13:00:00+00:00")
         self.assertFalse(late["prediction_before_kickoff"])
 
+    def test_missing_player_data_is_not_counted_as_a_snapshot(self):
+        row = self._record(player_snapshot={"fetched_at": "2026-11-07T09:30:00+00:00",
+                                             "availability": "unknown_no_exact_provider_lineup"})
+        self.assertFalse(row["player_snapshot_before_kickoff"])
+
     def test_post_kickoff_player_snapshot_is_excluded(self):
         row = self._record(player_snapshot={"fetched_at": "2026-11-07T13:00:00+00:00",
                                              "players": [{"id": 1}]})
