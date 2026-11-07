@@ -118,7 +118,8 @@ def collect_recent_result_corroboration(
     league and season filters. A provider is skipped if an exact competition
     mapping is not available. No fuzzy team aliases are inferred.
     """
-    fetched = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
+    fetched = now or datetime.now(timezone.utc)
+    fetched = fetched.replace(tzinfo=timezone.utc) if fetched.tzinfo is None else fetched.astimezone(timezone.utc)
     key = competition_key(competition, country)
     home_records: list[dict[str, Any]] = []
     away_records: list[dict[str, Any]] = []
@@ -142,7 +143,8 @@ def collect_recent_result_corroboration(
                 raise RuntimeError("Highlightly pagination exceeded the safe page limit.")
             normalized = []
             for row in rows:
-                league = row.get("league") or {}
+                league_value = row.get("league")
+                league = league_value if isinstance(league_value, Mapping) else {}
                 league_name = league.get("name") or row.get("leagueName")
                 if league_name and normalize_competition_name(league_name) != normalize_competition_name(competition):
                     continue
