@@ -420,7 +420,7 @@ try:
                     for row in away.get("matches", [])
                 ],
             })
-        with st.expander("Reported injuries and next-match lineups (when provider data exists)"):
+        with st.expander("Reported sidelined players and selected-fixture lineups (when provider data exists)"):
             st.json({home_name:{"injuries":home["availability"],"lineups":home["lineups"]},away_name:{"injuries":away["availability"],"lineups":away["lineups"]}})
         if tvd_result:
             st.subheader("Tactical Vulnerability Detector")
