@@ -64,7 +64,9 @@ def get_sm_standings(season_id):
         return sm.standings_by_season(season_id, include="participant")
 
 @st.cache_data(ttl=1800, show_spinner=False)
-def get_sm_fixtures(season_id, include_stats, team_ids):
+def get_sm_fixtures(season_id, include_stats, team_ids, cache_version="fixture-verification-v2"):
+    # The version argument deliberately invalidates cached pre-fix schedule payloads.
+    _ = cache_version
     with SportmonksClient() as sm:
         return sm.fixtures_by_season(
             season_id,
