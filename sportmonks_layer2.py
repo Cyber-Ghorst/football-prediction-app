@@ -249,27 +249,60 @@ def collect_sportmonks_team_profile(
     team_id = int(team["id"])
     strength_map = standings_strength(standings)
     matches: list[dict[str, Any]] = []
+    history_diagnostics = {
+        "fixtures_scanned": len(fixtures),
+        "same_season_fixtures": 0,
+        "season_eligible_fixtures": 0,
+        "fixtures_missing_season_id": 0,
+        "team_fixtures": 0,
+        "completed_fixtures": 0,
+        "fixtures_with_valid_scores": 0,
+        "excluded_wrong_season": 0,
+        "excluded_missing_participants": 0,
+        "excluded_other_team": 0,
+        "excluded_not_completed": 0,
+        "excluded_missing_scores": 0,
+    }
 
     for fixture in fixtures:
         fixture_season_id = fixture.get("season_id")
         if fixture_season_id is not None:
             try:
                 if int(fixture_season_id) != int(season_id):
+                    history_diagnostics["excluded_wrong_season"] += 1
                     continue
             except (TypeError, ValueError):
+                history_diagnostics["excluded_wrong_season"] += 1
                 continue
+            history_diagnostics["same_season_fixtures"] += 1
+        else:
+            # Existing collection behavior accepts records with no season_id;
+            # expose them separately rather than silently calling them same-season.
+            history_diagnostics["fixtures_missing_season_id"] += 1
+        history_diagnostics["season_eligible_fixtures"] += 1
+
         home, away = _participants(fixture)
         if not home or not away:
+            history_diagnostics["excluded_missing_participants"] += 1
             continue
         try:
             home_id, away_id = int(home["id"]), int(away["id"])
         except (KeyError, TypeError, ValueError):
+            history_diagnostics["excluded_missing_participants"] += 1
             continue
-        if team_id not in {home_id, away_id} or _state(fixture) != "finished":
+        if team_id not in {home_id, away_id}:
+            history_diagnostics["excluded_other_team"] += 1
             continue
+        history_diagnostics["team_fixtures"] += 1
+        if _state(fixture) != "finished":
+            history_diagnostics["excluded_not_completed"] += 1
+            continue
+        history_diagnostics["completed_fixtures"] += 1
         home_goals, away_goals = _scores(fixture, home_id, away_id)
         if home_goals is None or away_goals is None:
+            history_diagnostics["excluded_missing_scores"] += 1
             continue
+        history_diagnostics["fixtures_with_valid_scores"] += 1
         is_home = team_id == home_id
         opponent = away if is_home else home
         opponent_id = away_id if is_home else home_id
@@ -316,6 +349,7 @@ def collect_sportmonks_team_profile(
         "lineups": {"lineups_available": False, "teams": [],
                     "note": "Lineups are not used unless a verified lineup response is available."},
         "upcoming_fixture_id": None,
+        "history_collection_diagnostics": history_diagnostics,
         "data_quality": {
             "provider": "sportmonks",
             "season_id": int(season_id),
