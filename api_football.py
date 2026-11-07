@@ -61,8 +61,27 @@ class APIFootballClient:
         return rows
 
     def status(self) -> dict[str, Any]:
-        rows = self._request("status")
-        return rows[0] if rows else {}
+        """Read account status/remaining quota; documented as quota-exempt."""
+        try:
+            response = self.session.get(f"{self.BASE_URL}/status", timeout=self.timeout)
+            if response.status_code in (401, 403):
+                raise APIFootballError(f"API-Football status authorization failed (HTTP {response.status_code}).")
+            response.raise_for_status()
+            payload = response.json()
+        except APIFootballError:
+            raise
+        except requests.RequestException as exc:
+            raise APIFootballError("API-Football status request failed.") from exc
+        except ValueError as exc:
+            raise APIFootballError("API-Football status returned invalid JSON.") from exc
+        if not isinstance(payload, dict) or payload.get("errors"):
+            raise APIFootballError("API-Football status endpoint rejected the request.")
+        data = payload.get("response")
+        if isinstance(data, dict):
+            return data
+        if isinstance(data, list) and data and isinstance(data[0], dict):
+            return data[0]
+        return {}
 
     def leagues(self, season: int | None = None) -> list[dict[str, Any]]:
         return self._request("leagues", {"season": season} if season is not None else {})
