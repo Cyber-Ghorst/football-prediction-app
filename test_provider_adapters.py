@@ -4,6 +4,7 @@ from unittest.mock import Mock
 from api_football import APIFootballClient, APIFootballError
 from api_ninjas import APINinjasClient
 from highlightly import HighlightlyClient, HighlightlyError
+from sportmonks import SportmonksClient, SportmonksError
 
 
 class ProviderAdapterTests(unittest.TestCase):
@@ -59,6 +60,32 @@ class ProviderAdapterTests(unittest.TestCase):
         self.assertEqual(result["transport_status"], "responding")
         self.assertEqual(result["records_returned"], 1)
         self.assertNotIn("test-only", str(result))
+        client.close()
+
+    def test_sportmonks_connection_test_reports_safe_metadata(self):
+        client = SportmonksClient(api_token="test-only")
+        client.leagues = Mock(return_value=[{"id": 8}])
+        client.last_metadata = {"http_status": 200, "rate_remaining": "100"}
+        result = client.test_connection()
+        self.assertEqual(result["transport_status"], "responding")
+        self.assertEqual(result["records_returned"], 1)
+        self.assertFalse(result["fallback_enabled"])
+        self.assertNotIn("test-only", str(result))
+        client.close()
+
+    def test_sportmonks_unwraps_data_envelope(self):
+        self.assertEqual(SportmonksClient._rows({"data": [{"id": 42}]}), [{"id": 42}])
+
+    def test_sportmonks_auth_error_does_not_expose_token(self):
+        client = SportmonksClient(api_token="secret-token")
+        response = Mock()
+        response.status_code = 403
+        response.headers = {}
+        response.raise_for_status.return_value = None
+        client.session.get = Mock(return_value=response)
+        with self.assertRaises(SportmonksError) as raised:
+            client.leagues()
+        self.assertNotIn("secret-token", str(raised.exception))
         client.close()
 
     def test_highlightly_unwraps_paginated_data(self):
