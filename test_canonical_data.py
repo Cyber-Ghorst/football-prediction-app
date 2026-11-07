@@ -103,6 +103,33 @@ class CanonicalMatchTests(unittest.TestCase):
         self.assertEqual(ids["home.livescore_football"], "ls-team-1")
         self.assertEqual(ids["home.api_football"], "42")
 
+    def test_reconcile_selects_priority_and_records_conflicting_scores(self):
+        from canonical_data import reconcile_match_pair
+        left = canonicalize_livescore_event(
+            self.livescore(), competition_key="eng-premier-league", season=2026
+        )
+        right = canonicalize_api_football_fixture(
+            self.api_fixture(), competition_key="eng-premier-league", season=2026
+        )
+        right["home_score"] = 3
+        result = reconcile_match_pair(
+            left, right, team_aliases={"Arsenal FC": "Arsenal", "Chelsea FC": "Chelsea"}
+        )
+        self.assertEqual(result["home_score"], 2)
+        self.assertEqual(result["reconciliation"]["home_score"]["provider"], "livescore_football")
+        self.assertEqual(result["reconciliation"]["home_score"]["status"], "conflict")
+        self.assertEqual(result["source_ids"]["api_football"], "771")
+
+    def test_reconcile_refuses_ambiguous_or_unmatched_records(self):
+        from canonical_data import reconcile_match_pair
+        left = canonicalize_livescore_event(
+            self.livescore(), competition_key="eng-premier-league", season=2026
+        )
+        right = canonicalize_api_football_fixture(
+            self.api_fixture(), competition_key="esp-la-liga", season=2026
+        )
+        self.assertIsNone(reconcile_match_pair(left, right))
+
 
 if __name__ == "__main__":
     unittest.main()
