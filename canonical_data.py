@@ -180,6 +180,7 @@ def reconcile_match_pair(
     now: datetime | None = None,
     max_age_seconds: int | None = 86400,
     team_aliases: Mapping[str, str] | None = None,
+    livescore_verified: bool = False,
 ) -> dict[str, Any] | None:
     """Reconcile two normalized records only after a strict identity match.
 
@@ -224,7 +225,8 @@ def reconcile_match_pair(
                 source_id=(record.get("source_ids") or {}).get(provider),
             ))
         resolved = resolve_field(
-            domain, observations, now=now, max_age_seconds=max_age_seconds
+            domain, observations, now=now, max_age_seconds=max_age_seconds,
+            livescore_verified=livescore_verified,
         )
         result[field] = resolved.value
         result["reconciliation"][field] = {
