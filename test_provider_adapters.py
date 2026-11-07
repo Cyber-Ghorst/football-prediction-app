@@ -142,6 +142,33 @@ class ProviderAdapterTests(unittest.TestCase):
         )
         client.close()
 
+    def test_sportmonks_schedule_enriches_labelled_finished_fixtures_without_state_id(self):
+        client = SportmonksClient(api_token="test-only")
+        schedule = {
+            "data": [{
+                "id": 10,
+                "rounds": [{
+                    "id": 20,
+                    "fixtures": [{
+                        "id": 101,
+                        "state": {"short_name": "FT", "name": "Finished"},
+                        "starting_at": "2026-08-01 12:00:00",
+                        "participants": [{"id": 1}, {"id": 2}],
+                        "scores": [],
+                    }],
+                }],
+            }],
+        }
+        client._get = Mock(side_effect=[
+            schedule,
+            {"data": [{"id": 101, "scores": [{"participant_id": 1, "score": {"goals": 1}}]}]},
+        ])
+        fixtures = client.fixtures_by_season(123, team_ids=[1, 2])
+        self.assertEqual(client._get.call_count, 2)
+        self.assertEqual(client._get.call_args_list[1].args[0], "fixtures/multi/101")
+        self.assertEqual(fixtures[0]["scores"][0]["score"]["goals"], 1)
+        client.close()
+
     def test_sportmonks_schedule_skips_statistics_when_disabled(self):
         client = SportmonksClient(api_token="test-only")
         client._get = Mock(return_value={"data": []})
