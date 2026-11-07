@@ -71,7 +71,7 @@ def canonicalize_sportmonks_fixture(
         status = "finished"
     elif any(x in label for x in ("live", "in play", "half time", "1st half", "2nd half", "extra time", "penalty")):
         status = "live"
-    elif any(x in label for x in ("not started", "scheduled", "to be played")):
+    elif label in {"ns", "tbd", "not started", "scheduled"} or any(x in label for x in ("not started", "scheduled", "to be played")):
         status = "scheduled"
     else:
         status = "unknown"
