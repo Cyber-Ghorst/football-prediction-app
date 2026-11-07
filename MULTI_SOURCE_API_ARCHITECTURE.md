@@ -184,3 +184,41 @@ The prediction engine, Layer 1 behavior, `tvd.py`, all existing component weight
 - Canonical reconciliation now requires an explicit `livescore_verified=True` signal before LiveScoreFootball can take priority. The default resolver excludes LiveScoreFootball, so catalogue presence alone cannot activate it.
 - Unit tests were added for the two new match normalizers, unknown scores, strict identity matching, provider connection diagnostics, and the LiveScore verification gate.
 - API Ninjas and Highlightly remain diagnostic/canonicalization sources only at this milestone. They are not yet wired to replace Layer 2's API-Football histories. The next integration step is runtime competition/team matching and field-level corroboration with provenance, followed by end-to-end tests. Prediction weights, recency weighting, and TVD remain unchanged.
+
+## Current-season provider-role adjustment and Sportmonks integration (2026-11-07)
+
+### API-Football season restriction
+
+The user's API-Football Free subscription currently accepts seasons 2022–2024 only. Treat this as an account-plan coverage restriction, not as a parser or date-format defect. API-Football remains available for historical data within its permitted seasons; do not make it the required source for 2025/26 or 2026/27 data.
+
+### Revised intended provider roles
+
+| Provider | Intended role after validation |
+|---|---|
+| Sportmonks Football API v3 | Preferred current-season source for fixtures, results, standings, match statistics, lineups, player and availability data, limited to leagues enabled on the account |
+| Highlightly | Independent current-season corroboration and secondary source where its account covers the exact league and fields |
+| API Ninjas | Independent fixtures/results/standings corroboration where exact competition and season data are available |
+| API-Football v3 | Historical source for seasons allowed by the user's subscription; secondary source only where a season is explicitly confirmed available |
+| LiveScoreFootball | Competition-specific fixtures/results/standings only after the existing exact crosswalk and freshness checks |
+
+provider_core.py now records Sportmonks first in the intended domain priority. This is a source-selection policy only: a provider observation must still exist, pass validation, and be fresh before it can be selected. It does not activate automatic fallback by itself.
+
+### Sportmonks adapter
+
+- Added sportmonks.py, a separate Football API v3 REST adapter using https://api.sportmonks.com/v3/football.
+- Reads SPORTMONKS_API_TOKEN (or the backward-compatible SPORTMONKS_API_KEY) from environment variables or Streamlit Secrets.
+- Uses the documented Authorization header; never logs or returns the token.
+- Provides read-only methods for leagues, seasons, teams, standings, fixtures, date-range fixtures, individual fixtures and livescores.
+- Connection diagnostics use the documented leagues endpoint and expose only HTTP/rate-limit metadata and record count.
+- Added Sportmonks to the Streamlit provider-readiness panel and opt-in health diagnostic.
+- Added adapter tests for response envelopes, connection metadata and credential redaction.
+
+### Coverage and cost guardrails
+
+Sportmonks' free tier currently provides a limited competition set (the provider advertises Danish Superliga and Scottish Premiership). Paid self-serve tiers are league-count based: Starter from €29/month for 5 leagues, Growth from €99/month for 30 leagues, and Pro from €249/month for 120 leagues; verify current checkout terms before purchasing. The provider states that all selected leagues receive its professional data features, while historical data beyond three seasons is a separately priced add-on for self-serve tiers. See the official plans and pricing page at https://www.sportmonks.com/football-api/plans-pricing/ and Football API v3 docs at https://docs.sportmonks.com/v3/endpoints-and-entities/endpoints.
+
+### Activation boundary
+
+Sportmonks is added as an adapter and diagnostic source, but it is not yet wired into data_layer2.py or the Streamlit prediction collector. Do not report a current-season prediction as Sportmonks-powered until the user's token has been tested, the required league is confirmed in the subscription, the relevant season and team IDs are mapped, and Sportmonks records are normalized into the existing Layer 2 profile contract. This fail-closed boundary prevents a connection-only test from being mistaken for usable coverage.
+
+No model weights, 60/40 recency weighting, Layer 1 calculations, or TVD rules were changed.
