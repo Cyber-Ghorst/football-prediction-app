@@ -278,6 +278,7 @@ try:
                         ninjas_client = APINinjasClient()
                     except APINinjasError as exc:
                         corroboration_errors["api_ninjas"] = str(exc)
+                    corroboration = None
                     try:
                         corroboration = collect_recent_result_corroboration(
                             sportmonks_fixtures=fixtures,
@@ -290,18 +291,21 @@ try:
                             api_ninjas_client=ninjas_client,
                         )
                         corroboration["errors"].update(corroboration_errors)
+                    except Exception as exc:
+                        st.warning(f"Cross-provider corroboration could not be completed: {exc}")
                     finally:
                         if hl_client is not None:
                             hl_client.close()
                         if ninjas_client is not None:
                             ninjas_client.close()
-                    st.subheader("Independent result corroboration")
-                    st.caption("This report compares matching fixtures only. It does not replace Sportmonks data or alter prediction calculations.")
-                    st.json({
-                        key: value for key, value in corroboration.items()
-                        if key != "matches"
-                    })
-                    if corroboration.get("matches"):
+                    if corroboration is not None:
+                        st.subheader("Independent result corroboration")
+                        st.caption("This report compares matching fixtures only. It does not replace Sportmonks data or alter prediction calculations.")
+                        st.json({
+                            key: value for key, value in corroboration.items()
+                            if key != "matches"
+                        })
+                    if corroboration and corroboration.get("matches"):
                         with st.expander("Matched source records and field-level conflicts", expanded=True):
                             for match_record in corroboration["matches"]:
                                 st.write(
@@ -315,7 +319,7 @@ try:
                                     "reconciliation": match_record.get("reconciliation"),
                                     "providers_seen": match_record.get("providers_seen"),
                                 })
-                    elif corroboration_errors or corroboration.get("errors"):
+                    elif corroboration_errors or (corroboration and corroboration.get("errors")):
                         st.warning("No cross-provider fixture could be reconciled. Check the provider errors and exact competition/team identity mapping above.")
                     else:
                         st.info("No exact cross-provider fixture matches were found. No substitute data was used.")
@@ -379,7 +383,8 @@ except Exception as exc:
 
 with st.expander("Layer 2 data rules"):
     st.markdown("""
-    - Data provider: API-Football v3. API key is stored in Streamlit Secrets.
+    - Data providers: Sportmonks for current seasons; API-Football for supported historical seasons (2022–2024).
+    - Optional Highlightly and API Ninjas recent-result corroboration is diagnostic only; it does not replace Layer 2 inputs.
     - Ten most recent completed matches are requested per team.
     - Latest five matches carry 60% of history weight; matches 6–10 carry 40%.
     - Home and away performance are calculated from matches at that venue.
