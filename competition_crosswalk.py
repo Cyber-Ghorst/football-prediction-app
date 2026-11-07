@@ -23,14 +23,14 @@ def normalize_country(value: Any) -> str:
     name = normalize_competition_name(value)
     aliases = {
         "england": "england", "united kingdom": "england",
-        "spain": "spain", "españa": "spain",
+        "spain": "spain", "espana": "spain",
         "germany": "germany", "deutschland": "germany",
         "italy": "italy", "italia": "italy",
         "france": "france", "netherlands": "netherlands",
         "holland": "netherlands", "scotland": "scotland",
         "portugal": "portugal", "belgium": "belgium",
         "austria": "austria", "turkey": "turkey",
-        "türkiye": "turkey", "united states": "united states",
+        "turkiye": "turkey", "united states": "united states",
         "usa": "united states", "mexico": "mexico",
         "argentina": "argentina", "brazil": "brazil",
         "saudi arabia": "saudi arabia", "japan": "japan",
