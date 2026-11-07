@@ -5,8 +5,10 @@ It never fills missing values or changes prediction inputs/model weights.
 """
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Any
+
+FIXTURE_FRESHNESS_THRESHOLD = timedelta(hours=24)
 
 
 def _utc_datetime(value: Any) -> datetime | None:
@@ -100,15 +102,24 @@ def _fixture_identity_status(
     if not kickoff_valid:
         reasons.append("kickoff is missing, invalid or not in the future")
     fetched_at = _utc_datetime(fixture.get("fixture_details_fetched_at"))
-    age_seconds = (now - fetched_at).total_seconds() if fetched_at is not None else None
-    age_minutes = round(age_seconds / 60, 1) if age_seconds is not None else None
-    freshness_note = (
-        "Retrieval age is measured from the successful detailed-fixture response; no fresh/stale threshold is applied."
-        if fetched_at is not None and age_seconds >= 0
-        else "The retrieval timestamp is later than the diagnostic clock; check system clock alignment."
-        if fetched_at is not None
-        else "No successful detailed-fixture retrieval timestamp is attached; freshness age cannot be measured."
+    timestamp_in_future = fetched_at is not None and fetched_at > now
+    age_seconds = (
+        (now - fetched_at).total_seconds()
+        if fetched_at is not None and not timestamp_in_future else None
     )
+    age_minutes = round(age_seconds / 60, 1) if age_seconds is not None else None
+    if fetched_at is None:
+        source_freshness = "unknown"
+        freshness_note = "No successful detailed-fixture retrieval timestamp is attached; freshness cannot be measured."
+    elif timestamp_in_future:
+        source_freshness = "unknown"
+        freshness_note = "The retrieval timestamp is later than the diagnostic clock; check system clock alignment."
+    elif age_seconds < FIXTURE_FRESHNESS_THRESHOLD.total_seconds():
+        source_freshness = "fresh"
+        freshness_note = "Detailed fixture data was retrieved less than 24 hours ago."
+    else:
+        source_freshness = "stale"
+        freshness_note = "Detailed fixture data was retrieved 24 hours ago or earlier; refresh it before relying on it."
     return {
         "verified": verified,
         "status": "verified" if verified else "identity_or_schedule_unverified",
@@ -119,7 +130,7 @@ def _fixture_identity_status(
         "source_fetched_at": fetched_at.isoformat() if fetched_at else None,
         "source_age_seconds": round(age_seconds, 1) if age_seconds is not None else None,
         "source_age_minutes": age_minutes,
-        "source_freshness": "measured" if fetched_at is not None and age_seconds >= 0 else "unknown",
+        "source_freshness": source_freshness,
         "freshness_note": freshness_note,
     }
 
