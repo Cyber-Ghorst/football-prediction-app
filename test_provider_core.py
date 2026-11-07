@@ -11,24 +11,40 @@ class ProviderCoreTests(unittest.TestCase):
     def obs(self, provider, value, **kwargs):
         return Observation(provider=provider, value=value, fetched_at=NOW, **kwargs)
 
-    def test_primary_provider_wins_without_averaging_conflicts(self):
+    def test_verified_livescore_primary_wins_without_averaging_conflicts(self):
         result = resolve_field("results", [
             self.obs("api_ninjas", {"home": 2, "away": 1}),
             self.obs("livescore_football", {"home": 1, "away": 1}),
-        ], now=NOW)
+        ], now=NOW, livescore_verified=True)
         self.assertEqual(result.value, {"home": 1, "away": 1})
         self.assertEqual(result.provider, "livescore_football")
         self.assertEqual(result.status, "conflict")
         self.assertEqual(result.conflicting_providers, ("api_ninjas",))
 
+    def test_unverified_livescore_is_never_selected(self):
+        result = resolve_field("results", [
+            self.obs("livescore_football", {"home": 1, "away": 1}),
+            self.obs("api_ninjas", {"home": 2, "away": 1}),
+        ], now=NOW)
+        self.assertEqual(result.provider, "api_ninjas")
+        self.assertEqual(result.value, {"home": 2, "away": 1})
+
+    def test_livescore_not_allowed_for_statistics_even_if_verified(self):
+        result = resolve_field("statistics", [
+            self.obs("livescore_football", 80),
+            self.obs("api_football", 12),
+        ], now=NOW, livescore_verified=True)
+        self.assertEqual(result.provider, "api_football")
+        self.assertEqual(result.value, 12)
+
     def test_agreement_is_reported_as_corroborated(self):
         result = resolve_field("standings", [
             self.obs("api_ninjas", 1),
-            self.obs("livescore_football", 1),
+            self.obs("highlightly", 1),
         ], now=NOW)
         self.assertEqual(result.value, 1)
         self.assertEqual(result.status, "corroborated")
-        self.assertEqual(result.corroborating_providers, ("api_ninjas",))
+        self.assertEqual(result.corroborating_providers, ("highlightly",))
 
     def test_statistics_use_api_football_priority(self):
         result = resolve_field("statistics", [
@@ -41,9 +57,9 @@ class ProviderCoreTests(unittest.TestCase):
 
     def test_invalid_null_and_stale_values_are_excluded(self):
         result = resolve_field("results", [
-            self.obs("livescore_football", None),
-            Observation("api_ninjas", 3, NOW - timedelta(days=4)),
-            Observation("highlightly", 2, NOW, valid=False),
+            self.obs("api_ninjas", None),
+            Observation("highlightly", 3, NOW - timedelta(days=4)),
+            Observation("api_football", 2, NOW, valid=False),
         ], now=NOW, max_age_seconds=3600)
         self.assertIsNone(result.value)
         self.assertEqual(result.status, "unknown")
