@@ -325,7 +325,7 @@ An opt-in diagnostic path now uses the exact selected-fixture Highlightly lineup
 ### Prediction ledger and evaluation
 - `prediction_evaluation.py` creates an auditable pre-match prediction record with competition/country/season, home/away teams, fixture/provider IDs where available, prediction timestamp, kickoff, 1X2 probabilities, model version and the protected 60/40 recency policy.
 - The Streamlit app keeps a session ledger and supports CSV export/import so records can be carried across app restarts. Streamlit session memory is not treated as permanent storage.
-- Final home/away goals can be entered in the ledger after the match. Evaluation excludes forecasts not demonstrably timestamped before kickoff.
+- Final home/away goals can be entered in the ledger after the match. Evaluation excludes forecasts not demonstrably timestamped before kickoff. The evaluator recomputes eligibility from prediction/kickoff timestamps rather than trusting imported boolean flags, requires identifiable fixture identity for scoring, and uses only the latest valid pre-kickoff forecast per fixture to avoid duplicate-match inflation. Repeated and unidentifiable rows are reported separately.
 - Reports accuracy, multiclass Brier score and log loss, plus model metrics by competition.
 - Opta comparison uses only completed fixtures for which both model and Opta probabilities are recorded. It reports both on the same fixture subset, never compares unrelated samples.
 - No automatic model fitting, weight changes or probability calibration is performed by the evaluation report.
