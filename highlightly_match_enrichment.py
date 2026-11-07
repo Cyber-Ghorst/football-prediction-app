@@ -12,10 +12,8 @@ from typing import Any, Mapping
 from canonical_data import canonicalize_highlightly_match, match_identity
 from competition_crosswalk import normalize_competition_name, normalize_country
 from provider_core import normalize_team_name
-from sportmonks_layer2 import (
-    _team_statistics,
-    canonicalize_sportmonks_fixture,
-)
+from provider_corroboration import canonicalize_sportmonks_fixture
+from sportmonks_layer2 import _team_statistics
 
 _STAT_NAMES = {
     "ball possession": "Ball Possession",
