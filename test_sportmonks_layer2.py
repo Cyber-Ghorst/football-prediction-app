@@ -55,6 +55,10 @@ class SportmonksLayer2Tests(unittest.TestCase):
         self.assertEqual(profile["matches"][0]["statistics"]["Passes %"], 82.0)
         self.assertEqual(profile["matches"][0]["statistics"]["Total Shots"], 12.0)
         self.assertNotIn("Shots Accuracy", profile["matches"][0]["statistics"])
+        raw_rows = profile["matches"][0]["statistics_raw_diagnostics"]
+        shots_accuracy = next(row for row in raw_rows if row["statistic_name_raw"] == "Shots Accuracy")
+        self.assertEqual(shots_accuracy["mapping_status"], "unmapped")
+        self.assertEqual(shots_accuracy["raw_value"], 0.5)
         self.assertEqual(profile["matches"][0]["statistics_provenance"][0]["provider"], "sportmonks")
         self.assertEqual(profile["matches"][0]["statistics_provenance"][0]["fixture_id"], 6)
         self.assertIsNone(profile["player_availability"])
