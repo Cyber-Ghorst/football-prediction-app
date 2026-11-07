@@ -40,9 +40,9 @@ def provider_readiness() -> list[dict[str, Any]]:
         },
         {
             "provider": "LiveScoreFootball",
-            "adapter": "blocked pending official API identification",
-            "credential_configured": False,
-            "app_integration": "not integrated",
-            "credential_name": "not assigned",
+            "adapter": "implemented",
+            "credential_configured": True,
+            "app_integration": "read-only adapter; not yet enabled as automatic fallback",
+            "credential_name": "none required for documented public endpoints",
         },
     ]
