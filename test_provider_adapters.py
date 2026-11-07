@@ -125,6 +125,25 @@ class ProviderAdapterTests(unittest.TestCase):
     def test_highlightly_preserves_plain_array_responses(self):
         self.assertEqual(HighlightlyClient._rows([{"id": 1}]), [{"id": 1}])
 
+    def test_highlightly_player_and_team_statistics_use_documented_paths(self):
+        client = HighlightlyClient(api_key="test-only")
+        response = Mock()
+        response.status_code = 200
+        response.json.return_value = [{"id": 7}]
+        response.headers = {}
+        response.raise_for_status.return_value = None
+        client.session.get = Mock(return_value=response)
+        self.assertEqual(client.player_statistics(7), [{"id": 7}])
+        self.assertEqual(client.session.get.call_args_list[-1].args[0],
+                         "https://soccer.highlightly.net/players/7/statistics")
+        self.assertEqual(client.team_statistics(11, fromDate="2026-01-01"),
+                         [{"id": 7}])
+        self.assertEqual(client.session.get.call_args_list[-1].args[0],
+                         "https://soccer.highlightly.net/teams/statistics/11")
+        self.assertEqual(client.session.get.call_args_list[-1].kwargs["params"],
+                         {"fromDate": "2026-01-01"})
+        client.close()
+
 
 if __name__ == "__main__":
     unittest.main()
