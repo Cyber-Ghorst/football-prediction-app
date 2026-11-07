@@ -5,17 +5,17 @@ from collections import defaultdict
 from typing import Any
 
 
-# These are the eight normalized statistics currently consumed by tactical_indicators.py.
+# These are the eight metric inputs currently consumed by tactical_indicators.py.
+# Shots on Goal and Shots on Target are aliases for one model input, not two metrics.
 CORE_STATISTICS = (
-    ("Ball Possession", "Possession & distribution"),
-    ("Passes %", "Possession & distribution"),
-    ("Total Shots", "Attacking"),
-    ("Shots on Goal", "Attacking"),
-    ("Shots on Target", "Attacking"),
-    ("Tackles", "Defending"),
-    ("Interceptions", "Defending"),
-    ("Blocked Shots", "Defending"),
-    ("Corner Kicks", "Attacking"),
+    ("Ball Possession", "Possession & distribution", ("Ball Possession",)),
+    ("Passes %", "Possession & distribution", ("Passes %",)),
+    ("Total Shots", "Attacking", ("Total Shots",)),
+    ("Shots on Target / Goal", "Attacking", ("Shots on Target", "Shots on Goal")),
+    ("Tackles", "Defending", ("Tackles",)),
+    ("Interceptions", "Defending", ("Interceptions",)),
+    ("Blocked Shots", "Defending", ("Blocked Shots",)),
+    ("Corner Kicks", "Attacking", ("Corner Kicks",)),
 )
 
 
@@ -24,21 +24,21 @@ def build_statistics_coverage(matches: list[dict[str, Any]]) -> dict[str, Any]:
     recent = list(matches[:10])
     total_matches = len(recent)
     metric_rows = []
-    for metric, group in CORE_STATISTICS:
+    for label, group, canonical_names in CORE_STATISTICS:
         available_fixtures = 0
         observations = 0
         for match in recent:
             stats = match.get("statistics") or {}
-            if stats.get(metric) is not None:
+            if any(stats.get(name) is not None for name in canonical_names):
                 available_fixtures += 1
             observations += sum(
                 1 for row in (match.get("statistics_raw_diagnostics") or [])
-                if row.get("canonical_name") == metric
+                if row.get("canonical_name") in canonical_names
                 and row.get("mapping_status") == "mapped"
             )
         metric_rows.append({
             "group": group,
-            "statistic": metric,
+            "statistic": label,
             "fixtures_available": available_fixtures,
             "fixtures_checked": total_matches,
             "coverage_pct": round(available_fixtures / total_matches * 100, 1) if total_matches else None,
