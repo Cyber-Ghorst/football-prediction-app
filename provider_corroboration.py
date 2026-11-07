@@ -200,6 +200,8 @@ def collect_recent_result_corroboration(
                     if normalize_country(row_country) != normalize_country(country):
                         highlightly_diagnostics["rejected_country_mismatch"] += 1
                         continue
+                elif not row_country:
+                    highlightly_diagnostics["country_missing_but_retained"] += 1
 
                 reported_season = league.get("season") or row.get("season")
                 if isinstance(reported_season, Mapping):
