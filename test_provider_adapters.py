@@ -47,6 +47,10 @@ class ProviderAdapterTests(unittest.TestCase):
         client.close()
 
     def test_api_ninjas_includes_danish_superliga_catalogue_slug(self):
+        self.assertEqual(len(APINinjasClient.LEAGUES), 74)
+        self.assertEqual(
+            len({row["id"] for row in APINinjasClient.LEAGUES}), 74
+        )
         self.assertIn(
             {"id": "danishsuperliga", "name": "Danish Superliga"},
             APINinjasClient.LEAGUES,
