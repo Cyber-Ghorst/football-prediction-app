@@ -79,6 +79,39 @@ class ProviderCoreTests(unittest.TestCase):
         result = resolve_field("results", [self.obs("unknown_source", 4)], now=NOW)
         self.assertIsNone(result.value)
 
+    def test_fixture_kickoff_equivalent_iso_formats_are_corroborated(self):
+        result = resolve_field("fixtures", [
+            self.obs("sportmonks", "2026-10-31 15:00:00"),
+            self.obs("api_ninjas", "2026-10-31T15:00:00+00:00"),
+        ], now=NOW)
+        self.assertEqual(result.value, "2026-10-31 15:00:00")
+        self.assertEqual(result.provider, "sportmonks")
+        self.assertEqual(result.status, "corroborated")
+        self.assertEqual(result.corroborating_providers, ("api_ninjas",))
+        self.assertEqual(result.conflicting_providers, ())
+
+    def test_fixture_kickoff_timezone_offsets_compare_as_same_instant(self):
+        result = resolve_field("fixtures", [
+            self.obs("sportmonks", "2026-10-31T18:00:00+03:00"),
+            self.obs("api_ninjas", "2026-10-31T15:00:00Z"),
+        ], now=NOW)
+        self.assertEqual(result.status, "corroborated")
+
+    def test_fixture_kickoff_real_time_difference_remains_conflict(self):
+        result = resolve_field("fixtures", [
+            self.obs("sportmonks", "2026-10-31T15:00:00Z"),
+            self.obs("api_ninjas", "2026-10-31T16:00:00Z"),
+        ], now=NOW)
+        self.assertEqual(result.status, "conflict")
+        self.assertEqual(result.conflicting_providers, ("api_ninjas",))
+
+    def test_non_fixture_strings_are_not_datetime_coerced(self):
+        result = resolve_field("results", [
+            self.obs("sportmonks", "2026-10-31 15:00:00"),
+            self.obs("api_ninjas", "2026-10-31T15:00:00+00:00"),
+        ], now=NOW)
+        self.assertEqual(result.status, "conflict")
+
     def test_match_identity_normalizes_team_names_and_timezone(self):
         a = match_identity_key("EPL", 2026, "2026-11-07T15:00:30Z", "Arsenal FC", "Chelsea")
         b = match_identity_key("epl", "2026", "2026-11-07T15:00:00+00:00", "arsenal-fc", "Chelsea")
