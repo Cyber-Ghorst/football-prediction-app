@@ -13,10 +13,11 @@ Required secret:
 """
 
 import os
+import requests
+
 from datetime import date, datetime, timedelta
 from typing import Any, Dict, List, Optional
 
-import requests
 
 
 class APIFootballError(Exception):
