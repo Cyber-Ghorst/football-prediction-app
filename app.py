@@ -618,6 +618,10 @@ with st.expander("Prediction tracking, Opta comparison and backtesting", expande
         report = evaluate_prediction_ledger(st.session_state["prediction_ledger"])
         st.subheader("Backtest summary")
         st.write(f"Pre-match forecasts: {report['pre_match_predictions']} • Completed and scored: {report['completed_pre_match_predictions']}")
+        if report["duplicate_records_excluded"]:
+            st.caption(f"Excluded {report['duplicate_records_excluded']} repeated forecast record(s); only the latest valid pre-kickoff forecast per identifiable fixture is scored.")
+        if report["unidentifiable_pre_match_records"]:
+            st.warning(f"{report['unidentifiable_pre_match_records']} pre-kickoff record(s) lack enough fixture identity to be scored safely.")
         model_metrics = report["model"]
         opta_metrics = report["opta_same_fixtures"]
         m1, m2, m3 = st.columns(3)
