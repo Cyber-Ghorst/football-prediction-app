@@ -146,6 +146,8 @@ def _team_readiness(profile: dict[str, Any]) -> dict[str, Any]:
                 "excluded_wrong_season", "excluded_missing_participants",
                 "excluded_other_team", "excluded_not_completed",
                 "excluded_missing_scores", "history_shortfall",
+                "history_latest_match_at", "history_oldest_match_at",
+                "history_collection_fetched_at", "history_order",
             )
             if key in quality
         },
