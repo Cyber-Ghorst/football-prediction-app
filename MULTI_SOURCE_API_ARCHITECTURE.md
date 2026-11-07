@@ -102,3 +102,16 @@ Provider enablement must be explicit and independently configurable. Do not assu
 7. Backtest predictions against historical results before considering any change to model parameters.
 
 No prediction weights, TVD rules or production branch files are changed by this architecture decision record.
+
+
+## Current implementation status (2026-11-07)
+
+- api_football.py now contains the dedicated API-Football v3 client and reads APISPORTS_API_KEY; it does not reuse the old ambiguous key name.
+- The former API Ninjas implementation is preserved as api_ninjas.py with APINinjasClient / APINinjasError.
+- highlightly.py contains a separate Highlightly adapter using the documented direct Football API host, key header, paginated-envelope handling and rate-limit metadata.
+- data_layer2.py now consumes API-Football v3 response structures, converts standings to competition-season-relative opponent-strength scores, and handles a single upcoming fixture object.
+- test_provider_adapters.py adds adapter contract and credential-redaction tests; .github/workflows/tests.yml runs the unit suite in CI.
+- The Streamlit prediction flow currently uses API-Football v3 only. API Ninjas and Highlightly are isolated adapters, not yet active fallbacks in a live multi-source registry.
+- No LiveScoreFootball adapter has been added: the provider name has not been matched to a verifiable official API documentation/base URL. Do not send credentials or assume coverage until the exact official product URL is confirmed.
+- Credentials are never displayed. Configure APISPORTS_API_KEY for API-Football, API_NINJAS_API_KEY for API Ninjas, and HIGHLIGHTLY_API_KEY for Highlightly. The Highlightly client retains API_FOOTBALL_KEY as a legacy fallback only.
+- Live provider health, quota, account coverage and deployed Streamlit configuration remain unverified until credentials and runtime access are available.
