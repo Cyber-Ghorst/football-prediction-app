@@ -126,3 +126,19 @@ The read-only adapter is livescore_football.py and defaults to https://worldcup2
 The repository README verifies initial competition coverage focused on England and Spain: Premier League, EFL competitions, FA Cup, LaLiga, LaLiga 2, Copa del Rey and women's competitions. UEFA Champions League and other countries are not to be assumed available. The service does not fetch upstream data on customer requests, and its API documentation warns that stored snapshots can be delayed or incomplete.
 
 Current app status: the read-only adapter and mocked contract tests exist, and the provider is listed first for fixtures/results/standings in provider_core.py. It is not yet connected as an automatic Layer 2 fallback. Do not treat this source as a guaranteed live feed or infer missing statistics, injuries, lineups, or player availability from absent fields.
+
+
+## Canonical normalization milestone (2026-11-07)
+
+The first canonical match-normalization layer is now implemented in `canonical_data.py`:
+
+- LiveScoreFootball scoreboard/fixture events are normalized from their documented `competitions[].competitors[]` structure, including the nested `competitor.team` object and `homeAway` side marker.
+- API-Football v3 fixture records are normalized from `fixture`, `teams`, `goals`, and `fixture.status.short`.
+- Canonical identity requires an explicitly supplied shared competition key, matching season, same home/away team identities (with optional explicit aliases), and kickoff within a configurable five-minute default tolerance.
+- Provider match and team IDs remain namespaced. Numeric ID equality is never used to join records.
+- `reconcile_match_pair` applies the existing domain priority field by field, keeps conflicting-source diagnostics, and never averages score or status values. Records that do not pass identity matching are not merged.
+- Unknown scores and absent fields remain `None`; a missing value from one source cannot overwrite a known value from another.
+
+The normalizers currently cover LiveScoreFootball and API-Football v3. API Ninjas and Highlightly remain isolated adapters until their actual response shapes are captured in fixtures and independently tested. The new canonical layer is not yet switched into the Streamlit prediction flow: automatic fallback requires an explicit competition/season crosswalk, team alias validation, and freshness checks against the LiveScoreFootball metadata endpoint. This is intentional fail-closed behavior, not a missing-data workaround.
+
+Tests are in `test_canonical_data.py`; the existing provider priority and Layer 1/TVD tests remain in place.
