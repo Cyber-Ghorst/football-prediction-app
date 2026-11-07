@@ -269,7 +269,7 @@ class APINinjasClient:
         if isinstance(date_from, datetime):
             start_date = date_from.date()
 
-        elif isinstance(date_from, date):
+        elif isinstance(date_from, Date):
             start_date = date_from
 
         elif date_from:
@@ -591,7 +591,7 @@ class APINinjasClient:
             "soccermatches",
             {
                 "league": "epl",
-                "date": date.today().isoformat()
+                "date": Date.today().isoformat()
             }
         )
 
