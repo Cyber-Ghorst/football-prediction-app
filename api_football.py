@@ -11,7 +11,6 @@ Required secret:
     API_NINJAS_API_KEY
 """
 
-from __dotenv import load_dotenv  # Optional if using dotenv locally
 import os
 import requests
 
