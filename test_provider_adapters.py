@@ -109,6 +109,20 @@ class ProviderAdapterTests(unittest.TestCase):
         self.assertEqual(fixtures[0]["stage_id"], 10)
         self.assertEqual(fixtures[0]["round_id"], 20)
 
+    def test_sportmonks_schedule_duplicate_ids_are_reported_not_silently_hidden(self):
+        payload = {"data": [{
+            "id": 10,
+            "rounds": [{"id": 20, "fixtures": [
+                {"id": 100, "starting_at": "2026-08-01 12:00:00"},
+                {"id": 100, "starting_at": "2026-08-01 12:00:00"},
+                {"id": 101, "starting_at": "2026-08-02 12:00:00"},
+            ]}],
+        }]}
+        fixtures = SportmonksClient._flatten_schedule_fixtures(payload)
+        self.assertEqual([row["id"] for row in fixtures], [100, 101])
+        self.assertEqual(fixtures[0]["_schedule_duplicate_fixture_ids"], [100])
+        self.assertEqual(fixtures[1]["_schedule_unique_fixture_count"], 2)
+
     def test_sportmonks_schedule_endpoint_and_targeted_statistics_enrichment(self):
         client = SportmonksClient(api_token="test-only")
         schedule = {
