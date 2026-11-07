@@ -41,6 +41,7 @@ class APINinjasClient:
         {"id": "eredivisie", "name": "Eredivisie"},
         {"id": "primeiraliga", "name": "Primeira Liga"},
         {"id": "scottishpremiership", "name": "Scottish Premiership"},
+        {"id": "danishsuperliga", "name": "Danish Superliga"},
         {"id": "superlig", "name": "Turkish Super Lig"},
         {"id": "saudiproleague", "name": "Saudi Pro League"},
         {"id": "brasileirao", "name": "Brasileirao"},
@@ -80,6 +81,7 @@ class APINinjasClient:
 
         self.timeout = timeout
         self.last_warning = None
+        self.last_metadata: Dict[str, Any] = {}
 
         self.session = requests.Session()
 
@@ -106,6 +108,11 @@ class APINinjasClient:
                 timeout=self.timeout
             )
 
+            self.last_metadata = {
+                "http_status": response.status_code,
+                "requests_limit": response.headers.get("X-RateLimit-Limit"),
+                "requests_remaining": response.headers.get("X-RateLimit-Remaining"),
+            }
             response.raise_for_status()
 
             return response.json()
