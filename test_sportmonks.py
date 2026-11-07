@@ -1,0 +1,87 @@
+import unittest
+from unittest.mock import patch
+from datetime import datetime, timezone
+
+from sportmonks import SportmonksClient
+
+
+def scheduled_fixture(fid, home_id, away_id, kickoff, season_id=2026):
+    return {
+        "id": fid,
+        "season_id": season_id,
+        "starting_at": "2026-12-26 15:00:00",
+        "starting_at_timestamp": kickoff,
+        "participants": [
+            {"id": home_id, "meta": {"location": "home"}},
+            {"id": away_id, "meta": {"location": "away"}},
+        ],
+    }
+
+
+class FakeSportmonksClient(SportmonksClient):
+    def __init__(self, schedule, details):
+        # Avoid credentials/network setup; _get is fully stubbed.
+        self.schedule = schedule
+        self.details = details
+        self.calls = []
+
+    def _get(self, path, params=None):
+        self.calls.append((path, params or {}))
+        if path.startswith("schedules/seasons/"):
+            return {"data": self.schedule}
+        if path.startswith("fixtures/multi/"):
+            return {"data": self.details}
+        raise AssertionError(f"Unexpected endpoint: {path}")
+
+
+class UpcomingFixtureEnrichmentTests(unittest.TestCase):
+    def test_upcoming_exact_pair_is_enriched_even_without_match_statistics(self):
+        kickoff = int(datetime(2026, 12, 26, 15, tzinfo=timezone.utc).timestamp())
+        schedule_fixture = scheduled_fixture(7001, 11, 22, kickoff)
+        detail_fixture = {
+            "id": 7001,
+            "season_id": 2026,
+            "participants": [
+                {"id": 11, "name": "Fulham", "meta": {"location": "home"}},
+                {"id": 22, "name": "Brighton & Hove Albion", "meta": {"location": "away"}},
+            ],
+            "state": {"id": 1, "short_name": "NS", "name": "Not Started"},
+        }
+        client = FakeSportmonksClient(
+            [{"id": 1, "rounds": [{"id": 2, "fixtures": [schedule_fixture]}]}],
+            [detail_fixture],
+        )
+        now = int(datetime(2026, 11, 7, tzinfo=timezone.utc).timestamp())
+        with patch("time.time", return_value=now):
+            fixtures = client.fixtures_by_season(
+                2026, include_statistics=False, team_ids=[11, 22]
+            )
+
+        self.assertEqual(fixtures[0]["id"], 7001)
+        self.assertEqual(fixtures[0]["state"]["short_name"], "NS")
+        self.assertEqual(fixtures[0]["participants"][0]["name"], "Fulham")
+        self.assertEqual(len(client.calls), 2)
+        self.assertEqual(client.calls[1][0], "fixtures/multi/7001")
+        self.assertEqual(client.calls[1][1]["include"], "participants;state")
+
+    def test_unrelated_wrong_season_and_past_fixtures_are_not_hydrated(self):
+        now_dt = datetime(2026, 11, 7, tzinfo=timezone.utc)
+        now = int(now_dt.timestamp())
+        schedule_rows = [
+            scheduled_fixture(1, 11, 22, now + 3600, season_id=2025),
+            scheduled_fixture(2, 11, 33, now + 3600),
+            scheduled_fixture(3, 11, 22, now - 3600),
+        ]
+        client = FakeSportmonksClient(
+            [{"id": 1, "rounds": [{"id": 2, "fixtures": schedule_rows}]}],
+            [],
+        )
+        with patch("time.time", return_value=now):
+            client.fixtures_by_season(2026, include_statistics=False, team_ids=[11, 22])
+
+        self.assertEqual(len(client.calls), 1)
+        self.assertEqual(client.calls[0][0], "schedules/seasons/2026")
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -178,12 +178,12 @@ class SportmonksClient:
         team_ids: list[int] | tuple[int, ...] | None = None,
         **params: Any,
     ) -> list[dict[str, Any]]:
-        """Fetch a season schedule and optionally enrich selected teams' recent matches.
+        """Fetch a season schedule and enrich selected-team history and exact upcoming fixtures.
 
-        Sportmonks schedules are returned as one nested stages/rounds/fixtures
-        response and do not support pagination or includes. Detailed statistics
-        are therefore fetched in one multi-fixture request for up to ten recent
-        completed matches per selected team, rather than requesting every match.
+        Schedule rows are the source of fixture IDs and kickoff times. The schedule
+        response does not guarantee the related state/participant objects required
+        by strict fixture verification, so exact upcoming pairings are hydrated
+        from the fixture multi endpoint even when historical statistics are off.
         """
         if params:
             unsupported = ", ".join(sorted(params))
@@ -200,17 +200,23 @@ class SportmonksClient:
             except (TypeError, ValueError):
                 continue
 
+        # Historical completed fixtures are enriched only when statistics were
+        # requested. Preserve the existing limit of ten recent matches per team.
+        chosen_completed: dict[int, dict[str, Any]] = {}
         if include_statistics and selected_ids:
             recent_by_team: dict[int, list[dict[str, Any]]] = {
                 team_id: [] for team_id in selected_ids
             }
             for fixture in fixtures:
-                if int(fixture.get("state_id") or 0) not in {5, 7, 8}:
+                try:
+                    state_id = int(fixture.get("state_id") or 0)
+                except (TypeError, ValueError):
+                    state_id = 0
+                if state_id not in {5, 7, 8}:
                     continue
                 for team_id in self._fixture_team_ids(fixture) & selected_ids:
                     recent_by_team[team_id].append(fixture)
 
-            chosen: dict[int, dict[str, Any]] = {}
             for team_fixtures in recent_by_team.values():
                 ordered = sorted(
                     team_fixtures,
@@ -218,24 +224,57 @@ class SportmonksClient:
                     reverse=True,
                 )
                 for fixture in ordered[:10]:
-                    chosen[int(fixture["id"])] = fixture
+                    if fixture.get("id") is not None:
+                        chosen_completed[int(fixture["id"])] = fixture
 
-            fixture_ids = sorted(chosen)
-            if fixture_ids:
-                include = "participants;scores;state;statistics.type"
-                details_payload = self._get(
-                    f"fixtures/multi/{','.join(str(value) for value in fixture_ids)}",
-                    {"include": include},
-                )
-                details = self._rows(details_payload)
-                details_by_id = {
-                    int(row["id"]): row for row in details
-                    if row.get("id") is not None
-                }
-                for fixture_id, detail in details_by_id.items():
-                    base = chosen.get(fixture_id)
-                    if base is not None:
-                        base.update(detail)
+        # Hydrate only future fixtures involving exactly the two selected teams.
+        # Do not filter by state here: the schedule may omit the related state
+        # object, which is precisely why this detail request is needed.
+        upcoming_candidates: dict[int, dict[str, Any]] = {}
+        if len(selected_ids) == 2:
+            import time
+
+            now = int(time.time())
+            for fixture in fixtures:
+                fixture_id = fixture.get("id")
+                try:
+                    kickoff = int(fixture.get("starting_at_timestamp"))
+                    fixture_season = int(fixture.get("season_id"))
+                except (TypeError, ValueError):
+                    continue
+                if fixture_season != int(season_id) or kickoff <= now:
+                    continue
+                if self._fixture_team_ids(fixture) != selected_ids:
+                    continue
+                try:
+                    upcoming_candidates[int(fixture_id)] = fixture
+                except (TypeError, ValueError):
+                    continue
+
+        # Merge both groups into one request, avoiding duplicate fixture IDs.
+        detail_targets = dict(chosen_completed)
+        detail_targets.update(upcoming_candidates)
+        fixture_ids = sorted(detail_targets)
+        if fixture_ids:
+            include_parts = ["participants"]
+            if chosen_completed:
+                include_parts.append("scores")
+            include_parts.append("state")
+            if chosen_completed:
+                include_parts.append("statistics.type")
+            details_payload = self._get(
+                f"fixtures/multi/{','.join(str(value) for value in fixture_ids)}",
+                {"include": ";".join(include_parts)},
+            )
+            details = self._rows(details_payload)
+            details_by_id = {
+                int(row["id"]): row for row in details
+                if row.get("id") is not None
+            }
+            for fixture_id, detail in details_by_id.items():
+                base = detail_targets.get(fixture_id)
+                if base is not None:
+                    base.update(detail)
         return fixtures
 
     def seasons(self, **params: Any) -> list[dict[str, Any]]:
