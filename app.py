@@ -13,7 +13,7 @@ st.caption("Layer 2 • Automatic API-Football data collection + weighted predic
 
 @st.cache_data(ttl=3600, show_spinner=False)
 def get_leagues(_client, season):
-    return _client.leagues()
+    return _client.leagues(season)
 
 @st.cache_data(ttl=3600, show_spinner=False)
 def get_teams(_client, league_id, season):
@@ -32,7 +32,7 @@ with st.sidebar:
     season = st.number_input("Season start year", min_value=2015, max_value=2035, value=2026, step=1,
                              help="For a 2026/27 season, enter 2026. Use the season year supported by your API plan.")
     include_stats = st.checkbox("Fetch match statistics (more API requests)", value=True)
-    st.caption("Add API_FOOTBALL_KEY in Streamlit app Settings → Secrets. Never paste the key into public code.")
+    st.caption("Add APISPORTS_API_KEY for API-Football v3 in Streamlit Secrets. Provider keys are separate; never paste keys into public code.")
 
 try:
     client = APIFootballClient()
