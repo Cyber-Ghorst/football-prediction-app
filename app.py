@@ -21,6 +21,7 @@ from highlightly_match_enrichment import collect_highlightly_match_enrichment
 from highlightly_player_enrichment import collect_highlightly_player_enrichment
 from prediction_evaluation import build_prediction_record, evaluate_prediction_ledger, merge_prediction_records
 from prediction_readiness import build_prediction_readiness
+from statistics_coverage import build_statistics_coverage
 
 st.set_page_config(page_title="Football Prediction Lab", page_icon="⚽", layout="wide")
 st.title("⚽ Football Prediction Lab")
@@ -608,6 +609,42 @@ try:
             st.json(result["component_ratings"]); st.json(result["tactical_component_ratings"])
         with st.expander("Tactical indicators and match statistics"):
             st.json({home_name:home["tactical_summary"],away_name:away["tactical_summary"]})
+            st.subheader("Statistics coverage dashboard")
+            st.caption("Coverage is calculated across each team's most recent completed matches. 'Missing' means the provider did not supply a usable value for that match; it is not filled with zero or estimated.")
+            coverage_columns = st.columns(2)
+            for column, profile in zip(coverage_columns, (home, away)):
+                report = build_statistics_coverage(profile.get("matches", []))
+                with column:
+                    st.markdown(f"**{profile['name']}**")
+                    st.metric(
+                        "Core metrics with any data",
+                        f"{report['core_metrics_with_any_data']}/{report['core_metrics_total']}",
+                        help="Number of the eight model inputs present in at least one recent match.",
+                    )
+                    st.metric(
+                        "Metrics present in every match",
+                        f"{report['core_metrics_complete']}/{report['core_metrics_total']}",
+                        help="A strict coverage measure across the matches checked.",
+                    )
+                    st.caption(
+                        f"{report['fixtures_checked']} matches checked • "
+                        f"{report['mapping_visibility']} for raw alias diagnostics"
+                    )
+                    st.dataframe(
+                        pd.DataFrame(report["metrics"]),
+                        use_container_width=True,
+                        hide_index=True,
+                    )
+                    if report["unmapped_statistics"]:
+                        with st.expander(f"{profile['name']}: unmapped provider statistics"):
+                            st.dataframe(
+                                pd.DataFrame(report["unmapped_statistics"]),
+                                use_container_width=True,
+                                hide_index=True,
+                            )
+                    else:
+                        st.caption("No unmapped raw statistic names were reported in this sample.")
+            st.caption("Only the eight existing tactical model inputs are counted in the core coverage score. Other provider statistics remain visible as diagnostics and are not automatically added to the prediction model.")
             st.caption("Normalized values and source provenance are shown alongside every raw Sportmonks statistic row for each team. Unmapped names are diagnostic only and never enter tactical ratings or prediction inputs.")
             st.json({
                 home_name: [
