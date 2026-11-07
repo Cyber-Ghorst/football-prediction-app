@@ -37,7 +37,7 @@ Files:
 
 ## Activation boundary
 
-This is a tested reconciliation layer, not yet an automatic live multi-provider
+This is a unit-test-covered reconciliation layer (the latest CI run has not yet been confirmed), not yet an automatic live multi-provider
 fetch path in Streamlit. The app currently builds its prediction profiles from
 Sportmonks for seasons after 2024 and API-Football for supported historical
 seasons. API Ninjas and Highlightly remain connected diagnostic/adaptor sources.
