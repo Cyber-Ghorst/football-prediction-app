@@ -238,7 +238,7 @@ def evaluate_prediction_ledger(records: Iterable[Mapping[str, Any]]) -> dict[str
         if previous is None or (current_time and (previous_time is None or current_time > previous_time)):
             latest_by_fixture[identity] = row
 
-    eligible = list(latest_by_fixture.values()) + unidentifiable
+    eligible = list(latest_by_fixture.values())
     completed = [row for row in eligible if outcome_from_score(
         row.get("actual_home_goals"), row.get("actual_away_goals")
     ) is not None]
