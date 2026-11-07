@@ -11,10 +11,13 @@ from datetime import datetime, timezone
 from typing import Any, Iterable
 
 
+# LiveScoreFootball is deliberately absent from the default order. Its public
+# catalogue is only eligible for a competition after exact name/country,
+# active-state, stored-data and season checks have passed.
 PROVIDER_ORDER = {
-    "fixtures": ("livescore_football", "api_ninjas", "highlightly", "api_football"),
-    "results": ("livescore_football", "api_ninjas", "highlightly", "api_football"),
-    "standings": ("livescore_football", "api_ninjas", "highlightly", "api_football"),
+    "fixtures": ("api_ninjas", "highlightly", "api_football"),
+    "results": ("api_ninjas", "highlightly", "api_football"),
+    "standings": ("api_ninjas", "highlightly", "api_football"),
     "statistics": ("api_football", "highlightly"),
     "injuries": ("api_football", "highlightly"),
     "lineups": ("api_football", "highlightly"),
@@ -67,16 +70,22 @@ def resolve_field(
     *,
     now: datetime | None = None,
     max_age_seconds: int | None = None,
+    livescore_verified: bool = False,
 ) -> ResolvedField:
-    """Choose one source by domain priority and expose agreement/conflicts.
+    """Choose a source by domain priority and expose agreement/conflicts.
 
-    Invalid, null and stale observations are excluded. Conflicts are never
-    averaged. If the configured domain has no eligible provider, the field
-    remains unknown.
+    LiveScoreFootball is considered only when the caller has independently
+    verified coverage for the exact competition and season. Invalid, null and
+    stale observations are excluded. Conflicts are never averaged.
     """
-    priority = PROVIDER_ORDER.get(domain)
-    if priority is None:
+    base_priority = PROVIDER_ORDER.get(domain)
+    if base_priority is None:
         raise ValueError(f"Unknown data domain: {domain}")
+    priority = (
+        ("livescore_football", *base_priority)
+        if livescore_verified and domain in {"fixtures", "results", "standings"}
+        else base_priority
+    )
 
     current = _utc(now or datetime.now(timezone.utc))
     eligible: list[Observation] = []
@@ -144,7 +153,7 @@ def normalize_team_name(name: str) -> str:
     """Conservative display-name normalization for candidate matching only."""
     import re
     normalized = re.sub(r"[^a-z0-9]+", " ", str(name).casefold()).strip()
-    return re.sub(r"\s+", " ", normalized)
+    return re.sub(r"\\s+", " ", normalized)
 
 
 def match_identity_key(
