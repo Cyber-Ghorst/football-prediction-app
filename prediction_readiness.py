@@ -58,7 +58,11 @@ def _fixture_identity_status(
             "fixture_id": None,
             "kickoff_utc": None,
             "source_updated_at": None,
+            "source_fetched_at": None,
+            "source_age_seconds": None,
+            "source_age_minutes": None,
             "source_freshness": "unknown",
+            "freshness_note": "No successful detailed-fixture retrieval timestamp is attached.",
         }
 
     try:
@@ -95,6 +99,16 @@ def _fixture_identity_status(
         reasons.append("fixture state is not confirmed as scheduled")
     if not kickoff_valid:
         reasons.append("kickoff is missing, invalid or not in the future")
+    fetched_at = _utc_datetime(fixture.get("fixture_details_fetched_at"))
+    age_seconds = (now - fetched_at).total_seconds() if fetched_at is not None else None
+    age_minutes = round(age_seconds / 60, 1) if age_seconds is not None else None
+    freshness_note = (
+        "Retrieval age is measured from the successful detailed-fixture response; no fresh/stale threshold is applied."
+        if fetched_at is not None and age_seconds >= 0
+        else "The retrieval timestamp is later than the diagnostic clock; check system clock alignment."
+        if fetched_at is not None
+        else "No successful detailed-fixture retrieval timestamp is attached; freshness age cannot be measured."
+    )
     return {
         "verified": verified,
         "status": "verified" if verified else "identity_or_schedule_unverified",
@@ -102,9 +116,11 @@ def _fixture_identity_status(
         "fixture_id": fixture.get("id"),
         "kickoff_utc": kickoff.isoformat() if kickoff else None,
         "source_updated_at": fixture.get("updated_at") or fixture.get("updatedAt"),
-        # The adapter does not currently attach a fetch timestamp to each fixture.
-        "source_freshness": "unknown",
-        "freshness_note": "No fixture-level fetched_at timestamp is attached; freshness cannot be certified from updated_at alone.",
+        "source_fetched_at": fetched_at.isoformat() if fetched_at else None,
+        "source_age_seconds": round(age_seconds, 1) if age_seconds is not None else None,
+        "source_age_minutes": age_minutes,
+        "source_freshness": "measured" if fetched_at is not None and age_seconds >= 0 else "unknown",
+        "freshness_note": freshness_note,
     }
 
 

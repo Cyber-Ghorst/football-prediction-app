@@ -57,6 +57,22 @@ class PredictionReadinessTests(unittest.TestCase):
         self.assertTrue(report["fixture"]["verified"])
         self.assertTrue(report["ten_match_history_target_met"])
 
+    def test_fixture_fetch_age_is_reported_without_freshness_threshold(self):
+        row = fixture()
+        row["fixture_details_fetched_at"] = "2026-11-07T11:30:00+00:00"
+        report = self.report(selected_fixture=row)
+        self.assertEqual(report["fixture"]["source_fetched_at"], "2026-11-07T11:30:00+00:00")
+        self.assertEqual(report["fixture"]["source_age_seconds"], 1800.0)
+        self.assertEqual(report["fixture"]["source_age_minutes"], 30.0)
+        self.assertEqual(report["fixture"]["source_freshness"], "measured")
+        self.assertIn("no fresh/stale threshold", report["fixture"]["freshness_note"])
+
+    def test_fixture_fetch_age_stays_unknown_when_timestamp_missing(self):
+        report = self.report(selected_fixture=fixture())
+        self.assertIsNone(report["fixture"]["source_fetched_at"])
+        self.assertIsNone(report["fixture"]["source_age_seconds"])
+        self.assertEqual(report["fixture"]["source_freshness"], "unknown")
+
     def test_five_to_nine_matches_is_limited_history(self):
         report = self.report(7, 9, fixture())
         self.assertEqual(report["overall_status"], "limited_history")

@@ -60,6 +60,11 @@ class UpcomingFixtureEnrichmentTests(unittest.TestCase):
         self.assertEqual(fixtures[0]["id"], 7001)
         self.assertEqual(fixtures[0]["state"]["short_name"], "NS")
         self.assertEqual(fixtures[0]["participants"][0]["name"], "Fulham")
+        fetched_at = datetime.fromisoformat(
+            fixtures[0]["fixture_details_fetched_at"].replace("Z", "+00:00")
+        )
+        self.assertIsNotNone(fetched_at.tzinfo)
+        self.assertIsNone(fixtures[0].get("updated_at"))
         self.assertEqual(len(client.calls), 2)
         self.assertEqual(client.calls[1][0], "fixtures/multi/7001")
         self.assertEqual(client.calls[1][1]["include"], "participants;state")
