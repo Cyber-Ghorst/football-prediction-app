@@ -429,8 +429,12 @@ try:
                                     st.json({
                                         "selected_score": [match_record.get("home_score"), match_record.get("away_score")],
                                         "source_ids": match_record.get("source_ids"),
-                                        "reconciliation": match_record.get("reconciliation"),
+                                        "diagnostic_status": match_record.get("diagnostic_status"),
+                                        "agreement_fields": match_record.get("agreement_fields"),
+                                        "conflict_fields": match_record.get("conflict_fields"),
                                         "providers_seen": match_record.get("providers_seen"),
+                                        "field_observations": match_record.get("field_observations"),
+                                        "reconciliation": match_record.get("reconciliation"),
                                     })
                         elif corroboration_errors or corroboration.get("errors"):
                             st.warning("No cross-provider fixture could be reconciled. Check provider errors and exact competition/team identity mapping.")

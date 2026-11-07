@@ -112,6 +112,23 @@ class ProviderCorroborationTests(unittest.TestCase):
         self.assertEqual(observed, {"sportmonks": 2, "highlightly": 3, "api_ninjas": 2})
         self.assertTrue(all(row.get("fetched_at") for row in match["reconciliation"]["home_score"]["observations"]))
         self.assertEqual(set(match["source_ids"]), {"sportmonks", "highlightly", "api_ninjas"})
+        self.assertEqual(match["agreement_fields"], ["status", "away_score"])
+        self.assertEqual(match["conflict_fields"], ["home_score", "kickoff_utc"])
+        self.assertEqual(match["diagnostic_status"], "agreement_and_conflict")
+        home_score_rows = [row for row in match["field_observations"] if row["field"] == "home_score"]
+        self.assertEqual(
+            {row["provider"]: row["value"] for row in home_score_rows},
+            {"sportmonks": 2, "highlightly": 3, "api_ninjas": 2},
+        )
+        self.assertTrue(all(row["fetched_at"] for row in home_score_rows))
+        self.assertEqual(
+            report["field_level_summary"]["home_score"]["fixtures_with_conflict"], 1
+        )
+        self.assertEqual(
+            report["field_level_summary"]["away_score"]["fixtures_with_agreement"], 1
+        )
+        self.assertEqual(report["fixtures_with_both_agreement_and_conflict"], 1)
+        self.assertIn("counted independently", report["interpretation"])
         self.assertEqual(len(ninjas.calls), 2)
         self.assertEqual(highlightly.calls[0]["leagueName"], "Premier League")
 
