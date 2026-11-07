@@ -160,10 +160,85 @@ def _score_records(records: Iterable[Mapping[str, Any]], prefix: str) -> dict[st
     }
 
 
+def _is_before_kickoff(row: Mapping[str, Any], timestamp_field: str) -> bool:
+    kickoff = _parse_datetime(row.get("kickoff_at"))
+    observed = _parse_datetime(row.get(timestamp_field))
+    return bool(kickoff and observed and observed < kickoff)
+
+
+def _fixture_identity(row: Mapping[str, Any]) -> str | None:
+    kickoff = _parse_datetime(row.get("kickoff_at"))
+    if kickoff is None:
+        return None
+    provider = str(row.get("fixture_provider") or "").strip().casefold()
+    fixture_id = str(row.get("fixture_id") or "").strip()
+    if provider and fixture_id:
+        return f"id:{provider}:{fixture_id}"
+    parts = (
+        str(row.get("competition") or "").strip().casefold(),
+        str(row.get("country") or "").strip().casefold(),
+        str(row.get("season") or "").strip(),
+        str(row.get("home_team") or "").strip().casefold(),
+        str(row.get("away_team") or "").strip().casefold(),
+        kickoff.isoformat(),
+    )
+    if not all(parts):
+        return None
+    return "fixture:" + "|".join(parts)
+
+
+def _json_player_records(row: Mapping[str, Any]) -> bool:
+    try:
+        value = json.loads(row.get("player_snapshot_players_json") or "[]")
+    except (TypeError, ValueError):
+        return False
+    return isinstance(value, list) and bool(value)
+
+
+def _json_team_season_records(row: Mapping[str, Any]) -> bool:
+    try:
+        value = json.loads(row.get("player_snapshot_teams_json") or "{}")
+    except (TypeError, ValueError):
+        return False
+    return isinstance(value, dict) and any(
+        isinstance(team, dict) and bool(team.get("season_statistics"))
+        for team in value.values()
+    )
+
+
 def evaluate_prediction_ledger(records: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
-    """Compare model vs Opta on identical completed fixtures; report coverage."""
+    """Evaluate one latest valid pre-kickoff forecast per identifiable fixture.
+
+    Timestamp fields and serialized snapshot contents are the source of truth;
+    imported boolean flags are not trusted for leakage protection.
+    """
     rows = [dict(row) for row in records]
-    eligible = [row for row in rows if str(row.get("prediction_before_kickoff", "")).lower() in ("true", "1")]
+    timestamp_eligible = [
+        row for row in rows
+        if _is_before_kickoff(row, "predicted_at")
+        and _valid_probabilities({
+            "home_win": row.get("model_home_win"),
+            "draw": row.get("model_draw"),
+            "away_win": row.get("model_away_win"),
+        }) is not None
+    ]
+
+    # Repeated runs for the same fixture must not inflate the backtest sample.
+    # Keep the latest valid pre-match forecast for each fixture identity.
+    latest_by_fixture: dict[str, dict[str, Any]] = {}
+    unidentifiable: list[dict[str, Any]] = []
+    for row in timestamp_eligible:
+        identity = _fixture_identity(row)
+        if identity is None:
+            unidentifiable.append(row)
+            continue
+        previous = latest_by_fixture.get(identity)
+        current_time = _parse_datetime(row.get("predicted_at"))
+        previous_time = _parse_datetime(previous.get("predicted_at")) if previous else None
+        if previous is None or (current_time and (previous_time is None or current_time > previous_time)):
+            latest_by_fixture[identity] = row
+
+    eligible = list(latest_by_fixture.values()) + unidentifiable
     completed = [row for row in eligible if outcome_from_score(
         row.get("actual_home_goals"), row.get("actual_away_goals")
     ) is not None]
@@ -173,19 +248,22 @@ def evaluate_prediction_ledger(records: Iterable[Mapping[str, Any]]) -> dict[str
             "home_win": row.get("opta_home_win"), "draw": row.get("opta_draw"),
             "away_win": row.get("opta_away_win"),
         }) is not None
-        and _parse_datetime(row.get("opta_captured_at")) is not None
-        and _parse_datetime(row.get("kickoff_at")) is not None
-        and _parse_datetime(row.get("opta_captured_at")) < _parse_datetime(row.get("kickoff_at"))
+        and _is_before_kickoff(row, "opta_captured_at")
     ]
-    player_snapshots = [row for row in eligible if str(
-        row.get("player_snapshot_before_kickoff", "")
-    ).lower() in ("true", "1")]
-    team_snapshots = [row for row in eligible if str(
-        row.get("team_snapshot_before_kickoff", "")
-    ).lower() in ("true", "1")]
+    player_snapshots = [
+        row for row in eligible
+        if _is_before_kickoff(row, "player_snapshot_at") and _json_player_records(row)
+    ]
+    team_snapshots = [
+        row for row in eligible
+        if _is_before_kickoff(row, "player_snapshot_at") and _json_team_season_records(row)
+    ]
     return {
         "records_total": len(rows),
+        "pre_match_prediction_records": len(timestamp_eligible),
         "pre_match_predictions": len(eligible),
+        "duplicate_records_excluded": len(timestamp_eligible) - len(eligible),
+        "unidentifiable_pre_match_records": len(unidentifiable),
         "completed_pre_match_predictions": len(completed),
         "player_snapshots_pre_kickoff": len(player_snapshots),
         "team_snapshots_pre_kickoff": len(team_snapshots),
@@ -209,7 +287,7 @@ def evaluate_prediction_ledger(records: Iterable[Mapping[str, Any]]) -> dict[str
         "model": _score_records(completed, "model"),
         "opta_same_fixtures": _score_records(opta_rows, "opta"),
         "opta_comparable_fixtures": len(opta_rows),
-        "opta_comparison_note": "Opta is scored only on the exact same completed fixtures as the model.",
+        "opta_comparison_note": "Opta is scored only on the same deduplicated completed fixtures as the model.",
     }
 
 
