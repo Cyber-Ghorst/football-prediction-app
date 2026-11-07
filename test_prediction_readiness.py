@@ -83,6 +83,26 @@ class PredictionReadinessTests(unittest.TestCase):
         self.assertEqual(diagnostics["fixtures_with_valid_scores"], 7)
         self.assertEqual(diagnostics["history_shortfall"], 3)
 
+    def test_history_order_and_collection_timestamp_are_exposed(self):
+        home = profile("Home FC", 9)
+        home["data_quality"].update({
+            "history_latest_match_at": "2026-11-01T15:00:00Z",
+            "history_oldest_match_at": "2026-09-01T15:00:00Z",
+            "history_collection_fetched_at": "2026-11-07T12:00:00+00:00",
+            "history_order": "newest_first_by_parsed_utc_kickoff",
+        })
+        report = build_prediction_readiness(
+            home, profile("Away FC", 9), selected_fixture=fixture(),
+            home_team_id=10, away_team_id=20, season_id=2026, now=self.NOW,
+        )
+        diagnostics = report["teams"]["home"]["history_collection_diagnostics"]
+        self.assertEqual(diagnostics["history_order"], "newest_first_by_parsed_utc_kickoff")
+        self.assertEqual(diagnostics["history_latest_match_at"], "2026-11-01T15:00:00Z")
+        self.assertEqual(
+            diagnostics["history_collection_fetched_at"],
+            "2026-11-07T12:00:00+00:00",
+        )
+
     def test_missing_exact_fixture_is_reported_not_substituted(self):
         report = self.report(selected_fixture=None)
         self.assertEqual(report["overall_status"], "fixture_unverified")
