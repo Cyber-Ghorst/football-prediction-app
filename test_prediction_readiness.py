@@ -83,6 +83,31 @@ class PredictionReadinessTests(unittest.TestCase):
         self.assertEqual(diagnostics["fixtures_with_valid_scores"], 7)
         self.assertEqual(diagnostics["history_shortfall"], 3)
 
+    def test_integrity_diagnostics_are_exposed(self):
+        home = profile("Home FC", 9)
+        home["data_quality"].update({
+            "duplicate_fixture_id_count": 1,
+            "duplicate_fixture_ids": [999],
+            "excluded_invalid_kickoff": 1,
+            "excluded_invalid_scores": 1,
+            "team_fixture_accounting_gap": 0,
+            "team_fixture_accounting_status": "balanced",
+            "statistics_core_metrics": ["Ball Possession", "Passes %"],
+            "statistics_coverage_by_metric": {"Ball Possession": 8, "Passes %": 6},
+            "matches_with_any_statistics": 9,
+            "matches_with_complete_core_statistics": 6,
+            "core_statistics_completeness_pct": 77.8,
+            "history_integrity_status": "issues_detected",
+        })
+        report = build_prediction_readiness(
+            home, profile("Away FC", 9), selected_fixture=fixture(),
+            home_team_id=10, away_team_id=20, season_id=2026, now=self.NOW,
+        )
+        diagnostics = report["teams"]["home"]["history_collection_diagnostics"]
+        self.assertEqual(diagnostics["duplicate_fixture_id_count"], 1)
+        self.assertEqual(diagnostics["history_integrity_status"], "issues_detected")
+        self.assertEqual(diagnostics["core_statistics_completeness_pct"], 77.8)
+
     def test_history_order_and_collection_timestamp_are_exposed(self):
         home = profile("Home FC", 9)
         home["data_quality"].update({
