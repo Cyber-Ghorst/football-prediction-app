@@ -6,7 +6,9 @@ This version adds automatic data collection from API-Football v3 while retaining
 - `app.py` — Streamlit interface and data workflow
 - `engine.py` — weighted prediction engine with explicit missing-data handling
 - `tvd.py` — keep the existing Layer 1 file unchanged
-- `api_football.py` — API-Football v3 client
+- `api_football.py` — dedicated API-Football v3 client
+- `api_ninjas.py` — separate API Ninjas client
+- `highlightly.py` — separate Highlightly client
 - `data_layer2.py` — fixture normalization and team profile collection
 - `form_analyzer.py` — last-10 form, goals and venue performance
 - `strength_analyzer.py` — opponent-strength values from competition standings
@@ -18,7 +20,7 @@ This version adds automatic data collection from API-Football v3 while retaining
 2. Set Streamlit Community Cloud → App → Settings → Secrets:
 
 ```toml
-API_FOOTBALL_KEY = "YOUR_API_FOOTBALL_KEY"
+APISPORTS_API_KEY = "YOUR_API_SPORTS_KEY"
 ```
 
 3. Ensure `requirements.txt` contains the supplied dependencies and redeploy/reboot the app.
@@ -30,3 +32,30 @@ API_FOOTBALL_KEY = "YOUR_API_FOOTBALL_KEY"
 - Injury reports are shown, but no availability rating is fabricated from raw injury counts.
 - Tactical metrics are calculated only from statistics actually returned. TVD remains available for evidence-based manual ratings.
 - Probabilities are model estimates, not guarantees. Backtest and calibrate before using for decisions.
+
+
+## Provider configuration status
+
+The Streamlit prediction workflow currently runs through API-Football v3. Configure APISPORTS_API_KEY in Streamlit Secrets. Optional independent adapter credentials are API_NINJAS_API_KEY and HIGHLIGHTLY_API_KEY; these adapters remain isolated and are not active fallbacks. LiveScoreFootball's documented public read API requires no key. Never commit provider keys.
+
+See MULTI_SOURCE_API_ARCHITECTURE.md for provider responsibilities, reconciliation rules and remaining integration work.
+
+
+## LiveScoreFootball read-only source
+
+The project includes a read-only adapter for the public [LiveScoreFootball API](https://github.com/rezarahiminia/livescoreFootball), hosted at https://worldcup26.ir. Its documented public endpoints currently require no API key. Set LIVESCORE_FOOTBALL_BASE_URL only when using a different compatible deployment. The API reads stored MongoDB snapshots fed by a separate listener, so it is not a guaranteed real-time feed. The public catalogue currently reports 33 active competitions across multiple countries; the exact per-competition catalogue and coverage must be read at runtime. A competition is eligible for a cross-provider mapping only when its name and country match exactly, it is active, it reports stored data, and its season matches. The adapter is implemented but is not yet enabled as an automatic Layer 2 fallback. See MULTI_SOURCE_API_ARCHITECTURE.md.
+
+
+## Canonical provider reconciliation
+
+The repository now includes `canonical_data.py`, which normalizes LiveScoreFootball and API-Football v3 match records into a common schema and reconciles matched fields with provider priority and conflict provenance. Cross-provider matching requires an explicit shared competition key, season, home/away team identity and a close kickoff time. Source IDs remain namespaced. The layer is covered by `test_canonical_data.py` and is not yet enabled as automatic fallback in the Streamlit app pending verified competition mappings and source freshness checks.
+
+
+## Competition crosswalk and provider health (2026-11-07)
+
+- `competition_crosswalk.py` builds a runtime crosswalk from the API-Football and LiveScoreFootball catalogues. It does not guess numeric IDs or fuzzy-match similar competition names.
+- A LiveScoreFootball competition is marked verified only after exact normalized competition-name and country matching, active status, stored-data coverage, and a matching requested season. Ambiguous duplicates and missing/mismatched seasons fail closed.
+- `provider_health.py` separates transport/account health from data freshness. It uses domain-specific freshness limits; a missing or invalid source timestamp is reported as unknown and is never treated as fresh.
+- The Streamlit sidebar now includes an opt-in **Run provider health & coverage check** action. It checks API-Football account status/quota, LiveScoreFootball health and sync metadata, and displays the exact competition crosswalk. It does not expose account identity or API keys.
+- API-Football documents a quota-exempt `/status` endpoint and daily request counters. Highlightly and API Ninjas are not probed because no verified health/status contract has been added for them.
+- These checks are diagnostics only. No automatic provider fallback is activated yet; source match IDs remain namespaced, and match-level freshness/identity validation must pass before data is handed to Layer 2.
