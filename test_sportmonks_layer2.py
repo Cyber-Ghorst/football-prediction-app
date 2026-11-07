@@ -47,6 +47,19 @@ class SportmonksLayer2Tests(unittest.TestCase):
         self.assertEqual(profile["matches"][0]["statistics"]["Ball Possession"], "60%")
         self.assertIsNone(profile["player_availability"])
 
+    def test_wrong_season_fixture_is_excluded(self):
+        row = fixture(1, 10, 20, 1, 0)
+        row["season_id"] = 999
+        profile = collect_sportmonks_team_profile({"id": 10, "name": "Home FC"}, 2026, [row], [])
+        self.assertEqual(profile["matches"], [])
+
+    def test_documented_finished_state_id_is_accepted(self):
+        row = fixture(1, 10, 20, 1, 0, state="unknown")
+        row["state_id"] = 5
+        row["state"] = {}
+        profile = collect_sportmonks_team_profile({"id": 10, "name": "Home FC"}, 2026, [row], [])
+        self.assertEqual(profile["data_quality"]["matches_returned"], 1)
+
     def test_missing_score_or_participant_is_not_fabricated(self):
         row = fixture(1, 10, 20, 1, 0)
         row["scores"] = []
