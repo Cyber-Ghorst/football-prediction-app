@@ -6,6 +6,7 @@ scores, opponent mappings, or availability ratings are created.
 from __future__ import annotations
 
 from typing import Any
+from datetime import datetime, timezone
 
 from form_analyzer import analyze_form, venue_rating
 from tactical_indicators import analyze_tactics
@@ -58,13 +59,28 @@ def _participants(fixture: dict[str, Any]) -> tuple[dict[str, Any] | None, dict[
 
 def _state(fixture: dict[str, Any]) -> str:
     state = fixture.get("state") or {}
-    # Sportmonks documents finished fixture state IDs 5, 7 and 8.
+    # Sportmonks state IDs: 1 = not started; 5/7/8 = completed.
     try:
-        if int(fixture.get("state_id")) in {5, 7, 8}:
+        state_id = int(fixture.get("state_id"))
+        if state_id in {5, 7, 8}:
             return "finished"
+        if state_id == 1:
+            return "scheduled"
+        if state_id in {2, 3, 4, 6}:
+            return "live"
     except (TypeError, ValueError):
         pass
-    label = str(state.get("short_name") or state.get("name") or "").strip().casefold()
+    if isinstance(state, dict):
+        label_value = state.get("short_name") or state.get("name")
+    else:
+        label_value = state
+    if not label_value:
+        status = fixture.get("status")
+        label_value = (
+            status.get("short_name") or status.get("name")
+            if isinstance(status, dict) else status
+        )
+    label = str(label_value or "").strip().casefold()
     if label in _COMPLETED or any(x in label for x in ("finished", "full time", "after extra", "after penalties")):
         return "finished"
     if any(x in label for x in ("live", "in play", "half time", "1st half", "2nd half", "extra time", "penalty")):
@@ -280,6 +296,118 @@ def collect_sportmonks_team_profile(
     }
 
 
+def _kickoff_timestamp(fixture: dict[str, Any]) -> int | None:
+    """Read Sportmonks kickoff from its epoch field or ISO datetime field."""
+    raw_timestamp = fixture.get("starting_at_timestamp")
+    if raw_timestamp is not None:
+        try:
+            value = float(raw_timestamp)
+            # Be tolerant of millisecond epochs while normalizing to seconds.
+            if value > 100_000_000_000:
+                value /= 1000
+            return int(value)
+        except (TypeError, ValueError, OverflowError):
+            pass
+
+    raw_date = fixture.get("starting_at")
+    if not raw_date:
+        return None
+    try:
+        value = datetime.fromisoformat(str(raw_date).strip().replace("Z", "+00:00"))
+        # Sportmonks timestamps without an explicit offset are UTC.
+        if value.tzinfo is None:
+            value = value.replace(tzinfo=timezone.utc)
+        return int(value.astimezone(timezone.utc).timestamp())
+    except (TypeError, ValueError, OverflowError):
+        return None
+
+
+def diagnose_upcoming_match_fixture(
+    fixtures: list[dict[str, Any]],
+    home_team_id: int,
+    away_team_id: int,
+    season_id: int,
+    now_timestamp: int | None = None,
+) -> dict[str, Any]:
+    """Return an exact fixture and auditable rejection counts; never guess identity."""
+    import time
+
+    current = int(now_timestamp if now_timestamp is not None else time.time())
+    counts = {
+        "fixtures_scanned": len(fixtures),
+        "same_season": 0,
+        "scheduled": 0,
+        "exact_home_away": 0,
+        "future_kickoff": 0,
+        "missing_kickoff": 0,
+    }
+    candidates: list[tuple[int, dict[str, Any]]] = []
+
+    for fixture in fixtures:
+        try:
+            if int(fixture.get("season_id")) != int(season_id):
+                continue
+        except (TypeError, ValueError):
+            continue
+        counts["same_season"] += 1
+
+        if _state(fixture) != "scheduled":
+            continue
+        counts["scheduled"] += 1
+
+        home, away = _participants(fixture)
+        if not home or not away:
+            continue
+        try:
+            exact_pair = (
+                int(home.get("id")) == int(home_team_id)
+                and int(away.get("id")) == int(away_team_id)
+            )
+        except (TypeError, ValueError):
+            exact_pair = False
+        if not exact_pair:
+            continue
+        counts["exact_home_away"] += 1
+
+        kickoff = _kickoff_timestamp(fixture)
+        if kickoff is None:
+            counts["missing_kickoff"] += 1
+            continue
+        if kickoff <= current:
+            continue
+        counts["future_kickoff"] += 1
+        candidates.append((kickoff, fixture))
+
+    if candidates:
+        kickoff, selected = min(candidates, key=lambda item: item[0])
+        return {
+            "verified": True,
+            "status": "verified",
+            "reason": "Exact home/away teams, season, scheduled state and future kickoff matched.",
+            "fixture": selected,
+            "kickoff_timestamp": kickoff,
+            **counts,
+        }
+
+    if counts["same_season"] == 0:
+        reason = "No fixtures in the returned schedule matched the selected Sportmonks season ID."
+    elif counts["scheduled"] == 0:
+        reason = "No not-started/scheduled fixtures were present in the selected season schedule."
+    elif counts["exact_home_away"] == 0:
+        reason = "Scheduled fixtures were returned, but none matched the exact selected home/away team IDs and orientation."
+    elif counts["future_kickoff"] == 0 and counts["missing_kickoff"] > 0:
+        reason = "The exact scheduled team pairing was found, but its kickoff timestamp could not be parsed."
+    else:
+        reason = "The exact scheduled team pairing was found, but its kickoff is not in the future."
+    return {
+        "verified": False,
+        "status": "not_found",
+        "reason": reason,
+        "fixture": None,
+        **counts,
+    }
+
+
 def find_upcoming_match_fixture(
     fixtures: list[dict[str, Any]],
     home_team_id: int,
@@ -288,31 +416,9 @@ def find_upcoming_match_fixture(
     now_timestamp: int | None = None,
 ) -> dict[str, Any] | None:
     """Find the exact scheduled home-v-away fixture; never substitute a team's other match."""
-    import time
-
-    current = int(now_timestamp if now_timestamp is not None else time.time())
-    candidates: list[dict[str, Any]] = []
-    for fixture in fixtures:
-        try:
-            if int(fixture.get("season_id")) != int(season_id):
-                continue
-        except (TypeError, ValueError):
-            continue
-        if _state(fixture) != "scheduled":
-            continue
-        home, away = _participants(fixture)
-        if not home or not away:
-            continue
-        try:
-            if int(home.get("id")) != int(home_team_id) or int(away.get("id")) != int(away_team_id):
-                continue
-            kickoff = int(fixture.get("starting_at_timestamp"))
-        except (TypeError, ValueError):
-            continue
-        if kickoff <= current:
-            continue
-        candidates.append(fixture)
-    return min(candidates, key=lambda row: int(row["starting_at_timestamp"])) if candidates else None
+    return diagnose_upcoming_match_fixture(
+        fixtures, home_team_id, away_team_id, season_id, now_timestamp
+    )["fixture"]
 
 
 def extract_sportmonks_match_details(
