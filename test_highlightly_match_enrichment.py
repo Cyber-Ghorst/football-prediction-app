@@ -132,7 +132,7 @@ class HighlightlyMatchEnrichmentTests(unittest.TestCase):
             competition="Premier League", country="England", season=2026,
             home_team_name="Arsenal", away_team_name="Chelsea",
             selected_upcoming_fixture=sm,
-            now=datetime(2026, 11, 8, tzinfo=timezone.utc),
+            now=datetime(2026, 11, 9, 17, 30, tzinfo=timezone.utc),
         )
         self.assertTrue(report["upcoming_lineup_match_found"])
         self.assertEqual(report["lineups"]["home"]["formation"], "4-3-3")
@@ -140,6 +140,21 @@ class HighlightlyMatchEnrichmentTests(unittest.TestCase):
         self.assertEqual(len(report["lineups"]["home"]["starting_players"]), 2)
         self.assertEqual(len(report["lineups"]["home"]["substitutes"]), 1)
         self.assertEqual(client.lineup_calls, ["9002"])
+
+    def test_lineup_request_is_skipped_outside_documented_availability_window(self):
+        sm = sm_fixture(fid=702, date="2026-11-09T18:00:00Z", state="NS")
+        hl = hl_match(mid=9003, date="2026-11-09T18:00:00Z", state="Not Started")
+        client = FakeHighlightly([hl], lineups={})
+        report = collect_highlightly_match_enrichment(
+            client=client, sportmonks_fixtures=[sm],
+            competition="Premier League", country="England", season=2026,
+            home_team_name="Arsenal", away_team_name="Chelsea",
+            selected_upcoming_fixture=sm,
+            now=datetime(2026, 11, 9, 12, 0, tzinfo=timezone.utc),
+        )
+        self.assertEqual(report["lineup_requests"], 0)
+        self.assertEqual(client.lineup_calls, [])
+        self.assertIn("40 minutes before kickoff", report["lineup_not_requested_reason"])
 
     def test_lineup_wrong_team_identity_is_rejected(self):
         payload = {
