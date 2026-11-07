@@ -1,8 +1,8 @@
 """Sportmonks Football API v3 adapter.
 
 Credential: SPORTMONKS_API_TOKEN (Streamlit Secrets or environment).
-Uses the documented v3 REST API and Authorization header. This adapter is
-initially diagnostic/read-only; it does not silently replace Layer 2 data.
+Uses the documented v3 REST API and Authorization header. Current-season
+collection is wired to Layer 2 with strict season/team identity and completeness gates.
 """
 from __future__ import annotations
 
