@@ -390,6 +390,7 @@ try:
                                 competition=str(selected_league_row.get("name") or selected_league),
                                 country=selected_country_name,
                                 season=int(season),
+                                sportmonks_season_id=int(selected_season_id),
                                 home_team_name=home_name,
                                 away_team_name=away_name,
                                 highlightly_client=hl_client,

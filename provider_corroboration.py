@@ -105,6 +105,7 @@ def collect_recent_result_corroboration(
     competition: str,
     country: str | None,
     season: int,
+    sportmonks_season_id: int | None = None,
     home_team_name: str,
     away_team_name: str,
     highlightly_client: Any | None = None,
@@ -219,9 +220,14 @@ def collect_recent_result_corroboration(
     # Restrict the diagnostic to fixtures involving either selected team.
     selected = {normalize_team_name(home_team_name), normalize_team_name(away_team_name)}
     target_fixtures = []
+    # Sportmonks season_id is an internal identifier, not the calendar year
+    # used by Highlightly's season filter. Keep the two values separate.
+    expected_sportmonks_season_id = int(
+        sportmonks_season_id if sportmonks_season_id is not None else season
+    )
     for fixture in sportmonks_fixtures:
         try:
-            if int(fixture.get("season_id")) != int(season):
+            if int(fixture.get("season_id")) != expected_sportmonks_season_id:
                 continue
         except (TypeError, ValueError):
             continue
