@@ -332,7 +332,7 @@ try:
         st.subheader("Data validation")
         for profile in (home, away):
             quality = profile["data_quality"]
-            st.write(f"**{profile['name']}** — source: {quality.get('provider', 'api_football')}; {quality['matches_returned']} completed matches; {quality['opponent_strength_matches']} with opponent-strength data; {quality['statistics_matches']} with match statistics.")
+            st.write(f"**{profile['name']}** — source: {quality.get('provider', 'api_football')}; {quality['matches_returned']} completed matches; {quality['opponent_strength_matches']} with opponent-strength data; {quality['statistics_matches']} with match statistics; {quality.get('statistics_observations', 0)} normalized statistic observations.")
             if quality["matches_returned"] < 5:
                 st.error(f"{profile['name']}: fewer than five completed matches. Prediction stopped; no data was fabricated.")
                 st.stop()
@@ -371,6 +371,21 @@ try:
             st.json(result["component_ratings"]); st.json(result["tactical_component_ratings"])
         with st.expander("Tactical indicators and match statistics"):
             st.json({home_name:home["tactical_summary"],away_name:away["tactical_summary"]})
+            st.caption("Recent per-match statistics include normalized values and their Sportmonks source provenance. Raw observations are retained for audit; only supported, unit-normalized metrics contribute to tactical indicators.")
+            st.json({
+                home_name: [
+                    {"fixture_id": row.get("fixture_id"), "date": row.get("date"),
+                     "statistics": row.get("statistics"),
+                     "statistics_provenance": row.get("statistics_provenance", [])}
+                    for row in home.get("matches", [])
+                ],
+                away_name: [
+                    {"fixture_id": row.get("fixture_id"), "date": row.get("date"),
+                     "statistics": row.get("statistics"),
+                     "statistics_provenance": row.get("statistics_provenance", [])}
+                    for row in away.get("matches", [])
+                ],
+            })
         with st.expander("Reported injuries and next-match lineups (when provider data exists)"):
             st.json({home_name:{"injuries":home["availability"],"lineups":home["lineups"]},away_name:{"injuries":away["availability"],"lineups":away["lineups"]}})
         if tvd_result:
