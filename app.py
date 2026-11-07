@@ -89,7 +89,7 @@ with st.sidebar:
     cross_check_highlightly_players = st.checkbox(
         "Fetch player and team-season performance statistics",
         value=False,
-        help="Uses the exact selected-fixture Highlightly starting lineups. Up to 22 player-stat requests plus two team-stat requests; available only when the lineup feed is available. Diagnostic only.",
+        help="Uses exact selected-fixture starters. Performs a quota preflight and skips collection when remaining requests are unknown or insufficient. Maximum 22 player-stat requests plus two team-stat requests. Diagnostic only.",
     )
     st.caption("For 2022–2024 add APISPORTS_API_KEY; for 2025+ add SPORTMONKS_API_TOKEN in Streamlit Secrets. Never paste keys into public code.")
     with st.expander("Provider readiness", expanded=True):
@@ -125,10 +125,12 @@ try:
         try:
             with APINinjasClient() as ninjas_client:
                 ninjas_ok = ninjas_client.test_connection()
+                ninjas_metadata = dict(ninjas_client.last_metadata)
             st.write("**API Ninjas connection test**")
             st.json({
                 "transport_status": "responding" if ninjas_ok else "unknown",
                 "credential_configured": True,
+                "quota_metadata": ninjas_metadata,
                 "fallback_enabled": False,
                 "note": "Connection verified; match records are not yet wired into Layer 2.",
             })
@@ -164,16 +166,26 @@ try:
                 live_competitions = live_client.leagues(kind="club", available=True)
             st.write("**LiveScoreFootball service health**")
             st.json({"health": live_health, "metadata_assessment": assess_livescore_metadata(live_meta)})
+            if int(season) > 2024:
+                crosswalk_source = get_sm_leagues()
+                crosswalk_provider = "sportmonks"
+            else:
+                crosswalk_source = leagues
+                crosswalk_provider = "api_football"
             crosswalk = build_competition_crosswalk(
-                leagues, live_competitions, requested_season=int(season)
+                crosswalk_source,
+                live_competitions,
+                requested_season=int(season),
+                source_provider=crosswalk_provider,
             )
-            st.write("**Exact competition crosswalk**")
-            st.caption("Only exact competition-name + country matches with active stored coverage and a matching season are marked verified. Unverified competitions are not eligible for fallback.")
+            st.write(f"**{crosswalk_provider.replace('_', ' ').title()} → LiveScoreFootball competition crosswalk**")
+            st.caption("Verification requires exact competition/country identity, matching season, active stored data, and a fresh per-competition coverage.lastSyncedAt timestamp. Fixture-level update timestamps must also be fresh before any individual fixture can be considered. Automatic fallback remains disabled.")
             if crosswalk:
                 st.dataframe([
                     {key: row.get(key) for key in (
-                        "api_football_id", "name", "country", "livescore_slug",
-                        "livescore_season", "verified", "reason"
+                        "source_provider", "source_competition_id", "name", "country",
+                        "livescore_slug", "livescore_season", "coverage_freshness",
+                        "verified", "reason"
                     )}
                     for row in crosswalk
                 ], use_container_width=True, hide_index=True)
@@ -467,6 +479,7 @@ try:
                         if highlightly_enrichment is not None:
                             try:
                                 with HighlightlyClient() as player_client:
+                                    quota_preflight = player_client.test_connection()
                                     player_report = collect_highlightly_player_enrichment(
                                         client=player_client,
                                         lineups=highlightly_enrichment.get("lineups"),
@@ -477,7 +490,9 @@ try:
                                         from_date=f"{int(season)}-01-01",
                                         timezone_name="Africa/Nairobi",
                                         max_players=22,
+                                        require_quota_metadata=True,
                                     )
+                                    player_report["quota_preflight"] = quota_preflight.get("metadata", {})
                                 st.json({
                                     key: value for key, value in player_report.items()
                                     if key not in {"players", "teams", "unknown_players", "errors"}
