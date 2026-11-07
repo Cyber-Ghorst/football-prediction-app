@@ -270,6 +270,7 @@ def collect_sportmonks_team_profile(
         matches.append({
             "fixture_id": fixture.get("id"),
             "date": fixture.get("starting_at"),
+            "collection_fetched_at": fixture.get("collection_fetched_at"),
             "venue": "home" if is_home else "away",
             "opponent_id": opponent_id,
             "opponent_name": opponent.get("name"),
@@ -280,8 +281,20 @@ def collect_sportmonks_team_profile(
             "statistics_provenance": _team_statistics_provenance(fixture, team_id),
         })
 
-    matches.sort(key=lambda row: str(row.get("date") or ""), reverse=True)
+    # Sort by parsed UTC kickoff, not raw ISO text: offsets can make lexical
+    # ordering incorrect. Undated rows are retained only after dated rows.
+    matches.sort(
+        key=lambda row: (
+            _kickoff_timestamp({"starting_at": row.get("date")}) is not None,
+            _kickoff_timestamp({"starting_at": row.get("date")}) or 0,
+        ),
+        reverse=True,
+    )
     recent = matches[:10]
+    collection_fetched_at = next(
+        (row.get("collection_fetched_at") for row in fixtures if row.get("collection_fetched_at")),
+        None,
+    )
     form = analyze_form(recent)
     tactics = analyze_tactics(recent)
     return {
@@ -321,6 +334,10 @@ def collect_sportmonks_team_profile(
             "matches_returned": len(recent),
             "history_target": 10,
             "history_shortfall": max(0, 10 - len(recent)),
+            "history_latest_match_at": recent[0].get("date") if recent else None,
+            "history_oldest_match_at": recent[-1].get("date") if recent else None,
+            "history_collection_fetched_at": collection_fetched_at,
+            "history_order": "newest_first_by_parsed_utc_kickoff",
         },
     }
 
