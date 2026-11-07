@@ -1,6 +1,6 @@
 # Football Prediction Lab — Layer 2
 
-This version adds automatic data collection from API-Football v3 while retaining the Layer 1 prediction model and `tvd.py` rules-based Tactical Vulnerability Detector.
+This version retains the Layer 1 weighted prediction model and `tvd.py` Tactical Vulnerability Detector while using a role-based multi-provider data architecture.
 
 ## Files
 - `app.py` — Streamlit interface and data workflow
@@ -17,11 +17,16 @@ This version adds automatic data collection from API-Football v3 while retaining
 
 ## Install and configure
 1. Copy the files into the repository root, replacing `app.py` and `engine.py` and adding the new modules. Keep the existing `tvd.py` and `sample_teams.json`.
-2. Set Streamlit Community Cloud → App → Settings → Secrets:
+2. Set the provider credentials required for the selected season in Streamlit Community Cloud → App → Settings → Secrets:
 
 ```toml
-APISPORTS_API_KEY = "YOUR_API_SPORTS_KEY"
+SPORTMONKS_API_TOKEN = "YOUR_SPORTMONKS_TOKEN"  # current seasons 2025+
+APISPORTS_API_KEY = "YOUR_API_SPORTS_KEY"        # historical seasons 2022–2024
+API_NINJAS_API_KEY = "YOUR_API_NINJAS_KEY"       # optional corroboration
+HIGHLIGHTLY_API_KEY = "YOUR_HIGHLIGHTLY_KEY"     # optional corroboration/enrichment
 ```
+
+Never commit or paste provider keys into public code or chat.
 
 3. Ensure `requirements.txt` contains the supplied dependencies and redeploy/reboot the app.
 
@@ -36,7 +41,14 @@ APISPORTS_API_KEY = "YOUR_API_SPORTS_KEY"
 
 ## Provider configuration status
 
-The Streamlit prediction workflow currently runs through API-Football v3. Configure APISPORTS_API_KEY in Streamlit Secrets. Optional independent adapter credentials are API_NINJAS_API_KEY and HIGHLIGHTLY_API_KEY; these adapters remain isolated and are not active fallbacks. LiveScoreFootball's documented public read API requires no key. Never commit provider keys.
+Provider roles in the current app:
+- Sportmonks is the primary current-season source for seasons 2025 onward.
+- API-Football v3 is the historical specialist for seasons 2022–2024, subject to account plan coverage.
+- Highlightly is an independent corroboration/enrichment source; its player enrichment now performs a quota preflight and refuses to proceed when remaining quota is unknown or insufficient.
+- API Ninjas supplies optional fixtures/results/standings and club/squad corroboration. Its adapter includes the documented Danish Superliga slug and exposes available rate-limit headers when returned.
+- LiveScoreFootball is a read-only, database-snapshot source. Its automatic fallback remains disabled. The diagnostics build its current-season crosswalk from Sportmonks and require fresh per-competition sync metadata; fixture-level update timestamps must also be validated before an individual fixture can be eligible.
+
+Provider health, account quota, competition coverage, and source-data freshness are distinct checks. A successful unit test or public status page does not prove that a user's credential, plan, quota, or selected competition is available.
 
 See MULTI_SOURCE_API_ARCHITECTURE.md for provider responsibilities, reconciliation rules and remaining integration work.
 
@@ -53,8 +65,9 @@ The repository now includes `canonical_data.py`, which normalizes LiveScoreFootb
 
 ## Competition crosswalk and provider health (2026-11-07)
 
-- `competition_crosswalk.py` builds a runtime crosswalk from the API-Football and LiveScoreFootball catalogues. It does not guess numeric IDs or fuzzy-match similar competition names.
-- A LiveScoreFootball competition is marked verified only after exact normalized competition-name and country matching, active status, stored-data coverage, and a matching requested season. Ambiguous duplicates and missing/mismatched seasons fail closed.
+- `competition_crosswalk.py` builds a runtime crosswalk from Sportmonks for current seasons and API-Football for historical seasons. It does not guess numeric IDs or fuzzy-match similar competition names.
+- A LiveScoreFootball competition is marked verified only after exact normalized competition-name and country matching, active status, stored-data coverage, matching requested season, and a fresh per-competition `coverage.lastSyncedAt`. Ambiguous duplicates and missing/mismatched seasons or stale/missing timestamps fail closed.
+- `provider_health.py` also exposes fixture-level timestamp validation. A fresh global or competition sync does not make an individual fixture eligible when its own update timestamp is missing or stale.
 - `provider_health.py` separates transport/account health from data freshness. It uses domain-specific freshness limits; a missing or invalid source timestamp is reported as unknown and is never treated as fresh.
 - The Streamlit sidebar now includes an opt-in **Run provider health & coverage check** action. It checks API-Football account status/quota, LiveScoreFootball health and sync metadata, and displays the exact competition crosswalk. It does not expose account identity or API keys.
 - API-Football documents a quota-exempt `/status` endpoint and daily request counters. Highlightly and API Ninjas are not probed because no verified health/status contract has been added for them.

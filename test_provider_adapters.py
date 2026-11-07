@@ -31,15 +31,30 @@ class ProviderAdapterTests(unittest.TestCase):
         self.assertNotIn("secret-do-not-print", str(raised.exception))
         client.close()
 
-    def test_api_ninjas_connection_test_uses_supported_date_alias(self):
+    def test_api_ninjas_connection_test_exposes_safe_quota_headers(self):
         client = APINinjasClient(api_key="test-only")
         response = Mock()
         response.status_code = 200
         response.json.return_value = []
+        response.headers = {"X-RateLimit-Limit": "1000", "X-RateLimit-Remaining": "975"}
         response.raise_for_status.return_value = None
         client.session.get = Mock(return_value=response)
         self.assertTrue(client.test_connection())
+        self.assertEqual(client.last_metadata["requests_remaining"], "975")
+        self.assertEqual(client.last_metadata["requests_limit"], "1000")
+        self.assertNotIn("test-only", str(client.last_metadata))
+        self.assertEqual(client.session.headers["X-Api-Key"], "test-only")
         client.close()
+
+    def test_api_ninjas_includes_danish_superliga_catalogue_slug(self):
+        self.assertEqual(len(APINinjasClient.LEAGUES), 74)
+        self.assertEqual(
+            len({row["id"] for row in APINinjasClient.LEAGUES}), 74
+        )
+        self.assertIn(
+            {"id": "danishsuperliga", "name": "Danish Superliga"},
+            APINinjasClient.LEAGUES,
+        )
 
     def test_api_ninjas_upcoming_matches_accepts_date_object(self):
         from datetime import date

@@ -75,6 +75,51 @@ def assess_freshness(
     }
 
 
+def assess_livescore_competition_coverage(
+    competition: Mapping[str, Any],
+    *,
+    now: datetime | None = None,
+    max_age_seconds: int = 24 * 60 * 60,
+) -> dict[str, Any]:
+    """Require a fresh per-competition coverage.lastSyncedAt timestamp."""
+    coverage = competition.get("coverage") if isinstance(competition.get("coverage"), Mapping) else {}
+    freshness = assess_freshness(
+        coverage.get("lastSyncedAt"), "fixtures", now=now,
+        max_age_seconds=max_age_seconds,
+    )
+    return {
+        "competition": competition.get("name") or competition.get("slug"),
+        "slug": competition.get("slug"),
+        "freshness": freshness,
+        "fallback_eligible": competition.get("active") is True
+            and coverage.get("hasData") is True and freshness["fresh"],
+    }
+
+
+def assess_livescore_fixture_freshness(
+    fixture: Mapping[str, Any],
+    *,
+    now: datetime | None = None,
+    max_age_seconds: int = 24 * 60 * 60,
+) -> dict[str, Any]:
+    """Require a provider-reported fixture update timestamp before use."""
+    timestamp = next((
+        fixture.get(key) for key in (
+            "updatedAt", "lastUpdatedAt", "sourceUpdatedAt", "updated_at",
+            "last_updated_at",
+        ) if fixture.get(key) is not None
+    ), None)
+    freshness = assess_freshness(
+        timestamp, "fixtures", now=now, max_age_seconds=max_age_seconds,
+    )
+    return {
+        "fixture_id": fixture.get("id") or fixture.get("eventId"),
+        "freshness": freshness,
+        "eligible": freshness["fresh"],
+        "reason": freshness["reason"],
+    }
+
+
 def assess_livescore_metadata(
     metadata: Mapping[str, Any],
     *,
