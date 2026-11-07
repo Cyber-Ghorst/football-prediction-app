@@ -57,20 +57,49 @@ class PredictionReadinessTests(unittest.TestCase):
         self.assertTrue(report["fixture"]["verified"])
         self.assertTrue(report["ten_match_history_target_met"])
 
-    def test_fixture_fetch_age_is_reported_without_freshness_threshold(self):
+    def test_fixture_retrieved_within_24_hours_is_fresh(self):
         row = fixture()
         row["fixture_details_fetched_at"] = "2026-11-07T11:30:00+00:00"
         report = self.report(selected_fixture=row)
         self.assertEqual(report["fixture"]["source_fetched_at"], "2026-11-07T11:30:00+00:00")
         self.assertEqual(report["fixture"]["source_age_seconds"], 1800.0)
         self.assertEqual(report["fixture"]["source_age_minutes"], 30.0)
-        self.assertEqual(report["fixture"]["source_freshness"], "measured")
-        self.assertIn("no fresh/stale threshold", report["fixture"]["freshness_note"])
+        self.assertEqual(report["fixture"]["source_freshness"], "fresh")
+        self.assertIn("less than 24 hours", report["fixture"]["freshness_note"])
+
+    def test_fixture_exactly_24_hours_old_is_stale(self):
+        row = fixture()
+        row["fixture_details_fetched_at"] = "2026-11-06T12:00:00+00:00"
+        report = self.report(selected_fixture=row)
+        self.assertEqual(report["fixture"]["source_age_seconds"], 86400.0)
+        self.assertEqual(report["fixture"]["source_freshness"], "stale")
+        self.assertIn("24 hours ago or more", report["fixture"]["freshness_note"])
+
+    def test_fixture_older_than_24_hours_is_stale(self):
+        row = fixture()
+        row["fixture_details_fetched_at"] = "2026-11-06T11:00:00+00:00"
+        report = self.report(selected_fixture=row)
+        self.assertEqual(report["fixture"]["source_freshness"], "stale")
 
     def test_fixture_fetch_age_stays_unknown_when_timestamp_missing(self):
         report = self.report(selected_fixture=fixture())
         self.assertIsNone(report["fixture"]["source_fetched_at"])
         self.assertIsNone(report["fixture"]["source_age_seconds"])
+        self.assertEqual(report["fixture"]["source_freshness"], "unknown")
+
+    def test_future_dated_fixture_fetch_timestamp_is_unknown(self):
+        row = fixture()
+        row["fixture_details_fetched_at"] = "2026-11-07T12:01:00+00:00"
+        report = self.report(selected_fixture=row)
+        self.assertIsNone(report["fixture"]["source_fetched_at"])
+        self.assertIsNone(report["fixture"]["source_age_seconds"])
+        self.assertEqual(report["fixture"]["source_freshness"], "unknown")
+
+    def test_invalid_fixture_fetch_timestamp_is_unknown(self):
+        row = fixture()
+        row["fixture_details_fetched_at"] = "not-a-timestamp"
+        report = self.report(selected_fixture=row)
+        self.assertIsNone(report["fixture"]["source_fetched_at"])
         self.assertEqual(report["fixture"]["source_freshness"], "unknown")
 
     def test_five_to_nine_matches_is_limited_history(self):
