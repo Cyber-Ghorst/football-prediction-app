@@ -113,7 +113,8 @@ class CanonicalMatchTests(unittest.TestCase):
         )
         right["home_score"] = 3
         result = reconcile_match_pair(
-            left, right, team_aliases={"Arsenal FC": "Arsenal", "Chelsea FC": "Chelsea"}
+            left, right, team_aliases={"Arsenal FC": "Arsenal", "Chelsea FC": "Chelsea"},
+            livescore_verified=True,
         )
         self.assertEqual(result["home_score"], 2)
         self.assertEqual(result["reconciliation"]["home_score"]["provider"], "livescore_football")
