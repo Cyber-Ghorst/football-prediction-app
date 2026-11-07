@@ -85,8 +85,8 @@ These are integration-contract defects, not reasons to alter the prediction weig
 Use Streamlit Secrets or environment variables. Never commit keys:
 
 - `API_NINJAS_API_KEY`
-- `HIGHLIGHTLY_API_KEY` (support the existing `API_FOOTBALL_KEY` alias only for backward compatibility if it is currently used for Highlightly)
-- `API_FOOTBALL_KEY` (for the API-Football v3 provider; do not confuse this with the Highlightly compatibility alias)
+- `HIGHLIGHTLY_API_KEY` (support the existing `API_FOOTBALL_KEY` alias only as a backward-compatible Highlightly credential)
+- `APISPORTS_API_KEY` (for API-Football v3; this avoids colliding with the legacy Highlightly key name)
 - `LIVESCORE_FOOTBALL_BASE_URL` (optional override for the documented public API base)
 
 Provider enablement must be explicit and independently configurable. Do not assume a key exists merely because a provider module is installed.
