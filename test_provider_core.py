@@ -46,14 +46,25 @@ class ProviderCoreTests(unittest.TestCase):
         self.assertEqual(result.status, "corroborated")
         self.assertEqual(result.corroborating_providers, ("highlightly",))
 
-    def test_statistics_use_api_football_priority(self):
+    def test_statistics_use_sportmonks_priority_when_validated(self):
         result = resolve_field("statistics", [
             self.obs("highlightly", 14),
             self.obs("api_football", 12),
+            self.obs("sportmonks", 13),
         ], now=NOW)
-        self.assertEqual(result.value, 12)
-        self.assertEqual(result.provider, "api_football")
+        self.assertEqual(result.value, 13)
+        self.assertEqual(result.provider, "sportmonks")
         self.assertEqual(result.status, "conflict")
+
+    def test_current_season_domains_prioritize_sportmonks(self):
+        for domain in ("fixtures", "results", "standings"):
+            result = resolve_field(domain, [
+                self.obs("api_ninjas", "secondary"),
+                self.obs("highlightly", "corroboration"),
+                self.obs("api_football", "historical"),
+                self.obs("sportmonks", "current-season"),
+            ], now=NOW)
+            self.assertEqual(result.provider, "sportmonks")
 
     def test_invalid_null_and_stale_values_are_excluded(self):
         result = resolve_field("results", [
