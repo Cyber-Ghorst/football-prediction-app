@@ -94,6 +94,14 @@ class HighlightlyClient:
     def players(self, **params: Any) -> list[dict[str, Any]]:
         return self._rows(self._get("players", params))
 
+    def player_statistics(self, player_id: int | str) -> list[dict[str, Any]]:
+        """Return competition- and club-level career statistics for one player."""
+        return self._rows(self._get(f"players/{player_id}/statistics"))
+
+    def team_statistics(self, team_id: int | str, **params: Any) -> list[dict[str, Any]]:
+        """Return team aggregates from the required fromDate onward."""
+        return self._rows(self._get(f"teams/statistics/{team_id}", params))
+
     def test_connection(self) -> dict[str, Any]:
         """Verify authenticated access using the documented leagues endpoint."""
         rows = self.leagues(limit=1, offset=0)
