@@ -6,7 +6,9 @@ from sportmonks_layer2 import collect_sportmonks_team_profile, standings_strengt
 def fixture(fid, home_id, away_id, home_goals, away_goals, state="FT"):
     return {
         "id": fid,
+        "season_id": 2026,
         "starting_at": f"2026-10-{fid:02d} 15:00:00",
+        "updated_at": "2026-10-20T10:00:00Z",
         "state": {"short_name": state, "name": "Finished"},
         "participants": [
             {"id": home_id, "name": f"Team {home_id}", "meta": {"location": "home"}},
@@ -17,8 +19,13 @@ def fixture(fid, home_id, away_id, home_goals, away_goals, state="FT"):
             {"participant_id": away_id, "description": "CURRENT", "score": {"goals": away_goals}},
         ],
         "statistics": [
-            {"participant_id": home_id, "type": {"name": "Ball Possession"}, "data": {"value": "60%"}},
-            {"participant_id": away_id, "type": {"name": "Ball Possession"}, "data": {"value": "40%"}},
+            {"participant_id": home_id, "type": {"id": 1, "name": "Ball Possession"}, "data": {"value": "60%"}},
+            {"participant_id": away_id, "type": {"id": 1, "name": "Ball Possession"}, "data": {"value": "40%"}},
+            {"participant_id": home_id, "type": {"id": 2, "name": "Pass Accuracy"}, "data": {"value": 0.82}},
+            {"participant_id": away_id, "type": {"id": 2, "name": "Pass Accuracy"}, "data": {"value": 0.71}},
+            {"participant_id": home_id, "type": {"id": 3, "name": "Total Shots"}, "data": {"value": 12}},
+            {"participant_id": away_id, "type": {"id": 3, "name": "Total Shots"}, "data": {"value": 8}},
+            {"participant_id": home_id, "type": {"id": 4, "name": "Shots Accuracy"}, "data": {"value": 0.5}},
         ],
     }
 
@@ -44,8 +51,20 @@ class SportmonksLayer2Tests(unittest.TestCase):
         self.assertEqual(profile["data_quality"]["matches_returned"], 6)
         self.assertEqual(profile["matches"][0]["goals_for"], 2)
         self.assertEqual(profile["matches"][0]["opponent_strength"], 50.0)
-        self.assertEqual(profile["matches"][0]["statistics"]["Ball Possession"], "60%")
+        self.assertEqual(profile["matches"][0]["statistics"]["Ball Possession"], 60.0)
+        self.assertEqual(profile["matches"][0]["statistics"]["Passes %"], 82.0)
+        self.assertEqual(profile["matches"][0]["statistics"]["Total Shots"], 12.0)
+        self.assertNotIn("Shots Accuracy", profile["matches"][0]["statistics"])
+        self.assertEqual(profile["matches"][0]["statistics_provenance"][0]["provider"], "sportmonks")
+        self.assertEqual(profile["matches"][0]["statistics_provenance"][0]["fixture_id"], 6)
         self.assertIsNone(profile["player_availability"])
+
+    def test_statistics_are_team_specific(self):
+        row = fixture(1, 10, 20, 1, 0)
+        profile = collect_sportmonks_team_profile({"id": 10, "name": "Home FC"}, 2026, [row], [])
+        stats = profile["matches"][0]["statistics"]
+        self.assertEqual(stats["Ball Possession"], 60.0)
+        self.assertNotEqual(stats["Ball Possession"], 40.0)
 
     def test_wrong_season_fixture_is_excluded(self):
         row = fixture(1, 10, 20, 1, 0)
