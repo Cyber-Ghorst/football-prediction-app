@@ -54,6 +54,8 @@ except APIFootballError as exc:
     st.stop()
 
 try:
+    # Do not send unsupported current-season requests to the API-Football account.
+    leagues = get_leagues(client, int(season)) if int(season) <= 2024 else []
     if run_provider_diagnostics:
         st.subheader("Provider health and competition coverage")
         try:
@@ -124,7 +126,6 @@ try:
     if int(season) > 2024:
         st.error("API-Football on the configured plan only accepts seasons 2022–2024. Sportmonks has been added as the intended current-season provider, but its account token, competition coverage and Layer 2 data mapping must be verified before predictions can use it. Add SPORTMONKS_API_TOKEN to Streamlit Secrets, run the provider diagnostic, and share the result.")
         st.stop()
-    leagues = get_leagues(client, int(season))
     league_options = {f"{x['league']['name']} — {x.get('country',{}).get('name','')}": x['league']['id']
                       for x in leagues if x.get('league',{}).get('id')}
     if not league_options:
