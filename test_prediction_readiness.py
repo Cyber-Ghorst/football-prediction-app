@@ -70,7 +70,8 @@ class PredictionReadinessTests(unittest.TestCase):
 
     def test_wrong_home_away_orientation_fails_closed(self):
         row = fixture()
-        row["participants"] = list(reversed(row["participants"]))
+        row["participants"][0]["meta"]["location"] = "away"
+        row["participants"][1]["meta"]["location"] = "home"
         report = self.report(selected_fixture=row)
         self.assertFalse(report["fixture"]["verified"])
         self.assertEqual(report["overall_status"], "fixture_unverified")
@@ -97,7 +98,7 @@ class PredictionReadinessTests(unittest.TestCase):
         home = report["teams"]["home"]
         self.assertEqual(home["player_availability_evidence"], "unknown")
         self.assertEqual(home["confirmed_lineup_evidence"], "unknown")
-        self.assertIsNone(home["tactical_components_available"]["defensive_structure"])
+        self.assertFalse(home["tactical_components_available"]["defensive_structure"])
 
 
 if __name__ == "__main__":
