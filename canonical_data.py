@@ -172,3 +172,67 @@ def merge_source_ids(*matches: Mapping[str, Any]) -> dict[str, str]:
                 if source_id:
                     merged[f"{side}.{provider}"] = str(source_id)
     return merged
+
+
+def reconcile_match_pair(
+    left: Mapping[str, Any], right: Mapping[str, Any], *,
+    fetched_at: Mapping[str, datetime] | None = None,
+    now: datetime | None = None,
+    max_age_seconds: int | None = 86400,
+    team_aliases: Mapping[str, str] | None = None,
+) -> dict[str, Any] | None:
+    """Reconcile two normalized records only after a strict identity match.
+
+    Field values are selected by provider priority through provider_core.
+    Conflicts are retained in diagnostics and never averaged. If the records
+    cannot be safely matched, return None rather than risk a false join.
+    """
+    from provider_core import Observation, resolve_field
+
+    if not match_identity(left, right, team_aliases=team_aliases):
+        return None
+    sources = (left, right)
+    fetched_at = fetched_at or {}
+    primary_provider = str(left.get("source") or "")
+    result = dict(left)
+    result["source_ids"] = dict(left.get("source_ids") or {})
+    result["home"] = dict(left["home"])
+    result["away"] = dict(left["away"])
+    result["home"]["source_ids"] = dict(left["home"].get("source_ids") or {})
+    result["away"]["source_ids"] = dict(left["away"].get("source_ids") or {})
+    result["reconciliation"] = {}
+
+    for record in sources[1:]:
+        result["source_ids"].update(record.get("source_ids") or {})
+        for side in ("home", "away"):
+            result[side]["source_ids"].update(record.get(side, {}).get("source_ids") or {})
+
+    for field, domain in (
+        ("status", "results"), ("home_score", "results"),
+        ("away_score", "results"), ("kickoff_utc", "fixtures"),
+    ):
+        observations = []
+        for record in sources:
+            provider = str(record.get("source") or "")
+            value = record.get(field)
+            if not provider or value is None:
+                continue
+            observations.append(Observation(
+                provider=provider,
+                value=value,
+                fetched_at=fetched_at.get(provider) or now or datetime.now(timezone.utc),
+                source_id=(record.get("source_ids") or {}).get(provider),
+            ))
+        resolved = resolve_field(
+            domain, observations, now=now, max_age_seconds=max_age_seconds
+        )
+        result[field] = resolved.value
+        result["reconciliation"][field] = {
+            "provider": resolved.provider,
+            "status": resolved.status,
+            "corroborating_providers": list(resolved.corroborating_providers),
+            "conflicting_providers": list(resolved.conflicting_providers),
+            "message": resolved.message,
+        }
+    result["source"] = primary_provider
+    return result
