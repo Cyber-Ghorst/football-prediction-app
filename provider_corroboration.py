@@ -242,13 +242,64 @@ def collect_recent_result_corroboration(
             reconciled.append(result)
             matched_providers.update(result.get("providers_seen", []))
 
-    conflicts = sum(
+    # Keep fixture-level agreement and conflict as independent flags: a match
+    # can agree on one field (for example, score) and conflict on another
+    # (for example, status or kickoff). Expose the exact field-level evidence.
+    field_names = ("status", "home_score", "away_score", "kickoff_utc")
+    field_level_summary: dict[str, dict[str, int]] = {
+        field: {
+            "fixtures_compared": 0,
+            "fixtures_with_agreement": 0,
+            "fixtures_with_conflict": 0,
+            "fixtures_with_multiple_observations": 0,
+        }
+        for field in field_names
+    }
+    for row in reconciled:
+        agreement_fields: list[str] = []
+        conflict_fields: list[str] = []
+        field_observations: list[dict[str, Any]] = []
+        for field in field_names:
+            detail = (row.get("reconciliation") or {}).get(field) or {}
+            observations = detail.get("observations") or []
+            if not observations:
+                continue
+            summary = field_level_summary[field]
+            summary["fixtures_compared"] += 1
+            if len(observations) > 1:
+                summary["fixtures_with_multiple_observations"] += 1
+            if detail.get("status") == "corroborated":
+                agreement_fields.append(field)
+                summary["fixtures_with_agreement"] += 1
+            elif detail.get("status") == "conflict":
+                conflict_fields.append(field)
+                summary["fixtures_with_conflict"] += 1
+            for observation in observations:
+                field_observations.append({
+                    "field": field,
+                    "provider": observation.get("provider"),
+                    "value": observation.get("value"),
+                    "selected_provider": detail.get("provider"),
+                    "field_status": detail.get("status"),
+                    "source_id": observation.get("source_id"),
+                    "fetched_at": observation.get("fetched_at"),
+                    "source_updated_at": observation.get("source_updated_at"),
+                })
+        row["agreement_fields"] = agreement_fields
+        row["conflict_fields"] = conflict_fields
+        row["field_observations"] = field_observations
+        row["diagnostic_status"] = (
+            "agreement_and_conflict" if agreement_fields and conflict_fields
+            else "conflict" if conflict_fields
+            else "agreement" if agreement_fields
+            else "matched_identity_only"
+        )
+
+    conflicts = sum(1 for row in reconciled if row.get("conflict_fields"))
+    corroborated = sum(1 for row in reconciled if row.get("agreement_fields"))
+    mixed = sum(
         1 for row in reconciled
-        if any(item.get("status") == "conflict" for item in row["reconciliation"].values())
-    )
-    corroborated = sum(
-        1 for row in reconciled
-        if any(item.get("status") == "corroborated" for item in row["reconciliation"].values())
+        if row.get("agreement_fields") and row.get("conflict_fields")
     )
     return {
         "competition": competition,
@@ -259,8 +310,16 @@ def collect_recent_result_corroboration(
         "fixtures_matched_across_sources": len(reconciled),
         "fixtures_with_agreement": corroborated,
         "fixtures_with_conflicts": conflicts,
+        "fixtures_with_both_agreement_and_conflict": mixed,
+        "field_level_summary": field_level_summary,
         "providers_matched": sorted(matched_providers),
         "errors": errors,
         "matches": reconciled,
+        "interpretation": (
+            "Agreement and conflict are counted independently at fixture level. "
+            "A fixture may appear in both counts when providers agree on some fields "
+            "and disagree on others. Inspect field_level_summary and each match's "
+            "field_observations for the exact provider values and timestamps."
+        ),
         "note": "Corroboration is diagnostic only; Sportmonks Layer 2 profiles and prediction inputs are not modified.",
     }
