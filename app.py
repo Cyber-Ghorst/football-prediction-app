@@ -56,9 +56,9 @@ def get_sm_standings(season_id):
         return sm.standings_by_season(season_id, include="participant")
 
 @st.cache_data(ttl=1800, show_spinner=False)
-def get_sm_fixtures(season_id):
+def get_sm_fixtures(season_id, include_stats):
     with SportmonksClient() as sm:
-        return sm.fixtures_by_season(season_id)
+        return sm.fixtures_by_season(season_id, include_statistics=include_stats)
 
 with st.sidebar:
     st.header("Data configuration")
@@ -251,7 +251,7 @@ try:
             if sportmonks_mode:
                 try:
                     standings = get_sm_standings(selected_season_id)
-                    fixtures = get_sm_fixtures(selected_season_id)
+                    fixtures = get_sm_fixtures(selected_season_id, include_stats)
                 except SportmonksError as exc:
                     st.error(f"Sportmonks season data collection failed: {exc}")
                     st.stop()
