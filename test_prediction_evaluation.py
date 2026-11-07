@@ -42,6 +42,7 @@ class PredictionEvaluationTests(unittest.TestCase):
         self.assertEqual(report["model"]["matches"], 1)
         self.assertEqual(report["opta_same_fixtures"]["matches"], 1)
         self.assertEqual(report["opta_comparable_fixtures"], 1)
+        self.assertEqual(report["model_metrics_by_competition"]["Premier League"]["matches"], 1)
         self.assertGreater(report["model"]["accuracy_pct"], 0)
 
     def test_late_predictions_are_not_scored(self):
@@ -53,6 +54,13 @@ class PredictionEvaluationTests(unittest.TestCase):
     def test_invalid_probability_sum_is_rejected(self):
         with self.assertRaises(ValueError):
             self._record(probabilities={"home_win": 60, "draw": 20, "away_win": 10})
+
+    def test_missing_opta_is_not_scored_or_penalized(self):
+        row = self._record(opta_probabilities=None)
+        row.update(actual_home_goals="0", actual_away_goals="0")
+        report = evaluate_prediction_ledger([row])
+        self.assertEqual(report["opta_comparable_fixtures"], 0)
+        self.assertEqual(report["opta_same_fixtures"]["matches"], 0)
 
     def test_outcome_and_merge(self):
         self.assertEqual(outcome_from_score(1, 1), "draw")
