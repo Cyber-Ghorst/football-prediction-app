@@ -8,6 +8,8 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Any
 
+FIXTURE_FRESHNESS_THRESHOLD_SECONDS = 24 * 60 * 60
+
 
 def _utc_datetime(value: Any) -> datetime | None:
     if value is None or value == "":
@@ -101,14 +103,24 @@ def _fixture_identity_status(
         reasons.append("kickoff is missing, invalid or not in the future")
     fetched_at = _utc_datetime(fixture.get("fixture_details_fetched_at"))
     age_seconds = (now - fetched_at).total_seconds() if fetched_at is not None else None
+    # A future-dated retrieval timestamp is invalid for age classification.
+    if age_seconds is not None and age_seconds < 0:
+        age_seconds = None
+        fetched_at = None
     age_minutes = round(age_seconds / 60, 1) if age_seconds is not None else None
-    freshness_note = (
-        "Retrieval age is measured from the successful detailed-fixture response; no fresh/stale threshold is applied."
-        if fetched_at is not None and age_seconds >= 0
-        else "The retrieval timestamp is later than the diagnostic clock; check system clock alignment."
-        if fetched_at is not None
-        else "No successful detailed-fixture retrieval timestamp is attached; freshness age cannot be measured."
-    )
+    if age_seconds is None:
+        freshness = "unknown"
+        freshness_note = (
+            "Retrieval timestamp is later than the diagnostic clock or invalid; freshness cannot be classified."
+            if fixture.get("fixture_details_fetched_at")
+            else "No successful detailed-fixture retrieval timestamp is attached; freshness age cannot be measured."
+        )
+    elif age_seconds < FIXTURE_FRESHNESS_THRESHOLD_SECONDS:
+        freshness = "fresh"
+        freshness_note = "Detailed fixture was retrieved less than 24 hours ago."
+    else:
+        freshness = "stale"
+        freshness_note = "Detailed fixture was retrieved 24 hours ago or more; refresh the fixture data before relying on it."
     return {
         "verified": verified,
         "status": "verified" if verified else "identity_or_schedule_unverified",
@@ -119,7 +131,7 @@ def _fixture_identity_status(
         "source_fetched_at": fetched_at.isoformat() if fetched_at else None,
         "source_age_seconds": round(age_seconds, 1) if age_seconds is not None else None,
         "source_age_minutes": age_minutes,
-        "source_freshness": "measured" if fetched_at is not None and age_seconds >= 0 else "unknown",
+        "source_freshness": freshness,
         "freshness_note": freshness_note,
     }
 
