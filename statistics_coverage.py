@@ -1,0 +1,85 @@
+"""Coverage reporting for model-relevant match statistics."""
+from __future__ import annotations
+
+from collections import defaultdict
+from typing import Any
+
+
+# These are the eight metric inputs currently consumed by tactical_indicators.py.
+# Shots on Goal and Shots on Target are aliases for one model input, not two metrics.
+CORE_STATISTICS = (
+    ("Ball Possession", "Possession & distribution", ("Ball Possession",)),
+    ("Passes %", "Possession & distribution", ("Passes %",)),
+    ("Total Shots", "Attacking", ("Total Shots",)),
+    ("Shots on Target / Goal", "Attacking", ("Shots on Target", "Shots on Goal")),
+    ("Tackles", "Defending", ("Tackles",)),
+    ("Interceptions", "Defending", ("Interceptions",)),
+    ("Blocked Shots", "Defending", ("Blocked Shots",)),
+    ("Corner Kicks", "Attacking", ("Corner Kicks",)),
+)
+
+
+def build_statistics_coverage(matches: list[dict[str, Any]]) -> dict[str, Any]:
+    """Summarize observed, missing and unmapped statistics without imputing values."""
+    recent = list(matches[:10])
+    total_matches = len(recent)
+    metric_rows = []
+    for label, group, canonical_names in CORE_STATISTICS:
+        available_fixtures = 0
+        observations = 0
+        for match in recent:
+            stats = match.get("statistics") or {}
+            if any(stats.get(name) is not None for name in canonical_names):
+                available_fixtures += 1
+            observations += sum(
+                1 for row in (match.get("statistics_raw_diagnostics") or [])
+                if row.get("canonical_name") in canonical_names
+                and row.get("mapping_status") == "mapped"
+            )
+        metric_rows.append({
+            "group": group,
+            "statistic": label,
+            "fixtures_available": available_fixtures,
+            "fixtures_checked": total_matches,
+            "coverage_pct": round(available_fixtures / total_matches * 100, 1) if total_matches else None,
+            "raw_observations": observations,
+            "status": (
+                "available" if available_fixtures == total_matches and total_matches
+                else "partial" if available_fixtures
+                else "missing"
+            ),
+        })
+
+    unmapped: dict[str, dict[str, Any]] = defaultdict(lambda: {"observations": 0, "fixture_ids": set()})
+    raw_rows_seen = 0
+    for match in recent:
+        for row in (match.get("statistics_raw_diagnostics") or []):
+            raw_rows_seen += 1
+            if row.get("mapping_status") != "unmapped":
+                continue
+            name = str(row.get("statistic_name_raw") or "Unknown statistic").strip() or "Unknown statistic"
+            unmapped[name]["observations"] += 1
+            if match.get("fixture_id") is not None:
+                unmapped[name]["fixture_ids"].add(match.get("fixture_id"))
+
+    unmapped_rows = [
+        {
+            "provider_statistic": name,
+            "observations": data["observations"],
+            "fixtures_seen": len(data["fixture_ids"]),
+        }
+        for name, data in sorted(unmapped.items(), key=lambda item: (-item[1]["observations"], item[0].casefold()))
+    ]
+    available_count = sum(row["fixtures_available"] > 0 for row in metric_rows)
+    complete_count = sum(row["fixtures_available"] == total_matches and total_matches > 0 for row in metric_rows)
+    return {
+        "fixtures_checked": total_matches,
+        "core_metrics_with_any_data": available_count,
+        "core_metrics_complete": complete_count,
+        "core_metrics_total": len(CORE_STATISTICS),
+        "raw_observations_seen": raw_rows_seen,
+        "unmapped_observations": sum(row["observations"] for row in unmapped_rows),
+        "mapping_visibility": "available" if raw_rows_seen else "not supplied by this data path",
+        "metrics": metric_rows,
+        "unmapped_statistics": unmapped_rows,
+    }
