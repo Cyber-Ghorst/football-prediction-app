@@ -52,6 +52,12 @@ def _participants(fixture: dict[str, Any]) -> tuple[dict[str, Any] | None, dict[
 
 def _state(fixture: dict[str, Any]) -> str:
     state = fixture.get("state") or {}
+    # Sportmonks documents finished fixture state IDs 5, 7 and 8.
+    try:
+        if int(fixture.get("state_id")) in {5, 7, 8}:
+            return "finished"
+    except (TypeError, ValueError):
+        pass
     label = str(state.get("short_name") or state.get("name") or "").strip().casefold()
     if label in _COMPLETED or any(x in label for x in ("finished", "full time", "after extra", "after penalties")):
         return "finished"
@@ -130,6 +136,13 @@ def collect_sportmonks_team_profile(
     matches: list[dict[str, Any]] = []
 
     for fixture in fixtures:
+        fixture_season_id = fixture.get("season_id")
+        if fixture_season_id is not None:
+            try:
+                if int(fixture_season_id) != int(season_id):
+                    continue
+            except (TypeError, ValueError):
+                continue
         home, away = _participants(fixture)
         if not home or not away:
             continue
