@@ -157,6 +157,15 @@ def collect_recent_result_corroboration(
                 )
                 if country and (not row_country or normalize_country(row_country) != normalize_country(country)):
                     continue
+                reported_season = league.get("season") or row.get("season")
+                if isinstance(reported_season, Mapping):
+                    reported_season = reported_season.get("year") or reported_season.get("start")
+                if reported_season is not None:
+                    try:
+                        if int(reported_season) != int(season):
+                            continue
+                    except (TypeError, ValueError):
+                        continue
                 try:
                     normalized.append(canonicalize_highlightly_match(
                         row, competition_key=key, season=int(season)
