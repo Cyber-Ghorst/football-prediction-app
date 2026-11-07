@@ -306,3 +306,15 @@ Official endpoint references: Sportmonks fixture includes support lineups, forma
 - No prediction weights, latest-five/previous-five 60/40 recency weighting, Layer 1 calculations, tactical scoring rules or TVD logic were changed.
 
 Official Highlightly documentation: match statistics return per-team `statistics` items with `displayName` and numeric `value`, refreshing every five minutes; lineups return home/away formations, nested initial lineups and substitutes, available from 40 minutes before kickoff to 120 minutes after kickoff, refreshing every 15 minutes.
+
+
+## Highlightly player and team-season performance diagnostics (2026-11-07)
+
+An opt-in diagnostic path now uses the exact selected-fixture Highlightly lineup to query player season statistics and team-season aggregates.
+
+- Player IDs come only from the exact provider-reported starting lineups. The integration does not perform name-only joins.
+- Each player response is filtered to exact normalized club name, competition name and selected season. Only documented per-competition fields are surfaced: appearances, minutes, goals, assists, penalties, own goals, cards, clean sheets, goals conceded and substitutions.
+- Team statistics are requested with the documented `fromDate` parameter and `Africa/Nairobi` timezone, then filtered to exact competition and season. Total, home and away aggregates are preserved as returned.
+- The UI is separately opt-in. It makes at most 22 player-stat requests plus two team-stat requests, and only when the exact selected-fixture lineup is available. Missing IDs, unavailable lineups and unmatched competition/season/club rows remain unknown.
+- Player/team statistics are diagnostic only. They do not change the 5% player-availability weight, tactical ratings, Layer 2 profiles or predictions. Statistics do not establish injury status or guaranteed availability.
+- The Highlightly statistics endpoints refresh on a daily basis for player statistics and after matches for team statistics; exact account plan coverage remains provider-dependent.
