@@ -20,6 +20,7 @@ from provider_corroboration import collect_recent_result_corroboration
 from highlightly_match_enrichment import collect_highlightly_match_enrichment
 from highlightly_player_enrichment import collect_highlightly_player_enrichment
 from prediction_evaluation import build_prediction_record, evaluate_prediction_ledger, merge_prediction_records
+from prediction_readiness import build_prediction_readiness
 
 st.set_page_config(page_title="Football Prediction Lab", page_icon="⚽", layout="wide")
 st.title("⚽ Football Prediction Lab")
@@ -522,9 +523,28 @@ try:
         for profile in (home, away):
             quality = profile["data_quality"]
             st.write(f"**{profile['name']}** — source: {quality.get('provider', 'api_football')}; {quality['matches_returned']} completed matches; {quality['opponent_strength_matches']} with opponent-strength data; {quality['statistics_matches']} with match statistics; {quality.get('statistics_observations', 0)} normalized statistic observations.")
-            if quality["matches_returned"] < 5:
-                st.error(f"{profile['name']}: fewer than five completed matches. Prediction stopped; no data was fabricated.")
-                st.stop()
+
+        readiness = build_prediction_readiness(
+            home,
+            away,
+            selected_fixture=selected_match_fixture,
+            home_team_id=int(team_map[home_name]["id"]),
+            away_team_id=int(team_map[away_name]["id"]),
+            season_id=int(selected_season_id) if selected_season_id is not None else None,
+        )
+        st.subheader("Upcoming fixture & prediction readiness")
+        st.caption("A transparent diagnostic of exact fixture identity, recent-history depth and evidence coverage. Unknown data remains unknown; this report does not alter the model.")
+        status_labels = {
+            "ready": "Ready — exact fixture verified and both teams have ten matches",
+            "limited_history": "Limited — exact fixture verified, but at least one team has fewer than ten matches",
+            "fixture_unverified": "Fixture unverified — matchup comparison may be possible, but no exact upcoming fixture is confirmed",
+            "insufficient_history": "Insufficient history — at least one team has fewer than five completed matches",
+        }
+        st.info(status_labels.get(readiness["overall_status"], readiness["overall_status"]))
+        st.json(readiness)
+        if not readiness["prediction_minimum_history_met"]:
+            st.error("Prediction stopped: at least one team has fewer than five completed matches. No missing matches or ratings will be fabricated.")
+            st.stop()
         st.subheader("Recent form and data coverage")
         st.json({home_name:home["form_summary"], away_name:away["form_summary"]})
         tvd_result = run_tvd(tvd_profiles[0],tvd_profiles[1]) if tvd_profiles else None
