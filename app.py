@@ -6,6 +6,7 @@ from api_football import APIFootballClient, APIFootballError
 from data_layer2 import collect_team_profile
 from engine import predict_match, WEIGHTS
 from tvd import run_tvd
+from provider_config import provider_readiness
 
 st.set_page_config(page_title="Football Prediction Lab", page_icon="⚽", layout="wide")
 st.title("⚽ Football Prediction Lab")
@@ -33,6 +34,10 @@ with st.sidebar:
                              help="For a 2026/27 season, enter 2026. Use the season year supported by your API plan.")
     include_stats = st.checkbox("Fetch match statistics (more API requests)", value=True)
     st.caption("Add APISPORTS_API_KEY for API-Football v3 in Streamlit Secrets. Provider keys are separate; never paste keys into public code.")
+    with st.expander("Provider readiness", expanded=True):
+        for provider in provider_readiness():
+            credential = "configured" if provider["credential_configured"] else "not configured"
+            st.write(f"**{provider['provider']}** — {provider['adapter']}; credential {credential}; {provider['app_integration']}.")
 
 try:
     client = APIFootballClient()
