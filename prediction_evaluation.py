@@ -107,6 +107,7 @@ def build_prediction_record(
         "player_snapshot_at": snapshot.get("fetched_at") or "",
         "player_snapshot_before_kickoff": bool(
             kickoff and snapshot_at and snapshot_at < kickoff
+            and snapshot.get("availability") == "collected"
         ),
         "player_snapshot_availability": snapshot.get("availability", "unknown"),
         "player_records_count": len(snapshot.get("players") or []),
