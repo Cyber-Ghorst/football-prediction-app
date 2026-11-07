@@ -8,6 +8,8 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Any
 
+from sportmonks_layer2 import _state as sportmonks_fixture_state
+
 
 def _utc_datetime(value: Any) -> datetime | None:
     if value is None or value == "":
@@ -76,11 +78,10 @@ def _fixture_identity_status(
     except (TypeError, ValueError):
         exact_teams = False
 
-    state = fixture.get("state") or {}
-    state_label = str(state.get("short_name") or state.get("name") or "").strip().casefold()
-    scheduled = state_label in {"ns", "not started", "scheduled", "tbd"} or any(
-        marker in state_label for marker in ("not started", "scheduled", "to be played")
-    )
+    # Reuse the provider adapter's canonical state normalization. This also
+    # recognizes Sportmonks state_id=1 when the expanded state relationship
+    # is absent or has an unhelpful label.
+    scheduled = sportmonks_fixture_state(fixture) == "scheduled"
     kickoff = _utc_datetime(fixture.get("starting_at_timestamp"))
     if kickoff is None:
         kickoff = _utc_datetime(fixture.get("starting_at"))
