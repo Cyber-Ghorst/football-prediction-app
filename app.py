@@ -36,7 +36,7 @@ with st.sidebar:
     st.caption("Add APISPORTS_API_KEY for API-Football v3 in Streamlit Secrets. Provider keys are separate; never paste keys into public code.")
     with st.expander("Provider readiness", expanded=True):
         for provider in provider_readiness():
-            credential = "configured" if provider["credential_configured"] else "not configured"
+            credential = ("not required" if provider.get("credential_required") is False else ("configured" if provider["credential_configured"] else "not configured"))
             st.write(f"**{provider['provider']}** — {provider['adapter']}; credential {credential}; {provider['app_integration']}.")
 
 try:
