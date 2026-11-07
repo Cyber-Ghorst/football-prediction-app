@@ -76,6 +76,25 @@ class ProviderAdapterTests(unittest.TestCase):
     def test_sportmonks_unwraps_data_envelope(self):
         self.assertEqual(SportmonksClient._rows({"data": [{"id": 42}]}), [{"id": 42}])
 
+    def test_sportmonks_paginates_complete_season_collections(self):
+        client = SportmonksClient(api_token="test-only")
+        client._get = Mock(side_effect=[
+            {"data": [{"id": 1}], "pagination": {"has_more": True}},
+            {"data": [{"id": 2}], "pagination": {"has_more": False}},
+        ])
+        self.assertEqual(client.available_seasons(), [{"id": 1}, {"id": 2}])
+        self.assertEqual(client._get.call_count, 2)
+        client.close()
+
+    def test_sportmonks_rejects_incomplete_page_without_pagination_metadata(self):
+        client = SportmonksClient(api_token="test-only")
+        client._get = Mock(return_value={
+            "data": [{"id": i} for i in range(50)]
+        })
+        with self.assertRaises(SportmonksError):
+            client.available_seasons()
+        client.close()
+
     def test_sportmonks_auth_error_does_not_expose_token(self):
         client = SportmonksClient(api_token="secret-token")
         response = Mock()
