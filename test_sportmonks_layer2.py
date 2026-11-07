@@ -66,6 +66,35 @@ class SportmonksLayer2Tests(unittest.TestCase):
         self.assertEqual(stats["Ball Possession"], 60.0)
         self.assertNotEqual(stats["Ball Possession"], 40.0)
 
+    def test_profile_exposes_history_filter_diagnostics(self):
+        valid = fixture(1, 10, 20, 1, 0)
+        wrong_season = fixture(2, 10, 20, 1, 0)
+        wrong_season["season_id"] = 2025
+        missing_score = fixture(3, 10, 20, 1, 0)
+        missing_score["scores"] = []
+        not_finished = fixture(4, 10, 20, 1, 0, state="NS")
+        other_team = fixture(5, 30, 40, 1, 0)
+        missing_participants = fixture(6, 10, 20, 1, 0)
+        missing_participants["participants"] = []
+
+        profile = collect_sportmonks_team_profile(
+            {"id": 10, "name": "Home FC"}, 2026,
+            [valid, wrong_season, missing_score, not_finished, other_team, missing_participants], [],
+        )
+        quality = profile["data_quality"]
+        self.assertEqual(quality["fixtures_scanned"], 6)
+        self.assertEqual(quality["same_season_fixtures"], 5)
+        self.assertEqual(quality["team_fixtures"], 3)
+        self.assertEqual(quality["completed_fixtures"], 2)
+        self.assertEqual(quality["fixtures_with_valid_scores"], 1)
+        self.assertEqual(quality["matches_returned"], 1)
+        self.assertEqual(quality["excluded_wrong_season"], 1)
+        self.assertEqual(quality["excluded_missing_participants"], 1)
+        self.assertEqual(quality["excluded_other_team"], 1)
+        self.assertEqual(quality["excluded_not_completed"], 1)
+        self.assertEqual(quality["excluded_missing_scores"], 1)
+        self.assertEqual(quality["history_shortfall"], 9)
+
     def test_wrong_season_fixture_is_excluded(self):
         row = fixture(1, 10, 20, 1, 0)
         row["season_id"] = 999
