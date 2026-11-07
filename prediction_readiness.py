@@ -138,6 +138,17 @@ def _team_readiness(profile: dict[str, Any]) -> dict[str, Any]:
         "history_status": "sufficient" if count >= 10 else "minimum_met" if count >= 5 else "insufficient",
         "matches_with_statistics": stats_count,
         "matches_with_opponent_strength": strength_count,
+        "history_collection_diagnostics": {
+            key: quality.get(key)
+            for key in (
+                "fixtures_scanned", "same_season_fixtures", "team_fixtures",
+                "completed_fixtures", "fixtures_with_valid_scores",
+                "excluded_wrong_season", "excluded_missing_participants",
+                "excluded_other_team", "excluded_not_completed",
+                "excluded_missing_scores", "history_shortfall",
+            )
+            if key in quality
+        },
         "tactical_components_available": tactical_components,
         "player_availability_evidence": "available" if availability_known else "unknown",
         "confirmed_lineup_evidence": "available" if lineup_known else "unknown",
