@@ -68,6 +68,7 @@ def collect_highlightly_player_enrichment(
     from_date: str | None = None,
     timezone_name: str = "Africa/Nairobi",
     max_players: int = 22,
+    require_quota_metadata: bool = False,
 ) -> dict[str, Any]:
     """Collect exact competition-season stats for lineup starters and both teams.
 
@@ -132,12 +133,50 @@ def collect_highlightly_player_enrichment(
         unique_jobs.append((side, player))
     unique_jobs = unique_jobs[:max(0, int(max_players))]
 
-    for side, team in list(report["teams"].items()):
+    def remaining_quota() -> int | None:
+        metadata = getattr(client, "last_metadata", {}) or {}
+        raw = metadata.get("requests_remaining")
+        try:
+            return int(raw) if raw is not None else None
+        except (TypeError, ValueError):
+            return None
+
+    team_jobs = [
+        (side, team) for side, team in report["teams"].items()
+        if team.get("team_id") is not None
+    ]
+    planned_requests = len(team_jobs) + len(unique_jobs)
+    if require_quota_metadata:
+        remaining = remaining_quota()
+        report["quota"] = {
+            "status": "verified" if remaining is not None else "unknown",
+            "requests_remaining_before_enrichment": remaining,
+            "planned_requests": planned_requests,
+            "guard_enabled": True,
+        }
+        if remaining is None:
+            report["quota"]["status"] = "blocked_unknown_quota"
+            report["availability"] = "unknown_quota_metadata"
+            report["fetched_at"] = datetime.now(timezone.utc).isoformat()
+            return report
+        if remaining < planned_requests:
+            report["quota"]["status"] = "blocked_insufficient_quota"
+            report["availability"] = "unknown_insufficient_quota"
+            report["fetched_at"] = datetime.now(timezone.utc).isoformat()
+            return report
+
+    for team_index, (side, team) in enumerate(list(report["teams"].items())):
         team_id = team.get("team_id")
         if team_id is None:
             report["errors"][f"team_stats:{side}"] = "Highlightly team ID missing."
             continue
         try:
+            if require_quota_metadata:
+                required_now = (len(team_jobs) - team_index) + len(unique_jobs)
+                available_now = remaining_quota()
+                if available_now is None or available_now < required_now:
+                    report["errors"]["quota_guard"] = "Stopped before a request because remaining quota could not safely cover the planned calls."
+                    break
             report["team_requests"] += 1
             raw = client.team_statistics(team_id, fromDate=start_date, timezone=timezone_name)
             matches = _exact_competition_rows(_rows(raw), competition, int(season))
@@ -146,9 +185,15 @@ def collect_highlightly_player_enrichment(
         except Exception as exc:
             report["errors"][f"team_stats:{side}"] = str(exc)
 
-    for side, player in unique_jobs:
+    for player_index, (side, player) in enumerate(unique_jobs):
         player_id = player["player_id"]
         try:
+            if require_quota_metadata:
+                required_now = len(unique_jobs) - player_index
+                available_now = remaining_quota()
+                if available_now is None or available_now < required_now:
+                    report["errors"]["quota_guard"] = "Stopped before a player request because remaining quota could not safely cover the planned calls."
+                    break
             report["player_requests"] += 1
             raw = client.player_statistics(player_id)
             payload_rows = _rows(raw)
@@ -180,6 +225,12 @@ def collect_highlightly_player_enrichment(
         except Exception as exc:
             report["errors"][f"player_stats:{player_id}"] = str(exc)
 
+    if require_quota_metadata:
+        report["quota"]["requests_remaining_after_enrichment"] = remaining_quota()
+        if report["errors"].get("quota_guard"):
+            report["quota"]["status"] = "stopped_by_quota_guard"
+        else:
+            report["quota"]["status"] = "completed_within_quota"
     report["fetched_at"] = datetime.now(timezone.utc).isoformat()
     report["player_statistics_status"] = (
         "collected" if report["players"] else "unknown_no_matching_player_statistics"
