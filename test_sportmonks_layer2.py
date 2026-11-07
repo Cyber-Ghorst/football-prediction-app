@@ -86,6 +86,60 @@ class SportmonksLayer2Tests(unittest.TestCase):
         self.assertEqual(profile["matches"], [])
         self.assertIsNone(profile["home_rating"])
 
+    def test_find_upcoming_fixture_requires_exact_home_away_and_season(self):
+        from datetime import datetime, timezone
+        from sportmonks_layer2 import find_upcoming_match_fixture
+
+        row = fixture(20, 10, 20, 0, 0, state="NS")
+        row["starting_at_timestamp"] = int(datetime(2026, 11, 8, tzinfo=timezone.utc).timestamp())
+        wrong_orientation = fixture(21, 20, 10, 0, 0, state="NS")
+        wrong_orientation["starting_at_timestamp"] = row["starting_at_timestamp"] + 60
+        wrong_season = fixture(22, 10, 20, 0, 0, state="NS")
+        wrong_season["season_id"] = 2025
+        wrong_season["starting_at_timestamp"] = row["starting_at_timestamp"] + 120
+
+        found = find_upcoming_match_fixture(
+            [wrong_orientation, wrong_season, row], 10, 20, 2026,
+            now_timestamp=int(datetime(2026, 11, 7, tzinfo=timezone.utc).timestamp()),
+        )
+        self.assertEqual(found["id"], 20)
+
+    def test_extract_match_details_keeps_sidelined_and_lineup_status_unknown(self):
+        from sportmonks_layer2 import extract_sportmonks_match_details
+
+        row = fixture(20, 10, 20, 0, 0, state="NS")
+        row["lineups"] = [
+            {"team_id": 10, "player_id": 101, "player_name": "Home Player",
+             "jersey_number": 9, "type": {"name": "Starting XI"}},
+            {"team_id": 20, "player_id": 201, "player_name": "Away Player",
+             "jersey_number": 1, "type": {"name": "Starting XI"}},
+        ]
+        row["formations"] = [
+            {"participant_id": 10, "formation": "4-3-3"},
+            {"participant_id": 20, "formation": "4-4-2"},
+        ]
+        row["sidelined"] = [
+            {"participant_id": 10, "player_id": 102,
+             "player": {"id": 102, "name": "Unavailable Player"},
+             "type": {"name": "Injury"},
+             "sideline": {"category": "Hamstring", "start_date": "2026-11-01", "end_date": None}},
+        ]
+
+        details = extract_sportmonks_match_details(row, 10, 20, 2026)
+        self.assertEqual(details["teams"]["home"]["formation"], "4-3-3")
+        self.assertTrue(details["teams"]["home"]["lineups_available"])
+        self.assertEqual(details["teams"]["home"]["confirmation_status"], "unknown")
+        self.assertEqual(details["availability"]["home"]["reported_unavailable_count"], 1)
+        self.assertEqual(details["availability"]["home"]["reported_sidelined"][0]["player_name"], "Unavailable Player")
+        self.assertIsNone(details["availability"]["home"]["player_availability"])
+
+    def test_extract_match_details_rejects_wrong_match_identity(self):
+        from sportmonks_layer2 import extract_sportmonks_match_details
+
+        row = fixture(20, 10, 20, 0, 0, state="NS")
+        with self.assertRaises(ValueError):
+            extract_sportmonks_match_details(row, 20, 10, 2026)
+
 
 if __name__ == "__main__":
     unittest.main()
