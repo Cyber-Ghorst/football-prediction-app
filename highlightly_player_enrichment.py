@@ -165,11 +165,12 @@ def collect_highlightly_player_enrichment(
             report["fetched_at"] = datetime.now(timezone.utc).isoformat()
             return report
 
-    for team_index, (side, team) in enumerate(list(report["teams"].items())):
-        team_id = team.get("team_id")
-        if team_id is None:
+    for side, team in report["teams"].items():
+        if team.get("team_id") is None:
             report["errors"][f"team_stats:{side}"] = "Highlightly team ID missing."
-            continue
+
+    for team_index, (side, team) in enumerate(team_jobs):
+        team_id = team.get("team_id")
         try:
             if require_quota_metadata:
                 required_now = (len(team_jobs) - team_index) + len(unique_jobs)
