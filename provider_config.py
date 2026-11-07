@@ -21,14 +21,14 @@ def provider_readiness() -> list[dict[str, Any]]:
             "provider": "API-Football v3",
             "adapter": "implemented",
             "credential_configured": _secret_present("APISPORTS_API_KEY"),
-            "app_integration": "active",
+            "app_integration": "active; account status and quota diagnostics available",
             "credential_name": "APISPORTS_API_KEY",
         },
         {
             "provider": "API Ninjas",
             "adapter": "implemented",
             "credential_configured": _secret_present("API_NINJAS_API_KEY", ("API_NINJAS_KEY",)),
-            "app_integration": "adapter only; fallback not enabled",
+            "app_integration": "adapter only; no documented account-health endpoint; fallback not enabled",
             "credential_name": "API_NINJAS_API_KEY",
         },
         {
@@ -43,7 +43,7 @@ def provider_readiness() -> list[dict[str, Any]]:
             "adapter": "implemented",
             "credential_configured": False,
             "credential_required": False,
-            "app_integration": "read-only adapter; not yet enabled as automatic fallback",
+            "app_integration": "read-only adapter; metadata freshness and live competition crosswalk checks implemented; fallback remains disabled",
             "credential_name": "none required for documented public endpoints",
         },
     ]
