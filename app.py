@@ -305,7 +305,9 @@ try:
                             key: value for key, value in corroboration.items()
                             if key != "matches"
                         })
-                    if corroboration and corroboration.get("matches"):
+                    if corroboration is None:
+                        st.warning("Cross-provider corroboration did not complete; the Sportmonks prediction data remains unchanged.")
+                    elif corroboration.get("matches"):
                         with st.expander("Matched source records and field-level conflicts", expanded=True):
                             for match_record in corroboration["matches"]:
                                 st.write(
@@ -319,7 +321,7 @@ try:
                                     "reconciliation": match_record.get("reconciliation"),
                                     "providers_seen": match_record.get("providers_seen"),
                                 })
-                    elif corroboration_errors or (corroboration and corroboration.get("errors")):
+                    elif corroboration_errors or corroboration.get("errors"):
                         st.warning("No cross-provider fixture could be reconciled. Check the provider errors and exact competition/team identity mapping above.")
                     else:
                         st.info("No exact cross-provider fixture matches were found. No substitute data was used.")
