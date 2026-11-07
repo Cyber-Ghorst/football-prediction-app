@@ -170,6 +170,28 @@ class SportmonksClient:
                 continue
         return ids
 
+    @staticmethod
+    def _fixture_is_completed(fixture: dict[str, Any]) -> bool:
+        """Recognize completed fixtures from either Sportmonks state IDs or labels."""
+        try:
+            if int(fixture.get("state_id")) in {5, 7, 8}:
+                return True
+        except (TypeError, ValueError):
+            pass
+        state = fixture.get("state") or fixture.get("status") or {}
+        if isinstance(state, dict):
+            label = state.get("short_name") or state.get("name") or ""
+        else:
+            label = state
+        normalized = str(label).strip().casefold()
+        return (
+            normalized in {"ft", "aet", "pen", "finished", "full time",
+                           "after extra time", "after penalties", "penalties"}
+            or any(marker in normalized for marker in (
+                "finished", "full time", "after extra", "after penalties"
+            ))
+        )
+
     def fixtures_by_season(
         self,
         season_id: int | str,
@@ -210,7 +232,7 @@ class SportmonksClient:
                 team_id: [] for team_id in selected_ids
             }
             for fixture in fixtures:
-                if int(fixture.get("state_id") or 0) not in {5, 7, 8}:
+                if not self._fixture_is_completed(fixture):
                     continue
                 for team_id in self._fixture_team_ids(fixture) & selected_ids:
                     recent_by_team[team_id].append(fixture)
