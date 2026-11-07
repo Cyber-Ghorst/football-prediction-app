@@ -1,7 +1,10 @@
 import unittest
 from datetime import datetime, timezone, timedelta
 
-from provider_health import assess_api_football_status, assess_freshness, assess_livescore_metadata
+from provider_health import (
+    assess_api_football_status, assess_freshness, assess_livescore_metadata,
+    assess_livescore_competition_coverage, assess_livescore_fixture_freshness,
+)
 
 
 class ProviderHealthTests(unittest.TestCase):
@@ -41,6 +44,29 @@ class ProviderHealthTests(unittest.TestCase):
         )
         self.assertFalse(result["fallback_eligible"])
         self.assertEqual(result["freshness"]["status"], "unknown")
+
+    def test_livescore_competition_requires_fresh_own_sync_timestamp(self):
+        fresh = {
+            "name": "Premier League", "slug": "eng.1", "active": True,
+            "coverage": {"hasData": True, "lastSyncedAt": self.now.isoformat()},
+        }
+        self.assertTrue(assess_livescore_competition_coverage(fresh, now=self.now)["fallback_eligible"])
+        stale = {
+            **fresh,
+            "coverage": {"hasData": True, "lastSyncedAt": (self.now - timedelta(days=2)).isoformat()},
+        }
+        self.assertFalse(assess_livescore_competition_coverage(stale, now=self.now)["fallback_eligible"])
+        missing = {**fresh, "coverage": {"hasData": True}}
+        self.assertFalse(assess_livescore_competition_coverage(missing, now=self.now)["fallback_eligible"])
+
+    def test_livescore_fixture_requires_its_own_update_timestamp(self):
+        fresh = assess_livescore_fixture_freshness(
+            {"id": "fixture-1", "updatedAt": self.now.isoformat()}, now=self.now
+        )
+        self.assertTrue(fresh["eligible"])
+        missing = assess_livescore_fixture_freshness({"id": "fixture-2"}, now=self.now)
+        self.assertFalse(missing["eligible"])
+        self.assertEqual(missing["freshness"]["status"], "unknown")
 
     def test_api_football_status_hides_account_identity_and_calculates_quota(self):
         result = assess_api_football_status({
