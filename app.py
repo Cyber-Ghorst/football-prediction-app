@@ -15,6 +15,7 @@ from livescore_football import LiveScoreFootballClient, LiveScoreFootballError
 from competition_crosswalk import build_competition_crosswalk
 from provider_health import assess_api_football_status, assess_livescore_metadata
 from provider_corroboration import collect_recent_result_corroboration
+from highlightly_match_enrichment import collect_highlightly_match_enrichment
 
 st.set_page_config(page_title="Football Prediction Lab", page_icon="⚽", layout="wide")
 st.title("⚽ Football Prediction Lab")
@@ -70,6 +71,11 @@ with st.sidebar:
         "Cross-check recent results with Highlightly and API Ninjas",
         value=True,
         help="Makes additional read-only requests. Results are diagnostic only and do not change prediction inputs.",
+    )
+    cross_check_highlightly_details = st.checkbox(
+        "Cross-check match statistics and lineups with Highlightly",
+        value=False,
+        help="Optional extra requests: compares up to ten recent matches per selected team and checks lineups for the exact upcoming fixture. Diagnostic only; does not change predictions.",
     )
     st.caption("For 2022–2024 add APISPORTS_API_KEY; for 2025+ add SPORTMONKS_API_TOKEN in Streamlit Secrets. Never paste keys into public code.")
     with st.expander("Provider readiness", expanded=True):
@@ -298,7 +304,7 @@ try:
                 else:
                     st.info("No exact upcoming Sportmonks fixture was found for this home/away pairing. Lineups and player availability remain unknown.")
 
-                if cross_check_recent_results:
+                if cross_check_recent_results or cross_check_highlightly_details:
                     selected_league_row = league_by_id.get(league_id, {})
                     selected_country = selected_league_row.get("country") or {}
                     selected_country_name = selected_country.get("name") if isinstance(selected_country, dict) else str(selected_country or "")
@@ -308,57 +314,102 @@ try:
                         hl_client = HighlightlyClient()
                     except HighlightlyError as exc:
                         corroboration_errors["highlightly"] = str(exc)
-                    try:
-                        ninjas_client = APINinjasClient()
-                    except APINinjasError as exc:
-                        corroboration_errors["api_ninjas"] = str(exc)
+                    if cross_check_recent_results:
+                        try:
+                            ninjas_client = APINinjasClient()
+                        except APINinjasError as exc:
+                            corroboration_errors["api_ninjas"] = str(exc)
+
                     corroboration = None
+                    highlightly_enrichment = None
                     try:
-                        corroboration = collect_recent_result_corroboration(
-                            sportmonks_fixtures=fixtures,
-                            competition=str(selected_league_row.get("name") or selected_league),
-                            country=selected_country_name,
-                            season=int(season),
-                            home_team_name=home_name,
-                            away_team_name=away_name,
-                            highlightly_client=hl_client,
-                            api_ninjas_client=ninjas_client,
-                        )
-                        corroboration["errors"].update(corroboration_errors)
+                        if cross_check_recent_results:
+                            corroboration = collect_recent_result_corroboration(
+                                sportmonks_fixtures=fixtures,
+                                competition=str(selected_league_row.get("name") or selected_league),
+                                country=selected_country_name,
+                                season=int(season),
+                                home_team_name=home_name,
+                                away_team_name=away_name,
+                                highlightly_client=hl_client,
+                                api_ninjas_client=ninjas_client,
+                            )
+                            corroboration["errors"].update(corroboration_errors)
+
+                        if cross_check_highlightly_details:
+                            if hl_client is None:
+                                corroboration_errors["highlightly_details"] = corroboration_errors.get(
+                                    "highlightly", "Highlightly client unavailable."
+                                )
+                            else:
+                                highlightly_enrichment = collect_highlightly_match_enrichment(
+                                    client=hl_client,
+                                    sportmonks_fixtures=fixtures,
+                                    competition=str(selected_league_row.get("name") or selected_league),
+                                    country=selected_country_name,
+                                    season=int(season),
+                                    home_team_name=home_name,
+                                    away_team_name=away_name,
+                                    selected_upcoming_fixture=selected_match_fixture,
+                                    history_per_team=10,
+                                )
                     except Exception as exc:
-                        st.warning(f"Cross-provider corroboration could not be completed: {exc}")
+                        st.warning(f"Optional Highlightly enrichment could not be completed: {exc}. Sportmonks prediction inputs remain unchanged.")
                     finally:
                         if hl_client is not None:
                             hl_client.close()
                         if ninjas_client is not None:
                             ninjas_client.close()
-                    if corroboration is not None:
-                        st.subheader("Independent result corroboration")
-                        st.caption("This report compares matching fixtures only. It does not replace Sportmonks data or alter prediction calculations.")
-                        st.json({
-                            key: value for key, value in corroboration.items()
-                            if key != "matches"
-                        })
-                    if corroboration is None:
-                        st.warning("Cross-provider corroboration did not complete; the Sportmonks prediction data remains unchanged.")
-                    elif corroboration.get("matches"):
-                        with st.expander("Matched source records and field-level conflicts", expanded=True):
-                            for match_record in corroboration["matches"]:
-                                st.write(
-                                    f"{match_record.get('home', {}).get('name')} vs "
-                                    f"{match_record.get('away', {}).get('name')} — "
-                                    f"{match_record.get('kickoff_utc')}"
-                                )
-                                st.json({
-                                    "selected_score": [match_record.get("home_score"), match_record.get("away_score")],
-                                    "source_ids": match_record.get("source_ids"),
-                                    "reconciliation": match_record.get("reconciliation"),
-                                    "providers_seen": match_record.get("providers_seen"),
-                                })
-                    elif corroboration_errors or corroboration.get("errors"):
-                        st.warning("No cross-provider fixture could be reconciled. Check the provider errors and exact competition/team identity mapping above.")
-                    else:
-                        st.info("No exact cross-provider fixture matches were found. No substitute data was used.")
+
+                    if cross_check_recent_results:
+                        if corroboration is not None:
+                            st.subheader("Independent result corroboration")
+                            st.caption("This report compares matching fixtures only. It does not replace Sportmonks data or alter prediction calculations.")
+                            st.json({
+                                key: value for key, value in corroboration.items()
+                                if key != "matches"
+                            })
+                        if corroboration is None:
+                            st.warning("Cross-provider result corroboration did not complete; Sportmonks prediction data remains unchanged.")
+                        elif corroboration.get("matches"):
+                            with st.expander("Matched source records and field-level result conflicts", expanded=True):
+                                for match_record in corroboration["matches"]:
+                                    st.write(
+                                        f"{match_record.get('home', {}).get('name')} vs "
+                                        f"{match_record.get('away', {}).get('name')} — "
+                                        f"{match_record.get('kickoff_utc')}"
+                                    )
+                                    st.json({
+                                        "selected_score": [match_record.get("home_score"), match_record.get("away_score")],
+                                        "source_ids": match_record.get("source_ids"),
+                                        "reconciliation": match_record.get("reconciliation"),
+                                        "providers_seen": match_record.get("providers_seen"),
+                                    })
+                        elif corroboration_errors or corroboration.get("errors"):
+                            st.warning("No cross-provider fixture could be reconciled. Check provider errors and exact competition/team identity mapping.")
+                        else:
+                            st.info("No exact cross-provider fixture matches were found. No substitute data was used.")
+
+                    if cross_check_highlightly_details:
+                        st.subheader("Highlightly match-statistics and lineup corroboration")
+                        st.caption("Only exact competition, country, season, home/away and kickoff matches are compared. Highlightly values remain diagnostic and never overwrite Sportmonks prediction inputs.")
+                        if highlightly_enrichment is not None:
+                            st.json({
+                                key: value for key, value in highlightly_enrichment.items()
+                                if key not in {"statistics", "lineups"}
+                            })
+                            with st.expander("Highlightly statistics: source observations and disagreements", expanded=True):
+                                st.json(highlightly_enrichment.get("statistics", []))
+                            with st.expander("Highlightly selected-fixture lineups"):
+                                if highlightly_enrichment.get("lineups"):
+                                    st.json(highlightly_enrichment["lineups"])
+                                else:
+                                    st.info("No exact Highlightly lineup record was available. The selected fixture's lineup remains unknown from this provider.")
+                            if highlightly_enrichment.get("errors"):
+                                st.warning(highlightly_enrichment["errors"])
+                        else:
+                            st.warning("Highlightly statistics and lineup corroboration did not complete. No substitute data was used.")
+
             else:
                 standings = get_standings(client, league_id, int(season))
                 home = get_profile(client, team_map[home_name], league_id, int(season), standings, include_stats)
