@@ -49,6 +49,7 @@ class PlayerEnrichmentTests(unittest.TestCase):
         self.assertEqual(report["players"][0]["team"], "home")
         self.assertEqual(report["players"][0]["statistics"]["goals"], 4)
         self.assertEqual(report["teams"]["home"]["status"], "matched")
+        self.assertLessEqual(report["started_at"], report["fetched_at"])
         self.assertEqual(report["team_requests"], 2)
         self.assertEqual(report["player_requests"], 2)
 
