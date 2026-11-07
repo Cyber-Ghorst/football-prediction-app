@@ -252,3 +252,25 @@ No model weights, 60/40 recency weighting, Layer 1 calculations, or TVD rules we
 - Sportmonks statistics are mapped by returned statistic type names. Pass counts are not treated as pass accuracy.
 - Added focused normalization tests in `test_sportmonks_layer2.py`. These tests have been committed but have not yet been confirmed by a CI run.
 - API Ninjas and Highlightly remain connected for diagnostics/canonicalization; their match records are not yet included in multi-source field-level corroboration. LiveScoreFootball remains gated by the existing exact crosswalk.
+
+
+## Independent result corroboration milestone (2026-11-07)
+
+The repository now includes `provider_corroboration.py`, which connects the Highlightly and API Ninjas adapters to the existing canonical match identity and multi-provider reconciliation functions for a selected Sportmonks competition/season.
+
+- Sportmonks completed fixtures are normalized as the anchor records.
+- Highlightly is queried with its documented `leagueName`, `season`, `countryName`, `limit` and `offset` match filters, with bounded pagination.
+- API Ninjas is queried for each selected team using its documented team, league and season match-history filters. The competition must have one exact name match in the adapter's league catalogue.
+- Every candidate must match competition key, season, home/away team names and kickoff within the canonical five-minute tolerance. No provider IDs are equated across systems.
+- Provider fetch timestamps, namespaced fixture/team IDs, selected values, corroborating sources and conflicting sources are retained.
+- Missing country identity in Highlightly records is not accepted when a country filter was requested. Mismatched season, league, team or kickoff records do not join.
+- API Ninjas does not contribute statistics, injuries or lineups. This integration is specifically for result/fixture corroboration.
+- Streamlit exposes a checkbox to run the independent result cross-check during a current-season Sportmonks prediction. It is enabled by default but can be disabled to conserve API quota.
+- The report is diagnostic only. It does not overwrite Sportmonks Layer 2 histories, team profiles, prediction inputs, TVD or model weights. Conflicting scores are displayed and never averaged.
+- Historical API-Football seasons remain outside this current-season Sportmonks corroboration path.
+
+Tests are in `test_provider_corroboration.py`, covering Sportmonks normalization, three-provider conflicts, country mismatch rejection, missing clients and team mismatch rejection.
+
+### Remaining integration boundary
+
+This milestone activates independent corroboration for recent match results. It does not yet merge Highlightly/API Ninjas statistics, player availability, lineups or squads into the Layer 2 team profiles. Those require separate endpoint-specific canonicalizers, field-level validation and identity mapping before use. Unknown values remain unknown.
