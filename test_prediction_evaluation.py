@@ -31,6 +31,19 @@ class PredictionEvaluationTests(unittest.TestCase):
         late = self._record(predicted_at="2026-11-07T13:00:00+00:00")
         self.assertFalse(late["prediction_before_kickoff"])
 
+    def test_team_only_statistics_are_not_mislabeled_as_player_snapshots(self):
+        row = self._record(player_snapshot={
+            "fetched_at": "2026-11-07T09:30:00+00:00",
+            "availability": "unknown_no_matching_player_statistics",
+            "players": [],
+            "teams": {"home": {"season_statistics": [{"total": {"games": 10}}]}},
+        })
+        self.assertFalse(row["player_snapshot_before_kickoff"])
+        self.assertTrue(row["team_snapshot_before_kickoff"])
+        report = evaluate_prediction_ledger([row])
+        self.assertEqual(report["player_snapshots_pre_kickoff"], 0)
+        self.assertEqual(report["team_snapshots_pre_kickoff"], 1)
+
     def test_missing_player_data_is_not_counted_as_a_snapshot(self):
         row = self._record(player_snapshot={"fetched_at": "2026-11-07T09:30:00+00:00",
                                              "availability": "unknown_no_exact_provider_lineup"})
