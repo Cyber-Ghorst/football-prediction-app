@@ -115,3 +115,14 @@ No prediction weights, TVD rules or production branch files are changed by this 
 - No LiveScoreFootball adapter has been added: the provider name has not been matched to a verifiable official API documentation/base URL. Do not send credentials or assume coverage until the exact official product URL is confirmed.
 - Credentials are never displayed. Configure APISPORTS_API_KEY for API-Football, API_NINJAS_API_KEY for API Ninjas, and HIGHLIGHTLY_API_KEY for Highlightly. The Highlightly client retains API_FOOTBALL_KEY as a legacy fallback only.
 - Live provider health, quota, account coverage and deployed Streamlit configuration remain unverified until credentials and runtime access are available.
+
+
+## LiveScoreFootball provider identification and adapter
+
+The user identified https://github.com/rezarahiminia/livescoreFootball. This is a public, database-backed REST API hosted at https://worldcup26.ir, not the separate upstream listener. The documented customer API does not require an API key. It reads stored MongoDB snapshots; a separately operated listener fetches upstream data and writes normalized records. Freshness therefore depends on listener synchronization and must be checked using /get/soccer/meta (lastSuccessfulSyncAt and generatedAt) and per-league lastSyncedAt.
+
+The read-only adapter is livescore_football.py and defaults to https://worldcup26.ir. Supported documented endpoints include /health, /get/soccer/meta, /get/soccer/leagues, /get/soccer/{league}/fixtures, /get/soccer/{league}/scoreboard, /get/soccer/{league}/standings, /get/soccer/{league}/summary, and /get/soccer/{league}/events/{eventId}/plays. Override the base URL with LIVESCORE_FOOTBALL_BASE_URL. No credential should be configured for this public service unless its operator changes the documented access policy.
+
+The repository README verifies initial competition coverage focused on England and Spain: Premier League, EFL competitions, FA Cup, LaLiga, LaLiga 2, Copa del Rey and women's competitions. UEFA Champions League and other countries are not to be assumed available. The service does not fetch upstream data on customer requests, and its API documentation warns that stored snapshots can be delayed or incomplete.
+
+Current app status: the read-only adapter and mocked contract tests exist, and the provider is listed first for fixtures/results/standings in provider_core.py. It is not yet connected as an automatic Layer 2 fallback. Do not treat this source as a guaranteed live feed or infer missing statistics, injuries, lineups, or player availability from absent fields.
