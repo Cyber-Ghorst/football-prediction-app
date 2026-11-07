@@ -256,9 +256,12 @@ class SportmonksClient:
         detail_targets.update(upcoming_candidates)
         fixture_ids = sorted(detail_targets)
         if fixture_ids:
-            include_parts = ["participants", "state"]
+            include_parts = ["participants"]
             if chosen_completed:
-                include_parts.extend(["scores", "statistics.type"])
+                include_parts.append("scores")
+            include_parts.append("state")
+            if chosen_completed:
+                include_parts.append("statistics.type")
             details_payload = self._get(
                 f"fixtures/multi/{','.join(str(value) for value in fixture_ids)}",
                 {"include": ";".join(include_parts)},
