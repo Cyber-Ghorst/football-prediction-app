@@ -633,6 +633,7 @@ with st.expander("Prediction tracking, Opta comparison and backtesting", expande
         else:
             st.info("No Opta benchmark has been captured for a completed fixture yet. Add published Opta probabilities before kickoff to enable a fair same-match comparison.")
         st.write("Player-stat snapshots captured before kickoff:", report["player_snapshots_pre_kickoff"])
+        st.write("Team-season snapshots captured before kickoff:", report["team_snapshots_pre_kickoff"])
         if report["player_snapshot_coverage_by_competition"]:
             st.json(report["player_snapshot_coverage_by_competition"])
         if report["model_metrics_by_competition"]:
