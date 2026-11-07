@@ -9,7 +9,7 @@ from api_ninjas import APINinjasClient, APINinjasError
 from highlightly import HighlightlyClient, HighlightlyError
 from sportmonks import SportmonksClient, SportmonksError
 from data_layer2 import collect_team_profile
-from sportmonks_layer2 import collect_sportmonks_team_profile, find_upcoming_match_fixture, extract_sportmonks_match_details
+from sportmonks_layer2 import collect_sportmonks_team_profile, diagnose_upcoming_match_fixture, extract_sportmonks_match_details
 from engine import predict_match, WEIGHTS
 from tvd import run_tvd
 from provider_config import provider_readiness
@@ -333,12 +333,18 @@ try:
 
                 # Only enrich an actual upcoming fixture when the selected home/away
                 # teams and season match exactly. A team's unrelated next match is not substituted.
-                selected_match_fixture = find_upcoming_match_fixture(
+                selected_match_diagnostic = diagnose_upcoming_match_fixture(
                     fixtures,
                     home_team_id=int(team_map[home_name]["id"]),
                     away_team_id=int(team_map[away_name]["id"]),
                     season_id=int(selected_season_id),
                 )
+                selected_match_fixture = selected_match_diagnostic["fixture"]
+                with st.expander("Exact fixture verification diagnostics", expanded=not selected_match_diagnostic["verified"]):
+                    st.json({
+                        key: value for key, value in selected_match_diagnostic.items()
+                        if key != "fixture"
+                    })
                 if selected_match_fixture:
                     try:
                         with SportmonksClient() as detail_client:
@@ -362,7 +368,11 @@ try:
                     except Exception as exc:
                         st.warning(f"Fixture-specific Sportmonks lineups/sidelined data unavailable: {exc}. Prediction inputs remain unchanged.")
                 else:
-                    st.info("No exact upcoming Sportmonks fixture was found for this home/away pairing. Lineups and player availability remain unknown.")
+                    st.warning(
+                        "Fixture verification failed: "
+                        + selected_match_diagnostic["reason"]
+                        + " Lineups and player availability remain unknown."
+                    )
 
                 if cross_check_recent_results or cross_check_highlightly_details or cross_check_highlightly_players:
                     selected_league_row = league_by_id.get(league_id, {})
