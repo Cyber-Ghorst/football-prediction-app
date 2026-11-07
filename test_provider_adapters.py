@@ -118,7 +118,7 @@ class ProviderAdapterTests(unittest.TestCase):
         fixtures = client.fixtures_by_season(123, team_ids=[1, 2])
         self.assertEqual(fixtures[0]["statistics"][0]["data"]["value"], 8)
         self.assertEqual(client._get.call_args_list[0].args[0], "schedules/seasons/123")
-        self.assertEqual(client._get.call_args_list[0].args[1], None)
+        self.assertEqual(client._get.call_args_list[0].args, ("schedules/seasons/123",))
         self.assertEqual(client._get.call_args_list[1].args[0], "fixtures/multi/100")
         self.assertEqual(
             client._get.call_args_list[1].args[1]["include"],
