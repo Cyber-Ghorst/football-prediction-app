@@ -68,6 +68,22 @@ class PredictionReadinessTests(unittest.TestCase):
         self.assertEqual(report["overall_status"], "fixture_unverified")
         self.assertFalse(report["fixture"]["verified"])
 
+    def test_sportmonks_scheduled_state_id_is_accepted_without_state_label(self):
+        row = fixture()
+        row["state"] = {}
+        row["state_id"] = 1
+        report = self.report(selected_fixture=row)
+        self.assertTrue(report["fixture"]["verified"])
+        self.assertEqual(report["overall_status"], "ready")
+
+    def test_non_scheduled_state_id_fails_closed(self):
+        row = fixture()
+        row["state"] = {}
+        row["state_id"] = 5
+        report = self.report(selected_fixture=row)
+        self.assertFalse(report["fixture"]["verified"])
+        self.assertEqual(report["overall_status"], "fixture_unverified")
+
     def test_wrong_home_away_orientation_fails_closed(self):
         row = fixture()
         row["participants"][0]["meta"]["location"] = "away"
