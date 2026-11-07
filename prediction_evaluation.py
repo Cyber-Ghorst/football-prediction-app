@@ -88,6 +88,8 @@ def build_prediction_record(
         "away_team": away_team,
         "fixture_id": str(fixture_id or ""),
         "fixture_provider": fixture_provider or "",
+        "model_version": "weighted-football-model-v1",
+        "model_recency_policy": "latest_5_60pct_previous_5_40pct",
         "model_home_win": round(model["home_win"] * 100, 4),
         "model_draw": round(model["draw"] * 100, 4),
         "model_away_win": round(model["away_win"] * 100, 4),
@@ -166,6 +168,19 @@ def evaluate_prediction_ledger(records: Iterable[Mapping[str, Any]]) -> dict[str
         "player_snapshot_competitions": len({
             str(row.get("competition") or "") for row in player_snapshots
         }),
+        "player_snapshot_coverage_by_competition": {
+            competition: sum(1 for row in player_snapshots
+                             if str(row.get("competition") or "") == competition)
+            for competition in sorted({str(row.get("competition") or "")
+                                        for row in player_snapshots})
+        },
+        "model_metrics_by_competition": {
+            competition: _score_records(
+                [row for row in completed if str(row.get("competition") or "") == competition],
+                "model",
+            )
+            for competition in sorted({str(row.get("competition") or "") for row in completed})
+        },
         "model": _score_records(completed, "model"),
         "opta_same_fixtures": _score_records(opta_rows, "opta"),
         "opta_comparable_fixtures": len(opta_rows),
