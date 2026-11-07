@@ -75,6 +75,29 @@ class PlayerEnrichmentTests(unittest.TestCase):
         self.assertEqual(client.player_calls, [])
         self.assertEqual(len(report["unknown_players"]), 1)
 
+    def test_quota_guard_blocks_when_remaining_quota_is_insufficient(self):
+        client = FakeClient()
+        client.last_metadata = {"requests_remaining": "2"}
+        report = collect_highlightly_player_enrichment(
+            client=client, lineups=self.lineups, competition="Premier League",
+            season=2026, home_team_name="Arsenal", away_team_name="Chelsea",
+            require_quota_metadata=True,
+        )
+        self.assertEqual(report["quota"]["status"], "blocked_insufficient_quota")
+        self.assertEqual(client.team_calls, [])
+        self.assertEqual(client.player_calls, [])
+
+    def test_quota_guard_blocks_when_quota_is_unknown(self):
+        client = FakeClient()
+        report = collect_highlightly_player_enrichment(
+            client=client, lineups=self.lineups, competition="Premier League",
+            season=2026, home_team_name="Arsenal", away_team_name="Chelsea",
+            require_quota_metadata=True,
+        )
+        self.assertEqual(report["quota"]["status"], "blocked_unknown_quota")
+        self.assertEqual(client.team_calls, [])
+        self.assertEqual(client.player_calls, [])
+
     def test_player_request_cap_is_respected(self):
         client = FakeClient()
         lineups = {"home": {"team_id": 11, "team_name": "Arsenal",
