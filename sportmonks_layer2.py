@@ -13,20 +13,26 @@ from tactical_indicators import analyze_tactics
 
 _COMPLETED = {"finished", "ft", "aet", "penalties", "after extra time", "after penalties"}
 _STAT_ALIASES = {
+    # Core tactical metrics consumed by tactical_indicators.py.
     "ball possession": "Ball Possession",
+    "ball possession %": "Ball Possession",
     "pass accuracy": "Passes %",
     "passes accuracy": "Passes %",
     "accurate passes percentage": "Passes %",
     "pass success percentage": "Passes %",
+    "successful passes percentage": "Passes %",
+    "successful passes %": "Passes %",
     "passes %": "Passes %",
     "shots on goal": "Shots on Goal",
     "total shots": "Total Shots",
+    "shots total": "Total Shots",
     "goal attempts": "Total Shots",
     "shots on target": "Shots on Target",
     "shots off target": "Shots off Target",
     "tackles": "Tackles",
     "interceptions": "Interceptions",
     "blocked shots": "Blocked Shots",
+    "shots blocked": "Blocked Shots",
     "corners": "Corner Kicks",
     "corner kicks": "Corner Kicks",
 }
