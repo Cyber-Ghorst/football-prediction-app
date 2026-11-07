@@ -97,19 +97,29 @@ def reconcile_match_records(
     )
     for field, domain in domains:
         observations = []
+        observed_values = []
         for row, provider in zip(rows, providers):
             value = row.get(field)
             fetched = _timestamp(timestamps.get(provider))
             if value is None or fetched is None:
                 continue
+            source_id = (row.get("source_ids") or {}).get(provider)
+            source_updated_at = _timestamp(row.get("raw_source_updated_at"))
             observations.append(Observation(
                 provider=provider,
                 value=value,
                 fetched_at=fetched,
-                source_id=(row.get("source_ids") or {}).get(provider),
-                updated_at=_timestamp(row.get("raw_source_updated_at")),
+                source_id=source_id,
+                updated_at=source_updated_at,
                 valid=True,
             ))
+            observed_values.append({
+                "provider": provider,
+                "value": value,
+                "source_id": str(source_id) if source_id is not None else None,
+                "fetched_at": fetched.isoformat(),
+                "source_updated_at": source_updated_at.isoformat() if source_updated_at else None,
+            })
         resolved = resolve_field(
             domain,
             observations,
@@ -125,6 +135,7 @@ def reconcile_match_records(
             "corroborating_providers": list(resolved.corroborating_providers),
             "conflicting_providers": list(resolved.conflicting_providers),
             "fetched_at": resolved.fetched_at.isoformat() if resolved.fetched_at else None,
+            "observations": observed_values,
             "message": resolved.message,
         }
 
