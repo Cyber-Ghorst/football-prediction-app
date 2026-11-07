@@ -94,7 +94,7 @@ class APIFootballClient:
         params: Optional[Dict[str, Any]] = None
     ) -> List[Dict[str, Any]]:
 
-        url = f"{self.BASE_URL}/{endpoint}"
+            url = f"{self.BASE_URL}/{endpoint}"
 
         try:
             response = self.session.get(
