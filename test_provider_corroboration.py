@@ -13,6 +13,7 @@ NOW = datetime(2026, 11, 7, 18, 0, tzinfo=timezone.utc)
 def sportmonks_fixture(home_score=2, away_score=1):
     return {
         "id": 700,
+        "season_id": 2026,
         "starting_at": "2026-11-07T15:00:00Z",
         "state_id": 5,
         "state": {"short_name": "FT", "name": "Finished"},
