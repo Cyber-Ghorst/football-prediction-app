@@ -69,7 +69,7 @@ def _state(fixture: dict[str, Any]) -> str:
         return "finished"
     if any(x in label for x in ("live", "in play", "half time", "1st half", "2nd half", "extra time", "penalty")):
         return "live"
-    if any(x in label for x in ("not started", "scheduled", "to be played")):
+    if label in {"ns", "not started", "scheduled", "tbd"} or any(x in label for x in ("not started", "scheduled", "to be played")):
         return "scheduled"
     return "unknown"
 
