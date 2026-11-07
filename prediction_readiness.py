@@ -136,7 +136,7 @@ def _team_readiness(profile: dict[str, Any]) -> dict[str, Any]:
         "completed_matches_available": count,
         "history_target": 10,
         "history_status": "sufficient" if count >= 10 else "minimum_met" if count >= 5 else "insufficient",
-        "matches_with_statistics": stats_count,
+        "matches_with_statistics": quality.get("matches_with_any_statistics", stats_count),
         "matches_with_opponent_strength": strength_count,
         "history_collection_diagnostics": {
             key: quality.get(key)
@@ -148,6 +148,13 @@ def _team_readiness(profile: dict[str, Any]) -> dict[str, Any]:
                 "excluded_missing_scores", "history_shortfall",
                 "history_latest_match_at", "history_oldest_match_at",
                 "history_collection_fetched_at", "history_order",
+                "schedule_unique_fixture_count", "duplicate_fixture_id_count",
+                "duplicate_fixture_ids", "excluded_invalid_kickoff",
+                "excluded_invalid_scores", "team_fixture_accounting_gap",
+                "team_fixture_accounting_status", "statistics_core_metrics",
+                "statistics_coverage_by_metric", "matches_with_any_statistics",
+                "matches_with_complete_core_statistics",
+                "core_statistics_completeness_pct", "history_integrity_status",
             )
             if key in quality
         },
