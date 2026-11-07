@@ -94,6 +94,15 @@ class HighlightlyClient:
     def players(self, **params: Any) -> list[dict[str, Any]]:
         return self._rows(self._get("players", params))
 
+    def test_connection(self) -> dict[str, Any]:
+        """Verify authenticated access using the documented leagues endpoint."""
+        rows = self.leagues(limit=1, offset=0)
+        return {
+            "transport_status": "responding",
+            "records_returned": len(rows),
+            "metadata": dict(self.last_metadata),
+        }
+
     def close(self) -> None:
         self.session.close()
 
