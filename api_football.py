@@ -251,7 +251,7 @@ class APIFootballClient:
     # UPCOMING MATCHES
     # --------------------------------------------------
 
-    def upcoming_matches(
+     def upcoming_matches(
         self,
         league: str = "epl",
         days: int = 7,
