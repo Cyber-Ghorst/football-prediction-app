@@ -63,6 +63,26 @@ class PredictionReadinessTests(unittest.TestCase):
         self.assertTrue(report["prediction_minimum_history_met"])
         self.assertFalse(report["ten_match_history_target_met"])
 
+    def test_history_collection_diagnostics_are_exposed_per_team(self):
+        home = profile("Home FC", 7)
+        home["data_quality"].update({
+            "fixtures_scanned": 38,
+            "same_season_fixtures": 38,
+            "team_fixtures": 12,
+            "completed_fixtures": 9,
+            "fixtures_with_valid_scores": 7,
+            "excluded_missing_scores": 2,
+            "history_shortfall": 3,
+        })
+        report = build_prediction_readiness(
+            home, profile("Away FC", 10), selected_fixture=fixture(),
+            home_team_id=10, away_team_id=20, season_id=2026, now=self.NOW,
+        )
+        diagnostics = report["teams"]["home"]["history_collection_diagnostics"]
+        self.assertEqual(diagnostics["completed_fixtures"], 9)
+        self.assertEqual(diagnostics["fixtures_with_valid_scores"], 7)
+        self.assertEqual(diagnostics["history_shortfall"], 3)
+
     def test_missing_exact_fixture_is_reported_not_substituted(self):
         report = self.report(selected_fixture=None)
         self.assertEqual(report["overall_status"], "fixture_unverified")
