@@ -39,6 +39,13 @@ def provider_readiness() -> list[dict[str, Any]]:
             "credential_name": "HIGHLIGHTLY_API_KEY",
         },
         {
+            "provider": "Sportmonks Football API v3",
+            "adapter": "implemented",
+            "credential_configured": _secret_present("SPORTMONKS_API_TOKEN", ("SPORTMONKS_API_KEY",)),
+            "app_integration": "authenticated connection diagnostic available; current-season data adapter added; Layer 2 activation pending coverage and schema validation",
+            "credential_name": "SPORTMONKS_API_TOKEN",
+        },
+        {
             "provider": "LiveScoreFootball",
             "adapter": "implemented",
             "credential_configured": False,
