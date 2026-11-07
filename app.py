@@ -543,12 +543,19 @@ try:
         }
         st.info(status_labels.get(readiness["overall_status"], readiness["overall_status"]))
         fixture_diagnostic = readiness["fixture"]
+        freshness = fixture_diagnostic.get("source_freshness", "unknown")
+        if freshness == "fresh":
+            st.success("Fixture data is fresh — retrieved less than 24 hours ago.")
+        elif freshness == "stale":
+            st.warning("Fixture data is stale — retrieved 24 hours ago or earlier. Refresh it before relying on it.")
+        else:
+            st.info("Fixture data freshness is unknown — no valid retrieval age is available.")
         if fixture_diagnostic.get("source_fetched_at") and fixture_diagnostic.get("source_age_minutes") is not None:
             st.caption(
                 "Sportmonks detailed fixture retrieved at "
                 f"{fixture_diagnostic['source_fetched_at']} (UTC) — "
                 f"{fixture_diagnostic['source_age_minutes']} minutes ago. "
-                "Age is measured from retrieval time; no fresh/stale threshold is applied."
+                "Freshness threshold: 24 hours."
             )
         else:
             st.caption("Sportmonks detailed-fixture retrieval time is unavailable; source age remains unknown.")
