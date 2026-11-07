@@ -289,3 +289,20 @@ This milestone activates independent corroboration for recent match results. It 
 - No model weights, latest-five/previous-five recency weighting, Layer 1 calculations, or TVD rules were changed.
 
 Official endpoint references: Sportmonks fixture includes support lineups, formations, statistics and sidelined; Sportmonks documents sidelined.player / sidelined.sideline for player and absence details. Highlightly provides per-match statistics and lineups endpoints; its lineup feed is documented as available from approximately 40 minutes before kickoff until 120 minutes after, refreshing every 15 minutes, while match statistics refresh every five minutes.
+
+
+## Highlightly match statistics and lineup corroboration (2026-11-07)
+
+- Added `highlightly_match_enrichment.py` as a diagnostic-only integration.
+- The app exposes a separate opt-in checkbox because the enrichment may make up to 20 match-statistics requests (latest 10 completed matches per selected team), plus one lineup request for the exact upcoming selected fixture.
+- Highlightly matches are filtered by competition, country and season; a match is joined to Sportmonks only when competition key, season, home team, away team, orientation and kickoff (within five minutes) all match.
+- Statistics use Highlightly's documented response shape: team object plus a list of `displayName` / `value` observations. Known metrics are normalized conservatively; percentage fractions are converted to percentage points.
+- Cross-provider statistic comparisons are only shown for metrics supported by both providers under the same canonical name and compatible units. The report preserves both values, the difference and the tolerance. It never averages or overwrites either value.
+- Unknown Highlightly statistic labels remain visible as raw observations but are not compared or used by the model.
+- Upcoming lineups are requested only after an exact scheduled Sportmonks fixture is matched to a Highlightly match. Initial lineup rows are flattened according to the documented nested grid; substitutes remain separate.
+- Highlightly lineup status is labeled `provider_reported`, not independently verified by the app. If the endpoint is not yet available, returns no lineup, or cannot be matched, lineup data remains unknown.
+- API Ninjas remains outside this statistics/lineups integration. No injury or suspension claims are inferred from Highlightly's lineup endpoint.
+- The existing result corroboration checkbox and new statistics/lineups checkbox are independent. The new checkbox defaults off to protect API quota; enabling it can make up to 20 stats calls plus one lineup call.
+- No prediction weights, latest-five/previous-five 60/40 recency weighting, Layer 1 calculations, tactical scoring rules or TVD logic were changed.
+
+Official Highlightly documentation: match statistics return per-team `statistics` items with `displayName` and numeric `value`, refreshing every five minutes; lineups return home/away formations, nested initial lineups and substitutes, available from 40 minutes before kickoff to 120 minutes after kickoff, refreshing every 15 minutes.
