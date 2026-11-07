@@ -41,6 +41,9 @@ class MultiSourceReconciliationTests(unittest.TestCase):
         self.assertEqual(result["reconciliation"]["home_score"]["status"], "conflict")
         self.assertEqual(result["reconciliation"]["home_score"]["corroborating_providers"], ["api_ninjas"])
         self.assertEqual(result["reconciliation"]["home_score"]["conflicting_providers"], ["api_football"])
+        observed = {row["provider"]: row["value"] for row in result["reconciliation"]["home_score"]["observations"]}
+        self.assertEqual(observed, {"api_ninjas": 2, "highlightly": 2, "api_football": 3})
+        self.assertTrue(all(row.get("source_id") for row in result["reconciliation"]["home_score"]["observations"]))
         self.assertEqual(set(result["source_ids"]), {"api_ninjas", "highlightly", "api_football"})
 
     def test_missing_fetched_timestamp_is_not_treated_as_fresh(self):
