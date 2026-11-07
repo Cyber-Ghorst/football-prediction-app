@@ -80,7 +80,7 @@ class SportmonksClient:
         except requests.RequestException as exc:
             status = getattr(getattr(exc, "response", None), "status_code", None)
             suffix = f" (HTTP {status})" if status else ""
-            raise SportmonksError(f"Sportmonks network request failed{suffix}.") from exc
+            raise SportmonksError(f"Sportmonks request to '{path}' failed{suffix}.") from exc
         except ValueError as exc:
             raise SportmonksError("Sportmonks returned invalid JSON.") from exc
 
@@ -135,17 +135,108 @@ class SportmonksClient:
     def standings_by_season(self, season_id: int | str, **params: Any) -> list[dict[str, Any]]:
         return self._all_pages(f"standings/seasons/{season_id}", **params)
 
+    @staticmethod
+    def _flatten_schedule_fixtures(payload: Any) -> list[dict[str, Any]]:
+        """Flatten Sportmonks' stages -> rounds -> fixtures schedule response."""
+        fixtures: list[dict[str, Any]] = []
+        seen: set[int] = set()
+        for stage in SportmonksClient._rows(payload):
+            for round_row in SportmonksClient._rows(stage.get("rounds")):
+                for fixture_row in SportmonksClient._rows(round_row.get("fixtures")):
+                    fixture = dict(fixture_row)
+                    fixture.setdefault("stage_id", stage.get("id"))
+                    fixture.setdefault("round_id", round_row.get("id"))
+                    fixture_id = fixture.get("id")
+                    if fixture_id is None:
+                        continue
+                    try:
+                        key = int(fixture_id)
+                    except (TypeError, ValueError):
+                        continue
+                    if key not in seen:
+                        seen.add(key)
+                        fixtures.append(fixture)
+        return fixtures
+
+    @staticmethod
+    def _fixture_team_ids(fixture: dict[str, Any]) -> set[int]:
+        participants = SportmonksClient._rows(fixture.get("participants"))
+        ids: set[int] = set()
+        for participant in participants:
+            try:
+                if participant.get("id") is not None:
+                    ids.add(int(participant["id"]))
+            except (TypeError, ValueError):
+                continue
+        return ids
+
     def fixtures_by_season(
-        self, season_id: int | str, *, include_statistics: bool = True, **params: Any
+        self,
+        season_id: int | str,
+        *,
+        include_statistics: bool = True,
+        team_ids: list[int] | tuple[int, ...] | None = None,
+        **params: Any,
     ) -> list[dict[str, Any]]:
-        includes = "participants;scores;state"
-        if include_statistics:
-            includes += ";statistics.type"
-        return self._all_pages(
-            f"fixtures/seasons/{season_id}",
-            include=includes,
-            **params,
-        )
+        """Fetch a season schedule and optionally enrich selected teams' recent matches.
+
+        Sportmonks schedules are returned as one nested stages/rounds/fixtures
+        response and do not support pagination or includes. Detailed statistics
+        are therefore fetched in one multi-fixture request for up to ten recent
+        completed matches per selected team, rather than requesting every match.
+        """
+        if params:
+            unsupported = ", ".join(sorted(params))
+            raise SportmonksError(
+                f"Unsupported schedule parameters ({unsupported}); the schedule endpoint does not accept query filters or includes."
+            )
+        payload = self._get(f"schedules/seasons/{season_id}")
+        fixtures = self._flatten_schedule_fixtures(payload)
+
+        selected_ids: set[int] = set()
+        for value in team_ids or ():
+            try:
+                selected_ids.add(int(value))
+            except (TypeError, ValueError):
+                continue
+
+        if include_statistics and selected_ids:
+            recent_by_team: dict[int, list[dict[str, Any]]] = {
+                team_id: [] for team_id in selected_ids
+            }
+            for fixture in fixtures:
+                if int(fixture.get("state_id") or 0) not in {5, 7, 8}:
+                    continue
+                for team_id in self._fixture_team_ids(fixture) & selected_ids:
+                    recent_by_team[team_id].append(fixture)
+
+            chosen: dict[int, dict[str, Any]] = {}
+            for team_fixtures in recent_by_team.values():
+                ordered = sorted(
+                    team_fixtures,
+                    key=lambda row: str(row.get("starting_at") or ""),
+                    reverse=True,
+                )
+                for fixture in ordered[:10]:
+                    chosen[int(fixture["id"])] = fixture
+
+            fixture_ids = sorted(chosen)
+            if fixture_ids:
+                include = "participants;scores;state;statistics.type"
+                details_payload = self._get(
+                    f"fixtures/multi/{','.join(str(value) for value in fixture_ids)}",
+                    {"include": include},
+                )
+                details = self._rows(details_payload)
+                details_by_id = {
+                    int(row["id"]): row for row in details
+                    if row.get("id") is not None
+                }
+                for fixture_id, detail in details_by_id.items():
+                    base = chosen.get(fixture_id)
+                    if base is not None:
+                        base.update(detail)
+        return fixtures
 
     def seasons(self, **params: Any) -> list[dict[str, Any]]:
         return self._rows(self._get("seasons", params))

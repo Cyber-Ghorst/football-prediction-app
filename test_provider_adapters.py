@@ -76,13 +76,61 @@ class ProviderAdapterTests(unittest.TestCase):
     def test_sportmonks_unwraps_data_envelope(self):
         self.assertEqual(SportmonksClient._rows({"data": [{"id": 42}]}), [{"id": 42}])
 
-    def test_sportmonks_statistics_include_can_be_disabled(self):
+    def test_sportmonks_flattens_schedule_stages_rounds_and_fixtures(self):
+        payload = {
+            "data": [{
+                "id": 10,
+                "rounds": [{
+                    "id": 20,
+                    "fixtures": [
+                        {"id": 100, "starting_at": "2026-08-01 12:00:00"},
+                        {"id": 101, "starting_at": "2026-08-02 12:00:00"},
+                    ],
+                }],
+            }],
+        }
+        fixtures = SportmonksClient._flatten_schedule_fixtures(payload)
+        self.assertEqual([row["id"] for row in fixtures], [100, 101])
+        self.assertEqual(fixtures[0]["stage_id"], 10)
+        self.assertEqual(fixtures[0]["round_id"], 20)
+
+    def test_sportmonks_schedule_endpoint_and_targeted_statistics_enrichment(self):
         client = SportmonksClient(api_token="test-only")
-        client._all_pages = Mock(return_value=[])
-        client.fixtures_by_season(123, include_statistics=False)
-        args, kwargs = client._all_pages.call_args
-        self.assertEqual(args[0], "fixtures/seasons/123")
-        self.assertEqual(kwargs["include"], "participants;scores;state")
+        schedule = {
+            "data": [{
+                "id": 10,
+                "rounds": [{
+                    "id": 20,
+                    "fixtures": [{
+                        "id": 100,
+                        "state_id": 5,
+                        "starting_at": "2026-08-01 12:00:00",
+                        "participants": [{"id": 1}, {"id": 2}],
+                        "scores": [],
+                    }],
+                }],
+            }],
+        }
+        client._get = Mock(side_effect=[
+            schedule,
+            {"data": [{"id": 100, "statistics": [{"type": {"name": "Shots"}, "data": {"value": 8}}]}]},
+        ])
+        fixtures = client.fixtures_by_season(123, team_ids=[1, 2])
+        self.assertEqual(fixtures[0]["statistics"][0]["data"]["value"], 8)
+        self.assertEqual(client._get.call_args_list[0].args[0], "schedules/seasons/123")
+        self.assertEqual(client._get.call_args_list[0].args, ("schedules/seasons/123",))
+        self.assertEqual(client._get.call_args_list[1].args[0], "fixtures/multi/100")
+        self.assertEqual(
+            client._get.call_args_list[1].args[1]["include"],
+            "participants;scores;state;statistics.type",
+        )
+        client.close()
+
+    def test_sportmonks_schedule_skips_statistics_when_disabled(self):
+        client = SportmonksClient(api_token="test-only")
+        client._get = Mock(return_value={"data": []})
+        self.assertEqual(client.fixtures_by_season(123, include_statistics=False), [])
+        client._get.assert_called_once_with("schedules/seasons/123")
         client.close()
 
     def test_sportmonks_paginates_complete_season_collections(self):
