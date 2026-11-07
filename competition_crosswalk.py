@@ -19,7 +19,7 @@ def normalize_competition_name(value: Any) -> str:
     text = "".join(ch for ch in text if not unicodedata.combining(ch))
     text = text.casefold().replace("&", " and ")
     text = re.sub(r"[^a-z0-9]+", " ", text)
-    return re.sub(r"\\s+", " ", text).strip()
+    return re.sub(r"\s+", " ", text).strip()
 
 
 def normalize_country(value: Any) -> str:
