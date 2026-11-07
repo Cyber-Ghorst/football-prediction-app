@@ -102,12 +102,16 @@ def _fixture_identity_status(
     if not kickoff_valid:
         reasons.append("kickoff is missing, invalid or not in the future")
     fetched_at = _utc_datetime(fixture.get("fixture_details_fetched_at"))
-    age_seconds = (now - fetched_at).total_seconds() if fetched_at is not None else None
+    timestamp_in_future = fetched_at is not None and fetched_at > now
+    age_seconds = (
+        (now - fetched_at).total_seconds()
+        if fetched_at is not None and not timestamp_in_future else None
+    )
     age_minutes = round(age_seconds / 60, 1) if age_seconds is not None else None
     if fetched_at is None:
         source_freshness = "unknown"
         freshness_note = "No successful detailed-fixture retrieval timestamp is attached; freshness cannot be measured."
-    elif age_seconds < 0:
+    elif timestamp_in_future:
         source_freshness = "unknown"
         freshness_note = "The retrieval timestamp is later than the diagnostic clock; check system clock alignment."
     elif age_seconds < FIXTURE_FRESHNESS_THRESHOLD.total_seconds():
