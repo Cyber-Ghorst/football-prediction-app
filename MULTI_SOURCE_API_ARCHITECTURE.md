@@ -318,3 +318,29 @@ An opt-in diagnostic path now uses the exact selected-fixture Highlightly lineup
 - The UI is separately opt-in. It makes at most 22 player-stat requests plus two team-stat requests, and only when the exact selected-fixture lineup is available. Missing IDs, unavailable lineups and unmatched competition/season/club rows remain unknown.
 - Player/team statistics are diagnostic only. They do not change the 5% player-availability weight, tactical ratings, Layer 2 profiles or predictions. Statistics do not establish injury status or guaranteed availability.
 - The Highlightly statistics endpoints refresh on a daily basis for player statistics and after matches for team statistics; exact account plan coverage remains provider-dependent.
+
+
+## Cross-competition player-stat validation and Opta benchmarking (2026-11-07)
+
+### Prediction ledger and evaluation
+- `prediction_evaluation.py` creates an auditable pre-match prediction record with competition/country/season, home/away teams, fixture/provider IDs where available, prediction timestamp, kickoff, 1X2 probabilities, model version and the protected 60/40 recency policy.
+- The Streamlit app keeps a session ledger and supports CSV export/import so records can be carried across app restarts. Streamlit session memory is not treated as permanent storage.
+- Final home/away goals can be entered in the ledger after the match. Evaluation excludes forecasts not demonstrably timestamped before kickoff.
+- Reports accuracy, multiclass Brier score and log loss, plus model metrics by competition.
+- Opta comparison uses only completed fixtures for which both model and Opta probabilities are recorded. It reports both on the same fixture subset, never compares unrelated samples.
+- No automatic model fitting, weight changes or probability calibration is performed by the evaluation report.
+
+### Player-stat validation and look-ahead protection
+- Player and team season aggregates are diagnostic observations, not injury or availability status.
+- Player-stat snapshots are eligible for historical evaluation only when the enrichment request has completed before the exact fixture kickoff. The completion timestamp is recorded after all provider calls.
+- Post-kickoff snapshots are excluded from the pre-match snapshot count to prevent future-data leakage.
+- Cross-competition coverage is summarized by competition as predictions are collected and exported/imported.
+- A future candidate player-impact feature must be evaluated as a separate experimental signal. It must not be relabelled as the existing 5% player-availability input, which requires verified availability evidence.
+- Any proposed model change requires a sufficiently large, chronological, out-of-sample evaluation and must beat the unchanged baseline on proper scoring rules before it is considered. No threshold or sample-size claim is treated as a guarantee.
+
+### Opta's role
+- Public Opta Analyst Supercomputer match probabilities can be recorded manually as an external benchmark with the article URL and capture timestamp.
+- Official Opta material describes the match outcome model as using betting-market odds and Opta Power Rankings. It is therefore a useful strong comparator, but not a pure odds-free independent model and not ground truth.
+- The app does not scrape Opta, reverse engineer its proprietary model, or copy its probabilities into our model inputs.
+- Licensed Opta data feeds/APIs remain a later commercial integration option, subject to coverage, demo access, pricing, redistribution rights and written licensing terms.
+- Benchmark scores are reported only on the same fixture set as our own forecasts.
