@@ -38,7 +38,7 @@ try:
     client = APIFootballClient()
 except APIFootballError as exc:
     st.error(str(exc))
-    st.markdown("**Setup:** create an API-Football key, then add this to Streamlit Secrets:\n```toml\nAPI_FOOTBALL_KEY = \"YOUR_KEY_HERE\"\n```")
+    st.markdown("**Setup:** create an API-Football key, then add this to Streamlit Secrets:\n```toml\nAPISPORTS_API_KEY = \"YOUR_API_SPORTS_KEY_HERE\"\n```")
     st.stop()
 
 try:
