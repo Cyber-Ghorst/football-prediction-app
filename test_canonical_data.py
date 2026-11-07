@@ -2,6 +2,7 @@ import unittest
 
 from canonical_data import (
     MatchNormalizationError, canonicalize_api_football_fixture,
+    canonicalize_api_ninjas_match, canonicalize_highlightly_match,
     canonicalize_livescore_event, match_identity, merge_source_ids,
 )
 
@@ -60,6 +61,70 @@ class CanonicalMatchTests(unittest.TestCase):
             left["source_ids"]["livescore_football"],
             right["source_ids"]["api_football"],
         )
+
+    def test_api_ninjas_normalizes_documented_match_shape(self):
+        row = {
+            "game_id": "epl-20261107-ars-che",
+            "season": 2026,
+            "start_time": "2026-11-07T15:00:00Z",
+            "status": "final",
+            "home_team": {"team_id": "soccer-arsenal", "name": "Arsenal"},
+            "away_team": {"team_id": "soccer-chelsea", "name": "Chelsea"},
+            "home_score": 2,
+            "away_score": 1,
+            "updated_at": "2026-11-07T17:10:00Z",
+        }
+        result = canonicalize_api_ninjas_match(row, competition_key="eng-premier-league")
+        self.assertEqual(result["status"], "finished")
+        self.assertEqual(result["home_score"], 2)
+        self.assertEqual(result["source_ids"]["api_ninjas"], row["game_id"])
+        self.assertEqual(result["raw_source_updated_at"], row["updated_at"])
+
+    def test_highlightly_normalizes_nested_match_shape_and_score(self):
+        row = {
+            "id": 9001,
+            "date": "2026-11-07T15:00:00.000Z",
+            "homeTeam": {"id": 11, "name": "Arsenal"},
+            "awayTeam": {"id": 12, "name": "Chelsea"},
+            "league": {"id": 99, "season": 2026, "name": "Premier League"},
+            "state": {"description": "Finished", "score": {"current": "2 - 1"}},
+            "updated_at": "2026-11-07T17:10:00Z",
+        }
+        result = canonicalize_highlightly_match(row, competition_key="eng-premier-league")
+        self.assertEqual(result["status"], "finished")
+        self.assertEqual((result["home_score"], result["away_score"]), (2, 1))
+        self.assertEqual(result["source_ids"]["highlightly"], "9001")
+
+    def test_highlightly_unparseable_score_remains_unknown(self):
+        row = {
+            "id": 9002, "date": "2026-11-07T15:00:00Z",
+            "homeTeam": {"id": 11, "name": "Arsenal"},
+            "awayTeam": {"id": 12, "name": "Chelsea"},
+            "league": {"season": 2026},
+            "state": {"description": "Not started", "score": {"current": None}},
+        }
+        result = canonicalize_highlightly_match(row, competition_key="eng-premier-league")
+        self.assertIsNone(result["home_score"])
+        self.assertIsNone(result["away_score"])
+        self.assertEqual(result["status"], "scheduled")
+
+    def test_api_ninjas_and_highlightly_records_match_by_identity_not_ids(self):
+        ninjas = canonicalize_api_ninjas_match({
+            "game_id": "epl-game-1", "season": 2026,
+            "start_time": "2026-11-07T15:00:00Z", "status": "final",
+            "home_team": {"team_id": "soccer-arsenal", "name": "Arsenal"},
+            "away_team": {"team_id": "soccer-chelsea", "name": "Chelsea"},
+            "home_score": 2, "away_score": 1,
+        }, competition_key="eng-premier-league")
+        highlightly = canonicalize_highlightly_match({
+            "id": 9001, "date": "2026-11-07T15:03:00Z",
+            "homeTeam": {"id": 11, "name": "Arsenal"},
+            "awayTeam": {"id": 12, "name": "Chelsea"},
+            "league": {"season": 2026},
+            "state": {"description": "Finished", "score": {"current": "2 - 1"}},
+        }, competition_key="eng-premier-league")
+        self.assertTrue(match_identity(ninjas, highlightly))
+        self.assertNotEqual(ninjas["source_ids"]["api_ninjas"], highlightly["source_ids"]["highlightly"])
 
     def test_competition_or_season_mismatch_prevents_join(self):
         left = canonicalize_livescore_event(
