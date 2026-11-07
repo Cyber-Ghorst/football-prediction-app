@@ -7,6 +7,7 @@ from api_ninjas import APINinjasClient, APINinjasError
 from highlightly import HighlightlyClient, HighlightlyError
 from sportmonks import SportmonksClient, SportmonksError
 from data_layer2 import collect_team_profile
+from sportmonks_layer2 import collect_sportmonks_team_profile
 from engine import predict_match, WEIGHTS
 from tvd import run_tvd
 from provider_config import provider_readiness
@@ -16,7 +17,7 @@ from provider_health import assess_api_football_status, assess_livescore_metadat
 
 st.set_page_config(page_title="Football Prediction Lab", page_icon="⚽", layout="wide")
 st.title("⚽ Football Prediction Lab")
-st.caption("Layer 2 • Automatic API-Football data collection + weighted prediction engine + TVD")
+st.caption("Layer 2 • Sportmonks current-season / API-Football historical data collection + weighted prediction engine + TVD")
 
 @st.cache_data(ttl=3600, show_spinner=False)
 def get_leagues(_client, season):
@@ -34,6 +35,31 @@ def get_standings(_client, league_id, season):
 def get_profile(_client, team, league_id, season, standings, include_stats):
     return collect_team_profile(_client, team, league_id, season, standings, include_stats)
 
+@st.cache_data(ttl=3600, show_spinner=False)
+def get_sm_leagues():
+    with SportmonksClient() as sm:
+        return sm.available_leagues(include="country")
+
+@st.cache_data(ttl=3600, show_spinner=False)
+def get_sm_seasons():
+    with SportmonksClient() as sm:
+        return sm.available_seasons()
+
+@st.cache_data(ttl=3600, show_spinner=False)
+def get_sm_teams(season_id):
+    with SportmonksClient() as sm:
+        return sm.teams_by_season(season_id)
+
+@st.cache_data(ttl=1800, show_spinner=False)
+def get_sm_standings(season_id):
+    with SportmonksClient() as sm:
+        return sm.standings_by_season(season_id, include="participant")
+
+@st.cache_data(ttl=1800, show_spinner=False)
+def get_sm_fixtures(season_id):
+    with SportmonksClient() as sm:
+        return sm.fixtures_by_season(season_id)
+
 with st.sidebar:
     st.header("Data configuration")
     season = st.number_input("Season start year", min_value=2015, max_value=2035, value=2026, step=1,
@@ -46,22 +72,27 @@ with st.sidebar:
             st.write(f"**{provider['provider']}** — {provider['adapter']}; credential {credential}; {provider['app_integration']}.")
         run_provider_diagnostics = st.button("Run provider health & coverage check", use_container_width=True)
 
-try:
-    client = APIFootballClient()
-except APIFootballError as exc:
-    st.error(str(exc))
-    st.markdown("**Setup:** create an API-Football key, then add this to Streamlit Secrets:\n```toml\nAPISPORTS_API_KEY = \"YOUR_API_SPORTS_KEY_HERE\"\n```")
-    st.stop()
+client = None
+leagues = []
+if int(season) <= 2024:
+    try:
+        client = APIFootballClient()
+        leagues = get_leagues(client, int(season))
+    except APIFootballError as exc:
+        st.error(str(exc))
+        st.markdown("**Setup:** add APISPORTS_API_KEY to Streamlit Secrets for historical seasons 2022–2024.")
+        st.stop()
 
 try:
-    # Do not send unsupported current-season requests to the API-Football account.
-    leagues = get_leagues(client, int(season)) if int(season) <= 2024 else []
     if run_provider_diagnostics:
         st.subheader("Provider health and competition coverage")
         try:
-            api_status = assess_api_football_status(client.status())
-            st.write("**API-Football account status**")
-            st.json(api_status)
+            if client is None:
+                st.info("API-Football diagnostics skipped for this season; your account only supports seasons 2022–2024.")
+            else:
+                api_status = assess_api_football_status(client.status())
+                st.write("**API-Football account status**")
+                st.json(api_status)
         except APIFootballError as exc:
             st.warning(f"API-Football status could not be verified: {exc}")
         try:
@@ -123,20 +154,66 @@ try:
                 st.info("No competition crosswalk candidates were returned.")
         except LiveScoreFootballError as exc:
             st.warning(f"LiveScoreFootball could not be verified: {exc}")
-    if int(season) > 2024:
-        st.error("API-Football on the configured plan only accepts seasons 2022–2024. Sportmonks has been added as the intended current-season provider, but its account token, competition coverage and Layer 2 data mapping must be verified before predictions can use it. Add SPORTMONKS_API_TOKEN to Streamlit Secrets, run the provider diagnostic, and share the result.")
-        st.stop()
-    league_options = {f"{x['league']['name']} — {x.get('country',{}).get('name','')}": x['league']['id']
-                      for x in leagues if x.get('league',{}).get('id')}
-    if not league_options:
-        st.warning("No competitions were returned for this season under the current API plan.")
-        st.stop()
-    selected_league = st.selectbox("Competition", list(league_options))
-    league_id = int(league_options[selected_league])
-    team_rows = get_teams(client, league_id, int(season))
-    team_map = {x['team']['name']: x['team'] for x in team_rows if x.get('team',{}).get('id')}
+    sportmonks_mode = int(season) > 2024
+    selected_season_id = None
+    if sportmonks_mode:
+        try:
+            sm_leagues = get_sm_leagues()
+            sm_seasons = get_sm_seasons()
+        except SportmonksError as exc:
+            st.error(f"Sportmonks competition discovery failed: {exc}")
+            st.stop()
+
+        league_by_id = {int(row["id"]): row for row in sm_leagues if row.get("id") is not None}
+        eligible_seasons = [
+            row for row in sm_seasons
+            if row.get("league_id") is not None
+            and (str(row.get("starting_at") or "")[:4].isdigit()
+                 and int(str(row.get("starting_at"))[:4]) == int(season)
+                 or str(row.get("name") or "").startswith(str(int(season))))
+        ]
+        eligible_league_ids = {int(row["league_id"]) for row in eligible_seasons}
+        league_options = {}
+        for league_id_value in sorted(eligible_league_ids):
+            league = league_by_id.get(league_id_value)
+            if not league:
+                continue
+            country = league.get("country") or {}
+            league_options[f"{league.get('name', 'Unknown league')} — {country.get('name', 'Unknown country')}"] = league_id_value
+        if not league_options:
+            st.warning(f"Sportmonks returned no covered competitions with a season starting in {int(season)}. This is a coverage result, not a reason to substitute another competition.")
+            st.stop()
+        selected_league = st.selectbox("Sportmonks competition", list(league_options))
+        league_id = int(league_options[selected_league])
+        matching_seasons = [row for row in eligible_seasons if int(row["league_id"]) == league_id]
+        season_options = {
+            f"{row.get('name') or row.get('starting_at')} (season ID {row['id']})": int(row["id"])
+            for row in matching_seasons if row.get("id") is not None
+        }
+        if not season_options:
+            st.warning("No exact Sportmonks season ID was found for this competition and start year.")
+            st.stop()
+        selected_season_label = st.selectbox("Verified season", list(season_options))
+        selected_season_id = season_options[selected_season_label]
+        try:
+            team_rows = get_sm_teams(selected_season_id)
+        except SportmonksError as exc:
+            st.error(f"Sportmonks team coverage could not be loaded: {exc}")
+            st.stop()
+        team_map = {str(row.get("name")): row for row in team_rows if row.get("id") is not None and row.get("name")}
+        st.caption(f"Sportmonks source mapping: league ID {league_id} → season ID {selected_season_id}. Team IDs are retained from the same provider.")
+    else:
+        league_options = {f"{x['league']['name']} — {x.get('country',{}).get('name','')}": x['league']['id']
+                          for x in leagues if x.get('league',{}).get('id')}
+        if not league_options:
+            st.warning("No competitions were returned for this season under the API-Football account.")
+            st.stop()
+        selected_league = st.selectbox("API-Football competition", list(league_options))
+        league_id = int(league_options[selected_league])
+        team_rows = get_teams(client, league_id, int(season))
+        team_map = {x['team']['name']: x['team'] for x in team_rows if x.get('team',{}).get('id')}
     if len(team_map) < 2:
-        st.warning("The provider returned fewer than two teams for this competition.")
+        st.warning("The selected provider returned fewer than two teams for this competition and season.")
         st.stop()
     c1,c2 = st.columns(2)
     with c1: home_name = st.selectbox("Home team", list(team_map))
@@ -171,9 +248,19 @@ try:
 
     if st.button("Collect data and predict", type="primary", use_container_width=True):
         with st.spinner("Collecting recent results, standings and available match statistics..."):
-            standings = get_standings(client, league_id, int(season))
-            home = get_profile(client, team_map[home_name], league_id, int(season), standings, include_stats)
-            away = get_profile(client, team_map[away_name], league_id, int(season), standings, include_stats)
+            if sportmonks_mode:
+                try:
+                    standings = get_sm_standings(selected_season_id)
+                    fixtures = get_sm_fixtures(selected_season_id)
+                except SportmonksError as exc:
+                    st.error(f"Sportmonks season data collection failed: {exc}")
+                    st.stop()
+                home = collect_sportmonks_team_profile(team_map[home_name], selected_season_id, fixtures, standings)
+                away = collect_sportmonks_team_profile(team_map[away_name], selected_season_id, fixtures, standings)
+            else:
+                standings = get_standings(client, league_id, int(season))
+                home = get_profile(client, team_map[home_name], league_id, int(season), standings, include_stats)
+                away = get_profile(client, team_map[away_name], league_id, int(season), standings, include_stats)
         st.subheader("Data validation")
         for profile in (home, away):
             quality = profile["data_quality"]
