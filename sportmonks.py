@@ -135,10 +135,15 @@ class SportmonksClient:
     def standings_by_season(self, season_id: int | str, **params: Any) -> list[dict[str, Any]]:
         return self._all_pages(f"standings/seasons/{season_id}", **params)
 
-    def fixtures_by_season(self, season_id: int | str, **params: Any) -> list[dict[str, Any]]:
+    def fixtures_by_season(
+        self, season_id: int | str, *, include_statistics: bool = True, **params: Any
+    ) -> list[dict[str, Any]]:
+        includes = "participants;scores;state"
+        if include_statistics:
+            includes += ";statistics.type"
         return self._all_pages(
             f"fixtures/seasons/{season_id}",
-            include="participants;scores;state;statistics.type;lineups",
+            include=includes,
             **params,
         )
 
