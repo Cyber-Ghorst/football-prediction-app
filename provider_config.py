@@ -28,14 +28,14 @@ def provider_readiness() -> list[dict[str, Any]]:
             "provider": "API Ninjas",
             "adapter": "implemented",
             "credential_configured": _secret_present("API_NINJAS_API_KEY", ("API_NINJAS_KEY",)),
-            "app_integration": "adapter only; no documented account-health endpoint; fallback not enabled",
+            "app_integration": "connection diagnostic available; match fallback not yet enabled",
             "credential_name": "API_NINJAS_API_KEY",
         },
         {
             "provider": "Highlightly",
             "adapter": "implemented",
             "credential_configured": _secret_present("HIGHLIGHTLY_API_KEY", ("API_FOOTBALL_KEY",)),
-            "app_integration": "adapter only; fallback not enabled",
+            "app_integration": "connection diagnostic available; match fallback not yet enabled",
             "credential_name": "HIGHLIGHTLY_API_KEY",
         },
         {
