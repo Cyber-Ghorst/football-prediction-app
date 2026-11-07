@@ -13,20 +13,26 @@ from tactical_indicators import analyze_tactics
 
 _COMPLETED = {"finished", "ft", "aet", "penalties", "after extra time", "after penalties"}
 _STAT_ALIASES = {
+    # Core tactical metrics consumed by tactical_indicators.py.
     "ball possession": "Ball Possession",
+    "ball possession %": "Ball Possession",
     "pass accuracy": "Passes %",
     "passes accuracy": "Passes %",
     "accurate passes percentage": "Passes %",
     "pass success percentage": "Passes %",
+    "successful passes percentage": "Passes %",
+    "successful passes %": "Passes %",
     "passes %": "Passes %",
     "shots on goal": "Shots on Goal",
     "total shots": "Total Shots",
+    "shots total": "Total Shots",
     "goal attempts": "Total Shots",
     "shots on target": "Shots on Target",
     "shots off target": "Shots off Target",
     "tackles": "Tackles",
     "interceptions": "Interceptions",
     "blocked shots": "Blocked Shots",
+    "shots blocked": "Blocked Shots",
     "corners": "Corner Kicks",
     "corner kicks": "Corner Kicks",
 }
@@ -174,6 +180,48 @@ def _team_statistics_provenance(fixture: dict[str, Any], team_id: int) -> list[d
     return observations
 
 
+
+def _team_statistics_raw_diagnostics(fixture: dict[str, Any], team_id: int) -> list[dict[str, Any]]:
+    """Expose every provider statistic row for this team, including unmapped names.
+
+    This is audit-only data: unknown statistic types are never added to the
+    normalized statistics used by tactical ratings or prediction inputs.
+    """
+    observations: list[dict[str, Any]] = []
+    for row in _rows(fixture.get("statistics")):
+        try:
+            if int(row.get("participant_id")) != team_id:
+                continue
+        except (TypeError, ValueError):
+            continue
+
+        stat_type = row.get("type") or {}
+        raw_name = (
+            stat_type.get("name")
+            if isinstance(stat_type, dict)
+            else str(stat_type or "")
+        )
+        normalized_name = str(raw_name or "").strip().casefold()
+        canonical_name = _STAT_ALIASES.get(normalized_name)
+        raw_value = _stat_value(row)
+        normalized_value = (
+            _normalize_stat_value(canonical_name, raw_value)
+            if canonical_name is not None
+            else None
+        )
+        observations.append({
+            "provider": "sportmonks",
+            "fixture_id": fixture.get("id"),
+            "participant_id": team_id,
+            "statistic_type_id": stat_type.get("id") if isinstance(stat_type, dict) else None,
+            "statistic_name_raw": str(raw_name or ""),
+            "canonical_name": canonical_name,
+            "raw_value": raw_value,
+            "normalized_value": normalized_value,
+            "mapping_status": "mapped" if canonical_name is not None else "unmapped",
+        })
+    return observations
+
 def standings_strength(rows: list[dict[str, Any]]) -> dict[int, float]:
     ranks: dict[int, float] = {}
     for row in rows:
@@ -236,6 +284,7 @@ def collect_sportmonks_team_profile(
             "opponent_strength": strength_map.get(opponent_id),
             "statistics": _team_statistics(fixture, team_id),
             "statistics_provenance": _team_statistics_provenance(fixture, team_id),
+            "statistics_raw_diagnostics": _team_statistics_raw_diagnostics(fixture, team_id),
         })
 
     matches.sort(key=lambda row: str(row.get("date") or ""), reverse=True)
@@ -275,6 +324,11 @@ def collect_sportmonks_team_profile(
             "opponent_strength_matches": sum(m.get("opponent_strength") is not None for m in recent),
             "statistics_matches": sum(bool(m.get("statistics")) for m in recent),
             "statistics_observations": sum(len(m.get("statistics_provenance") or []) for m in recent),
+            "statistics_raw_observations": sum(len(m.get("statistics_raw_diagnostics") or []) for m in recent),
+            "statistics_unmapped_observations": sum(
+                sum(row.get("mapping_status") == "unmapped" for row in (m.get("statistics_raw_diagnostics") or []))
+                for m in recent
+            ),
             "fixtures_scanned": len(fixtures),
         },
     }

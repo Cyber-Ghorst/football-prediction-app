@@ -19,13 +19,18 @@ def fixture(fid, home_id, away_id, home_goals, away_goals, state="FT"):
             {"participant_id": away_id, "description": "CURRENT", "score": {"goals": away_goals}},
         ],
         "statistics": [
-            {"participant_id": home_id, "type": {"id": 1, "name": "Ball Possession"}, "data": {"value": "60%"}},
+            {"participant_id": home_id, "type": {"id": 1, "name": "Ball Possession %"}, "data": {"value": "60%"}},
             {"participant_id": away_id, "type": {"id": 1, "name": "Ball Possession"}, "data": {"value": "40%"}},
             {"participant_id": home_id, "type": {"id": 2, "name": "Pass Accuracy"}, "data": {"value": 0.82}},
             {"participant_id": away_id, "type": {"id": 2, "name": "Pass Accuracy"}, "data": {"value": 0.71}},
             {"participant_id": home_id, "type": {"id": 3, "name": "Total Shots"}, "data": {"value": 12}},
             {"participant_id": away_id, "type": {"id": 3, "name": "Total Shots"}, "data": {"value": 8}},
             {"participant_id": home_id, "type": {"id": 4, "name": "Shots Accuracy"}, "data": {"value": 0.5}},
+            {"participant_id": home_id, "type": {"id": 42, "name": "Shots Total"}, "data": {"value": 14}},
+            {"participant_id": home_id, "type": {"id": 58, "name": "Shots Blocked"}, "data": {"value": 3}},
+            {"participant_id": home_id, "type": {"id": 99, "name": "Successful Passes Percentage"}, "data": {"value": 0.84}},
+            {"participant_id": home_id, "type": {"id": 43, "name": "Attacks"}, "data": {"value": 85}},
+            {"participant_id": home_id, "type": {"id": 100, "name": "Passes"}, "data": {"value": 300}},
         ],
     }
 
@@ -52,9 +57,16 @@ class SportmonksLayer2Tests(unittest.TestCase):
         self.assertEqual(profile["matches"][0]["goals_for"], 2)
         self.assertEqual(profile["matches"][0]["opponent_strength"], 50.0)
         self.assertEqual(profile["matches"][0]["statistics"]["Ball Possession"], 60.0)
-        self.assertEqual(profile["matches"][0]["statistics"]["Passes %"], 82.0)
-        self.assertEqual(profile["matches"][0]["statistics"]["Total Shots"], 12.0)
+        self.assertEqual(profile["matches"][0]["statistics"]["Total Shots"], 14.0)
+        self.assertEqual(profile["matches"][0]["statistics"]["Blocked Shots"], 3.0)
+        self.assertEqual(profile["matches"][0]["statistics"]["Passes %"], 84.0)
         self.assertNotIn("Shots Accuracy", profile["matches"][0]["statistics"])
+        self.assertNotIn("Attacks", profile["matches"][0]["statistics"])
+        self.assertNotIn("Passes", profile["matches"][0]["statistics"])
+        raw_rows = profile["matches"][0]["statistics_raw_diagnostics"]
+        shots_accuracy = next(row for row in raw_rows if row["statistic_name_raw"] == "Shots Accuracy")
+        self.assertEqual(shots_accuracy["mapping_status"], "unmapped")
+        self.assertEqual(shots_accuracy["raw_value"], 0.5)
         self.assertEqual(profile["matches"][0]["statistics_provenance"][0]["provider"], "sportmonks")
         self.assertEqual(profile["matches"][0]["statistics_provenance"][0]["fixture_id"], 6)
         self.assertIsNone(profile["player_availability"])

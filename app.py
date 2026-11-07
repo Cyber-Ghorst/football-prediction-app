@@ -608,12 +608,13 @@ try:
             st.json(result["component_ratings"]); st.json(result["tactical_component_ratings"])
         with st.expander("Tactical indicators and match statistics"):
             st.json({home_name:home["tactical_summary"],away_name:away["tactical_summary"]})
-            st.caption("Recent per-match statistics include normalized values and their Sportmonks source provenance. Raw observations are retained for audit; only supported, unit-normalized metrics contribute to tactical indicators.")
+            st.caption("Normalized values and source provenance are shown alongside every raw Sportmonks statistic row for each team. Unmapped names are diagnostic only and never enter tactical ratings or prediction inputs.")
             st.json({
                 home_name: [
                     {"fixture_id": row.get("fixture_id"), "date": row.get("date"),
                      "statistics": row.get("statistics"),
-                     "statistics_provenance": row.get("statistics_provenance", [])}
+                     "statistics_provenance": row.get("statistics_provenance", []),
+                     "statistics_raw_diagnostics": row.get("statistics_raw_diagnostics", [])}
                     for row in home.get("matches", [])
                 ],
                 away_name: [
