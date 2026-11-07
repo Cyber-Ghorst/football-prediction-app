@@ -74,12 +74,13 @@ def collect_highlightly_player_enrichment(
     Requests at most two team-stat endpoints and max_players player-stat
     endpoints. Substitutes are intentionally excluded to bound quota usage.
     """
-    fetched_at = datetime.now(timezone.utc).isoformat()
+    started_at = datetime.now(timezone.utc).isoformat()
     report: dict[str, Any] = {
         "provider": "highlightly",
         "competition": competition,
         "season": int(season),
-        "fetched_at": fetched_at,
+        "started_at": started_at,
+        "fetched_at": "",
         "diagnostic_only": True,
         "player_requests": 0,
         "team_requests": 0,
@@ -89,6 +90,7 @@ def collect_highlightly_player_enrichment(
         "unknown_players": [],
     }
     if not lineups:
+        report["fetched_at"] = datetime.now(timezone.utc).isoformat()
         report["availability"] = "unknown_no_exact_provider_lineup"
         return report
 
@@ -176,6 +178,7 @@ def collect_highlightly_player_enrichment(
         except Exception as exc:
             report["errors"][f"player_stats:{player_id}"] = str(exc)
 
+    report["fetched_at"] = datetime.now(timezone.utc).isoformat()
     report["availability"] = "collected" if report["players"] or any(
         team.get("season_statistics") for team in report["teams"].values()
     ) else "unknown_no_matching_statistics"
