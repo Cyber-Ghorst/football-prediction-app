@@ -54,7 +54,6 @@ except APIFootballError as exc:
     st.stop()
 
 try:
-    leagues = get_leagues(client, int(season))
     if run_provider_diagnostics:
         st.subheader("Provider health and competition coverage")
         try:
@@ -122,6 +121,10 @@ try:
                 st.info("No competition crosswalk candidates were returned.")
         except LiveScoreFootballError as exc:
             st.warning(f"LiveScoreFootball could not be verified: {exc}")
+    if int(season) > 2024:
+        st.error("API-Football on the configured plan only accepts seasons 2022–2024. Sportmonks has been added as the intended current-season provider, but its account token, competition coverage and Layer 2 data mapping must be verified before predictions can use it. Add SPORTMONKS_API_TOKEN to Streamlit Secrets, run the provider diagnostic, and share the result.")
+        st.stop()
+    leagues = get_leagues(client, int(season))
     league_options = {f"{x['league']['name']} — {x.get('country',{}).get('name','')}": x['league']['id']
                       for x in leagues if x.get('league',{}).get('id')}
     if not league_options:
