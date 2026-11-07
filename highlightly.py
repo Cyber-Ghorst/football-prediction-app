@@ -34,6 +34,7 @@ class HighlightlyClient:
         self.last_metadata: dict[str, Any] = {}
 
     def _get(self, path: str, params: dict[str, Any] | None = None) -> Any:
+        self.last_metadata = {}
         try:
             response = self.session.get(f"{self.base_url}/{path.lstrip('/')}", params=params or {}, timeout=self.timeout)
             self.last_metadata = {
