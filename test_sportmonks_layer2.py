@@ -141,5 +141,44 @@ class SportmonksLayer2Tests(unittest.TestCase):
             extract_sportmonks_match_details(row, 20, 10, 2026)
 
 
+    def test_upcoming_fixture_accepts_state_id_and_iso_kickoff_without_epoch(self):
+        from datetime import datetime, timezone
+        from sportmonks_layer2 import diagnose_upcoming_match_fixture
+
+        row = fixture(30, 10, 20, 0, 0, state="unknown")
+        row["state_id"] = 1
+        row["state"] = {}
+        row.pop("starting_at_timestamp", None)
+        row["starting_at"] = "2026-11-08T15:00:00Z"
+
+        now = int(datetime(2026, 11, 7, 12, tzinfo=timezone.utc).timestamp())
+        diagnostic = diagnose_upcoming_match_fixture([row], 10, 20, 2026, now_timestamp=now)
+
+        self.assertTrue(diagnostic["verified"])
+        self.assertEqual(diagnostic["fixture"]["id"], 30)
+        self.assertEqual(diagnostic["same_season"], 1)
+        self.assertEqual(diagnostic["scheduled"], 1)
+        self.assertEqual(diagnostic["exact_home_away"], 1)
+        self.assertEqual(diagnostic["future_kickoff"], 1)
+
+    def test_upcoming_fixture_accepts_string_state_and_reports_missing_kickoff(self):
+        from datetime import datetime, timezone
+        from sportmonks_layer2 import diagnose_upcoming_match_fixture
+
+        row = fixture(31, 10, 20, 0, 0, state="unknown")
+        row["state"] = "NS"
+        row["state_id"] = None
+        row.pop("starting_at_timestamp", None)
+        row["starting_at"] = "not-a-date"
+
+        now = int(datetime(2026, 11, 7, tzinfo=timezone.utc).timestamp())
+        diagnostic = diagnose_upcoming_match_fixture([row], 10, 20, 2026, now_timestamp=now)
+
+        self.assertFalse(diagnostic["verified"])
+        self.assertEqual(diagnostic["exact_home_away"], 1)
+        self.assertEqual(diagnostic["missing_kickoff"], 1)
+        self.assertIn("kickoff timestamp could not be parsed", diagnostic["reason"])
+
+
 if __name__ == "__main__":
     unittest.main()
