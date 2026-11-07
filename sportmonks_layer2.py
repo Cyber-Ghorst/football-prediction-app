@@ -15,16 +15,22 @@ _COMPLETED = {"finished", "ft", "aet", "penalties", "after extra time", "after p
 _STAT_ALIASES = {
     "ball possession": "Ball Possession",
     "pass accuracy": "Passes %",
+    "passes accuracy": "Passes %",
+    "accurate passes percentage": "Passes %",
+    "pass success percentage": "Passes %",
     "passes %": "Passes %",
     "shots on goal": "Shots on Goal",
     "total shots": "Total Shots",
+    "goal attempts": "Total Shots",
     "shots on target": "Shots on Target",
     "shots off target": "Shots off Target",
     "tackles": "Tackles",
     "interceptions": "Interceptions",
     "blocked shots": "Blocked Shots",
     "corners": "Corner Kicks",
+    "corner kicks": "Corner Kicks",
 }
+_PERCENTAGE_STATS = {"Ball Possession", "Passes %"}
 
 
 def _rows(value: Any) -> list[dict[str, Any]]:
@@ -87,8 +93,39 @@ def _scores(fixture: dict[str, Any], home_id: int, away_id: int) -> tuple[int | 
     return values.get(home_id), values.get(away_id)
 
 
-def _team_statistics(fixture: dict[str, Any], team_id: int) -> dict[str, Any]:
-    result: dict[str, Any] = {}
+def _stat_name(row: dict[str, Any]) -> str:
+    stat_type = row.get("type") or {}
+    if isinstance(stat_type, dict):
+        return str(stat_type.get("name") or "").strip().casefold()
+    return str(stat_type).strip().casefold()
+
+
+def _stat_value(row: dict[str, Any]) -> Any:
+    data = row.get("data")
+    if isinstance(data, dict):
+        return data.get("value")
+    return data if data is not None else row.get("value")
+
+
+def _normalize_stat_value(key: str, value: Any) -> float | None:
+    """Normalize numeric statistics; percentage fractions become 0-100 values."""
+    if value is None:
+        return None
+    text = str(value).strip().replace(",", "")
+    had_percent_sign = text.endswith("%")
+    if had_percent_sign:
+        text = text[:-1].strip()
+    try:
+        number = float(text)
+    except (TypeError, ValueError):
+        return None
+    if key in _PERCENTAGE_STATS and not had_percent_sign and 0 < number <= 1:
+        number *= 100
+    return round(number, 3)
+
+
+def _team_statistics(fixture: dict[str, Any], team_id: int) -> dict[str, float]:
+    result: dict[str, float] = {}
     for row in _rows(fixture.get("statistics")):
         if row.get("participant_id") is None:
             continue
@@ -97,14 +134,44 @@ def _team_statistics(fixture: dict[str, Any], team_id: int) -> dict[str, Any]:
                 continue
         except (TypeError, ValueError):
             continue
-        stat_type = row.get("type") or {}
-        name = str(stat_type.get("name") or "").strip().casefold()
-        key = _STAT_ALIASES.get(name)
-        data = row.get("data")
-        value = data.get("value") if isinstance(data, dict) else data
-        if key and value is not None:
+        key = _STAT_ALIASES.get(_stat_name(row))
+        if key is None:
+            continue
+        value = _normalize_stat_value(key, _stat_value(row))
+        if value is not None:
             result[key] = value
     return result
+
+
+def _team_statistics_provenance(fixture: dict[str, Any], team_id: int) -> list[dict[str, Any]]:
+    """Keep source-level observations alongside normalized values for auditing."""
+    observations: list[dict[str, Any]] = []
+    for row in _rows(fixture.get("statistics")):
+        try:
+            if int(row.get("participant_id")) != team_id:
+                continue
+        except (TypeError, ValueError):
+            continue
+        key = _STAT_ALIASES.get(_stat_name(row))
+        if key is None:
+            continue
+        raw_value = _stat_value(row)
+        normalized = _normalize_stat_value(key, raw_value)
+        if normalized is None:
+            continue
+        stat_type = row.get("type") or {}
+        observations.append({
+            "provider": "sportmonks",
+            "fixture_id": fixture.get("id"),
+            "season_id": fixture.get("season_id"),
+            "fixture_updated_at": fixture.get("updated_at") or fixture.get("last_processed_at"),
+            "statistic_type_id": stat_type.get("id") if isinstance(stat_type, dict) else None,
+            "statistic_name": _stat_name(row),
+            "canonical_name": key,
+            "raw_value": raw_value,
+            "normalized_value": normalized,
+        })
+    return observations
 
 
 def standings_strength(rows: list[dict[str, Any]]) -> dict[int, float]:
@@ -168,6 +235,7 @@ def collect_sportmonks_team_profile(
             "goals_against": away_goals if is_home else home_goals,
             "opponent_strength": strength_map.get(opponent_id),
             "statistics": _team_statistics(fixture, team_id),
+            "statistics_provenance": _team_statistics_provenance(fixture, team_id),
         })
 
     matches.sort(key=lambda row: str(row.get("date") or ""), reverse=True)
@@ -206,6 +274,7 @@ def collect_sportmonks_team_profile(
             "goals_complete": len(recent) >= 5,
             "opponent_strength_matches": sum(m.get("opponent_strength") is not None for m in recent),
             "statistics_matches": sum(bool(m.get("statistics")) for m in recent),
+            "statistics_observations": sum(len(m.get("statistics_provenance") or []) for m in recent),
             "fixtures_scanned": len(fixtures),
         },
     }
