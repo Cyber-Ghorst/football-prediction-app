@@ -42,6 +42,11 @@ def collect_team_profile(client: APIFootballClient, team: dict, league_id: int, 
     matches = []
     for fixture in fixtures:
         fixture_info = fixture.get("fixture") or {}
+        # Keep completed competitive outcomes only; postponed, abandoned and
+        # scheduled fixtures must never enter form or goals calculations.
+        status = (fixture_info.get("status") or {}).get("short")
+        if status not in {"FT", "AET", "PEN"}:
+            continue
         teams = fixture.get("teams") or {}
         goals = fixture.get("goals") or {}
         home = teams.get("home") or {}
