@@ -192,6 +192,11 @@ class SportmonksClient:
             )
         payload = self._get(f"schedules/seasons/{season_id}")
         fixtures = self._flatten_schedule_fixtures(payload)
+        # The endpoint itself is scoped to this exact season. Some schedule
+        # responses omit season_id on nested fixture rows, so preserve that
+        # request provenance rather than rejecting otherwise valid fixtures.
+        for fixture in fixtures:
+            fixture.setdefault("season_id", int(season_id))
 
         selected_ids: set[int] = set()
         for value in team_ids or ():
