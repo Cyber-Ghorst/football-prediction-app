@@ -69,7 +69,8 @@ with st.sidebar:
     with st.expander("Provider readiness", expanded=True):
         for provider in provider_readiness():
             credential = ("not required" if provider.get("credential_required") is False else ("configured" if provider["credential_configured"] else "not configured"))
-            st.write(f"**{provider['provider']}** — {provider['adapter']}; credential {credential}; {provider['app_integration']}.")
+            st.write(f"**#{provider['rank']} {provider['provider']} — {provider['role']}**; credential {credential}.")
+            st.caption(f"Domains: {', '.join(provider['domains'])}. {provider['app_integration']}. Limitation: {provider['limitation']}")
         run_provider_diagnostics = st.button("Run provider health & coverage check", use_container_width=True)
 
 client = None
