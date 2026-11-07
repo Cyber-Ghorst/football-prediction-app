@@ -187,7 +187,12 @@ def collect_recent_result_corroboration(
                     highlightly_diagnostics["rejected_competition_mismatch"] += 1
                     continue
 
+                # Highlightly's documented match schema places country at
+                # the match's top level (row.country). Retain compatibility
+                # with older/nested payloads that expose it under league.
                 country_value = league.get("country")
+                if country_value is None:
+                    country_value = row.get("country")
                 row_country = (
                     country_value.get("name") if isinstance(country_value, Mapping)
                     else country_value if isinstance(country_value, str)
