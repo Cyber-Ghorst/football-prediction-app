@@ -266,6 +266,10 @@ class SportmonksClient:
                 f"fixtures/multi/{','.join(str(value) for value in fixture_ids)}",
                 {"include": ";".join(include_parts)},
             )
+            # This is the local UTC retrieval time after the detailed provider
+            # response completed successfully. It is not Sportmonks' updated_at.
+            from datetime import datetime, timezone
+            details_fetched_at = datetime.now(timezone.utc).isoformat()
             details = self._rows(details_payload)
             details_by_id = {
                 int(row["id"]): row for row in details
@@ -275,6 +279,7 @@ class SportmonksClient:
                 base = detail_targets.get(fixture_id)
                 if base is not None:
                     base.update(detail)
+                    base["fixture_details_fetched_at"] = details_fetched_at
         return fixtures
 
     def seasons(self, **params: Any) -> list[dict[str, Any]]:
