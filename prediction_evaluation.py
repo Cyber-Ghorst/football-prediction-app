@@ -7,7 +7,8 @@ back into the prediction engine.
 from __future__ import annotations
 
 from datetime import datetime, timezone
-from math import log
+from math import isfinite, log
+import json
 from typing import Any, Iterable, Mapping
 import uuid
 
@@ -32,7 +33,7 @@ def _valid_probabilities(values: Mapping[str, Any]) -> dict[str, float] | None:
         result = {key: float(values[key]) for key in PROBABILITY_FIELDS}
     except (KeyError, TypeError, ValueError):
         return None
-    if any(value < 0 or value > 100 for value in result.values()):
+    if any(not isfinite(value) or value < 0 or value > 100 for value in result.values()):
         return None
     if abs(sum(result.values()) - 100.0) > 0.6:
         return None
@@ -41,7 +42,12 @@ def _valid_probabilities(values: Mapping[str, Any]) -> dict[str, float] | None:
 
 def outcome_from_score(home_goals: Any, away_goals: Any) -> str | None:
     try:
-        home, away = int(home_goals), int(away_goals)
+        home_float, away_float = float(home_goals), float(away_goals)
+        if not isfinite(home_float) or not isfinite(away_float):
+            return None
+        if not home_float.is_integer() or not away_float.is_integer():
+            return None
+        home, away = int(home_float), int(away_float)
     except (TypeError, ValueError):
         return None
     if home < 0 or away < 0:
@@ -105,6 +111,8 @@ def build_prediction_record(
         "player_snapshot_availability": snapshot.get("availability", "unknown"),
         "player_records_count": len(snapshot.get("players") or []),
         "player_unknown_count": len(snapshot.get("unknown_players") or []),
+        "player_snapshot_players_json": json.dumps(snapshot.get("players") or [], ensure_ascii=False, separators=(",", ":")),
+        "player_snapshot_teams_json": json.dumps(snapshot.get("teams") or {}, ensure_ascii=False, separators=(",", ":")),
         "actual_home_goals": "",
         "actual_away_goals": "",
         "actual_result": "",
@@ -152,10 +160,16 @@ def evaluate_prediction_ledger(records: Iterable[Mapping[str, Any]]) -> dict[str
     completed = [row for row in eligible if outcome_from_score(
         row.get("actual_home_goals"), row.get("actual_away_goals")
     ) is not None]
-    opta_rows = [row for row in completed if _valid_probabilities({
-        "home_win": row.get("opta_home_win"), "draw": row.get("opta_draw"),
-        "away_win": row.get("opta_away_win"),
-    }) is not None]
+    opta_rows = [
+        row for row in completed
+        if _valid_probabilities({
+            "home_win": row.get("opta_home_win"), "draw": row.get("opta_draw"),
+            "away_win": row.get("opta_away_win"),
+        }) is not None
+        and _parse_datetime(row.get("opta_captured_at")) is not None
+        and _parse_datetime(row.get("kickoff_at")) is not None
+        and _parse_datetime(row.get("opta_captured_at")) < _parse_datetime(row.get("kickoff_at"))
+    ]
     player_snapshots = [row for row in eligible if str(
         row.get("player_snapshot_before_kickoff", "")
     ).lower() in ("true", "1")]
