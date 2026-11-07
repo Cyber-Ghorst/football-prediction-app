@@ -428,8 +428,32 @@ try:
                             st.caption("This report compares matching fixtures only. It does not replace Sportmonks data or alter prediction calculations.")
                             st.json({
                                 key: value for key, value in corroboration.items()
-                                if key != "matches"
+                                if key not in {"matches", "team_history_coverage"}
                             })
+                            st.markdown("**Independent team-history check (Highlightly)**")
+                            st.caption("Compares completed, score-valid results by exact competition, season, team orientation and kickoff. Any unmatched Highlightly result is a review candidate only; it is not added to the model history.")
+                            history_checks = corroboration.get("team_history_coverage") or {}
+                            history_columns = st.columns(2)
+                            for history_column, team_label in zip(history_columns, (home_name, away_name)):
+                                with history_column:
+                                    st.markdown(f"**{team_label}**")
+                                    history_check = history_checks.get(team_label)
+                                    if history_check:
+                                        st.metric(
+                                            "Highlightly completed matches",
+                                            history_check.get("highlightly_completed_score_valid", 0),
+                                            help="Completed Highlightly results with a valid home-away score in the exact selected competition and season.",
+                                        )
+                                        st.write(
+                                            f"Sportmonks: {history_check.get('sportmonks_completed_score_valid', 0)}; "
+                                            f"exact cross-source matches: {history_check.get('exact_matches_across_sources', 0)}; "
+                                            f"unmatched candidates: {history_check.get('highlightly_results_not_found_in_sportmonks', 0)}."
+                                        )
+                                        if history_check.get("unmatched_completed_candidates"):
+                                            st.warning("Highlightly reported completed result(s) not found among Sportmonks' completed, score-valid fixtures. Review the candidates below; none has been added automatically.")
+                                        st.json(history_check)
+                                    else:
+                                        st.info("No independent Highlightly history report was available for this team.")
                         if corroboration is None:
                             st.warning("Cross-provider result corroboration did not complete; Sportmonks prediction data remains unchanged.")
                         elif corroboration.get("matches"):
