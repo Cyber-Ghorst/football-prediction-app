@@ -44,7 +44,7 @@ class ProviderCoreTests(unittest.TestCase):
         ], now=NOW)
         self.assertEqual(result.value, 1)
         self.assertEqual(result.status, "corroborated")
-        self.assertEqual(result.corroborating_providers, ("highlightly",))
+        self.assertEqual(result.corroborating_providers, ("api_ninjas",))
 
     def test_statistics_use_sportmonks_priority_when_validated(self):
         result = resolve_field("statistics", [
