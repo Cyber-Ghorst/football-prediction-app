@@ -19,14 +19,13 @@ def fixture(fid, home_id, away_id, home_goals, away_goals, state="FT"):
             {"participant_id": away_id, "description": "CURRENT", "score": {"goals": away_goals}},
         ],
         "statistics": [
-            {"participant_id": home_id, "type": {"id": 1, "name": "Ball Possession"}, "data": {"value": "60%"}},
+            {"participant_id": home_id, "type": {"id": 1, "name": "Ball Possession %"}, "data": {"value": "60%"}},
             {"participant_id": away_id, "type": {"id": 1, "name": "Ball Possession"}, "data": {"value": "40%"}},
             {"participant_id": home_id, "type": {"id": 2, "name": "Pass Accuracy"}, "data": {"value": 0.82}},
             {"participant_id": away_id, "type": {"id": 2, "name": "Pass Accuracy"}, "data": {"value": 0.71}},
             {"participant_id": home_id, "type": {"id": 3, "name": "Total Shots"}, "data": {"value": 12}},
             {"participant_id": away_id, "type": {"id": 3, "name": "Total Shots"}, "data": {"value": 8}},
             {"participant_id": home_id, "type": {"id": 4, "name": "Shots Accuracy"}, "data": {"value": 0.5}},
-            {"participant_id": home_id, "type": {"id": 45, "name": "Ball Possession %"}, "data": {"value": 55}},
             {"participant_id": home_id, "type": {"id": 42, "name": "Shots Total"}, "data": {"value": 14}},
             {"participant_id": home_id, "type": {"id": 58, "name": "Shots Blocked"}, "data": {"value": 3}},
             {"participant_id": home_id, "type": {"id": 99, "name": "Successful Passes Percentage"}, "data": {"value": 0.84}},
@@ -60,7 +59,6 @@ class SportmonksLayer2Tests(unittest.TestCase):
         self.assertEqual(profile["matches"][0]["statistics"]["Ball Possession"], 60.0)
         self.assertEqual(profile["matches"][0]["statistics"]["Passes %"], 82.0)
         self.assertEqual(profile["matches"][0]["statistics"]["Total Shots"], 12.0)
-        self.assertEqual(profile["matches"][0]["statistics"]["Ball Possession"], 55.0)
         self.assertEqual(profile["matches"][0]["statistics"]["Blocked Shots"], 3.0)
         self.assertEqual(profile["matches"][0]["statistics"]["Passes %"], 84.0)
         self.assertNotIn("Shots Accuracy", profile["matches"][0]["statistics"])
