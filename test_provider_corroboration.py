@@ -10,10 +10,10 @@ from provider_corroboration import (
 NOW = datetime(2026, 11, 7, 18, 0, tzinfo=timezone.utc)
 
 
-def sportmonks_fixture(home_score=2, away_score=1):
+def sportmonks_fixture(home_score=2, away_score=1, season_id=2026):
     return {
         "id": 700,
-        "season_id": 2026,
+        "season_id": season_id,
         "starting_at": "2026-11-07T15:00:00Z",
         "state_id": 5,
         "state": {"short_name": "FT", "name": "Finished"},
@@ -91,6 +91,17 @@ class ProviderCorroborationTests(unittest.TestCase):
         self.assertEqual(row["source_ids"]["sportmonks"], "700")
         self.assertEqual(row["home_score"], 2)
         self.assertEqual(row["status"], "finished")
+
+    def test_team_history_uses_sportmonks_season_id_not_calendar_year(self):
+        report = collect_recent_result_corroboration(
+            sportmonks_fixtures=[sportmonks_fixture(season_id=25678)],
+            competition="Premier League", country="England", season=2026,
+            sportmonks_season_id=25678,
+            home_team_name="Arsenal", away_team_name="Chelsea",
+            highlightly_client=FakeHighlightly([]), now=NOW,
+        )
+        arsenal = report["team_history_coverage"]["Arsenal"]
+        self.assertEqual(arsenal["sportmonks_completed_score_valid"], 1)
 
     def test_three_provider_agreement_and_conflict_are_exposed(self):
         highlightly = FakeHighlightly([highlightly_match(home_score=3)])
