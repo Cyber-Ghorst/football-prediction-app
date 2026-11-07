@@ -131,6 +131,7 @@ class ProviderAdapterTests(unittest.TestCase):
             {"data": [{"id": 100, "statistics": [{"type": {"name": "Shots"}, "data": {"value": 8}}]}]},
         ])
         fixtures = client.fixtures_by_season(123, team_ids=[1, 2])
+        self.assertEqual(fixtures[0]["season_id"], 123)
         self.assertEqual(fixtures[0]["statistics"][0]["data"]["value"], 8)
         self.assertEqual(client._get.call_args_list[0].args[0], "schedules/seasons/123")
         self.assertEqual(client._get.call_args_list[0].args, ("schedules/seasons/123",))
