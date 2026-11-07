@@ -278,3 +278,142 @@ def collect_sportmonks_team_profile(
             "fixtures_scanned": len(fixtures),
         },
     }
+
+
+def find_upcoming_match_fixture(
+    fixtures: list[dict[str, Any]],
+    home_team_id: int,
+    away_team_id: int,
+    season_id: int,
+    now_timestamp: int | None = None,
+) -> dict[str, Any] | None:
+    """Find the exact scheduled home-v-away fixture; never substitute a team's other match."""
+    import time
+
+    current = int(now_timestamp if now_timestamp is not None else time.time())
+    candidates: list[dict[str, Any]] = []
+    for fixture in fixtures:
+        try:
+            if int(fixture.get("season_id")) != int(season_id):
+                continue
+        except (TypeError, ValueError):
+            continue
+        if _state(fixture) != "scheduled":
+            continue
+        home, away = _participants(fixture)
+        if not home or not away:
+            continue
+        try:
+            if int(home.get("id")) != int(home_team_id) or int(away.get("id")) != int(away_team_id):
+                continue
+            kickoff = int(fixture.get("starting_at_timestamp"))
+        except (TypeError, ValueError):
+            continue
+        if kickoff <= current:
+            continue
+        candidates.append(fixture)
+    return min(candidates, key=lambda row: int(row["starting_at_timestamp"])) if candidates else None
+
+
+def extract_sportmonks_match_details(
+    fixture: dict[str, Any],
+    home_team_id: int,
+    away_team_id: int,
+    season_id: int,
+) -> dict[str, Any]:
+    """Extract fixture-specific lineups and sidelined reports without inventing availability."""
+    if int(fixture.get("season_id", -1)) != int(season_id):
+        raise ValueError("Sportmonks match detail season does not match the selected season.")
+    home, away = _participants(fixture)
+    if not home or not away:
+        raise ValueError("Sportmonks match detail is missing home/away participants.")
+    if int(home.get("id", -1)) != int(home_team_id) or int(away.get("id", -1)) != int(away_team_id):
+        raise ValueError("Sportmonks match detail does not match the selected home/away teams.")
+
+    team_ids = {"home": int(home_team_id), "away": int(away_team_id)}
+    lineups_by_team: dict[int, list[dict[str, Any]]] = {team_ids["home"]: [], team_ids["away"]: []}
+    for row in _rows(fixture.get("lineups")):
+        try:
+            team_id = int(row.get("team_id"))
+        except (TypeError, ValueError):
+            continue
+        if team_id not in lineups_by_team:
+            continue
+        player = row.get("player") or {}
+        lineup_type = row.get("type") or {}
+        lineups_by_team[team_id].append({
+            "player_id": row.get("player_id") or player.get("id"),
+            "player_name": row.get("player_name") or player.get("name"),
+            "jersey_number": row.get("jersey_number"),
+            "position": (row.get("position") or {}).get("name") if isinstance(row.get("position"), dict) else row.get("position"),
+            "formation_position": row.get("formation_position"),
+            "formation_field": row.get("formation_field"),
+            "lineup_type": lineup_type.get("name") if isinstance(lineup_type, dict) else str(lineup_type or ""),
+        })
+
+    formations: dict[int, str] = {}
+    for row in _rows(fixture.get("formations")):
+        try:
+            participant_id = int(row.get("participant_id"))
+        except (TypeError, ValueError):
+            continue
+        if participant_id in lineups_by_team and row.get("formation"):
+            formations[participant_id] = str(row["formation"])
+
+    sidelined_by_team: dict[int, list[dict[str, Any]]] = {team_ids["home"]: [], team_ids["away"]: []}
+    for row in _rows(fixture.get("sidelined")):
+        participant_value = row.get("participant_id") or row.get("team_id")
+        try:
+            participant_id = int(participant_value)
+        except (TypeError, ValueError):
+            continue
+        if participant_id not in sidelined_by_team:
+            continue
+        player = row.get("player") or {}
+        sideline = row.get("sideline") or {}
+        sidelined_type = row.get("type") or {}
+        sidelined_by_team[participant_id].append({
+            "player_id": row.get("player_id") or player.get("id"),
+            "player_name": player.get("name") or row.get("player_name"),
+            "category": sideline.get("category") or row.get("category"),
+            "reason": sidelined_type.get("name") if isinstance(sidelined_type, dict) else str(sidelined_type or ""),
+            "start_date": sideline.get("start_date") or row.get("start_date"),
+            "end_date": sideline.get("end_date") or row.get("end_date"),
+            "source": "sportmonks",
+            "fixture_id": fixture.get("id"),
+        })
+
+    teams: dict[str, dict[str, Any]] = {}
+    availability: dict[str, dict[str, Any]] = {}
+    for side, team_id in team_ids.items():
+        lineup_rows = lineups_by_team[team_id]
+        sidelined_rows = sidelined_by_team[team_id]
+        teams[side] = {
+            "team_id": team_id,
+            "team_name": home.get("name") if side == "home" else away.get("name"),
+            "formation": formations.get(team_id),
+            "players": lineup_rows,
+            "lineups_available": bool(lineup_rows),
+            # Sportmonks can return predictive as well as confirmed lineups.
+            # Do not mark confirmed unless the fixture metadata explicitly proves it.
+            "confirmation_status": "unknown",
+            "source": "sportmonks",
+            "fixture_id": fixture.get("id"),
+        }
+        availability[side] = {
+            "injury_data_available": bool(sidelined_rows),
+            "reported_unavailable_count": len(sidelined_rows) if sidelined_rows else None,
+            "reported_sidelined": sidelined_rows,
+            "player_availability": None,
+            "source": "sportmonks" if sidelined_rows else None,
+            "fixture_id": fixture.get("id"),
+            "note": "Provider-reported sidelined records are shown as reported; no availability score is inferred.",
+        }
+    return {
+        "fixture_id": fixture.get("id"),
+        "season_id": int(season_id),
+        "kickoff": fixture.get("starting_at"),
+        "teams": teams,
+        "availability": availability,
+        "source": "sportmonks",
+    }
