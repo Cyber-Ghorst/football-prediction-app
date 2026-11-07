@@ -125,6 +125,48 @@ class SportmonksLayer2Tests(unittest.TestCase):
             for m in profile["matches"]
         ))
 
+    def test_integrity_diagnostics_detect_invalid_scores_and_missing_dates(self):
+        invalid_score = fixture(1, 10, 20, 1, 0)
+        invalid_score["scores"][0]["score"]["goals"] = 1.5
+        invalid_date = fixture(2, 10, 20, 2, 0)
+        invalid_date["starting_at"] = "not-a-real-date"
+        profile = collect_sportmonks_team_profile(
+            {"id": 10, "name": "Home FC"}, 2026, [invalid_score, invalid_date], [],
+        )
+        quality = profile["data_quality"]
+        self.assertEqual(quality["excluded_invalid_scores"], 1)
+        self.assertEqual(quality["excluded_missing_scores"], 1)
+        self.assertEqual(quality["excluded_invalid_kickoff"], 1)
+        self.assertEqual(quality["history_integrity_status"], "issues_detected")
+        self.assertEqual(quality["team_fixture_accounting_status"], "balanced")
+
+    def test_integrity_diagnostics_report_statistics_coverage_without_dropping_matches(self):
+        row = fixture(1, 10, 20, 1, 0)
+        row["statistics"] = [
+            item for item in row["statistics"]
+            if item["type"]["name"] in {"Ball Possession", "Total Shots"}
+        ]
+        profile = collect_sportmonks_team_profile(
+            {"id": 10, "name": "Home FC"}, 2026, [row], [],
+        )
+        quality = profile["data_quality"]
+        self.assertEqual(quality["matches_returned"], 1)
+        self.assertEqual(quality["matches_with_any_statistics"], 1)
+        self.assertEqual(quality["matches_with_complete_core_statistics"], 0)
+        self.assertEqual(quality["statistics_coverage_by_metric"]["Ball Possession"], 1)
+        self.assertEqual(quality["core_statistics_completeness_pct"], 40.0)
+
+    def test_duplicate_fixture_ids_are_reported(self):
+        row = fixture(1, 10, 20, 1, 0)
+        row["_schedule_duplicate_fixture_ids"] = [1, 2]
+        row["_schedule_unique_fixture_count"] = 1
+        profile = collect_sportmonks_team_profile(
+            {"id": 10, "name": "Home FC"}, 2026, [row], [],
+        )
+        self.assertEqual(profile["data_quality"]["duplicate_fixture_id_count"], 2)
+        self.assertEqual(profile["data_quality"]["duplicate_fixture_ids"], [1, 2])
+        self.assertEqual(profile["data_quality"]["history_integrity_status"], "issues_detected")
+
     def test_wrong_season_fixture_is_excluded(self):
         row = fixture(1, 10, 20, 1, 0)
         row["season_id"] = 999
