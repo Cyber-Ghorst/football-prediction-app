@@ -274,3 +274,18 @@ Tests are in `test_provider_corroboration.py`, covering Sportmonks normalization
 ### Remaining integration boundary
 
 This milestone activates independent corroboration for recent match results. It does not yet merge Highlightly/API Ninjas statistics, player availability, lineups or squads into the Layer 2 team profiles. Those require separate endpoint-specific canonicalizers, field-level validation and identity mapping before use. Unknown values remain unknown.
+
+
+## Sportmonks statistics and fixture-detail milestone (2026-11-07)
+
+- Sportmonks match statistics are normalized into a conservative canonical set before tactical indicators consume them. Possession and pass-accuracy fractions (for example, 0.82) are converted to percentage points (82.0); percent strings (for example, "60%") are normalized consistently.
+- Statistic names are mapped only where the meaning is supported. Shots accuracy is not treated as pass accuracy or shots-on-target count. Unknown statistic types remain outside the tactical feature set.
+- Each normalized statistic retains its raw value, provider, fixture ID, season ID, source statistic type ID/name, and fixture update timestamp where supplied. Streamlit displays these observations in the match-statistics expander.
+- The Streamlit flow now looks for an exact upcoming fixture with the selected home team, away team, orientation, and Sportmonks season. It does not substitute either team's unrelated next match.
+- For that exact fixture only, the app requests Sportmonks lineups, formations and sidelined player records. Provider-reported sidelined records are shown separately; no player-availability rating is inferred from a list or its absence.
+- Lineup confirmation remains "unknown" unless explicit confirmation metadata is parsed and verified. Predictive or unconfirmed lineups are not represented as confirmed.
+- If the exact fixture is absent, the endpoint is unavailable, or subscription coverage blocks the includes, the app leaves those fields unknown and continues the prediction with existing inputs.
+- API Ninjas is not used for statistics, injuries or lineups. Highlightly match-statistics and lineup endpoints remain a separate corroboration milestone.
+- No model weights, latest-five/previous-five recency weighting, Layer 1 calculations, or TVD rules were changed.
+
+Official endpoint references: Sportmonks fixture includes support lineups, formations, statistics and sidelined; Sportmonks documents sidelined.player / sidelined.sideline for player and absence details. Highlightly provides per-match statistics and lineups endpoints; its lineup feed is documented as available from approximately 40 minutes before kickoff until 120 minutes after, refreshing every 15 minutes, while match statistics refresh every five minutes.
