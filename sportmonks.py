@@ -141,6 +141,7 @@ class SportmonksClient:
         """Flatten Sportmonks' stages -> rounds -> fixtures schedule response."""
         fixtures: list[dict[str, Any]] = []
         seen: set[int] = set()
+        duplicate_ids: set[int] = set()
         for stage in SportmonksClient._rows(payload):
             for round_row in SportmonksClient._rows(stage.get("rounds")):
                 for fixture_row in SportmonksClient._rows(round_row.get("fixtures")):
@@ -157,6 +158,12 @@ class SportmonksClient:
                     if key not in seen:
                         seen.add(key)
                         fixtures.append(fixture)
+                    else:
+                        duplicate_ids.add(key)
+        duplicate_list = sorted(duplicate_ids)
+        for fixture in fixtures:
+            fixture["_schedule_duplicate_fixture_ids"] = duplicate_list
+            fixture["_schedule_unique_fixture_count"] = len(seen)
         return fixtures
 
     @staticmethod
