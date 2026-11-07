@@ -64,8 +64,29 @@ class PredictionReadinessTests(unittest.TestCase):
         self.assertEqual(report["fixture"]["source_fetched_at"], "2026-11-07T11:30:00+00:00")
         self.assertEqual(report["fixture"]["source_age_seconds"], 1800.0)
         self.assertEqual(report["fixture"]["source_age_minutes"], 30.0)
-        self.assertEqual(report["fixture"]["source_freshness"], "measured")
-        self.assertIn("no fresh/stale threshold", report["fixture"]["freshness_note"])
+        self.assertEqual(report["fixture"]["source_freshness"], "fresh")
+        self.assertIn("less than 24 hours", report["fixture"]["freshness_note"])
+
+    def test_fixture_retrieved_just_under_24_hours_is_fresh(self):
+        row = fixture()
+        row["fixture_details_fetched_at"] = "2026-11-06T12:00:01+00:00"
+        report = self.report(selected_fixture=row)
+        self.assertEqual(report["fixture"]["source_freshness"], "fresh")
+
+    def test_fixture_retrieved_exactly_24_hours_ago_is_stale(self):
+        row = fixture()
+        row["fixture_details_fetched_at"] = "2026-11-06T12:00:00+00:00"
+        report = self.report(selected_fixture=row)
+        self.assertEqual(report["fixture"]["source_age_seconds"], 86400.0)
+        self.assertEqual(report["fixture"]["source_freshness"], "stale")
+        self.assertIn("24 hours ago or earlier", report["fixture"]["freshness_note"])
+
+    def test_future_fixture_retrieval_timestamp_is_unknown(self):
+        row = fixture()
+        row["fixture_details_fetched_at"] = "2026-11-07T12:00:01+00:00"
+        report = self.report(selected_fixture=row)
+        self.assertEqual(report["fixture"]["source_freshness"], "unknown")
+        self.assertIn("later than the diagnostic clock", report["fixture"]["freshness_note"])
 
     def test_fixture_fetch_age_stays_unknown_when_timestamp_missing(self):
         report = self.report(selected_fixture=fixture())
