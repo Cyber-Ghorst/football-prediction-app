@@ -264,7 +264,7 @@ try:
         st.subheader("Data validation")
         for profile in (home, away):
             quality = profile["data_quality"]
-            st.write(f"**{profile['name']}** — {quality['matches_returned']} completed matches; {quality['opponent_strength_matches']} with opponent-strength data; {quality['statistics_matches']} with match statistics.")
+            st.write(f"**{profile['name']}** — source: {quality.get('provider', 'api_football')}; {quality['matches_returned']} completed matches; {quality['opponent_strength_matches']} with opponent-strength data; {quality['statistics_matches']} with match statistics.")
             if quality["matches_returned"] < 5:
                 st.error(f"{profile['name']}: fewer than five completed matches. Prediction stopped; no data was fabricated.")
                 st.stop()
