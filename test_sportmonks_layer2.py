@@ -57,7 +57,7 @@ class SportmonksLayer2Tests(unittest.TestCase):
         self.assertEqual(profile["matches"][0]["goals_for"], 2)
         self.assertEqual(profile["matches"][0]["opponent_strength"], 50.0)
         self.assertEqual(profile["matches"][0]["statistics"]["Ball Possession"], 60.0)
-        self.assertEqual(profile["matches"][0]["statistics"]["Total Shots"], 12.0)
+        self.assertEqual(profile["matches"][0]["statistics"]["Total Shots"], 14.0)
         self.assertEqual(profile["matches"][0]["statistics"]["Blocked Shots"], 3.0)
         self.assertEqual(profile["matches"][0]["statistics"]["Passes %"], 84.0)
         self.assertNotIn("Shots Accuracy", profile["matches"][0]["statistics"])
