@@ -102,8 +102,45 @@ class SportmonksClient:
                 return [rows]
         return []
 
+    def _all_pages(self, path: str, **params: Any) -> list[dict[str, Any]]:
+        """Read a complete paginated collection or fail rather than use a partial season."""
+        rows: list[dict[str, Any]] = []
+        page = 1
+        max_pages = 20
+        while page <= max_pages:
+            query = {**params, "per_page": min(int(params.get("per_page", 50)), 50), "page": page}
+            payload = self._get(path, query)
+            rows.extend(self._rows(payload))
+            pagination = payload.get("pagination") or {}
+            has_more = pagination.get("has_more")
+            if has_more is None:
+                # Some responses omit pagination when the collection fits one page.
+                if len(self._rows(payload)) < query["per_page"]:
+                    return rows
+                raise SportmonksError("Sportmonks pagination metadata is missing; refusing a potentially incomplete dataset.")
+            if not has_more:
+                return rows
+            page += 1
+        raise SportmonksError("Sportmonks season collection exceeded the safe pagination limit; no partial dataset was accepted.")
+
     def leagues(self, **params: Any) -> list[dict[str, Any]]:
         return self._rows(self._get("leagues", params))
+
+    def available_leagues(self, **params: Any) -> list[dict[str, Any]]:
+        return self._all_pages("leagues", **params)
+
+    def teams_by_season(self, season_id: int | str, **params: Any) -> list[dict[str, Any]]:
+        return self._all_pages(f"teams/seasons/{season_id}", **params)
+
+    def standings_by_season(self, season_id: int | str, **params: Any) -> list[dict[str, Any]]:
+        return self._all_pages(f"standings/seasons/{season_id}", **params)
+
+    def fixtures_by_season(self, season_id: int | str, **params: Any) -> list[dict[str, Any]]:
+        return self._all_pages(
+            f"fixtures/seasons/{season_id}",
+            include="participants;scores;state;statistics.type;lineups",
+            **params,
+        )
 
     def seasons(self, **params: Any) -> list[dict[str, Any]]:
         return self._rows(self._get("seasons", params))
