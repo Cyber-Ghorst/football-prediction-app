@@ -90,7 +90,8 @@ def canonicalize_livescore_event(
         "away_score": _int_or_none(away_row.get("score")),
         "source_ids": {"livescore_football": str(event.get("id") or "")},
         "source": "livescore_football",
-        "raw_source_updated_at": competition.get("date"),
+        "raw_source_updated_at": event.get("updatedAt") or event.get("updated_at")
+        or competition.get("updatedAt") or competition.get("updated_at"),
     }
 
 
@@ -117,9 +118,98 @@ def canonicalize_api_football_fixture(
         "away_score": _int_or_none(goals.get("away")),
         "source_ids": {"api_football": str(info.get("id") or "")},
         "source": "api_football",
-        "raw_source_updated_at": info.get("date"),
+        "raw_source_updated_at": fixture.get("updated_at") or info.get("updated_at"),
     }
 
+
+
+def _status_from_api_ninjas(match: Mapping[str, Any]) -> str:
+    status = str(match.get("status") or "").casefold().replace(" ", "_")
+    if status == "final":
+        return "finished"
+    if status == "in_progress":
+        return "live"
+    if status == "scheduled":
+        return "scheduled"
+    return "unknown"
+
+
+def _score_pair(value: Any) -> tuple[int | None, int | None]:
+    """Parse a provider's displayed home-away score without guessing."""
+    import re
+    match = re.fullmatch(r"\s*(\d+)\s*[-:]\s*(\d+)\s*", value) if isinstance(value, str) else None
+    if not match:
+        return None, None
+    return int(match.group(1)), int(match.group(2))
+
+
+def canonicalize_api_ninjas_match(
+    match: Mapping[str, Any], *, competition_key: str, season: int | str | None = None
+) -> dict[str, Any]:
+    """Normalize API Ninjas match records into the canonical schema."""
+    home, away = match.get("home_team") or {}, match.get("away_team") or {}
+    home_name, away_name = home.get("name"), away.get("name")
+    if not home_name or not away_name:
+        raise MatchNormalizationError("API Ninjas match is missing home/away team names.")
+    kickoff = _parse_datetime(match.get("start_time"))
+    season_value = _season_year(season if season is not None else match.get("season"))
+    return {
+        "competition_key": str(competition_key).casefold().strip(),
+        "season": season_value,
+        "kickoff_utc": kickoff.isoformat(),
+        "home": {"name": str(home_name), "normalized_name": normalize_team_name(home_name),
+                 "source_ids": {"api_ninjas": str(home.get("team_id") or "")}},
+        "away": {"name": str(away_name), "normalized_name": normalize_team_name(away_name),
+                 "source_ids": {"api_ninjas": str(away.get("team_id") or "")}},
+        "status": _status_from_api_ninjas(match),
+        "home_score": _int_or_none(match.get("home_score")),
+        "away_score": _int_or_none(match.get("away_score")),
+        "source_ids": {"api_ninjas": str(match.get("game_id") or "")},
+        "source": "api_ninjas",
+        "raw_source_updated_at": match.get("updated_at"),
+    }
+
+
+def _status_from_highlightly(match: Mapping[str, Any]) -> str:
+    description = str(((match.get("state") or {}).get("description")) or "").casefold()
+    if description in {"finished", "finished after penalties", "finished after extra time", "awarded"}:
+        return "finished"
+    if description in {"first half", "second half", "half time", "extra time",
+                       "break time", "penalties", "in progress"}:
+        return "live"
+    if description == "not started":
+        return "scheduled"
+    return "unknown"
+
+
+def canonicalize_highlightly_match(
+    match: Mapping[str, Any], *, competition_key: str, season: int | str | None = None
+) -> dict[str, Any]:
+    """Normalize Highlightly match-list/detail records."""
+    home, away = match.get("homeTeam") or {}, match.get("awayTeam") or {}
+    league = match.get("league") or {}
+    home_name, away_name = home.get("name"), away.get("name")
+    if not home_name or not away_name:
+        raise MatchNormalizationError("Highlightly match is missing home/away team names.")
+    kickoff = _parse_datetime(match.get("date"))
+    season_value = _season_year(season if season is not None else league.get("season"))
+    score = ((match.get("state") or {}).get("score") or {}).get("current")
+    home_score, away_score = _score_pair(score)
+    return {
+        "competition_key": str(competition_key).casefold().strip(),
+        "season": season_value,
+        "kickoff_utc": kickoff.isoformat(),
+        "home": {"name": str(home_name), "normalized_name": normalize_team_name(home_name),
+                 "source_ids": {"highlightly": str(home.get("id") or "")}},
+        "away": {"name": str(away_name), "normalized_name": normalize_team_name(away_name),
+                 "source_ids": {"highlightly": str(away.get("id") or "")}},
+        "status": _status_from_highlightly(match),
+        "home_score": home_score,
+        "away_score": away_score,
+        "source_ids": {"highlightly": str(match.get("id") or "")},
+        "source": "highlightly",
+        "raw_source_updated_at": match.get("updatedAt") or match.get("updated_at"),
+    }
 
 def _int_or_none(value: Any) -> int | None:
     if value is None or value == "":
