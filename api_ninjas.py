@@ -14,7 +14,7 @@ Required secret:
 import os
 import requests
 
-from datetime import date, datetime, timedelta
+from datetime import date as Date, datetime, timedelta
 from typing import Any, Dict, List, Optional
 
 
@@ -111,12 +111,12 @@ class APINinjasClient:
             return response.json()
 
         except requests.RequestException as exc:
-            raise APIFootballError(
+            raise APINinjasError(
                 f"Football API request failed: {exc}"
             ) from exc
 
         except ValueError as exc:
-            raise APIFootballError(
+            raise APINinjasError(
                 "Invalid JSON returned by API."
             ) from exc
 
@@ -208,7 +208,7 @@ class APINinjasClient:
             if isinstance(date, datetime):
                 date = date.date()
 
-            if isinstance(date, date):
+            if isinstance(date, Date):
                 date = date.isoformat()
 
             params["date"] = str(date)
@@ -262,7 +262,7 @@ class APINinjasClient:
         season: Optional[int] = None
     ):
         if not league:
-            raise APIFootballError(
+            raise APINinjasError(
                 "League identifier is required."
             )
 
@@ -276,7 +276,7 @@ class APINinjasClient:
             start_date = date.fromisoformat(str(date_from))
 
         else:
-            start_date = date.today()
+            start_date = Date.today()
 
         days = max(1, min(int(days), 60))
 
@@ -327,7 +327,7 @@ class APINinjasClient:
         league: Optional[str] = None
     ):
         if not team:
-            raise APIFootballError(
+            raise APINinjasError(
                 "Team name or team ID is required."
             )
 
@@ -405,7 +405,7 @@ class APINinjasClient:
 
     def match_details(self, game_id: str):
         if not game_id:
-            raise APIFootballError("Game ID is required.")
+            raise APINinjasError("Game ID is required.")
 
         data = self._request(
             "soccermatches",
@@ -431,7 +431,7 @@ class APINinjasClient:
         conference: Optional[str] = None
     ):
         if not league:
-            raise APIFootballError(
+            raise APINinjasError(
                 "League identifier is required."
             )
 
