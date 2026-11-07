@@ -1,6 +1,8 @@
 """Football Prediction Lab — Layer 2 automatic data collection."""
 from __future__ import annotations
 import json
+from datetime import datetime, timezone
+import pandas as pd
 import streamlit as st
 from api_football import APIFootballClient, APIFootballError
 from api_ninjas import APINinjasClient, APINinjasError
@@ -17,10 +19,12 @@ from provider_health import assess_api_football_status, assess_livescore_metadat
 from provider_corroboration import collect_recent_result_corroboration
 from highlightly_match_enrichment import collect_highlightly_match_enrichment
 from highlightly_player_enrichment import collect_highlightly_player_enrichment
+from prediction_evaluation import build_prediction_record, evaluate_prediction_ledger, merge_prediction_records
 
 st.set_page_config(page_title="Football Prediction Lab", page_icon="⚽", layout="wide")
 st.title("⚽ Football Prediction Lab")
 st.caption("Layer 2 • Sportmonks current-season / API-Football historical data collection + weighted prediction engine + TVD")
+st.session_state.setdefault("prediction_ledger", [])
 
 @st.cache_data(ttl=3600, show_spinner=False)
 def get_leagues(_client, season):
@@ -238,6 +242,25 @@ try:
     with c1: home_name = st.selectbox("Home team", list(team_map))
     with c2:
         away_name = st.selectbox("Away team", [x for x in team_map if x != home_name])
+    with st.expander("Opta Supercomputer benchmark (optional)"):
+        st.caption("Enter published Opta Analyst match probabilities as a separate benchmark. Do not treat Opta as ground truth or copy market odds into these fields.")
+        record_opta_benchmark = st.checkbox("Record Opta probabilities for this fixture", value=False)
+        opta_home = opta_draw = opta_away = None
+        opta_source_url = ""
+        if record_opta_benchmark:
+            oc1, oc2, oc3 = st.columns(3)
+            with oc1:
+                opta_home = st.number_input("Opta home win %", min_value=0.0, max_value=100.0, value=None, placeholder="Unknown", key="opta_home")
+            with oc2:
+                opta_draw = st.number_input("Opta draw %", min_value=0.0, max_value=100.0, value=None, placeholder="Unknown", key="opta_draw")
+            with oc3:
+                opta_away = st.number_input("Opta away win %", min_value=0.0, max_value=100.0, value=None, placeholder="Unknown", key="opta_away")
+            opta_source_url = st.text_input("Opta Analyst source URL", placeholder="Paste the public match-prediction article URL", key="opta_source_url")
+            if all(value is not None for value in (opta_home, opta_draw, opta_away)):
+                if abs(opta_home + opta_draw + opta_away - 100.0) > 0.6:
+                    st.warning("Opta probabilities must sum to 100%. They will not be saved until corrected.")
+                elif not opta_source_url.strip():
+                    st.warning("Add the Opta Analyst source URL so this benchmark can be audited.")
     # TVD inputs are collected before the action button so Streamlit reruns retain them.
     use_tvd = st.checkbox("Use manually evidenced TVD ratings for this matchup", value=False)
     tvd_profiles = None
@@ -266,6 +289,9 @@ try:
         tvd_profiles=(home_tvd,away_tvd)
 
     if st.button("Collect data and predict", type="primary", use_container_width=True):
+        player_report = None
+        selected_match_fixture = None
+        highlightly_enrichment = None
         with st.spinner("Collecting recent results, standings and available match statistics..."):
             if sportmonks_mode:
                 try:
@@ -474,6 +500,34 @@ try:
             result=predict_match(home,away,tactical_compatibility=overrides)
         except ValueError as exc:
             st.error(str(exc)); st.stop()
+        selected_league_row = league_by_id.get(league_id, {}) if sportmonks_mode else {}
+        selected_country = selected_league_row.get("country") or {}
+        selected_country_name = selected_country.get("name") if isinstance(selected_country, dict) else str(selected_country or "")
+        if not selected_country_name:
+            selected_country_name = selected_league.rsplit(" — ", 1)[-1] if " — " in selected_league else ""
+        opta_values = None
+        if record_opta_benchmark and all(value is not None for value in (opta_home, opta_draw, opta_away)) and abs(opta_home + opta_draw + opta_away - 100.0) <= 0.6 and opta_source_url.strip():
+            opta_values = {"home_win": opta_home, "draw": opta_draw, "away_win": opta_away}
+        player_snapshot = player_report if isinstance(player_report, dict) else None
+        prediction_row = build_prediction_record(
+            competition=str(selected_league_row.get("name") or selected_league.split(" — ")[0]),
+            country=selected_country_name,
+            season=int(season),
+            home_team=home_name,
+            away_team=away_name,
+            probabilities=result["probabilities"],
+            predicted_at=datetime.now(timezone.utc).isoformat(),
+            kickoff_at=(selected_match_fixture or {}).get("starting_at") or (selected_match_fixture or {}).get("starting_at_at"),
+            fixture_id=(selected_match_fixture or {}).get("id"),
+            fixture_provider="sportmonks" if selected_match_fixture else "",
+            opta_probabilities=opta_values,
+            opta_source_url=opta_source_url.strip() if opta_values else "",
+            opta_captured_at=datetime.now(timezone.utc).isoformat() if opta_values else "",
+            player_snapshot=player_snapshot,
+        )
+        st.session_state["prediction_ledger"] = merge_prediction_records(
+            st.session_state["prediction_ledger"], [prediction_row]
+        )
         st.subheader(f"{home_name} vs {away_name}")
         probabilities=result["probabilities"]; cols=st.columns(3)
         cols[0].metric(f"{home_name} win",f"{probabilities['home_win']}%")
@@ -522,6 +576,78 @@ except APIFootballError as exc:
     st.error(f"Data provider error: {exc}")
 except Exception as exc:
     st.error(f"Unexpected data-collection error: {exc}")
+
+with st.expander("Prediction tracking, Opta comparison and backtesting", expanded=True):
+    st.caption("Predictions are retained in this browser session. Export the CSV and re-import it after a restart; Streamlit session storage is not a permanent database.")
+    uploaded_ledger = st.file_uploader("Import a saved prediction ledger CSV", type=["csv"], key="prediction_ledger_upload")
+    if uploaded_ledger is not None:
+        try:
+            imported = pd.read_csv(uploaded_ledger)
+            imported_records = imported.where(pd.notna(imported), "").to_dict("records")
+            st.session_state["prediction_ledger"] = merge_prediction_records(
+                st.session_state["prediction_ledger"], imported_records
+            )
+            st.success(f"Imported {len(imported_records)} ledger rows. Duplicate record IDs were merged.")
+        except Exception as exc:
+            st.error(f"Could not import prediction ledger: {exc}")
+    ledger = st.session_state["prediction_ledger"]
+    if ledger:
+        display_columns = [
+            "record_id", "predicted_at", "competition", "home_team", "away_team",
+            "model_home_win", "model_draw", "model_away_win",
+            "opta_home_win", "opta_draw", "opta_away_win",
+            "actual_home_goals", "actual_away_goals",
+        ]
+        frame = pd.DataFrame(ledger)
+        for column in display_columns:
+            if column not in frame:
+                frame[column] = ""
+        edited = st.data_editor(
+            frame[display_columns],
+            key="prediction_ledger_editor",
+            hide_index=True,
+            use_container_width=True,
+            disabled=display_columns[:-2],
+            column_config={
+                "actual_home_goals": st.column_config.NumberColumn("Final home goals", min_value=0, step=1, format="%d"),
+                "actual_away_goals": st.column_config.NumberColumn("Final away goals", min_value=0, step=1, format="%d"),
+            },
+        )
+        edited_records = edited.where(pd.notna(edited), "").to_dict("records")
+        st.session_state["prediction_ledger"] = merge_prediction_records(ledger, edited_records)
+        report = evaluate_prediction_ledger(st.session_state["prediction_ledger"])
+        st.subheader("Backtest summary")
+        st.write(f"Pre-match forecasts: {report['pre_match_predictions']} • Completed and scored: {report['completed_pre_match_predictions']}")
+        model_metrics = report["model"]
+        opta_metrics = report["opta_same_fixtures"]
+        m1, m2, m3 = st.columns(3)
+        m1.metric("Model accuracy", f"{model_metrics['accuracy_pct']}%" if model_metrics["accuracy_pct"] is not None else "—")
+        m2.metric("Model Brier score", f"{model_metrics['multiclass_brier']}" if model_metrics["multiclass_brier"] is not None else "—", help="Lower is better; multiclass score over home/draw/away.")
+        m3.metric("Model log loss", f"{model_metrics['log_loss']}" if model_metrics["log_loss"] is not None else "—", help="Lower is better; penalizes confident incorrect forecasts.")
+        if report["opta_comparable_fixtures"]:
+            st.write(f"Opta comparison on the same {report['opta_comparable_fixtures']} completed fixtures")
+            o1, o2, o3 = st.columns(3)
+            o1.metric("Opta accuracy", f"{opta_metrics['accuracy_pct']}%")
+            o2.metric("Opta Brier score", f"{opta_metrics['multiclass_brier']}")
+            o3.metric("Opta log loss", f"{opta_metrics['log_loss']}")
+        else:
+            st.info("No Opta benchmark has been captured for a completed fixture yet. Add published Opta probabilities before kickoff to enable a fair same-match comparison.")
+        st.write("Player-stat snapshots captured before kickoff:", report["player_snapshots_pre_kickoff"])
+        if report["player_snapshot_coverage_by_competition"]:
+            st.json(report["player_snapshot_coverage_by_competition"])
+        if report["model_metrics_by_competition"]:
+            st.write("Model results by competition")
+            st.dataframe(pd.DataFrame(report["model_metrics_by_competition"]).T, use_container_width=True)
+        st.download_button(
+            "Download prediction ledger CSV",
+            data=pd.DataFrame(st.session_state["prediction_ledger"]).to_csv(index=False).encode("utf-8"),
+            file_name="football_prediction_ledger.csv",
+            mime="text/csv",
+            use_container_width=True,
+        )
+        st.caption("Only forecasts timestamped before kickoff are scored. Player-stat snapshots after kickoff are excluded from validation to prevent future-data leakage. No weights are changed by this report.")
+    else:
+        st.info("No predictions have been logged in this session yet. Make a prediction to start the ledger, or import an existing CSV.")
 
 with st.expander("Layer 2 data rules"):
     st.markdown("""
