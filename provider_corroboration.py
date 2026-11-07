@@ -146,7 +146,12 @@ def collect_recent_result_corroboration(
                 league_name = league.get("name") or row.get("leagueName")
                 if league_name and normalize_competition_name(league_name) != normalize_competition_name(competition):
                     continue
-                row_country = (league.get("country") or {}).get("name") if isinstance(league.get("country"), Mapping) else league.get("countryName")
+                country_value = league.get("country")
+                row_country = (
+                    country_value.get("name") if isinstance(country_value, Mapping)
+                    else country_value if isinstance(country_value, str)
+                    else league.get("countryName") or row.get("countryName")
+                )
                 if country and (not row_country or normalize_country(row_country) != normalize_country(country)):
                     continue
                 try:
@@ -207,9 +212,13 @@ def collect_recent_result_corroboration(
         )
         if canonical is None:
             continue
+        if canonical["status"] != "finished" or canonical["home_score"] is None or canonical["away_score"] is None:
+            continue
         if (normalize_team_name(canonical["home"]["name"]) in selected
                 or normalize_team_name(canonical["away"]["name"]) in selected):
             target_fixtures.append(canonical)
+    target_fixtures.sort(key=lambda row: row["kickoff_utc"], reverse=True)
+    target_fixtures = target_fixtures[:20]
 
     all_alternates = home_records
     reconciled: list[dict[str, Any]] = []
