@@ -128,6 +128,31 @@ def collect_recent_result_corroboration(
     provider_counts: dict[str, int] = {}
     highlightly_records: list[dict[str, Any]] = []
 
+    highlightly_diagnostics: dict[str, Any] = {
+        "requested_filters": {
+            "leagueName": competition,
+            "countryName": country,
+            "season": int(season),
+            "limit": 100,
+            "max_pages": 10,
+        },
+        "pages_requested": 0,
+        "raw_rows_received": 0,
+        "rejected_competition_mismatch": 0,
+        "competition_missing_in_response": 0,
+        "rejected_country_missing": 0,
+        "rejected_country_mismatch": 0,
+        "country_missing_but_retained": 0,
+        "season_missing_in_response": 0,
+        "rejected_season_mismatch": 0,
+        "rejected_invalid_season": 0,
+        "normalization_failures": 0,
+        "records_normalized": 0,
+        "completed_score_valid_records": 0,
+        "selected_team_records": 0,
+        "page_metadata": [],
+    }
+
     if highlightly_client is not None:
         try:
             rows: list[dict[str, Any]] = []
@@ -137,48 +162,94 @@ def collect_recent_result_corroboration(
                     leagueName=competition, season=int(season),
                     countryName=country, limit=limit, offset=offset,
                 )
+                highlightly_diagnostics["pages_requested"] += 1
+                highlightly_diagnostics["page_metadata"].append({
+                    "offset": offset,
+                    "rows_returned": len(page),
+                    "response": dict(getattr(highlightly_client, "last_metadata", {}) or {}),
+                })
                 rows.extend(page)
                 if len(page) < limit:
                     break
                 offset += limit
             else:
                 raise RuntimeError("Highlightly pagination exceeded the safe page limit.")
+
+            highlightly_diagnostics["raw_rows_received"] = len(rows)
             normalized = []
             for row in rows:
                 league_value = row.get("league")
                 league = league_value if isinstance(league_value, Mapping) else {}
                 league_name = league.get("name") or row.get("leagueName")
-                if league_name and normalize_competition_name(league_name) != normalize_competition_name(competition):
+                if not league_name:
+                    highlightly_diagnostics["competition_missing_in_response"] += 1
+                elif normalize_competition_name(league_name) != normalize_competition_name(competition):
+                    highlightly_diagnostics["rejected_competition_mismatch"] += 1
                     continue
+
                 country_value = league.get("country")
                 row_country = (
                     country_value.get("name") if isinstance(country_value, Mapping)
                     else country_value if isinstance(country_value, str)
                     else league.get("countryName") or row.get("countryName")
                 )
-                if country and (not row_country or normalize_country(row_country) != normalize_country(country)):
-                    continue
+                if country:
+                    if not row_country:
+                        highlightly_diagnostics["rejected_country_missing"] += 1
+                        continue
+                    if normalize_country(row_country) != normalize_country(country):
+                        highlightly_diagnostics["rejected_country_mismatch"] += 1
+                        continue
+
                 reported_season = league.get("season") or row.get("season")
                 if isinstance(reported_season, Mapping):
                     reported_season = reported_season.get("year") or reported_season.get("start")
-                if reported_season is not None:
+                if reported_season is None:
+                    highlightly_diagnostics["season_missing_in_response"] += 1
+                else:
                     try:
                         if int(reported_season) != int(season):
+                            highlightly_diagnostics["rejected_season_mismatch"] += 1
                             continue
                     except (TypeError, ValueError):
+                        highlightly_diagnostics["rejected_invalid_season"] += 1
                         continue
                 try:
                     normalized.append(canonicalize_highlightly_match(
                         row, competition_key=key, season=int(season)
                     ))
                 except (ValueError, TypeError, KeyError):
+                    highlightly_diagnostics["normalization_failures"] += 1
                     continue
+
             highlightly_records = normalized
             home_records.extend(normalized)
             away_records.extend(normalized)
             provider_counts["highlightly"] = len(normalized)
+            selected_team_keys = {
+                normalize_team_name(home_team_name),
+                normalize_team_name(away_team_name),
+            }
+            highlightly_diagnostics["records_normalized"] = len(normalized)
+            highlightly_diagnostics["completed_score_valid_records"] = sum(
+                1 for row in normalized
+                if row.get("status") == "finished"
+                and row.get("home_score") is not None
+                and row.get("away_score") is not None
+            )
+            highlightly_diagnostics["selected_team_records"] = sum(
+                1 for row in normalized
+                if selected_team_keys.intersection({
+                    normalize_team_name(row.get("home", {}).get("name", "")),
+                    normalize_team_name(row.get("away", {}).get("name", "")),
+                })
+            )
         except Exception as exc:
             errors["highlightly"] = str(exc)
+            highlightly_diagnostics["retrieval_error"] = str(exc)
+            highlightly_diagnostics["client_metadata_at_error"] = dict(
+                getattr(highlightly_client, "last_metadata", {}) or {}
+            )
 
     if api_ninjas_client is not None:
         try:
@@ -395,6 +466,7 @@ def collect_recent_result_corroboration(
         "season": int(season),
         "sportmonks_fixtures_checked": len(target_fixtures),
         "provider_records_returned": provider_counts,
+        "highlightly_diagnostics": highlightly_diagnostics,
         "team_history_coverage": team_history_coverage,
         "fixtures_matched_across_sources": len(reconciled),
         "fixtures_with_agreement": corroborated,
