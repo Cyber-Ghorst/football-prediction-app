@@ -58,12 +58,23 @@ def _utc(value: datetime) -> datetime:
     return value.astimezone(timezone.utc)
 
 
-def _equivalent(left: Any, right: Any) -> bool:
-    """Compare values conservatively; do not coerce unrelated types."""
+def _equivalent(left: Any, right: Any, *, domain: str) -> bool:
+    """Compare values conservatively, normalizing ISO kickoffs for fixtures."""
     if isinstance(left, bool) or isinstance(right, bool):
         return type(left) is type(right) and left == right
     if isinstance(left, (int, float)) and isinstance(right, (int, float)):
         return float(left) == float(right)
+    if domain == "fixtures" and isinstance(left, str) and isinstance(right, str):
+        def parse_kickoff(value: str) -> datetime | None:
+            try:
+                parsed = datetime.fromisoformat(value.strip().replace("Z", "+00:00"))
+            except ValueError:
+                return None
+            return _utc(parsed)
+        left_time = parse_kickoff(left)
+        right_time = parse_kickoff(right)
+        if left_time is not None and right_time is not None:
+            return left_time == right_time
     return left == right
 
 
@@ -120,11 +131,11 @@ def resolve_field(
     selected = eligible[0]
     corroborating = tuple(sorted({
         item.provider for item in eligible
-        if item.provider != selected.provider and _equivalent(item.value, selected.value)
+        if item.provider != selected.provider and _equivalent(item.value, selected.value, domain=domain)
     }))
     conflicting = tuple(sorted({
         item.provider for item in eligible
-        if item.provider != selected.provider and not _equivalent(item.value, selected.value)
+        if item.provider != selected.provider and not _equivalent(item.value, selected.value, domain=domain)
     }))
 
     if conflicting:
