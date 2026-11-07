@@ -7,6 +7,9 @@ from data_layer2 import collect_team_profile
 from engine import predict_match, WEIGHTS
 from tvd import run_tvd
 from provider_config import provider_readiness
+from livescore_football import LiveScoreFootballClient, LiveScoreFootballError
+from competition_crosswalk import build_competition_crosswalk
+from provider_health import assess_api_football_status, assess_livescore_metadata
 
 st.set_page_config(page_title="Football Prediction Lab", page_icon="⚽", layout="wide")
 st.title("⚽ Football Prediction Lab")
@@ -38,6 +41,7 @@ with st.sidebar:
         for provider in provider_readiness():
             credential = ("not required" if provider.get("credential_required") is False else ("configured" if provider["credential_configured"] else "not configured"))
             st.write(f"**{provider['provider']}** — {provider['adapter']}; credential {credential}; {provider['app_integration']}.")
+        run_provider_diagnostics = st.button("Run provider health & coverage check", use_container_width=True)
 
 try:
     client = APIFootballClient()
@@ -48,6 +52,38 @@ except APIFootballError as exc:
 
 try:
     leagues = get_leagues(client, int(season))
+    if run_provider_diagnostics:
+        st.subheader("Provider health and competition coverage")
+        try:
+            api_status = assess_api_football_status(client.status())
+            st.write("**API-Football account status**")
+            st.json(api_status)
+        except APIFootballError as exc:
+            st.warning(f"API-Football status could not be verified: {exc}")
+        try:
+            with LiveScoreFootballClient() as live_client:
+                live_health = live_client.health()
+                live_meta = live_client.meta()
+                live_competitions = live_client.leagues(kind="club", available=True)
+            st.write("**LiveScoreFootball service health**")
+            st.json({"health": live_health, "metadata_assessment": assess_livescore_metadata(live_meta)})
+            crosswalk = build_competition_crosswalk(
+                leagues, live_competitions, requested_season=int(season)
+            )
+            st.write("**Exact competition crosswalk**")
+            st.caption("Only exact competition-name + country matches with active stored coverage and a matching season are marked verified. Unverified competitions are not eligible for fallback.")
+            if crosswalk:
+                st.dataframe([
+                    {key: row.get(key) for key in (
+                        "api_football_id", "name", "country", "livescore_slug",
+                        "livescore_season", "verified", "reason"
+                    )}
+                    for row in crosswalk
+                ], use_container_width=True, hide_index=True)
+            else:
+                st.info("No competition crosswalk candidates were returned.")
+        except LiveScoreFootballError as exc:
+            st.warning(f"LiveScoreFootball could not be verified: {exc}")
     league_options = {f"{x['league']['name']} — {x.get('country',{}).get('name','')}": x['league']['id']
                       for x in leagues if x.get('league',{}).get('id')}
     if not league_options:
