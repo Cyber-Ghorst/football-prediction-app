@@ -16,6 +16,7 @@ from competition_crosswalk import build_competition_crosswalk
 from provider_health import assess_api_football_status, assess_livescore_metadata
 from provider_corroboration import collect_recent_result_corroboration
 from highlightly_match_enrichment import collect_highlightly_match_enrichment
+from highlightly_player_enrichment import collect_highlightly_player_enrichment
 
 st.set_page_config(page_title="Football Prediction Lab", page_icon="⚽", layout="wide")
 st.title("⚽ Football Prediction Lab")
@@ -76,6 +77,11 @@ with st.sidebar:
         "Cross-check match statistics and lineups with Highlightly",
         value=False,
         help="Optional extra requests: compares up to ten recent matches per selected team and checks lineups for the exact upcoming fixture. Diagnostic only; does not change predictions.",
+    )
+    cross_check_highlightly_players = st.checkbox(
+        "Fetch player and team-season performance statistics",
+        value=False,
+        help="Uses the exact selected-fixture Highlightly starting lineups. Up to 22 player-stat requests plus two team-stat requests; available only when the lineup feed is available. Diagnostic only.",
     )
     st.caption("For 2022–2024 add APISPORTS_API_KEY; for 2025+ add SPORTMONKS_API_TOKEN in Streamlit Secrets. Never paste keys into public code.")
     with st.expander("Provider readiness", expanded=True):
@@ -304,7 +310,7 @@ try:
                 else:
                     st.info("No exact upcoming Sportmonks fixture was found for this home/away pairing. Lineups and player availability remain unknown.")
 
-                if cross_check_recent_results or cross_check_highlightly_details:
+                if cross_check_recent_results or cross_check_highlightly_details or cross_check_highlightly_players:
                     selected_league_row = league_by_id.get(league_id, {})
                     selected_country = selected_league_row.get("country") or {}
                     selected_country_name = selected_country.get("name") if isinstance(selected_country, dict) else str(selected_country or "")
@@ -336,7 +342,7 @@ try:
                             )
                             corroboration["errors"].update(corroboration_errors)
 
-                        if cross_check_highlightly_details:
+                        if cross_check_highlightly_details or cross_check_highlightly_players:
                             if hl_client is None:
                                 corroboration_errors["highlightly_details"] = corroboration_errors.get(
                                     "highlightly", "Highlightly client unavailable."
@@ -351,7 +357,7 @@ try:
                                     home_team_name=home_name,
                                     away_team_name=away_name,
                                     selected_upcoming_fixture=selected_match_fixture,
-                                    history_per_team=10,
+                                    history_per_team=10 if cross_check_highlightly_details else 0,
                                 )
                     except Exception as exc:
                         st.warning(f"Optional Highlightly enrichment could not be completed: {exc}. Sportmonks prediction inputs remain unchanged.")
@@ -409,6 +415,40 @@ try:
                                 st.warning(highlightly_enrichment["errors"])
                         else:
                             st.warning("Highlightly statistics and lineup corroboration did not complete. No substitute data was used.")
+
+                    if cross_check_highlightly_players:
+                        st.subheader("Highlightly player and team-season performance")
+                        st.caption("Player statistics are matched by Highlightly player ID, exact club, competition and season. Only provider-reported starters are queried; no names-only joins or availability inferences are made.")
+                        if highlightly_enrichment is not None:
+                            try:
+                                with HighlightlyClient() as player_client:
+                                    player_report = collect_highlightly_player_enrichment(
+                                        client=player_client,
+                                        lineups=highlightly_enrichment.get("lineups"),
+                                        competition=str(selected_league_row.get("name") or selected_league),
+                                        season=int(season),
+                                        home_team_name=home_name,
+                                        away_team_name=away_name,
+                                        from_date=f"{int(season)}-01-01",
+                                        timezone_name="Africa/Nairobi",
+                                        max_players=22,
+                                    )
+                                st.json({
+                                    key: value for key, value in player_report.items()
+                                    if key not in {"players", "teams", "unknown_players", "errors"}
+                                })
+                                with st.expander("Exact player season statistics", expanded=True):
+                                    st.json(player_report.get("players", []))
+                                with st.expander("Team season statistics"):
+                                    st.json(player_report.get("teams", {}))
+                                if player_report.get("unknown_players"):
+                                    st.info({"players_without_exact_statistics": player_report["unknown_players"]})
+                                if player_report.get("errors"):
+                                    st.warning(player_report["errors"])
+                            except Exception as exc:
+                                st.warning(f"Highlightly player statistics unavailable: {exc}. No player data was inferred.")
+                        else:
+                            st.info("Player statistics were not requested because the exact selected-fixture Highlightly lineup was unavailable.")
 
             else:
                 standings = get_standings(client, league_id, int(season))
