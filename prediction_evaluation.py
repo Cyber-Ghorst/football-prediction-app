@@ -262,7 +262,7 @@ def evaluate_prediction_ledger(records: Iterable[Mapping[str, Any]]) -> dict[str
         "records_total": len(rows),
         "pre_match_prediction_records": len(timestamp_eligible),
         "pre_match_predictions": len(eligible),
-        "duplicate_records_excluded": len(timestamp_eligible) - len(eligible),
+        "duplicate_records_excluded": len(timestamp_eligible) - len(eligible) - len(unidentifiable),
         "unidentifiable_pre_match_records": len(unidentifiable),
         "completed_pre_match_predictions": len(completed),
         "player_snapshots_pre_kickoff": len(player_snapshots),
