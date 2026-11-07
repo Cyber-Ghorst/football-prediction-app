@@ -219,6 +219,18 @@ Sportmonks' free tier currently provides a limited competition set (the provider
 
 ### Activation boundary
 
-Sportmonks is added as an adapter and diagnostic source, but it is not yet wired into data_layer2.py or the Streamlit prediction collector. Do not report a current-season prediction as Sportmonks-powered until the user's token has been tested, the required league is confirmed in the subscription, the relevant season and team IDs are mapped, and Sportmonks records are normalized into the existing Layer 2 profile contract. This fail-closed boundary prevents a connection-only test from being mistaken for usable coverage.
+Sportmonks is now wired into the Streamlit current-season prediction path through sportmonks_layer2.py. The app discovers leagues and seasons from the authenticated account, maps the selected league to its exact Sportmonks season ID, retrieves season teams/standings/fixtures, and builds the existing Layer 2 profile contract using provider-native team IDs. The current-season path still fails closed when the token, competition, season, teams, standings/fixtures, or five completed matches are unavailable. A successful token test alone is not treated as proof of competition coverage.
 
 No model weights, 60/40 recency weighting, Layer 1 calculations, or TVD rules were changed.
+
+### Sportmonks Layer 2 activation (2026-11-07)
+
+- Added paginated season discovery, teams-by-season, standings-by-season, and fixtures-by-season methods. Pagination must terminate cleanly; partial collections are rejected.
+- Added `sportmonks_layer2.py` to normalize Sportmonks fixture participants, completed match states, current scores, statistics, standings positions, and team history into the existing profile structure.
+- Current-season app flow now uses Sportmonks for seasons after 2024 and no longer requires an API-Football key for those seasons. Historical seasons 2022–2024 continue using API-Football.
+- The app uses Sportmonks league, season, and team IDs directly; it does not attempt to equate provider IDs across APIs.
+- Only completed fixtures with both team scores are included. Five completed matches remain the minimum; ten are used when available. Latest five / previous five weighting remains in the existing model.
+- Opponent strength is derived only from available standings positions. Missing positions and statistics remain unknown. Player availability and lineups remain unknown unless a verified source is added; no score is inferred from an empty injury list.
+- Sportmonks statistics are mapped by returned statistic type names. Pass counts are not treated as pass accuracy.
+- Added focused normalization tests in `test_sportmonks_layer2.py`. These tests have been committed but have not yet been confirmed by a CI run.
+- API Ninjas and Highlightly remain connected for diagnostics/canonicalization; their match records are not yet included in multi-source field-level corroboration. LiveScoreFootball remains gated by the existing exact crosswalk.
