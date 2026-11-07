@@ -100,5 +100,5 @@ class PredictionReadinessTests(unittest.TestCase):
         self.assertIsNone(home["tactical_components_available"]["defensive_structure"])
 
 
-if __import__("__main__").__name__ == "__main__":
+if __name__ == "__main__":
     unittest.main()
