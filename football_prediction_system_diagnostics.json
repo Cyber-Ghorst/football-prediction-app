@@ -1,6 +1,6 @@
 {
   "diagnostic_version": 1,
-  "generated_at": "2026-11-08T13:11:21.414110+00:00",
+  "generated_at": "2026-11-08T13:22:45.041228+00:00",
   "overall_status": "healthy",
   "selected_context": {
     "season_start_year": 2026,
@@ -173,8 +173,8 @@
     "fixture_id": 19721930,
     "kickoff_utc": "2027-03-03T20:00:00+00:00",
     "source_updated_at": null,
-    "source_fetched_at": "2026-11-08T13:11:15.068100+00:00",
-    "source_age_seconds": 6.3,
+    "source_fetched_at": "2026-11-08T13:22:41.817221+00:00",
+    "source_age_seconds": 3.2,
     "source_age_minutes": 0.1,
     "source_freshness": "fresh",
     "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
@@ -852,7 +852,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "27",
+            "requests_remaining": "24",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -870,7 +870,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "26",
+            "requests_remaining": "23",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -888,7 +888,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "25",
+            "requests_remaining": "22",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -901,6 +901,148 @@
           }
         }
       ],
+      "team_name_catalog": {
+        "Sunderland": {
+          "normalized_name": "sunderland",
+          "appearances": 28,
+          "source_team_ids": [
+            "635630"
+          ]
+        },
+        "Manchester United": {
+          "normalized_name": "manchester united",
+          "appearances": 28,
+          "source_team_ids": [
+            "28867"
+          ]
+        },
+        "Nottingham Forest": {
+          "normalized_name": "nottingham forest",
+          "appearances": 28,
+          "source_team_ids": [
+            "56099"
+          ]
+        },
+        "Newcastle United": {
+          "normalized_name": "newcastle united",
+          "appearances": 28,
+          "source_team_ids": [
+            "29718"
+          ]
+        },
+        "Manchester City": {
+          "normalized_name": "manchester city",
+          "appearances": 28,
+          "source_team_ids": [
+            "43334"
+          ]
+        },
+        "Everton": {
+          "normalized_name": "everton",
+          "appearances": 28,
+          "source_team_ids": [
+            "39079"
+          ]
+        },
+        "Liverpool": {
+          "normalized_name": "liverpool",
+          "appearances": 28,
+          "source_team_ids": [
+            "34824"
+          ]
+        },
+        "Aston Villa": {
+          "normalized_name": "aston villa",
+          "appearances": 28,
+          "source_team_ids": [
+            "56950"
+          ]
+        },
+        "Leeds": {
+          "normalized_name": "leeds",
+          "appearances": 28,
+          "source_team_ids": [
+            "54397"
+          ]
+        },
+        "Hull City": {
+          "normalized_name": "hull city",
+          "appearances": 28,
+          "source_team_ids": [
+            "55248"
+          ]
+        },
+        "Chelsea": {
+          "normalized_name": "chelsea",
+          "appearances": 28,
+          "source_team_ids": [
+            "42483"
+          ]
+        },
+        "Coventry": {
+          "normalized_name": "coventry",
+          "appearances": 28,
+          "source_team_ids": [
+            "1146230"
+          ]
+        },
+        "Brighton": {
+          "normalized_name": "brighton",
+          "appearances": 28,
+          "source_team_ids": [
+            "44185"
+          ]
+        },
+        "Fulham": {
+          "normalized_name": "fulham",
+          "appearances": 28,
+          "source_team_ids": [
+            "31420"
+          ]
+        },
+        "Brentford": {
+          "normalized_name": "brentford",
+          "appearances": 28,
+          "source_team_ids": [
+            "47589"
+          ]
+        },
+        "Ipswich": {
+          "normalized_name": "ipswich",
+          "appearances": 28,
+          "source_team_ids": [
+            "49291"
+          ]
+        },
+        "Bournemouth": {
+          "normalized_name": "bournemouth",
+          "appearances": 28,
+          "source_team_ids": [
+            "30569"
+          ]
+        },
+        "Tottenham": {
+          "normalized_name": "tottenham",
+          "appearances": 28,
+          "source_team_ids": [
+            "40781"
+          ]
+        },
+        "Arsenal": {
+          "normalized_name": "arsenal",
+          "appearances": 28,
+          "source_team_ids": [
+            "36526"
+          ]
+        },
+        "Crystal Palace": {
+          "normalized_name": "crystal palace",
+          "appearances": 28,
+          "source_team_ids": [
+            "45036"
+          ]
+        }
+      },
       "selected_team_breakdown": {
         "Brighton & Hove Albion": {
           "normalized_team_records": 0,
@@ -1530,7 +1672,7 @@
         "sportmonks_request_metadata": {
           "http_status": 200,
           "rate_limit": "2000",
-          "rate_remaining": "1977"
+          "rate_remaining": "1997"
         }
       },
       {
@@ -1879,7 +2021,7 @@
         "sportmonks_request_metadata": {
           "http_status": 200,
           "rate_limit": "2000",
-          "rate_remaining": "1976"
+          "rate_remaining": "1996"
         }
       }
     ],
@@ -1937,8 +2079,8 @@
       "fixture_id": 19721930,
       "kickoff_utc": "2027-03-03T20:00:00+00:00",
       "source_updated_at": null,
-      "source_fetched_at": "2026-11-08T13:11:15.068100+00:00",
-      "source_age_seconds": 6.3,
+      "source_fetched_at": "2026-11-08T13:22:41.817221+00:00",
+      "source_age_seconds": 3.2,
       "source_age_minutes": 0.1,
       "source_freshness": "fresh",
       "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
