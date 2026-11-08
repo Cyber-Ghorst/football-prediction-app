@@ -608,7 +608,7 @@ def get_repository_fixtures(
                 f"""
                 SELECT fixture_id, season_id, league_id, home_team_id, away_team_id,
                        starting_at, status, home_goals, away_goals, venue,
-                       source_provider, provider_updated_at, collected_at
+                       source_provider, provider_updated_at, collected_at, raw_payload
                 FROM football_fixtures
                 {where_sql}
                 ORDER BY starting_at DESC NULLS LAST
@@ -649,7 +649,7 @@ def get_repository_team_history(
                 f"""
                 SELECT fixture_id, season_id, league_id, home_team_id, away_team_id,
                        starting_at, status, home_goals, away_goals, venue,
-                       source_provider, provider_updated_at, collected_at
+                       source_provider, provider_updated_at, collected_at, raw_payload
                 FROM football_fixtures
                 WHERE {" AND ".join(clauses)}
                 ORDER BY starting_at DESC
