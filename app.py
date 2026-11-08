@@ -884,6 +884,7 @@ try:
         st.session_state["prediction_ledger"] = merge_prediction_records(
             st.session_state["prediction_ledger"], [prediction_row]
         )
+        _persist_database_ledger()
         st.subheader(f"{home_name} vs {away_name}")
         probabilities=result["probabilities"]
         outcome = most_likely_outcome(probabilities, home_name, away_name)
@@ -1007,6 +1008,7 @@ with st.expander("Prediction tracking, Opta comparison and backtesting", expande
             st.session_state["prediction_ledger"] = merge_prediction_records(
                 st.session_state["prediction_ledger"], imported_records
             )
+            _persist_database_ledger()
             st.success(f"Imported {len(imported_records)} ledger rows. Duplicate record IDs were merged.")
         except Exception as exc:
             st.error(f"Could not import prediction ledger: {exc}")
