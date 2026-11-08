@@ -23,5 +23,16 @@ class PredictionEngineTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             predict_match(bad, self.teams["Chelsea"])
 
+    def test_most_likely_outcome_labels(self):
+        from engine import most_likely_outcome
+        home = most_likely_outcome({"home_win": 48, "draw": 27, "away_win": 25}, "Brighton", "Fulham")
+        draw = most_likely_outcome({"home_win": 24, "draw": 52, "away_win": 24}, "Brighton", "Fulham")
+        away = most_likely_outcome({"home_win": 20, "draw": 25, "away_win": 55}, "Brighton", "Fulham")
+        tie = most_likely_outcome({"home_win": 40, "draw": 40, "away_win": 20}, "Brighton", "Fulham")
+        self.assertEqual(home["label"], "Predicted winner: Brighton")
+        self.assertEqual(draw["label"], "Most likely outcome: Draw")
+        self.assertEqual(away["label"], "Predicted winner: Fulham")
+        self.assertEqual(tie["label"], "No single most likely outcome (tied probabilities)")
+
 if __name__ == "__main__":
     unittest.main()
