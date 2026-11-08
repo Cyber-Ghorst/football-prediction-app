@@ -1145,6 +1145,23 @@ with st.expander("Prediction tracking, Opta comparison and backtesting", expande
         report = evaluate_prediction_ledger(st.session_state["prediction_ledger"])
         st.subheader("Backtest summary")
         st.write(f"Pre-match forecasts: {report['pre_match_predictions']} • Completed and scored: {report['completed_pre_match_predictions']}")
+        st.subheader("Prediction eligibility audit")
+        audit = report["eligibility_audit"]
+        audit_rows = [
+            {"Category": "Total saved records", "Count": audit["records_total"]},
+            {"Category": "Valid pre-kickoff records", "Count": audit["valid_pre_kickoff_records"]},
+            {"Category": "Missing prediction timestamp", "Count": audit["missing_prediction_timestamp"]},
+            {"Category": "Missing kickoff timestamp", "Count": audit["missing_kickoff_timestamp"]},
+            {"Category": "Recorded at/after kickoff", "Count": audit["at_or_after_kickoff"]},
+            {"Category": "Invalid probability sets", "Count": audit["invalid_probabilities"]},
+            {"Category": "Unidentifiable pre-match records", "Count": audit["unidentifiable_pre_match_records"]},
+            {"Category": "Duplicate records excluded", "Count": audit["duplicate_records_excluded"]},
+            {"Category": "Unique pre-match fixtures", "Count": audit["unique_pre_match_fixtures"]},
+            {"Category": "Awaiting a valid final score", "Count": audit["awaiting_valid_score"]},
+            {"Category": "Completed with valid scores", "Count": audit["completed_with_valid_scores"]},
+        ]
+        st.dataframe(pd.DataFrame(audit_rows), use_container_width=True, hide_index=True)
+        st.caption("Exclusion categories are mutually exclusive. Fixture-level counts are calculated after duplicate removal; a valid score does not by itself prove that a result came from the automatic verifier.")
         if report["duplicate_records_excluded"]:
             st.caption(f"Excluded {report['duplicate_records_excluded']} repeated forecast record(s); only the latest valid pre-kickoff forecast per identifiable fixture is scored.")
         if report["unidentifiable_pre_match_records"]:
