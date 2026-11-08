@@ -2,6 +2,7 @@
 from __future__ import annotations
 import json
 import base64
+import hashlib
 from datetime import datetime, timezone
 import requests
 import pandas as pd
@@ -61,39 +62,104 @@ except Exception:
 def _ledger_signature(records):
     return json.dumps(records, sort_keys=True, ensure_ascii=False, default=str)
 
-def _upload_fixture_diagnostic_to_github(report):
-    """Create or update the latest compact fixture diagnostic in this repository."""
+def _upload_report_to_github(report_name, report, latest_path=None):
+    """Archive a generated report and maintain a latest copy in GitHub."""
     token = st.secrets.get("GITHUB_REPORT_TOKEN", "")
     if not token:
         raise RuntimeError("GITHUB_REPORT_TOKEN is not configured in Streamlit Secrets.")
+
     owner_repo = "Cyber-Ghorst/football-prediction-app"
-    path = "diagnostics/fixture_history_report.json"
-    api_url = f"https://api.github.com/repos/{owner_repo}/contents/{path}"
+    safe_name = "".join(
+        character.lower() if character.isalnum() else "_"
+        for character in str(report_name)
+    ).strip("_")
+    if not safe_name:
+        raise ValueError("A report name is required.")
+
+    generated_at = datetime.now(timezone.utc)
+    report_payload = dict(report) if isinstance(report, dict) else {"data": report}
+    report_payload.setdefault("generated_at_utc", generated_at.isoformat())
+    report_payload.setdefault("report_name", safe_name)
+    serialized = json.dumps(
+        report_payload, ensure_ascii=False, indent=2, default=str
+    ).encode("utf-8")
+    content_hash = hashlib.sha256(serialized).hexdigest()
+    archive_path = (
+        f"reports/{safe_name}/archive/"
+        f"{generated_at.strftime('%Y%m%dT%H%M%S%fZ')}.json"
+    )
+    latest_path = latest_path or f"reports/{safe_name}/latest.json"
+
     headers = {
         "Accept": "application/vnd.github+json",
         "Authorization": f"Bearer {token}",
         "X-GitHub-Api-Version": "2022-11-28",
     }
-    current = requests.get(api_url, headers=headers, timeout=20)
+
+    def _put_file(path, message, existing_sha=None):
+        api_url = f"https://api.github.com/repos/{owner_repo}/contents/{path}"
+        payload = {
+            "message": message,
+            "content": base64.b64encode(serialized).decode("ascii"),
+        }
+        if existing_sha:
+            payload["sha"] = existing_sha
+        saved = requests.put(api_url, headers=headers, json=payload, timeout=30)
+        if saved.status_code not in (200, 201):
+            raise RuntimeError(
+                f"GitHub report upload failed for {path} (HTTP {saved.status_code})."
+            )
+        result = saved.json()
+        return {
+            "path": path,
+            "html_url": result.get("content", {}).get("html_url"),
+            "commit_sha": result.get("commit", {}).get("sha"),
+        }
+
+    # The timestamped archive is immutable; the latest copy is replaced on each run.
+    archived = _put_file(archive_path, f"Archive {safe_name} report")
+    latest_url = f"https://api.github.com/repos/{owner_repo}/contents/{latest_path}"
+    current = requests.get(latest_url, headers=headers, timeout=20)
     if current.status_code not in (200, 404):
-        raise RuntimeError(f"GitHub report lookup failed (HTTP {current.status_code}).")
-    payload = {
-        "message": "Update fixture history diagnostic report",
-        "content": base64.b64encode(
-            json.dumps(report, ensure_ascii=False, indent=2, default=str).encode("utf-8")
-        ).decode("ascii"),
-    }
-    if current.status_code == 200:
-        payload["sha"] = current.json().get("sha")
-    saved = requests.put(api_url, headers=headers, json=payload, timeout=30)
-    if saved.status_code not in (200, 201):
-        raise RuntimeError(f"GitHub report upload failed (HTTP {saved.status_code}).")
-    result = saved.json()
+        raise RuntimeError(
+            f"GitHub report lookup failed for {latest_path} (HTTP {current.status_code})."
+        )
+    latest_sha = current.json().get("sha") if current.status_code == 200 else None
+    latest = _put_file(
+        latest_path,
+        f"Update latest {safe_name} report",
+        existing_sha=latest_sha,
+    )
     return {
-        "path": path,
-        "html_url": result.get("content", {}).get("html_url"),
-        "commit_sha": result.get("commit", {}).get("sha"),
+        "archive_path": archived["path"],
+        "archive_url": archived["html_url"],
+        "latest_path": latest["path"],
+        "latest_url": latest["html_url"],
+        "content_sha256": content_hash,
     }
+
+
+def _upload_fixture_diagnostic_to_github(report):
+    """Keep the existing fixture-diagnostic path while archiving each run."""
+    return _upload_report_to_github(
+        "fixture_history",
+        report,
+        latest_path="diagnostics/fixture_history_report.json",
+    )
+
+
+def _upload_report_once(report_name, report):
+    """Avoid creating duplicate archive commits during ordinary Streamlit reruns."""
+    payload = dict(report) if isinstance(report, dict) else {"data": report}
+    fingerprint = hashlib.sha256(
+        json.dumps(payload, sort_keys=True, ensure_ascii=False, default=str).encode("utf-8")
+    ).hexdigest()
+    uploaded = st.session_state.setdefault("_github_report_fingerprints", {})
+    if uploaded.get(report_name) == fingerprint:
+        return None
+    result = _upload_report_to_github(report_name, payload)
+    uploaded[report_name] = fingerprint
+    return result
 
 
 def _load_database_ledger():
@@ -523,10 +589,13 @@ if upload_fixture_report:
                 fixture_report["generated_at_utc"] = datetime.now(timezone.utc).isoformat()
                 fixture_report["repository"] = "Cyber-Ghorst/football-prediction-app"
                 github_report_result = _upload_fixture_diagnostic_to_github(fixture_report)
-            st.success("Fixture diagnostic report uploaded to GitHub.")
-            st.write(f"Report path: {github_report_result['path']}")
-            if github_report_result.get("html_url"):
-                st.markdown(f"[Open the latest diagnostic report]({github_report_result['html_url']})")
+            st.success("Fixture diagnostic report archived in GitHub.")
+            st.write(f"Latest report: {github_report_result['latest_path']}")
+            st.write(f"Archived copy: {github_report_result['archive_path']}")
+            if github_report_result.get("latest_url"):
+                st.markdown(f"[Open latest fixture diagnostic]({github_report_result['latest_url']})")
+            if github_report_result.get("archive_url"):
+                st.markdown(f"[Open timestamped archive]({github_report_result['archive_url']})")
         except Exception as exc:
             st.error(f"Diagnostic report upload failed ({type(exc).__name__}): {exc}")
 
@@ -1219,7 +1288,23 @@ try:
             corroboration=corroboration,
             model_weights=WEIGHTS,
         )
+        try:
+            github_system_report = _upload_report_once("system_diagnostics", diagnostic_report)
+            if github_system_report:
+                st.session_state["_latest_system_report_github_url"] = github_system_report.get("latest_url")
+                st.session_state["_latest_system_report_github_archive_url"] = github_system_report.get("archive_url")
+        except Exception as upload_error:
+            st.warning(f"System report could not be archived to GitHub ({type(upload_error).__name__}). Check GITHUB_REPORT_TOKEN and GitHub permissions.")
         st.subheader("Automated System Health & Diagnostics")
+        if st.session_state.get("_latest_system_report_github_url"):
+            st.caption("System report is archived in GitHub automatically.")
+            st.markdown(
+                f"[Open latest system report]({st.session_state['_latest_system_report_github_url']})"
+                + (
+                    f" · [Open timestamped archive]({st.session_state['_latest_system_report_github_archive_url']})"
+                    if st.session_state.get("_latest_system_report_github_archive_url") else ""
+                )
+            )
         st.caption("Automatically generated after each data collection. Provider credentials are shown only as configured/not configured; actual connectivity is tested separately using the provider health button. This report is read-only.")
         diagnostic_status = diagnostic_report["overall_status"]
         if diagnostic_status == "healthy":
@@ -1542,7 +1627,23 @@ with st.expander("Prediction tracking, Opta comparison and backtesting", expande
         st.session_state["prediction_ledger"] = merge_prediction_records(ledger, edited_records)
         _persist_database_ledger()
         report = evaluate_prediction_ledger(st.session_state["prediction_ledger"])
+        try:
+            github_performance_report = _upload_report_once("prediction_performance", report)
+            if github_performance_report:
+                st.session_state["_latest_performance_report_github_url"] = github_performance_report.get("latest_url")
+                st.session_state["_latest_performance_report_github_archive_url"] = github_performance_report.get("archive_url")
+        except Exception as upload_error:
+            st.warning(f"Prediction performance report could not be archived to GitHub ({type(upload_error).__name__}). Check GITHUB_REPORT_TOKEN and GitHub permissions.")
         st.subheader("Backtest summary")
+        if st.session_state.get("_latest_performance_report_github_url"):
+            st.caption("Prediction performance report is archived in GitHub automatically.")
+            st.markdown(
+                f"[Open latest performance report]({st.session_state['_latest_performance_report_github_url']})"
+                + (
+                    f" · [Open timestamped archive]({st.session_state['_latest_performance_report_github_archive_url']})"
+                    if st.session_state.get("_latest_performance_report_github_archive_url") else ""
+                )
+            )
         st.write(f"Pre-match forecasts: {report['pre_match_predictions']} • Completed and scored: {report['completed_pre_match_predictions']}")
         st.subheader("Prediction eligibility audit")
         audit = report["eligibility_audit"]
