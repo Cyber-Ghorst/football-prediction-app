@@ -67,7 +67,7 @@ class UpcomingFixtureEnrichmentTests(unittest.TestCase):
         self.assertIsNone(fixtures[0].get("updated_at"))
         self.assertEqual(len(client.calls), 2)
         self.assertEqual(client.calls[1][0], "fixtures/multi/7001")
-        self.assertEqual(client.calls[1][1]["include"], "participants;state")
+        self.assertEqual(client.calls[1][1]["include"], "participants;state;league;season")
 
     def test_exact_live_or_past_pair_is_hydrated_for_prediction_ledger_identity(self):
         now = int(datetime(2026, 11, 8, 16, tzinfo=timezone.utc).timestamp())
