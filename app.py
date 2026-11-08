@@ -36,7 +36,7 @@ from provider_data_storage import (
     save_provider_snapshot,
     record_provider_collection_run,
 )
-from football_repository import ensure_football_repository, repository_table_counts
+from football_repository import ensure_football_repository, repository_table_counts, import_sportmonks_season
 
 st.set_page_config(page_title="Football Prediction Lab", page_icon="⚽", layout="wide")
 st.title("⚽ Football Prediction Lab")
@@ -605,6 +605,47 @@ try:
             st.stop()
         team_map = {str(row.get("name")): row for row in team_rows if row.get("id") is not None and row.get("name")}
         st.caption(f"Sportmonks source mapping: league ID {league_id} → season ID {selected_season_id}. Team IDs are retained from the same provider.")
+
+        if st.button(
+            "Import selected Sportmonks season into central database",
+            use_container_width=True,
+            help="Imports the selected league, season, teams and season fixtures into CockroachDB. Existing records are updated safely; Neon is not touched."
+        ):
+            if not PROVIDER_DATABASE_URL:
+                st.warning("Configure PROVIDER_DATABASE_URL before importing into the central database.")
+            else:
+                try:
+                    selected_season_row = next(
+                        row for row in matching_seasons
+                        if int(row.get("id")) == int(selected_season_id)
+                    )
+                    selected_team_ids = tuple(sorted(
+                        int(row["id"]) for row in team_rows if row.get("id") is not None
+                    ))
+                    with st.spinner("Collecting and importing the selected Sportmonks season..."):
+                        season_fixtures = get_sm_fixtures(
+                            int(selected_season_id), False, selected_team_ids
+                        )
+                        import_report = import_sportmonks_season(
+                            PROVIDER_DATABASE_URL,
+                            league=league_by_id[int(league_id)],
+                            season=selected_season_row,
+                            teams=team_rows,
+                            fixtures=season_fixtures,
+                        )
+                        current_counts = repository_table_counts(PROVIDER_DATABASE_URL)
+                    st.success("Sportmonks season imported into the central football database.")
+                    st.json({
+                        "import_report": import_report,
+                        "central_table_counts": current_counts,
+                    })
+                except SportmonksError as exc:
+                    st.error(f"Sportmonks season collection failed: {exc}")
+                except Exception as exc:
+                    st.error(
+                        f"Central season import failed ({type(exc).__name__}). "
+                        "No prediction ledger changes were made. Check the selected season data and CockroachDB."
+                    )
     else:
         league_options = {f"{x['league']['name']} — {x.get('country',{}).get('name','')}": x['league']['id']
                           for x in leagues if x.get('league',{}).get('id')}
