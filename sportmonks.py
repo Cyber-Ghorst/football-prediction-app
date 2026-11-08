@@ -267,19 +267,29 @@ class SportmonksClient:
             include_parts.extend(["state", "league", "season"])
             if chosen_completed:
                 include_parts.append("statistics.type")
-            details_payload = self._get(
-                f"fixtures/multi/{','.join(str(value) for value in fixture_ids)}",
-                {"include": ";".join(include_parts)},
-            )
-            # This is the local UTC retrieval time after the detailed provider
-            # response completed successfully. It is not Sportmonks' updated_at.
+
+            # Sportmonks rejects oversized fixtures/multi ID lists with HTTP 422.
+            # Keep each request comfortably below the endpoint's practical limit.
+            batch_size = 25
+            details_by_id: dict[int, dict[str, Any]] = {}
+            for offset in range(0, len(fixture_ids), batch_size):
+                fixture_batch = fixture_ids[offset:offset + batch_size]
+                details_payload = self._get(
+                    f"fixtures/multi/{','.join(str(value) for value in fixture_batch)}",
+                    {"include": ";".join(include_parts)},
+                )
+                for row in self._rows(details_payload):
+                    if row.get("id") is None:
+                        continue
+                    try:
+                        details_by_id[int(row["id"])] = row
+                    except (TypeError, ValueError):
+                        continue
+
+            # Merge only after all batches succeed; a failed batch must fail the
+            # collection rather than silently accepting a partial history.
             from datetime import datetime, timezone
             details_fetched_at = datetime.now(timezone.utc).isoformat()
-            details = self._rows(details_payload)
-            details_by_id = {
-                int(row["id"]): row for row in details
-                if row.get("id") is not None
-            }
             for fixture_id, detail in details_by_id.items():
                 base = detail_targets.get(fixture_id)
                 if base is not None:
