@@ -272,6 +272,43 @@ def evaluate_prediction_ledger(records: Iterable[Mapping[str, Any]]) -> dict[str
         }) is not None
         and _is_before_kickoff(row, "opta_captured_at")
     ]
+
+    # One chronological row per identifiable, completed pre-match fixture.
+    # This is descriptive history only; it never feeds the prediction engine.
+    performance_history = []
+    for row in completed:
+        probabilities = _valid_probabilities({
+            "home_win": row.get("model_home_win"),
+            "draw": row.get("model_draw"),
+            "away_win": row.get("model_away_win"),
+        })
+        actual = outcome_from_score(
+            row.get("actual_home_goals"), row.get("actual_away_goals")
+        )
+        if probabilities is None or actual is None:
+            continue
+        picked_key = max(probabilities, key=probabilities.get)
+        picked = {
+            "home_win": "home", "draw": "draw", "away_win": "away"
+        }[picked_key]
+        one_match = _score_records([row], "model")
+        performance_history.append({
+            "kickoff_at": str(row.get("kickoff_at") or ""),
+            "predicted_at": str(row.get("predicted_at") or ""),
+            "competition": str(row.get("competition") or "Unknown"),
+            "home_team": str(row.get("home_team") or "Unknown"),
+            "away_team": str(row.get("away_team") or "Unknown"),
+            "score": f"{row.get('actual_home_goals')}-{row.get('actual_away_goals')}",
+            "actual_outcome": actual,
+            "predicted_outcome": picked,
+            "correct": picked == actual,
+            "top_confidence_pct": round(probabilities[picked_key] * 100, 2),
+            "brier": one_match["multiclass_brier"],
+            "log_loss": one_match["log_loss"],
+        })
+    performance_history.sort(
+        key=lambda item: _parse_datetime(item["kickoff_at"]) or datetime.min.replace(tzinfo=timezone.utc)
+    )
     player_snapshots = [
         row for row in eligible
         if _is_before_kickoff(row, "player_snapshot_at") and _json_player_records(row)
@@ -315,6 +352,7 @@ def evaluate_prediction_ledger(records: Iterable[Mapping[str, Any]]) -> dict[str
             for competition in sorted({str(row.get("competition") or "") for row in completed})
         },
         "model": _score_records(completed, "model"),
+        "performance_history": performance_history,
         "opta_same_fixtures": _score_records(opta_rows, "opta"),
         "opta_comparable_fixtures": len(opta_rows),
         "opta_comparison_note": "Opta is scored only on the same deduplicated completed fixtures as the model.",
