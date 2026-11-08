@@ -28,7 +28,7 @@ from prediction_readiness import build_prediction_readiness
 from player_availability import assess_player_availability
 from statistics_coverage import build_statistics_coverage
 from system_diagnostics import build_system_diagnostics
-from provider_data_storage import check_provider_storage_connection
+from provider_data_storage import check_provider_storage_connection, verify_provider_storage_round_trip
 
 st.set_page_config(page_title="Football Prediction Lab", page_icon="⚽", layout="wide")
 st.title("⚽ Football Prediction Lab")
@@ -256,6 +256,7 @@ with st.sidebar:
             st.caption(f"Domains: {', '.join(provider['domains'])}. {provider['app_integration']}. Limitation: {provider['limitation']}")
         run_provider_diagnostics = st.button("Run provider health & coverage check", use_container_width=True)
         test_provider_database = st.button("Test CockroachDB connection", use_container_width=True)
+        test_provider_storage = st.button("Verify CockroachDB write/read", use_container_width=True)
         if not PROVIDER_DATABASE_URL:
             st.caption("CockroachDB is not configured yet. Add PROVIDER_DATABASE_URL in Streamlit Secrets.")
 
@@ -273,6 +274,21 @@ if test_provider_database:
                 f"CockroachDB connection test failed ({type(exc).__name__}). "
                 "Check the connection string and TLS settings in Streamlit Secrets."
             )
+
+
+if test_provider_storage:
+    if not PROVIDER_DATABASE_URL:
+        st.warning("Add PROVIDER_DATABASE_URL in Streamlit Secrets before testing CockroachDB storage.")
+    else:
+        try:
+            with st.spinner("Writing a diagnostic snapshot and retrieving it from CockroachDB..."):
+                storage_test = verify_provider_storage_round_trip(PROVIDER_DATABASE_URL)
+            st.success("CockroachDB storage verified: the diagnostic record was written and read back successfully.")
+            st.caption("A short-lived diagnostic snapshot was saved; it expires from the fresh-cache view after five minutes.")
+        except Exception as exc:
+            # Keep credentials and connection details out of the user-facing error.
+            st.error(f"CockroachDB storage verification failed ({type(exc).__name__}). Check the storage tables and database permissions.")
+
 
 client = None
 leagues = []
