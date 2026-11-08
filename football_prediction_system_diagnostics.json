@@ -1,6 +1,6 @@
 {
   "diagnostic_version": 1,
-  "generated_at": "2026-11-08T10:03:32.390863+00:00",
+  "generated_at": "2026-11-08T10:12:50.772926+00:00",
   "overall_status": "attention_required",
   "selected_context": {
     "season_start_year": 2026,
@@ -168,8 +168,8 @@
     "fixture_id": 19721930,
     "kickoff_utc": "2027-03-03T20:00:00+00:00",
     "source_updated_at": null,
-    "source_fetched_at": "2026-11-08T10:03:28.935198+00:00",
-    "source_age_seconds": 3.5,
+    "source_fetched_at": "2026-11-08T10:12:47.691095+00:00",
+    "source_age_seconds": 3.1,
     "source_age_minutes": 0.1,
     "source_freshness": "fresh",
     "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
@@ -777,7 +777,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "87",
+            "requests_remaining": "84",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -795,7 +795,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "86",
+            "requests_remaining": "83",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -813,7 +813,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "85",
+            "requests_remaining": "82",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -1204,23 +1204,52 @@
         "expected_identity": {
           "season_id": 28083,
           "league_id": 8,
-          "home_team_id": null,
+          "home_team_id": 117,
           "away_team_id": 11
         },
-        "team_mapping_status": "unresolved_exact_team_mapping",
-        "same_season_and_competition_fixtures": 0,
-        "exact_home_away_team_fixtures": 0,
-        "exact_kickoff_fixtures": 0,
-        "exact_completed_score_valid_fixtures": 0,
-        "candidate_score_agreement": null,
-        "sportmonks_candidates": [],
-        "verification_status": "unresolved_exact_team_mapping",
+        "team_mapping_status": "exact_team_ids_resolved",
+        "same_season_and_competition_fixtures": 4,
+        "exact_home_away_team_fixtures": 1,
+        "exact_kickoff_fixtures": 1,
+        "exact_completed_score_valid_fixtures": 1,
+        "candidate_score_agreement": true,
+        "sportmonks_candidates": [
+          {
+            "fixture_id": 19722130,
+            "season_id": 28083,
+            "league_id": 8,
+            "kickoff_utc": "2026-10-24 14:00:00",
+            "kickoff_exact_match": true,
+            "home": "Coventry City",
+            "away": "Fulham",
+            "home_team_id": 117,
+            "away_team_id": 11,
+            "state_id": 5,
+            "state": "FT",
+            "completed": true,
+            "score": [
+              0,
+              1
+            ],
+            "score_valid": true
+          }
+        ],
+        "verification_status": "exact_fixture_and_score_agree",
         "team_mapping_details": {
           "Coventry": {
-            "team_id": null,
-            "status": "team_name_not_found_in_date_fixtures",
-            "matched_provider_names": [],
-            "candidate_matches": []
+            "team_id": 117,
+            "status": "explicit_alias_resolved_from_date_fixtures",
+            "matched_provider_names": [
+              "Coventry City"
+            ],
+            "candidate_matches": [
+              {
+                "team_id": 117,
+                "provider_names": [
+                  "Coventry City"
+                ]
+              }
+            ]
           },
           "Fulham": {
             "team_id": 11,
@@ -1233,7 +1262,7 @@
         "sportmonks_request_metadata": {
           "http_status": 200,
           "rate_limit": "2000",
-          "rate_remaining": "1997"
+          "rate_remaining": "1993"
         }
       },
       {
@@ -1524,23 +1553,52 @@
         "expected_identity": {
           "season_id": 28083,
           "league_id": 8,
-          "home_team_id": null,
+          "home_team_id": 116,
           "away_team_id": 11
         },
-        "team_mapping_status": "unresolved_exact_team_mapping",
-        "same_season_and_competition_fixtures": 0,
-        "exact_home_away_team_fixtures": 0,
-        "exact_kickoff_fixtures": 0,
-        "exact_completed_score_valid_fixtures": 0,
-        "candidate_score_agreement": null,
-        "sportmonks_candidates": [],
-        "verification_status": "unresolved_exact_team_mapping",
+        "team_mapping_status": "exact_team_ids_resolved",
+        "same_season_and_competition_fixtures": 6,
+        "exact_home_away_team_fixtures": 1,
+        "exact_kickoff_fixtures": 1,
+        "exact_completed_score_valid_fixtures": 1,
+        "candidate_score_agreement": true,
+        "sportmonks_candidates": [
+          {
+            "fixture_id": 19722147,
+            "season_id": 28083,
+            "league_id": 8,
+            "kickoff_utc": "2026-10-10 14:00:00",
+            "kickoff_exact_match": true,
+            "home": "Ipswich Town",
+            "away": "Fulham",
+            "home_team_id": 116,
+            "away_team_id": 11,
+            "state_id": 5,
+            "state": "FT",
+            "completed": true,
+            "score": [
+              2,
+              1
+            ],
+            "score_valid": true
+          }
+        ],
+        "verification_status": "exact_fixture_and_score_agree",
         "team_mapping_details": {
           "Ipswich": {
-            "team_id": null,
-            "status": "team_name_not_found_in_date_fixtures",
-            "matched_provider_names": [],
-            "candidate_matches": []
+            "team_id": 116,
+            "status": "explicit_alias_resolved_from_date_fixtures",
+            "matched_provider_names": [
+              "Ipswich Town"
+            ],
+            "candidate_matches": [
+              {
+                "team_id": 116,
+                "provider_names": [
+                  "Ipswich Town"
+                ]
+              }
+            ]
           },
           "Fulham": {
             "team_id": 11,
@@ -1553,7 +1611,7 @@
         "sportmonks_request_metadata": {
           "http_status": 200,
           "rate_limit": "2000",
-          "rate_remaining": "1996"
+          "rate_remaining": "1992"
         }
       }
     ],
@@ -1574,8 +1632,8 @@
       "fixture_id": 19721930,
       "kickoff_utc": "2027-03-03T20:00:00+00:00",
       "source_updated_at": null,
-      "source_fetched_at": "2026-11-08T10:03:28.935198+00:00",
-      "source_age_seconds": 3.5,
+      "source_fetched_at": "2026-11-08T10:12:47.691095+00:00",
+      "source_age_seconds": 3.1,
       "source_age_minutes": 0.1,
       "source_freshness": "fresh",
       "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
