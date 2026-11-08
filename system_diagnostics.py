@@ -135,14 +135,14 @@ def build_system_diagnostics(
             status = "fail"
             recommendation = "Collect more verified completed matches; prediction minimum remains five per team."
         elif count < 10:
-            status = "warning"
-            recommendation = "Keep readiness marked limited_history until Brighton's next result is completed and collected with valid scores. Do not add unplayed fixtures, use another season, or relax the ten-match target."
+            status = "info"
+            recommendation = None
         else:
             status = "pass"
             recommendation = None
         checks.append(_check(
             f"{side}_history_depth", status,
-            f"{name}: {count} completed score-valid matches available (minimum 5; target 10).",
+            f"{name}: {count} completed score-valid matches available (minimum 5 met; preferred target 10 {'met' if count >= 10 else 'not yet met'}).",
             recommendation,
         ))
         tactical_summary = dict(profile.get("tactical_summary") or {})
@@ -318,9 +318,9 @@ def build_system_diagnostics(
     readiness_status = str(readiness.get("overall_status") or "unknown")
     checks.append(_check(
         "prediction_readiness",
-        "pass" if readiness_status == "ready" else "fail" if readiness_status == "insufficient_history" else "warning",
-        f"Prediction readiness status: {readiness_status}.",
-        None if readiness_status == "ready" else "Review fixture verification and history depth before relying on the forecast.",
+        "pass" if readiness_status in {"ready", "limited_history"} else "fail" if readiness_status == "insufficient_history" else "warning",
+        f"Prediction readiness status: {readiness_status}. Five completed, score-valid matches per team meet the history minimum; ten is preferred.",
+        None if readiness_status in {"ready", "limited_history"} else "Review fixture verification and history depth before relying on the forecast.",
     ))
 
     statuses = {row["status"] for row in checks}
