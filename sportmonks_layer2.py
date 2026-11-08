@@ -553,7 +553,11 @@ def collect_repository_team_profile(
     The repository is the source for match history. Standings remain an optional
     enrichment because they are not yet stored in the normalized repository.
     """
-    from football_repository import get_repository_fixtures, get_repository_teams
+    from football_repository import (
+        get_repository_fixtures,
+        get_repository_fixture_statistics,
+        get_repository_teams,
+    )
 
     canonical_team_id = str(team_id)
     canonical_season_id = str(season_id)
@@ -575,11 +579,55 @@ def collect_repository_team_profile(
         season_id=canonical_season_id,
         limit=2000,
     )
-    provider_fixtures = [
-        row["raw_payload"]
-        for row in fixture_rows
-        if isinstance(row.get("raw_payload"), dict)
-    ]
+    fixture_ids = [str(row["fixture_id"]) for row in fixture_rows]
+    normalized_statistics = get_repository_fixture_statistics(
+        database_url, fixture_ids
+    )
+    statistics_by_fixture: dict[str, list[dict[str, Any]]] = {}
+    for statistic_row in normalized_statistics:
+        raw_statistic = statistic_row.get("raw_payload")
+        if not isinstance(raw_statistic, dict):
+            raw_statistic = {
+                "participant_id": (
+                    str(statistic_row.get("team_id") or "").split(":", 1)[-1] or None
+                ),
+                "type": {
+                    "id": statistic_row.get("provider_statistic_id"),
+                    "name": statistic_row.get("statistic_type"),
+                },
+                "data": {"value": statistic_row.get("statistic_value")},
+            }
+        else:
+            raw_statistic = dict(raw_statistic)
+        raw_statistic.setdefault(
+            "participant_id",
+            str(statistic_row.get("team_id") or "").split(":", 1)[-1] or None,
+        )
+        raw_statistic.setdefault(
+            "type",
+            {
+                "id": statistic_row.get("provider_statistic_id"),
+                "name": statistic_row.get("statistic_type"),
+            },
+        )
+        if "data" not in raw_statistic:
+            raw_statistic["data"] = {
+                "value": statistic_row.get("statistic_value")
+            }
+        statistics_by_fixture.setdefault(
+            str(statistic_row.get("fixture_id")), []
+        ).append(raw_statistic)
+
+    provider_fixtures = []
+    for row in fixture_rows:
+        raw_fixture = row.get("raw_payload")
+        if not isinstance(raw_fixture, dict):
+            continue
+        fixture_payload = dict(raw_fixture)
+        normalized_rows = statistics_by_fixture.get(str(row.get("fixture_id")))
+        if normalized_rows:
+            fixture_payload["statistics"] = normalized_rows
+        provider_fixtures.append(fixture_payload)
     if not provider_fixtures:
         raise ValueError(
             f"No archived provider fixture payloads are available for season {canonical_season_id}."
@@ -605,4 +653,8 @@ def collect_repository_team_profile(
     profile["data_quality"]["history_source"] = "cockroachdb_central_repository"
     profile["data_quality"]["repository_fixture_rows"] = len(fixture_rows)
     profile["data_quality"]["repository_fixture_payloads"] = len(provider_fixtures)
+    profile["data_quality"]["normalized_statistics_rows"] = len(normalized_statistics)
+    profile["data_quality"]["fixtures_with_normalized_statistics"] = len(
+        statistics_by_fixture
+    )
     return profile
