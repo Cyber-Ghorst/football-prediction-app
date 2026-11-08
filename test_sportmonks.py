@@ -97,7 +97,7 @@ class UpcomingFixtureEnrichmentTests(unittest.TestCase):
         self.assertEqual(client.calls[1][0], "fixtures/multi/7002")
         self.assertEqual(client.calls[1][1]["include"], "participants;state;league;season")
 
-    def test_completed_fixture_details_are_fetched_in_batches_of_at_most_25(self):
+    def test_completed_fixture_details_are_fetched_in_batches_of_at_most_10(self):
         now = int(datetime(2026, 11, 7, tzinfo=timezone.utc).timestamp())
         schedule_rows = []
         detail_rows = []
@@ -129,11 +129,11 @@ class UpcomingFixtureEnrichmentTests(unittest.TestCase):
         multi_calls = [
             path for path, _ in client.calls if path.startswith("fixtures/multi/")
         ]
-        self.assertEqual(len(multi_calls), 2)
+        self.assertEqual(len(multi_calls), 3)
         requested_ids = []
         for path in multi_calls:
             ids = path.rsplit("/", 1)[1].split(",")
-            self.assertLessEqual(len(ids), 25)
+            self.assertLessEqual(len(ids), 10)
             requested_ids.extend(ids)
         self.assertEqual(len(requested_ids), 30)
         self.assertTrue(all(fixture.get("state") for fixture in fixtures))
