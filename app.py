@@ -22,6 +22,7 @@ from provider_corroboration import collect_recent_result_corroboration
 from highlightly_match_enrichment import collect_highlightly_match_enrichment
 from highlightly_player_enrichment import collect_highlightly_player_enrichment
 from prediction_evaluation import build_prediction_record, evaluate_prediction_ledger, merge_prediction_records
+from prediction_storage import load_prediction_ledger, save_prediction_records
 from prediction_readiness import build_prediction_readiness
 from player_availability import assess_player_availability
 from statistics_coverage import build_statistics_coverage
@@ -33,6 +34,51 @@ st.caption("Layer 2 • Sportmonks current-season / API-Football historical data
 report_download_slot = st.empty()
 report_download_slot.info("Collect data and predict to generate the system report. Its download shortcut will appear here.")
 st.session_state.setdefault("prediction_ledger", [])
+
+try:
+    DATABASE_URL = st.secrets.get("DATABASE_URL", "")
+except Exception:
+    DATABASE_URL = ""
+
+def _ledger_signature(records):
+    return json.dumps(records, sort_keys=True, ensure_ascii=False, default=str)
+
+def _load_database_ledger():
+    if not DATABASE_URL:
+        st.session_state["_ledger_db_status"] = "not_configured"
+        st.session_state["_ledger_db_message"] = "Add DATABASE_URL in Streamlit Secrets to enable permanent storage."
+        st.session_state["_ledger_db_loaded"] = True
+        return
+    try:
+        database_records = load_prediction_ledger(DATABASE_URL)
+        st.session_state["prediction_ledger"] = merge_prediction_records(
+            database_records, st.session_state["prediction_ledger"]
+        )
+        st.session_state["_ledger_db_status"] = "connected"
+        st.session_state["_ledger_db_message"] = f"Neon connected • {len(database_records)} saved prediction(s) loaded."
+        st.session_state["_ledger_db_last_saved"] = _ledger_signature(st.session_state["prediction_ledger"])
+    except Exception:
+        st.session_state["_ledger_db_status"] = "error"
+        st.session_state["_ledger_db_message"] = "Neon connection failed. Check DATABASE_URL in Streamlit Secrets, then retry."
+    st.session_state["_ledger_db_loaded"] = True
+
+def _persist_database_ledger():
+    if not DATABASE_URL:
+        return
+    signature = _ledger_signature(st.session_state["prediction_ledger"])
+    if signature == st.session_state.get("_ledger_db_last_saved"):
+        return
+    try:
+        count = save_prediction_records(DATABASE_URL, st.session_state["prediction_ledger"])
+        st.session_state["_ledger_db_status"] = "connected"
+        st.session_state["_ledger_db_message"] = f"Neon connected • {count} saved prediction(s)."
+        st.session_state["_ledger_db_last_saved"] = signature
+    except Exception:
+        st.session_state["_ledger_db_status"] = "error"
+        st.session_state["_ledger_db_message"] = "Could not save to Neon. Your current browser-session data is still available; check DATABASE_URL."
+
+if not st.session_state.get("_ledger_db_loaded"):
+    _load_database_ledger()
 
 @st.cache_data(ttl=3600, show_spinner=False)
 def get_leagues(_client, season):
@@ -941,7 +987,18 @@ except Exception as exc:
     st.error(f"Unexpected data-collection error: {exc}")
 
 with st.expander("Prediction tracking, Opta comparison and backtesting", expanded=True):
-    st.caption("Predictions are retained in this browser session. Export the CSV and re-import it after a restart; Streamlit session storage is not a permanent database.")
+    db_status = st.session_state.get("_ledger_db_status", "not_configured")
+    if db_status == "connected":
+        st.success(st.session_state.get("_ledger_db_message", "Neon database connected."))
+    elif db_status == "error":
+        st.warning(st.session_state.get("_ledger_db_message", "Neon connection needs attention."))
+        if st.button("Retry Neon connection", key="retry_neon_connection"):
+            st.session_state["_ledger_db_loaded"] = False
+            _load_database_ledger()
+            st.rerun()
+    else:
+        st.info(st.session_state.get("_ledger_db_message", "Neon is not configured; predictions remain in this browser session only."))
+    st.caption("When Neon is connected, prediction records are saved across browser sessions and app restarts. CSV import/export remains available as a backup.")
     uploaded_ledger = st.file_uploader("Import a saved prediction ledger CSV", type=["csv"], key="prediction_ledger_upload")
     if uploaded_ledger is not None:
         try:
@@ -978,6 +1035,7 @@ with st.expander("Prediction tracking, Opta comparison and backtesting", expande
         )
         edited_records = edited.where(pd.notna(edited), "").to_dict("records")
         st.session_state["prediction_ledger"] = merge_prediction_records(ledger, edited_records)
+        _persist_database_ledger()
         report = evaluate_prediction_ledger(st.session_state["prediction_ledger"])
         st.subheader("Backtest summary")
         st.write(f"Pre-match forecasts: {report['pre_match_predictions']} • Completed and scored: {report['completed_pre_match_predictions']}")
