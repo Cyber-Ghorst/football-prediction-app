@@ -368,7 +368,10 @@ def import_sportmonks_season(
                         home = participant
                     elif location == "away":
                         away = participant
-                if fixture.get("id") is None or not home or not away:
+                if (
+                    fixture.get("id") is None or not home or not away
+                    or home.get("id") is None or away.get("id") is None
+                ):
                     counts["skipped_fixtures"] += 1
                     continue
                 fixture_season_id = _provider_id(fixture.get("season_id") or season.get("id"))
