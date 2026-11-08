@@ -69,13 +69,41 @@ class UpcomingFixtureEnrichmentTests(unittest.TestCase):
         self.assertEqual(client.calls[1][0], "fixtures/multi/7001")
         self.assertEqual(client.calls[1][1]["include"], "participants;state")
 
-    def test_unrelated_wrong_season_and_past_fixtures_are_not_hydrated(self):
+    def test_exact_live_or_past_pair_is_hydrated_for_prediction_ledger_identity(self):
+        now = int(datetime(2026, 11, 8, 16, tzinfo=timezone.utc).timestamp())
+        schedule_fixture = scheduled_fixture(7002, 11, 22, now - 1800)
+        detail_fixture = {
+            "id": 7002,
+            "season_id": 2026,
+            "starting_at": "2026-11-08 15:30:00",
+            "participants": [
+                {"id": 11, "name": "Brighton", "meta": {"location": "home"}},
+                {"id": 22, "name": "Brentford", "meta": {"location": "away"}},
+            ],
+            "state": {"id": 2, "short_name": "LIVE", "name": "In Play"},
+            "league": {"name": "Premier League"},
+            "season": {"name": "2026/2027"},
+        }
+        client = FakeSportmonksClient(
+            [{"id": 1, "rounds": [{"id": 2, "fixtures": [schedule_fixture]}]}],
+            [detail_fixture],
+        )
+        with patch("time.time", return_value=now):
+            fixtures = client.fixtures_by_season(2026, include_statistics=False, team_ids=[11, 22])
+        self.assertEqual(fixtures[0]["id"], 7002)
+        self.assertEqual(fixtures[0]["state"]["short_name"], "LIVE")
+        self.assertEqual(fixtures[0]["league"]["name"], "Premier League")
+        self.assertEqual(fixtures[0]["season"]["name"], "2026/2027")
+        self.assertEqual(client.calls[1][0], "fixtures/multi/7002")
+        self.assertEqual(client.calls[1][1]["include"], "participants;state;league;season")
+
+    def test_unrelated_wrong_season_and_wrong_pair_are_not_hydrated(self):
         now_dt = datetime(2026, 11, 7, tzinfo=timezone.utc)
         now = int(now_dt.timestamp())
         schedule_rows = [
             scheduled_fixture(1, 11, 22, now + 3600, season_id=2025),
             scheduled_fixture(2, 11, 33, now + 3600),
-            scheduled_fixture(3, 11, 22, now - 3600),
+            scheduled_fixture(3, 11, 33, now - 3600),
         ]
         client = FakeSportmonksClient(
             [{"id": 1, "rounds": [{"id": 2, "fixtures": schedule_rows}]}],
