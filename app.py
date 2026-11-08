@@ -12,7 +12,7 @@ from data_layer2 import collect_team_profile
 from sportmonks_layer2 import collect_sportmonks_team_profile, find_upcoming_match_fixture, extract_sportmonks_match_details
 from sportmonks_candidate_verification import verify_highlightly_candidate
 from provider_core import normalize_team_name
-from engine import predict_match, WEIGHTS
+from engine import predict_match, WEIGHTS, most_likely_outcome
 from tvd import run_tvd
 from provider_config import provider_readiness
 from livescore_football import LiveScoreFootballClient, LiveScoreFootballError
@@ -816,7 +816,11 @@ try:
             st.session_state["prediction_ledger"], [prediction_row]
         )
         st.subheader(f"{home_name} vs {away_name}")
-        probabilities=result["probabilities"]; cols=st.columns(3)
+        probabilities=result["probabilities"]
+        outcome = most_likely_outcome(probabilities, home_name, away_name)
+        st.success(outcome["label"])
+        st.caption(f"Model's most likely 1X2 outcome: {outcome['probability']:.1f}% — an estimate, not a guaranteed result.")
+        cols=st.columns(3)
         cols[0].metric(f"{home_name} win",f"{probabilities['home_win']}%")
         cols[1].metric("Draw",f"{probabilities['draw']}%")
         cols[2].metric(f"{away_name} win",f"{probabilities['away_win']}%")
