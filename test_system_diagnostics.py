@@ -169,6 +169,27 @@ class SystemDiagnosticsTests(unittest.TestCase):
         self.assertEqual(check["status"], "warning")
         self.assertEqual(len(report["corroboration"]["candidate_verification"]), 1)
 
+    def test_provider_record_counts_are_preserved_in_report(self):
+        report = self.build(corroboration={
+            "errors": {},
+            "provider_records_returned": {"highlightly": 10, "api_ninjas": 8},
+            "team_history_coverage": {
+                "Home FC": {
+                    "highlightly_completed_score_valid": 7,
+                    "api_ninjas_completed_score_valid": 6,
+                    "api_ninjas_exact_matches": 5,
+                    "api_ninjas_unmatched_count": 1,
+                }
+            },
+        })
+        self.assertEqual(
+            report["corroboration"]["provider_records_returned"],
+            {"highlightly": 10, "api_ninjas": 8},
+        )
+        home = report["corroboration"]["team_history_coverage"]["Home FC"]
+        self.assertEqual(home["api_ninjas_completed_score_valid"], 6)
+        self.assertEqual(home["api_ninjas_exact_matches"], 5)
+
     def test_targeted_verified_candidates_are_not_left_as_unmatched_warning(self):
         corroboration = {
             "errors": {},
