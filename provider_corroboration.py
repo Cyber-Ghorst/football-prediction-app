@@ -150,6 +150,7 @@ def collect_recent_result_corroboration(
         "records_normalized": 0,
         "completed_score_valid_records": 0,
         "selected_team_records": 0,
+        "team_record_diagnostics": {},
         "page_metadata": [],
     }
 
@@ -177,6 +178,7 @@ def collect_recent_result_corroboration(
 
             highlightly_diagnostics["raw_rows_received"] = len(rows)
             normalized = []
+            normalized_raw: list[dict[str, Any]] = []
             for row in rows:
                 league_value = row.get("league")
                 league = league_value if isinstance(league_value, Mapping) else {}
@@ -222,9 +224,25 @@ def collect_recent_result_corroboration(
                         highlightly_diagnostics["rejected_invalid_season"] += 1
                         continue
                 try:
-                    normalized.append(canonicalize_highlightly_match(
+                    canonical = canonicalize_highlightly_match(
                         row, competition_key=key, season=int(season)
-                    ))
+                    )
+                    normalized.append(canonical)
+                    state = row.get("state") if isinstance(row.get("state"), Mapping) else {}
+                    state_score = state.get("score") if isinstance(state.get("score"), Mapping) else {}
+                    normalized_raw.append({
+                        "match_id": str(row.get("id") or ""),
+                        "kickoff": row.get("date"),
+                        "home_team": canonical["home"]["name"],
+                        "away_team": canonical["away"]["name"],
+                        "home_team_id": str((row.get("homeTeam") or {}).get("id") or ""),
+                        "away_team_id": str((row.get("awayTeam") or {}).get("id") or ""),
+                        "state_description": state.get("description"),
+                        "score_current": state_score.get("current"),
+                        "normalized_status": canonical.get("status"),
+                        "home_score": canonical.get("home_score"),
+                        "away_score": canonical.get("away_score"),
+                    })
                 except (ValueError, TypeError, KeyError):
                     highlightly_diagnostics["normalization_failures"] += 1
                     continue
@@ -251,6 +269,45 @@ def collect_recent_result_corroboration(
                     normalize_team_name(row.get("away", {}).get("name", "")),
                 })
             )
+            for selected_name in (home_team_name, away_team_name):
+                selected_key = normalize_team_name(selected_name)
+                team_rows = [
+                    row for row in normalized_raw
+                    if selected_key in {
+                        normalize_team_name(row.get("home_team", "")),
+                        normalize_team_name(row.get("away_team", "")),
+                    }
+                ]
+                status_counts: dict[str, int] = {}
+                for row in team_rows:
+                    status = str(row.get("normalized_status") or "unknown")
+                    status_counts[status] = status_counts.get(status, 0) + 1
+                team_rows.sort(key=lambda row: str(row.get("kickoff") or ""), reverse=True)
+                highlightly_diagnostics["team_record_diagnostics"][selected_name] = {
+                    "records_seen_after_competition_season_filters": len(team_rows),
+                    "normalized_status_counts": status_counts,
+                    "records_with_complete_score": sum(
+                        1 for row in team_rows
+                        if row.get("home_score") is not None and row.get("away_score") is not None
+                    ),
+                    "finished_status_records": sum(
+                        1 for row in team_rows if row.get("normalized_status") == "finished"
+                    ),
+                    "finished_and_score_valid_records": sum(
+                        1 for row in team_rows
+                        if row.get("normalized_status") == "finished"
+                        and row.get("home_score") is not None and row.get("away_score") is not None
+                    ),
+                    "records_with_missing_score": sum(
+                        1 for row in team_rows
+                        if row.get("home_score") is None or row.get("away_score") is None
+                    ),
+                    "sample_records": team_rows[:10],
+                    "interpretation": (
+                        "Samples show provider team names/IDs, raw state description and score string, "
+                        "alongside normalized status and parsed scores. These are diagnostic only."
+                    ),
+                }
         except Exception as exc:
             errors["highlightly"] = str(exc)
             highlightly_diagnostics["retrieval_error"] = str(exc)
