@@ -740,8 +740,8 @@ try:
         st.subheader("Upcoming fixture & prediction readiness")
         st.caption("A transparent diagnostic of exact fixture identity, recent-history depth and evidence coverage. Unknown data remains unknown; this report does not alter the model.")
         status_labels = {
-            "ready": "Ready — exact fixture verified and both teams have ten matches",
-            "limited_history": "Limited — exact fixture verified, but at least one team has fewer than ten matches",
+            "ready": "Ready — exact fixture verified and both teams meet the five-match minimum",
+            "limited_history": "Limited sample — prediction allowed; at least one team has 5–9 completed matches (10 preferred)",
             "fixture_unverified": "Fixture unverified — matchup comparison may be possible, but no exact upcoming fixture is confirmed",
             "insufficient_history": "Insufficient history — at least one team has fewer than five completed matches",
         }

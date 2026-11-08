@@ -230,15 +230,17 @@ class SystemDiagnosticsTests(unittest.TestCase):
         self.assertEqual(len(review["verified_exact_fixture_and_score"]), 1)
         self.assertEqual(len(review["unresolved_candidates"]), 1)
 
-    def test_limited_history_recommends_waiting_for_completed_result_without_relaxing_target(self):
+    def test_five_to_nine_matches_are_informational_not_a_blocker(self):
         report = self.build(
             home_profile=profile("Home FC", count=9),
             readiness=readiness("limited_history"),
         )
         check = next(row for row in report["checks"] if row["id"] == "home_history_depth")
-        self.assertEqual(check["status"], "warning")
-        self.assertIn("next result is completed", check["recommendation"])
-        self.assertIn("Do not add unplayed fixtures", check["recommendation"])
+        self.assertEqual(check["status"], "info")
+        self.assertIsNone(check["recommendation"])
+        readiness_check = next(row for row in report["checks"] if row["id"] == "prediction_readiness")
+        self.assertEqual(readiness_check["status"], "pass")
+        self.assertNotEqual(report["overall_status"], "blocked")
 
     def test_historical_season_selects_api_football_as_primary(self):
         report = self.build(season=2024, provider_configuration=[
