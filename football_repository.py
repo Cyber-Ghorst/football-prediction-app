@@ -597,7 +597,7 @@ def get_repository_fixtures(
     if completed_only:
         clauses.append(
             "LOWER(COALESCE(status, '')) IN "
-            "('finished', 'complete', 'completed', 'ft', 'full time')"
+            "('finished', 'complete', 'completed', 'ft', 'full time', '5')"
         )
         clauses.append("home_goals IS NOT NULL AND away_goals IS NOT NULL")
     where_sql = ("WHERE " + " AND ".join(clauses)) if clauses else ""
@@ -635,7 +635,7 @@ def get_repository_team_history(
     clauses = [
         "(home_team_id = %s OR away_team_id = %s)",
         "LOWER(COALESCE(status, '')) IN "
-        "('finished', 'complete', 'completed', 'ft', 'full time')",
+        "('finished', 'complete', 'completed', 'ft', 'full time', '5')",
         "home_goals IS NOT NULL AND away_goals IS NOT NULL",
     ]
     params: list[Any] = [team_id, team_id]
