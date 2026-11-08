@@ -684,7 +684,20 @@ try:
         summary_columns[1].metric("Passed", diagnostic_report["summary"]["passed"])
         summary_columns[2].metric("Warnings", diagnostic_report["summary"]["warnings"])
         summary_columns[3].metric("Failed", diagnostic_report["summary"]["failed"])
-        with st.expander("Diagnostic checks and recommended actions", expanded=True):
+        st.subheader("Recommended next steps")
+        st.caption(
+            "The diagnostic report is analyzed automatically in memory after collection. "
+            "You do not need to download or upload the JSON to get these recommendations."
+        )
+        recommended_actions = diagnostic_report.get("recommended_actions", [])
+        if recommended_actions:
+            for index, action in enumerate(recommended_actions, start=1):
+                priority_label = "URGENT" if action["priority"] == "urgent" else "NEXT"
+                st.markdown(f"**{index}. {priority_label} — {action['issue']}**")
+                st.write(action["action"])
+        else:
+            st.success("No corrective actions are currently recommended by the available checks.")
+        with st.expander("Diagnostic checks and recommended actions", expanded=False):
             st.dataframe(
                 pd.DataFrame(diagnostic_report["checks"]),
                 use_container_width=True,
