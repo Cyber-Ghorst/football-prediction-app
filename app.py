@@ -620,8 +620,8 @@ if verify_repository_reads:
                     sample_history = get_repository_team_history(
                         PROVIDER_DATABASE_URL, repository_teams[0]["team_id"], limit=10
                     )
-            st.success("Central repository read test completed successfully.")
-            st.json({
+            repository_verification_report = {
+                "verification_status": "success",
                 "read_counts": {
                     "leagues": len(repository_leagues),
                     "seasons": len(repository_seasons),
@@ -639,7 +639,27 @@ if verify_repository_reads:
                 "sample_team_history": sample_history,
                 "prediction_engine_modified": False,
                 "neon_prediction_ledger_modified": False,
-            })
+            }
+            st.success("Central repository read test completed successfully.")
+            st.json(repository_verification_report)
+            try:
+                github_repository_report = _upload_report_once(
+                    "central_repository_verification",
+                    repository_verification_report,
+                )
+                if github_repository_report:
+                    st.success("Central repository verification report archived in GitHub.")
+                    st.markdown(
+                        f"[Latest report]({github_repository_report['latest_url']}) · "
+                        f"[Timestamped archive]({github_repository_report['archive_url']})"
+                    )
+                else:
+                    st.caption("This unchanged verification report is already archived in GitHub.")
+            except Exception as upload_exc:
+                st.warning(
+                    f"Verification completed, but GitHub report upload failed "
+                    f"({type(upload_exc).__name__}). Check GITHUB_REPORT_TOKEN permissions."
+                )
         except Exception as exc:
             st.error(
                 f"Central repository read verification failed ({type(exc).__name__}). "
