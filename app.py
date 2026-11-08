@@ -36,7 +36,7 @@ from provider_data_storage import (
     save_provider_snapshot,
     record_provider_collection_run,
 )
-from football_repository import ensure_football_repository, repository_table_counts, import_sportmonks_season
+from football_repository import (\n    ensure_football_repository, repository_table_counts, import_sportmonks_season,\n    get_repository_leagues, get_repository_seasons, get_repository_teams,\n    get_repository_fixtures, get_repository_team_history,\n)
 
 st.set_page_config(page_title="Football Prediction Lab", page_icon="⚽", layout="wide")
 st.title("⚽ Football Prediction Lab")
@@ -405,6 +405,10 @@ with st.sidebar:
             "Initialize central football database", use_container_width=True,
             help="Creates the normalized CockroachDB tables. Does not import or delete football records."
         )
+        verify_repository_reads = st.button(
+            "Verify central repository reads", use_container_width=True,
+            help="Reads leagues, seasons, teams, fixtures and a team's verified completed-match history from CockroachDB."
+        )
         if not PROVIDER_DATABASE_URL:
             st.caption("CockroachDB is not configured yet. Add PROVIDER_DATABASE_URL in Streamlit Secrets.")
 
@@ -460,6 +464,49 @@ if initialize_football_repository:
             st.error(
                 f"Central football database initialization failed ({type(exc).__name__}). "
                 "Check CockroachDB permissions and the provider database connection."
+            )
+
+
+if verify_repository_reads:
+    if not PROVIDER_DATABASE_URL:
+        st.warning("Add PROVIDER_DATABASE_URL in Streamlit Secrets before verifying repository reads.")
+    else:
+        try:
+            with st.spinner("Reading normalized football records from CockroachDB..."):
+                repository_leagues = get_repository_leagues(PROVIDER_DATABASE_URL)
+                repository_seasons = get_repository_seasons(PROVIDER_DATABASE_URL)
+                repository_teams = get_repository_teams(PROVIDER_DATABASE_URL)
+                repository_fixture_sample = get_repository_fixtures(
+                    PROVIDER_DATABASE_URL, limit=5
+                )
+                sample_history = []
+                if repository_teams:
+                    sample_history = get_repository_team_history(
+                        PROVIDER_DATABASE_URL, repository_teams[0]["team_id"], limit=10
+                    )
+            st.success("Central repository read test completed successfully.")
+            st.json({
+                "read_counts": {
+                    "leagues": len(repository_leagues),
+                    "seasons": len(repository_seasons),
+                    "teams": len(repository_teams),
+                    "fixture_sample_returned": len(repository_fixture_sample),
+                    "sample_team_completed_history": len(sample_history),
+                },
+                "league_names": [row.get("name") for row in repository_leagues],
+                "season_names": [row.get("name") for row in repository_seasons],
+                "sample_team": (
+                    repository_teams[0].get("name") if repository_teams else None
+                ),
+                "sample_fixtures": repository_fixture_sample,
+                "sample_team_history": sample_history,
+                "prediction_engine_modified": False,
+                "neon_prediction_ledger_modified": False,
+            })
+        except Exception as exc:
+            st.error(
+                f"Central repository read verification failed ({type(exc).__name__}). "
+                "Check that the repository schema and CockroachDB connection are ready."
             )
 
 
