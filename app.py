@@ -39,7 +39,7 @@ from provider_data_storage import (
 from football_repository import (
     ensure_football_repository, repository_table_counts, import_sportmonks_season,
     get_repository_leagues, get_repository_seasons, get_repository_teams,
-    get_repository_fixtures, get_repository_team_history,
+    get_repository_fixtures, get_repository_team_history, diagnose_repository_fixture_history,
 )
 
 st.set_page_config(page_title="Football Prediction Lab", page_icon="⚽", layout="wide")
@@ -483,6 +483,9 @@ if verify_repository_reads:
                 repository_fixture_sample = get_repository_fixtures(
                     PROVIDER_DATABASE_URL, limit=5
                 )
+                fixture_history_diagnostics = diagnose_repository_fixture_history(
+                    PROVIDER_DATABASE_URL
+                )
                 sample_history = []
                 if repository_teams:
                     sample_history = get_repository_team_history(
@@ -503,6 +506,7 @@ if verify_repository_reads:
                     repository_teams[0].get("name") if repository_teams else None
                 ),
                 "sample_fixtures": repository_fixture_sample,
+                "fixture_history_diagnostics": fixture_history_diagnostics,
                 "sample_team_history": sample_history,
                 "prediction_engine_modified": False,
                 "neon_prediction_ledger_modified": False,
