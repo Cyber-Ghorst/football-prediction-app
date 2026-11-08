@@ -190,6 +190,57 @@ class SystemDiagnosticsTests(unittest.TestCase):
         self.assertEqual(home["api_ninjas_completed_score_valid"], 6)
         self.assertEqual(home["api_ninjas_exact_matches"], 5)
 
+    def test_api_ninjas_exact_history_coverage_passes(self):
+        report = self.build(corroboration={
+            "errors": {},
+            "team_history_coverage": {
+                "Brighton": {
+                    "api_ninjas_completed_score_valid": 9,
+                    "api_ninjas_exact_matches": 9,
+                    "highlightly_completed_score_valid": 0,
+                },
+                "Fulham": {
+                    "api_ninjas_completed_score_valid": 10,
+                    "api_ninjas_exact_matches": 10,
+                    "highlightly_completed_score_valid": 10,
+                    "highlightly_exact_matches": 8,
+                },
+            },
+        })
+        ninjas = next(row for row in report["checks"] if row["id"] == "api_ninjas_history_corroboration")
+        highlightly = next(row for row in report["checks"] if row["id"] == "highlightly_history_coverage")
+        self.assertEqual(ninjas["status"], "pass")
+        self.assertIn("Brighton: 9/9", ninjas["summary"])
+        self.assertIn("Fulham: 10/10", ninjas["summary"])
+        self.assertEqual(highlightly["status"], "info")
+        self.assertIn("Fulham: 8/10", highlightly["summary"])
+
+    def test_api_ninjas_unmatched_history_is_warning_not_imported(self):
+        report = self.build(corroboration={
+            "errors": {},
+            "team_history_coverage": {
+                "Brighton": {
+                    "api_ninjas_completed_score_valid": 9,
+                    "api_ninjas_exact_matches": 8,
+                },
+            },
+        })
+        check = next(row for row in report["checks"] if row["id"] == "api_ninjas_history_corroboration")
+        self.assertEqual(check["status"], "warning")
+        self.assertIn("8/9", check["summary"])
+        self.assertIn("Do not import", check["recommendation"])
+
+    def test_missing_highlightly_coverage_is_informational(self):
+        report = self.build(corroboration={
+            "errors": {},
+            "team_history_coverage": {
+                "Brighton": {"api_ninjas_completed_score_valid": 9, "api_ninjas_exact_matches": 9},
+            },
+        })
+        check = next(row for row in report["checks"] if row["id"] == "highlightly_history_coverage")
+        self.assertEqual(check["status"], "info")
+        self.assertIn("coverage limitation", check["summary"])
+
     def test_targeted_verified_candidates_are_not_left_as_unmatched_warning(self):
         corroboration = {
             "errors": {},
