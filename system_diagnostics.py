@@ -225,6 +225,7 @@ def build_system_diagnostics(
     if corroboration:
         corroboration_report = {
             "errors": dict(corroboration.get("errors") or {}),
+            "provider_records_returned": dict(corroboration.get("provider_records_returned") or {}),
             "highlightly_diagnostics": dict(corroboration.get("highlightly_diagnostics") or {}),
             "team_history_coverage": dict(corroboration.get("team_history_coverage") or {}),
             "candidate_verification": list(corroboration.get("candidate_verification") or []),

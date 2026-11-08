@@ -362,9 +362,51 @@ def collect_recent_result_corroboration(
             row for row in secondary_team
             if not any(match_identity(row, primary) for primary in primary_team)
         ]
+        ninjas_team = []
+        seen_ninjas: set[str] = set()
+        for row in home_records:
+            if row.get("source") != "api_ninjas":
+                continue
+            if row.get("season") != int(season) or row.get("competition_key") != key:
+                continue
+            if team_key not in {
+                normalize_team_name(row.get("home", {}).get("name", "")),
+                normalize_team_name(row.get("away", {}).get("name", "")),
+            }:
+                continue
+            if row.get("status") != "finished" or row.get("home_score") is None or row.get("away_score") is None:
+                continue
+            source_id = str((row.get("source_ids") or {}).get("api_ninjas") or "")
+            identity_key = source_id or "|".join((
+                str(row.get("kickoff_utc") or ""),
+                normalize_team_name(row.get("home", {}).get("name", "")),
+                normalize_team_name(row.get("away", {}).get("name", "")),
+            ))
+            if identity_key in seen_ninjas:
+                continue
+            seen_ninjas.add(identity_key)
+            ninjas_team.append(row)
+        ninjas_team.sort(key=lambda row: str(row.get("kickoff_utc") or ""), reverse=True)
+        ninjas_unmatched = [
+            row for row in ninjas_team
+            if not any(match_identity(row, primary) for primary in primary_team)
+        ]
         team_history_coverage[team_name] = {
             "highlightly_completed_score_valid": len(secondary_team),
+            "highlightly_exact_matches": len(secondary_team) - len(unmatched),
+            "highlightly_unmatched_count": len(unmatched),
             "sportmonks_completed_score_valid": len(primary_team),
+            "api_ninjas_completed_score_valid": len(ninjas_team),
+            "api_ninjas_exact_matches": len(ninjas_team) - len(ninjas_unmatched),
+            "api_ninjas_unmatched_count": len(ninjas_unmatched),
+            "api_ninjas_unmatched_candidates": [{
+                "kickoff_utc": row.get("kickoff_utc"),
+                "home": row.get("home", {}).get("name"),
+                "away": row.get("away", {}).get("name"),
+                "score": [row.get("home_score"), row.get("away_score")],
+                "api_ninjas_match_id": (row.get("source_ids") or {}).get("api_ninjas"),
+                "review_status": "candidate_only_not_added_to_prediction_history",
+            } for row in ninjas_unmatched[:5]],
             "exact_matches_across_sources": len(secondary_team) - len(unmatched),
             "highlightly_results_not_found_in_sportmonks": len(unmatched),
             "latest_highlightly_completed_match": ({
@@ -383,7 +425,7 @@ def collect_recent_result_corroboration(
                 "review_status": "candidate_only_not_added_to_prediction_history",
             } for row in unmatched[:5]],
             "interpretation": (
-                "An unmatched Highlightly result is a review candidate, not an accepted extra match. "
+                "Provider-specific unmatched results are review candidates, not accepted extra matches. "
                 "Exact competition, season, home/away teams and kickoff must match before joining."
             ),
         }
