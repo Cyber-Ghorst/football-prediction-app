@@ -2,6 +2,7 @@
 import sys
 import types
 
+import prediction_storage as storage
 from prediction_storage import _clean_record, save_prediction_records
 
 
@@ -81,6 +82,8 @@ def test_database_upsert_deduplicates_and_preserves_known_values(monkeypatch):
     monkeypatch.setitem(sys.modules, "psycopg", fake_psycopg)
     monkeypatch.setitem(sys.modules, "psycopg.types", fake_types)
     monkeypatch.setitem(sys.modules, "psycopg.types.json", fake_json)
+    monkeypatch.setattr(storage, "psycopg", fake_psycopg)
+    monkeypatch.setattr(storage, "Jsonb", FakeJsonb)
 
     original = {
         "record_id": "fixture-1",
