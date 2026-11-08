@@ -1,6 +1,6 @@
 {
   "diagnostic_version": 1,
-  "generated_at": "2026-11-08T11:23:39.949526+00:00",
+  "generated_at": "2026-11-08T12:20:49.026815+00:00",
   "overall_status": "healthy",
   "selected_context": {
     "season_start_year": 2026,
@@ -161,9 +161,9 @@
     "fixture_id": 19721930,
     "kickoff_utc": "2027-03-03T20:00:00+00:00",
     "source_updated_at": null,
-    "source_fetched_at": "2026-11-08T11:23:35.146280+00:00",
-    "source_age_seconds": 4.8,
-    "source_age_minutes": 0.1,
+    "source_fetched_at": "2026-11-08T12:15:03.894062+00:00",
+    "source_age_seconds": 345.1,
+    "source_age_minutes": 5.8,
     "source_freshness": "fresh",
     "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
   },
@@ -807,6 +807,10 @@
   },
   "corroboration": {
     "errors": {},
+    "provider_records_returned": {
+      "highlightly": 280,
+      "api_ninjas": 74
+    },
     "highlightly_diagnostics": {
       "requested_filters": {
         "leagueName": "Premier League",
@@ -836,7 +840,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "63",
+            "requests_remaining": "45",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -854,7 +858,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "62",
+            "requests_remaining": "44",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -872,7 +876,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "61",
+            "requests_remaining": "43",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -889,16 +893,28 @@
     "team_history_coverage": {
       "Brighton & Hove Albion": {
         "highlightly_completed_score_valid": 0,
+        "highlightly_exact_matches": 0,
+        "highlightly_unmatched_count": 0,
         "sportmonks_completed_score_valid": 9,
+        "api_ninjas_completed_score_valid": 9,
+        "api_ninjas_exact_matches": 9,
+        "api_ninjas_unmatched_count": 0,
+        "api_ninjas_unmatched_candidates": [],
         "exact_matches_across_sources": 0,
         "highlightly_results_not_found_in_sportmonks": 0,
         "latest_highlightly_completed_match": null,
         "unmatched_completed_candidates": [],
-        "interpretation": "An unmatched Highlightly result is a review candidate, not an accepted extra match. Exact competition, season, home/away teams and kickoff must match before joining."
+        "interpretation": "Provider-specific unmatched results are review candidates, not accepted extra matches. Exact competition, season, home/away teams and kickoff must match before joining."
       },
       "Fulham": {
         "highlightly_completed_score_valid": 10,
+        "highlightly_exact_matches": 8,
+        "highlightly_unmatched_count": 2,
         "sportmonks_completed_score_valid": 10,
+        "api_ninjas_completed_score_valid": 10,
+        "api_ninjas_exact_matches": 10,
+        "api_ninjas_unmatched_count": 0,
+        "api_ninjas_unmatched_candidates": [],
         "exact_matches_across_sources": 8,
         "highlightly_results_not_found_in_sportmonks": 2,
         "latest_highlightly_completed_match": {
@@ -935,7 +951,7 @@
             "review_status": "candidate_only_not_added_to_prediction_history"
           }
         ],
-        "interpretation": "An unmatched Highlightly result is a review candidate, not an accepted extra match. Exact competition, season, home/away teams and kickoff must match before joining."
+        "interpretation": "Provider-specific unmatched results are review candidates, not accepted extra matches. Exact competition, season, home/away teams and kickoff must match before joining."
       }
     },
     "candidate_verification": [
@@ -1321,7 +1337,7 @@
         "sportmonks_request_metadata": {
           "http_status": 200,
           "rate_limit": "2000",
-          "rate_remaining": "1993"
+          "rate_remaining": "1994"
         }
       },
       {
@@ -1670,7 +1686,7 @@
         "sportmonks_request_metadata": {
           "http_status": 200,
           "rate_limit": "2000",
-          "rate_remaining": "1992"
+          "rate_remaining": "1993"
         }
       }
     ],
@@ -1728,9 +1744,9 @@
       "fixture_id": 19721930,
       "kickoff_utc": "2027-03-03T20:00:00+00:00",
       "source_updated_at": null,
-      "source_fetched_at": "2026-11-08T11:23:35.146280+00:00",
-      "source_age_seconds": 4.8,
-      "source_age_minutes": 0.1,
+      "source_fetched_at": "2026-11-08T12:15:03.894062+00:00",
+      "source_age_seconds": 345.1,
+      "source_age_minutes": 5.8,
       "source_freshness": "fresh",
       "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
     },
