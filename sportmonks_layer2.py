@@ -539,3 +539,70 @@ def extract_sportmonks_match_details(
         "availability": availability,
         "source": "sportmonks",
     }
+
+
+
+def collect_repository_team_profile(
+    database_url: str,
+    team_id: int | str,
+    season_id: int | str,
+    standings: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """Build the existing Layer 2 team profile from CockroachDB fixture payloads.
+
+    The repository is the source for match history. Standings remain an optional
+    enrichment because they are not yet stored in the normalized repository.
+    """
+    from football_repository import get_repository_fixtures, get_repository_teams
+
+    canonical_team_id = str(team_id)
+    canonical_season_id = str(season_id)
+    provider_team_id = canonical_team_id.split(":", 1)[-1]
+    provider_season_id = canonical_season_id.split(":", 1)[-1]
+
+    teams = get_repository_teams(database_url, season_id=canonical_season_id)
+    team_row = next(
+        (row for row in teams if str(row.get("team_id")) == canonical_team_id),
+        None,
+    )
+    if team_row is None:
+        raise ValueError(
+            f"Team {canonical_team_id} is not present in central season {canonical_season_id}."
+        )
+
+    fixture_rows = get_repository_fixtures(
+        database_url,
+        season_id=canonical_season_id,
+        limit=2000,
+    )
+    provider_fixtures = [
+        row["raw_payload"]
+        for row in fixture_rows
+        if isinstance(row.get("raw_payload"), dict)
+    ]
+    if not provider_fixtures:
+        raise ValueError(
+            f"No archived provider fixture payloads are available for season {canonical_season_id}."
+        )
+
+    try:
+        numeric_team_id = int(provider_team_id)
+        numeric_season_id = int(provider_season_id)
+    except (TypeError, ValueError) as exc:
+        raise ValueError("Central repository IDs are not valid Sportmonks IDs.") from exc
+
+    team = {
+        "id": numeric_team_id,
+        "name": team_row.get("name") or f"Team {provider_team_id}",
+        "image_path": None,
+    }
+    profile = collect_sportmonks_team_profile(
+        team,
+        numeric_season_id,
+        provider_fixtures,
+        standings or [],
+    )
+    profile["data_quality"]["history_source"] = "cockroachdb_central_repository"
+    profile["data_quality"]["repository_fixture_rows"] = len(fixture_rows)
+    profile["data_quality"]["repository_fixture_payloads"] = len(provider_fixtures)
+    return profile
