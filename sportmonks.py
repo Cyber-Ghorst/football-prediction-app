@@ -7,6 +7,7 @@ collection is wired to Layer 2 with strict season/team identity and completeness
 from __future__ import annotations
 
 import os
+import time
 from typing import Any, Mapping
 
 import requests
@@ -54,6 +55,7 @@ class SportmonksClient:
         self.last_metadata: dict[str, Any] = {}
 
     def _get(self, path: str, params: Mapping[str, Any] | None = None) -> dict[str, Any]:
+        request_started = time.monotonic()
         try:
             response = self.session.get(
                 f"{self.base_url}/{path.lstrip('/')}",
@@ -61,7 +63,9 @@ class SportmonksClient:
                 timeout=self.timeout,
             )
             self.last_metadata = {
+                "request_path": path,
                 "http_status": response.status_code,
+                "request_seconds": round(time.monotonic() - request_started, 3),
                 "rate_limit": response.headers.get("X-RateLimit-Limit"),
                 "rate_remaining": response.headers.get("X-RateLimit-Remaining"),
             }
@@ -76,9 +80,21 @@ class SportmonksClient:
         except SportmonksError:
             raise
         except requests.Timeout as exc:
+            self.last_metadata = {
+                "request_path": path,
+                "http_status": None,
+                "request_seconds": round(time.monotonic() - request_started, 3),
+                "error": "timeout",
+            }
             raise SportmonksError("Sportmonks request timed out.") from exc
         except requests.RequestException as exc:
             status = getattr(getattr(exc, "response", None), "status_code", None)
+            self.last_metadata = {
+                "request_path": path,
+                "http_status": status,
+                "request_seconds": round(time.monotonic() - request_started, 3),
+                "error": type(exc).__name__,
+            }
             suffix = f" (HTTP {status})" if status else ""
             raise SportmonksError(f"Sportmonks request to '{path}' failed{suffix}.") from exc
         except ValueError as exc:
@@ -268,17 +284,45 @@ class SportmonksClient:
             if chosen_completed:
                 include_parts.append("statistics.type")
 
-            # Sportmonks rejects oversized fixtures/multi ID lists with HTTP 422.
-            # Keep each request comfortably below the endpoint's practical limit.
-            batch_size = 25
+            # Smaller batches reduce the risk of Sportmonks rejecting long ID lists.
+            # Print one concise progress line per request so Streamlit Cloud logs show
+            # exactly which batch is running and how long each provider call takes.
+            batch_size = 10
+            batch_total = (len(fixture_ids) + batch_size - 1) // batch_size
             details_by_id: dict[int, dict[str, Any]] = {}
             for offset in range(0, len(fixture_ids), batch_size):
                 fixture_batch = fixture_ids[offset:offset + batch_size]
-                details_payload = self._get(
-                    f"fixtures/multi/{','.join(str(value) for value in fixture_batch)}",
-                    {"include": ";".join(include_parts)},
+                batch_number = (offset // batch_size) + 1
+                batch_path = f"fixtures/multi/{','.join(str(value) for value in fixture_batch)}"
+                print(
+                    f"[Sportmonks] Season {season_id}: starting detail batch "
+                    f"{batch_number}/{batch_total} ({len(fixture_batch)} fixtures).",
+                    flush=True,
                 )
-                for row in self._rows(details_payload):
+                try:
+                    details_payload = self._get(
+                        batch_path,
+                        {"include": ";".join(include_parts)},
+                    )
+                except SportmonksError as exc:
+                    metadata = dict(self.last_metadata)
+                    print(
+                        f"[Sportmonks] Season {season_id}: batch {batch_number}/{batch_total} "
+                        f"FAILED after {metadata.get('request_seconds', 'unknown')}s; "
+                        f"HTTP {metadata.get('http_status')}; {type(exc).__name__}: {exc}",
+                        flush=True,
+                    )
+                    raise
+                detail_rows = self._rows(details_payload)
+                print(
+                    f"[Sportmonks] Season {season_id}: completed detail batch "
+                    f"{batch_number}/{batch_total}; HTTP {self.last_metadata.get('http_status')}; "
+                    f"{len(detail_rows)} detail rows; "
+                    f"{self.last_metadata.get('request_seconds', 'unknown')}s; "
+                    f"rate remaining={self.last_metadata.get('rate_remaining')}.",
+                    flush=True,
+                )
+                for row in detail_rows:
                     if row.get("id") is None:
                         continue
                     try:
