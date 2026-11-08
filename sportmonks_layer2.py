@@ -396,7 +396,10 @@ def find_exact_match_fixture(
         except (TypeError, ValueError):
             continue
         candidates.append(fixture)
-    return min(candidates, key=lambda row: abs(int(row["starting_at_timestamp"]) - current)) if candidates else None
+    future = [row for row in candidates if int(row["starting_at_timestamp"]) > current]
+    if future:
+        return min(future, key=lambda row: int(row["starting_at_timestamp"]))
+    return max(candidates, key=lambda row: int(row["starting_at_timestamp"])) if candidates else None
 
 
 def find_upcoming_match_fixture(
