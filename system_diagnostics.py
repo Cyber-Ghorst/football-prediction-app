@@ -136,7 +136,7 @@ def build_system_diagnostics(
             recommendation = "Collect more verified completed matches; prediction minimum remains five per team."
         elif count < 10:
             status = "warning"
-            recommendation = "Collect the remaining recent history where available; ten matches is the target."
+            recommendation = "Keep readiness marked limited_history until Brighton's next result is completed and collected with valid scores. Do not add unplayed fixtures, use another season, or relax the ten-match target."
         else:
             status = "pass"
             recommendation = None
@@ -210,16 +210,58 @@ def build_system_diagnostics(
                 "independent_provider_corroboration", "info",
                 "No corroboration request errors were reported in the supplied diagnostic context. This does not imply that every provider agreed.",
             ))
-        candidates = sum(
-            len(row.get("unmatched_completed_candidates") or [])
-            for row in corroboration_report["team_history_coverage"].values()
+        candidate_verification = corroboration_report["candidate_verification"]
+        verification_by_id = {
+            str((row.get("highlightly_candidate") or {}).get("highlightly_match_id")): row
+            for row in candidate_verification
             if isinstance(row, Mapping)
-        )
-        if candidates:
+            and (row.get("highlightly_candidate") or {}).get("highlightly_match_id") is not None
+        }
+        verified_candidates = []
+        unresolved_candidates = []
+        for team_row in corroboration_report["team_history_coverage"].values():
+            if not isinstance(team_row, Mapping):
+                continue
+            for candidate in team_row.get("unmatched_completed_candidates") or []:
+                if not isinstance(candidate, Mapping):
+                    continue
+                candidate_id = str(candidate.get("highlightly_match_id") or "")
+                verification = verification_by_id.get(candidate_id)
+                review = {
+                    "highlightly_match_id": candidate_id or None,
+                    "home": candidate.get("home"),
+                    "away": candidate.get("away"),
+                    "kickoff_utc": candidate.get("kickoff_utc"),
+                    "score": candidate.get("score"),
+                    "verification_status": (
+                        verification.get("verification_status") if verification else "not_targeted_verified"
+                    ),
+                }
+                if review["verification_status"] == "exact_fixture_and_score_agree":
+                    verified_candidates.append(review)
+                else:
+                    unresolved_candidates.append(review)
+
+        corroboration_report["candidate_review_summary"] = {
+            "unmatched_candidates_seen": len(verified_candidates) + len(unresolved_candidates),
+            "verified_exact_fixture_and_score": verified_candidates,
+            "unresolved_candidates": unresolved_candidates,
+            "verified_candidates_added_to_prediction_history": 0,
+            "note": (
+                "Targeted verification confirms identity and score only. Verified candidates are not imported "
+                "or appended; primary Sportmonks season history remains the prediction source."
+            ),
+        }
+        if unresolved_candidates:
             checks.append(_check(
                 "unmatched_external_results", "warning",
-                f"{candidates} unmatched Highlightly completed-result candidate(s) require review.",
-                "Use targeted Sportmonks candidate verification. Candidates remain excluded from prediction history until independently verified.",
+                f"{len(unresolved_candidates)} unmatched Highlightly candidate(s) remain unresolved after targeted verification.",
+                "Review unresolved candidates with targeted Sportmonks checks. Keep them out of prediction history unless exact fixture identity and score are independently verified.",
+            ))
+        elif verified_candidates:
+            checks.append(_check(
+                "unmatched_external_results", "info",
+                f"{len(verified_candidates)} Highlightly candidate(s) were independently verified against exact Sportmonks fixtures and scores; none were imported.",
             ))
     else:
         checks.append(_check(
