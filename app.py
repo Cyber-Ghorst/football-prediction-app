@@ -245,11 +245,11 @@ def _collect_sportmonks_with_archive(resource_type, request_params, fetcher, ttl
             pass
         raise
 
+    source_ids = [
+        row.get("id") for row in payload
+        if isinstance(row, dict) and row.get("id") is not None
+    ] if isinstance(payload, list) else []
     try:
-        source_ids = [
-            row.get("id") for row in payload
-            if isinstance(row, dict) and row.get("id") is not None
-        ] if isinstance(payload, list) else []
         save_provider_snapshot(
             PROVIDER_DATABASE_URL,
             provider="sportmonks",
@@ -260,14 +260,19 @@ def _collect_sportmonks_with_archive(resource_type, request_params, fetcher, ttl
             source_ids=source_ids,
             ttl_seconds=ttl_seconds,
         )
-        record_provider_collection_run(
-            PROVIDER_DATABASE_URL,
-            provider="sportmonks",
-            resource_type=resource_type,
-            cache_key=cache_key,
-            succeeded=True,
-        )
-    except Exception:
+    except Exception as exc:
+        try:
+            record_provider_collection_run(
+                PROVIDER_DATABASE_URL,
+                provider="sportmonks",
+                resource_type=resource_type,
+                cache_key=cache_key,
+                succeeded=False,
+                error_type=f"ArchiveWrite:{type(exc).__name__}",
+                error_message=str(exc),
+            )
+        except Exception:
+            pass
         # Keep the live response usable even if archival storage is temporarily
         # unavailable. Warn once per Streamlit session rather than hiding it.
         if not st.session_state.get("_provider_archive_write_warning"):
@@ -276,6 +281,18 @@ def _collect_sportmonks_with_archive(resource_type, request_params, fetcher, ttl
                 "the response. Prediction processing can continue."
             )
             st.session_state["_provider_archive_write_warning"] = True
+    else:
+        try:
+            record_provider_collection_run(
+                PROVIDER_DATABASE_URL,
+                provider="sportmonks",
+                resource_type=resource_type,
+                cache_key=cache_key,
+                succeeded=True,
+            )
+        except Exception:
+            # The snapshot is already safely stored; diagnostics are secondary.
+            pass
     return payload
 
 
