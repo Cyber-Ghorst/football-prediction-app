@@ -1,0 +1,719 @@
+{
+  "diagnostic_version": 1,
+  "generated_at": "2026-11-08T22:01:01.300564+00:00",
+  "overall_status": "attention_required",
+  "selected_context": {
+    "season_start_year": 2026,
+    "competition": "La Liga — Spain",
+    "primary_provider": "sportmonks"
+  },
+  "summary": {
+    "checks_total": 16,
+    "passed": 11,
+    "warnings": 4,
+    "failed": 0,
+    "informational": 1
+  },
+  "checks": [
+    {
+      "id": "primary_provider_configuration",
+      "status": "pass",
+      "summary": "The selected season uses sportmonks; its credential is configured. Connectivity is assessed separately.",
+      "recommendation": null
+    },
+    {
+      "id": "fixture_identity",
+      "status": "pass",
+      "summary": "The selected upcoming fixture passed exact season, home/away team and scheduled-kickoff checks.",
+      "recommendation": null
+    },
+    {
+      "id": "fixture_freshness",
+      "status": "pass",
+      "summary": "Detailed fixture retrieval is less than 24 hours old.",
+      "recommendation": null
+    },
+    {
+      "id": "home_history_depth",
+      "status": "pass",
+      "summary": "Villarreal: 10 completed score-valid matches available (minimum 5 met; preferred target 10 met).",
+      "recommendation": null
+    },
+    {
+      "id": "home_tactical_recency_weighting",
+      "status": "pass",
+      "summary": "Villarreal: tactical recency metadata reports latest-five 60% / previous-five 40% over 10 match(es).",
+      "recommendation": null
+    },
+    {
+      "id": "home_history_integrity",
+      "status": "pass",
+      "summary": "Villarreal: no duplicate fixture IDs or invalid/missing score fields were found in the collected sample.",
+      "recommendation": null
+    },
+    {
+      "id": "home_statistics_coverage",
+      "status": "warning",
+      "summary": "Villarreal: none of the 8 core tactical statistics has usable values in the checked sample.",
+      "recommendation": "Check whether match statistics were requested and supplied by the selected provider. Missing values remain unknown."
+    },
+    {
+      "id": "away_history_depth",
+      "status": "pass",
+      "summary": "Real Madrid: 10 completed score-valid matches available (minimum 5 met; preferred target 10 met).",
+      "recommendation": null
+    },
+    {
+      "id": "away_tactical_recency_weighting",
+      "status": "pass",
+      "summary": "Real Madrid: tactical recency metadata reports latest-five 60% / previous-five 40% over 10 match(es).",
+      "recommendation": null
+    },
+    {
+      "id": "away_history_integrity",
+      "status": "pass",
+      "summary": "Real Madrid: no duplicate fixture IDs or invalid/missing score fields were found in the collected sample.",
+      "recommendation": null
+    },
+    {
+      "id": "away_statistics_coverage",
+      "status": "warning",
+      "summary": "Real Madrid: none of the 8 core tactical statistics has usable values in the checked sample.",
+      "recommendation": "Check whether match statistics were requested and supplied by the selected provider. Missing values remain unknown."
+    },
+    {
+      "id": "independent_provider_corroboration",
+      "status": "warning",
+      "summary": "One or more optional corroboration requests reported errors.",
+      "recommendation": "Review the provider error details. Corroboration failures do not authorize automatic fallback."
+    },
+    {
+      "id": "api_ninjas_history_corroboration",
+      "status": "warning",
+      "summary": "API Ninjas has unmatched completed results for selected team history (Villarreal: 8/12 exact; Real Madrid: 9/12 exact).",
+      "recommendation": "Review each unmatched API Ninjas candidate against exact competition, season, teams, kickoff and score. Do not import candidates automatically."
+    },
+    {
+      "id": "highlightly_history_coverage",
+      "status": "info",
+      "summary": "Highlightly returned no score-valid history for the selected teams. This is a provider coverage limitation, not evidence of disagreement.",
+      "recommendation": null
+    },
+    {
+      "id": "model_weight_configuration",
+      "status": "pass",
+      "summary": "The supplied top-level model weights are non-negative and sum to 1.0.",
+      "recommendation": null
+    },
+    {
+      "id": "prediction_readiness",
+      "status": "pass",
+      "summary": "Prediction readiness status: ready. Five completed, score-valid matches per team meet the history minimum; ten is preferred.",
+      "recommendation": null
+    }
+  ],
+  "recommended_actions": [
+    {
+      "priority": "next",
+      "check_id": "home_statistics_coverage",
+      "issue": "Villarreal: none of the 8 core tactical statistics has usable values in the checked sample.",
+      "action": "Check whether match statistics were requested and supplied by the selected provider. Missing values remain unknown."
+    },
+    {
+      "priority": "next",
+      "check_id": "independent_provider_corroboration",
+      "issue": "One or more optional corroboration requests reported errors.",
+      "action": "Review the provider error details. Corroboration failures do not authorize automatic fallback."
+    },
+    {
+      "priority": "next",
+      "check_id": "api_ninjas_history_corroboration",
+      "issue": "API Ninjas has unmatched completed results for selected team history (Villarreal: 8/12 exact; Real Madrid: 9/12 exact).",
+      "action": "Review each unmatched API Ninjas candidate against exact competition, season, teams, kickoff and score. Do not import candidates automatically."
+    }
+  ],
+  "providers": {
+    "sportmonks": {
+      "provider": "Sportmonks Football API v3",
+      "role": "Primary current-season provider",
+      "credential_configured": true,
+      "credential_required": true,
+      "adapter": "implemented",
+      "app_integration": "current-season Layer 2 path active; exact competition/season coverage and data-quality gates enforced",
+      "limitation": "Coverage is limited to competitions/seasons enabled by the account; each selected competition must pass data-quality gates."
+    },
+    "highlightly": {
+      "provider": "Highlightly",
+      "role": "Independent current-season corroboration and secondary source",
+      "credential_configured": true,
+      "credential_required": true,
+      "adapter": "implemented",
+      "app_integration": "adapter and authenticated smoke test available; canonical normalizer exists; not yet active in Layer 2 reconciliation",
+      "limitation": "Coverage, fields, quotas and refresh intervals are plan-dependent; match data is not yet active in Layer 2 reconciliation."
+    },
+    "api_football": {
+      "provider": "API-Football v3",
+      "role": "Historical specialist source and secondary detail provider",
+      "credential_configured": true,
+      "credential_required": true,
+      "adapter": "implemented",
+      "app_integration": "historical Layer 2 path active for supported seasons; account status/quota diagnostic available",
+      "limitation": "The configured account is limited to seasons 2022–2024; do not request newer seasons from this account."
+    },
+    "api_ninjas": {
+      "provider": "API Ninjas",
+      "role": "Independent fixtures/results/standings and club/squad corroboration",
+      "credential_configured": true,
+      "credential_required": true,
+      "adapter": "implemented",
+      "app_integration": "adapter and authenticated smoke test available; canonical normalizer exists; not yet active in Layer 2 reconciliation",
+      "limitation": "The current adapter does not supply detailed fixture statistics, injuries or lineups; not yet active in Layer 2 reconciliation."
+    },
+    "livescore_football": {
+      "provider": "LiveScoreFootball",
+      "role": "Conditional competition-specific corroboration for fixtures/results/standings",
+      "credential_configured": false,
+      "credential_required": false,
+      "adapter": "implemented",
+      "app_integration": "read-only adapter, metadata freshness and exact competition crosswalk checks available; automatic fallback remains disabled",
+      "limitation": "Database-backed snapshots can be delayed; require exact competition/season crosswalk and fresh sync metadata for every use."
+    }
+  },
+  "fixture": {
+    "verified": true,
+    "status": "verified",
+    "reason": "Exact competition-season fixture identity and future kickoff verified.",
+    "fixture_id": 19732473,
+    "kickoff_utc": "2027-03-07T00:00:00+00:00",
+    "source_updated_at": null,
+    "source_fetched_at": "2026-11-08T22:00:34.130938+00:00",
+    "source_age_seconds": 27.2,
+    "source_age_minutes": 0.5,
+    "source_freshness": "fresh",
+    "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
+  },
+  "teams": {
+    "home": {
+      "team": "Villarreal",
+      "completed_matches_available": 10,
+      "history_minimum": 5,
+      "history_target": 10,
+      "history_collection_diagnostics": {
+        "fixtures_scanned": 380,
+        "same_season_fixtures": 380,
+        "season_eligible_fixtures": 380,
+        "fixtures_missing_season_id": 0,
+        "team_fixtures": 38,
+        "completed_fixtures": 12,
+        "fixtures_with_valid_scores": 12,
+        "excluded_wrong_season": 0,
+        "excluded_missing_participants": 0,
+        "excluded_other_team": 342,
+        "excluded_not_completed": 26,
+        "excluded_missing_scores": 0
+      },
+      "statistics_coverage": {
+        "fixtures_checked": 10,
+        "core_metrics_with_any_data": 0,
+        "core_metrics_complete": 0,
+        "core_metrics_total": 8,
+        "raw_observations_seen": 0,
+        "unmapped_observations": 0,
+        "mapping_visibility": "not supplied by this data path",
+        "metrics": [
+          {
+            "group": "Possession & distribution",
+            "statistic": "Ball Possession",
+            "fixtures_available": 0,
+            "fixtures_checked": 10,
+            "coverage_pct": 0.0,
+            "raw_observations": 0,
+            "status": "missing"
+          },
+          {
+            "group": "Possession & distribution",
+            "statistic": "Passes %",
+            "fixtures_available": 0,
+            "fixtures_checked": 10,
+            "coverage_pct": 0.0,
+            "raw_observations": 0,
+            "status": "missing"
+          },
+          {
+            "group": "Attacking",
+            "statistic": "Total Shots",
+            "fixtures_available": 0,
+            "fixtures_checked": 10,
+            "coverage_pct": 0.0,
+            "raw_observations": 0,
+            "status": "missing"
+          },
+          {
+            "group": "Attacking",
+            "statistic": "Shots on Target / Goal",
+            "fixtures_available": 0,
+            "fixtures_checked": 10,
+            "coverage_pct": 0.0,
+            "raw_observations": 0,
+            "status": "missing"
+          },
+          {
+            "group": "Defending",
+            "statistic": "Tackles",
+            "fixtures_available": 0,
+            "fixtures_checked": 10,
+            "coverage_pct": 0.0,
+            "raw_observations": 0,
+            "status": "missing"
+          },
+          {
+            "group": "Defending",
+            "statistic": "Interceptions",
+            "fixtures_available": 0,
+            "fixtures_checked": 10,
+            "coverage_pct": 0.0,
+            "raw_observations": 0,
+            "status": "missing"
+          },
+          {
+            "group": "Defending",
+            "statistic": "Blocked Shots",
+            "fixtures_available": 0,
+            "fixtures_checked": 10,
+            "coverage_pct": 0.0,
+            "raw_observations": 0,
+            "status": "missing"
+          },
+          {
+            "group": "Attacking",
+            "statistic": "Corner Kicks",
+            "fixtures_available": 0,
+            "fixtures_checked": 10,
+            "coverage_pct": 0.0,
+            "raw_observations": 0,
+            "status": "missing"
+          }
+        ],
+        "unmapped_statistics": []
+      },
+      "tactical_summary": {
+        "playing_style": null,
+        "attacking_approach": null,
+        "defensive_structure": null,
+        "coverage_metrics": 0,
+        "available_metrics": {
+          "average_possession": null,
+          "average_pass_accuracy": null,
+          "average_shots": null,
+          "average_shots_on_target": null,
+          "average_tackles": null,
+          "average_interceptions": null,
+          "average_blocked_shots": null,
+          "average_corners": null
+        },
+        "recency_weighting": {
+          "matches_used": 10,
+          "recent_matches": 5,
+          "recent_weight": 0.6,
+          "previous_matches": 5,
+          "previous_weight": 0.4,
+          "note": "Latest five matches carry 60%; previous five carry 40%. If a metric is absent from one window, the available window is renormalized."
+        },
+        "note": "Tactical ratings are shown only when the underlying statistics are present; unavailable metrics remain unknown."
+      },
+      "tactical_recency_weighting": {
+        "matches_used": 10,
+        "recent_matches": 5,
+        "recent_weight": 0.6,
+        "previous_matches": 5,
+        "previous_weight": 0.4,
+        "note": "Latest five matches carry 60%; previous five carry 40%. If a metric is absent from one window, the available window is renormalized."
+      },
+      "integrity": {
+        "matches_checked": 10,
+        "duplicate_fixture_ids": [],
+        "invalid_or_missing_score_fields": []
+      }
+    },
+    "away": {
+      "team": "Real Madrid",
+      "completed_matches_available": 10,
+      "history_minimum": 5,
+      "history_target": 10,
+      "history_collection_diagnostics": {
+        "fixtures_scanned": 380,
+        "same_season_fixtures": 380,
+        "season_eligible_fixtures": 380,
+        "fixtures_missing_season_id": 0,
+        "team_fixtures": 38,
+        "completed_fixtures": 12,
+        "fixtures_with_valid_scores": 12,
+        "excluded_wrong_season": 0,
+        "excluded_missing_participants": 0,
+        "excluded_other_team": 342,
+        "excluded_not_completed": 26,
+        "excluded_missing_scores": 0
+      },
+      "statistics_coverage": {
+        "fixtures_checked": 10,
+        "core_metrics_with_any_data": 0,
+        "core_metrics_complete": 0,
+        "core_metrics_total": 8,
+        "raw_observations_seen": 0,
+        "unmapped_observations": 0,
+        "mapping_visibility": "not supplied by this data path",
+        "metrics": [
+          {
+            "group": "Possession & distribution",
+            "statistic": "Ball Possession",
+            "fixtures_available": 0,
+            "fixtures_checked": 10,
+            "coverage_pct": 0.0,
+            "raw_observations": 0,
+            "status": "missing"
+          },
+          {
+            "group": "Possession & distribution",
+            "statistic": "Passes %",
+            "fixtures_available": 0,
+            "fixtures_checked": 10,
+            "coverage_pct": 0.0,
+            "raw_observations": 0,
+            "status": "missing"
+          },
+          {
+            "group": "Attacking",
+            "statistic": "Total Shots",
+            "fixtures_available": 0,
+            "fixtures_checked": 10,
+            "coverage_pct": 0.0,
+            "raw_observations": 0,
+            "status": "missing"
+          },
+          {
+            "group": "Attacking",
+            "statistic": "Shots on Target / Goal",
+            "fixtures_available": 0,
+            "fixtures_checked": 10,
+            "coverage_pct": 0.0,
+            "raw_observations": 0,
+            "status": "missing"
+          },
+          {
+            "group": "Defending",
+            "statistic": "Tackles",
+            "fixtures_available": 0,
+            "fixtures_checked": 10,
+            "coverage_pct": 0.0,
+            "raw_observations": 0,
+            "status": "missing"
+          },
+          {
+            "group": "Defending",
+            "statistic": "Interceptions",
+            "fixtures_available": 0,
+            "fixtures_checked": 10,
+            "coverage_pct": 0.0,
+            "raw_observations": 0,
+            "status": "missing"
+          },
+          {
+            "group": "Defending",
+            "statistic": "Blocked Shots",
+            "fixtures_available": 0,
+            "fixtures_checked": 10,
+            "coverage_pct": 0.0,
+            "raw_observations": 0,
+            "status": "missing"
+          },
+          {
+            "group": "Attacking",
+            "statistic": "Corner Kicks",
+            "fixtures_available": 0,
+            "fixtures_checked": 10,
+            "coverage_pct": 0.0,
+            "raw_observations": 0,
+            "status": "missing"
+          }
+        ],
+        "unmapped_statistics": []
+      },
+      "tactical_summary": {
+        "playing_style": null,
+        "attacking_approach": null,
+        "defensive_structure": null,
+        "coverage_metrics": 0,
+        "available_metrics": {
+          "average_possession": null,
+          "average_pass_accuracy": null,
+          "average_shots": null,
+          "average_shots_on_target": null,
+          "average_tackles": null,
+          "average_interceptions": null,
+          "average_blocked_shots": null,
+          "average_corners": null
+        },
+        "recency_weighting": {
+          "matches_used": 10,
+          "recent_matches": 5,
+          "recent_weight": 0.6,
+          "previous_matches": 5,
+          "previous_weight": 0.4,
+          "note": "Latest five matches carry 60%; previous five carry 40%. If a metric is absent from one window, the available window is renormalized."
+        },
+        "note": "Tactical ratings are shown only when the underlying statistics are present; unavailable metrics remain unknown."
+      },
+      "tactical_recency_weighting": {
+        "matches_used": 10,
+        "recent_matches": 5,
+        "recent_weight": 0.6,
+        "previous_matches": 5,
+        "previous_weight": 0.4,
+        "note": "Latest five matches carry 60%; previous five carry 40%. If a metric is absent from one window, the available window is renormalized."
+      },
+      "integrity": {
+        "matches_checked": 10,
+        "duplicate_fixture_ids": [],
+        "invalid_or_missing_score_fields": []
+      }
+    }
+  },
+  "corroboration": {
+    "errors": {
+      "highlightly": "Highlightly rate limit or daily quota reached (HTTP 429)."
+    },
+    "provider_records_returned": {
+      "api_ninjas": 74
+    },
+    "highlightly_diagnostics": {
+      "requested_filters": {
+        "leagueName": "La Liga",
+        "countryName": "Spain",
+        "season": 2026,
+        "limit": 100,
+        "max_pages": 10
+      },
+      "pages_requested": 0,
+      "raw_rows_received": 0,
+      "rejected_competition_mismatch": 0,
+      "competition_missing_in_response": 0,
+      "rejected_country_missing": 0,
+      "rejected_country_mismatch": 0,
+      "country_missing_but_retained": 0,
+      "season_missing_in_response": 0,
+      "rejected_season_mismatch": 0,
+      "rejected_invalid_season": 0,
+      "normalization_failures": 0,
+      "records_normalized": 0,
+      "completed_score_valid_records": 0,
+      "selected_team_records": 0,
+      "page_metadata": [],
+      "retrieval_error": "Highlightly rate limit or daily quota reached (HTTP 429).",
+      "client_metadata_at_error": {
+        "http_status": 429,
+        "requests_limit": null,
+        "requests_remaining": null
+      }
+    },
+    "team_history_coverage": {
+      "Villarreal": {
+        "highlightly_completed_score_valid": 0,
+        "highlightly_exact_matches": 0,
+        "highlightly_unmatched_count": 0,
+        "sportmonks_completed_score_valid": 10,
+        "api_ninjas_completed_score_valid": 12,
+        "api_ninjas_exact_matches": 8,
+        "api_ninjas_unmatched_count": 4,
+        "api_ninjas_unmatched_candidates": [
+          {
+            "kickoff_utc": "2026-09-05T19:00:00+00:00",
+            "home": "Villarreal",
+            "away": "Deportivo",
+            "score": [
+              2,
+              3
+            ],
+            "api_ninjas_match_id": "laliga-20260905-dep-vil",
+            "review_status": "candidate_only_not_added_to_prediction_history"
+          },
+          {
+            "kickoff_utc": "2026-08-28T19:30:00+00:00",
+            "home": "Alavés",
+            "away": "Villarreal",
+            "score": [
+              1,
+              0
+            ],
+            "api_ninjas_match_id": "laliga-20260828-vil-ala",
+            "review_status": "candidate_only_not_added_to_prediction_history"
+          },
+          {
+            "kickoff_utc": "2026-08-23T15:00:00+00:00",
+            "home": "Atlético Madrid",
+            "away": "Villarreal",
+            "score": [
+              2,
+              2
+            ],
+            "api_ninjas_match_id": "laliga-20260823-vil-atm",
+            "review_status": "candidate_only_not_added_to_prediction_history"
+          },
+          {
+            "kickoff_utc": "2026-08-16T15:00:00+00:00",
+            "home": "Racing Santander",
+            "away": "Villarreal",
+            "score": [
+              2,
+              2
+            ],
+            "api_ninjas_match_id": "laliga-20260816-vil-rac",
+            "review_status": "candidate_only_not_added_to_prediction_history"
+          }
+        ],
+        "exact_matches_across_sources": 0,
+        "highlightly_results_not_found_in_sportmonks": 0,
+        "latest_highlightly_completed_match": null,
+        "unmatched_completed_candidates": [],
+        "interpretation": "Provider-specific unmatched results are review candidates, not accepted extra matches. Exact competition, season, home/away teams and kickoff must match before joining."
+      },
+      "Real Madrid": {
+        "highlightly_completed_score_valid": 0,
+        "highlightly_exact_matches": 0,
+        "highlightly_unmatched_count": 0,
+        "sportmonks_completed_score_valid": 11,
+        "api_ninjas_completed_score_valid": 12,
+        "api_ninjas_exact_matches": 9,
+        "api_ninjas_unmatched_count": 3,
+        "api_ninjas_unmatched_candidates": [
+          {
+            "kickoff_utc": "2026-10-25T20:00:00+00:00",
+            "home": "Barcelona",
+            "away": "Real Madrid",
+            "score": [
+              1,
+              2
+            ],
+            "api_ninjas_match_id": "laliga-20261025-rma-bar",
+            "review_status": "candidate_only_not_added_to_prediction_history"
+          },
+          {
+            "kickoff_utc": "2026-09-20T14:15:00+00:00",
+            "home": "Atlético Madrid",
+            "away": "Real Madrid",
+            "score": [
+              2,
+              1
+            ],
+            "api_ninjas_match_id": "laliga-20260920-rma-atm",
+            "review_status": "candidate_only_not_added_to_prediction_history"
+          },
+          {
+            "kickoff_utc": "2026-08-22T19:30:00+00:00",
+            "home": "Espanyol",
+            "away": "Real Madrid",
+            "score": [
+              1,
+              2
+            ],
+            "api_ninjas_match_id": "laliga-20260822-rma-esp",
+            "review_status": "candidate_only_not_added_to_prediction_history"
+          }
+        ],
+        "exact_matches_across_sources": 0,
+        "highlightly_results_not_found_in_sportmonks": 0,
+        "latest_highlightly_completed_match": null,
+        "unmatched_completed_candidates": [],
+        "interpretation": "Provider-specific unmatched results are review candidates, not accepted extra matches. Exact competition, season, home/away teams and kickoff must match before joining."
+      }
+    },
+    "candidate_verification": [],
+    "providers_matched": [
+      "api_ninjas",
+      "sportmonks"
+    ],
+    "candidate_review_summary": {
+      "unmatched_candidates_seen": 0,
+      "verified_exact_fixture_and_score": [],
+      "unresolved_candidates": [],
+      "verified_candidates_added_to_prediction_history": 0,
+      "note": "Targeted verification confirms identity and score only. Verified candidates are not imported or appended; primary Sportmonks season history remains the prediction source."
+    }
+  },
+  "prediction_readiness": {
+    "overall_status": "ready",
+    "prediction_minimum_history_met": true,
+    "ten_match_history_target_met": true,
+    "history_policy": {
+      "minimum_matches_per_team": 5,
+      "preferred_target_per_team": 10,
+      "target_is_advisory": true,
+      "note": "Prediction history eligibility requires five completed, score-valid matches per team. Five to nine matches are allowed with a limited-sample label; ten remains the preferred target."
+    },
+    "prediction_allowed_by_history": true,
+    "fixture": {
+      "verified": true,
+      "status": "verified",
+      "reason": "Exact competition-season fixture identity and future kickoff verified.",
+      "fixture_id": 19732473,
+      "kickoff_utc": "2027-03-07T00:00:00+00:00",
+      "source_updated_at": null,
+      "source_fetched_at": "2026-11-08T22:00:34.130938+00:00",
+      "source_age_seconds": 27.2,
+      "source_age_minutes": 0.5,
+      "source_freshness": "fresh",
+      "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
+    },
+    "teams": {
+      "home": {
+        "team": "Villarreal",
+        "completed_matches_available": 10,
+        "history_minimum": 5,
+        "history_target": 10,
+        "history_status": "target_met",
+        "prediction_allowed_by_history": true,
+        "matches_with_statistics": 0,
+        "matches_with_opponent_strength": 10,
+        "tactical_components_available": {
+          "playing_style": false,
+          "defensive_structure": false,
+          "attacking_approach": false
+        },
+        "player_availability_evidence": "unknown",
+        "confirmed_lineup_evidence": "unknown"
+      },
+      "away": {
+        "team": "Real Madrid",
+        "completed_matches_available": 10,
+        "history_minimum": 5,
+        "history_target": 10,
+        "history_status": "target_met",
+        "prediction_allowed_by_history": true,
+        "matches_with_statistics": 0,
+        "matches_with_opponent_strength": 10,
+        "tactical_components_available": {
+          "playing_style": false,
+          "defensive_structure": false,
+          "attacking_approach": false
+        },
+        "player_availability_evidence": "unknown",
+        "confirmed_lineup_evidence": "unknown"
+      }
+    },
+    "model_impact": "Diagnostic only. This report does not change prediction inputs, model weights, recency weighting or TVD rules."
+  },
+  "model_configuration": {
+    "weights": {
+      "recent_form": 0.2,
+      "goals_scored": 0.1,
+      "goals_conceded": 0.1,
+      "home_away": 0.1,
+      "strength_of_schedule": 0.15,
+      "player_availability": 0.05,
+      "tactical": 0.3
+    },
+    "weights_total": 1.0,
+    "model_impact": "Diagnostics only; weights, recency weighting, prediction inputs and missing-data rules are not changed."
+  },
+  "generated_at_utc": "2026-11-08T22:01:04.364540+00:00",
+  "report_name": "system_diagnostics"
+}
