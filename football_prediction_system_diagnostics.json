@@ -1,7 +1,7 @@
 {
   "diagnostic_version": 1,
-  "generated_at": "2026-11-08T13:51:19.021809+00:00",
-  "overall_status": "attention_required",
+  "generated_at": "2026-11-08T14:06:29.067341+00:00",
+  "overall_status": "healthy",
   "selected_context": {
     "season_start_year": 2026,
     "competition": "Premier League \u2014 England",
@@ -10,9 +10,9 @@
   "summary": {
     "checks_total": 17,
     "passed": 13,
-    "warnings": 1,
+    "warnings": 0,
     "failed": 0,
-    "informational": 3
+    "informational": 4
   },
   "checks": [
     {
@@ -101,9 +101,9 @@
     },
     {
       "id": "unmatched_external_results",
-      "status": "warning",
-      "summary": "2 unmatched Highlightly candidate(s) remain unresolved after targeted verification.",
-      "recommendation": "Review unresolved candidates with targeted Sportmonks checks. Keep them out of prediction history unless exact fixture identity and score are independently verified."
+      "status": "info",
+      "summary": "4 Highlightly candidate(s) were independently verified against exact Sportmonks fixtures and scores; none were imported.",
+      "recommendation": null
     },
     {
       "id": "model_weight_configuration",
@@ -118,14 +118,7 @@
       "recommendation": null
     }
   ],
-  "recommended_actions": [
-    {
-      "priority": "next",
-      "check_id": "unmatched_external_results",
-      "issue": "2 unmatched Highlightly candidate(s) remain unresolved after targeted verification.",
-      "action": "Review unresolved candidates with targeted Sportmonks checks. Keep them out of prediction history unless exact fixture identity and score are independently verified."
-    }
-  ],
+  "recommended_actions": [],
   "providers": {
     "sportmonks": {
       "provider": "Sportmonks Football API v3",
@@ -180,9 +173,9 @@
     "fixture_id": 19721930,
     "kickoff_utc": "2027-03-03T20:00:00+00:00",
     "source_updated_at": null,
-    "source_fetched_at": "2026-11-08T13:51:13.616874+00:00",
-    "source_age_seconds": 5.4,
-    "source_age_minutes": 0.1,
+    "source_fetched_at": "2026-11-08T14:01:57.074567+00:00",
+    "source_age_seconds": 272.0,
+    "source_age_minutes": 4.5,
     "source_freshness": "fresh",
     "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
   },
@@ -859,7 +852,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "18",
+            "requests_remaining": "12",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -877,7 +870,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "17",
+            "requests_remaining": "11",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -895,7 +888,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "16",
+            "requests_remaining": "10",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -1054,11 +1047,13 @@
         "Brighton & Hove Albion": {
           "normalized_team_records": 28,
           "status_counts": {
-            "scheduled": 19,
+            "scheduled": 18,
+            "live": 1,
             "finished": 9
           },
           "raw_state_descriptions": {
-            "Not started": 19,
+            "Not started": 18,
+            "First half": 1,
             "Finished": 9
           },
           "completed_score_valid": 9,
@@ -1745,16 +1740,36 @@
           "season_id": 28083,
           "league_id": 8,
           "home_team_id": 117,
-          "away_team_id": null
+          "away_team_id": 78
         },
-        "team_mapping_status": "unresolved_exact_team_mapping",
-        "same_season_and_competition_fixtures": 0,
-        "exact_home_away_team_fixtures": 0,
-        "exact_kickoff_fixtures": 0,
-        "exact_completed_score_valid_fixtures": 0,
-        "candidate_score_agreement": null,
-        "sportmonks_candidates": [],
-        "verification_status": "unresolved_exact_team_mapping",
+        "team_mapping_status": "exact_team_ids_resolved",
+        "same_season_and_competition_fixtures": 2,
+        "exact_home_away_team_fixtures": 1,
+        "exact_kickoff_fixtures": 1,
+        "exact_completed_score_valid_fixtures": 1,
+        "candidate_score_agreement": true,
+        "sportmonks_candidates": [
+          {
+            "fixture_id": 19722170,
+            "season_id": 28083,
+            "league_id": 8,
+            "kickoff_utc": "2026-09-13 13:00:00",
+            "kickoff_exact_match": true,
+            "home": "Coventry City",
+            "away": "Brighton & Hove Albion",
+            "home_team_id": 117,
+            "away_team_id": 78,
+            "state_id": 5,
+            "state": "FT",
+            "completed": true,
+            "score": [
+              0,
+              5
+            ],
+            "score_valid": true
+          }
+        ],
+        "verification_status": "exact_fixture_and_score_agree",
         "team_mapping_details": {
           "Coventry": {
             "team_id": 117,
@@ -1772,16 +1787,25 @@
             ]
           },
           "Brighton": {
-            "team_id": null,
-            "status": "team_name_not_found_in_date_fixtures",
-            "matched_provider_names": [],
-            "candidate_matches": []
+            "team_id": 78,
+            "status": "explicit_alias_resolved_from_date_fixtures",
+            "matched_provider_names": [
+              "Brighton & Hove Albion"
+            ],
+            "candidate_matches": [
+              {
+                "team_id": 78,
+                "provider_names": [
+                  "Brighton & Hove Albion"
+                ]
+              }
+            ]
           }
         },
         "sportmonks_request_metadata": {
           "http_status": 200,
           "rate_limit": "2000",
-          "rate_remaining": "1987"
+          "rate_remaining": "1976"
         }
       },
       {
@@ -2252,35 +2276,73 @@
         "expected_identity": {
           "season_id": 28083,
           "league_id": 8,
-          "home_team_id": null,
-          "away_team_id": null
+          "home_team_id": 78,
+          "away_team_id": 71
         },
-        "team_mapping_status": "unresolved_exact_team_mapping",
-        "same_season_and_competition_fixtures": 0,
-        "exact_home_away_team_fixtures": 0,
-        "exact_kickoff_fixtures": 0,
-        "exact_completed_score_valid_fixtures": 0,
-        "candidate_score_agreement": null,
-        "sportmonks_candidates": [],
-        "verification_status": "unresolved_exact_team_mapping",
+        "team_mapping_status": "exact_team_ids_resolved",
+        "same_season_and_competition_fixtures": 6,
+        "exact_home_away_team_fixtures": 1,
+        "exact_kickoff_fixtures": 1,
+        "exact_completed_score_valid_fixtures": 1,
+        "candidate_score_agreement": true,
+        "sportmonks_candidates": [
+          {
+            "fixture_id": 19722181,
+            "season_id": 28083,
+            "league_id": 8,
+            "kickoff_utc": "2026-09-05 14:00:00",
+            "kickoff_exact_match": true,
+            "home": "Brighton & Hove Albion",
+            "away": "Leeds United",
+            "home_team_id": 78,
+            "away_team_id": 71,
+            "state_id": 5,
+            "state": "FT",
+            "completed": true,
+            "score": [
+              1,
+              1
+            ],
+            "score_valid": true
+          }
+        ],
+        "verification_status": "exact_fixture_and_score_agree",
         "team_mapping_details": {
           "Brighton": {
-            "team_id": null,
-            "status": "team_name_not_found_in_date_fixtures",
-            "matched_provider_names": [],
-            "candidate_matches": []
+            "team_id": 78,
+            "status": "explicit_alias_resolved_from_date_fixtures",
+            "matched_provider_names": [
+              "Brighton & Hove Albion"
+            ],
+            "candidate_matches": [
+              {
+                "team_id": 78,
+                "provider_names": [
+                  "Brighton & Hove Albion"
+                ]
+              }
+            ]
           },
           "Leeds": {
-            "team_id": null,
-            "status": "team_name_not_found_in_date_fixtures",
-            "matched_provider_names": [],
-            "candidate_matches": []
+            "team_id": 71,
+            "status": "explicit_alias_resolved_from_date_fixtures",
+            "matched_provider_names": [
+              "Leeds United"
+            ],
+            "candidate_matches": [
+              {
+                "team_id": 71,
+                "provider_names": [
+                  "Leeds United"
+                ]
+              }
+            ]
           }
         },
         "sportmonks_request_metadata": {
           "http_status": 200,
           "rate_limit": "2000",
-          "rate_remaining": "1986"
+          "rate_remaining": "1975"
         }
       },
       {
@@ -2665,7 +2727,7 @@
         "sportmonks_request_metadata": {
           "http_status": 200,
           "rate_limit": "2000",
-          "rate_remaining": "1985"
+          "rate_remaining": "1974"
         }
       },
       {
@@ -3014,7 +3076,7 @@
         "sportmonks_request_metadata": {
           "http_status": 200,
           "rate_limit": "2000",
-          "rate_remaining": "1984"
+          "rate_remaining": "1973"
         }
       }
     ],
@@ -3026,6 +3088,28 @@
     "candidate_review_summary": {
       "unmatched_candidates_seen": 4,
       "verified_exact_fixture_and_score": [
+        {
+          "highlightly_match_id": "1325348184",
+          "home": "Coventry",
+          "away": "Brighton",
+          "kickoff_utc": "2026-09-13T13:00:00+00:00",
+          "score": [
+            0,
+            5
+          ],
+          "verification_status": "exact_fixture_and_score_agree"
+        },
+        {
+          "highlightly_match_id": "1325338823",
+          "home": "Brighton",
+          "away": "Leeds",
+          "kickoff_utc": "2026-09-05T14:00:00+00:00",
+          "score": [
+            1,
+            1
+          ],
+          "verification_status": "exact_fixture_and_score_agree"
+        },
         {
           "highlightly_match_id": "1325382224",
           "home": "Coventry",
@@ -3049,30 +3133,7 @@
           "verification_status": "exact_fixture_and_score_agree"
         }
       ],
-      "unresolved_candidates": [
-        {
-          "highlightly_match_id": "1325348184",
-          "home": "Coventry",
-          "away": "Brighton",
-          "kickoff_utc": "2026-09-13T13:00:00+00:00",
-          "score": [
-            0,
-            5
-          ],
-          "verification_status": "unresolved_exact_team_mapping"
-        },
-        {
-          "highlightly_match_id": "1325338823",
-          "home": "Brighton",
-          "away": "Leeds",
-          "kickoff_utc": "2026-09-05T14:00:00+00:00",
-          "score": [
-            1,
-            1
-          ],
-          "verification_status": "unresolved_exact_team_mapping"
-        }
-      ],
+      "unresolved_candidates": [],
       "verified_candidates_added_to_prediction_history": 0,
       "note": "Targeted verification confirms identity and score only. Verified candidates are not imported or appended; primary Sportmonks season history remains the prediction source."
     }
@@ -3095,9 +3156,9 @@
       "fixture_id": 19721930,
       "kickoff_utc": "2027-03-03T20:00:00+00:00",
       "source_updated_at": null,
-      "source_fetched_at": "2026-11-08T13:51:13.616874+00:00",
-      "source_age_seconds": 5.4,
-      "source_age_minutes": 0.1,
+      "source_fetched_at": "2026-11-08T14:01:57.074567+00:00",
+      "source_age_seconds": 272.0,
+      "source_age_minutes": 4.5,
       "source_freshness": "fresh",
       "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
     },
