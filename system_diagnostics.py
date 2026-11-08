@@ -251,6 +251,22 @@ def build_system_diagnostics(
 
     statuses = {row["status"] for row in checks}
     overall = "blocked" if "fail" in statuses else "attention_required" if "warning" in statuses or "unknown" in statuses else "healthy"
+    recommended_actions = []
+    seen_recommendations = set()
+    for row in checks:
+        recommendation = row.get("recommendation")
+        if not recommendation or row.get("status") not in {"fail", "warning"}:
+            continue
+        if recommendation in seen_recommendations:
+            continue
+        seen_recommendations.add(recommendation)
+        recommended_actions.append({
+            "priority": "urgent" if row.get("status") == "fail" else "next",
+            "check_id": row.get("id"),
+            "issue": row.get("summary"),
+            "action": recommendation,
+        })
+
     return {
         "diagnostic_version": 1,
         "generated_at": now.isoformat(),
@@ -268,6 +284,7 @@ def build_system_diagnostics(
             "informational": sum(row["status"] == "info" for row in checks),
         },
         "checks": checks,
+        "recommended_actions": recommended_actions,
         "providers": {
             key: {
                 "provider": row.get("provider"),
