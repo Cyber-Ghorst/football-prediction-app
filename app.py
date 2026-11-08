@@ -28,6 +28,7 @@ from prediction_readiness import build_prediction_readiness
 from player_availability import assess_player_availability
 from statistics_coverage import build_statistics_coverage
 from system_diagnostics import build_system_diagnostics
+from provider_data_storage import check_provider_storage_connection
 
 st.set_page_config(page_title="Football Prediction Lab", page_icon="⚽", layout="wide")
 st.title("⚽ Football Prediction Lab")
@@ -38,8 +39,10 @@ st.session_state.setdefault("prediction_ledger", [])
 
 try:
     DATABASE_URL = st.secrets.get("DATABASE_URL", "")
+    PROVIDER_DATABASE_URL = st.secrets.get("PROVIDER_DATABASE_URL", "")
 except Exception:
     DATABASE_URL = ""
+    PROVIDER_DATABASE_URL = ""
 
 def _ledger_signature(records):
     return json.dumps(records, sort_keys=True, ensure_ascii=False, default=str)
@@ -252,6 +255,24 @@ with st.sidebar:
             st.write(f"**#{provider['rank']} {provider['provider']} — {provider['role']}**; credential {credential}.")
             st.caption(f"Domains: {', '.join(provider['domains'])}. {provider['app_integration']}. Limitation: {provider['limitation']}")
         run_provider_diagnostics = st.button("Run provider health & coverage check", use_container_width=True)
+        test_provider_database = st.button("Test CockroachDB connection", use_container_width=True)
+        if not PROVIDER_DATABASE_URL:
+            st.caption("CockroachDB is not configured yet. Add PROVIDER_DATABASE_URL in Streamlit Secrets.")
+
+if test_provider_database:
+    if not PROVIDER_DATABASE_URL:
+        st.warning("Add PROVIDER_DATABASE_URL in Streamlit Secrets before testing CockroachDB.")
+    else:
+        try:
+            with st.spinner("Testing CockroachDB and preparing provider storage tables..."):
+                check_provider_storage_connection(PROVIDER_DATABASE_URL)
+            st.success("CockroachDB connected. Provider storage tables are ready.")
+        except Exception as exc:
+            # Do not display the raw exception: database errors can contain connection details.
+            st.error(
+                f"CockroachDB connection test failed ({type(exc).__name__}). "
+                "Check the connection string and TLS settings in Streamlit Secrets."
+            )
 
 client = None
 leagues = []
