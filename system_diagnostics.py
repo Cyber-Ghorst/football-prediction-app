@@ -243,6 +243,63 @@ def build_system_diagnostics(
                 "independent_provider_corroboration", "info",
                 "No corroboration request errors were reported in the supplied diagnostic context. This does not imply that every provider agreed.",
             ))
+        team_coverage = corroboration_report["team_history_coverage"]
+        api_ninjas_rows = []
+        highlightly_rows = []
+        for team_name, team_row in team_coverage.items():
+            if not isinstance(team_row, Mapping):
+                continue
+            ninjas_count = int(team_row.get("api_ninjas_completed_score_valid") or 0)
+            ninjas_exact = int(team_row.get("api_ninjas_exact_matches") or 0)
+            if ninjas_count:
+                api_ninjas_rows.append((str(team_name), ninjas_count, ninjas_exact))
+            highlightly_count = int(team_row.get("highlightly_completed_score_valid") or 0)
+            highlightly_exact = int(team_row.get("highlightly_exact_matches") or 0)
+            if highlightly_count:
+                highlightly_rows.append((str(team_name), highlightly_count, highlightly_exact))
+
+        if api_ninjas_rows:
+            ninjas_mismatches = [
+                (name, count, exact) for name, count, exact in api_ninjas_rows
+                if exact < count
+            ]
+            if ninjas_mismatches:
+                detail = "; ".join(
+                    f"{name}: {exact}/{count} exact" for name, count, exact in ninjas_mismatches
+                )
+                checks.append(_check(
+                    "api_ninjas_history_corroboration", "warning",
+                    f"API Ninjas has unmatched completed results for selected team history ({detail}).",
+                    "Review each unmatched API Ninjas candidate against exact competition, season, teams, kickoff and score. Do not import candidates automatically.",
+                ))
+            else:
+                detail = "; ".join(
+                    f"{name}: {exact}/{count}" for name, count, exact in api_ninjas_rows
+                )
+                checks.append(_check(
+                    "api_ninjas_history_corroboration", "pass",
+                    f"All selected-team API Ninjas completed results match Sportmonks history exactly ({detail}).",
+                ))
+        else:
+            checks.append(_check(
+                "api_ninjas_history_corroboration", "info",
+                "No score-valid API Ninjas history was available for the selected teams; no agreement is assumed.",
+            ))
+
+        if highlightly_rows:
+            detail = "; ".join(
+                f"{name}: {exact}/{count}" for name, count, exact in highlightly_rows
+            )
+            checks.append(_check(
+                "highlightly_history_coverage", "info",
+                f"Highlightly returned score-valid selected-team history ({detail}); unmatched candidates are assessed separately.",
+            ))
+        else:
+            checks.append(_check(
+                "highlightly_history_coverage", "info",
+                "Highlightly returned no score-valid history for the selected teams. This is a provider coverage limitation, not evidence of disagreement.",
+            ))
+
         candidate_verification = corroboration_report["candidate_verification"]
         verification_by_id = {
             str((row.get("highlightly_candidate") or {}).get("highlightly_match_id")): row
