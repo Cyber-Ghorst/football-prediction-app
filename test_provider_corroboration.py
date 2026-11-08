@@ -171,6 +171,34 @@ class ProviderCorroborationTests(unittest.TestCase):
         )
         self.assertEqual(len(report["matches"]), 1)
 
+    def test_api_ninjas_team_history_coverage_is_reported_per_team(self):
+        extra = ninjas_match()
+        extra.update({
+            "game_id": "epl-20261105-ars-eve",
+            "start_time": "2026-11-05T15:00:00Z",
+            "away_team": {"team_id": "soccer-everton", "name": "Everton"},
+            "home_score": 1,
+            "away_score": 0,
+        })
+        report = collect_recent_result_corroboration(
+            sportmonks_fixtures=[sportmonks_fixture()],
+            competition="Premier League", country="England", season=2026,
+            home_team_name="Arsenal", away_team_name="Chelsea",
+            api_ninjas_client=FakeNinjas([ninjas_match(), extra]), now=NOW,
+        )
+        arsenal = report["team_history_coverage"]["Arsenal"]
+        chelsea = report["team_history_coverage"]["Chelsea"]
+        self.assertEqual(arsenal["api_ninjas_completed_score_valid"], 2)
+        self.assertEqual(arsenal["api_ninjas_exact_matches"], 1)
+        self.assertEqual(arsenal["api_ninjas_unmatched_count"], 1)
+        self.assertEqual(
+            arsenal["api_ninjas_unmatched_candidates"][0]["api_ninjas_match_id"],
+            "epl-20261105-ars-eve",
+        )
+        self.assertEqual(chelsea["api_ninjas_completed_score_valid"], 1)
+        self.assertEqual(chelsea["api_ninjas_exact_matches"], 1)
+        self.assertEqual(len(report["matches"]), 1)
+
     def test_documented_top_level_country_object_is_accepted(self):
         row = highlightly_match()
         row["country"] = {"code": "GB", "name": "England", "logo": ""}
