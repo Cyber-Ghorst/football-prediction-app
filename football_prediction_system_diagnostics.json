@@ -1,6 +1,6 @@
 {
   "diagnostic_version": 1,
-  "generated_at": "2026-11-08T10:30:27.047249+00:00",
+  "generated_at": "2026-11-08T10:44:57.726542+00:00",
   "overall_status": "attention_required",
   "selected_context": {
     "season_start_year": 2026,
@@ -162,9 +162,9 @@
     "fixture_id": 19721930,
     "kickoff_utc": "2027-03-03T20:00:00+00:00",
     "source_updated_at": null,
-    "source_fetched_at": "2026-11-08T10:24:51.543374+00:00",
-    "source_age_seconds": 335.5,
-    "source_age_minutes": 5.6,
+    "source_fetched_at": "2026-11-08T10:44:54.691162+00:00",
+    "source_age_seconds": 3.0,
+    "source_age_minutes": 0.1,
     "source_freshness": "fresh",
     "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
   },
@@ -771,7 +771,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "78",
+            "requests_remaining": "75",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -789,7 +789,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "77",
+            "requests_remaining": "74",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -807,7 +807,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "76",
+            "requests_remaining": "73",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -1256,7 +1256,7 @@
         "sportmonks_request_metadata": {
           "http_status": 200,
           "rate_limit": "2000",
-          "rate_remaining": "1986"
+          "rate_remaining": "1982"
         }
       },
       {
@@ -1605,7 +1605,7 @@
         "sportmonks_request_metadata": {
           "http_status": 200,
           "rate_limit": "2000",
-          "rate_remaining": "1985"
+          "rate_remaining": "1981"
         }
       }
     ],
@@ -1656,9 +1656,9 @@
       "fixture_id": 19721930,
       "kickoff_utc": "2027-03-03T20:00:00+00:00",
       "source_updated_at": null,
-      "source_fetched_at": "2026-11-08T10:24:51.543374+00:00",
-      "source_age_seconds": 335.5,
-      "source_age_minutes": 5.6,
+      "source_fetched_at": "2026-11-08T10:44:54.691162+00:00",
+      "source_age_seconds": 3.0,
+      "source_age_minutes": 0.1,
       "source_freshness": "fresh",
       "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
     },
