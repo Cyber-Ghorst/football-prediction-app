@@ -23,6 +23,7 @@ from highlightly_match_enrichment import collect_highlightly_match_enrichment
 from highlightly_player_enrichment import collect_highlightly_player_enrichment
 from prediction_evaluation import build_prediction_record, evaluate_prediction_ledger, merge_prediction_records
 from prediction_readiness import build_prediction_readiness
+from player_availability import assess_player_availability
 from statistics_coverage import build_statistics_coverage
 from system_diagnostics import build_system_diagnostics
 
@@ -638,6 +639,14 @@ try:
                 standings = get_standings(client, league_id, int(season))
                 home = get_profile(client, team_map[home_name], league_id, int(season), standings, include_stats)
                 away = get_profile(client, team_map[away_name], league_id, int(season), standings, include_stats)
+        # Player availability is scored only when the provider supplies a complete
+        # roster, known statuses and evidenced player-importance weights.
+        for profile in (home, away):
+            availability_evidence = profile.get("availability") or {}
+            assessment = assess_player_availability(availability_evidence)
+            profile["player_availability_assessment"] = assessment
+            profile["player_availability"] = assessment["score"]
+
         st.subheader("Data validation")
         for profile in (home, away):
             quality = profile["data_quality"]
@@ -893,8 +902,20 @@ try:
                     for row in away.get("matches", [])
                 ],
             })
-        with st.expander("Reported sidelined players and selected-fixture lineups (when provider data exists)"):
-            st.json({home_name:{"injuries":home["availability"],"lineups":home["lineups"]},away_name:{"injuries":away["availability"],"lineups":away["lineups"]}})
+        with st.expander("Reported sidelined players, lineups and availability scoring evidence (when provider data exists)"):
+            st.json({
+                home_name: {
+                    "availability_assessment": home.get("player_availability_assessment"),
+                    "reported_sidelined": home["availability"],
+                    "lineups": home["lineups"],
+                },
+                away_name: {
+                    "availability_assessment": away.get("player_availability_assessment"),
+                    "reported_sidelined": away["availability"],
+                    "lineups": away["lineups"],
+                },
+            })
+            st.caption("The 5% player-availability component is used only when a complete squad roster, known player statuses and evidenced importance weights are supplied. Partial sidelined lists and unconfirmed lineups remain unknown.")
         if tvd_result:
             st.subheader("Tactical Vulnerability Detector")
             st.json(tvd_result)
