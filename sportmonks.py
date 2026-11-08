@@ -247,9 +247,13 @@ class SportmonksClient:
                     continue
                 if self._fixture_team_ids(fixture) != selected_ids:
                     continue
-                exact_rows.append((abs(kickoff - now), fixture_id, fixture))
-            if exact_rows:
-                _, fixture_id, fixture = min(exact_rows, key=lambda item: item[0])
+                exact_rows.append((kickoff, fixture_id, fixture))
+            future_rows = [row for row in exact_rows if row[0] > now]
+            if future_rows:
+                _, fixture_id, fixture = min(future_rows, key=lambda item: item[0])
+                selected_candidates[fixture_id] = fixture
+            elif exact_rows:
+                _, fixture_id, fixture = max(exact_rows, key=lambda item: item[0])
                 selected_candidates[fixture_id] = fixture
 
         # Merge both groups into one request, avoiding duplicate fixture IDs.
