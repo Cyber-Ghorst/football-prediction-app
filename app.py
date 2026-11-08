@@ -813,7 +813,7 @@ try:
         if st.button(
             "Import selected Sportmonks season into central database",
             use_container_width=True,
-            help="Imports the selected league, season, teams and season fixtures into CockroachDB. Existing records are updated safely; Neon is not touched."
+            help="Imports the selected league, season, teams, fixtures and available statistics for each team’s ten most recent completed matches into CockroachDB. Existing records are updated safely; Neon is not touched."
         ):
             if not PROVIDER_DATABASE_URL:
                 st.warning("Configure PROVIDER_DATABASE_URL before importing into the central database.")
@@ -828,7 +828,7 @@ try:
                     ))
                     with st.spinner("Collecting and importing the selected Sportmonks season..."):
                         season_fixtures = get_sm_fixtures(
-                            int(selected_season_id), False, selected_team_ids
+                            int(selected_season_id), True, selected_team_ids
                         )
                         import_report = import_sportmonks_season(
                             PROVIDER_DATABASE_URL,
@@ -838,11 +838,46 @@ try:
                             fixtures=season_fixtures,
                         )
                         current_counts = repository_table_counts(PROVIDER_DATABASE_URL)
-                    st.success("Sportmonks season imported into the central football database.")
+                    statistics_import_report = {
+                        "generated_at": datetime.now(timezone.utc).isoformat(),
+                        "season_id": int(selected_season_id),
+                        "league": selected_league,
+                        "teams_requested": len(selected_team_ids),
+                        "fixtures_collected": len(season_fixtures),
+                        "fixtures_with_statistics": sum(
+                            bool(row.get("statistics"))
+                            for row in season_fixtures if isinstance(row, dict)
+                        ),
+                        "statistics_rows_imported": import_report.get("upserted", {}).get("statistics", 0),
+                        "central_statistics_table_rows": current_counts.get("football_fixture_statistics", 0),
+                        "statistics_import_mode": "ten most recent completed fixtures per selected team",
+                        "prediction_engine_modified": False,
+                        "neon_prediction_ledger_modified": False,
+                    }
+                    st.success("Sportmonks season and available recent-match statistics imported into the central football database.")
                     st.json({
                         "import_report": import_report,
+                        "statistics_report": statistics_import_report,
                         "central_table_counts": current_counts,
                     })
+                    try:
+                        statistics_archive = _upload_report_once(
+                            "central_repository_statistics_import",
+                            statistics_import_report,
+                        )
+                        if statistics_archive:
+                            st.success("Statistics import report archived in GitHub.")
+                            st.markdown(
+                                f"[Latest report]({statistics_archive['latest_url']}) · "
+                                f"[Timestamped archive]({statistics_archive['archive_url']})"
+                            )
+                        else:
+                            st.caption("This unchanged statistics import report is already archived in GitHub.")
+                    except Exception as report_error:
+                        st.error(
+                            "Statistics were imported, but the GitHub report upload failed: "
+                            f"{type(report_error).__name__}. Check GITHUB_REPORT_TOKEN."
+                        )
                 except SportmonksError as exc:
                     st.error(f"Sportmonks season collection failed: {exc}")
                 except Exception as exc:
