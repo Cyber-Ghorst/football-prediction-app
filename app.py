@@ -1,7 +1,9 @@
 """Football Prediction Lab — Layer 2 automatic data collection."""
 from __future__ import annotations
 import json
+import base64
 from datetime import datetime, timezone
+import requests
 import pandas as pd
 import streamlit as st
 from api_football import APIFootballClient, APIFootballError
@@ -58,6 +60,41 @@ except Exception:
 
 def _ledger_signature(records):
     return json.dumps(records, sort_keys=True, ensure_ascii=False, default=str)
+
+def _upload_fixture_diagnostic_to_github(report):
+    """Create or update the latest compact fixture diagnostic in this repository."""
+    token = st.secrets.get("GITHUB_REPORT_TOKEN", "")
+    if not token:
+        raise RuntimeError("GITHUB_REPORT_TOKEN is not configured in Streamlit Secrets.")
+    owner_repo = "Cyber-Ghorst/football-prediction-app"
+    path = "diagnostics/fixture_history_report.json"
+    api_url = f"https://api.github.com/repos/{owner_repo}/contents/{path}"
+    headers = {
+        "Accept": "application/vnd.github+json",
+        "Authorization": f"Bearer {token}",
+        "X-GitHub-Api-Version": "2022-11-28",
+    }
+    current = requests.get(api_url, headers=headers, timeout=20)
+    if current.status_code not in (200, 404):
+        raise RuntimeError(f"GitHub report lookup failed (HTTP {current.status_code}).")
+    payload = {
+        "message": "Update fixture history diagnostic report",
+        "content": base64.b64encode(
+            json.dumps(report, ensure_ascii=False, indent=2, default=str).encode("utf-8")
+        ).decode("ascii"),
+    }
+    if current.status_code == 200:
+        payload["sha"] = current.json().get("sha")
+    saved = requests.put(api_url, headers=headers, json=payload, timeout=30)
+    if saved.status_code not in (200, 201):
+        raise RuntimeError(f"GitHub report upload failed (HTTP {saved.status_code}).")
+    result = saved.json()
+    return {
+        "path": path,
+        "html_url": result.get("content", {}).get("html_url"),
+        "commit_sha": result.get("commit", {}).get("sha"),
+    }
+
 
 def _load_database_ledger():
     if not DATABASE_URL:
@@ -413,6 +450,11 @@ with st.sidebar:
             "Verify central repository reads", use_container_width=True,
             help="Reads leagues, seasons, teams, fixtures and a team's verified completed-match history from CockroachDB."
         )
+        upload_fixture_report = st.button(
+            "Generate and upload fixture diagnostic report",
+            use_container_width=True,
+            help="Writes the latest fixture status and score diagnostic to diagnostics/fixture_history_report.json in GitHub."
+        )
         if not PROVIDER_DATABASE_URL:
             st.caption("CockroachDB is not configured yet. Add PROVIDER_DATABASE_URL in Streamlit Secrets.")
 
@@ -469,6 +511,24 @@ if initialize_football_repository:
                 f"Central football database initialization failed ({type(exc).__name__}). "
                 "Check CockroachDB permissions and the provider database connection."
             )
+
+
+if upload_fixture_report:
+    if not PROVIDER_DATABASE_URL:
+        st.warning("Add PROVIDER_DATABASE_URL in Streamlit Secrets before generating the report.")
+    else:
+        try:
+            with st.spinner("Generating the fixture diagnostic and uploading it to GitHub..."):
+                fixture_report = diagnose_repository_fixture_history(PROVIDER_DATABASE_URL)
+                fixture_report["generated_at_utc"] = datetime.now(timezone.utc).isoformat()
+                fixture_report["repository"] = "Cyber-Ghorst/football-prediction-app"
+                github_report_result = _upload_fixture_diagnostic_to_github(fixture_report)
+            st.success("Fixture diagnostic report uploaded to GitHub.")
+            st.write(f"Report path: {github_report_result['path']}")
+            if github_report_result.get("html_url"):
+                st.markdown(f"[Open the latest diagnostic report]({github_report_result['html_url']})")
+        except Exception as exc:
+            st.error(f"Diagnostic report upload failed ({type(exc).__name__}): {exc}")
 
 
 if verify_repository_reads:
