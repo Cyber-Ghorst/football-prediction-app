@@ -97,6 +97,47 @@ class UpcomingFixtureEnrichmentTests(unittest.TestCase):
         self.assertEqual(client.calls[1][0], "fixtures/multi/7002")
         self.assertEqual(client.calls[1][1]["include"], "participants;state;league;season")
 
+    def test_completed_fixture_details_are_fetched_in_batches_of_at_most_25(self):
+        now = int(datetime(2026, 11, 7, tzinfo=timezone.utc).timestamp())
+        schedule_rows = []
+        detail_rows = []
+        fixture_id = 8000
+        for home_id, away_id in [(11, 12), (13, 14), (15, 16)]:
+            for index in range(10):
+                fixture_id += 1
+                row = scheduled_fixture(
+                    fixture_id, home_id, away_id, now - (index + 1) * 86400
+                )
+                row["state_id"] = 5
+                schedule_rows.append(row)
+                detail_rows.append({
+                    "id": fixture_id,
+                    "season_id": 2026,
+                    "participants": row["participants"],
+                    "scores": [],
+                    "state": {"id": 5, "short_name": "FT"},
+                })
+
+        client = FakeSportmonksClient(
+            [{"id": 1, "rounds": [{"id": 2, "fixtures": schedule_rows}]}],
+            detail_rows,
+        )
+        fixtures = client.fixtures_by_season(
+            2026, include_statistics=True, team_ids=[11, 12, 13, 14, 15, 16]
+        )
+
+        multi_calls = [
+            path for path, _ in client.calls if path.startswith("fixtures/multi/")
+        ]
+        self.assertEqual(len(multi_calls), 2)
+        requested_ids = []
+        for path in multi_calls:
+            ids = path.rsplit("/", 1)[1].split(",")
+            self.assertLessEqual(len(ids), 25)
+            requested_ids.extend(ids)
+        self.assertEqual(len(requested_ids), 30)
+        self.assertTrue(all(fixture.get("state") for fixture in fixtures))
+
     def test_unrelated_wrong_season_and_wrong_pair_are_not_hydrated(self):
         now_dt = datetime(2026, 11, 7, tzinfo=timezone.utc)
         now = int(now_dt.timestamp())
