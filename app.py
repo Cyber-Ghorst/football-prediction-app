@@ -24,6 +24,7 @@ from highlightly_player_enrichment import collect_highlightly_player_enrichment
 from prediction_evaluation import build_prediction_record, evaluate_prediction_ledger, merge_prediction_records
 from prediction_readiness import build_prediction_readiness
 from statistics_coverage import build_statistics_coverage
+from system_diagnostics import build_system_diagnostics
 
 st.set_page_config(page_title="Football Prediction Lab", page_icon="⚽", layout="wide")
 st.title("⚽ Football Prediction Lab")
@@ -312,6 +313,7 @@ try:
         player_report = None
         selected_match_fixture = None
         highlightly_enrichment = None
+        corroboration = None
         with st.spinner("Collecting recent results, standings and available match statistics..."):
             if sportmonks_mode:
                 try:
@@ -653,6 +655,56 @@ try:
             away_team_id=int(team_map[away_name]["id"]),
             season_id=int(selected_season_id) if selected_season_id is not None else None,
         )
+        statistics_reports = {
+            profile["name"]: build_statistics_coverage(profile.get("matches", []))
+            for profile in (home, away)
+        }
+        diagnostic_report = build_system_diagnostics(
+            season=int(season),
+            competition=selected_league,
+            home_profile=home,
+            away_profile=away,
+            readiness=readiness,
+            statistics_coverage=statistics_reports,
+            provider_configuration=provider_readiness(),
+            corroboration=corroboration,
+            model_weights=WEIGHTS,
+        )
+        st.subheader("Automated System Health & Diagnostics")
+        st.caption("Automatically generated after each data collection. Provider credentials are shown only as configured/not configured; actual connectivity is tested separately using the provider health button. This report is read-only.")
+        diagnostic_status = diagnostic_report["overall_status"]
+        if diagnostic_status == "healthy":
+            st.success("System diagnostics: healthy")
+        elif diagnostic_status == "blocked":
+            st.error("System diagnostics: blocked — critical data or configuration checks failed")
+        else:
+            st.warning("System diagnostics: attention required — review the checks below")
+        summary_columns = st.columns(4)
+        summary_columns[0].metric("Checks", diagnostic_report["summary"]["checks_total"])
+        summary_columns[1].metric("Passed", diagnostic_report["summary"]["passed"])
+        summary_columns[2].metric("Warnings", diagnostic_report["summary"]["warnings"])
+        summary_columns[3].metric("Failed", diagnostic_report["summary"]["failed"])
+        with st.expander("Diagnostic checks and recommended actions", expanded=True):
+            st.dataframe(
+                pd.DataFrame(diagnostic_report["checks"]),
+                use_container_width=True,
+                hide_index=True,
+            )
+            st.json({
+                "selected_context": diagnostic_report["selected_context"],
+                "providers": diagnostic_report["providers"],
+                "fixture": diagnostic_report["fixture"],
+                "teams": diagnostic_report["teams"],
+                "corroboration": diagnostic_report["corroboration"],
+                "model_configuration": diagnostic_report["model_configuration"],
+            })
+        st.download_button(
+            "Download complete system diagnostic (JSON)",
+            data=json.dumps(diagnostic_report, indent=2, default=str).encode("utf-8"),
+            file_name="football_prediction_system_diagnostics.json",
+            mime="application/json",
+            use_container_width=True,
+        )
         st.subheader("Upcoming fixture & prediction readiness")
         st.caption("A transparent diagnostic of exact fixture identity, recent-history depth and evidence coverage. Unknown data remains unknown; this report does not alter the model.")
         status_labels = {
@@ -757,7 +809,7 @@ try:
             st.caption("Coverage is calculated across each team's most recent completed matches. 'Missing' means the provider did not supply a usable value for that match; it is not filled with zero or estimated.")
             coverage_columns = st.columns(2)
             for column, profile in zip(coverage_columns, (home, away)):
-                report = build_statistics_coverage(profile.get("matches", []))
+                report = statistics_reports[profile["name"]]
                 with column:
                     st.markdown(f"**{profile['name']}**")
                     st.metric(
