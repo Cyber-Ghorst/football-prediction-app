@@ -1,9 +1,9 @@
 """Tests for CockroachDB provider snapshot persistence."""
 import sys
 import types
+import unittest
 from datetime import datetime, timedelta, timezone
-
-import pytest
+from unittest.mock import patch
 
 import provider_data_storage as storage
 
@@ -51,99 +51,115 @@ class FakeConnection:
         return False
 
 
-@pytest.fixture
-def fake_db(monkeypatch):
-    connection = FakeConnection()
-    fake_psycopg = types.ModuleType("psycopg")
-    fake_psycopg.connect = lambda *args, **kwargs: connection
-    fake_json = types.ModuleType("psycopg.types.json")
+class ProviderStorageTests(unittest.TestCase):
+    def setUp(self):
+        self.connection = FakeConnection()
+        fake_psycopg = types.ModuleType("psycopg")
+        fake_psycopg.connect = lambda *args, **kwargs: self.connection
+        fake_json = types.ModuleType("psycopg.types.json")
 
-    class FakeJsonb:
-        def __init__(self, obj):
-            self.obj = obj
+        class FakeJsonb:
+            def __init__(self, obj):
+                self.obj = obj
 
-    fake_json.Jsonb = FakeJsonb
-    fake_types = types.ModuleType("psycopg.types")
-    fake_types.json = fake_json
-    monkeypatch.setitem(sys.modules, "psycopg", fake_psycopg)
-    monkeypatch.setitem(sys.modules, "psycopg.types", fake_types)
-    monkeypatch.setitem(sys.modules, "psycopg.types.json", fake_json)
-    monkeypatch.setattr(storage, "psycopg", fake_psycopg)
-    monkeypatch.setattr(storage, "Jsonb", FakeJsonb)
-    return connection
+        fake_json.Jsonb = FakeJsonb
+        fake_types = types.ModuleType("psycopg.types")
+        fake_types.json = fake_json
+        self.modules_patch = patch.dict(
+            sys.modules,
+            {
+                "psycopg": fake_psycopg,
+                "psycopg.types": fake_types,
+                "psycopg.types.json": fake_json,
+            },
+        )
+        self.modules_patch.start()
+        self.psycopg_patch = patch.object(storage, "psycopg", fake_psycopg)
+        self.jsonb_patch = patch.object(storage, "Jsonb", FakeJsonb)
+        self.psycopg_patch.start()
+        self.jsonb_patch.start()
+
+    def tearDown(self):
+        self.jsonb_patch.stop()
+        self.psycopg_patch.stop()
+        self.modules_patch.stop()
+
+    def test_cache_key_is_stable_and_provider_scoped(self):
+        params = {"season": 2026, "team_id": 123}
+        first = storage.build_provider_cache_key("Sportmonks", "fixtures", params)
+        second = storage.build_provider_cache_key("sportmonks", "fixtures", {"team_id": 123, "season": 2026})
+        other_provider = storage.build_provider_cache_key("highlightly", "fixtures", params)
+        self.assertEqual(first, second)
+        self.assertNotEqual(first, other_provider)
+
+    def test_cache_key_requires_provider_and_resource(self):
+        with self.assertRaises(ValueError):
+            storage.build_provider_cache_key("", "fixtures", {})
+
+    def test_save_appends_immutable_snapshot_and_hashes_payload(self):
+        captured = datetime(2026, 11, 8, tzinfo=timezone.utc)
+        snapshot_id = storage.save_provider_snapshot(
+            "postgresql://example",
+            provider="Sportmonks",
+            resource_type="fixture",
+            cache_key="sportmonks:fixture:abc",
+            request_params={"fixture_id": 123},
+            payload={"data": [{"id": 123}]},
+            source_ids=[123],
+            ttl_seconds=600,
+            retrieved_at=captured,
+        )
+        self.assertTrue(snapshot_id)
+        self.assertEqual(len(self.connection.snapshots), 1)
+        row = self.connection.snapshots[0]
+        self.assertEqual(row[2:4], ("sportmonks", "fixture"))
+        self.assertEqual(row[6].obj, {"data": [{"id": 123}]})
+        self.assertEqual(row[7], captured)
+        self.assertEqual(row[8], captured + timedelta(seconds=600))
+        self.assertEqual(len(row[9]), 64)
+
+    def test_failed_collection_diagnostic_does_not_write_snapshot(self):
+        run_id = storage.record_provider_collection_run(
+            "postgresql://example",
+            provider="highlightly",
+            resource_type="matches",
+            cache_key="highlightly:matches:abc",
+            succeeded=False,
+            http_status=429,
+            error_type="RateLimitError",
+            error_message="quota exhausted",
+        )
+        self.assertTrue(run_id)
+        self.assertEqual(len(self.connection.runs), 1)
+        self.assertEqual(self.connection.snapshots, [])
+        self.assertEqual(self.connection.runs[0][6], 429)
+
+    def test_load_fresh_and_stale_snapshots_use_separate_queries(self):
+        fresh_row = ("fresh", "sportmonks", "fixtures", {}, [], {"data": []}, None, None, "a" * 64)
+        stale_row = ("stale", "sportmonks", "fixtures", {}, [], {"data": [1]}, None, "b" * 64)
+        self.connection.fresh = fresh_row
+        self.connection.latest = stale_row
+        self.assertEqual(
+            storage.load_provider_snapshot("postgresql://example", "key")["snapshot_id"],
+            "fresh",
+        )
+        self.assertEqual(
+            storage.load_provider_snapshot("postgresql://example", "key", allow_stale=True)["snapshot_id"],
+            "stale",
+        )
+
+    def test_invalid_payload_or_ttl_is_rejected(self):
+        base = {
+            "provider": "sportmonks",
+            "resource_type": "fixtures",
+            "cache_key": "key",
+            "request_params": {},
+        }
+        with self.assertRaises(ValueError):
+            storage.save_provider_snapshot("postgresql://example", payload="not-json-object", **base)
+        with self.assertRaises(ValueError):
+            storage.save_provider_snapshot("postgresql://example", payload={}, ttl_seconds=-1, **base)
 
 
-def test_cache_key_is_stable_and_provider_scoped():
-    params = {"season": 2026, "team_id": 123}
-    first = storage.build_provider_cache_key("Sportmonks", "fixtures", params)
-    second = storage.build_provider_cache_key("sportmonks", "fixtures", {"team_id": 123, "season": 2026})
-    other_provider = storage.build_provider_cache_key("highlightly", "fixtures", params)
-    assert first == second
-    assert first != other_provider
-
-
-def test_cache_key_requires_provider_and_resource():
-    with pytest.raises(ValueError):
-        storage.build_provider_cache_key("", "fixtures", {})
-
-
-def test_save_appends_immutable_snapshot_and_hashes_payload(fake_db):
-    captured = datetime(2026, 11, 8, tzinfo=timezone.utc)
-    snapshot_id = storage.save_provider_snapshot(
-        "postgresql://example",
-        provider="Sportmonks",
-        resource_type="fixture",
-        cache_key="sportmonks:fixture:abc",
-        request_params={"fixture_id": 123},
-        payload={"data": [{"id": 123}]},
-        source_ids=[123],
-        ttl_seconds=600,
-        retrieved_at=captured,
-    )
-    assert snapshot_id
-    assert len(fake_db.snapshots) == 1
-    row = fake_db.snapshots[0]
-    assert row[2:4] == ("sportmonks", "fixture")
-    assert row[6].obj == {"data": [{"id": 123}]}
-    assert row[7] == captured
-    assert row[8] == captured + timedelta(seconds=600)
-    assert len(row[9]) == 64
-
-
-def test_failed_collection_diagnostic_does_not_write_snapshot(fake_db):
-    run_id = storage.record_provider_collection_run(
-        "postgresql://example",
-        provider="highlightly",
-        resource_type="matches",
-        cache_key="highlightly:matches:abc",
-        succeeded=False,
-        http_status=429,
-        error_type="RateLimitError",
-        error_message="quota exhausted",
-    )
-    assert run_id
-    assert len(fake_db.runs) == 1
-    assert fake_db.snapshots == []
-    assert fake_db.runs[0][6] == 429
-
-
-def test_load_fresh_and_stale_snapshots_use_separate_queries(fake_db, monkeypatch):
-    fresh_row = ("fresh", "sportmonks", "fixtures", {}, [], {"data": []}, None, None, "a" * 64)
-    stale_row = ("stale", "sportmonks", "fixtures", {}, [], {"data": [1]}, None, "b" * 64)
-    fake_db.fresh = fresh_row
-    fake_db.latest = stale_row
-    assert storage.load_provider_snapshot("postgresql://example", "key")["snapshot_id"] == "fresh"
-    assert storage.load_provider_snapshot("postgresql://example", "key", allow_stale=True)["snapshot_id"] == "stale"
-
-
-def test_invalid_payload_or_ttl_is_rejected(fake_db):
-    base = {
-        "provider": "sportmonks",
-        "resource_type": "fixtures",
-        "cache_key": "key",
-        "request_params": {},
-    }
-    with pytest.raises(ValueError):
-        storage.save_provider_snapshot("postgresql://example", payload="not-json-object", **base)
-    with pytest.raises(ValueError):
-        storage.save_provider_snapshot("postgresql://example", payload={}, ttl_seconds=-1, **base)
+if __name__ == "__main__":
+    unittest.main()
