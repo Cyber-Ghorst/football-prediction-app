@@ -1,6 +1,6 @@
 {
   "diagnostic_version": 1,
-  "generated_at": "2026-11-08T08:35:06.735157+00:00",
+  "generated_at": "2026-11-08T09:15:06.321247+00:00",
   "overall_status": "attention_required",
   "selected_context": {
     "season_start_year": 2026,
@@ -168,8 +168,8 @@
     "fixture_id": 19721930,
     "kickoff_utc": "2027-03-03T20:00:00+00:00",
     "source_updated_at": null,
-    "source_fetched_at": "2026-11-08T08:35:01.977130+00:00",
-    "source_age_seconds": 4.8,
+    "source_fetched_at": "2026-11-08T09:15:01.034462+00:00",
+    "source_age_seconds": 5.3,
     "source_age_minutes": 0.1,
     "source_freshness": "fresh",
     "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
@@ -777,7 +777,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "93",
+            "requests_remaining": "90",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -795,7 +795,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "92",
+            "requests_remaining": "89",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -813,7 +813,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "91",
+            "requests_remaining": "88",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -907,10 +907,25 @@
         "candidate_score_agreement": null,
         "sportmonks_candidates": [],
         "verification_status": "unresolved_exact_team_mapping",
+        "team_mapping_details": {
+          "Coventry": {
+            "team_id": null,
+            "status": "team_name_not_found_in_date_fixtures",
+            "matched_provider_names": [],
+            "candidate_matches": []
+          },
+          "Fulham": {
+            "team_id": 11,
+            "status": "exact_name_resolved_from_selected_season_team_list",
+            "matched_provider_names": [
+              "Fulham"
+            ]
+          }
+        },
         "sportmonks_request_metadata": {
           "http_status": 200,
           "rate_limit": "2000",
-          "rate_remaining": "1997"
+          "rate_remaining": "1993"
         }
       },
       {
@@ -940,10 +955,25 @@
         "candidate_score_agreement": null,
         "sportmonks_candidates": [],
         "verification_status": "unresolved_exact_team_mapping",
+        "team_mapping_details": {
+          "Ipswich": {
+            "team_id": null,
+            "status": "team_name_not_found_in_date_fixtures",
+            "matched_provider_names": [],
+            "candidate_matches": []
+          },
+          "Fulham": {
+            "team_id": 11,
+            "status": "exact_name_resolved_from_selected_season_team_list",
+            "matched_provider_names": [
+              "Fulham"
+            ]
+          }
+        },
         "sportmonks_request_metadata": {
           "http_status": 200,
           "rate_limit": "2000",
-          "rate_remaining": "1996"
+          "rate_remaining": "1992"
         }
       }
     ],
@@ -964,8 +994,8 @@
       "fixture_id": 19721930,
       "kickoff_utc": "2027-03-03T20:00:00+00:00",
       "source_updated_at": null,
-      "source_fetched_at": "2026-11-08T08:35:01.977130+00:00",
-      "source_age_seconds": 4.8,
+      "source_fetched_at": "2026-11-08T09:15:01.034462+00:00",
+      "source_age_seconds": 5.3,
       "source_age_minutes": 0.1,
       "source_freshness": "fresh",
       "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
