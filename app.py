@@ -750,6 +750,7 @@ try:
                 mime="application/json",
                 use_container_width=True,
                 key="top_system_diagnostics_download",
+                on_click="ignore",
             )
         st.download_button(
             "Download complete system diagnostic (JSON)",
@@ -757,6 +758,7 @@ try:
             file_name="football_prediction_system_diagnostics.json",
             mime="application/json",
             use_container_width=True,
+            on_click="ignore",
         )
         st.subheader("Upcoming fixture & prediction readiness")
         st.caption("A transparent diagnostic of exact fixture identity, recent-history depth and evidence coverage. Unknown data remains unknown; this report does not alter the model.")
@@ -1010,6 +1012,7 @@ with st.expander("Prediction tracking, Opta comparison and backtesting", expande
             file_name="football_prediction_ledger.csv",
             mime="text/csv",
             use_container_width=True,
+            on_click="ignore",
         )
         st.caption("Only forecasts timestamped before kickoff are scored. Player-stat snapshots after kickoff are excluded from validation to prevent future-data leakage. No weights are changed by this report.")
     else:
