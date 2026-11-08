@@ -36,7 +36,11 @@ from provider_data_storage import (
     save_provider_snapshot,
     record_provider_collection_run,
 )
-from football_repository import (\n    ensure_football_repository, repository_table_counts, import_sportmonks_season,\n    get_repository_leagues, get_repository_seasons, get_repository_teams,\n    get_repository_fixtures, get_repository_team_history,\n)
+from football_repository import (
+    ensure_football_repository, repository_table_counts, import_sportmonks_season,
+    get_repository_leagues, get_repository_seasons, get_repository_teams,
+    get_repository_fixtures, get_repository_team_history,
+)
 
 st.set_page_config(page_title="Football Prediction Lab", page_icon="⚽", layout="wide")
 st.title("⚽ Football Prediction Lab")
