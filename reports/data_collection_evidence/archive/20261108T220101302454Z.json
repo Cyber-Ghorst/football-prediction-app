@@ -1,0 +1,5232 @@
+{
+  "season": 2026,
+  "competition": "La Liga — Spain",
+  "selected_fixture": {
+    "id": 19732473,
+    "sport_id": 1,
+    "league_id": 564,
+    "season_id": 27965,
+    "stage_id": 77482690,
+    "group_id": null,
+    "aggregate_id": null,
+    "round_id": 408934,
+    "state_id": 1,
+    "venue_id": 2028,
+    "name": "Villarreal vs Real Madrid",
+    "starting_at": "2027-03-07 00:00:00",
+    "result_info": null,
+    "leg": "1/1",
+    "details": null,
+    "length": 90,
+    "placeholder": false,
+    "has_odds": false,
+    "has_premium_odds": false,
+    "starting_at_timestamp": 1804377600,
+    "participants": [
+      {
+        "id": 3468,
+        "sport_id": 1,
+        "country_id": 32,
+        "venue_id": 2020,
+        "gender": "male",
+        "name": "Real Madrid",
+        "short_code": "RMA",
+        "image_path": "https://cdn.sportmonks.com/images/soccer/teams/12/3468.png",
+        "founded": 1902,
+        "type": "domestic",
+        "placeholder": false,
+        "last_played_at": "2026-11-07 20:00:00",
+        "meta": {
+          "location": "away",
+          "winner": null,
+          "position": null
+        }
+      },
+      {
+        "id": 3477,
+        "sport_id": 1,
+        "country_id": 32,
+        "venue_id": 2028,
+        "gender": "male",
+        "name": "Villarreal",
+        "short_code": "VIL",
+        "image_path": "https://cdn.sportmonks.com/images/soccer/teams/21/3477.png",
+        "founded": 1923,
+        "type": "domestic",
+        "placeholder": false,
+        "last_played_at": "2026-11-08 17:30:00",
+        "meta": {
+          "location": "home",
+          "winner": null,
+          "position": null
+        }
+      }
+    ],
+    "scores": [],
+    "state": {
+      "id": 1,
+      "state": "NS",
+      "name": "Not Started",
+      "short_name": "NS",
+      "developer_name": "NS"
+    },
+    "league": {
+      "id": 564,
+      "sport_id": 1,
+      "country_id": 32,
+      "name": "La Liga",
+      "active": true,
+      "short_code": "ESP PL",
+      "image_path": "https://cdn.sportmonks.com/images/soccer/leagues/20/564.png",
+      "type": "league",
+      "sub_type": "domestic",
+      "last_played_at": "2026-11-08 20:00:00",
+      "category": 1,
+      "has_jerseys": false
+    },
+    "season": {
+      "id": 27965,
+      "sport_id": 1,
+      "league_id": 564,
+      "tie_breaker_rule_id": 171,
+      "name": "2026/2027",
+      "finished": false,
+      "pending": false,
+      "is_current": true,
+      "starting_at": "2026-08-15",
+      "ending_at": "2027-05-30",
+      "standings_recalculated_at": "2026-11-08 21:59:07",
+      "games_in_current_week": true
+    },
+    "statistics": [],
+    "fixture_details_fetched_at": "2026-11-08T22:00:34.130938+00:00"
+  },
+  "teams": {
+    "Villarreal": {
+      "data_quality": {
+        "provider": "sportmonks",
+        "season_id": 27965,
+        "matches_returned": 10,
+        "goals_complete": true,
+        "opponent_strength_matches": 10,
+        "statistics_matches": 0,
+        "statistics_observations": 0,
+        "statistics_raw_observations": 0,
+        "statistics_unmapped_observations": 0,
+        "fixtures_scanned": 380,
+        "history_source": "cockroachdb_central_repository",
+        "repository_fixture_rows": 380,
+        "repository_fixture_payloads": 380
+      },
+      "history_collection_diagnostics": {
+        "fixtures_scanned": 380,
+        "same_season_fixtures": 380,
+        "season_eligible_fixtures": 380,
+        "fixtures_missing_season_id": 0,
+        "team_fixtures": 38,
+        "completed_fixtures": 12,
+        "fixtures_with_valid_scores": 12,
+        "excluded_wrong_season": 0,
+        "excluded_missing_participants": 0,
+        "excluded_other_team": 342,
+        "excluded_not_completed": 26,
+        "excluded_missing_scores": 0
+      },
+      "player_availability_assessment": {
+        "score": null,
+        "status": "unknown",
+        "reason": "The provider has not confirmed a complete squad roster.",
+        "source": null,
+        "fixture_id": 19732473,
+        "players_assessed": 0
+      }
+    },
+    "Real Madrid": {
+      "data_quality": {
+        "provider": "sportmonks",
+        "season_id": 27965,
+        "matches_returned": 10,
+        "goals_complete": true,
+        "opponent_strength_matches": 10,
+        "statistics_matches": 0,
+        "statistics_observations": 0,
+        "statistics_raw_observations": 0,
+        "statistics_unmapped_observations": 0,
+        "fixtures_scanned": 380,
+        "history_source": "cockroachdb_central_repository",
+        "repository_fixture_rows": 380,
+        "repository_fixture_payloads": 380
+      },
+      "history_collection_diagnostics": {
+        "fixtures_scanned": 380,
+        "same_season_fixtures": 380,
+        "season_eligible_fixtures": 380,
+        "fixtures_missing_season_id": 0,
+        "team_fixtures": 38,
+        "completed_fixtures": 12,
+        "fixtures_with_valid_scores": 12,
+        "excluded_wrong_season": 0,
+        "excluded_missing_participants": 0,
+        "excluded_other_team": 342,
+        "excluded_not_completed": 26,
+        "excluded_missing_scores": 0
+      },
+      "player_availability_assessment": {
+        "score": null,
+        "status": "unknown",
+        "reason": "The provider has not confirmed a complete squad roster.",
+        "source": null,
+        "fixture_id": 19732473,
+        "players_assessed": 0
+      }
+    }
+  },
+  "statistics_coverage": {
+    "Villarreal": {
+      "fixtures_checked": 10,
+      "core_metrics_with_any_data": 0,
+      "core_metrics_complete": 0,
+      "core_metrics_total": 8,
+      "raw_observations_seen": 0,
+      "unmapped_observations": 0,
+      "mapping_visibility": "not supplied by this data path",
+      "metrics": [
+        {
+          "group": "Possession & distribution",
+          "statistic": "Ball Possession",
+          "fixtures_available": 0,
+          "fixtures_checked": 10,
+          "coverage_pct": 0.0,
+          "raw_observations": 0,
+          "status": "missing"
+        },
+        {
+          "group": "Possession & distribution",
+          "statistic": "Passes %",
+          "fixtures_available": 0,
+          "fixtures_checked": 10,
+          "coverage_pct": 0.0,
+          "raw_observations": 0,
+          "status": "missing"
+        },
+        {
+          "group": "Attacking",
+          "statistic": "Total Shots",
+          "fixtures_available": 0,
+          "fixtures_checked": 10,
+          "coverage_pct": 0.0,
+          "raw_observations": 0,
+          "status": "missing"
+        },
+        {
+          "group": "Attacking",
+          "statistic": "Shots on Target / Goal",
+          "fixtures_available": 0,
+          "fixtures_checked": 10,
+          "coverage_pct": 0.0,
+          "raw_observations": 0,
+          "status": "missing"
+        },
+        {
+          "group": "Defending",
+          "statistic": "Tackles",
+          "fixtures_available": 0,
+          "fixtures_checked": 10,
+          "coverage_pct": 0.0,
+          "raw_observations": 0,
+          "status": "missing"
+        },
+        {
+          "group": "Defending",
+          "statistic": "Interceptions",
+          "fixtures_available": 0,
+          "fixtures_checked": 10,
+          "coverage_pct": 0.0,
+          "raw_observations": 0,
+          "status": "missing"
+        },
+        {
+          "group": "Defending",
+          "statistic": "Blocked Shots",
+          "fixtures_available": 0,
+          "fixtures_checked": 10,
+          "coverage_pct": 0.0,
+          "raw_observations": 0,
+          "status": "missing"
+        },
+        {
+          "group": "Attacking",
+          "statistic": "Corner Kicks",
+          "fixtures_available": 0,
+          "fixtures_checked": 10,
+          "coverage_pct": 0.0,
+          "raw_observations": 0,
+          "status": "missing"
+        }
+      ],
+      "unmapped_statistics": []
+    },
+    "Real Madrid": {
+      "fixtures_checked": 10,
+      "core_metrics_with_any_data": 0,
+      "core_metrics_complete": 0,
+      "core_metrics_total": 8,
+      "raw_observations_seen": 0,
+      "unmapped_observations": 0,
+      "mapping_visibility": "not supplied by this data path",
+      "metrics": [
+        {
+          "group": "Possession & distribution",
+          "statistic": "Ball Possession",
+          "fixtures_available": 0,
+          "fixtures_checked": 10,
+          "coverage_pct": 0.0,
+          "raw_observations": 0,
+          "status": "missing"
+        },
+        {
+          "group": "Possession & distribution",
+          "statistic": "Passes %",
+          "fixtures_available": 0,
+          "fixtures_checked": 10,
+          "coverage_pct": 0.0,
+          "raw_observations": 0,
+          "status": "missing"
+        },
+        {
+          "group": "Attacking",
+          "statistic": "Total Shots",
+          "fixtures_available": 0,
+          "fixtures_checked": 10,
+          "coverage_pct": 0.0,
+          "raw_observations": 0,
+          "status": "missing"
+        },
+        {
+          "group": "Attacking",
+          "statistic": "Shots on Target / Goal",
+          "fixtures_available": 0,
+          "fixtures_checked": 10,
+          "coverage_pct": 0.0,
+          "raw_observations": 0,
+          "status": "missing"
+        },
+        {
+          "group": "Defending",
+          "statistic": "Tackles",
+          "fixtures_available": 0,
+          "fixtures_checked": 10,
+          "coverage_pct": 0.0,
+          "raw_observations": 0,
+          "status": "missing"
+        },
+        {
+          "group": "Defending",
+          "statistic": "Interceptions",
+          "fixtures_available": 0,
+          "fixtures_checked": 10,
+          "coverage_pct": 0.0,
+          "raw_observations": 0,
+          "status": "missing"
+        },
+        {
+          "group": "Defending",
+          "statistic": "Blocked Shots",
+          "fixtures_available": 0,
+          "fixtures_checked": 10,
+          "coverage_pct": 0.0,
+          "raw_observations": 0,
+          "status": "missing"
+        },
+        {
+          "group": "Attacking",
+          "statistic": "Corner Kicks",
+          "fixtures_available": 0,
+          "fixtures_checked": 10,
+          "coverage_pct": 0.0,
+          "raw_observations": 0,
+          "status": "missing"
+        }
+      ],
+      "unmapped_statistics": []
+    }
+  },
+  "prediction_readiness": {
+    "overall_status": "ready",
+    "prediction_minimum_history_met": true,
+    "ten_match_history_target_met": true,
+    "history_policy": {
+      "minimum_matches_per_team": 5,
+      "preferred_target_per_team": 10,
+      "target_is_advisory": true,
+      "note": "Prediction history eligibility requires five completed, score-valid matches per team. Five to nine matches are allowed with a limited-sample label; ten remains the preferred target."
+    },
+    "prediction_allowed_by_history": true,
+    "fixture": {
+      "verified": true,
+      "status": "verified",
+      "reason": "Exact competition-season fixture identity and future kickoff verified.",
+      "fixture_id": 19732473,
+      "kickoff_utc": "2027-03-07T00:00:00+00:00",
+      "source_updated_at": null,
+      "source_fetched_at": "2026-11-08T22:00:34.130938+00:00",
+      "source_age_seconds": 27.2,
+      "source_age_minutes": 0.5,
+      "source_freshness": "fresh",
+      "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
+    },
+    "teams": {
+      "home": {
+        "team": "Villarreal",
+        "completed_matches_available": 10,
+        "history_minimum": 5,
+        "history_target": 10,
+        "history_status": "target_met",
+        "prediction_allowed_by_history": true,
+        "matches_with_statistics": 0,
+        "matches_with_opponent_strength": 10,
+        "tactical_components_available": {
+          "playing_style": false,
+          "defensive_structure": false,
+          "attacking_approach": false
+        },
+        "player_availability_evidence": "unknown",
+        "confirmed_lineup_evidence": "unknown"
+      },
+      "away": {
+        "team": "Real Madrid",
+        "completed_matches_available": 10,
+        "history_minimum": 5,
+        "history_target": 10,
+        "history_status": "target_met",
+        "prediction_allowed_by_history": true,
+        "matches_with_statistics": 0,
+        "matches_with_opponent_strength": 10,
+        "tactical_components_available": {
+          "playing_style": false,
+          "defensive_structure": false,
+          "attacking_approach": false
+        },
+        "player_availability_evidence": "unknown",
+        "confirmed_lineup_evidence": "unknown"
+      }
+    },
+    "model_impact": "Diagnostic only. This report does not change prediction inputs, model weights, recency weighting or TVD rules."
+  },
+  "corroboration": {
+    "competition": "La Liga",
+    "country": "Spain",
+    "season": 2026,
+    "sportmonks_fixtures_checked": 20,
+    "provider_records_returned": {
+      "api_ninjas": 74
+    },
+    "highlightly_diagnostics": {
+      "requested_filters": {
+        "leagueName": "La Liga",
+        "countryName": "Spain",
+        "season": 2026,
+        "limit": 100,
+        "max_pages": 10
+      },
+      "pages_requested": 0,
+      "raw_rows_received": 0,
+      "rejected_competition_mismatch": 0,
+      "competition_missing_in_response": 0,
+      "rejected_country_missing": 0,
+      "rejected_country_mismatch": 0,
+      "country_missing_but_retained": 0,
+      "season_missing_in_response": 0,
+      "rejected_season_mismatch": 0,
+      "rejected_invalid_season": 0,
+      "normalization_failures": 0,
+      "records_normalized": 0,
+      "completed_score_valid_records": 0,
+      "selected_team_records": 0,
+      "page_metadata": [],
+      "retrieval_error": "Highlightly rate limit or daily quota reached (HTTP 429).",
+      "client_metadata_at_error": {
+        "http_status": 429,
+        "requests_limit": null,
+        "requests_remaining": null
+      }
+    },
+    "team_history_coverage": {
+      "Villarreal": {
+        "highlightly_completed_score_valid": 0,
+        "highlightly_exact_matches": 0,
+        "highlightly_unmatched_count": 0,
+        "sportmonks_completed_score_valid": 10,
+        "api_ninjas_completed_score_valid": 12,
+        "api_ninjas_exact_matches": 8,
+        "api_ninjas_unmatched_count": 4,
+        "api_ninjas_unmatched_candidates": [
+          {
+            "kickoff_utc": "2026-09-05T19:00:00+00:00",
+            "home": "Villarreal",
+            "away": "Deportivo",
+            "score": [
+              2,
+              3
+            ],
+            "api_ninjas_match_id": "laliga-20260905-dep-vil",
+            "review_status": "candidate_only_not_added_to_prediction_history"
+          },
+          {
+            "kickoff_utc": "2026-08-28T19:30:00+00:00",
+            "home": "Alavés",
+            "away": "Villarreal",
+            "score": [
+              1,
+              0
+            ],
+            "api_ninjas_match_id": "laliga-20260828-vil-ala",
+            "review_status": "candidate_only_not_added_to_prediction_history"
+          },
+          {
+            "kickoff_utc": "2026-08-23T15:00:00+00:00",
+            "home": "Atlético Madrid",
+            "away": "Villarreal",
+            "score": [
+              2,
+              2
+            ],
+            "api_ninjas_match_id": "laliga-20260823-vil-atm",
+            "review_status": "candidate_only_not_added_to_prediction_history"
+          },
+          {
+            "kickoff_utc": "2026-08-16T15:00:00+00:00",
+            "home": "Racing Santander",
+            "away": "Villarreal",
+            "score": [
+              2,
+              2
+            ],
+            "api_ninjas_match_id": "laliga-20260816-vil-rac",
+            "review_status": "candidate_only_not_added_to_prediction_history"
+          }
+        ],
+        "exact_matches_across_sources": 0,
+        "highlightly_results_not_found_in_sportmonks": 0,
+        "latest_highlightly_completed_match": null,
+        "unmatched_completed_candidates": [],
+        "interpretation": "Provider-specific unmatched results are review candidates, not accepted extra matches. Exact competition, season, home/away teams and kickoff must match before joining."
+      },
+      "Real Madrid": {
+        "highlightly_completed_score_valid": 0,
+        "highlightly_exact_matches": 0,
+        "highlightly_unmatched_count": 0,
+        "sportmonks_completed_score_valid": 11,
+        "api_ninjas_completed_score_valid": 12,
+        "api_ninjas_exact_matches": 9,
+        "api_ninjas_unmatched_count": 3,
+        "api_ninjas_unmatched_candidates": [
+          {
+            "kickoff_utc": "2026-10-25T20:00:00+00:00",
+            "home": "Barcelona",
+            "away": "Real Madrid",
+            "score": [
+              1,
+              2
+            ],
+            "api_ninjas_match_id": "laliga-20261025-rma-bar",
+            "review_status": "candidate_only_not_added_to_prediction_history"
+          },
+          {
+            "kickoff_utc": "2026-09-20T14:15:00+00:00",
+            "home": "Atlético Madrid",
+            "away": "Real Madrid",
+            "score": [
+              2,
+              1
+            ],
+            "api_ninjas_match_id": "laliga-20260920-rma-atm",
+            "review_status": "candidate_only_not_added_to_prediction_history"
+          },
+          {
+            "kickoff_utc": "2026-08-22T19:30:00+00:00",
+            "home": "Espanyol",
+            "away": "Real Madrid",
+            "score": [
+              1,
+              2
+            ],
+            "api_ninjas_match_id": "laliga-20260822-rma-esp",
+            "review_status": "candidate_only_not_added_to_prediction_history"
+          }
+        ],
+        "exact_matches_across_sources": 0,
+        "highlightly_results_not_found_in_sportmonks": 0,
+        "latest_highlightly_completed_match": null,
+        "unmatched_completed_candidates": [],
+        "interpretation": "Provider-specific unmatched results are review candidates, not accepted extra matches. Exact competition, season, home/away teams and kickoff must match before joining."
+      }
+    },
+    "fixtures_matched_across_sources": 16,
+    "fixtures_with_agreement": 16,
+    "fixtures_with_conflicts": 0,
+    "fixtures_with_both_agreement_and_conflict": 0,
+    "field_level_summary": {
+      "status": {
+        "fixtures_compared": 16,
+        "fixtures_with_agreement": 16,
+        "fixtures_with_conflict": 0,
+        "fixtures_with_multiple_observations": 16
+      },
+      "home_score": {
+        "fixtures_compared": 16,
+        "fixtures_with_agreement": 16,
+        "fixtures_with_conflict": 0,
+        "fixtures_with_multiple_observations": 16
+      },
+      "away_score": {
+        "fixtures_compared": 16,
+        "fixtures_with_agreement": 16,
+        "fixtures_with_conflict": 0,
+        "fixtures_with_multiple_observations": 16
+      },
+      "kickoff_utc": {
+        "fixtures_compared": 16,
+        "fixtures_with_agreement": 16,
+        "fixtures_with_conflict": 0,
+        "fixtures_with_multiple_observations": 16
+      }
+    },
+    "providers_matched": [
+      "api_ninjas",
+      "sportmonks"
+    ],
+    "errors": {
+      "highlightly": "Highlightly rate limit or daily quota reached (HTTP 429)."
+    },
+    "matches": [
+      {
+        "competition_key": "la liga|spain",
+        "season": 2026,
+        "kickoff_utc": "2026-11-08 17:30:00",
+        "home": {
+          "name": "Villarreal",
+          "source_ids": {
+            "sportmonks": "3477",
+            "api_ninjas": "soccer-villarreal"
+          }
+        },
+        "away": {
+          "name": "Getafe",
+          "source_ids": {
+            "sportmonks": "106",
+            "api_ninjas": "soccer-getafe"
+          }
+        },
+        "status": "finished",
+        "home_score": 2,
+        "away_score": 0,
+        "source_ids": {
+          "sportmonks": "19732623",
+          "api_ninjas": "laliga-20261108-get-vil"
+        },
+        "source": "sportmonks",
+        "raw_source_updated_at": null,
+        "reconciliation": {
+          "status": {
+            "provider": "sportmonks",
+            "source_id": "19732623",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "finished",
+                "source_id": "19732623",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "finished",
+                "source_id": "laliga-20261108-get-vil",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-11-08T19:23:01+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "home_score": {
+            "provider": "sportmonks",
+            "source_id": "19732623",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 2,
+                "source_id": "19732623",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 2,
+                "source_id": "laliga-20261108-get-vil",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-11-08T19:23:01+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "away_score": {
+            "provider": "sportmonks",
+            "source_id": "19732623",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 0,
+                "source_id": "19732623",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 0,
+                "source_id": "laliga-20261108-get-vil",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-11-08T19:23:01+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "kickoff_utc": {
+            "provider": "sportmonks",
+            "source_id": "19732623",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "2026-11-08 17:30:00",
+                "source_id": "19732623",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "2026-11-08T17:30:00+00:00",
+                "source_id": "laliga-20261108-get-vil",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-11-08T19:23:01+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          }
+        },
+        "source_ids_by_provider": {
+          "sportmonks": {
+            "match": "19732623",
+            "home": "3477",
+            "away": "106"
+          },
+          "api_ninjas": {
+            "match": "laliga-20261108-get-vil",
+            "home": "soccer-villarreal",
+            "away": "soccer-getafe"
+          }
+        },
+        "providers_seen": [
+          "sportmonks",
+          "api_ninjas"
+        ],
+        "agreement_fields": [
+          "status",
+          "home_score",
+          "away_score",
+          "kickoff_utc"
+        ],
+        "conflict_fields": [],
+        "field_observations": [
+          {
+            "field": "status",
+            "provider": "sportmonks",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732623",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "status",
+            "provider": "api_ninjas",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261108-get-vil",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-11-08T19:23:01+00:00"
+          },
+          {
+            "field": "home_score",
+            "provider": "sportmonks",
+            "value": 2,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732623",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "home_score",
+            "provider": "api_ninjas",
+            "value": 2,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261108-get-vil",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-11-08T19:23:01+00:00"
+          },
+          {
+            "field": "away_score",
+            "provider": "sportmonks",
+            "value": 0,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732623",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "away_score",
+            "provider": "api_ninjas",
+            "value": 0,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261108-get-vil",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-11-08T19:23:01+00:00"
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "sportmonks",
+            "value": "2026-11-08 17:30:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732623",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "api_ninjas",
+            "value": "2026-11-08T17:30:00+00:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261108-get-vil",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-11-08T19:23:01+00:00"
+          }
+        ],
+        "diagnostic_status": "agreement"
+      },
+      {
+        "competition_key": "la liga|spain",
+        "season": 2026,
+        "kickoff_utc": "2026-11-07 20:00:00",
+        "home": {
+          "name": "Valencia",
+          "source_ids": {
+            "sportmonks": "214",
+            "api_ninjas": "soccer-valencia"
+          }
+        },
+        "away": {
+          "name": "Real Madrid",
+          "source_ids": {
+            "sportmonks": "3468",
+            "api_ninjas": "soccer-real-madrid"
+          }
+        },
+        "status": "finished",
+        "home_score": 0,
+        "away_score": 3,
+        "source_ids": {
+          "sportmonks": "19732624",
+          "api_ninjas": "laliga-20261107-rma-val"
+        },
+        "source": "sportmonks",
+        "raw_source_updated_at": null,
+        "reconciliation": {
+          "status": {
+            "provider": "sportmonks",
+            "source_id": "19732624",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "finished",
+                "source_id": "19732624",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "finished",
+                "source_id": "laliga-20261107-rma-val",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-11-07T21:58:30+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "home_score": {
+            "provider": "sportmonks",
+            "source_id": "19732624",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 0,
+                "source_id": "19732624",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 0,
+                "source_id": "laliga-20261107-rma-val",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-11-07T21:58:30+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "away_score": {
+            "provider": "sportmonks",
+            "source_id": "19732624",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 3,
+                "source_id": "19732624",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 3,
+                "source_id": "laliga-20261107-rma-val",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-11-07T21:58:30+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "kickoff_utc": {
+            "provider": "sportmonks",
+            "source_id": "19732624",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "2026-11-07 20:00:00",
+                "source_id": "19732624",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "2026-11-07T20:00:00+00:00",
+                "source_id": "laliga-20261107-rma-val",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-11-07T21:58:30+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          }
+        },
+        "source_ids_by_provider": {
+          "sportmonks": {
+            "match": "19732624",
+            "home": "214",
+            "away": "3468"
+          },
+          "api_ninjas": {
+            "match": "laliga-20261107-rma-val",
+            "home": "soccer-valencia",
+            "away": "soccer-real-madrid"
+          }
+        },
+        "providers_seen": [
+          "sportmonks",
+          "api_ninjas"
+        ],
+        "agreement_fields": [
+          "status",
+          "home_score",
+          "away_score",
+          "kickoff_utc"
+        ],
+        "conflict_fields": [],
+        "field_observations": [
+          {
+            "field": "status",
+            "provider": "sportmonks",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732624",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "status",
+            "provider": "api_ninjas",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261107-rma-val",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-11-07T21:58:30+00:00"
+          },
+          {
+            "field": "home_score",
+            "provider": "sportmonks",
+            "value": 0,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732624",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "home_score",
+            "provider": "api_ninjas",
+            "value": 0,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261107-rma-val",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-11-07T21:58:30+00:00"
+          },
+          {
+            "field": "away_score",
+            "provider": "sportmonks",
+            "value": 3,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732624",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "away_score",
+            "provider": "api_ninjas",
+            "value": 3,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261107-rma-val",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-11-07T21:58:30+00:00"
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "sportmonks",
+            "value": "2026-11-07 20:00:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732624",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "api_ninjas",
+            "value": "2026-11-07T20:00:00+00:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261107-rma-val",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-11-07T21:58:30+00:00"
+          }
+        ],
+        "diagnostic_status": "agreement"
+      },
+      {
+        "competition_key": "la liga|spain",
+        "season": 2026,
+        "kickoff_utc": "2026-11-01 15:15:00",
+        "home": {
+          "name": "Racing Santander",
+          "source_ids": {
+            "sportmonks": "9818",
+            "api_ninjas": "soccer-racing-santander"
+          }
+        },
+        "away": {
+          "name": "Real Madrid",
+          "source_ids": {
+            "sportmonks": "3468",
+            "api_ninjas": "soccer-real-madrid"
+          }
+        },
+        "status": "finished",
+        "home_score": 0,
+        "away_score": 3,
+        "source_ids": {
+          "sportmonks": "19732635",
+          "api_ninjas": "laliga-20261101-rma-rac"
+        },
+        "source": "sportmonks",
+        "raw_source_updated_at": null,
+        "reconciliation": {
+          "status": {
+            "provider": "sportmonks",
+            "source_id": "19732635",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "finished",
+                "source_id": "19732635",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "finished",
+                "source_id": "laliga-20261101-rma-rac",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-11-01T17:16:01+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "home_score": {
+            "provider": "sportmonks",
+            "source_id": "19732635",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 0,
+                "source_id": "19732635",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 0,
+                "source_id": "laliga-20261101-rma-rac",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-11-01T17:16:01+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "away_score": {
+            "provider": "sportmonks",
+            "source_id": "19732635",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 3,
+                "source_id": "19732635",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 3,
+                "source_id": "laliga-20261101-rma-rac",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-11-01T17:16:01+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "kickoff_utc": {
+            "provider": "sportmonks",
+            "source_id": "19732635",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "2026-11-01 15:15:00",
+                "source_id": "19732635",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "2026-11-01T15:15:00+00:00",
+                "source_id": "laliga-20261101-rma-rac",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-11-01T17:16:01+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          }
+        },
+        "source_ids_by_provider": {
+          "sportmonks": {
+            "match": "19732635",
+            "home": "9818",
+            "away": "3468"
+          },
+          "api_ninjas": {
+            "match": "laliga-20261101-rma-rac",
+            "home": "soccer-racing-santander",
+            "away": "soccer-real-madrid"
+          }
+        },
+        "providers_seen": [
+          "sportmonks",
+          "api_ninjas"
+        ],
+        "agreement_fields": [
+          "status",
+          "home_score",
+          "away_score",
+          "kickoff_utc"
+        ],
+        "conflict_fields": [],
+        "field_observations": [
+          {
+            "field": "status",
+            "provider": "sportmonks",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732635",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "status",
+            "provider": "api_ninjas",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261101-rma-rac",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-11-01T17:16:01+00:00"
+          },
+          {
+            "field": "home_score",
+            "provider": "sportmonks",
+            "value": 0,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732635",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "home_score",
+            "provider": "api_ninjas",
+            "value": 0,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261101-rma-rac",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-11-01T17:16:01+00:00"
+          },
+          {
+            "field": "away_score",
+            "provider": "sportmonks",
+            "value": 3,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732635",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "away_score",
+            "provider": "api_ninjas",
+            "value": 3,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261101-rma-rac",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-11-01T17:16:01+00:00"
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "sportmonks",
+            "value": "2026-11-01 15:15:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732635",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "api_ninjas",
+            "value": "2026-11-01T15:15:00+00:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261101-rma-rac",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-11-01T17:16:01+00:00"
+          }
+        ],
+        "diagnostic_status": "agreement"
+      },
+      {
+        "competition_key": "la liga|spain",
+        "season": 2026,
+        "kickoff_utc": "2026-10-30 20:00:00",
+        "home": {
+          "name": "Villarreal",
+          "source_ids": {
+            "sportmonks": "3477",
+            "api_ninjas": "soccer-villarreal"
+          }
+        },
+        "away": {
+          "name": "Espanyol",
+          "source_ids": {
+            "sportmonks": "528",
+            "api_ninjas": "soccer-espanyol"
+          }
+        },
+        "status": "finished",
+        "home_score": 0,
+        "away_score": 1,
+        "source_ids": {
+          "sportmonks": "19732633",
+          "api_ninjas": "laliga-20261030-esp-vil"
+        },
+        "source": "sportmonks",
+        "raw_source_updated_at": null,
+        "reconciliation": {
+          "status": {
+            "provider": "sportmonks",
+            "source_id": "19732633",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "finished",
+                "source_id": "19732633",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "finished",
+                "source_id": "laliga-20261030-esp-vil",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-30T21:52:30+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "home_score": {
+            "provider": "sportmonks",
+            "source_id": "19732633",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 0,
+                "source_id": "19732633",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 0,
+                "source_id": "laliga-20261030-esp-vil",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-30T21:52:30+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "away_score": {
+            "provider": "sportmonks",
+            "source_id": "19732633",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 1,
+                "source_id": "19732633",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 1,
+                "source_id": "laliga-20261030-esp-vil",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-30T21:52:30+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "kickoff_utc": {
+            "provider": "sportmonks",
+            "source_id": "19732633",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "2026-10-30 20:00:00",
+                "source_id": "19732633",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "2026-10-30T20:00:00+00:00",
+                "source_id": "laliga-20261030-esp-vil",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-30T21:52:30+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          }
+        },
+        "source_ids_by_provider": {
+          "sportmonks": {
+            "match": "19732633",
+            "home": "3477",
+            "away": "528"
+          },
+          "api_ninjas": {
+            "match": "laliga-20261030-esp-vil",
+            "home": "soccer-villarreal",
+            "away": "soccer-espanyol"
+          }
+        },
+        "providers_seen": [
+          "sportmonks",
+          "api_ninjas"
+        ],
+        "agreement_fields": [
+          "status",
+          "home_score",
+          "away_score",
+          "kickoff_utc"
+        ],
+        "conflict_fields": [],
+        "field_observations": [
+          {
+            "field": "status",
+            "provider": "sportmonks",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732633",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "status",
+            "provider": "api_ninjas",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261030-esp-vil",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-30T21:52:30+00:00"
+          },
+          {
+            "field": "home_score",
+            "provider": "sportmonks",
+            "value": 0,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732633",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "home_score",
+            "provider": "api_ninjas",
+            "value": 0,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261030-esp-vil",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-30T21:52:30+00:00"
+          },
+          {
+            "field": "away_score",
+            "provider": "sportmonks",
+            "value": 1,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732633",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "away_score",
+            "provider": "api_ninjas",
+            "value": 1,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261030-esp-vil",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-30T21:52:30+00:00"
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "sportmonks",
+            "value": "2026-10-30 20:00:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732633",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "api_ninjas",
+            "value": "2026-10-30T20:00:00+00:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261030-esp-vil",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-30T21:52:30+00:00"
+          }
+        ],
+        "diagnostic_status": "agreement"
+      },
+      {
+        "competition_key": "la liga|spain",
+        "season": 2026,
+        "kickoff_utc": "2026-10-24 16:30:00",
+        "home": {
+          "name": "Valencia",
+          "source_ids": {
+            "sportmonks": "214",
+            "api_ninjas": "soccer-valencia"
+          }
+        },
+        "away": {
+          "name": "Villarreal",
+          "source_ids": {
+            "sportmonks": "3477",
+            "api_ninjas": "soccer-villarreal"
+          }
+        },
+        "status": "finished",
+        "home_score": 1,
+        "away_score": 2,
+        "source_ids": {
+          "sportmonks": "19732643",
+          "api_ninjas": "laliga-20261024-vil-val"
+        },
+        "source": "sportmonks",
+        "raw_source_updated_at": null,
+        "reconciliation": {
+          "status": {
+            "provider": "sportmonks",
+            "source_id": "19732643",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "finished",
+                "source_id": "19732643",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "finished",
+                "source_id": "laliga-20261024-vil-val",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:14:17+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "home_score": {
+            "provider": "sportmonks",
+            "source_id": "19732643",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 1,
+                "source_id": "19732643",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 1,
+                "source_id": "laliga-20261024-vil-val",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:14:17+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "away_score": {
+            "provider": "sportmonks",
+            "source_id": "19732643",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 2,
+                "source_id": "19732643",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 2,
+                "source_id": "laliga-20261024-vil-val",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:14:17+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "kickoff_utc": {
+            "provider": "sportmonks",
+            "source_id": "19732643",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "2026-10-24 16:30:00",
+                "source_id": "19732643",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "2026-10-24T16:30:00+00:00",
+                "source_id": "laliga-20261024-vil-val",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:14:17+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          }
+        },
+        "source_ids_by_provider": {
+          "sportmonks": {
+            "match": "19732643",
+            "home": "214",
+            "away": "3477"
+          },
+          "api_ninjas": {
+            "match": "laliga-20261024-vil-val",
+            "home": "soccer-valencia",
+            "away": "soccer-villarreal"
+          }
+        },
+        "providers_seen": [
+          "sportmonks",
+          "api_ninjas"
+        ],
+        "agreement_fields": [
+          "status",
+          "home_score",
+          "away_score",
+          "kickoff_utc"
+        ],
+        "conflict_fields": [],
+        "field_observations": [
+          {
+            "field": "status",
+            "provider": "sportmonks",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732643",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "status",
+            "provider": "api_ninjas",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261024-vil-val",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:14:17+00:00"
+          },
+          {
+            "field": "home_score",
+            "provider": "sportmonks",
+            "value": 1,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732643",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "home_score",
+            "provider": "api_ninjas",
+            "value": 1,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261024-vil-val",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:14:17+00:00"
+          },
+          {
+            "field": "away_score",
+            "provider": "sportmonks",
+            "value": 2,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732643",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "away_score",
+            "provider": "api_ninjas",
+            "value": 2,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261024-vil-val",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:14:17+00:00"
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "sportmonks",
+            "value": "2026-10-24 16:30:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732643",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "api_ninjas",
+            "value": "2026-10-24T16:30:00+00:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261024-vil-val",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:14:17+00:00"
+          }
+        ],
+        "diagnostic_status": "agreement"
+      },
+      {
+        "competition_key": "la liga|spain",
+        "season": 2026,
+        "kickoff_utc": "2026-10-18 19:00:00",
+        "home": {
+          "name": "Real Madrid",
+          "source_ids": {
+            "sportmonks": "3468",
+            "api_ninjas": "soccer-real-madrid"
+          }
+        },
+        "away": {
+          "name": "Sevilla",
+          "source_ids": {
+            "sportmonks": "676",
+            "api_ninjas": "soccer-sevilla"
+          }
+        },
+        "status": "finished",
+        "home_score": 4,
+        "away_score": 1,
+        "source_ids": {
+          "sportmonks": "19732655",
+          "api_ninjas": "laliga-20261018-sev-rma"
+        },
+        "source": "sportmonks",
+        "raw_source_updated_at": null,
+        "reconciliation": {
+          "status": {
+            "provider": "sportmonks",
+            "source_id": "19732655",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "finished",
+                "source_id": "19732655",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "finished",
+                "source_id": "laliga-20261018-sev-rma",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:14:17+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "home_score": {
+            "provider": "sportmonks",
+            "source_id": "19732655",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 4,
+                "source_id": "19732655",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 4,
+                "source_id": "laliga-20261018-sev-rma",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:14:17+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "away_score": {
+            "provider": "sportmonks",
+            "source_id": "19732655",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 1,
+                "source_id": "19732655",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 1,
+                "source_id": "laliga-20261018-sev-rma",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:14:17+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "kickoff_utc": {
+            "provider": "sportmonks",
+            "source_id": "19732655",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "2026-10-18 19:00:00",
+                "source_id": "19732655",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "2026-10-18T19:00:00+00:00",
+                "source_id": "laliga-20261018-sev-rma",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:14:17+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          }
+        },
+        "source_ids_by_provider": {
+          "sportmonks": {
+            "match": "19732655",
+            "home": "3468",
+            "away": "676"
+          },
+          "api_ninjas": {
+            "match": "laliga-20261018-sev-rma",
+            "home": "soccer-real-madrid",
+            "away": "soccer-sevilla"
+          }
+        },
+        "providers_seen": [
+          "sportmonks",
+          "api_ninjas"
+        ],
+        "agreement_fields": [
+          "status",
+          "home_score",
+          "away_score",
+          "kickoff_utc"
+        ],
+        "conflict_fields": [],
+        "field_observations": [
+          {
+            "field": "status",
+            "provider": "sportmonks",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732655",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "status",
+            "provider": "api_ninjas",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261018-sev-rma",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:14:17+00:00"
+          },
+          {
+            "field": "home_score",
+            "provider": "sportmonks",
+            "value": 4,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732655",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "home_score",
+            "provider": "api_ninjas",
+            "value": 4,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261018-sev-rma",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:14:17+00:00"
+          },
+          {
+            "field": "away_score",
+            "provider": "sportmonks",
+            "value": 1,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732655",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "away_score",
+            "provider": "api_ninjas",
+            "value": 1,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261018-sev-rma",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:14:17+00:00"
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "sportmonks",
+            "value": "2026-10-18 19:00:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732655",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "api_ninjas",
+            "value": "2026-10-18T19:00:00+00:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261018-sev-rma",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:14:17+00:00"
+          }
+        ],
+        "diagnostic_status": "agreement"
+      },
+      {
+        "competition_key": "la liga|spain",
+        "season": 2026,
+        "kickoff_utc": "2026-10-17 14:15:00",
+        "home": {
+          "name": "Villarreal",
+          "source_ids": {
+            "sportmonks": "3477",
+            "api_ninjas": "soccer-villarreal"
+          }
+        },
+        "away": {
+          "name": "Elche",
+          "source_ids": {
+            "sportmonks": "1099",
+            "api_ninjas": "soccer-elche"
+          }
+        },
+        "status": "finished",
+        "home_score": 0,
+        "away_score": 0,
+        "source_ids": {
+          "sportmonks": "19732653",
+          "api_ninjas": "laliga-20261017-elc-vil"
+        },
+        "source": "sportmonks",
+        "raw_source_updated_at": null,
+        "reconciliation": {
+          "status": {
+            "provider": "sportmonks",
+            "source_id": "19732653",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "finished",
+                "source_id": "19732653",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "finished",
+                "source_id": "laliga-20261017-elc-vil",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:14:17+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "home_score": {
+            "provider": "sportmonks",
+            "source_id": "19732653",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 0,
+                "source_id": "19732653",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 0,
+                "source_id": "laliga-20261017-elc-vil",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:14:17+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "away_score": {
+            "provider": "sportmonks",
+            "source_id": "19732653",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 0,
+                "source_id": "19732653",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 0,
+                "source_id": "laliga-20261017-elc-vil",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:14:17+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "kickoff_utc": {
+            "provider": "sportmonks",
+            "source_id": "19732653",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "2026-10-17 14:15:00",
+                "source_id": "19732653",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "2026-10-17T14:15:00+00:00",
+                "source_id": "laliga-20261017-elc-vil",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:14:17+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          }
+        },
+        "source_ids_by_provider": {
+          "sportmonks": {
+            "match": "19732653",
+            "home": "3477",
+            "away": "1099"
+          },
+          "api_ninjas": {
+            "match": "laliga-20261017-elc-vil",
+            "home": "soccer-villarreal",
+            "away": "soccer-elche"
+          }
+        },
+        "providers_seen": [
+          "sportmonks",
+          "api_ninjas"
+        ],
+        "agreement_fields": [
+          "status",
+          "home_score",
+          "away_score",
+          "kickoff_utc"
+        ],
+        "conflict_fields": [],
+        "field_observations": [
+          {
+            "field": "status",
+            "provider": "sportmonks",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732653",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "status",
+            "provider": "api_ninjas",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261017-elc-vil",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:14:17+00:00"
+          },
+          {
+            "field": "home_score",
+            "provider": "sportmonks",
+            "value": 0,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732653",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "home_score",
+            "provider": "api_ninjas",
+            "value": 0,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261017-elc-vil",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:14:17+00:00"
+          },
+          {
+            "field": "away_score",
+            "provider": "sportmonks",
+            "value": 0,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732653",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "away_score",
+            "provider": "api_ninjas",
+            "value": 0,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261017-elc-vil",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:14:17+00:00"
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "sportmonks",
+            "value": "2026-10-17 14:15:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732653",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "api_ninjas",
+            "value": "2026-10-17T14:15:00+00:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261017-elc-vil",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:14:17+00:00"
+          }
+        ],
+        "diagnostic_status": "agreement"
+      },
+      {
+        "competition_key": "la liga|spain",
+        "season": 2026,
+        "kickoff_utc": "2026-10-10 19:00:00",
+        "home": {
+          "name": "Real Madrid",
+          "source_ids": {
+            "sportmonks": "3468",
+            "api_ninjas": "soccer-real-madrid"
+          }
+        },
+        "away": {
+          "name": "Villarreal",
+          "source_ids": {
+            "sportmonks": "3477",
+            "api_ninjas": "soccer-villarreal"
+          }
+        },
+        "status": "finished",
+        "home_score": 1,
+        "away_score": 0,
+        "source_ids": {
+          "sportmonks": "19732664",
+          "api_ninjas": "laliga-20261010-vil-rma"
+        },
+        "source": "sportmonks",
+        "raw_source_updated_at": null,
+        "reconciliation": {
+          "status": {
+            "provider": "sportmonks",
+            "source_id": "19732664",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "finished",
+                "source_id": "19732664",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "finished",
+                "source_id": "laliga-20261010-vil-rma",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:14:17+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "home_score": {
+            "provider": "sportmonks",
+            "source_id": "19732664",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 1,
+                "source_id": "19732664",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 1,
+                "source_id": "laliga-20261010-vil-rma",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:14:17+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "away_score": {
+            "provider": "sportmonks",
+            "source_id": "19732664",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 0,
+                "source_id": "19732664",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 0,
+                "source_id": "laliga-20261010-vil-rma",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:14:17+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "kickoff_utc": {
+            "provider": "sportmonks",
+            "source_id": "19732664",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "2026-10-10 19:00:00",
+                "source_id": "19732664",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "2026-10-10T19:00:00+00:00",
+                "source_id": "laliga-20261010-vil-rma",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:14:17+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          }
+        },
+        "source_ids_by_provider": {
+          "sportmonks": {
+            "match": "19732664",
+            "home": "3468",
+            "away": "3477"
+          },
+          "api_ninjas": {
+            "match": "laliga-20261010-vil-rma",
+            "home": "soccer-real-madrid",
+            "away": "soccer-villarreal"
+          }
+        },
+        "providers_seen": [
+          "sportmonks",
+          "api_ninjas"
+        ],
+        "agreement_fields": [
+          "status",
+          "home_score",
+          "away_score",
+          "kickoff_utc"
+        ],
+        "conflict_fields": [],
+        "field_observations": [
+          {
+            "field": "status",
+            "provider": "sportmonks",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732664",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "status",
+            "provider": "api_ninjas",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261010-vil-rma",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:14:17+00:00"
+          },
+          {
+            "field": "home_score",
+            "provider": "sportmonks",
+            "value": 1,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732664",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "home_score",
+            "provider": "api_ninjas",
+            "value": 1,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261010-vil-rma",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:14:17+00:00"
+          },
+          {
+            "field": "away_score",
+            "provider": "sportmonks",
+            "value": 0,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732664",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "away_score",
+            "provider": "api_ninjas",
+            "value": 0,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261010-vil-rma",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:14:17+00:00"
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "sportmonks",
+            "value": "2026-10-10 19:00:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732664",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "api_ninjas",
+            "value": "2026-10-10T19:00:00+00:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20261010-vil-rma",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:14:17+00:00"
+          }
+        ],
+        "diagnostic_status": "agreement"
+      },
+      {
+        "competition_key": "la liga|spain",
+        "season": 2026,
+        "kickoff_utc": "2026-09-20 16:30:00",
+        "home": {
+          "name": "Villarreal",
+          "source_ids": {
+            "sportmonks": "3477",
+            "api_ninjas": "soccer-villarreal"
+          }
+        },
+        "away": {
+          "name": "Levante",
+          "source_ids": {
+            "sportmonks": "3457",
+            "api_ninjas": "soccer-levante"
+          }
+        },
+        "status": "finished",
+        "home_score": 3,
+        "away_score": 1,
+        "source_ids": {
+          "sportmonks": "19732673",
+          "api_ninjas": "laliga-20260920-lev-vil"
+        },
+        "source": "sportmonks",
+        "raw_source_updated_at": null,
+        "reconciliation": {
+          "status": {
+            "provider": "sportmonks",
+            "source_id": "19732673",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "finished",
+                "source_id": "19732673",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "finished",
+                "source_id": "laliga-20260920-lev-vil",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "home_score": {
+            "provider": "sportmonks",
+            "source_id": "19732673",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 3,
+                "source_id": "19732673",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 3,
+                "source_id": "laliga-20260920-lev-vil",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "away_score": {
+            "provider": "sportmonks",
+            "source_id": "19732673",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 1,
+                "source_id": "19732673",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 1,
+                "source_id": "laliga-20260920-lev-vil",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "kickoff_utc": {
+            "provider": "sportmonks",
+            "source_id": "19732673",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "2026-09-20 16:30:00",
+                "source_id": "19732673",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "2026-09-20T16:30:00+00:00",
+                "source_id": "laliga-20260920-lev-vil",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          }
+        },
+        "source_ids_by_provider": {
+          "sportmonks": {
+            "match": "19732673",
+            "home": "3477",
+            "away": "3457"
+          },
+          "api_ninjas": {
+            "match": "laliga-20260920-lev-vil",
+            "home": "soccer-villarreal",
+            "away": "soccer-levante"
+          }
+        },
+        "providers_seen": [
+          "sportmonks",
+          "api_ninjas"
+        ],
+        "agreement_fields": [
+          "status",
+          "home_score",
+          "away_score",
+          "kickoff_utc"
+        ],
+        "conflict_fields": [],
+        "field_observations": [
+          {
+            "field": "status",
+            "provider": "sportmonks",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732673",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "status",
+            "provider": "api_ninjas",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260920-lev-vil",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          },
+          {
+            "field": "home_score",
+            "provider": "sportmonks",
+            "value": 3,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732673",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "home_score",
+            "provider": "api_ninjas",
+            "value": 3,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260920-lev-vil",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          },
+          {
+            "field": "away_score",
+            "provider": "sportmonks",
+            "value": 1,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732673",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "away_score",
+            "provider": "api_ninjas",
+            "value": 1,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260920-lev-vil",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "sportmonks",
+            "value": "2026-09-20 16:30:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732673",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "api_ninjas",
+            "value": "2026-09-20T16:30:00+00:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260920-lev-vil",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          }
+        ],
+        "diagnostic_status": "agreement"
+      },
+      {
+        "competition_key": "la liga|spain",
+        "season": 2026,
+        "kickoff_utc": "2026-09-17 19:30:00",
+        "home": {
+          "name": "Málaga",
+          "source_ids": {
+            "sportmonks": "126",
+            "api_ninjas": "soccer-malaga"
+          }
+        },
+        "away": {
+          "name": "Villarreal",
+          "source_ids": {
+            "sportmonks": "3477",
+            "api_ninjas": "soccer-villarreal"
+          }
+        },
+        "status": "finished",
+        "home_score": 1,
+        "away_score": 3,
+        "source_ids": {
+          "sportmonks": "19732685",
+          "api_ninjas": "laliga-20260917-vil-mcf"
+        },
+        "source": "sportmonks",
+        "raw_source_updated_at": null,
+        "reconciliation": {
+          "status": {
+            "provider": "sportmonks",
+            "source_id": "19732685",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "finished",
+                "source_id": "19732685",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "finished",
+                "source_id": "laliga-20260917-vil-mcf",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "home_score": {
+            "provider": "sportmonks",
+            "source_id": "19732685",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 1,
+                "source_id": "19732685",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 1,
+                "source_id": "laliga-20260917-vil-mcf",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "away_score": {
+            "provider": "sportmonks",
+            "source_id": "19732685",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 3,
+                "source_id": "19732685",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 3,
+                "source_id": "laliga-20260917-vil-mcf",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "kickoff_utc": {
+            "provider": "sportmonks",
+            "source_id": "19732685",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "2026-09-17 19:30:00",
+                "source_id": "19732685",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "2026-09-17T19:30:00+00:00",
+                "source_id": "laliga-20260917-vil-mcf",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          }
+        },
+        "source_ids_by_provider": {
+          "sportmonks": {
+            "match": "19732685",
+            "home": "126",
+            "away": "3477"
+          },
+          "api_ninjas": {
+            "match": "laliga-20260917-vil-mcf",
+            "home": "soccer-malaga",
+            "away": "soccer-villarreal"
+          }
+        },
+        "providers_seen": [
+          "sportmonks",
+          "api_ninjas"
+        ],
+        "agreement_fields": [
+          "status",
+          "home_score",
+          "away_score",
+          "kickoff_utc"
+        ],
+        "conflict_fields": [],
+        "field_observations": [
+          {
+            "field": "status",
+            "provider": "sportmonks",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732685",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "status",
+            "provider": "api_ninjas",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260917-vil-mcf",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          },
+          {
+            "field": "home_score",
+            "provider": "sportmonks",
+            "value": 1,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732685",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "home_score",
+            "provider": "api_ninjas",
+            "value": 1,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260917-vil-mcf",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          },
+          {
+            "field": "away_score",
+            "provider": "sportmonks",
+            "value": 3,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732685",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "away_score",
+            "provider": "api_ninjas",
+            "value": 3,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260917-vil-mcf",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "sportmonks",
+            "value": "2026-09-17 19:30:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732685",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "api_ninjas",
+            "value": "2026-09-17T19:30:00+00:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260917-vil-mcf",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          }
+        ],
+        "diagnostic_status": "agreement"
+      },
+      {
+        "competition_key": "la liga|spain",
+        "season": 2026,
+        "kickoff_utc": "2026-09-15 19:30:00",
+        "home": {
+          "name": "Elche",
+          "source_ids": {
+            "sportmonks": "1099",
+            "api_ninjas": "soccer-elche"
+          }
+        },
+        "away": {
+          "name": "Real Madrid",
+          "source_ids": {
+            "sportmonks": "3468",
+            "api_ninjas": "soccer-real-madrid"
+          }
+        },
+        "status": "finished",
+        "home_score": 2,
+        "away_score": 3,
+        "source_ids": {
+          "sportmonks": "19732688",
+          "api_ninjas": "laliga-20260915-rma-elc"
+        },
+        "source": "sportmonks",
+        "raw_source_updated_at": null,
+        "reconciliation": {
+          "status": {
+            "provider": "sportmonks",
+            "source_id": "19732688",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "finished",
+                "source_id": "19732688",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "finished",
+                "source_id": "laliga-20260915-rma-elc",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "home_score": {
+            "provider": "sportmonks",
+            "source_id": "19732688",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 2,
+                "source_id": "19732688",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 2,
+                "source_id": "laliga-20260915-rma-elc",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "away_score": {
+            "provider": "sportmonks",
+            "source_id": "19732688",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 3,
+                "source_id": "19732688",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 3,
+                "source_id": "laliga-20260915-rma-elc",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "kickoff_utc": {
+            "provider": "sportmonks",
+            "source_id": "19732688",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "2026-09-15 19:30:00",
+                "source_id": "19732688",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "2026-09-15T19:30:00+00:00",
+                "source_id": "laliga-20260915-rma-elc",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          }
+        },
+        "source_ids_by_provider": {
+          "sportmonks": {
+            "match": "19732688",
+            "home": "1099",
+            "away": "3468"
+          },
+          "api_ninjas": {
+            "match": "laliga-20260915-rma-elc",
+            "home": "soccer-elche",
+            "away": "soccer-real-madrid"
+          }
+        },
+        "providers_seen": [
+          "sportmonks",
+          "api_ninjas"
+        ],
+        "agreement_fields": [
+          "status",
+          "home_score",
+          "away_score",
+          "kickoff_utc"
+        ],
+        "conflict_fields": [],
+        "field_observations": [
+          {
+            "field": "status",
+            "provider": "sportmonks",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732688",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "status",
+            "provider": "api_ninjas",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260915-rma-elc",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          },
+          {
+            "field": "home_score",
+            "provider": "sportmonks",
+            "value": 2,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732688",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "home_score",
+            "provider": "api_ninjas",
+            "value": 2,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260915-rma-elc",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          },
+          {
+            "field": "away_score",
+            "provider": "sportmonks",
+            "value": 3,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732688",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "away_score",
+            "provider": "api_ninjas",
+            "value": 3,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260915-rma-elc",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "sportmonks",
+            "value": "2026-09-15 19:30:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732688",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "api_ninjas",
+            "value": "2026-09-15T19:30:00+00:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260915-rma-elc",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          }
+        ],
+        "diagnostic_status": "agreement"
+      },
+      {
+        "competition_key": "la liga|spain",
+        "season": 2026,
+        "kickoff_utc": "2026-09-14 19:00:00",
+        "home": {
+          "name": "Villarreal",
+          "source_ids": {
+            "sportmonks": "3477",
+            "api_ninjas": "soccer-villarreal"
+          }
+        },
+        "away": {
+          "name": "Real Betis",
+          "source_ids": {
+            "sportmonks": "485",
+            "api_ninjas": "soccer-real-betis"
+          }
+        },
+        "status": "finished",
+        "home_score": 1,
+        "away_score": 2,
+        "source_ids": {
+          "sportmonks": "19732693",
+          "api_ninjas": "laliga-20260914-bet-vil"
+        },
+        "source": "sportmonks",
+        "raw_source_updated_at": null,
+        "reconciliation": {
+          "status": {
+            "provider": "sportmonks",
+            "source_id": "19732693",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "finished",
+                "source_id": "19732693",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "finished",
+                "source_id": "laliga-20260914-bet-vil",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "home_score": {
+            "provider": "sportmonks",
+            "source_id": "19732693",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 1,
+                "source_id": "19732693",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 1,
+                "source_id": "laliga-20260914-bet-vil",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "away_score": {
+            "provider": "sportmonks",
+            "source_id": "19732693",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 2,
+                "source_id": "19732693",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 2,
+                "source_id": "laliga-20260914-bet-vil",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "kickoff_utc": {
+            "provider": "sportmonks",
+            "source_id": "19732693",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "2026-09-14 19:00:00",
+                "source_id": "19732693",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "2026-09-14T19:00:00+00:00",
+                "source_id": "laliga-20260914-bet-vil",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          }
+        },
+        "source_ids_by_provider": {
+          "sportmonks": {
+            "match": "19732693",
+            "home": "3477",
+            "away": "485"
+          },
+          "api_ninjas": {
+            "match": "laliga-20260914-bet-vil",
+            "home": "soccer-villarreal",
+            "away": "soccer-real-betis"
+          }
+        },
+        "providers_seen": [
+          "sportmonks",
+          "api_ninjas"
+        ],
+        "agreement_fields": [
+          "status",
+          "home_score",
+          "away_score",
+          "kickoff_utc"
+        ],
+        "conflict_fields": [],
+        "field_observations": [
+          {
+            "field": "status",
+            "provider": "sportmonks",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732693",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "status",
+            "provider": "api_ninjas",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260914-bet-vil",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          },
+          {
+            "field": "home_score",
+            "provider": "sportmonks",
+            "value": 1,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732693",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "home_score",
+            "provider": "api_ninjas",
+            "value": 1,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260914-bet-vil",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          },
+          {
+            "field": "away_score",
+            "provider": "sportmonks",
+            "value": 2,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732693",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "away_score",
+            "provider": "api_ninjas",
+            "value": 2,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260914-bet-vil",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "sportmonks",
+            "value": "2026-09-14 19:00:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732693",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "api_ninjas",
+            "value": "2026-09-14T19:00:00+00:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260914-bet-vil",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          }
+        ],
+        "diagnostic_status": "agreement"
+      },
+      {
+        "competition_key": "la liga|spain",
+        "season": 2026,
+        "kickoff_utc": "2026-09-12 19:00:00",
+        "home": {
+          "name": "Real Madrid",
+          "source_ids": {
+            "sportmonks": "3468",
+            "api_ninjas": "soccer-real-madrid"
+          }
+        },
+        "away": {
+          "name": "Rayo Vallecano",
+          "source_ids": {
+            "sportmonks": "377",
+            "api_ninjas": "soccer-rayo-vallecano"
+          }
+        },
+        "status": "finished",
+        "home_score": 4,
+        "away_score": 1,
+        "source_ids": {
+          "sportmonks": "19732696",
+          "api_ninjas": "laliga-20260912-ray-rma"
+        },
+        "source": "sportmonks",
+        "raw_source_updated_at": null,
+        "reconciliation": {
+          "status": {
+            "provider": "sportmonks",
+            "source_id": "19732696",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "finished",
+                "source_id": "19732696",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "finished",
+                "source_id": "laliga-20260912-ray-rma",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "home_score": {
+            "provider": "sportmonks",
+            "source_id": "19732696",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 4,
+                "source_id": "19732696",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 4,
+                "source_id": "laliga-20260912-ray-rma",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "away_score": {
+            "provider": "sportmonks",
+            "source_id": "19732696",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 1,
+                "source_id": "19732696",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 1,
+                "source_id": "laliga-20260912-ray-rma",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "kickoff_utc": {
+            "provider": "sportmonks",
+            "source_id": "19732696",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "2026-09-12 19:00:00",
+                "source_id": "19732696",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "2026-09-12T19:00:00+00:00",
+                "source_id": "laliga-20260912-ray-rma",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          }
+        },
+        "source_ids_by_provider": {
+          "sportmonks": {
+            "match": "19732696",
+            "home": "3468",
+            "away": "377"
+          },
+          "api_ninjas": {
+            "match": "laliga-20260912-ray-rma",
+            "home": "soccer-real-madrid",
+            "away": "soccer-rayo-vallecano"
+          }
+        },
+        "providers_seen": [
+          "sportmonks",
+          "api_ninjas"
+        ],
+        "agreement_fields": [
+          "status",
+          "home_score",
+          "away_score",
+          "kickoff_utc"
+        ],
+        "conflict_fields": [],
+        "field_observations": [
+          {
+            "field": "status",
+            "provider": "sportmonks",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732696",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "status",
+            "provider": "api_ninjas",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260912-ray-rma",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          },
+          {
+            "field": "home_score",
+            "provider": "sportmonks",
+            "value": 4,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732696",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "home_score",
+            "provider": "api_ninjas",
+            "value": 4,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260912-ray-rma",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          },
+          {
+            "field": "away_score",
+            "provider": "sportmonks",
+            "value": 1,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732696",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "away_score",
+            "provider": "api_ninjas",
+            "value": 1,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260912-ray-rma",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "sportmonks",
+            "value": "2026-09-12 19:00:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732696",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "api_ninjas",
+            "value": "2026-09-12T19:00:00+00:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260912-ray-rma",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          }
+        ],
+        "diagnostic_status": "agreement"
+      },
+      {
+        "competition_key": "la liga|spain",
+        "season": 2026,
+        "kickoff_utc": "2026-09-04 19:00:00",
+        "home": {
+          "name": "Real Betis",
+          "source_ids": {
+            "sportmonks": "485",
+            "api_ninjas": "soccer-real-betis"
+          }
+        },
+        "away": {
+          "name": "Real Madrid",
+          "source_ids": {
+            "sportmonks": "3468",
+            "api_ninjas": "soccer-real-madrid"
+          }
+        },
+        "status": "finished",
+        "home_score": 1,
+        "away_score": 0,
+        "source_ids": {
+          "sportmonks": "19732710",
+          "api_ninjas": "laliga-20260904-rma-bet"
+        },
+        "source": "sportmonks",
+        "raw_source_updated_at": null,
+        "reconciliation": {
+          "status": {
+            "provider": "sportmonks",
+            "source_id": "19732710",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "finished",
+                "source_id": "19732710",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "finished",
+                "source_id": "laliga-20260904-rma-bet",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "home_score": {
+            "provider": "sportmonks",
+            "source_id": "19732710",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 1,
+                "source_id": "19732710",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 1,
+                "source_id": "laliga-20260904-rma-bet",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "away_score": {
+            "provider": "sportmonks",
+            "source_id": "19732710",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 0,
+                "source_id": "19732710",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 0,
+                "source_id": "laliga-20260904-rma-bet",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "kickoff_utc": {
+            "provider": "sportmonks",
+            "source_id": "19732710",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "2026-09-04 19:00:00",
+                "source_id": "19732710",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "2026-09-04T19:00:00+00:00",
+                "source_id": "laliga-20260904-rma-bet",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          }
+        },
+        "source_ids_by_provider": {
+          "sportmonks": {
+            "match": "19732710",
+            "home": "485",
+            "away": "3468"
+          },
+          "api_ninjas": {
+            "match": "laliga-20260904-rma-bet",
+            "home": "soccer-real-betis",
+            "away": "soccer-real-madrid"
+          }
+        },
+        "providers_seen": [
+          "sportmonks",
+          "api_ninjas"
+        ],
+        "agreement_fields": [
+          "status",
+          "home_score",
+          "away_score",
+          "kickoff_utc"
+        ],
+        "conflict_fields": [],
+        "field_observations": [
+          {
+            "field": "status",
+            "provider": "sportmonks",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732710",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "status",
+            "provider": "api_ninjas",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260904-rma-bet",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          },
+          {
+            "field": "home_score",
+            "provider": "sportmonks",
+            "value": 1,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732710",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "home_score",
+            "provider": "api_ninjas",
+            "value": 1,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260904-rma-bet",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          },
+          {
+            "field": "away_score",
+            "provider": "sportmonks",
+            "value": 0,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732710",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "away_score",
+            "provider": "api_ninjas",
+            "value": 0,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260904-rma-bet",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "sportmonks",
+            "value": "2026-09-04 19:00:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732710",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "api_ninjas",
+            "value": "2026-09-04T19:00:00+00:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260904-rma-bet",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          }
+        ],
+        "diagnostic_status": "agreement"
+      },
+      {
+        "competition_key": "la liga|spain",
+        "season": 2026,
+        "kickoff_utc": "2026-08-30 15:00:00",
+        "home": {
+          "name": "Real Madrid",
+          "source_ids": {
+            "sportmonks": "3468",
+            "api_ninjas": "soccer-real-madrid"
+          }
+        },
+        "away": {
+          "name": "Málaga",
+          "source_ids": {
+            "sportmonks": "126",
+            "api_ninjas": "soccer-malaga"
+          }
+        },
+        "status": "finished",
+        "home_score": 4,
+        "away_score": 0,
+        "source_ids": {
+          "sportmonks": "19732715",
+          "api_ninjas": "laliga-20260830-mcf-rma"
+        },
+        "source": "sportmonks",
+        "raw_source_updated_at": null,
+        "reconciliation": {
+          "status": {
+            "provider": "sportmonks",
+            "source_id": "19732715",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "finished",
+                "source_id": "19732715",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "finished",
+                "source_id": "laliga-20260830-mcf-rma",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "home_score": {
+            "provider": "sportmonks",
+            "source_id": "19732715",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 4,
+                "source_id": "19732715",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 4,
+                "source_id": "laliga-20260830-mcf-rma",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "away_score": {
+            "provider": "sportmonks",
+            "source_id": "19732715",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 0,
+                "source_id": "19732715",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 0,
+                "source_id": "laliga-20260830-mcf-rma",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "kickoff_utc": {
+            "provider": "sportmonks",
+            "source_id": "19732715",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "2026-08-30 15:00:00",
+                "source_id": "19732715",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "2026-08-30T15:00:00+00:00",
+                "source_id": "laliga-20260830-mcf-rma",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          }
+        },
+        "source_ids_by_provider": {
+          "sportmonks": {
+            "match": "19732715",
+            "home": "3468",
+            "away": "126"
+          },
+          "api_ninjas": {
+            "match": "laliga-20260830-mcf-rma",
+            "home": "soccer-real-madrid",
+            "away": "soccer-malaga"
+          }
+        },
+        "providers_seen": [
+          "sportmonks",
+          "api_ninjas"
+        ],
+        "agreement_fields": [
+          "status",
+          "home_score",
+          "away_score",
+          "kickoff_utc"
+        ],
+        "conflict_fields": [],
+        "field_observations": [
+          {
+            "field": "status",
+            "provider": "sportmonks",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732715",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "status",
+            "provider": "api_ninjas",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260830-mcf-rma",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          },
+          {
+            "field": "home_score",
+            "provider": "sportmonks",
+            "value": 4,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732715",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "home_score",
+            "provider": "api_ninjas",
+            "value": 4,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260830-mcf-rma",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          },
+          {
+            "field": "away_score",
+            "provider": "sportmonks",
+            "value": 0,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732715",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "away_score",
+            "provider": "api_ninjas",
+            "value": 0,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260830-mcf-rma",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "sportmonks",
+            "value": "2026-08-30 15:00:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732715",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "api_ninjas",
+            "value": "2026-08-30T15:00:00+00:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260830-mcf-rma",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          }
+        ],
+        "diagnostic_status": "agreement"
+      },
+      {
+        "competition_key": "la liga|spain",
+        "season": 2026,
+        "kickoff_utc": "2026-08-26 19:00:00",
+        "home": {
+          "name": "Real Madrid",
+          "source_ids": {
+            "sportmonks": "3468",
+            "api_ninjas": "soccer-real-madrid"
+          }
+        },
+        "away": {
+          "name": "Real Sociedad",
+          "source_ids": {
+            "sportmonks": "594",
+            "api_ninjas": "soccer-real-sociedad"
+          }
+        },
+        "status": "finished",
+        "home_score": 4,
+        "away_score": 1,
+        "source_ids": {
+          "sportmonks": "19732735",
+          "api_ninjas": "laliga-20260826-rso-rma"
+        },
+        "source": "sportmonks",
+        "raw_source_updated_at": null,
+        "reconciliation": {
+          "status": {
+            "provider": "sportmonks",
+            "source_id": "19732735",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "finished",
+                "source_id": "19732735",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "finished",
+                "source_id": "laliga-20260826-rso-rma",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "home_score": {
+            "provider": "sportmonks",
+            "source_id": "19732735",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 4,
+                "source_id": "19732735",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 4,
+                "source_id": "laliga-20260826-rso-rma",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "away_score": {
+            "provider": "sportmonks",
+            "source_id": "19732735",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": 1,
+                "source_id": "19732735",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": 1,
+                "source_id": "laliga-20260826-rso-rma",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          },
+          "kickoff_utc": {
+            "provider": "sportmonks",
+            "source_id": "19732735",
+            "status": "corroborated",
+            "corroborating_providers": [
+              "api_ninjas"
+            ],
+            "conflicting_providers": [],
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "observations": [
+              {
+                "provider": "sportmonks",
+                "value": "2026-08-26 19:00:00",
+                "source_id": "19732735",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": null
+              },
+              {
+                "provider": "api_ninjas",
+                "value": "2026-08-26T19:00:00+00:00",
+                "source_id": "laliga-20260826-rso-rma",
+                "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+                "source_updated_at": "2026-10-27T23:36:02+00:00"
+              }
+            ],
+            "message": "sportmonks is corroborated by independent source data."
+          }
+        },
+        "source_ids_by_provider": {
+          "sportmonks": {
+            "match": "19732735",
+            "home": "3468",
+            "away": "594"
+          },
+          "api_ninjas": {
+            "match": "laliga-20260826-rso-rma",
+            "home": "soccer-real-madrid",
+            "away": "soccer-real-sociedad"
+          }
+        },
+        "providers_seen": [
+          "sportmonks",
+          "api_ninjas"
+        ],
+        "agreement_fields": [
+          "status",
+          "home_score",
+          "away_score",
+          "kickoff_utc"
+        ],
+        "conflict_fields": [],
+        "field_observations": [
+          {
+            "field": "status",
+            "provider": "sportmonks",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732735",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "status",
+            "provider": "api_ninjas",
+            "value": "finished",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260826-rso-rma",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          },
+          {
+            "field": "home_score",
+            "provider": "sportmonks",
+            "value": 4,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732735",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "home_score",
+            "provider": "api_ninjas",
+            "value": 4,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260826-rso-rma",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          },
+          {
+            "field": "away_score",
+            "provider": "sportmonks",
+            "value": 1,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732735",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "away_score",
+            "provider": "api_ninjas",
+            "value": 1,
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260826-rso-rma",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "sportmonks",
+            "value": "2026-08-26 19:00:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "19732735",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": null
+          },
+          {
+            "field": "kickoff_utc",
+            "provider": "api_ninjas",
+            "value": "2026-08-26T19:00:00+00:00",
+            "selected_provider": "sportmonks",
+            "field_status": "corroborated",
+            "source_id": "laliga-20260826-rso-rma",
+            "fetched_at": "2026-11-08T22:01:00.469535+00:00",
+            "source_updated_at": "2026-10-27T23:36:02+00:00"
+          }
+        ],
+        "diagnostic_status": "agreement"
+      }
+    ],
+    "interpretation": "Agreement and conflict are counted independently at fixture level. A fixture may appear in both counts when providers agree on some fields and disagree on others. Inspect field_level_summary and each match's field_observations for the exact provider values and timestamps.",
+    "note": "Corroboration is diagnostic only; Sportmonks Layer 2 profiles and prediction inputs are not modified.",
+    "candidate_verification": []
+  },
+  "player_enrichment": null,
+  "system_diagnostics": {
+    "diagnostic_version": 1,
+    "generated_at": "2026-11-08T22:01:01.300564+00:00",
+    "overall_status": "attention_required",
+    "selected_context": {
+      "season_start_year": 2026,
+      "competition": "La Liga — Spain",
+      "primary_provider": "sportmonks"
+    },
+    "summary": {
+      "checks_total": 16,
+      "passed": 11,
+      "warnings": 4,
+      "failed": 0,
+      "informational": 1
+    },
+    "checks": [
+      {
+        "id": "primary_provider_configuration",
+        "status": "pass",
+        "summary": "The selected season uses sportmonks; its credential is configured. Connectivity is assessed separately.",
+        "recommendation": null
+      },
+      {
+        "id": "fixture_identity",
+        "status": "pass",
+        "summary": "The selected upcoming fixture passed exact season, home/away team and scheduled-kickoff checks.",
+        "recommendation": null
+      },
+      {
+        "id": "fixture_freshness",
+        "status": "pass",
+        "summary": "Detailed fixture retrieval is less than 24 hours old.",
+        "recommendation": null
+      },
+      {
+        "id": "home_history_depth",
+        "status": "pass",
+        "summary": "Villarreal: 10 completed score-valid matches available (minimum 5 met; preferred target 10 met).",
+        "recommendation": null
+      },
+      {
+        "id": "home_tactical_recency_weighting",
+        "status": "pass",
+        "summary": "Villarreal: tactical recency metadata reports latest-five 60% / previous-five 40% over 10 match(es).",
+        "recommendation": null
+      },
+      {
+        "id": "home_history_integrity",
+        "status": "pass",
+        "summary": "Villarreal: no duplicate fixture IDs or invalid/missing score fields were found in the collected sample.",
+        "recommendation": null
+      },
+      {
+        "id": "home_statistics_coverage",
+        "status": "warning",
+        "summary": "Villarreal: none of the 8 core tactical statistics has usable values in the checked sample.",
+        "recommendation": "Check whether match statistics were requested and supplied by the selected provider. Missing values remain unknown."
+      },
+      {
+        "id": "away_history_depth",
+        "status": "pass",
+        "summary": "Real Madrid: 10 completed score-valid matches available (minimum 5 met; preferred target 10 met).",
+        "recommendation": null
+      },
+      {
+        "id": "away_tactical_recency_weighting",
+        "status": "pass",
+        "summary": "Real Madrid: tactical recency metadata reports latest-five 60% / previous-five 40% over 10 match(es).",
+        "recommendation": null
+      },
+      {
+        "id": "away_history_integrity",
+        "status": "pass",
+        "summary": "Real Madrid: no duplicate fixture IDs or invalid/missing score fields were found in the collected sample.",
+        "recommendation": null
+      },
+      {
+        "id": "away_statistics_coverage",
+        "status": "warning",
+        "summary": "Real Madrid: none of the 8 core tactical statistics has usable values in the checked sample.",
+        "recommendation": "Check whether match statistics were requested and supplied by the selected provider. Missing values remain unknown."
+      },
+      {
+        "id": "independent_provider_corroboration",
+        "status": "warning",
+        "summary": "One or more optional corroboration requests reported errors.",
+        "recommendation": "Review the provider error details. Corroboration failures do not authorize automatic fallback."
+      },
+      {
+        "id": "api_ninjas_history_corroboration",
+        "status": "warning",
+        "summary": "API Ninjas has unmatched completed results for selected team history (Villarreal: 8/12 exact; Real Madrid: 9/12 exact).",
+        "recommendation": "Review each unmatched API Ninjas candidate against exact competition, season, teams, kickoff and score. Do not import candidates automatically."
+      },
+      {
+        "id": "highlightly_history_coverage",
+        "status": "info",
+        "summary": "Highlightly returned no score-valid history for the selected teams. This is a provider coverage limitation, not evidence of disagreement.",
+        "recommendation": null
+      },
+      {
+        "id": "model_weight_configuration",
+        "status": "pass",
+        "summary": "The supplied top-level model weights are non-negative and sum to 1.0.",
+        "recommendation": null
+      },
+      {
+        "id": "prediction_readiness",
+        "status": "pass",
+        "summary": "Prediction readiness status: ready. Five completed, score-valid matches per team meet the history minimum; ten is preferred.",
+        "recommendation": null
+      }
+    ],
+    "recommended_actions": [
+      {
+        "priority": "next",
+        "check_id": "home_statistics_coverage",
+        "issue": "Villarreal: none of the 8 core tactical statistics has usable values in the checked sample.",
+        "action": "Check whether match statistics were requested and supplied by the selected provider. Missing values remain unknown."
+      },
+      {
+        "priority": "next",
+        "check_id": "independent_provider_corroboration",
+        "issue": "One or more optional corroboration requests reported errors.",
+        "action": "Review the provider error details. Corroboration failures do not authorize automatic fallback."
+      },
+      {
+        "priority": "next",
+        "check_id": "api_ninjas_history_corroboration",
+        "issue": "API Ninjas has unmatched completed results for selected team history (Villarreal: 8/12 exact; Real Madrid: 9/12 exact).",
+        "action": "Review each unmatched API Ninjas candidate against exact competition, season, teams, kickoff and score. Do not import candidates automatically."
+      }
+    ],
+    "providers": {
+      "sportmonks": {
+        "provider": "Sportmonks Football API v3",
+        "role": "Primary current-season provider",
+        "credential_configured": true,
+        "credential_required": true,
+        "adapter": "implemented",
+        "app_integration": "current-season Layer 2 path active; exact competition/season coverage and data-quality gates enforced",
+        "limitation": "Coverage is limited to competitions/seasons enabled by the account; each selected competition must pass data-quality gates."
+      },
+      "highlightly": {
+        "provider": "Highlightly",
+        "role": "Independent current-season corroboration and secondary source",
+        "credential_configured": true,
+        "credential_required": true,
+        "adapter": "implemented",
+        "app_integration": "adapter and authenticated smoke test available; canonical normalizer exists; not yet active in Layer 2 reconciliation",
+        "limitation": "Coverage, fields, quotas and refresh intervals are plan-dependent; match data is not yet active in Layer 2 reconciliation."
+      },
+      "api_football": {
+        "provider": "API-Football v3",
+        "role": "Historical specialist source and secondary detail provider",
+        "credential_configured": true,
+        "credential_required": true,
+        "adapter": "implemented",
+        "app_integration": "historical Layer 2 path active for supported seasons; account status/quota diagnostic available",
+        "limitation": "The configured account is limited to seasons 2022–2024; do not request newer seasons from this account."
+      },
+      "api_ninjas": {
+        "provider": "API Ninjas",
+        "role": "Independent fixtures/results/standings and club/squad corroboration",
+        "credential_configured": true,
+        "credential_required": true,
+        "adapter": "implemented",
+        "app_integration": "adapter and authenticated smoke test available; canonical normalizer exists; not yet active in Layer 2 reconciliation",
+        "limitation": "The current adapter does not supply detailed fixture statistics, injuries or lineups; not yet active in Layer 2 reconciliation."
+      },
+      "livescore_football": {
+        "provider": "LiveScoreFootball",
+        "role": "Conditional competition-specific corroboration for fixtures/results/standings",
+        "credential_configured": false,
+        "credential_required": false,
+        "adapter": "implemented",
+        "app_integration": "read-only adapter, metadata freshness and exact competition crosswalk checks available; automatic fallback remains disabled",
+        "limitation": "Database-backed snapshots can be delayed; require exact competition/season crosswalk and fresh sync metadata for every use."
+      }
+    },
+    "fixture": {
+      "verified": true,
+      "status": "verified",
+      "reason": "Exact competition-season fixture identity and future kickoff verified.",
+      "fixture_id": 19732473,
+      "kickoff_utc": "2027-03-07T00:00:00+00:00",
+      "source_updated_at": null,
+      "source_fetched_at": "2026-11-08T22:00:34.130938+00:00",
+      "source_age_seconds": 27.2,
+      "source_age_minutes": 0.5,
+      "source_freshness": "fresh",
+      "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
+    },
+    "teams": {
+      "home": {
+        "team": "Villarreal",
+        "completed_matches_available": 10,
+        "history_minimum": 5,
+        "history_target": 10,
+        "history_collection_diagnostics": {
+          "fixtures_scanned": 380,
+          "same_season_fixtures": 380,
+          "season_eligible_fixtures": 380,
+          "fixtures_missing_season_id": 0,
+          "team_fixtures": 38,
+          "completed_fixtures": 12,
+          "fixtures_with_valid_scores": 12,
+          "excluded_wrong_season": 0,
+          "excluded_missing_participants": 0,
+          "excluded_other_team": 342,
+          "excluded_not_completed": 26,
+          "excluded_missing_scores": 0
+        },
+        "statistics_coverage": {
+          "fixtures_checked": 10,
+          "core_metrics_with_any_data": 0,
+          "core_metrics_complete": 0,
+          "core_metrics_total": 8,
+          "raw_observations_seen": 0,
+          "unmapped_observations": 0,
+          "mapping_visibility": "not supplied by this data path",
+          "metrics": [
+            {
+              "group": "Possession & distribution",
+              "statistic": "Ball Possession",
+              "fixtures_available": 0,
+              "fixtures_checked": 10,
+              "coverage_pct": 0.0,
+              "raw_observations": 0,
+              "status": "missing"
+            },
+            {
+              "group": "Possession & distribution",
+              "statistic": "Passes %",
+              "fixtures_available": 0,
+              "fixtures_checked": 10,
+              "coverage_pct": 0.0,
+              "raw_observations": 0,
+              "status": "missing"
+            },
+            {
+              "group": "Attacking",
+              "statistic": "Total Shots",
+              "fixtures_available": 0,
+              "fixtures_checked": 10,
+              "coverage_pct": 0.0,
+              "raw_observations": 0,
+              "status": "missing"
+            },
+            {
+              "group": "Attacking",
+              "statistic": "Shots on Target / Goal",
+              "fixtures_available": 0,
+              "fixtures_checked": 10,
+              "coverage_pct": 0.0,
+              "raw_observations": 0,
+              "status": "missing"
+            },
+            {
+              "group": "Defending",
+              "statistic": "Tackles",
+              "fixtures_available": 0,
+              "fixtures_checked": 10,
+              "coverage_pct": 0.0,
+              "raw_observations": 0,
+              "status": "missing"
+            },
+            {
+              "group": "Defending",
+              "statistic": "Interceptions",
+              "fixtures_available": 0,
+              "fixtures_checked": 10,
+              "coverage_pct": 0.0,
+              "raw_observations": 0,
+              "status": "missing"
+            },
+            {
+              "group": "Defending",
+              "statistic": "Blocked Shots",
+              "fixtures_available": 0,
+              "fixtures_checked": 10,
+              "coverage_pct": 0.0,
+              "raw_observations": 0,
+              "status": "missing"
+            },
+            {
+              "group": "Attacking",
+              "statistic": "Corner Kicks",
+              "fixtures_available": 0,
+              "fixtures_checked": 10,
+              "coverage_pct": 0.0,
+              "raw_observations": 0,
+              "status": "missing"
+            }
+          ],
+          "unmapped_statistics": []
+        },
+        "tactical_summary": {
+          "playing_style": null,
+          "attacking_approach": null,
+          "defensive_structure": null,
+          "coverage_metrics": 0,
+          "available_metrics": {
+            "average_possession": null,
+            "average_pass_accuracy": null,
+            "average_shots": null,
+            "average_shots_on_target": null,
+            "average_tackles": null,
+            "average_interceptions": null,
+            "average_blocked_shots": null,
+            "average_corners": null
+          },
+          "recency_weighting": {
+            "matches_used": 10,
+            "recent_matches": 5,
+            "recent_weight": 0.6,
+            "previous_matches": 5,
+            "previous_weight": 0.4,
+            "note": "Latest five matches carry 60%; previous five carry 40%. If a metric is absent from one window, the available window is renormalized."
+          },
+          "note": "Tactical ratings are shown only when the underlying statistics are present; unavailable metrics remain unknown."
+        },
+        "tactical_recency_weighting": {
+          "matches_used": 10,
+          "recent_matches": 5,
+          "recent_weight": 0.6,
+          "previous_matches": 5,
+          "previous_weight": 0.4,
+          "note": "Latest five matches carry 60%; previous five carry 40%. If a metric is absent from one window, the available window is renormalized."
+        },
+        "integrity": {
+          "matches_checked": 10,
+          "duplicate_fixture_ids": [],
+          "invalid_or_missing_score_fields": []
+        }
+      },
+      "away": {
+        "team": "Real Madrid",
+        "completed_matches_available": 10,
+        "history_minimum": 5,
+        "history_target": 10,
+        "history_collection_diagnostics": {
+          "fixtures_scanned": 380,
+          "same_season_fixtures": 380,
+          "season_eligible_fixtures": 380,
+          "fixtures_missing_season_id": 0,
+          "team_fixtures": 38,
+          "completed_fixtures": 12,
+          "fixtures_with_valid_scores": 12,
+          "excluded_wrong_season": 0,
+          "excluded_missing_participants": 0,
+          "excluded_other_team": 342,
+          "excluded_not_completed": 26,
+          "excluded_missing_scores": 0
+        },
+        "statistics_coverage": {
+          "fixtures_checked": 10,
+          "core_metrics_with_any_data": 0,
+          "core_metrics_complete": 0,
+          "core_metrics_total": 8,
+          "raw_observations_seen": 0,
+          "unmapped_observations": 0,
+          "mapping_visibility": "not supplied by this data path",
+          "metrics": [
+            {
+              "group": "Possession & distribution",
+              "statistic": "Ball Possession",
+              "fixtures_available": 0,
+              "fixtures_checked": 10,
+              "coverage_pct": 0.0,
+              "raw_observations": 0,
+              "status": "missing"
+            },
+            {
+              "group": "Possession & distribution",
+              "statistic": "Passes %",
+              "fixtures_available": 0,
+              "fixtures_checked": 10,
+              "coverage_pct": 0.0,
+              "raw_observations": 0,
+              "status": "missing"
+            },
+            {
+              "group": "Attacking",
+              "statistic": "Total Shots",
+              "fixtures_available": 0,
+              "fixtures_checked": 10,
+              "coverage_pct": 0.0,
+              "raw_observations": 0,
+              "status": "missing"
+            },
+            {
+              "group": "Attacking",
+              "statistic": "Shots on Target / Goal",
+              "fixtures_available": 0,
+              "fixtures_checked": 10,
+              "coverage_pct": 0.0,
+              "raw_observations": 0,
+              "status": "missing"
+            },
+            {
+              "group": "Defending",
+              "statistic": "Tackles",
+              "fixtures_available": 0,
+              "fixtures_checked": 10,
+              "coverage_pct": 0.0,
+              "raw_observations": 0,
+              "status": "missing"
+            },
+            {
+              "group": "Defending",
+              "statistic": "Interceptions",
+              "fixtures_available": 0,
+              "fixtures_checked": 10,
+              "coverage_pct": 0.0,
+              "raw_observations": 0,
+              "status": "missing"
+            },
+            {
+              "group": "Defending",
+              "statistic": "Blocked Shots",
+              "fixtures_available": 0,
+              "fixtures_checked": 10,
+              "coverage_pct": 0.0,
+              "raw_observations": 0,
+              "status": "missing"
+            },
+            {
+              "group": "Attacking",
+              "statistic": "Corner Kicks",
+              "fixtures_available": 0,
+              "fixtures_checked": 10,
+              "coverage_pct": 0.0,
+              "raw_observations": 0,
+              "status": "missing"
+            }
+          ],
+          "unmapped_statistics": []
+        },
+        "tactical_summary": {
+          "playing_style": null,
+          "attacking_approach": null,
+          "defensive_structure": null,
+          "coverage_metrics": 0,
+          "available_metrics": {
+            "average_possession": null,
+            "average_pass_accuracy": null,
+            "average_shots": null,
+            "average_shots_on_target": null,
+            "average_tackles": null,
+            "average_interceptions": null,
+            "average_blocked_shots": null,
+            "average_corners": null
+          },
+          "recency_weighting": {
+            "matches_used": 10,
+            "recent_matches": 5,
+            "recent_weight": 0.6,
+            "previous_matches": 5,
+            "previous_weight": 0.4,
+            "note": "Latest five matches carry 60%; previous five carry 40%. If a metric is absent from one window, the available window is renormalized."
+          },
+          "note": "Tactical ratings are shown only when the underlying statistics are present; unavailable metrics remain unknown."
+        },
+        "tactical_recency_weighting": {
+          "matches_used": 10,
+          "recent_matches": 5,
+          "recent_weight": 0.6,
+          "previous_matches": 5,
+          "previous_weight": 0.4,
+          "note": "Latest five matches carry 60%; previous five carry 40%. If a metric is absent from one window, the available window is renormalized."
+        },
+        "integrity": {
+          "matches_checked": 10,
+          "duplicate_fixture_ids": [],
+          "invalid_or_missing_score_fields": []
+        }
+      }
+    },
+    "corroboration": {
+      "errors": {
+        "highlightly": "Highlightly rate limit or daily quota reached (HTTP 429)."
+      },
+      "provider_records_returned": {
+        "api_ninjas": 74
+      },
+      "highlightly_diagnostics": {
+        "requested_filters": {
+          "leagueName": "La Liga",
+          "countryName": "Spain",
+          "season": 2026,
+          "limit": 100,
+          "max_pages": 10
+        },
+        "pages_requested": 0,
+        "raw_rows_received": 0,
+        "rejected_competition_mismatch": 0,
+        "competition_missing_in_response": 0,
+        "rejected_country_missing": 0,
+        "rejected_country_mismatch": 0,
+        "country_missing_but_retained": 0,
+        "season_missing_in_response": 0,
+        "rejected_season_mismatch": 0,
+        "rejected_invalid_season": 0,
+        "normalization_failures": 0,
+        "records_normalized": 0,
+        "completed_score_valid_records": 0,
+        "selected_team_records": 0,
+        "page_metadata": [],
+        "retrieval_error": "Highlightly rate limit or daily quota reached (HTTP 429).",
+        "client_metadata_at_error": {
+          "http_status": 429,
+          "requests_limit": null,
+          "requests_remaining": null
+        }
+      },
+      "team_history_coverage": {
+        "Villarreal": {
+          "highlightly_completed_score_valid": 0,
+          "highlightly_exact_matches": 0,
+          "highlightly_unmatched_count": 0,
+          "sportmonks_completed_score_valid": 10,
+          "api_ninjas_completed_score_valid": 12,
+          "api_ninjas_exact_matches": 8,
+          "api_ninjas_unmatched_count": 4,
+          "api_ninjas_unmatched_candidates": [
+            {
+              "kickoff_utc": "2026-09-05T19:00:00+00:00",
+              "home": "Villarreal",
+              "away": "Deportivo",
+              "score": [
+                2,
+                3
+              ],
+              "api_ninjas_match_id": "laliga-20260905-dep-vil",
+              "review_status": "candidate_only_not_added_to_prediction_history"
+            },
+            {
+              "kickoff_utc": "2026-08-28T19:30:00+00:00",
+              "home": "Alavés",
+              "away": "Villarreal",
+              "score": [
+                1,
+                0
+              ],
+              "api_ninjas_match_id": "laliga-20260828-vil-ala",
+              "review_status": "candidate_only_not_added_to_prediction_history"
+            },
+            {
+              "kickoff_utc": "2026-08-23T15:00:00+00:00",
+              "home": "Atlético Madrid",
+              "away": "Villarreal",
+              "score": [
+                2,
+                2
+              ],
+              "api_ninjas_match_id": "laliga-20260823-vil-atm",
+              "review_status": "candidate_only_not_added_to_prediction_history"
+            },
+            {
+              "kickoff_utc": "2026-08-16T15:00:00+00:00",
+              "home": "Racing Santander",
+              "away": "Villarreal",
+              "score": [
+                2,
+                2
+              ],
+              "api_ninjas_match_id": "laliga-20260816-vil-rac",
+              "review_status": "candidate_only_not_added_to_prediction_history"
+            }
+          ],
+          "exact_matches_across_sources": 0,
+          "highlightly_results_not_found_in_sportmonks": 0,
+          "latest_highlightly_completed_match": null,
+          "unmatched_completed_candidates": [],
+          "interpretation": "Provider-specific unmatched results are review candidates, not accepted extra matches. Exact competition, season, home/away teams and kickoff must match before joining."
+        },
+        "Real Madrid": {
+          "highlightly_completed_score_valid": 0,
+          "highlightly_exact_matches": 0,
+          "highlightly_unmatched_count": 0,
+          "sportmonks_completed_score_valid": 11,
+          "api_ninjas_completed_score_valid": 12,
+          "api_ninjas_exact_matches": 9,
+          "api_ninjas_unmatched_count": 3,
+          "api_ninjas_unmatched_candidates": [
+            {
+              "kickoff_utc": "2026-10-25T20:00:00+00:00",
+              "home": "Barcelona",
+              "away": "Real Madrid",
+              "score": [
+                1,
+                2
+              ],
+              "api_ninjas_match_id": "laliga-20261025-rma-bar",
+              "review_status": "candidate_only_not_added_to_prediction_history"
+            },
+            {
+              "kickoff_utc": "2026-09-20T14:15:00+00:00",
+              "home": "Atlético Madrid",
+              "away": "Real Madrid",
+              "score": [
+                2,
+                1
+              ],
+              "api_ninjas_match_id": "laliga-20260920-rma-atm",
+              "review_status": "candidate_only_not_added_to_prediction_history"
+            },
+            {
+              "kickoff_utc": "2026-08-22T19:30:00+00:00",
+              "home": "Espanyol",
+              "away": "Real Madrid",
+              "score": [
+                1,
+                2
+              ],
+              "api_ninjas_match_id": "laliga-20260822-rma-esp",
+              "review_status": "candidate_only_not_added_to_prediction_history"
+            }
+          ],
+          "exact_matches_across_sources": 0,
+          "highlightly_results_not_found_in_sportmonks": 0,
+          "latest_highlightly_completed_match": null,
+          "unmatched_completed_candidates": [],
+          "interpretation": "Provider-specific unmatched results are review candidates, not accepted extra matches. Exact competition, season, home/away teams and kickoff must match before joining."
+        }
+      },
+      "candidate_verification": [],
+      "providers_matched": [
+        "api_ninjas",
+        "sportmonks"
+      ],
+      "candidate_review_summary": {
+        "unmatched_candidates_seen": 0,
+        "verified_exact_fixture_and_score": [],
+        "unresolved_candidates": [],
+        "verified_candidates_added_to_prediction_history": 0,
+        "note": "Targeted verification confirms identity and score only. Verified candidates are not imported or appended; primary Sportmonks season history remains the prediction source."
+      }
+    },
+    "prediction_readiness": {
+      "overall_status": "ready",
+      "prediction_minimum_history_met": true,
+      "ten_match_history_target_met": true,
+      "history_policy": {
+        "minimum_matches_per_team": 5,
+        "preferred_target_per_team": 10,
+        "target_is_advisory": true,
+        "note": "Prediction history eligibility requires five completed, score-valid matches per team. Five to nine matches are allowed with a limited-sample label; ten remains the preferred target."
+      },
+      "prediction_allowed_by_history": true,
+      "fixture": {
+        "verified": true,
+        "status": "verified",
+        "reason": "Exact competition-season fixture identity and future kickoff verified.",
+        "fixture_id": 19732473,
+        "kickoff_utc": "2027-03-07T00:00:00+00:00",
+        "source_updated_at": null,
+        "source_fetched_at": "2026-11-08T22:00:34.130938+00:00",
+        "source_age_seconds": 27.2,
+        "source_age_minutes": 0.5,
+        "source_freshness": "fresh",
+        "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
+      },
+      "teams": {
+        "home": {
+          "team": "Villarreal",
+          "completed_matches_available": 10,
+          "history_minimum": 5,
+          "history_target": 10,
+          "history_status": "target_met",
+          "prediction_allowed_by_history": true,
+          "matches_with_statistics": 0,
+          "matches_with_opponent_strength": 10,
+          "tactical_components_available": {
+            "playing_style": false,
+            "defensive_structure": false,
+            "attacking_approach": false
+          },
+          "player_availability_evidence": "unknown",
+          "confirmed_lineup_evidence": "unknown"
+        },
+        "away": {
+          "team": "Real Madrid",
+          "completed_matches_available": 10,
+          "history_minimum": 5,
+          "history_target": 10,
+          "history_status": "target_met",
+          "prediction_allowed_by_history": true,
+          "matches_with_statistics": 0,
+          "matches_with_opponent_strength": 10,
+          "tactical_components_available": {
+            "playing_style": false,
+            "defensive_structure": false,
+            "attacking_approach": false
+          },
+          "player_availability_evidence": "unknown",
+          "confirmed_lineup_evidence": "unknown"
+        }
+      },
+      "model_impact": "Diagnostic only. This report does not change prediction inputs, model weights, recency weighting or TVD rules."
+    },
+    "model_configuration": {
+      "weights": {
+        "recent_form": 0.2,
+        "goals_scored": 0.1,
+        "goals_conceded": 0.1,
+        "home_away": 0.1,
+        "strength_of_schedule": 0.15,
+        "player_availability": 0.05,
+        "tactical": 0.3
+      },
+      "weights_total": 1.0,
+      "model_impact": "Diagnostics only; weights, recency weighting, prediction inputs and missing-data rules are not changed."
+    }
+  },
+  "generated_at_utc": "2026-11-08T22:01:01.302454+00:00",
+  "report_name": "data_collection_evidence"
+}
