@@ -9,7 +9,7 @@ from api_ninjas import APINinjasClient, APINinjasError
 from highlightly import HighlightlyClient, HighlightlyError
 from sportmonks import SportmonksClient, SportmonksError
 from data_layer2 import collect_team_profile
-from sportmonks_layer2 import collect_sportmonks_team_profile, find_upcoming_match_fixture, extract_sportmonks_match_details
+from sportmonks_layer2 import collect_sportmonks_team_profile, find_upcoming_match_fixture, find_exact_match_fixture, extract_sportmonks_match_details
 from sportmonks_candidate_verification import verify_highlightly_candidate
 from provider_core import normalize_team_name
 from engine import predict_match, WEIGHTS, most_likely_outcome
@@ -459,8 +459,14 @@ try:
                 home = collect_sportmonks_team_profile(team_map[home_name], selected_season_id, fixtures, standings)
                 away = collect_sportmonks_team_profile(team_map[away_name], selected_season_id, fixtures, standings)
 
-                # Only enrich an actual upcoming fixture when the selected home/away
-                # teams and season match exactly. A team's unrelated next match is not substituted.
+                # Ledger identity uses the closest exact pairing in this season,
+                # including live/completed fixtures. Lineup enrichment stays upcoming-only.
+                prediction_fixture = find_exact_match_fixture(
+                    fixtures,
+                    home_team_id=int(team_map[home_name]["id"]),
+                    away_team_id=int(team_map[away_name]["id"]),
+                    season_id=int(selected_season_id),
+                )
                 selected_match_fixture = find_upcoming_match_fixture(
                     fixtures,
                     home_team_id=int(team_map[home_name]["id"]),
@@ -947,9 +953,9 @@ try:
             away_team=away_name,
             probabilities=result["probabilities"],
             predicted_at=datetime.now(timezone.utc).isoformat(),
-            kickoff_at=(selected_match_fixture or {}).get("starting_at") or (selected_match_fixture or {}).get("starting_at_at"),
-            fixture_id=(selected_match_fixture or {}).get("id"),
-            fixture_provider="sportmonks" if selected_match_fixture else "",
+            kickoff_at=(prediction_fixture or {}).get("starting_at") or (prediction_fixture or {}).get("starting_at_at") or (datetime.fromtimestamp(int(prediction_fixture["starting_at_timestamp"]), timezone.utc).isoformat() if prediction_fixture and prediction_fixture.get("starting_at_timestamp") else None),
+            fixture_id=(prediction_fixture or {}).get("id"),
+            fixture_provider="sportmonks" if prediction_fixture else "",
             opta_probabilities=opta_values,
             opta_source_url=opta_source_url.strip() if opta_values else "",
             opta_captured_at=datetime.now(timezone.utc).isoformat() if opta_values else "",
@@ -964,6 +970,10 @@ try:
         outcome = most_likely_outcome(probabilities, home_name, away_name)
         st.success(outcome["label"])
         st.caption(f"Model's most likely 1X2 outcome: {outcome['probability']:.1f}% — an estimate, not a guaranteed result.")
+        if not prediction_fixture:
+            st.warning("No exact Sportmonks fixture was found for this home/away pairing and season. This prediction is saved but cannot be auto-linked for result collection or fixture-based backtesting.")
+        elif prediction_row.get("prediction_before_kickoff") is False:
+            st.warning("This prediction was recorded at or after kickoff. Its fixture is linked, but it will not be counted as a pre-match forecast in accuracy reports.")
         cols=st.columns(3)
         cols[0].metric(f"{home_name} win",f"{probabilities['home_win']}%")
         cols[1].metric("Draw",f"{probabilities['draw']}%")
