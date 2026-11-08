@@ -435,6 +435,7 @@ try:
     if st.button("Collect data and predict", type="primary", use_container_width=True):
         player_report = None
         selected_match_fixture = None
+        prediction_fixture = None
         highlightly_enrichment = None
         corroboration = None
         with st.spinner("Collecting recent results, standings and available match statistics..."):
