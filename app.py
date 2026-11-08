@@ -268,10 +268,16 @@ if test_provider_database:
                 check_provider_storage_connection(PROVIDER_DATABASE_URL)
             st.success("CockroachDB connected. Provider storage tables are ready.")
         except Exception as exc:
-            # Do not display the raw exception: database errors can contain connection details.
+            # Show only PostgreSQL's primary diagnostic, never the raw exception
+            # or connection URL, which could contain credentials.
+            diagnostic = getattr(getattr(exc, "diag", None), "message_primary", None)
+            sqlstate = getattr(exc, "sqlstate", None)
+            detail = f" SQLSTATE {sqlstate}." if sqlstate else ""
+            if diagnostic:
+                detail += f" {diagnostic}"
             st.error(
-                f"CockroachDB connection test failed ({type(exc).__name__}). "
-                "Check the connection string and TLS settings in Streamlit Secrets."
+                f"CockroachDB connection test failed ({type(exc).__name__})."
+                f"{detail} Check the connection string and TLS settings in Streamlit Secrets."
             )
 
 client = None
