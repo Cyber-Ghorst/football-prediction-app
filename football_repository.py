@@ -274,6 +274,7 @@ def import_sportmonks_season(
     season: dict[str, Any],
     teams: list[dict[str, Any]],
     fixtures: list[dict[str, Any]],
+    progress_callback=None,
 ) -> dict[str, Any]:
     """Idempotently import one Sportmonks competition season into canonical tables.
 
@@ -296,6 +297,8 @@ def import_sportmonks_season(
         f"{len(teams)} teams, {len(fixtures)} fixtures.",
         flush=True,
     )
+    if progress_callback:
+        progress_callback(f"Starting database import: {len(teams)} teams and {len(fixtures)} fixtures.")
     with _connect(database_url) as connection:
         print(
             f"[Repository import] Database connection established in "
@@ -386,6 +389,8 @@ def import_sportmonks_season(
                 f"{time.monotonic() - stage_started:.2f}s.",
                 flush=True,
             )
+            if progress_callback:
+                progress_callback(f"Teams saved: {counts['teams']}/{len(teams)}. Starting fixture import...")
             stage_started = time.monotonic()
             print(
                 f"[Repository import] Entering fixture loop for {len(fixtures)} fixtures.",
@@ -393,6 +398,8 @@ def import_sportmonks_season(
             )
 
             for fixture_index, fixture in enumerate(fixtures, start=1):
+                if progress_callback:
+                    progress_callback(f"Processing fixture {fixture_index}/{len(fixtures)}")
                 print(
                     f"[Repository import] Fixture {fixture_index}/{len(fixtures)} starting; "
                     f"provider_id={fixture.get('id')}.",
@@ -592,6 +599,8 @@ def import_sportmonks_season(
                     f"{len(statistic_rows)} statistic rows examined.",
                     flush=True,
                 )
+                if progress_callback:
+                    progress_callback(f"Completed fixture {fixture_index}/{len(fixtures)} — {counts['statistics']} statistics rows saved.")
                 if fixture_index % 25 == 0 or fixture_index == len(fixtures):
                     print(
                         f"[Repository import] Fixture progress {fixture_index}/{len(fixtures)}; "
