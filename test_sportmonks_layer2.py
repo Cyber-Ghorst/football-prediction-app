@@ -1,6 +1,6 @@
 import unittest
 
-from sportmonks_layer2 import collect_sportmonks_team_profile, standings_strength
+from sportmonks_layer2 import collect_sportmonks_team_profile, standings_strength, find_exact_match_fixture
 
 
 def fixture(fid, home_id, away_id, home_goals, away_goals, state="FT"):
