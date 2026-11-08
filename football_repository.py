@@ -385,43 +385,32 @@ def import_sportmonks_season(
                 status = _nested_name(state) or (str(fixture.get("state_id")) if fixture.get("state_id") is not None else None)
                 venue = fixture.get("venue")
                 scores = fixture.get("scores") if isinstance(fixture.get("scores"), list) else []
-                current_score = None
-                for score in scores:
-                    if not isinstance(score, dict):
-                        continue
-                    description = str(score.get("description") or "").upper()
-                    score_type = score.get("type") if isinstance(score.get("type"), dict) else {}
-                    type_code = str(score_type.get("code") or "").upper()
-                    if description in {"CURRENT", "2ND_HALF"} or type_code in {"CURRENT", "2ND_HALF"}:
-                        current_score = score
-                        if description == "CURRENT" or type_code == "CURRENT":
-                            break
+                preferred_score_group = None
+                for preferred_code in ("CURRENT", "2ND_HALF"):
+                    candidates = []
+                    for score in scores:
+                        if not isinstance(score, dict):
+                            continue
+                        description = str(score.get("description") or "").upper()
+                        score_type = score.get("type") if isinstance(score.get("type"), dict) else {}
+                        type_code = str(score_type.get("code") or "").upper()
+                        if description == preferred_code or type_code == preferred_code:
+                            candidates.append(score)
+                    if candidates:
+                        preferred_score_group = candidates
+                        break
                 home_goals = away_goals = None
-                if current_score:
-                    participant_id = str(current_score.get("participant_id") or "")
-                    goals = current_score.get("score")
-                    goals = goals.get("goals") if isinstance(goals, dict) else goals
-                    try:
-                        goals = int(goals)
-                        if participant_id == str(home.get("id")):
-                            home_goals = goals
-                        elif participant_id == str(away.get("id")):
-                            away_goals = goals
-                    except (TypeError, ValueError):
-                        pass
-                    # Sportmonks score rows are participant-specific.
-                    if home_goals is None or away_goals is None:
-                        by_participant = {}
-                        for score in scores:
-                            if isinstance(score, dict):
-                                value = score.get("score")
-                                value = value.get("goals") if isinstance(value, dict) else value
-                                try:
-                                    by_participant[str(score.get("participant_id"))] = int(value)
-                                except (TypeError, ValueError):
-                                    continue
-                        home_goals = by_participant.get(str(home.get("id")))
-                        away_goals = by_participant.get(str(away.get("id")))
+                if preferred_score_group:
+                    by_participant = {}
+                    for score in preferred_score_group:
+                        value = score.get("score")
+                        value = value.get("goals") if isinstance(value, dict) else value
+                        try:
+                            by_participant[str(score.get("participant_id"))] = int(value)
+                        except (TypeError, ValueError):
+                            continue
+                    home_goals = by_participant.get(str(home.get("id")))
+                    away_goals = by_participant.get(str(away.get("id")))
                 cursor.execute(
                     """
                     INSERT INTO football_fixtures
