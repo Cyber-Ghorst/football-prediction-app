@@ -287,7 +287,7 @@ def import_sportmonks_season(
     if str(season.get("league_id")) != str(league.get("id")):
         raise ValueError("Selected Sportmonks season does not belong to the selected league.")
 
-    counts = {"leagues": 0, "seasons": 0, "teams": 0, "fixtures": 0, "skipped_fixtures": 0}
+    counts = {"leagues": 0, "seasons": 0, "teams": 0, "fixtures": 0, "statistics": 0, "skipped_fixtures": 0}
     with _connect(database_url) as connection:
         with connection.cursor() as cursor:
             cursor.execute(
@@ -435,19 +435,96 @@ def import_sportmonks_season(
                      fixture.get("starting_at"), status, home_goals, away_goals,
                      _nested_name(venue), _provider_updated_at(fixture), Jsonb(fixture)),
                 )
-                _entity_link(cursor, "fixture", fixture["id"], _provider_id(fixture["id"]))
+                canonical_fixture_id = _provider_id(fixture["id"])
+                _entity_link(cursor, "fixture", fixture["id"], canonical_fixture_id)
                 counts["fixtures"] += 1
+
+                # Replace the normalized statistics for this fixture atomically.
+                # Raw fixture payloads remain preserved in football_fixtures.
+                cursor.execute(
+                    "DELETE FROM football_fixture_statistics WHERE fixture_id = %s",
+                    (canonical_fixture_id,),
+                )
+                statistic_rows = fixture.get("statistics")
+                if not isinstance(statistic_rows, list):
+                    statistic_rows = []
+                import uuid
+                for statistic_index, statistic in enumerate(statistic_rows):
+                    if not isinstance(statistic, dict):
+                        continue
+                    statistic_type = statistic.get("type")
+                    if isinstance(statistic_type, dict):
+                        statistic_type_id = statistic_type.get("id")
+                        statistic_type_name = statistic_type.get("name")
+                    else:
+                        statistic_type_id = None
+                        statistic_type_name = str(statistic_type or "").strip()
+                    if not statistic_type_name:
+                        statistic_type_name = str(
+                            statistic.get("name") or statistic.get("code") or ""
+                        ).strip()
+                    if not statistic_type_name:
+                        continue
+                    participant_id = statistic.get("participant_id")
+                    canonical_participant_id = (
+                        _provider_id(participant_id) if participant_id is not None else None
+                    )
+                    raw_data = statistic.get("data")
+                    if isinstance(raw_data, dict) and "value" in raw_data:
+                        statistic_value = raw_data.get("value")
+                    elif raw_data is not None:
+                        statistic_value = raw_data
+                    else:
+                        statistic_value = statistic.get("value")
+                    external_statistic_id = statistic.get("id")
+                    stable_identity = (
+                        str(external_statistic_id) if external_statistic_id is not None
+                        else f"{participant_id}:{statistic_type_id or statistic_type_name}:{statistic_index}"
+                    )
+                    statistic_id = str(uuid.uuid5(
+                        uuid.NAMESPACE_URL,
+                        f"sportmonks:fixture-statistic:{fixture['id']}:{stable_identity}",
+                    ))
+                    cursor.execute(
+                        """
+                        INSERT INTO football_fixture_statistics
+                            (statistic_id, fixture_id, team_id, statistic_type,
+                             statistic_value, source_provider, provider_statistic_id,
+                             provider_updated_at, raw_payload)
+                        VALUES (%s, %s, %s, %s, %s, 'sportmonks', %s, %s, %s)
+                        ON CONFLICT (statistic_id) DO UPDATE SET
+                            fixture_id = excluded.fixture_id,
+                            team_id = excluded.team_id,
+                            statistic_type = excluded.statistic_type,
+                            statistic_value = excluded.statistic_value,
+                            source_provider = excluded.source_provider,
+                            provider_statistic_id = excluded.provider_statistic_id,
+                            provider_updated_at = excluded.provider_updated_at,
+                            collected_at = NOW(),
+                            raw_payload = excluded.raw_payload
+                        """,
+                        (
+                            statistic_id, canonical_fixture_id,
+                            canonical_participant_id, statistic_type_name,
+                            Jsonb(statistic_value),
+                            str(external_statistic_id) if external_statistic_id is not None else None,
+                            _provider_updated_at(fixture), Jsonb(statistic),
+                        ),
+                    )
+                    counts["statistics"] += 1
 
             _sync_result(cursor, "leagues", 1, counts["leagues"])
             _sync_result(cursor, "seasons", 1, counts["seasons"])
             _sync_result(cursor, "teams", len(teams), counts["teams"])
             _sync_result(cursor, "fixtures", len(fixtures), counts["fixtures"])
+            _sync_result(cursor, "fixture_statistics", counts["statistics"], counts["statistics"])
     return {
         "provider": "sportmonks",
         "league": league.get("name"),
         "season": season.get("name"),
         "received": {"teams": len(teams), "fixtures": len(fixtures)},
         "upserted": counts,
+        "statistics_source": "fixture raw_payload.statistics when supplied by provider",
         "idempotent": True,
         "raw_snapshots_preserved": True,
         "neon_prediction_ledger_modified": False,
