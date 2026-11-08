@@ -79,6 +79,49 @@ def _scores(fixture: Mapping[str, Any], home_id: int, away_id: int) -> tuple[int
     return values.get(home_id), values.get(away_id)
 
 
+
+
+def resolve_candidate_team_id(
+    team_name: str,
+    fixtures: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Resolve a candidate team only from exact names in Sportmonks date results.
+
+    This deliberately avoids fuzzy matching. A unique exact normalized name
+    maps to one provider ID; absent or ambiguous names remain unresolved.
+    """
+    from provider_core import normalize_team_name
+
+    target = normalize_team_name(team_name or "")
+    observations: dict[int, set[str]] = {}
+    if target:
+        for fixture in fixtures:
+            for participant in _rows(fixture.get("participants")):
+                name = str(participant.get("name") or "").strip()
+                participant_id = _as_int(participant.get("id"))
+                if not name or participant_id is None:
+                    continue
+                if normalize_team_name(name) == target:
+                    observations.setdefault(participant_id, set()).add(name)
+
+    matches = [
+        {"team_id": team_id, "provider_names": sorted(names)}
+        for team_id, names in sorted(observations.items())
+    ]
+    if len(matches) == 1:
+        return {
+            "team_id": matches[0]["team_id"],
+            "status": "exact_name_resolved_from_date_fixtures",
+            "matched_provider_names": matches[0]["provider_names"],
+            "candidate_matches": matches,
+        }
+    return {
+        "team_id": None,
+        "status": "team_name_not_found_in_date_fixtures" if not matches else "ambiguous_exact_team_name",
+        "matched_provider_names": [],
+        "candidate_matches": matches,
+    }
+
 def verify_highlightly_candidate(
     candidate: Mapping[str, Any],
     fixtures: list[dict[str, Any]],

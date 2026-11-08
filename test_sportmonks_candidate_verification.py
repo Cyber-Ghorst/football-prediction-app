@@ -65,6 +65,35 @@ class HighlightlyCandidateVerificationTests(unittest.TestCase):
         self.assertEqual(result["verification_status"], "same_teams_found_but_kickoff_differs")
         self.assertEqual(result["exact_kickoff_fixtures"], 0)
 
+
+    def test_candidate_team_id_resolves_from_date_fixture_participants(self):
+        from sportmonks_candidate_verification import resolve_candidate_team_id
+
+        fixtures = [sm_fixture(home_id=101, away_id=202)]
+        result = resolve_candidate_team_id("Coventry", fixtures)
+        self.assertEqual(result["team_id"], 101)
+        self.assertEqual(result["status"], "exact_name_resolved_from_date_fixtures")
+        self.assertEqual(result["matched_provider_names"], ["Coventry"])
+
+    def test_candidate_team_id_does_not_use_fuzzy_names(self):
+        from sportmonks_candidate_verification import resolve_candidate_team_id
+
+        fixtures = [sm_fixture(home_id=101, away_id=202)]
+        result = resolve_candidate_team_id("Coventry City", fixtures)
+        self.assertIsNone(result["team_id"])
+        self.assertEqual(result["status"], "team_name_not_found_in_date_fixtures")
+
+    def test_candidate_team_id_ambiguous_exact_name_stays_unresolved(self):
+        from sportmonks_candidate_verification import resolve_candidate_team_id
+
+        fixtures = [
+            sm_fixture(fid=1, home_id=101, away_id=202),
+            sm_fixture(fid=2, home_id=303, away_id=404),
+        ]
+        result = resolve_candidate_team_id("Coventry", fixtures)
+        self.assertIsNone(result["team_id"])
+        self.assertEqual(result["status"], "ambiguous_exact_team_name")
+
     def test_unresolved_team_mapping_stays_unverified(self):
         result = verify_highlightly_candidate(
             self.candidate, [sm_fixture()], season_id=2026, league_id=8,

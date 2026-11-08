@@ -444,13 +444,31 @@ try:
                                                     candidate_date,
                                                     include="participants;state;scores",
                                                 )
+                                            candidate_team_mapping = {}
+
                                             def exact_team_id(candidate_team_name):
                                                 target_name = normalize_team_name(candidate_team_name or "")
                                                 matches = [
                                                     row for name, row in team_map.items()
                                                     if normalize_team_name(name) == target_name
                                                 ]
-                                                return int(matches[0]["id"]) if len(matches) == 1 else None
+                                                if len(matches) == 1:
+                                                    candidate_team_mapping[str(candidate_team_name)] = {
+                                                        "team_id": int(matches[0]["id"]),
+                                                        "status": "exact_name_resolved_from_selected_season_team_list",
+                                                        "matched_provider_names": [str(matches[0].get("name") or "")],
+                                                    }
+                                                    return int(matches[0]["id"])
+                                                # Candidate opponents may not be present in the selected
+                                                # season's team list. Resolve only from exact participant
+                                                # names returned by Sportmonks for this candidate date.
+                                                from sportmonks_candidate_verification import resolve_candidate_team_id
+                                                resolution = resolve_candidate_team_id(
+                                                    candidate_team_name,
+                                                    fixtures_by_date[candidate_date],
+                                                )
+                                                candidate_team_mapping[str(candidate_team_name)] = resolution
+                                                return resolution["team_id"]
 
                                             report = verify_highlightly_candidate(
                                                 candidate,
@@ -460,6 +478,7 @@ try:
                                                 home_team_id=exact_team_id(candidate.get("home")),
                                                 away_team_id=exact_team_id(candidate.get("away")),
                                             )
+                                            report["team_mapping_details"] = candidate_team_mapping
                                             report["sportmonks_request_metadata"] = dict(
                                                 verifier_client.last_metadata or {}
                                             )
