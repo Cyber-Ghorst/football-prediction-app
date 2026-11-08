@@ -85,6 +85,20 @@ def _rating(components: dict, tactical: float | None) -> float:
 def _poisson(lam: float, k: int) -> float:
     return exp(-lam) * (lam ** k) / factorial(k)
 
+
+def most_likely_outcome(probabilities: Dict[str, float], home_name: str = "Home", away_name: str = "Away") -> Dict[str, object]:
+    """Return a plain-language label for the highest 1X2 probability."""
+    outcomes = [
+        (f"Predicted winner: {home_name}", float(probabilities["home_win"])),
+        ("Most likely outcome: Draw", float(probabilities["draw"])),
+        (f"Predicted winner: {away_name}", float(probabilities["away_win"])),
+    ]
+    highest = max(value for _, value in outcomes)
+    leaders = [label for label, value in outcomes if value == highest]
+    label = leaders[0] if len(leaders) == 1 else "No single most likely outcome (tied probabilities)"
+    return {"label": label, "probability": highest}
+
+
 def predict_match(home: Dict, away: Dict, max_goals: int = 8, tactical_compatibility: Dict[str, float] | None = None) -> Dict:
     _validate_team(home, "Home team"); _validate_team(away, "Away team")
     home_comp = _team_components(home, "home_rating")
