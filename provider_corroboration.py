@@ -237,6 +237,27 @@ def collect_recent_result_corroboration(
                 normalize_team_name(home_team_name),
                 normalize_team_name(away_team_name),
             }
+            # Preserve a compact catalogue of every normalized provider team
+            # name and source ID. This reveals abbreviated/alternate names
+            # without weakening exact selected-team matching.
+            team_name_catalog: dict[str, dict[str, Any]] = {}
+            for record in normalized:
+                for side in ("home", "away"):
+                    team = record.get(side) or {}
+                    display_name = str(team.get("name") or "")
+                    if not display_name:
+                        continue
+                    entry = team_name_catalog.setdefault(display_name, {
+                        "normalized_name": normalize_team_name(display_name),
+                        "appearances": 0,
+                        "source_team_ids": [],
+                    })
+                    entry["appearances"] += 1
+                    source_id = str((team.get("source_ids") or {}).get("highlightly") or "")
+                    if source_id and source_id not in entry["source_team_ids"]:
+                        entry["source_team_ids"].append(source_id)
+            highlightly_diagnostics["team_name_catalog"] = team_name_catalog
+
             highlightly_diagnostics["records_normalized"] = len(normalized)
             highlightly_diagnostics["completed_score_valid_records"] = sum(
                 1 for row in normalized
