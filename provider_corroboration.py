@@ -19,6 +19,29 @@ from multi_source_reconciliation import reconcile_match_records
 from provider_core import normalize_team_name
 
 
+# Provider-specific identity aliases are keyed by both exact display name and
+# reviewed provider team ID. Display names and namespaced IDs remain unchanged.
+_HIGHLIGHTLY_TEAM_IDENTITY_ALIASES = {
+    ("brighton", "44185"): "brighton & hove albion",
+}
+
+
+def _team_identity_key(team: Mapping[str, Any] | None) -> str:
+    team = team or {}
+    return str(team.get("normalized_name") or normalize_team_name(team.get("name", "")))
+
+
+def _apply_highlightly_team_identity_aliases(record: dict[str, Any]) -> None:
+    for side in ("home", "away"):
+        team = record.get(side) or {}
+        name_key = normalize_team_name(team.get("name", ""))
+        source_id = str((team.get("source_ids") or {}).get("highlightly") or "")
+        alias = _HIGHLIGHTLY_TEAM_IDENTITY_ALIASES.get((name_key, source_id))
+        if alias:
+            team["normalized_name"] = normalize_team_name(alias)
+        record[side] = team
+
+
 def competition_key(name: str, country: str | None = None) -> str:
     """Build the same conservative key for the selected competition in each feed."""
     return "|".join((normalize_competition_name(name), normalize_country(country or "")))
@@ -222,9 +245,11 @@ def collect_recent_result_corroboration(
                         highlightly_diagnostics["rejected_invalid_season"] += 1
                         continue
                 try:
-                    normalized.append(canonicalize_highlightly_match(
+                    canonical = canonicalize_highlightly_match(
                         row, competition_key=key, season=int(season)
-                    ))
+                    )
+                    _apply_highlightly_team_identity_aliases(canonical)
+                    normalized.append(canonical)
                 except (ValueError, TypeError, KeyError):
                     highlightly_diagnostics["normalization_failures"] += 1
                     continue
@@ -268,8 +293,8 @@ def collect_recent_result_corroboration(
             highlightly_diagnostics["selected_team_records"] = sum(
                 1 for row in normalized
                 if selected_team_keys.intersection({
-                    normalize_team_name(row.get("home", {}).get("name", "")),
-                    normalize_team_name(row.get("away", {}).get("name", "")),
+                    _team_identity_key(row.get("home")),
+                    _team_identity_key(row.get("away")),
                 })
             )
 
@@ -287,8 +312,8 @@ def collect_recent_result_corroboration(
                 team_rows = [
                     row for row in normalized
                     if team_key in {
-                        normalize_team_name(row.get("home", {}).get("name", "")),
-                        normalize_team_name(row.get("away", {}).get("name", "")),
+                        _team_identity_key(row.get("home")),
+                        _team_identity_key(row.get("away")),
                     }
                 ]
                 status_counts: dict[str, int] = {}
@@ -442,8 +467,8 @@ def collect_recent_result_corroboration(
             if row.get("season") != int(season) or row.get("competition_key") != key:
                 continue
             if team_key not in {
-                normalize_team_name(row.get("home", {}).get("name", "")),
-                normalize_team_name(row.get("away", {}).get("name", "")),
+                _team_identity_key(row.get("home")),
+                _team_identity_key(row.get("away")),
             }:
                 continue
             if row.get("status") != "finished" or row.get("home_score") is None or row.get("away_score") is None:

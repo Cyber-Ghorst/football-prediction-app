@@ -203,6 +203,49 @@ class ProviderCorroborationTests(unittest.TestCase):
         self.assertEqual(brighton["sample_records"][0]["home_team_id"], 78)
         self.assertEqual(brighton["sample_records"][0]["raw_state"]["description"], "Finished")
 
+    def test_highlightly_brighton_alias_requires_exact_reviewed_team_id(self):
+        primary = sportmonks_fixture()
+        primary.update({
+            "id": 7001,
+            "starting_at": "2026-11-07T15:00:00Z",
+            "participants": [
+                {"id": 78, "name": "Brighton & Hove Albion", "meta": {"location": "home"}},
+                {"id": 79, "name": "Fulham", "meta": {"location": "away"}},
+            ],
+            "scores": [
+                {"participant_id": 78, "description": "CURRENT", "score": {"goals": 2}},
+                {"participant_id": 79, "description": "CURRENT", "score": {"goals": 1}},
+            ],
+        })
+        correct = highlightly_match()
+        correct.update({
+            "id": 9201,
+            "date": "2026-11-07T15:02:00Z",
+            "homeTeam": {"id": 44185, "name": "Brighton"},
+            "awayTeam": {"id": 31420, "name": "Fulham"},
+        })
+        wrong_id = highlightly_match()
+        wrong_id.update({
+            "id": 9202,
+            "date": "2026-11-07T15:02:00Z",
+            "homeTeam": {"id": 99999, "name": "Brighton"},
+            "awayTeam": {"id": 31420, "name": "Fulham"},
+        })
+        report = collect_recent_result_corroboration(
+            sportmonks_fixtures=[primary],
+            competition="Premier League", country="England", season=2026,
+            home_team_name="Brighton & Hove Albion", away_team_name="Fulham",
+            highlightly_client=FakeHighlightly([correct, wrong_id]), now=NOW,
+        )
+        coverage = report["team_history_coverage"]["Brighton & Hove Albion"]
+        self.assertEqual(coverage["highlightly_completed_score_valid"], 1)
+        self.assertEqual(coverage["highlightly_exact_matches"], 1)
+        self.assertEqual(coverage["highlightly_unmatched_count"], 0)
+        self.assertEqual(
+            report["highlightly_diagnostics"]["selected_team_breakdown"]["Brighton & Hove Albion"]["completed_score_valid"],
+            1,
+        )
+
     def test_highlightly_team_name_catalog_exposes_all_normalized_names_and_ids(self):
         brighton = highlightly_match()
         brighton.update({
