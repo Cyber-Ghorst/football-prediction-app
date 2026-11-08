@@ -192,3 +192,271 @@ def repository_table_counts(database_url: str) -> dict[str, int]:
                 cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
                 counts[table_name] = int(cursor.fetchone()[0])
     return counts
+
+
+
+def _provider_id(value: Any) -> str:
+    if value is None or str(value).strip() == "":
+        raise ValueError("A provider entity ID is required.")
+    return f"sportmonks:{str(value).strip()}"
+
+
+def _nested_name(value: Any) -> str | None:
+    if isinstance(value, dict):
+        return str(value.get("name") or "").strip() or None
+    return str(value).strip() or None if value is not None else None
+
+
+def _provider_updated_at(row: dict[str, Any]):
+    from datetime import datetime
+    value = row.get("updated_at")
+    if not value:
+        return None
+    if isinstance(value, datetime):
+        return value
+    try:
+        return datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except (TypeError, ValueError):
+        return None
+
+
+def _entity_link(cursor, entity_type: str, provider_id: Any, canonical_id: str) -> None:
+    import uuid
+    provider_entity_id = str(provider_id)
+    link_id = str(uuid.uuid5(
+        uuid.NAMESPACE_URL,
+        f"sportmonks:{entity_type}:{provider_entity_id}",
+    ))
+    cursor.execute(
+        """
+        INSERT INTO provider_entity_links
+            (link_id, provider, entity_type, provider_entity_id, canonical_entity_id)
+        VALUES (%s, 'sportmonks', %s, %s, %s)
+        ON CONFLICT (provider, entity_type, provider_entity_id)
+        DO UPDATE SET canonical_entity_id = excluded.canonical_entity_id,
+                      last_seen_at = NOW()
+        """,
+        (link_id, entity_type, provider_entity_id, canonical_id),
+    )
+
+
+def _sync_result(cursor, resource_type: str, received: int, upserted: int,
+                 status: str = "success", error: str | None = None) -> None:
+    sync_key = f"sportmonks:{resource_type}"
+    cursor.execute(
+        """
+        INSERT INTO football_repository_sync_state
+            (sync_key, provider, resource_type, last_attempted_at,
+             last_succeeded_at, records_received, records_upserted, status, last_error)
+        VALUES (%s, 'sportmonks', %s, NOW(),
+                CASE WHEN %s = 'success' THEN NOW() ELSE NULL END,
+                %s, %s, %s, %s)
+        ON CONFLICT (sync_key) DO UPDATE SET
+            last_attempted_at = NOW(),
+            last_succeeded_at = CASE WHEN excluded.status = 'success'
+                                     THEN NOW()
+                                     ELSE football_repository_sync_state.last_succeeded_at END,
+            records_received = excluded.records_received,
+            records_upserted = excluded.records_upserted,
+            status = excluded.status,
+            last_error = excluded.last_error
+        """,
+        (sync_key, resource_type, status, received, upserted, status, error),
+    )
+
+
+def import_sportmonks_season(
+    database_url: str,
+    *,
+    league: dict[str, Any],
+    season: dict[str, Any],
+    teams: list[dict[str, Any]],
+    fixtures: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Idempotently import one Sportmonks competition season into canonical tables.
+
+    Raw provider snapshots are maintained separately by provider_data_storage.
+    This importer writes only to CockroachDB and never accesses the Neon ledger.
+    """
+    from psycopg.types.json import Jsonb
+
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+    league_id = _provider_id(league.get("id"))
+    season_id = _provider_id(season.get("id"))
+    if str(season.get("league_id")) != str(league.get("id")):
+        raise ValueError("Selected Sportmonks season does not belong to the selected league.")
+
+    counts = {"leagues": 0, "seasons": 0, "teams": 0, "fixtures": 0, "skipped_fixtures": 0}
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                INSERT INTO football_leagues
+                    (league_id, name, country, competition_type, logo_url,
+                     source_provider, provider_updated_at, raw_payload)
+                VALUES (%s, %s, %s, %s, %s, 'sportmonks', %s, %s)
+                ON CONFLICT (league_id) DO UPDATE SET
+                    name = excluded.name, country = excluded.country,
+                    competition_type = excluded.competition_type,
+                    logo_url = excluded.logo_url, source_provider = excluded.source_provider,
+                    provider_updated_at = excluded.provider_updated_at,
+                    collected_at = NOW(), raw_payload = excluded.raw_payload
+                """,
+                (league_id, str(league.get("name") or "Unknown league"),
+                 _nested_name(league.get("country")),
+                 _nested_name(league.get("type") or league.get("competition_type")),
+                 league.get("image_path") or league.get("logo"),
+                 _provider_updated_at(league), Jsonb(league)),
+            )
+            _entity_link(cursor, "league", league.get("id"), league_id)
+            counts["leagues"] = 1
+
+            cursor.execute(
+                """
+                INSERT INTO football_seasons
+                    (season_id, league_id, name, start_date, end_date, is_current,
+                     source_provider, provider_updated_at, raw_payload)
+                VALUES (%s, %s, %s, %s, %s, %s, 'sportmonks', %s, %s)
+                ON CONFLICT (season_id) DO UPDATE SET
+                    league_id = excluded.league_id, name = excluded.name,
+                    start_date = excluded.start_date, end_date = excluded.end_date,
+                    is_current = excluded.is_current, source_provider = excluded.source_provider,
+                    provider_updated_at = excluded.provider_updated_at,
+                    collected_at = NOW(), raw_payload = excluded.raw_payload
+                """,
+                (season_id, league_id, str(season.get("name") or ""),
+                 season.get("starting_at") or None, season.get("ending_at") or None,
+                 season.get("is_current"), _provider_updated_at(season), Jsonb(season)),
+            )
+            _entity_link(cursor, "season", season.get("id"), season_id)
+            counts["seasons"] = 1
+
+            for team in teams:
+                if team.get("id") is None or not team.get("name"):
+                    continue
+                team_id = _provider_id(team["id"])
+                cursor.execute(
+                    """
+                    INSERT INTO football_teams
+                        (team_id, name, short_name, country, logo_url,
+                         source_provider, provider_updated_at, raw_payload)
+                    VALUES (%s, %s, %s, %s, %s, 'sportmonks', %s, %s)
+                    ON CONFLICT (team_id) DO UPDATE SET
+                        name = excluded.name, short_name = excluded.short_name,
+                        country = excluded.country, logo_url = excluded.logo_url,
+                        source_provider = excluded.source_provider,
+                        provider_updated_at = excluded.provider_updated_at,
+                        collected_at = NOW(), raw_payload = excluded.raw_payload
+                    """,
+                    (team_id, str(team["name"]), team.get("short_code") or team.get("short_name"),
+                     _nested_name(team.get("country")), team.get("image_path") or team.get("logo"),
+                     _provider_updated_at(team), Jsonb(team)),
+                )
+                _entity_link(cursor, "team", team["id"], team_id)
+                counts["teams"] += 1
+
+            for fixture in fixtures:
+                participants = fixture.get("participants")
+                if not isinstance(participants, list):
+                    participants = []
+                home = away = None
+                for participant in participants:
+                    meta = participant.get("meta") if isinstance(participant, dict) else {}
+                    location = str((meta or {}).get("location") or "").lower()
+                    if location == "home":
+                        home = participant
+                    elif location == "away":
+                        away = participant
+                if fixture.get("id") is None or not home or not away:
+                    counts["skipped_fixtures"] += 1
+                    continue
+                fixture_season_id = _provider_id(fixture.get("season_id") or season.get("id"))
+                fixture_league_id = _provider_id(fixture.get("league_id") or league.get("id"))
+                if fixture_season_id != season_id or fixture_league_id != league_id:
+                    counts["skipped_fixtures"] += 1
+                    continue
+                home_id = _provider_id(home.get("id"))
+                away_id = _provider_id(away.get("id"))
+                if home_id == away_id:
+                    counts["skipped_fixtures"] += 1
+                    continue
+                state = fixture.get("state")
+                status = _nested_name(state) or (str(fixture.get("state_id")) if fixture.get("state_id") is not None else None)
+                venue = fixture.get("venue")
+                scores = fixture.get("scores") if isinstance(fixture.get("scores"), list) else []
+                current_score = None
+                for score in scores:
+                    if not isinstance(score, dict):
+                        continue
+                    description = str(score.get("description") or "").upper()
+                    score_type = score.get("type") if isinstance(score.get("type"), dict) else {}
+                    type_code = str(score_type.get("code") or "").upper()
+                    if description in {"CURRENT", "2ND_HALF"} or type_code in {"CURRENT", "2ND_HALF"}:
+                        current_score = score
+                        if description == "CURRENT" or type_code == "CURRENT":
+                            break
+                home_goals = away_goals = None
+                if current_score:
+                    participant_id = str(current_score.get("participant_id") or "")
+                    goals = current_score.get("score")
+                    goals = goals.get("goals") if isinstance(goals, dict) else goals
+                    try:
+                        goals = int(goals)
+                        if participant_id == str(home.get("id")):
+                            home_goals = goals
+                        elif participant_id == str(away.get("id")):
+                            away_goals = goals
+                    except (TypeError, ValueError):
+                        pass
+                    # Sportmonks score rows are participant-specific.
+                    if home_goals is None or away_goals is None:
+                        by_participant = {}
+                        for score in scores:
+                            if isinstance(score, dict):
+                                value = score.get("score")
+                                value = value.get("goals") if isinstance(value, dict) else value
+                                try:
+                                    by_participant[str(score.get("participant_id"))] = int(value)
+                                except (TypeError, ValueError):
+                                    continue
+                        home_goals = by_participant.get(str(home.get("id")))
+                        away_goals = by_participant.get(str(away.get("id")))
+                cursor.execute(
+                    """
+                    INSERT INTO football_fixtures
+                        (fixture_id, season_id, league_id, home_team_id, away_team_id,
+                         starting_at, status, home_goals, away_goals, venue,
+                         source_provider, provider_updated_at, raw_payload)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
+                            'sportmonks', %s, %s)
+                    ON CONFLICT (fixture_id) DO UPDATE SET
+                        season_id = excluded.season_id, league_id = excluded.league_id,
+                        home_team_id = excluded.home_team_id, away_team_id = excluded.away_team_id,
+                        starting_at = excluded.starting_at, status = excluded.status,
+                        home_goals = excluded.home_goals, away_goals = excluded.away_goals,
+                        venue = excluded.venue, source_provider = excluded.source_provider,
+                        provider_updated_at = excluded.provider_updated_at,
+                        collected_at = NOW(), raw_payload = excluded.raw_payload
+                    """,
+                    (_provider_id(fixture["id"]), season_id, league_id, home_id, away_id,
+                     fixture.get("starting_at"), status, home_goals, away_goals,
+                     _nested_name(venue), _provider_updated_at(fixture), Jsonb(fixture)),
+                )
+                _entity_link(cursor, "fixture", fixture["id"], _provider_id(fixture["id"]))
+                counts["fixtures"] += 1
+
+            _sync_result(cursor, "leagues", 1, counts["leagues"])
+            _sync_result(cursor, "seasons", 1, counts["seasons"])
+            _sync_result(cursor, "teams", len(teams), counts["teams"])
+            _sync_result(cursor, "fixtures", len(fixtures), counts["fixtures"])
+    return {
+        "provider": "sportmonks",
+        "league": league.get("name"),
+        "season": season.get("name"),
+        "received": {"teams": len(teams), "fixtures": len(fixtures)},
+        "upserted": counts,
+        "idempotent": True,
+        "raw_snapshots_preserved": True,
+        "neon_prediction_ledger_modified": False,
+    }
