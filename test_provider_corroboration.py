@@ -171,6 +171,38 @@ class ProviderCorroborationTests(unittest.TestCase):
         )
         self.assertEqual(len(report["matches"]), 1)
 
+    def test_highlightly_selected_team_breakdown_exposes_status_and_raw_state(self):
+        brighton_finished = highlightly_match()
+        brighton_finished.update({
+            "id": 9101,
+            "homeTeam": {"id": 78, "name": "Brighton & Hove Albion"},
+            "awayTeam": {"id": 11, "name": "Arsenal"},
+            "state": {"description": "Finished", "score": {"current": "2 - 1"}},
+        })
+        brighton_scheduled = highlightly_match()
+        brighton_scheduled.update({
+            "id": 9102,
+            "date": "2026-11-09T15:00:00Z",
+            "homeTeam": {"id": 78, "name": "Brighton & Hove Albion"},
+            "awayTeam": {"id": 12, "name": "Chelsea"},
+            "state": {"description": "Not started", "score": {"current": None}},
+        })
+        report = collect_recent_result_corroboration(
+            sportmonks_fixtures=[sportmonks_fixture()],
+            competition="Premier League", country="England", season=2026,
+            home_team_name="Brighton & Hove Albion", away_team_name="Fulham",
+            highlightly_client=FakeHighlightly([brighton_finished, brighton_scheduled]),
+            now=NOW,
+        )
+        breakdown = report["highlightly_diagnostics"]["selected_team_breakdown"]
+        brighton = breakdown["Brighton & Hove Albion"]
+        self.assertEqual(brighton["normalized_team_records"], 2)
+        self.assertEqual(brighton["status_counts"], {"finished": 1, "scheduled": 1})
+        self.assertEqual(brighton["completed_score_valid"], 1)
+        self.assertEqual(brighton["raw_state_descriptions"]["Finished"], 1)
+        self.assertEqual(brighton["sample_records"][0]["home_team_id"], 78)
+        self.assertEqual(brighton["sample_records"][0]["raw_state"]["description"], "Finished")
+
     def test_api_ninjas_team_history_coverage_is_reported_per_team(self):
         extra = ninjas_match()
         extra.update({
