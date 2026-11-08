@@ -199,6 +199,35 @@ class ProviderCorroborationTests(unittest.TestCase):
         self.assertEqual(chelsea["api_ninjas_exact_matches"], 1)
         self.assertEqual(len(report["matches"]), 1)
 
+    def test_highlightly_team_diagnostics_explain_status_and_score_exclusions(self):
+        finished = highlightly_match()
+        finished["homeTeam"] = {"id": 78, "name": "Brighton & Hove Albion"}
+        finished["awayTeam"] = {"id": 11, "name": "Arsenal"}
+        unknown_state = highlightly_match()
+        unknown_state.update({
+            "id": 9002,
+            "date": "2026-11-06T15:00:00Z",
+            "homeTeam": {"id": 78, "name": "Brighton & Hove Albion"},
+            "awayTeam": {"id": 12, "name": "Chelsea"},
+            "state": {
+                "description": "Match Finished",
+                "score": {"current": "2 - 0"},
+            },
+        })
+        report = collect_recent_result_corroboration(
+            sportmonks_fixtures=[],
+            competition="Premier League", country="England", season=2026,
+            home_team_name="Brighton & Hove Albion", away_team_name="Fulham",
+            highlightly_client=FakeHighlightly([finished, unknown_state]), now=NOW,
+        )
+        diagnostics = report["highlightly_diagnostics"]["team_record_diagnostics"]["Brighton & Hove Albion"]
+        self.assertEqual(diagnostics["records_seen_after_competition_season_filters"], 2)
+        self.assertEqual(diagnostics["normalized_status_counts"], {"finished": 1, "unknown": 1})
+        self.assertEqual(diagnostics["finished_and_score_valid_records"], 1)
+        self.assertEqual(diagnostics["sample_records"][0]["state_description"], "Match Finished")
+        self.assertEqual(diagnostics["sample_records"][0]["normalized_status"], "unknown")
+        self.assertEqual(diagnostics["sample_records"][0]["score_current"], "2 - 0")
+
     def test_documented_top_level_country_object_is_accepted(self):
         row = highlightly_match()
         row["country"] = {"code": "GB", "name": "England", "logo": ""}
