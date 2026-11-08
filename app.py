@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import base64
 import hashlib
+import time
 from datetime import datetime, timezone
 import requests
 import pandas as pd
@@ -322,8 +323,18 @@ def _collect_sportmonks_with_archive(resource_type, request_params, fetcher, ttl
     cache_key = build_provider_cache_key(
         "sportmonks", resource_type, request_params
     )
+    if resource_type == "fixtures":
+        print("[Sportmonks] Fixture collection: starting CockroachDB snapshot lookup.", flush=True)
+    archive_read_started = time.monotonic()
     try:
         cached = load_provider_snapshot(PROVIDER_DATABASE_URL, cache_key)
+        if resource_type == "fixtures":
+            print(
+                f"[Sportmonks] Fixture collection: snapshot lookup completed in "
+                f"{time.monotonic() - archive_read_started:.2f}s; "
+                f"fresh_snapshot={'yes' if cached else 'no'}.",
+                flush=True,
+            )
         if cached:
             return cached.get("payload")
     except Exception:
@@ -336,8 +347,18 @@ def _collect_sportmonks_with_archive(resource_type, request_params, fetcher, ttl
             )
             st.session_state["_provider_archive_read_warning"] = True
 
+    if resource_type == "fixtures":
+        print("[Sportmonks] Fixture collection: starting live provider fetch.", flush=True)
+    provider_fetch_started = time.monotonic()
     try:
         payload = fetcher()
+        if resource_type == "fixtures":
+            print(
+                f"[Sportmonks] Fixture collection: live provider fetch returned "
+                f"{len(payload) if isinstance(payload, list) else 'non-list'} rows in "
+                f"{time.monotonic() - provider_fetch_started:.2f}s.",
+                flush=True,
+            )
     except Exception as exc:
         try:
             record_provider_collection_run(
@@ -473,11 +494,23 @@ def get_sm_fixtures(season_id, include_stats, team_ids):
 
 def _fetch_sm_fixtures(season_id, include_stats, team_ids):
     with SportmonksClient() as sm:
-        return sm.fixtures_by_season(
+        print(
+            f"[Sportmonks] Season {season_id}: starting initial schedule request "
+            f"(statistics={bool(include_stats)}, selected_teams={len(team_ids)}).",
+            flush=True,
+        )
+        request_started = time.monotonic()
+        fixtures = sm.fixtures_by_season(
             season_id,
             include_statistics=include_stats,
             team_ids=team_ids,
         )
+        print(
+            f"[Sportmonks] Season {season_id}: initial schedule and detail collection "
+            f"returned {len(fixtures)} fixtures in {time.monotonic() - request_started:.2f}s.",
+            flush=True,
+        )
+        return fixtures
 
 with st.sidebar:
     st.header("Data configuration")
@@ -827,9 +860,20 @@ try:
                         int(row["id"]) for row in team_rows if row.get("id") is not None
                     ))
                     with st.spinner("Collecting and importing the selected Sportmonks season..."):
+                        print(
+                            f"[Sportmonks] Season {selected_season_id}: import action entered; "
+                            f"{len(selected_team_ids)} team IDs selected.",
+                            flush=True,
+                        )
                         season_fixtures = get_sm_fixtures(
                             int(selected_season_id), True, selected_team_ids
                         )
+                        print(
+                            f"[Sportmonks] Season {selected_season_id}: provider collection returned; "
+                            f"starting CockroachDB import for {len(season_fixtures)} fixtures.",
+                            flush=True,
+                        )
+                        import_started = time.monotonic()
                         import_report = import_sportmonks_season(
                             PROVIDER_DATABASE_URL,
                             league=league_by_id[int(league_id)],
@@ -837,7 +881,20 @@ try:
                             teams=team_rows,
                             fixtures=season_fixtures,
                         )
+                        print(
+                            f"[Sportmonks] Season {selected_season_id}: CockroachDB import completed "
+                            f"in {time.monotonic() - import_started:.2f}s.",
+                            flush=True,
+                        )
+                        print(
+                            f"[Sportmonks] Season {selected_season_id}: reading central table counts.",
+                            flush=True,
+                        )
                         current_counts = repository_table_counts(PROVIDER_DATABASE_URL)
+                        print(
+                            f"[Sportmonks] Season {selected_season_id}: central table counts returned.",
+                            flush=True,
+                        )
                     statistics_import_report = {
                         "generated_at": datetime.now(timezone.utc).isoformat(),
                         "season_id": int(selected_season_id),
