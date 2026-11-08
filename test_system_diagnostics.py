@@ -158,6 +158,21 @@ class SystemDiagnosticsTests(unittest.TestCase):
         self.assertEqual(report["model_configuration"]["weights_total"], 0.5)
         self.assertEqual(report["overall_status"], "attention_required")
 
+    def test_recommended_actions_prioritize_failures_before_warnings(self):
+        report = self.build(
+            home_profile=profile("Home FC", count=4),
+            readiness=readiness("insufficient_history", verified=False, freshness="stale"),
+        )
+        actions = report["recommended_actions"]
+        self.assertTrue(actions)
+        self.assertEqual(actions[0]["priority"], "urgent")
+        self.assertTrue(any(row["priority"] == "next" for row in actions))
+        self.assertTrue(all(row["action"] for row in actions))
+
+    def test_healthy_report_has_no_corrective_actions(self):
+        report = self.build()
+        self.assertEqual(report["recommended_actions"], [])
+
 
 if __name__ == "__main__":
     unittest.main()
