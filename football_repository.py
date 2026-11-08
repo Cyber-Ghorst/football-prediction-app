@@ -6,6 +6,8 @@ these tables hold normalized, queryable football entities.
 """
 from __future__ import annotations
 
+import time
+
 from typing import Any
 
 import psycopg
@@ -288,8 +290,20 @@ def import_sportmonks_season(
         raise ValueError("Selected Sportmonks season does not belong to the selected league.")
 
     counts = {"leagues": 0, "seasons": 0, "teams": 0, "fixtures": 0, "statistics": 0, "skipped_fixtures": 0}
+    import_started = time.monotonic()
+    print(
+        f"[Repository import] Starting CockroachDB transaction for season {season_id}: "
+        f"{len(teams)} teams, {len(fixtures)} fixtures.",
+        flush=True,
+    )
     with _connect(database_url) as connection:
+        print(
+            f"[Repository import] Database connection established in "
+            f"{time.monotonic() - import_started:.2f}s.",
+            flush=True,
+        )
         with connection.cursor() as cursor:
+            stage_started = time.monotonic()
             cursor.execute(
                 """
                 INSERT INTO football_leagues
@@ -311,6 +325,12 @@ def import_sportmonks_season(
             )
             _entity_link(cursor, "league", league.get("id"), league_id)
             counts["leagues"] = 1
+            print(
+                f"[Repository import] League upsert and crosswalk completed in "
+                f"{time.monotonic() - stage_started:.2f}s.",
+                flush=True,
+            )
+            stage_started = time.monotonic()
 
             cursor.execute(
                 """
@@ -331,6 +351,12 @@ def import_sportmonks_season(
             )
             _entity_link(cursor, "season", season.get("id"), season_id)
             counts["seasons"] = 1
+            print(
+                f"[Repository import] Season upsert and crosswalk completed in "
+                f"{time.monotonic() - stage_started:.2f}s.",
+                flush=True,
+            )
+            stage_started = time.monotonic()
 
             for team in teams:
                 if team.get("id") is None or not team.get("name"):
@@ -355,8 +381,14 @@ def import_sportmonks_season(
                 )
                 _entity_link(cursor, "team", team["id"], team_id)
                 counts["teams"] += 1
+            print(
+                f"[Repository import] Team upserts completed: {counts['teams']} teams in "
+                f"{time.monotonic() - stage_started:.2f}s.",
+                flush=True,
+            )
+            stage_started = time.monotonic()
 
-            for fixture in fixtures:
+            for fixture_index, fixture in enumerate(fixtures, start=1):
                 participants = fixture.get("participants")
                 if not isinstance(participants, list):
                     participants = []
@@ -373,16 +405,37 @@ def import_sportmonks_season(
                     or home.get("id") is None or away.get("id") is None
                 ):
                     counts["skipped_fixtures"] += 1
+                    if fixture_index % 25 == 0 or fixture_index == len(fixtures):
+                        print(
+                            f"[Repository import] Fixture progress {fixture_index}/{len(fixtures)}; "
+                            f"upserted={counts['fixtures']}, skipped={counts['skipped_fixtures']}, "
+                            f"statistics={counts['statistics']}.",
+                            flush=True,
+                        )
                     continue
                 fixture_season_id = _provider_id(fixture.get("season_id") or season.get("id"))
                 fixture_league_id = _provider_id(fixture.get("league_id") or league.get("id"))
                 if fixture_season_id != season_id or fixture_league_id != league_id:
                     counts["skipped_fixtures"] += 1
+                    if fixture_index % 25 == 0 or fixture_index == len(fixtures):
+                        print(
+                            f"[Repository import] Fixture progress {fixture_index}/{len(fixtures)}; "
+                            f"upserted={counts['fixtures']}, skipped={counts['skipped_fixtures']}, "
+                            f"statistics={counts['statistics']}.",
+                            flush=True,
+                        )
                     continue
                 home_id = _provider_id(home.get("id"))
                 away_id = _provider_id(away.get("id"))
                 if home_id == away_id:
                     counts["skipped_fixtures"] += 1
+                    if fixture_index % 25 == 0 or fixture_index == len(fixtures):
+                        print(
+                            f"[Repository import] Fixture progress {fixture_index}/{len(fixtures)}; "
+                            f"upserted={counts['fixtures']}, skipped={counts['skipped_fixtures']}, "
+                            f"statistics={counts['statistics']}.",
+                            flush=True,
+                        )
                     continue
                 state = fixture.get("state")
                 status = _nested_name(state) or (str(fixture.get("state_id")) if fixture.get("state_id") is not None else None)
@@ -513,11 +566,37 @@ def import_sportmonks_season(
                     )
                     counts["statistics"] += 1
 
+                if fixture_index % 25 == 0 or fixture_index == len(fixtures):
+                    print(
+                        f"[Repository import] Fixture progress {fixture_index}/{len(fixtures)}; "
+                        f"upserted={counts['fixtures']}, skipped={counts['skipped_fixtures']}, "
+                        f"statistics={counts['statistics']}; "
+                        f"elapsed={time.monotonic() - stage_started:.1f}s.",
+                        flush=True,
+                    )
+
+            print(
+                f"[Repository import] Fixture/statistics writes completed in "
+                f"{time.monotonic() - stage_started:.1f}s.",
+                flush=True,
+            )
+            stage_started = time.monotonic()
+            print("[Repository import] Writing synchronization state.", flush=True)
             _sync_result(cursor, "leagues", 1, counts["leagues"])
             _sync_result(cursor, "seasons", 1, counts["seasons"])
             _sync_result(cursor, "teams", len(teams), counts["teams"])
             _sync_result(cursor, "fixtures", len(fixtures), counts["fixtures"])
             _sync_result(cursor, "fixture_statistics", counts["statistics"], counts["statistics"])
+            print(
+                f"[Repository import] Synchronization state written in "
+                f"{time.monotonic() - stage_started:.2f}s; transaction will now commit.",
+                flush=True,
+            )
+    print(
+        f"[Repository import] Transaction committed; total duration "
+        f"{time.monotonic() - import_started:.2f}s.",
+        flush=True,
+    )
     return {
         "provider": "sportmonks",
         "league": league.get("name"),
