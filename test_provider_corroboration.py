@@ -224,9 +224,9 @@ class ProviderCorroborationTests(unittest.TestCase):
         self.assertEqual(diagnostics["records_seen_after_competition_season_filters"], 2)
         self.assertEqual(diagnostics["normalized_status_counts"], {"finished": 1, "unknown": 1})
         self.assertEqual(diagnostics["finished_and_score_valid_records"], 1)
-        self.assertEqual(diagnostics["sample_records"][0]["state_description"], "Match Finished")
-        self.assertEqual(diagnostics["sample_records"][0]["normalized_status"], "unknown")
-        self.assertEqual(diagnostics["sample_records"][0]["score_current"], "2 - 0")
+        self.assertEqual(diagnostics["sample_records"][1]["state_description"], "Match Finished")
+        self.assertEqual(diagnostics["sample_records"][1]["normalized_status"], "unknown")
+        self.assertEqual(diagnostics["sample_records"][1]["score_current"], "2 - 0")
 
     def test_documented_top_level_country_object_is_accepted(self):
         row = highlightly_match()
