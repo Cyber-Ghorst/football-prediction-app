@@ -874,13 +874,17 @@ try:
                             flush=True,
                         )
                         import_started = time.monotonic()
+                        import_status = st.empty()
+                        import_status.info("Starting CockroachDB import...")
                         import_report = import_sportmonks_season(
                             PROVIDER_DATABASE_URL,
                             league=league_by_id[int(league_id)],
                             season=selected_season_row,
                             teams=team_rows,
                             fixtures=season_fixtures,
+                            progress_callback=lambda message: import_status.info(f"**Import diagnostics:** {message}"),
                         )
+                        import_status.success("Database import completed.")
                         print(
                             f"[Sportmonks] Season {selected_season_id}: CockroachDB import completed "
                             f"in {time.monotonic() - import_started:.2f}s.",
