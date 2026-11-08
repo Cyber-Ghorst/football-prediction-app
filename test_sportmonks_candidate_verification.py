@@ -83,6 +83,43 @@ class HighlightlyCandidateVerificationTests(unittest.TestCase):
         self.assertIsNone(result["team_id"])
         self.assertEqual(result["status"], "team_name_not_found_in_date_fixtures")
 
+
+    def test_candidate_team_id_resolves_coventry_alias_to_exact_provider_name(self):
+        from sportmonks_candidate_verification import resolve_candidate_team_id
+
+        fixtures = [{
+            "participants": [
+                {"id": 117, "name": "Coventry City"},
+                {"id": 11, "name": "Fulham"},
+            ]
+        }]
+        result = resolve_candidate_team_id("Coventry", fixtures)
+        self.assertEqual(result["team_id"], 117)
+        self.assertEqual(result["status"], "explicit_alias_resolved_from_date_fixtures")
+        self.assertEqual(result["matched_provider_names"], ["Coventry City"])
+
+    def test_candidate_team_id_resolves_ipswich_alias_to_exact_provider_name(self):
+        from sportmonks_candidate_verification import resolve_candidate_team_id
+
+        fixtures = [{
+            "participants": [
+                {"id": 116, "name": "Ipswich Town"},
+                {"id": 11, "name": "Fulham"},
+            ]
+        }]
+        result = resolve_candidate_team_id("Ipswich", fixtures)
+        self.assertEqual(result["team_id"], 116)
+        self.assertEqual(result["status"], "explicit_alias_resolved_from_date_fixtures")
+        self.assertEqual(result["matched_provider_names"], ["Ipswich Town"])
+
+    def test_alias_resolution_does_not_accept_unlisted_fuzzy_names(self):
+        from sportmonks_candidate_verification import resolve_candidate_team_id
+
+        fixtures = [{"participants": [{"id": 117, "name": "Coventry City FC"}]}]
+        result = resolve_candidate_team_id("Coventry", fixtures)
+        self.assertIsNone(result["team_id"])
+        self.assertEqual(result["status"], "team_name_not_found_in_date_fixtures")
+
     def test_candidate_team_id_ambiguous_exact_name_stays_unresolved(self):
         from sportmonks_candidate_verification import resolve_candidate_team_id
 
