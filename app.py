@@ -450,7 +450,17 @@ try:
                                                     row for name, row in team_map.items()
                                                     if normalize_team_name(name) == target_name
                                                 ]
-                                                return int(matches[0]["id"]) if len(matches) == 1 else None
+                                                if len(matches) == 1:
+                                                    return int(matches[0]["id"])
+                                                # Candidate opponents may not be present in the selected
+                                                # season's team list. Resolve only from exact participant
+                                                # names returned by Sportmonks for this candidate date.
+                                                from sportmonks_candidate_verification import resolve_candidate_team_id
+                                                resolution = resolve_candidate_team_id(
+                                                    candidate_team_name,
+                                                    fixtures_by_date[candidate_date],
+                                                )
+                                                return resolution["team_id"]
 
                                             report = verify_highlightly_candidate(
                                                 candidate,
