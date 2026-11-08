@@ -658,3 +658,46 @@ def get_repository_team_history(
                 tuple(params),
             )
             return _rows_as_dicts(cursor)
+
+
+
+def diagnose_repository_fixture_history(database_url: str) -> dict[str, Any]:
+    """Summarize imported fixture statuses and score coverage to diagnose history reads."""
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT COALESCE(status, '<NULL>') AS status,
+                       COUNT(*) AS fixture_count,
+                       COUNT(*) FILTER (
+                           WHERE home_goals IS NOT NULL AND away_goals IS NOT NULL
+                       ) AS fixtures_with_both_scores,
+                       COUNT(*) FILTER (
+                           WHERE starting_at < NOW()
+                       ) AS fixtures_in_past
+                FROM football_fixtures
+                GROUP BY COALESCE(status, '<NULL>')
+                ORDER BY fixture_count DESC, status
+                """
+            )
+            status_summary = _rows_as_dicts(cursor)
+            cursor.execute(
+                """
+                SELECT fixture_id, starting_at, status, home_goals, away_goals,
+                       raw_payload->'state' AS raw_state,
+                       raw_payload->>'state_id' AS raw_state_id,
+                       raw_payload->'scores' AS raw_scores
+                FROM football_fixtures
+                WHERE starting_at < NOW()
+                ORDER BY starting_at DESC NULLS LAST
+                LIMIT 5
+                """
+            )
+            recent_past_samples = _rows_as_dicts(cursor)
+    return {
+        "status_summary": status_summary,
+        "recent_past_fixture_samples": recent_past_samples,
+        "history_filter_requires_recognized_status_and_both_scores": True,
+    }
