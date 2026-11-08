@@ -126,8 +126,14 @@ def resolve_candidate_team_id(
     # matches: the candidate alias must resolve to one exact Sportmonks name
     # and one unique participant ID in the date response.
     explicit_aliases = {
+        # Reviewed Highlightly -> Sportmonks display-name variants. Each alias
+        # still has to resolve to one unique participant ID in the exact-date
+        # Sportmonks response; season, league, orientation, kickoff and score
+        # are checked separately before a candidate can be verified.
         "coventry": {"coventry city"},
         "ipswich": {"ipswich town"},
+        "brighton": {"brighton & hove albion"},
+        "leeds": {"leeds united"},
     }
     accepted_names = {target} | explicit_aliases.get(target, set()) if target else set()
     observations: dict[int, set[str]] = {}
