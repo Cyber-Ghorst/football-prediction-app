@@ -1,6 +1,10 @@
 from datetime import datetime, timezone
 
-from prediction_results import verified_final_score, group_completed_fixture_candidates
+from prediction_results import (
+    verified_final_score,
+    group_completed_fixture_candidates,
+    automatic_result_check_due,
+)
 
 
 def _record():
@@ -108,3 +112,32 @@ def test_result_sync_does_not_overwrite_records_with_existing_scores():
     groups = group_completed_fixture_candidates([manual, blank], now)
     assert len(groups) == 1
     assert groups[0] == [blank]
+
+
+
+def test_automatic_result_check_runs_immediately_and_then_after_interval():
+    first = datetime(2026, 11, 8, 18, 0, tzinfo=timezone.utc)
+    assert automatic_result_check_due(None, first) is True
+    assert automatic_result_check_due(
+        first, datetime(2026, 11, 8, 18, 14, tzinfo=timezone.utc)
+    ) is False
+    assert automatic_result_check_due(
+        first, datetime(2026, 11, 8, 18, 15, tzinfo=timezone.utc)
+    ) is True
+
+
+def test_automatic_result_check_handles_naive_and_malformed_previous_timestamp():
+    now = datetime(2026, 11, 8, 18, 15)
+    previous = datetime(2026, 11, 8, 18, 0)
+    assert automatic_result_check_due(previous, now) is True
+    assert automatic_result_check_due("invalid", now) is True
+
+
+def test_automatic_result_check_rejects_invalid_interval():
+    now = datetime(2026, 11, 8, 18, 0, tzinfo=timezone.utc)
+    try:
+        automatic_result_check_due(None, now, interval_minutes=0)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("Expected invalid interval to be rejected")

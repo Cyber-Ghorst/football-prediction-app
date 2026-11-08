@@ -23,7 +23,7 @@ from highlightly_match_enrichment import collect_highlightly_match_enrichment
 from highlightly_player_enrichment import collect_highlightly_player_enrichment
 from prediction_evaluation import build_prediction_record, evaluate_prediction_ledger, merge_prediction_records
 from prediction_storage import load_prediction_ledger, save_prediction_records
-from prediction_results import verified_final_score, group_completed_fixture_candidates
+from prediction_results import verified_final_score, group_completed_fixture_candidates, automatic_result_check_due
 from prediction_readiness import build_prediction_readiness
 from player_availability import assess_player_availability
 from statistics_coverage import build_statistics_coverage
@@ -140,6 +140,42 @@ def _sync_completed_sportmonks_results():
         "errors": errors,
         "limit_reached": len(fixture_groups) > 10,
     }
+
+@st.fragment(run_every="15m")
+def _automatic_result_collection(enabled):
+    """Refresh verified results periodically while this Streamlit session is open."""
+    if not enabled:
+        st.caption("Automatic result checks are paused. The manual check remains available.")
+        return
+
+    now = datetime.now(timezone.utc)
+    last_checked = st.session_state.get("_automatic_result_check_last_at")
+    if not automatic_result_check_due(last_checked, now, interval_minutes=15):
+        st.caption("Automatic result collection is active • next check within 15 minutes.")
+        return
+
+    # Set the timestamp before the request so a transient error does not cause
+    # repeated API calls on every ordinary Streamlit rerun.
+    st.session_state["_automatic_result_check_last_at"] = now
+    try:
+        with st.spinner("Automatically checking completed Sportmonks fixtures..."):
+            report = _sync_completed_sportmonks_results()
+        st.caption(
+            f"Automatic result check • {report['eligible_checked']} unique fixture(s) checked • "
+            f"{report['updated']} verified prediction result(s) saved."
+        )
+        if report["errors"]:
+            st.warning(
+                f"{report['errors']} automatic result request(s) failed. "
+                "No unverified result was saved; another check will run later."
+            )
+        if report["limit_reached"]:
+            st.info("The automatic check reached its 10-fixture safety limit; remaining fixtures will be checked later.")
+        if report["updated"]:
+            st.rerun()
+    except SportmonksError as exc:
+        st.warning(f"Automatic Sportmonks result check failed: {exc}")
+
 
 if not st.session_state.get("_ledger_db_loaded"):
     _load_database_ledger()
@@ -1076,6 +1112,13 @@ with st.expander("Prediction tracking, Opta comparison and backtesting", expande
         st.info(st.session_state.get("_ledger_db_message", "Neon is not configured; predictions remain in this browser session only."))
     st.caption("When Neon is connected, prediction records are saved across browser sessions and app restarts. CSV import/export remains available as a backup.")
     st.caption("Automatic result collection checks each unique completed Sportmonks fixture once, then applies its exact verified 90-minute score to every matching blank prediction record. Manual scores are never overwritten.")
+    auto_result_checks = st.checkbox(
+        "Automatically check for completed results every 15 minutes while this app is open",
+        value=True,
+        key="automatic_result_collection_enabled",
+        help="Checks run when the app opens and periodically while this browser session stays connected. The manual check remains available.",
+    )
+    _automatic_result_collection(auto_result_checks)
     if st.button("Check for completed match results", key="sync_verified_match_results"):
         try:
             with st.spinner("Checking eligible completed Sportmonks fixtures..."):
