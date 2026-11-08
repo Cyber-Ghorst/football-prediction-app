@@ -60,6 +60,44 @@ def _score_pairs(fixture: Mapping[str, Any], descriptions: set[str]) -> dict[str
     return pairs if set(pairs) == {"home", "away"} else None
 
 
+def group_completed_fixture_candidates(
+    records: list[Mapping[str, Any]], now: Any
+) -> list[list[Mapping[str, Any]]]:
+    """Group blank-score, already-kicked-off Sportmonks records by fixture ID.
+
+    A fixture is returned once even when the ledger contains repeated forecasts.
+    Rows with any existing score value are excluded so manual results are preserved.
+    """
+    from datetime import datetime, timezone
+
+    if not isinstance(now, datetime):
+        raise TypeError("now must be a datetime")
+    current = now if now.tzinfo else now.replace(tzinfo=timezone.utc)
+    current = current.astimezone(timezone.utc)
+    grouped: dict[tuple[str, str], list[Mapping[str, Any]]] = {}
+    for record in records:
+        if str(record.get("fixture_provider") or "").strip().casefold() != "sportmonks":
+            continue
+        fixture_id = str(record.get("fixture_id") or "").strip()
+        if not fixture_id:
+            continue
+        if record.get("actual_home_goals") not in (None, "") or record.get("actual_away_goals") not in (None, ""):
+            continue
+        try:
+            kickoff = datetime.fromisoformat(
+                str(record.get("kickoff_at") or "").replace("Z", "+00:00")
+            )
+        except (TypeError, ValueError):
+            continue
+        if kickoff.tzinfo is None:
+            kickoff = kickoff.replace(tzinfo=timezone.utc)
+        if kickoff.astimezone(timezone.utc) > current:
+            continue
+        key = ("sportmonks", fixture_id)
+        grouped.setdefault(key, []).append(record)
+    return list(grouped.values())
+
+
 def verified_final_score(record: Mapping[str, Any], fixture: Mapping[str, Any]) -> tuple[int, int] | None:
     """Return a verified 90-minute score, otherwise None.
 
