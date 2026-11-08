@@ -203,6 +203,30 @@ class ProviderCorroborationTests(unittest.TestCase):
         self.assertEqual(brighton["sample_records"][0]["home_team_id"], 78)
         self.assertEqual(brighton["sample_records"][0]["raw_state"]["description"], "Finished")
 
+    def test_highlightly_team_name_catalog_exposes_all_normalized_names_and_ids(self):
+        brighton = highlightly_match()
+        brighton.update({
+            "id": 9191,
+            "homeTeam": {"id": 78, "name": "Brighton"},
+            "awayTeam": {"id": 11, "name": "Arsenal"},
+        })
+        report = collect_recent_result_corroboration(
+            sportmonks_fixtures=[sportmonks_fixture()],
+            competition="Premier League", country="England", season=2026,
+            home_team_name="Brighton & Hove Albion", away_team_name="Fulham",
+            highlightly_client=FakeHighlightly([brighton]), now=NOW,
+        )
+        catalog = report["highlightly_diagnostics"]["team_name_catalog"]
+        self.assertEqual(catalog["Brighton"]["normalized_name"], "brighton")
+        self.assertEqual(catalog["Brighton"]["appearances"], 1)
+        self.assertEqual(catalog["Brighton"]["source_team_ids"], ["78"])
+        # A short provider label remains diagnostic-only and is not treated as
+        # an exact selected-team identity.
+        self.assertEqual(
+            report["highlightly_diagnostics"]["selected_team_breakdown"]["Brighton & Hove Albion"]["normalized_team_records"],
+            0,
+        )
+
     def test_api_ninjas_team_history_coverage_is_reported_per_team(self):
         extra = ninjas_match()
         extra.update({
