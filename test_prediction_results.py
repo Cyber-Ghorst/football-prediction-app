@@ -1,4 +1,6 @@
-from datetime import datetime, timezone\n\nfrom prediction_results import verified_final_score, group_completed_fixture_candidates
+from datetime import datetime, timezone
+
+from prediction_results import verified_final_score, group_completed_fixture_candidates
 
 
 def _record():
