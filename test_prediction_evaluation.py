@@ -107,6 +107,34 @@ class PredictionEvaluationTests(unittest.TestCase):
         report = evaluate_prediction_ledger([row])
         self.assertEqual(report["player_snapshots_pre_kickoff"], 0)
 
+    def test_eligibility_audit_explains_each_exclusion_reason(self):
+        valid = self._record()
+        missing_prediction_time = self._record()
+        missing_prediction_time["predicted_at"] = ""
+        missing_kickoff = self._record()
+        missing_kickoff["kickoff_at"] = ""
+        late = self._record(predicted_at="2026-11-07T13:00:00+00:00")
+        invalid_probabilities = self._record()
+        invalid_probabilities["model_home_win"] = 80
+        records = [valid, missing_prediction_time, missing_kickoff, late, invalid_probabilities]
+
+        audit = evaluate_prediction_ledger(records)["eligibility_audit"]
+
+        self.assertEqual(audit["records_total"], 5)
+        self.assertEqual(audit["valid_pre_kickoff_records"], 1)
+        self.assertEqual(audit["missing_prediction_timestamp"], 1)
+        self.assertEqual(audit["missing_kickoff_timestamp"], 1)
+        self.assertEqual(audit["at_or_after_kickoff"], 1)
+        self.assertEqual(audit["invalid_probabilities"], 1)
+        self.assertEqual(
+            sum(audit[key] for key in (
+                "valid_pre_kickoff_records", "missing_prediction_timestamp",
+                "missing_kickoff_timestamp", "at_or_after_kickoff",
+                "invalid_probabilities",
+            )),
+            audit["records_total"],
+        )
+
     def test_invalid_probability_sum_is_rejected(self):
         with self.assertRaises(ValueError):
             self._record(probabilities={"home_win": 60, "draw": 20, "away_win": 10})
