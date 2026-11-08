@@ -12,7 +12,7 @@ from api_ninjas import APINinjasClient, APINinjasError
 from highlightly import HighlightlyClient, HighlightlyError
 from sportmonks import SportmonksClient, SportmonksError
 from data_layer2 import collect_team_profile
-from sportmonks_layer2 import collect_sportmonks_team_profile, find_upcoming_match_fixture, find_exact_match_fixture, extract_sportmonks_match_details
+from sportmonks_layer2 import collect_sportmonks_team_profile, collect_repository_team_profile, find_upcoming_match_fixture, find_exact_match_fixture, extract_sportmonks_match_details
 from sportmonks_candidate_verification import verify_highlightly_candidate
 from provider_core import normalize_team_name
 from engine import predict_match, WEIGHTS, most_likely_outcome
@@ -938,8 +938,70 @@ try:
                 except SportmonksError as exc:
                     st.error(f"Sportmonks fixture collection failed: {exc}")
                     st.stop()
-                home = collect_sportmonks_team_profile(team_map[home_name], selected_season_id, fixtures, standings)
-                away = collect_sportmonks_team_profile(team_map[away_name], selected_season_id, fixtures, standings)
+                repository_profile_report = {
+                    "generated_at": datetime.now(timezone.utc).isoformat(),
+                    "season_id": int(selected_season_id),
+                    "home_team": home_name,
+                    "away_team": away_name,
+                    "profiles": {},
+                    "prediction_engine_modified": False,
+                    "neon_prediction_ledger_modified": False,
+                }
+
+                def _load_team_profile_with_repository(team_name):
+                    provider_team = team_map[team_name]
+                    try:
+                        profile = collect_repository_team_profile(
+                            PROVIDER_DATABASE_URL,
+                            f"sportmonks:{int(provider_team['id'])}",
+                            f"sportmonks:{int(selected_season_id)}",
+                            standings,
+                        )
+                        if len(profile.get("matches") or []) < 5:
+                            raise ValueError(
+                                f"Central repository returned only {len(profile.get('matches') or [])} "
+                                "verified completed matches; at least 5 are required."
+                            )
+                        repository_profile_report["profiles"][team_name] = {
+                            "source": "cockroachdb_central_repository",
+                            "completed_matches": len(profile.get("matches") or []),
+                            "repository_fixture_rows": profile.get("data_quality", {}).get(
+                                "repository_fixture_rows", 0
+                            ),
+                            "fallback_used": False,
+                        }
+                        return profile
+                    except Exception as repository_error:
+                        profile = collect_sportmonks_team_profile(
+                            provider_team, selected_season_id, fixtures, standings
+                        )
+                        repository_profile_report["profiles"][team_name] = {
+                            "source": "live_sportmonks_fallback",
+                            "completed_matches": len(profile.get("matches") or []),
+                            "fallback_used": True,
+                            "fallback_reason": str(repository_error),
+                        }
+                        return profile
+
+                home = _load_team_profile_with_repository(home_name)
+                away = _load_team_profile_with_repository(away_name)
+
+                try:
+                    repository_profile_archive = _upload_report_once(
+                        "central_repository_prediction_inputs",
+                        repository_profile_report,
+                    )
+                    if repository_profile_archive:
+                        st.caption(
+                            "Prediction input-source report archived in GitHub: "
+                            f"[latest]({repository_profile_archive['latest_url']}) · "
+                            f"[archive]({repository_profile_archive['archive_url']})"
+                        )
+                except Exception as report_error:
+                    st.error(
+                        "Prediction input-source report could not be uploaded to GitHub: "
+                        f"{report_error}"
+                    )
 
                 # Ledger identity uses the closest exact pairing in this season,
                 # including live/completed fixtures. Lineup enrichment stays upcoming-only.
