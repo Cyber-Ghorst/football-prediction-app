@@ -1156,6 +1156,50 @@ with st.expander("Prediction tracking, Opta comparison and backtesting", expande
             st.caption(f"Excluded {report['duplicate_records_excluded']} repeated forecast record(s); only the latest valid pre-kickoff forecast per identifiable fixture is scored.")
         if report["unidentifiable_pre_match_records"]:
             st.warning(f"{report['unidentifiable_pre_match_records']} pre-kickoff record(s) lack enough fixture identity to be scored safely.")
+        st.subheader("Historical performance dashboard")
+        history = report.get("performance_history", [])
+        if history:
+            history_frame = pd.DataFrame(history)
+            history_frame["kickoff_date"] = pd.to_datetime(
+                history_frame["kickoff_at"], utc=True, errors="coerce"
+            )
+            history_frame = history_frame.dropna(subset=["kickoff_date"]).sort_values("kickoff_date")
+            if not history_frame.empty:
+                history_frame["cumulative_accuracy_pct"] = (
+                    history_frame["correct"].astype(float).expanding().mean() * 100
+                )
+                history_frame["cumulative_brier"] = history_frame["brier"].astype(float).expanding().mean()
+                h1, h2, h3 = st.columns(3)
+                h1.metric("Verified pre-match fixtures", len(history_frame))
+                h2.metric("Correct predictions", int(history_frame["correct"].sum()))
+                h3.metric(
+                    "Historical accuracy",
+                    f"{history_frame['correct'].mean() * 100:.1f}%",
+                )
+                st.caption("Each point represents one unique fixture, using the latest valid pre-kickoff forecast and an exact verified final score. Lower Brier score is better.")
+                st.write("Cumulative prediction accuracy")
+                st.line_chart(
+                    history_frame.set_index("kickoff_date")[["cumulative_accuracy_pct"]]
+                )
+                st.write("Cumulative multiclass Brier score")
+                st.line_chart(
+                    history_frame.set_index("kickoff_date")[["cumulative_brier"]]
+                )
+                st.write("Verified match-by-match history")
+                st.dataframe(
+                    history_frame[[
+                        "kickoff_at", "competition", "home_team", "away_team",
+                        "score", "predicted_outcome", "actual_outcome", "correct",
+                        "top_confidence_pct", "brier", "log_loss",
+                    ]],
+                    use_container_width=True,
+                    hide_index=True,
+                )
+            else:
+                st.info("No completed pre-match fixtures have a usable kickoff date for the history chart.")
+        else:
+            st.info("The historical dashboard will populate as eligible pre-match forecasts receive verified final scores.")
+
         model_metrics = report["model"]
         opta_metrics = report["opta_same_fixtures"]
         m1, m2, m3 = st.columns(3)

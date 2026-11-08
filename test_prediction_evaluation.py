@@ -95,6 +95,31 @@ class PredictionEvaluationTests(unittest.TestCase):
         self.assertEqual(report["duplicate_records_excluded"], 1)
         self.assertEqual(report["model"]["matches"], 1)
         self.assertEqual(report["model"]["accuracy_pct"], 0.0)
+        self.assertEqual(len(report["performance_history"]), 1)
+        self.assertEqual(report["performance_history"][0]["predicted_outcome"], "away")
+        self.assertFalse(report["performance_history"][0]["correct"])
+
+    def test_performance_history_contains_only_completed_pre_match_fixtures(self):
+        valid = self._record(fixture_id="fixture-1", fixture_provider="sportmonks")
+        valid.update(actual_home_goals="2", actual_away_goals="0")
+        late = self._record(
+            home_team="Liverpool", away_team="Everton",
+            predicted_at="2026-11-07T13:00:00+00:00",
+            fixture_id="fixture-2", fixture_provider="sportmonks",
+        )
+        late.update(actual_home_goals="0", actual_away_goals="1")
+
+        report = evaluate_prediction_ledger([valid, late])
+        history = report["performance_history"]
+
+        self.assertEqual(len(history), 1)
+        self.assertEqual(history[0]["home_team"], "Arsenal")
+        self.assertEqual(history[0]["score"], "2-0")
+        self.assertEqual(history[0]["actual_outcome"], "home")
+        self.assertEqual(history[0]["predicted_outcome"], "home")
+        self.assertTrue(history[0]["correct"])
+        self.assertIsNotNone(history[0]["brier"])
+        self.assertIsNotNone(history[0]["log_loss"])
 
     def test_snapshot_counts_recompute_timestamp_and_require_serialized_records(self):
         row = self._record()
