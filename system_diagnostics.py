@@ -145,6 +145,8 @@ def build_system_diagnostics(
             f"{name}: {count} completed score-valid matches available (minimum 5; target 10).",
             recommendation,
         ))
+        tactical_summary = dict(profile.get("tactical_summary") or {})
+        recency = dict(tactical_summary.get("recency_weighting") or {})
         team_reports[side] = {
             "team": name,
             "completed_matches_available": count,
@@ -152,8 +154,38 @@ def build_system_diagnostics(
             "history_target": 10,
             "history_collection_diagnostics": profile.get("history_collection_diagnostics"),
             "statistics_coverage": dict(statistics_coverage.get(name) or {}),
+            "tactical_summary": tactical_summary,
+            "tactical_recency_weighting": recency or None,
             "integrity": _profile_integrity(profile),
         }
+        if recency:
+            matches_used = recency.get("matches_used")
+            recent_matches = recency.get("recent_matches")
+            previous_matches = recency.get("previous_matches")
+            weighting_valid = (
+                recency.get("recent_weight") == 0.60
+                and recency.get("previous_weight") == 0.40
+                and isinstance(matches_used, int)
+                and 0 <= matches_used <= 10
+                and isinstance(recent_matches, int)
+                and isinstance(previous_matches, int)
+                and recent_matches == min(matches_used, 5)
+                and previous_matches == max(0, matches_used - 5)
+            )
+            checks.append(_check(
+                f"{side}_tactical_recency_weighting",
+                "pass" if weighting_valid else "fail",
+                f"{name}: tactical recency metadata reports latest-five 60% / previous-five 40% over {matches_used} match(es)."
+                if weighting_valid else f"{name}: tactical recency metadata is missing or inconsistent with the agreed ten-match 60% / 40% rule.",
+                None if weighting_valid else "Inspect the tactical analyser and ensure it uses only the latest ten matches, with the latest five weighted 60% and the previous five 40%.",
+            ))
+        else:
+            checks.append(_check(
+                f"{side}_tactical_recency_weighting",
+                "info",
+                f"{name}: tactical recency metadata was not supplied; the weighting cannot be independently audited from this report.",
+                "Expose the tactical_summary.recency_weighting metadata in the collected team profile.",
+            ))
         integrity[side] = team_reports[side]["integrity"]
         team_integrity = integrity[side]
         if team_integrity["duplicate_fixture_ids"] or team_integrity["invalid_or_missing_score_fields"]:
