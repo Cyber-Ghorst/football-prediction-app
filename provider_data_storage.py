@@ -114,6 +114,20 @@ def ensure_provider_storage(database_url: str) -> None:
                     cursor.execute(statement)
 
 
+def check_provider_storage_connection(database_url: str) -> bool:
+    """Create required tables and verify a live CockroachDB SQL round trip."""
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+    ensure_provider_storage(database_url)
+    with psycopg.connect(database_url, connect_timeout=10) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+            row = cursor.fetchone()
+    if row != (1,):
+        raise RuntimeError("CockroachDB connection check returned an unexpected result.")
+    return True
+
+
 def _snapshot_from_row(row: tuple[Any, ...]) -> dict[str, Any]:
     names = (
         "snapshot_id", "provider", "resource_type", "request_params",

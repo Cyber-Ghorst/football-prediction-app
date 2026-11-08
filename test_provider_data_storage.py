@@ -15,7 +15,9 @@ class FakeCursor:
 
     def execute(self, query, params=None):
         normalized = " ".join(query.split())
-        if normalized.startswith("INSERT INTO provider_api_snapshots"):
+        if normalized == "SELECT 1":
+            self.result = (1,)
+        elif normalized.startswith("INSERT INTO provider_api_snapshots"):
             self.connection.snapshots.append(params)
         elif normalized.startswith("INSERT INTO provider_collection_runs"):
             self.connection.runs.append(params)
@@ -83,6 +85,13 @@ class ProviderStorageTests(unittest.TestCase):
         self.jsonb_patch.stop()
         self.psycopg_patch.stop()
         self.modules_patch.stop()
+
+    def test_connection_check_creates_tables_and_verifies_sql_round_trip(self):
+        self.assertTrue(storage.check_provider_storage_connection("postgresql://example"))
+
+    def test_connection_check_requires_database_url(self):
+        with self.assertRaises(ValueError):
+            storage.check_provider_storage_connection("")
 
     def test_cache_key_is_stable_and_provider_scoped(self):
         params = {"season": 2026, "team_id": 123}
