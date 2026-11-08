@@ -19,6 +19,15 @@ def profile(name, count=10, stats=True):
         "matches": matches,
         "data_quality": {"matches_returned": count},
         "history_collection_diagnostics": {"fixtures_scanned": count},
+        "tactical_summary": {
+            "recency_weighting": {
+                "matches_used": min(count, 10),
+                "recent_matches": min(count, 5),
+                "recent_weight": 0.60,
+                "previous_matches": max(0, min(count, 10) - 5),
+                "previous_weight": 0.40,
+            }
+        },
     }
 
 
@@ -75,6 +84,30 @@ class SystemDiagnosticsTests(unittest.TestCase):
         self.assertEqual(report["overall_status"], "healthy")
         self.assertEqual(report["summary"]["failed"], 0)
         self.assertEqual(report["selected_context"]["primary_provider"], "sportmonks")
+
+    def test_tactical_recency_metadata_is_exposed_and_audited(self):
+        report = self.build()
+        home = report["teams"]["home"]
+        self.assertEqual(home["tactical_recency_weighting"]["recent_weight"], 0.60)
+        self.assertEqual(home["tactical_recency_weighting"]["previous_weight"], 0.40)
+        check = next(row for row in report["checks"] if row["id"] == "home_tactical_recency_weighting")
+        self.assertEqual(check["status"], "pass")
+
+    def test_incorrect_tactical_recency_metadata_fails_audit(self):
+        home = profile("Home FC")
+        home["tactical_summary"]["recency_weighting"]["recent_weight"] = 0.50
+        report = self.build(home_profile=home)
+        check = next(row for row in report["checks"] if row["id"] == "home_tactical_recency_weighting")
+        self.assertEqual(check["status"], "fail")
+        self.assertEqual(report["overall_status"], "blocked")
+
+    def test_missing_tactical_recency_metadata_is_not_assumed_valid(self):
+        home = profile("Home FC")
+        home.pop("tactical_summary")
+        report = self.build(home_profile=home)
+        check = next(row for row in report["checks"] if row["id"] == "home_tactical_recency_weighting")
+        self.assertEqual(check["status"], "info")
+        self.assertIsNone(report["teams"]["home"]["tactical_recency_weighting"])
 
     def test_unverified_fixture_requires_attention_not_fake_verification(self):
         report = self.build(
