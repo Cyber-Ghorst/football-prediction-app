@@ -1,18 +1,18 @@
 {
   "diagnostic_version": 1,
-  "generated_at": "2026-11-08T10:44:57.726542+00:00",
-  "overall_status": "attention_required",
+  "generated_at": "2026-11-08T11:00:22.813169+00:00",
+  "overall_status": "healthy",
   "selected_context": {
     "season_start_year": 2026,
     "competition": "Premier League \u2014 England",
     "primary_provider": "sportmonks"
   },
   "summary": {
-    "checks_total": 13,
-    "passed": 9,
-    "warnings": 2,
+    "checks_total": 15,
+    "passed": 12,
+    "warnings": 0,
     "failed": 0,
-    "informational": 2
+    "informational": 3
   },
   "checks": [
     {
@@ -35,9 +35,15 @@
     },
     {
       "id": "home_history_depth",
-      "status": "warning",
-      "summary": "Brighton & Hove Albion: 9 completed score-valid matches available (minimum 5; target 10).",
-      "recommendation": "Keep readiness marked limited_history until Brighton's next result is completed and collected with valid scores. Do not add unplayed fixtures, use another season, or relax the ten-match target."
+      "status": "info",
+      "summary": "Brighton & Hove Albion: 9 completed score-valid matches available (minimum 5 met; preferred target 10 not yet met).",
+      "recommendation": null
+    },
+    {
+      "id": "home_tactical_recency_weighting",
+      "status": "pass",
+      "summary": "Brighton & Hove Albion: tactical recency metadata reports latest-five 60% / previous-five 40% over 9 match(es).",
+      "recommendation": null
     },
     {
       "id": "home_history_integrity",
@@ -54,7 +60,13 @@
     {
       "id": "away_history_depth",
       "status": "pass",
-      "summary": "Fulham: 10 completed score-valid matches available (minimum 5; target 10).",
+      "summary": "Fulham: 10 completed score-valid matches available (minimum 5 met; preferred target 10 met).",
+      "recommendation": null
+    },
+    {
+      "id": "away_tactical_recency_weighting",
+      "status": "pass",
+      "summary": "Fulham: tactical recency metadata reports latest-five 60% / previous-five 40% over 10 match(es).",
       "recommendation": null
     },
     {
@@ -89,25 +101,12 @@
     },
     {
       "id": "prediction_readiness",
-      "status": "warning",
-      "summary": "Prediction readiness status: limited_history.",
-      "recommendation": "Review fixture verification and history depth before relying on the forecast."
+      "status": "pass",
+      "summary": "Prediction readiness status: limited_history. Five completed, score-valid matches per team meet the history minimum; ten is preferred.",
+      "recommendation": null
     }
   ],
-  "recommended_actions": [
-    {
-      "priority": "next",
-      "check_id": "home_history_depth",
-      "issue": "Brighton & Hove Albion: 9 completed score-valid matches available (minimum 5; target 10).",
-      "action": "Keep readiness marked limited_history until Brighton's next result is completed and collected with valid scores. Do not add unplayed fixtures, use another season, or relax the ten-match target."
-    },
-    {
-      "priority": "next",
-      "check_id": "prediction_readiness",
-      "issue": "Prediction readiness status: limited_history.",
-      "action": "Review fixture verification and history depth before relying on the forecast."
-    }
-  ],
+  "recommended_actions": [],
   "providers": {
     "sportmonks": {
       "provider": "Sportmonks Football API v3",
@@ -162,9 +161,9 @@
     "fixture_id": 19721930,
     "kickoff_utc": "2027-03-03T20:00:00+00:00",
     "source_updated_at": null,
-    "source_fetched_at": "2026-11-08T10:44:54.691162+00:00",
-    "source_age_seconds": 3.0,
-    "source_age_minutes": 0.1,
+    "source_fetched_at": "2026-11-08T10:57:46.603417+00:00",
+    "source_age_seconds": 156.2,
+    "source_age_minutes": 2.6,
     "source_freshness": "fresh",
     "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
   },
@@ -447,6 +446,39 @@
             "fixtures_seen": 1
           }
         ]
+      },
+      "tactical_summary": {
+        "playing_style": 64.9,
+        "attacking_approach": 44.76666666666667,
+        "defensive_structure": 40.6,
+        "coverage_metrics": 8,
+        "available_metrics": {
+          "average_possession": 56.7,
+          "average_pass_accuracy": 82.1,
+          "average_shots": 11.1,
+          "average_shots_on_target": 5.0,
+          "average_tackles": 15.2,
+          "average_interceptions": 9.0,
+          "average_blocked_shots": 3.6,
+          "average_corners": 4.8
+        },
+        "recency_weighting": {
+          "matches_used": 9,
+          "recent_matches": 5,
+          "recent_weight": 0.6,
+          "previous_matches": 4,
+          "previous_weight": 0.4,
+          "note": "Latest five matches carry 60%; previous five carry 40%. If a metric is absent from one window, the available window is renormalized."
+        },
+        "note": "Tactical ratings are shown only when the underlying statistics are present; unavailable metrics remain unknown."
+      },
+      "tactical_recency_weighting": {
+        "matches_used": 9,
+        "recent_matches": 5,
+        "recent_weight": 0.6,
+        "previous_matches": 4,
+        "previous_weight": 0.4,
+        "note": "Latest five matches carry 60%; previous five carry 40%. If a metric is absent from one window, the available window is renormalized."
       },
       "integrity": {
         "matches_checked": 9,
@@ -733,6 +765,39 @@
           }
         ]
       },
+      "tactical_summary": {
+        "playing_style": 72.75,
+        "attacking_approach": 43.300000000000004,
+        "defensive_structure": 38.233333333333334,
+        "coverage_metrics": 8,
+        "available_metrics": {
+          "average_possession": 58.4,
+          "average_pass_accuracy": 86.1,
+          "average_shots": 8.8,
+          "average_shots_on_target": 4.6,
+          "average_tackles": 14.6,
+          "average_interceptions": 7.7,
+          "average_blocked_shots": 4.0,
+          "average_corners": 6.0
+        },
+        "recency_weighting": {
+          "matches_used": 10,
+          "recent_matches": 5,
+          "recent_weight": 0.6,
+          "previous_matches": 5,
+          "previous_weight": 0.4,
+          "note": "Latest five matches carry 60%; previous five carry 40%. If a metric is absent from one window, the available window is renormalized."
+        },
+        "note": "Tactical ratings are shown only when the underlying statistics are present; unavailable metrics remain unknown."
+      },
+      "tactical_recency_weighting": {
+        "matches_used": 10,
+        "recent_matches": 5,
+        "recent_weight": 0.6,
+        "previous_matches": 5,
+        "previous_weight": 0.4,
+        "note": "Latest five matches carry 60%; previous five carry 40%. If a metric is absent from one window, the available window is renormalized."
+      },
       "integrity": {
         "matches_checked": 10,
         "duplicate_fixture_ids": [],
@@ -771,7 +836,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "75",
+            "requests_remaining": "69",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -789,7 +854,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "74",
+            "requests_remaining": "68",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -807,7 +872,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "73",
+            "requests_remaining": "67",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -1256,7 +1321,7 @@
         "sportmonks_request_metadata": {
           "http_status": 200,
           "rate_limit": "2000",
-          "rate_remaining": "1982"
+          "rate_remaining": "1975"
         }
       },
       {
@@ -1605,7 +1670,7 @@
         "sportmonks_request_metadata": {
           "http_status": 200,
           "rate_limit": "2000",
-          "rate_remaining": "1981"
+          "rate_remaining": "1974"
         }
       }
     ],
@@ -1649,6 +1714,13 @@
     "overall_status": "limited_history",
     "prediction_minimum_history_met": true,
     "ten_match_history_target_met": false,
+    "history_policy": {
+      "minimum_matches_per_team": 5,
+      "preferred_target_per_team": 10,
+      "target_is_advisory": true,
+      "note": "Prediction history eligibility requires five completed, score-valid matches per team. Five to nine matches are allowed with a limited-sample label; ten remains the preferred target."
+    },
+    "prediction_allowed_by_history": true,
     "fixture": {
       "verified": true,
       "status": "verified",
@@ -1656,9 +1728,9 @@
       "fixture_id": 19721930,
       "kickoff_utc": "2027-03-03T20:00:00+00:00",
       "source_updated_at": null,
-      "source_fetched_at": "2026-11-08T10:44:54.691162+00:00",
-      "source_age_seconds": 3.0,
-      "source_age_minutes": 0.1,
+      "source_fetched_at": "2026-11-08T10:57:46.603417+00:00",
+      "source_age_seconds": 156.2,
+      "source_age_minutes": 2.6,
       "source_freshness": "fresh",
       "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
     },
@@ -1666,8 +1738,10 @@
       "home": {
         "team": "Brighton & Hove Albion",
         "completed_matches_available": 9,
+        "history_minimum": 5,
         "history_target": 10,
         "history_status": "minimum_met",
+        "prediction_allowed_by_history": true,
         "matches_with_statistics": 9,
         "matches_with_opponent_strength": 9,
         "tactical_components_available": {
@@ -1681,8 +1755,10 @@
       "away": {
         "team": "Fulham",
         "completed_matches_available": 10,
+        "history_minimum": 5,
         "history_target": 10,
-        "history_status": "sufficient",
+        "history_status": "target_met",
+        "prediction_allowed_by_history": true,
         "matches_with_statistics": 10,
         "matches_with_opponent_strength": 10,
         "tactical_components_available": {
