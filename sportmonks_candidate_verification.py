@@ -122,15 +122,23 @@ def resolve_candidate_team_id(
     from provider_core import normalize_team_name
 
     target = normalize_team_name(team_name or "")
+    # Explicit, reviewed provider-name variants only. These are not fuzzy
+    # matches: the candidate alias must resolve to one exact Sportmonks name
+    # and one unique participant ID in the date response.
+    explicit_aliases = {
+        "coventry": {"coventry city"},
+        "ipswich": {"ipswich town"},
+    }
+    accepted_names = {target} | explicit_aliases.get(target, set()) if target else set()
     observations: dict[int, set[str]] = {}
-    if target:
+    if accepted_names:
         for fixture in fixtures:
             for participant in _rows(fixture.get("participants")):
                 name = str(participant.get("name") or "").strip()
                 participant_id = _as_int(participant.get("id"))
                 if not name or participant_id is None:
                     continue
-                if normalize_team_name(name) == target:
+                if normalize_team_name(name) in accepted_names:
                     observations.setdefault(participant_id, set()).add(name)
 
     matches = [
@@ -138,9 +146,16 @@ def resolve_candidate_team_id(
         for team_id, names in sorted(observations.items())
     ]
     if len(matches) == 1:
+        used_alias = any(
+            normalize_team_name(name) != target
+            for name in matches[0]["provider_names"]
+        )
         return {
             "team_id": matches[0]["team_id"],
-            "status": "exact_name_resolved_from_date_fixtures",
+            "status": (
+                "explicit_alias_resolved_from_date_fixtures"
+                if used_alias else "exact_name_resolved_from_date_fixtures"
+            ),
             "matched_provider_names": matches[0]["provider_names"],
             "candidate_matches": matches,
         }
