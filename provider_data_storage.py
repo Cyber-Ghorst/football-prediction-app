@@ -217,6 +217,42 @@ def save_provider_snapshot(
     return snapshot_id
 
 
+
+def verify_provider_storage_round_trip(database_url: str) -> dict[str, Any]:
+    """Write and read back a short-lived diagnostic snapshot in CockroachDB."""
+    test_id = str(uuid.uuid4())
+    request_params = {"diagnostic_id": test_id}
+    cache_key = build_provider_cache_key(
+        "internal", "storage_diagnostic", request_params
+    )
+    payload = {
+        "diagnostic": "provider_storage_round_trip",
+        "diagnostic_id": test_id,
+        "message": "CockroachDB write/read verification",
+    }
+    snapshot_id = save_provider_snapshot(
+        database_url,
+        provider="internal",
+        resource_type="storage_diagnostic",
+        cache_key=cache_key,
+        request_params=request_params,
+        payload=payload,
+        source_ids=[],
+        ttl_seconds=300,
+    )
+    stored = load_provider_snapshot(database_url, cache_key)
+    if not stored:
+        raise RuntimeError("CockroachDB saved the diagnostic but could not retrieve it.")
+    if stored.get("snapshot_id") != snapshot_id or stored.get("payload") != payload:
+        raise RuntimeError("CockroachDB returned diagnostic data that did not match the saved record.")
+    return {
+        "success": True,
+        "snapshot_id": snapshot_id,
+        "payload_sha256": stored.get("payload_sha256"),
+        "expires_at": stored.get("expires_at"),
+    }
+
+
 def record_provider_collection_run(
     database_url: str,
     *,
