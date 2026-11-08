@@ -94,11 +94,23 @@ class PredictionReadinessTests(unittest.TestCase):
         self.assertIsNone(report["fixture"]["source_age_seconds"])
         self.assertEqual(report["fixture"]["source_freshness"], "unknown")
 
-    def test_five_to_nine_matches_is_limited_history(self):
+    def test_five_to_nine_matches_are_prediction_eligible_with_limited_label(self):
         report = self.report(7, 9, fixture())
         self.assertEqual(report["overall_status"], "limited_history")
         self.assertTrue(report["prediction_minimum_history_met"])
         self.assertFalse(report["ten_match_history_target_met"])
+        self.assertTrue(report["prediction_allowed_by_history"])
+        self.assertEqual(report["history_policy"]["minimum_matches_per_team"], 5)
+        self.assertTrue(report["history_policy"]["target_is_advisory"])
+
+    def test_exactly_five_matches_meets_minimum_for_both_teams(self):
+        report = self.report(5, 5, fixture())
+        self.assertEqual(report["overall_status"], "limited_history")
+        self.assertTrue(report["prediction_allowed_by_history"])
+
+    def test_four_matches_still_blocks_history_eligibility(self):
+        report = self.report(4, 10, fixture())
+        self.assertFalse(report["prediction_allowed_by_history"])
 
     def test_missing_exact_fixture_is_reported_not_substituted(self):
         report = self.report(selected_fixture=None)
