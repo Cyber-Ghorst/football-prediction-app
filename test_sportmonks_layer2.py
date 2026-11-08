@@ -1,6 +1,6 @@
 import unittest
 
-from sportmonks_layer2 import collect_sportmonks_team_profile, standings_strength
+from sportmonks_layer2 import collect_sportmonks_team_profile, standings_strength, find_exact_match_fixture
 
 
 def fixture(fid, home_id, away_id, home_goals, away_goals, state="FT"):
@@ -148,6 +148,34 @@ class SportmonksLayer2Tests(unittest.TestCase):
             now_timestamp=int(datetime(2026, 11, 7, tzinfo=timezone.utc).timestamp()),
         )
         self.assertEqual(found["id"], 20)
+
+    def test_find_exact_fixture_accepts_live_or_past_pair_but_requires_exact_orientation_and_season(self):
+        from datetime import datetime, timezone
+        now = int(datetime(2026, 11, 8, 16, tzinfo=timezone.utc).timestamp())
+        live = fixture(20, 10, 20, 0, 0, state="LIVE")
+        live["starting_at_timestamp"] = now - 1800
+        wrong_orientation = fixture(21, 20, 10, 0, 0, state="LIVE")
+        wrong_orientation["starting_at_timestamp"] = now - 900
+        wrong_season = fixture(22, 10, 20, 0, 0, state="LIVE")
+        wrong_season["season_id"] = 2025
+        wrong_season["starting_at_timestamp"] = now - 600
+        found = find_exact_match_fixture(
+            [wrong_orientation, wrong_season, live], 10, 20, 2026,
+            now_timestamp=now,
+        )
+        self.assertEqual(found["id"], 20)
+
+    def test_exact_fixture_lookup_prefers_upcoming_pair_over_previous_meeting(self):
+        from datetime import datetime, timezone
+        now = int(datetime(2026, 11, 8, 16, tzinfo=timezone.utc).timestamp())
+        previous = fixture(30, 10, 20, 1, 0, state="FT")
+        previous["starting_at_timestamp"] = now - 86400
+        upcoming = fixture(31, 10, 20, 0, 0, state="NS")
+        upcoming["starting_at_timestamp"] = now + 86400
+        found = find_exact_match_fixture(
+            [previous, upcoming], 10, 20, 2026, now_timestamp=now
+        )
+        self.assertEqual(found["id"], 31)
 
     def test_extract_match_details_keeps_sidelined_and_lineup_status_unknown(self):
         from sportmonks_layer2 import extract_sportmonks_match_details

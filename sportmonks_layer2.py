@@ -368,6 +368,40 @@ def collect_sportmonks_team_profile(
     }
 
 
+def find_exact_match_fixture(
+    fixtures: list[dict[str, Any]],
+    home_team_id: int,
+    away_team_id: int,
+    season_id: int,
+    now_timestamp: int | None = None,
+) -> dict[str, Any] | None:
+    """Find the closest exact home-v-away fixture in the selected season, at any status."""
+    import time
+
+    current = int(now_timestamp if now_timestamp is not None else time.time())
+    candidates: list[dict[str, Any]] = []
+    for fixture in fixtures:
+        try:
+            if int(fixture.get("season_id")) != int(season_id):
+                continue
+            kickoff = int(fixture.get("starting_at_timestamp"))
+        except (TypeError, ValueError):
+            continue
+        home, away = _participants(fixture)
+        if not home or not away:
+            continue
+        try:
+            if int(home.get("id")) != int(home_team_id) or int(away.get("id")) != int(away_team_id):
+                continue
+        except (TypeError, ValueError):
+            continue
+        candidates.append(fixture)
+    future = [row for row in candidates if int(row["starting_at_timestamp"]) > current]
+    if future:
+        return min(future, key=lambda row: int(row["starting_at_timestamp"]))
+    return max(candidates, key=lambda row: int(row["starting_at_timestamp"])) if candidates else None
+
+
 def find_upcoming_match_fixture(
     fixtures: list[dict[str, Any]],
     home_team_id: int,
