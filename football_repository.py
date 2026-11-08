@@ -387,8 +387,17 @@ def import_sportmonks_season(
                 flush=True,
             )
             stage_started = time.monotonic()
+            print(
+                f"[Repository import] Entering fixture loop for {len(fixtures)} fixtures.",
+                flush=True,
+            )
 
             for fixture_index, fixture in enumerate(fixtures, start=1):
+                print(
+                    f"[Repository import] Fixture {fixture_index}/{len(fixtures)} starting; "
+                    f"provider_id={fixture.get('id')}.",
+                    flush=True,
+                )
                 participants = fixture.get("participants")
                 if not isinstance(participants, list):
                     participants = []
@@ -491,6 +500,10 @@ def import_sportmonks_season(
                 canonical_fixture_id = _provider_id(fixture["id"])
                 _entity_link(cursor, "fixture", fixture["id"], canonical_fixture_id)
                 counts["fixtures"] += 1
+                print(
+                    f"[Repository import] Fixture {fixture_index}: fixture row and provider link written.",
+                    flush=True,
+                )
 
                 # Replace the normalized statistics for this fixture atomically.
                 # Raw fixture payloads remain preserved in football_fixtures.
@@ -498,9 +511,17 @@ def import_sportmonks_season(
                     "DELETE FROM football_fixture_statistics WHERE fixture_id = %s",
                     (canonical_fixture_id,),
                 )
+                print(
+                    f"[Repository import] Fixture {fixture_index}: old normalized statistics cleared.",
+                    flush=True,
+                )
                 statistic_rows = fixture.get("statistics")
                 if not isinstance(statistic_rows, list):
                     statistic_rows = []
+                print(
+                    f"[Repository import] Fixture {fixture_index}: processing {len(statistic_rows)} statistic rows.",
+                    flush=True,
+                )
                 import uuid
                 for statistic_index, statistic in enumerate(statistic_rows):
                     if not isinstance(statistic, dict):
@@ -566,6 +587,11 @@ def import_sportmonks_season(
                     )
                     counts["statistics"] += 1
 
+                print(
+                    f"[Repository import] Fixture {fixture_index}: completed; "
+                    f"{len(statistic_rows)} statistic rows examined.",
+                    flush=True,
+                )
                 if fixture_index % 25 == 0 or fixture_index == len(fixtures):
                     print(
                         f"[Repository import] Fixture progress {fixture_index}/{len(fixtures)}; "
