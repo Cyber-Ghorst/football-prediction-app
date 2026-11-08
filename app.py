@@ -1238,6 +1238,15 @@ try:
             profile["player_availability"] = assessment["score"]
 
         st.subheader("Data validation")
+        if st.session_state.get("_latest_collection_report_github_url"):
+            st.caption("Full data-collection evidence is archived in GitHub.")
+            st.markdown(
+                f"[Open latest collection report]({st.session_state['_latest_collection_report_github_url']})"
+                + (
+                    f" · [Open timestamped archive]({st.session_state['_latest_collection_report_github_archive_url']})"
+                    if st.session_state.get("_latest_collection_report_github_archive_url") else ""
+                )
+            )
         for profile in (home, away):
             quality = profile["data_quality"]
             st.write(f"**{profile['name']}** — source: {quality.get('provider', 'api_football')}; {quality['matches_returned']} completed matches; {quality['opponent_strength_matches']} with opponent-strength data; {quality['statistics_matches']} with match statistics; {quality.get('statistics_observations', 0)} normalized statistic observations.")
@@ -1288,6 +1297,33 @@ try:
             corroboration=corroboration,
             model_weights=WEIGHTS,
         )
+        collection_evidence_report = {
+            "season": int(season),
+            "competition": selected_league,
+            "selected_fixture": selected_match_fixture,
+            "teams": {
+                profile["name"]: {
+                    "data_quality": profile.get("data_quality"),
+                    "history_collection_diagnostics": profile.get("history_collection_diagnostics"),
+                    "player_availability_assessment": profile.get("player_availability_assessment"),
+                }
+                for profile in (home, away)
+            },
+            "statistics_coverage": statistics_reports,
+            "prediction_readiness": readiness,
+            "corroboration": corroboration,
+            "player_enrichment": player_report,
+            "system_diagnostics": diagnostic_report,
+        }
+        try:
+            github_collection_report = _upload_report_once(
+                "data_collection_evidence", collection_evidence_report
+            )
+            if github_collection_report:
+                st.session_state["_latest_collection_report_github_url"] = github_collection_report.get("latest_url")
+                st.session_state["_latest_collection_report_github_archive_url"] = github_collection_report.get("archive_url")
+        except Exception as upload_error:
+            st.warning(f"Data collection evidence report could not be archived to GitHub ({type(upload_error).__name__}). Check GITHUB_REPORT_TOKEN and GitHub permissions.")
         try:
             github_system_report = _upload_report_once("system_diagnostics", diagnostic_report)
             if github_system_report:
@@ -1628,6 +1664,19 @@ with st.expander("Prediction tracking, Opta comparison and backtesting", expande
         _persist_database_ledger()
         report = evaluate_prediction_ledger(st.session_state["prediction_ledger"])
         try:
+            github_ledger_report = _upload_report_once(
+                "prediction_ledger_snapshot",
+                {
+                    "record_count": len(st.session_state["prediction_ledger"]),
+                    "records": st.session_state["prediction_ledger"],
+                },
+            )
+            if github_ledger_report:
+                st.session_state["_latest_ledger_report_github_url"] = github_ledger_report.get("latest_url")
+                st.session_state["_latest_ledger_report_github_archive_url"] = github_ledger_report.get("archive_url")
+        except Exception as upload_error:
+            st.warning(f"Prediction ledger snapshot could not be archived to GitHub ({type(upload_error).__name__}). Check GITHUB_REPORT_TOKEN and GitHub permissions.")
+        try:
             github_performance_report = _upload_report_once("prediction_performance", report)
             if github_performance_report:
                 st.session_state["_latest_performance_report_github_url"] = github_performance_report.get("latest_url")
@@ -1635,6 +1684,15 @@ with st.expander("Prediction tracking, Opta comparison and backtesting", expande
         except Exception as upload_error:
             st.warning(f"Prediction performance report could not be archived to GitHub ({type(upload_error).__name__}). Check GITHUB_REPORT_TOKEN and GitHub permissions.")
         st.subheader("Backtest summary")
+        if st.session_state.get("_latest_ledger_report_github_url"):
+            st.caption("The complete prediction ledger snapshot is also archived in GitHub.")
+            st.markdown(
+                f"[Open latest ledger snapshot]({st.session_state['_latest_ledger_report_github_url']})"
+                + (
+                    f" · [Open timestamped archive]({st.session_state['_latest_ledger_report_github_archive_url']})"
+                    if st.session_state.get("_latest_ledger_report_github_archive_url") else ""
+                )
+            )
         if st.session_state.get("_latest_performance_report_github_url"):
             st.caption("Prediction performance report is archived in GitHub automatically.")
             st.markdown(
