@@ -144,7 +144,7 @@ def _upload_fixture_diagnostic_to_github(report):
     return _upload_report_to_github(
         "fixture_history",
         report,
-        latest_path="diagnostics/fixture_history_report.json",
+        latest_path="reports/fixture_history_diagnostics/latest.json",
     )
 
 
