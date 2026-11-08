@@ -30,6 +30,8 @@ from system_diagnostics import build_system_diagnostics
 st.set_page_config(page_title="Football Prediction Lab", page_icon="⚽", layout="wide")
 st.title("⚽ Football Prediction Lab")
 st.caption("Layer 2 • Sportmonks current-season / API-Football historical data collection + weighted prediction engine + TVD")
+report_download_slot = st.empty()
+report_download_slot.info("Collect data and predict to generate the system report. Its download shortcut will appear here.")
 st.session_state.setdefault("prediction_ledger", [])
 
 @st.cache_data(ttl=3600, show_spinner=False)
@@ -739,6 +741,16 @@ try:
                 "corroboration": diagnostic_report["corroboration"],
                 "model_configuration": diagnostic_report["model_configuration"],
             })
+        with report_download_slot.container():
+            st.success(f"System report ready — {diagnostic_report['overall_status'].replace('_', ' ').title()}")
+            st.download_button(
+                "⬇️ Download system report (JSON)",
+                data=json.dumps(diagnostic_report, indent=2, default=str).encode("utf-8"),
+                file_name="football_prediction_system_diagnostics.json",
+                mime="application/json",
+                use_container_width=True,
+                key="top_system_diagnostics_download",
+            )
         st.download_button(
             "Download complete system diagnostic (JSON)",
             data=json.dumps(diagnostic_report, indent=2, default=str).encode("utf-8"),
