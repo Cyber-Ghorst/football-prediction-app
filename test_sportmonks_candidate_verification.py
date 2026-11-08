@@ -112,6 +112,34 @@ class HighlightlyCandidateVerificationTests(unittest.TestCase):
         self.assertEqual(result["status"], "explicit_alias_resolved_from_date_fixtures")
         self.assertEqual(result["matched_provider_names"], ["Ipswich Town"])
 
+    def test_candidate_team_id_resolves_brighton_alias_to_exact_provider_name(self):
+        from sportmonks_candidate_verification import resolve_candidate_team_id
+
+        fixtures = [{
+            "participants": [
+                {"id": 78, "name": "Brighton & Hove Albion"},
+                {"id": 117, "name": "Coventry City"},
+            ]
+        }]
+        result = resolve_candidate_team_id("Brighton", fixtures)
+        self.assertEqual(result["team_id"], 78)
+        self.assertEqual(result["status"], "explicit_alias_resolved_from_date_fixtures")
+        self.assertEqual(result["matched_provider_names"], ["Brighton & Hove Albion"])
+
+    def test_candidate_team_id_resolves_leeds_alias_to_exact_provider_name(self):
+        from sportmonks_candidate_verification import resolve_candidate_team_id
+
+        fixtures = [{
+            "participants": [
+                {"id": 71, "name": "Leeds United"},
+                {"id": 78, "name": "Brighton & Hove Albion"},
+            ]
+        }]
+        result = resolve_candidate_team_id("Leeds", fixtures)
+        self.assertEqual(result["team_id"], 71)
+        self.assertEqual(result["status"], "explicit_alias_resolved_from_date_fixtures")
+        self.assertEqual(result["matched_provider_names"], ["Leeds United"])
+
     def test_alias_resolution_does_not_accept_unlisted_fuzzy_names(self):
         from sportmonks_candidate_verification import resolve_candidate_team_id
 
