@@ -38,7 +38,6 @@ Never commit or paste provider keys into public code or chat.
 - Tactical metrics are calculated only from statistics actually returned. TVD remains available for evidence-based manual ratings.
 - Probabilities are model estimates, not guarantees. Backtest and calibrate before using for decisions.
 
-
 ## Provider configuration status
 
 Provider roles in the current app:
@@ -52,16 +51,13 @@ Provider health, account quota, competition coverage, and source-data freshness 
 
 See MULTI_SOURCE_API_ARCHITECTURE.md for provider responsibilities, reconciliation rules and remaining integration work.
 
-
 ## LiveScoreFootball read-only source
 
 The project includes a read-only adapter for the public [LiveScoreFootball API](https://github.com/rezarahiminia/livescoreFootball), hosted at https://worldcup26.ir. Its documented public endpoints currently require no API key. Set LIVESCORE_FOOTBALL_BASE_URL only when using a different compatible deployment. The API reads stored MongoDB snapshots fed by a separate listener, so it is not a guaranteed real-time feed. The public catalogue currently reports 33 active competitions across multiple countries; the exact per-competition catalogue and coverage must be read at runtime. A competition is eligible for a cross-provider mapping only when its name and country match exactly, it is active, it reports stored data, and its season matches. The adapter is implemented but is not yet enabled as an automatic Layer 2 fallback. See MULTI_SOURCE_API_ARCHITECTURE.md.
 
-
 ## Canonical provider reconciliation
 
 The repository now includes `canonical_data.py`, which normalizes LiveScoreFootball and API-Football v3 match records into a common schema and reconciles matched fields with provider priority and conflict provenance. Cross-provider matching requires an explicit shared competition key, season, home/away team identity and a close kickoff time. Source IDs remain namespaced. The layer is covered by `test_canonical_data.py` and is not yet enabled as automatic fallback in the Streamlit app pending verified competition mappings and source freshness checks.
-
 
 ## Competition crosswalk and provider health (2026-11-07)
 
@@ -72,3 +68,22 @@ The repository now includes `canonical_data.py`, which normalizes LiveScoreFootb
 - The Streamlit sidebar now includes an opt-in **Run provider health & coverage check** action. It checks API-Football account status/quota, LiveScoreFootball health and sync metadata, and displays the exact competition crosswalk. It does not expose account identity or API keys.
 - API-Football documents a quota-exempt `/status` endpoint and daily request counters. Highlightly and API Ninjas are not probed because no verified health/status contract has been added for them.
 - These checks are diagnostics only. No automatic provider fallback is activated yet; source match IDs remain namespaced, and match-level freshness/identity validation must pass before data is handed to Layer 2.
+
+## Provider API archive database (CockroachDB candidate)
+
+The project now includes `provider_data_storage.py`, a separate PostgreSQL-wire-compatible storage module intended for CockroachDB. It does not replace the existing Neon prediction ledger.
+
+1. Create a CockroachDB Serverless cluster and copy its PostgreSQL connection string from the CockroachDB console. Keep the TLS/SSL parameters supplied by CockroachDB.
+2. In Streamlit Community Cloud → App → Settings → Secrets, add:
+
+```toml
+PROVIDER_DATABASE_URL = "YOUR_COCKROACHDB_POSTGRESQL_CONNECTION_STRING"
+```
+
+3. Keep the existing `DATABASE_URL` secret unchanged; it continues to point to Neon and stores prediction-ledger rows.
+4. The provider archive module creates two tables on first use:
+   - `provider_api_snapshots`: append-only JSONB responses with provider, resource type, request parameters, source IDs, retrieval time, expiry and payload hash.
+   - `provider_collection_runs`: collection success/failure diagnostics, including HTTP status and bounded error text.
+5. Cache keys are provider-scoped and deterministic. Callers must not include API tokens, passwords or other credentials in request parameters. A failed API call is recorded separately and must never replace the last successful snapshot.
+
+The storage module is the database foundation; it does not yet redirect all live provider requests into CockroachDB. The next integration step is to connect the app's Sportmonks and corroboration collection paths to cache-first reads and successful-response writes. Existing prediction inputs, provider hierarchy, model weights, recency rules and TVD behavior remain unchanged. Do not migrate or delete Neon ledger data.
