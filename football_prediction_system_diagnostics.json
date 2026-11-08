@@ -1,6 +1,6 @@
 {
   "diagnostic_version": 1,
-  "generated_at": "2026-11-08T12:20:49.026815+00:00",
+  "generated_at": "2026-11-08T12:31:34.564325+00:00",
   "overall_status": "healthy",
   "selected_context": {
     "season_start_year": 2026,
@@ -162,8 +162,8 @@
     "kickoff_utc": "2027-03-03T20:00:00+00:00",
     "source_updated_at": null,
     "source_fetched_at": "2026-11-08T12:15:03.894062+00:00",
-    "source_age_seconds": 345.1,
-    "source_age_minutes": 5.8,
+    "source_age_seconds": 990.7,
+    "source_age_minutes": 16.5,
     "source_freshness": "fresh",
     "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
   },
@@ -840,7 +840,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "45",
+            "requests_remaining": "42",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -858,7 +858,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "44",
+            "requests_remaining": "41",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -876,7 +876,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "43",
+            "requests_remaining": "40",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -1337,7 +1337,7 @@
         "sportmonks_request_metadata": {
           "http_status": 200,
           "rate_limit": "2000",
-          "rate_remaining": "1994"
+          "rate_remaining": "1991"
         }
       },
       {
@@ -1686,7 +1686,7 @@
         "sportmonks_request_metadata": {
           "http_status": 200,
           "rate_limit": "2000",
-          "rate_remaining": "1993"
+          "rate_remaining": "1990"
         }
       }
     ],
@@ -1745,8 +1745,8 @@
       "kickoff_utc": "2027-03-03T20:00:00+00:00",
       "source_updated_at": null,
       "source_fetched_at": "2026-11-08T12:15:03.894062+00:00",
-      "source_age_seconds": 345.1,
-      "source_age_minutes": 5.8,
+      "source_age_seconds": 990.7,
+      "source_age_minutes": 16.5,
       "source_freshness": "fresh",
       "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
     },
