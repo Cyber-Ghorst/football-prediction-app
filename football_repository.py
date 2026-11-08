@@ -452,3 +452,209 @@ def import_sportmonks_season(
         "raw_snapshots_preserved": True,
         "neon_prediction_ledger_modified": False,
     }
+
+
+def _rows_as_dicts(cursor) -> list[dict[str, Any]]:
+    """Convert the current cursor result into ordinary dictionaries."""
+    columns = [column.name for column in cursor.description]
+    return [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+
+def get_repository_leagues(database_url: str) -> list[dict[str, Any]]:
+    """Read canonical leagues, newest collected first."""
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT league_id, name, country, competition_type, source_provider,
+                       provider_updated_at, collected_at
+                FROM football_leagues
+                ORDER BY name
+                """
+            )
+            return _rows_as_dicts(cursor)
+
+
+def get_repository_seasons(
+    database_url: str, *, league_id: str | None = None
+) -> list[dict[str, Any]]:
+    """Read seasons, optionally restricted to one canonical league ID."""
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            if league_id:
+                cursor.execute(
+                    """
+                    SELECT season_id, league_id, name, start_date, end_date,
+                           is_current, source_provider, provider_updated_at, collected_at
+                    FROM football_seasons
+                    WHERE league_id = %s
+                    ORDER BY start_date DESC NULLS LAST, name DESC
+                    """,
+                    (league_id,),
+                )
+            else:
+                cursor.execute(
+                    """
+                    SELECT season_id, league_id, name, start_date, end_date,
+                           is_current, source_provider, provider_updated_at, collected_at
+                    FROM football_seasons
+                    ORDER BY start_date DESC NULLS LAST, name DESC
+                    """
+                )
+            return _rows_as_dicts(cursor)
+
+
+def get_repository_teams(
+    database_url: str,
+    *,
+    season_id: str | None = None,
+    league_id: str | None = None,
+) -> list[dict[str, Any]]:
+    """Read teams, optionally limited to teams appearing in a season or league."""
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+    if season_id and league_id:
+        raise ValueError("Pass season_id or league_id, not both.")
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            if season_id:
+                cursor.execute(
+                    """
+                    SELECT DISTINCT t.team_id, t.name, t.short_name, t.country,
+                           t.source_provider, t.provider_updated_at, t.collected_at
+                    FROM football_teams AS t
+                    JOIN football_fixtures AS f
+                      ON f.home_team_id = t.team_id OR f.away_team_id = t.team_id
+                    WHERE f.season_id = %s
+                    ORDER BY t.name
+                    """,
+                    (season_id,),
+                )
+            elif league_id:
+                cursor.execute(
+                    """
+                    SELECT DISTINCT t.team_id, t.name, t.short_name, t.country,
+                           t.source_provider, t.provider_updated_at, t.collected_at
+                    FROM football_teams AS t
+                    JOIN football_fixtures AS f
+                      ON f.home_team_id = t.team_id OR f.away_team_id = t.team_id
+                    WHERE f.league_id = %s
+                    ORDER BY t.name
+                    """,
+                    (league_id,),
+                )
+            else:
+                cursor.execute(
+                    """
+                    SELECT team_id, name, short_name, country, source_provider,
+                           provider_updated_at, collected_at
+                    FROM football_teams
+                    ORDER BY name
+                    """
+                )
+            return _rows_as_dicts(cursor)
+
+
+def get_repository_fixtures(
+    database_url: str,
+    *,
+    season_id: str | None = None,
+    league_id: str | None = None,
+    team_id: str | None = None,
+    upcoming_only: bool = False,
+    completed_only: bool = False,
+    limit: int = 500,
+) -> list[dict[str, Any]]:
+    """Read fixtures with safe optional filters and a bounded result size.
+
+    completed_only deliberately requires both a recognized completed status
+    and non-null exact scores; merely having a score is not sufficient.
+    """
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+    if season_id and league_id:
+        raise ValueError("Pass season_id or league_id, not both.")
+    if upcoming_only and completed_only:
+        raise ValueError("A fixture query cannot be both upcoming and completed.")
+    safe_limit = max(1, min(int(limit), 2000))
+    clauses: list[str] = []
+    params: list[Any] = []
+    if season_id:
+        clauses.append("season_id = %s")
+        params.append(season_id)
+    if league_id:
+        clauses.append("league_id = %s")
+        params.append(league_id)
+    if team_id:
+        clauses.append("(home_team_id = %s OR away_team_id = %s)")
+        params.extend((team_id, team_id))
+    if upcoming_only:
+        clauses.append("starting_at >= NOW()")
+    if completed_only:
+        clauses.append(
+            "LOWER(COALESCE(status, '')) IN "
+            "('finished', 'complete', 'completed', 'ft', 'full time')"
+        )
+        clauses.append("home_goals IS NOT NULL AND away_goals IS NOT NULL")
+    where_sql = ("WHERE " + " AND ".join(clauses)) if clauses else ""
+    params.append(safe_limit)
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"""
+                SELECT fixture_id, season_id, league_id, home_team_id, away_team_id,
+                       starting_at, status, home_goals, away_goals, venue,
+                       source_provider, provider_updated_at, collected_at
+                FROM football_fixtures
+                {where_sql}
+                ORDER BY starting_at DESC NULLS LAST
+                LIMIT %s
+                """,
+                tuple(params),
+            )
+            return _rows_as_dicts(cursor)
+
+
+def get_repository_team_history(
+    database_url: str,
+    team_id: str,
+    *,
+    before_datetime: Any = None,
+    limit: int = 10,
+) -> list[dict[str, Any]]:
+    """Return the latest verified completed fixtures for one canonical team ID."""
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+    if not team_id:
+        raise ValueError("A canonical team_id is required.")
+    safe_limit = max(1, min(int(limit), 50))
+    clauses = [
+        "(home_team_id = %s OR away_team_id = %s)",
+        "LOWER(COALESCE(status, '')) IN "
+        "('finished', 'complete', 'completed', 'ft', 'full time')",
+        "home_goals IS NOT NULL AND away_goals IS NOT NULL",
+    ]
+    params: list[Any] = [team_id, team_id]
+    if before_datetime is not None:
+        clauses.append("starting_at < %s")
+        params.append(before_datetime)
+    params.append(safe_limit)
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"""
+                SELECT fixture_id, season_id, league_id, home_team_id, away_team_id,
+                       starting_at, status, home_goals, away_goals, venue,
+                       source_provider, provider_updated_at, collected_at
+                FROM football_fixtures
+                WHERE {" AND ".join(clauses)}
+                ORDER BY starting_at DESC
+                LIMIT %s
+                """,
+                tuple(params),
+            )
+            return _rows_as_dicts(cursor)
