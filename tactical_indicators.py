@@ -3,6 +3,11 @@ from __future__ import annotations
 from typing import Any
 
 
+RECENT_MATCH_COUNT = 5
+RECENT_WEIGHT = 0.60
+PREVIOUS_WEIGHT = 0.40
+
+
 def _number(stats: dict, *keys: str) -> float | None:
     for key in keys:
         value = stats.get(key)
@@ -19,6 +24,23 @@ def _mean(values: list[float | None]) -> float | None:
     return sum(known) / len(known) if known else None
 
 
+def _recency_weighted_mean(values: list[float | None]) -> float | None:
+    """Combine latest-five and previous-five means using 60% / 40%.
+
+    Missing observations stay missing. If one time window has no observations
+    for a metric, the available window is renormalized rather than treated as 0.
+    """
+    recent = _mean(values[:RECENT_MATCH_COUNT])
+    previous = _mean(values[RECENT_MATCH_COUNT:10])
+    if recent is None and previous is None:
+        return None
+    if recent is None:
+        return previous
+    if previous is None:
+        return recent
+    return recent * RECENT_WEIGHT + previous * PREVIOUS_WEIGHT
+
+
 def _scale(value: float | None, low: float, high: float, inverse: bool = False) -> float | None:
     if value is None:
         return None
@@ -27,15 +49,16 @@ def _scale(value: float | None, low: float, high: float, inverse: bool = False) 
 
 
 def analyze_tactics(matches: list[dict]) -> dict[str, Any]:
+    # Callers provide matches newest first. Keep the agreed ten-match window.
     stats = [m.get("statistics") or {} for m in matches[:10]]
-    possession = _mean([_number(s, "Ball Possession", "ball_possession") for s in stats])
-    pass_accuracy = _mean([_number(s, "Passes %", "Passes accuracy", "passes_accuracy") for s in stats])
-    shots = _mean([_number(s, "Total Shots", "total_shots") for s in stats])
-    shots_on_target = _mean([_number(s, "Shots on Goal", "Shots on Target", "shots_on_target") for s in stats])
-    tackles = _mean([_number(s, "Tackles", "tackles") for s in stats])
-    interceptions = _mean([_number(s, "Interceptions", "interceptions") for s in stats])
-    blocks = _mean([_number(s, "Blocked Shots", "blocked_shots") for s in stats])
-    corners = _mean([_number(s, "Corner Kicks", "corners") for s in stats])
+    possession = _recency_weighted_mean([_number(s, "Ball Possession", "ball_possession") for s in stats])
+    pass_accuracy = _recency_weighted_mean([_number(s, "Passes %", "Passes accuracy", "passes_accuracy") for s in stats])
+    shots = _recency_weighted_mean([_number(s, "Total Shots", "total_shots") for s in stats])
+    shots_on_target = _recency_weighted_mean([_number(s, "Shots on Goal", "Shots on Target", "shots_on_target") for s in stats])
+    tackles = _recency_weighted_mean([_number(s, "Tackles", "tackles") for s in stats])
+    interceptions = _recency_weighted_mean([_number(s, "Interceptions", "interceptions") for s in stats])
+    blocks = _recency_weighted_mean([_number(s, "Blocked Shots", "blocked_shots") for s in stats])
+    corners = _recency_weighted_mean([_number(s, "Corner Kicks", "corners") for s in stats])
 
     style_parts = [_scale(possession, 30, 70), _scale(pass_accuracy, 60, 95)]
     attack_parts = [_scale(shots, 5, 22), _scale(shots_on_target, 1, 9), _scale(corners, 1, 9)]
@@ -58,6 +81,14 @@ def analyze_tactics(matches: list[dict]) -> dict[str, Any]:
             "average_interceptions": round(interceptions, 1) if interceptions is not None else None,
             "average_blocked_shots": round(blocks, 1) if blocks is not None else None,
             "average_corners": round(corners, 1) if corners is not None else None,
+        },
+        "recency_weighting": {
+            "matches_used": len(stats),
+            "recent_matches": min(len(stats), RECENT_MATCH_COUNT),
+            "recent_weight": RECENT_WEIGHT,
+            "previous_matches": max(0, len(stats) - RECENT_MATCH_COUNT),
+            "previous_weight": PREVIOUS_WEIGHT,
+            "note": "Latest five matches carry 60%; previous five carry 40%. If a metric is absent from one window, the available window is renormalized.",
         },
         "note": "Tactical ratings are shown only when the underlying statistics are present; unavailable metrics remain unknown.",
     }
