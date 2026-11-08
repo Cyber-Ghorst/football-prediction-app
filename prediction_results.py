@@ -8,6 +8,25 @@ from typing import Any, Mapping
 COMPLETED_STATE_IDS = {5, 7, 8}
 
 
+def automatic_result_check_due(last_checked_at: Any, now: Any, interval_minutes: int = 15) -> bool:
+    """Return whether the session's automatic result check is due."""
+    from datetime import datetime, timedelta, timezone
+
+    if not isinstance(now, datetime):
+        raise TypeError("now must be a datetime")
+    if not isinstance(interval_minutes, int) or interval_minutes < 1:
+        raise ValueError("interval_minutes must be a positive integer")
+    current = now if now.tzinfo else now.replace(tzinfo=timezone.utc)
+    current = current.astimezone(timezone.utc)
+    if last_checked_at is None:
+        return True
+    if not isinstance(last_checked_at, datetime):
+        return True
+    previous = last_checked_at if last_checked_at.tzinfo else last_checked_at.replace(tzinfo=timezone.utc)
+    previous = previous.astimezone(timezone.utc)
+    return current - previous >= timedelta(minutes=interval_minutes)
+
+
 def _normalise_name(value: Any) -> str:
     return "".join(character for character in str(value or "").casefold() if character.isalnum())
 
