@@ -149,6 +149,22 @@ class SportmonksLayer2Tests(unittest.TestCase):
         )
         self.assertEqual(found["id"], 20)
 
+    def test_find_exact_fixture_accepts_live_or_past_pair_but_requires_exact_orientation_and_season(self):
+        from datetime import datetime, timezone
+        now = int(datetime(2026, 11, 8, 16, tzinfo=timezone.utc).timestamp())
+        live = fixture(20, 10, 20, 0, 0, state="LIVE")
+        live["starting_at_timestamp"] = now - 1800
+        wrong_orientation = fixture(21, 20, 10, 0, 0, state="LIVE")
+        wrong_orientation["starting_at_timestamp"] = now - 900
+        wrong_season = fixture(22, 10, 20, 0, 0, state="LIVE")
+        wrong_season["season_id"] = 2025
+        wrong_season["starting_at_timestamp"] = now - 600
+        found = find_exact_match_fixture(
+            [wrong_orientation, wrong_season, live], 10, 20, 2026,
+            now_timestamp=now,
+        )
+        self.assertEqual(found["id"], 20)
+
     def test_extract_match_details_keeps_sidelined_and_lineup_status_unknown(self):
         from sportmonks_layer2 import extract_sportmonks_match_details
 
