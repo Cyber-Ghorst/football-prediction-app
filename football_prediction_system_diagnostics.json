@@ -1,6 +1,6 @@
 {
   "diagnostic_version": 1,
-  "generated_at": "2026-11-08T10:12:50.772926+00:00",
+  "generated_at": "2026-11-08T10:30:27.047249+00:00",
   "overall_status": "attention_required",
   "selected_context": {
     "season_start_year": 2026,
@@ -10,9 +10,9 @@
   "summary": {
     "checks_total": 13,
     "passed": 9,
-    "warnings": 3,
+    "warnings": 2,
     "failed": 0,
-    "informational": 1
+    "informational": 2
   },
   "checks": [
     {
@@ -37,7 +37,7 @@
       "id": "home_history_depth",
       "status": "warning",
       "summary": "Brighton & Hove Albion: 9 completed score-valid matches available (minimum 5; target 10).",
-      "recommendation": "Collect the remaining recent history where available; ten matches is the target."
+      "recommendation": "Keep readiness marked limited_history until Brighton's next result is completed and collected with valid scores. Do not add unplayed fixtures, use another season, or relax the ten-match target."
     },
     {
       "id": "home_history_integrity",
@@ -77,9 +77,9 @@
     },
     {
       "id": "unmatched_external_results",
-      "status": "warning",
-      "summary": "2 unmatched Highlightly completed-result candidate(s) require review.",
-      "recommendation": "Use targeted Sportmonks candidate verification. Candidates remain excluded from prediction history until independently verified."
+      "status": "info",
+      "summary": "2 Highlightly candidate(s) were independently verified against exact Sportmonks fixtures and scores; none were imported.",
+      "recommendation": null
     },
     {
       "id": "model_weight_configuration",
@@ -99,13 +99,7 @@
       "priority": "next",
       "check_id": "home_history_depth",
       "issue": "Brighton & Hove Albion: 9 completed score-valid matches available (minimum 5; target 10).",
-      "action": "Collect the remaining recent history where available; ten matches is the target."
-    },
-    {
-      "priority": "next",
-      "check_id": "unmatched_external_results",
-      "issue": "2 unmatched Highlightly completed-result candidate(s) require review.",
-      "action": "Use targeted Sportmonks candidate verification. Candidates remain excluded from prediction history until independently verified."
+      "action": "Keep readiness marked limited_history until Brighton's next result is completed and collected with valid scores. Do not add unplayed fixtures, use another season, or relax the ten-match target."
     },
     {
       "priority": "next",
@@ -168,9 +162,9 @@
     "fixture_id": 19721930,
     "kickoff_utc": "2027-03-03T20:00:00+00:00",
     "source_updated_at": null,
-    "source_fetched_at": "2026-11-08T10:12:47.691095+00:00",
-    "source_age_seconds": 3.1,
-    "source_age_minutes": 0.1,
+    "source_fetched_at": "2026-11-08T10:24:51.543374+00:00",
+    "source_age_seconds": 335.5,
+    "source_age_minutes": 5.6,
     "source_freshness": "fresh",
     "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
   },
@@ -777,7 +771,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "84",
+            "requests_remaining": "78",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -795,7 +789,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "83",
+            "requests_remaining": "77",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -813,7 +807,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "82",
+            "requests_remaining": "76",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -1262,7 +1256,7 @@
         "sportmonks_request_metadata": {
           "http_status": 200,
           "rate_limit": "2000",
-          "rate_remaining": "1993"
+          "rate_remaining": "1986"
         }
       },
       {
@@ -1611,7 +1605,7 @@
         "sportmonks_request_metadata": {
           "http_status": 200,
           "rate_limit": "2000",
-          "rate_remaining": "1992"
+          "rate_remaining": "1985"
         }
       }
     ],
@@ -1619,7 +1613,37 @@
       "api_ninjas",
       "highlightly",
       "sportmonks"
-    ]
+    ],
+    "candidate_review_summary": {
+      "unmatched_candidates_seen": 2,
+      "verified_exact_fixture_and_score": [
+        {
+          "highlightly_match_id": "1325382224",
+          "home": "Coventry",
+          "away": "Fulham",
+          "kickoff_utc": "2026-10-24T14:00:00+00:00",
+          "score": [
+            0,
+            1
+          ],
+          "verification_status": "exact_fixture_and_score_agree"
+        },
+        {
+          "highlightly_match_id": "1325367757",
+          "home": "Ipswich",
+          "away": "Fulham",
+          "kickoff_utc": "2026-10-10T14:00:00+00:00",
+          "score": [
+            2,
+            1
+          ],
+          "verification_status": "exact_fixture_and_score_agree"
+        }
+      ],
+      "unresolved_candidates": [],
+      "verified_candidates_added_to_prediction_history": 0,
+      "note": "Targeted verification confirms identity and score only. Verified candidates are not imported or appended; primary Sportmonks season history remains the prediction source."
+    }
   },
   "prediction_readiness": {
     "overall_status": "limited_history",
@@ -1632,9 +1656,9 @@
       "fixture_id": 19721930,
       "kickoff_utc": "2027-03-03T20:00:00+00:00",
       "source_updated_at": null,
-      "source_fetched_at": "2026-11-08T10:12:47.691095+00:00",
-      "source_age_seconds": 3.1,
-      "source_age_minutes": 0.1,
+      "source_fetched_at": "2026-11-08T10:24:51.543374+00:00",
+      "source_age_seconds": 335.5,
+      "source_age_minutes": 5.6,
       "source_freshness": "fresh",
       "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
     },
