@@ -11,9 +11,27 @@ import json
 import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Any, Mapping
+from pathlib import Path
 
 import psycopg
 from psycopg.types.json import Jsonb
+
+
+def _connect(database_url: str):
+    """Connect to CockroachDB using the CA certificate shipped with the app."""
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+    cert_path = Path(__file__).resolve().with_name("root.crt")
+    if not cert_path.is_file():
+        raise FileNotFoundError(
+            f"CockroachDB CA certificate was not found at {cert_path}"
+        )
+    return psycopg.connect(
+        database_url,
+        connect_timeout=10,
+        sslmode="verify-full",
+        sslrootcert=str(cert_path),
+    )
 
 
 CREATE_TABLES_SQL = """
@@ -107,7 +125,7 @@ def ensure_provider_storage(database_url: str) -> None:
     """Create provider snapshot and collection-run tables if they do not exist."""
     if not database_url:
         raise ValueError("PROVIDER_DATABASE_URL is required.")
-    with psycopg.connect(database_url, connect_timeout=10) as connection:
+    with _connect(database_url) as connection:
         with connection.cursor() as cursor:
             for statement in CREATE_TABLES_SQL.split(";"):
                 if statement.strip():
@@ -119,7 +137,7 @@ def check_provider_storage_connection(database_url: str) -> bool:
     if not database_url:
         raise ValueError("PROVIDER_DATABASE_URL is required.")
     ensure_provider_storage(database_url)
-    with psycopg.connect(database_url, connect_timeout=10) as connection:
+    with _connect(database_url) as connection:
         with connection.cursor() as cursor:
             cursor.execute("SELECT 1")
             row = cursor.fetchone()
@@ -143,7 +161,7 @@ def load_provider_snapshot(
     if not database_url:
         raise ValueError("PROVIDER_DATABASE_URL is required.")
     query = LATEST_SNAPSHOT_SQL if allow_stale else FRESH_SNAPSHOT_SQL
-    with psycopg.connect(database_url, connect_timeout=10) as connection:
+    with _connect(database_url) as connection:
         with connection.cursor() as cursor:
             cursor.execute(query, (cache_key,))
             row = cursor.fetchone()
@@ -182,7 +200,7 @@ def save_provider_snapshot(
     payload_hash = hashlib.sha256(payload_text.encode("utf-8")).hexdigest()
     snapshot_id = str(uuid.uuid4())
 
-    with psycopg.connect(database_url, connect_timeout=10) as connection:
+    with _connect(database_url) as connection:
         with connection.cursor() as cursor:
             for statement in CREATE_TABLES_SQL.split(";"):
                 if statement.strip():
@@ -219,7 +237,7 @@ def record_provider_collection_run(
         attempted = attempted.replace(tzinfo=timezone.utc)
     run_id = str(uuid.uuid4())
     message = str(error_message)[:1000] if error_message else None
-    with psycopg.connect(database_url, connect_timeout=10) as connection:
+    with _connect(database_url) as connection:
         with connection.cursor() as cursor:
             for statement in CREATE_TABLES_SQL.split(";"):
                 if statement.strip():
