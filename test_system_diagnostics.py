@@ -136,6 +136,77 @@ class SystemDiagnosticsTests(unittest.TestCase):
         self.assertEqual(check["status"], "warning")
         self.assertEqual(len(report["corroboration"]["candidate_verification"]), 1)
 
+    def test_targeted_verified_candidates_are_not_left_as_unmatched_warning(self):
+        corroboration = {
+            "errors": {},
+            "team_history_coverage": {
+                "Home FC": {
+                    "unmatched_completed_candidates": [
+                        {
+                            "home": "Other",
+                            "away": "Home FC",
+                            "kickoff_utc": "2026-10-24T14:00:00+00:00",
+                            "score": [0, 1],
+                            "highlightly_match_id": "verified-1",
+                        }
+                    ]
+                }
+            },
+            "candidate_verification": [
+                {
+                    "highlightly_candidate": {"highlightly_match_id": "verified-1"},
+                    "verification_status": "exact_fixture_and_score_agree",
+                }
+            ],
+        }
+        report = self.build(corroboration=corroboration)
+        check = next(row for row in report["checks"] if row["id"] == "unmatched_external_results")
+        self.assertEqual(check["status"], "info")
+        review = report["corroboration"]["candidate_review_summary"]
+        self.assertEqual(len(review["verified_exact_fixture_and_score"]), 1)
+        self.assertEqual(review["unresolved_candidates"], [])
+        self.assertEqual(review["verified_candidates_added_to_prediction_history"], 0)
+
+    def test_only_unresolved_candidates_remain_in_warning_count(self):
+        corroboration = {
+            "errors": {},
+            "team_history_coverage": {
+                "Home FC": {
+                    "unmatched_completed_candidates": [
+                        {"home": "A", "away": "Home FC", "highlightly_match_id": "verified-1"},
+                        {"home": "B", "away": "Home FC", "highlightly_match_id": "unresolved-1"},
+                    ]
+                }
+            },
+            "candidate_verification": [
+                {
+                    "highlightly_candidate": {"highlightly_match_id": "verified-1"},
+                    "verification_status": "exact_fixture_and_score_agree",
+                },
+                {
+                    "highlightly_candidate": {"highlightly_match_id": "unresolved-1"},
+                    "verification_status": "exact_fixture_found_score_disagrees",
+                },
+            ],
+        }
+        report = self.build(corroboration=corroboration)
+        check = next(row for row in report["checks"] if row["id"] == "unmatched_external_results")
+        self.assertEqual(check["status"], "warning")
+        self.assertIn("1 unmatched Highlightly candidate", check["summary"])
+        review = report["corroboration"]["candidate_review_summary"]
+        self.assertEqual(len(review["verified_exact_fixture_and_score"]), 1)
+        self.assertEqual(len(review["unresolved_candidates"]), 1)
+
+    def test_limited_history_recommends_waiting_for_completed_result_without_relaxing_target(self):
+        report = self.build(
+            home_profile=profile("Home FC", count=9),
+            readiness=readiness("limited_history"),
+        )
+        check = next(row for row in report["checks"] if row["id"] == "home_history_depth")
+        self.assertEqual(check["status"], "warning")
+        self.assertIn("next result is completed", check["recommendation"])
+        self.assertIn("Do not add unplayed fixtures", check["recommendation"])
+
     def test_historical_season_selects_api_football_as_primary(self):
         report = self.build(season=2024, provider_configuration=[
             {"provider_id": "api_football", "credential_configured": True}
