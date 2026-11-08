@@ -137,7 +137,7 @@ class ProviderAdapterTests(unittest.TestCase):
         self.assertEqual(client._get.call_args_list[1].args[0], "fixtures/multi/100")
         self.assertEqual(
             client._get.call_args_list[1].args[1]["include"],
-            "participants;scores;state;statistics.type",
+            "participants;scores;state;league;season;statistics.type",
         )
         client.close()
 
