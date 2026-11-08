@@ -36,6 +36,7 @@ from provider_data_storage import (
     save_provider_snapshot,
     record_provider_collection_run,
 )
+from football_repository import ensure_football_repository, repository_table_counts
 
 st.set_page_config(page_title="Football Prediction Lab", page_icon="⚽", layout="wide")
 st.title("⚽ Football Prediction Lab")
@@ -400,6 +401,10 @@ with st.sidebar:
         run_provider_diagnostics = st.button("Run provider health & coverage check", use_container_width=True)
         test_provider_database = st.button("Test CockroachDB connection", use_container_width=True)
         test_provider_storage = st.button("Verify CockroachDB write/read", use_container_width=True)
+        initialize_football_repository = st.button(
+            "Initialize central football database", use_container_width=True,
+            help="Creates the normalized CockroachDB tables. Does not import or delete football records."
+        )
         if not PROVIDER_DATABASE_URL:
             st.caption("CockroachDB is not configured yet. Add PROVIDER_DATABASE_URL in Streamlit Secrets.")
 
@@ -431,6 +436,31 @@ if test_provider_storage:
         except Exception as exc:
             # Keep credentials and connection details out of the user-facing error.
             st.error(f"CockroachDB storage verification failed ({type(exc).__name__}). Check the storage tables and database permissions.")
+
+
+if initialize_football_repository:
+    if not PROVIDER_DATABASE_URL:
+        st.warning("Add PROVIDER_DATABASE_URL in Streamlit Secrets before initializing the central football database.")
+    else:
+        try:
+            with st.spinner("Creating and verifying the central football database tables..."):
+                repository_status = ensure_football_repository(PROVIDER_DATABASE_URL)
+                repository_counts = repository_table_counts(PROVIDER_DATABASE_URL)
+            st.success(
+                f"Central football database ready: {repository_status['table_count']} tables verified."
+            )
+            st.json({
+                "tables": repository_status["tables_created_or_verified"],
+                "record_counts": repository_counts,
+                "records_imported": 0,
+                "existing_provider_snapshots_preserved": True,
+                "neon_prediction_ledger_modified": False,
+            })
+        except Exception as exc:
+            st.error(
+                f"Central football database initialization failed ({type(exc).__name__}). "
+                "Check CockroachDB permissions and the provider database connection."
+            )
 
 
 client = None
