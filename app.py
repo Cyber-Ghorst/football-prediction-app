@@ -28,7 +28,14 @@ from prediction_readiness import build_prediction_readiness
 from player_availability import assess_player_availability
 from statistics_coverage import build_statistics_coverage
 from system_diagnostics import build_system_diagnostics
-from provider_data_storage import check_provider_storage_connection, verify_provider_storage_round_trip
+from provider_data_storage import (
+    check_provider_storage_connection,
+    verify_provider_storage_round_trip,
+    build_provider_cache_key,
+    load_provider_snapshot,
+    save_provider_snapshot,
+    record_provider_collection_run,
+)
 
 st.set_page_config(page_title="Football Prediction Lab", page_icon="⚽", layout="wide")
 st.title("⚽ Football Prediction Lab")
@@ -199,28 +206,147 @@ def get_standings(_client, league_id, season):
 def get_profile(_client, team, league_id, season, standings, include_stats):
     return collect_team_profile(_client, team, league_id, season, standings, include_stats)
 
+def _collect_sportmonks_with_archive(resource_type, request_params, fetcher, ttl_seconds):
+    """Read a fresh CockroachDB snapshot or fetch and archive a Sportmonks response."""
+    if not PROVIDER_DATABASE_URL:
+        return fetcher()
+
+    cache_key = build_provider_cache_key(
+        "sportmonks", resource_type, request_params
+    )
+    try:
+        cached = load_provider_snapshot(PROVIDER_DATABASE_URL, cache_key)
+        if cached:
+            return cached.get("payload")
+    except Exception:
+        # The archive is an additional persistence layer; a read failure must
+        # not prevent a live provider request from supplying prediction data.
+        if not st.session_state.get("_provider_archive_read_warning"):
+            st.warning(
+                "CockroachDB snapshot lookup failed. Live Sportmonks collection "
+                "will continue; check the provider archive diagnostics."
+            )
+            st.session_state["_provider_archive_read_warning"] = True
+
+    try:
+        payload = fetcher()
+    except Exception as exc:
+        try:
+            record_provider_collection_run(
+                PROVIDER_DATABASE_URL,
+                provider="sportmonks",
+                resource_type=resource_type,
+                cache_key=cache_key,
+                succeeded=False,
+                error_type=type(exc).__name__,
+                error_message=str(exc),
+            )
+        except Exception:
+            pass
+        raise
+
+    try:
+        source_ids = [
+            row.get("id") for row in payload
+            if isinstance(row, dict) and row.get("id") is not None
+        ] if isinstance(payload, list) else []
+        save_provider_snapshot(
+            PROVIDER_DATABASE_URL,
+            provider="sportmonks",
+            resource_type=resource_type,
+            cache_key=cache_key,
+            request_params=request_params,
+            payload=payload,
+            source_ids=source_ids,
+            ttl_seconds=ttl_seconds,
+        )
+        record_provider_collection_run(
+            PROVIDER_DATABASE_URL,
+            provider="sportmonks",
+            resource_type=resource_type,
+            cache_key=cache_key,
+            succeeded=True,
+        )
+    except Exception:
+        # Keep the live response usable even if archival storage is temporarily
+        # unavailable. Warn once per Streamlit session rather than hiding it.
+        if not st.session_state.get("_provider_archive_write_warning"):
+            st.warning(
+                "Sportmonks data was collected, but CockroachDB could not archive "
+                "the response. Prediction processing can continue."
+            )
+            st.session_state["_provider_archive_write_warning"] = True
+    return payload
+
+
 @st.cache_data(ttl=3600, show_spinner=False)
 def get_sm_leagues():
+    return _collect_sportmonks_with_archive(
+        "leagues", {"include": "country"},
+        lambda: _fetch_sm_leagues(), 3600,
+    )
+
+
+def _fetch_sm_leagues():
     with SportmonksClient() as sm:
         return sm.available_leagues(include="country")
 
+
 @st.cache_data(ttl=3600, show_spinner=False)
 def get_sm_seasons():
+    return _collect_sportmonks_with_archive(
+        "seasons", {},
+        lambda: _fetch_sm_seasons(), 3600,
+    )
+
+
+def _fetch_sm_seasons():
     with SportmonksClient() as sm:
         return sm.available_seasons()
 
+
 @st.cache_data(ttl=3600, show_spinner=False)
 def get_sm_teams(season_id):
+    return _collect_sportmonks_with_archive(
+        "teams", {"season_id": int(season_id)},
+        lambda: _fetch_sm_teams(season_id), 3600,
+    )
+
+
+def _fetch_sm_teams(season_id):
     with SportmonksClient() as sm:
         return sm.teams_by_season(season_id)
 
+
 @st.cache_data(ttl=1800, show_spinner=False)
 def get_sm_standings(season_id):
+    return _collect_sportmonks_with_archive(
+        "standings", {"season_id": int(season_id), "include": "participant"},
+        lambda: _fetch_sm_standings(season_id), 1800,
+    )
+
+
+def _fetch_sm_standings(season_id):
     with SportmonksClient() as sm:
         return sm.standings_by_season(season_id, include="participant")
 
+
 @st.cache_data(ttl=1800, show_spinner=False)
 def get_sm_fixtures(season_id, include_stats, team_ids):
+    normalized_team_ids = [int(value) for value in team_ids]
+    return _collect_sportmonks_with_archive(
+        "fixtures",
+        {
+            "season_id": int(season_id),
+            "include_statistics": bool(include_stats),
+            "team_ids": normalized_team_ids,
+        },
+        lambda: _fetch_sm_fixtures(season_id, include_stats, normalized_team_ids),
+        1800,
+    )
+
+
+def _fetch_sm_fixtures(season_id, include_stats, team_ids):
     with SportmonksClient() as sm:
         return sm.fixtures_by_season(
             season_id,
