@@ -94,6 +94,16 @@ class HighlightlyCandidateVerificationTests(unittest.TestCase):
         self.assertIsNone(result["team_id"])
         self.assertEqual(result["status"], "ambiguous_exact_team_name")
 
+    def test_date_participant_catalog_exposes_exact_names_and_ids_for_review(self):
+        result = verify_highlightly_candidate(
+            self.candidate, [sm_fixture(home_id=101, away_id=202)], season_id=2026,
+            league_id=8, home_team_id=None, away_team_id=202,
+        )
+        catalog = result["date_fixture_participant_catalog"]
+        self.assertEqual(catalog[0]["team_id"], 101)
+        self.assertEqual(catalog[0]["provider_names"], ["Coventry"])
+        self.assertEqual(catalog[0]["fixture_ids"], [1])
+
     def test_unresolved_team_mapping_stays_unverified(self):
         result = verify_highlightly_candidate(
             self.candidate, [sm_fixture()], season_id=2026, league_id=8,
