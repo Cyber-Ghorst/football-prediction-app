@@ -738,6 +738,35 @@ def get_repository_team_history(
 
 
 
+def get_repository_fixture_statistics(
+    database_url: str,
+    fixture_ids: list[str],
+) -> list[dict[str, Any]]:
+    """Read normalized statistics for a bounded set of canonical fixture IDs."""
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+    normalized_ids = list(dict.fromkeys(str(value) for value in fixture_ids if value))
+    if not normalized_ids:
+        return []
+    if len(normalized_ids) > 2000:
+        raise ValueError("A maximum of 2000 fixture IDs may be queried at once.")
+    placeholders = ", ".join(["%s"] * len(normalized_ids))
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"""
+                SELECT statistic_id, fixture_id, team_id, statistic_type,
+                       statistic_value, source_provider, provider_statistic_id,
+                       provider_updated_at, collected_at, raw_payload
+                FROM football_fixture_statistics
+                WHERE fixture_id IN ({placeholders})
+                ORDER BY fixture_id, team_id, statistic_type
+                """,
+                tuple(normalized_ids),
+            )
+            return _rows_as_dicts(cursor)
+
+
 def diagnose_repository_fixture_history(database_url: str) -> dict[str, Any]:
     """Summarize imported fixture statuses and score coverage to diagnose history reads."""
     if not database_url:
