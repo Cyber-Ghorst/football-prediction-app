@@ -81,6 +81,35 @@ def _scores(fixture: Mapping[str, Any], home_id: int, away_id: int) -> tuple[int
 
 
 
+def _date_fixture_participant_catalog(fixtures: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Summarize every exact participant name/ID seen in the date response.
+
+    This is diagnostic evidence only. It does not resolve aliases or verify a
+    candidate; it lets reviewers distinguish a naming mismatch from missing
+    fixture coverage without exposing the full provider payload.
+    """
+    observations: dict[int, dict[str, Any]] = {}
+    for fixture in fixtures:
+        fixture_id = _as_int(fixture.get("id"))
+        for participant in _rows(fixture.get("participants")):
+            team_id = _as_int(participant.get("id"))
+            name = str(participant.get("name") or "").strip()
+            if team_id is None or not name:
+                continue
+            item = observations.setdefault(team_id, {"team_id": team_id, "provider_names": set(), "fixture_ids": set()})
+            item["provider_names"].add(name)
+            if fixture_id is not None:
+                item["fixture_ids"].add(fixture_id)
+    return [
+        {
+            "team_id": team_id,
+            "provider_names": sorted(item["provider_names"]),
+            "fixture_ids": sorted(item["fixture_ids"]),
+        }
+        for team_id, item in sorted(observations.items())
+    ]
+
+
 def resolve_candidate_team_id(
     team_name: str,
     fixtures: list[dict[str, Any]],
@@ -143,6 +172,7 @@ def verify_highlightly_candidate(
         },
         "sportmonks_date_query": kickoff.date().isoformat() if kickoff else None,
         "sportmonks_fixtures_returned_for_date": len(fixtures),
+        "date_fixture_participant_catalog": _date_fixture_participant_catalog(fixtures),
         "expected_identity": {
             "season_id": int(season_id),
             "league_id": int(league_id),
