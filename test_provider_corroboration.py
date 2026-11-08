@@ -212,6 +212,10 @@ class ProviderCorroborationTests(unittest.TestCase):
                 {"id": 78, "name": "Brighton & Hove Albion", "meta": {"location": "home"}},
                 {"id": 79, "name": "Fulham", "meta": {"location": "away"}},
             ],
+            "scores": [
+                {"participant_id": 78, "description": "CURRENT", "score": {"goals": 2}},
+                {"participant_id": 79, "description": "CURRENT", "score": {"goals": 1}},
+            ],
         })
         correct = highlightly_match()
         correct.update({
