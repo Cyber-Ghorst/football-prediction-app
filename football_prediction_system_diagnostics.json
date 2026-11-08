@@ -1,6 +1,6 @@
 {
   "diagnostic_version": 1,
-  "generated_at": "2026-11-08T13:00:12.822219+00:00",
+  "generated_at": "2026-11-08T13:11:21.414110+00:00",
   "overall_status": "healthy",
   "selected_context": {
     "season_start_year": 2026,
@@ -8,11 +8,11 @@
     "primary_provider": "sportmonks"
   },
   "summary": {
-    "checks_total": 15,
-    "passed": 12,
+    "checks_total": 17,
+    "passed": 13,
     "warnings": 0,
     "failed": 0,
-    "informational": 3
+    "informational": 4
   },
   "checks": [
     {
@@ -85,6 +85,18 @@
       "id": "independent_provider_corroboration",
       "status": "info",
       "summary": "No corroboration request errors were reported in the supplied diagnostic context. This does not imply that every provider agreed.",
+      "recommendation": null
+    },
+    {
+      "id": "api_ninjas_history_corroboration",
+      "status": "pass",
+      "summary": "All selected-team API Ninjas completed results match Sportmonks history exactly (Brighton & Hove Albion: 9/9; Fulham: 10/10).",
+      "recommendation": null
+    },
+    {
+      "id": "highlightly_history_coverage",
+      "status": "info",
+      "summary": "Highlightly returned score-valid selected-team history (Fulham: 8/10); unmatched candidates are assessed separately.",
       "recommendation": null
     },
     {
@@ -161,9 +173,9 @@
     "fixture_id": 19721930,
     "kickoff_utc": "2027-03-03T20:00:00+00:00",
     "source_updated_at": null,
-    "source_fetched_at": "2026-11-08T12:52:17.502117+00:00",
-    "source_age_seconds": 475.3,
-    "source_age_minutes": 7.9,
+    "source_fetched_at": "2026-11-08T13:11:15.068100+00:00",
+    "source_age_seconds": 6.3,
+    "source_age_minutes": 0.1,
     "source_freshness": "fresh",
     "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
   },
@@ -840,7 +852,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "33",
+            "requests_remaining": "27",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -858,7 +870,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "32",
+            "requests_remaining": "26",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -876,7 +888,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "31",
+            "requests_remaining": "25",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -888,7 +900,188 @@
             "extracted_rows_count": 80
           }
         }
-      ]
+      ],
+      "selected_team_breakdown": {
+        "Brighton & Hove Albion": {
+          "normalized_team_records": 0,
+          "status_counts": {},
+          "raw_state_descriptions": {},
+          "completed_score_valid": 0,
+          "finished_missing_score": 0,
+          "sample_records": []
+        },
+        "Fulham": {
+          "normalized_team_records": 28,
+          "status_counts": {
+            "scheduled": 18,
+            "finished": 10
+          },
+          "raw_state_descriptions": {
+            "Not started": 18,
+            "Finished": 10
+          },
+          "completed_score_valid": 10,
+          "finished_missing_score": 0,
+          "sample_records": [
+            {
+              "highlightly_match_id": "1325552424",
+              "date": "2027-03-03T20:00:00.000Z",
+              "home": "Brighton",
+              "away": "Fulham",
+              "home_team_id": 44185,
+              "away_team_id": 31420,
+              "raw_state": {
+                "description": "Not started",
+                "score": {
+                  "current": null,
+                  "penalties": null
+                }
+              },
+              "normalized_status": "scheduled",
+              "normalized_score": [
+                null,
+                null
+              ],
+              "league": {
+                "id": 33973,
+                "name": "Premier League",
+                "season": 2026
+              },
+              "country": "England"
+            },
+            {
+              "highlightly_match_id": "1325544765",
+              "date": "2027-02-27T15:00:00.000Z",
+              "home": "Fulham",
+              "away": "Leeds",
+              "home_team_id": 31420,
+              "away_team_id": 54397,
+              "raw_state": {
+                "description": "Not started",
+                "score": {
+                  "current": null,
+                  "penalties": null
+                }
+              },
+              "normalized_status": "scheduled",
+              "normalized_score": [
+                null,
+                null
+              ],
+              "league": {
+                "id": 33973,
+                "name": "Premier League",
+                "season": 2026
+              },
+              "country": "England"
+            },
+            {
+              "highlightly_match_id": "1325532851",
+              "date": "2027-02-20T15:00:00.000Z",
+              "home": "Arsenal",
+              "away": "Fulham",
+              "home_team_id": 36526,
+              "away_team_id": 31420,
+              "raw_state": {
+                "description": "Not started",
+                "score": {
+                  "current": null,
+                  "penalties": null
+                }
+              },
+              "normalized_status": "scheduled",
+              "normalized_score": [
+                null,
+                null
+              ],
+              "league": {
+                "id": 33973,
+                "name": "Premier League",
+                "season": 2026
+              },
+              "country": "England"
+            },
+            {
+              "highlightly_match_id": "1325527745",
+              "date": "2027-02-10T20:00:00.000Z",
+              "home": "Fulham",
+              "away": "Nottingham Forest",
+              "home_team_id": 31420,
+              "away_team_id": 56099,
+              "raw_state": {
+                "description": "Not started",
+                "score": {
+                  "current": null,
+                  "penalties": null
+                }
+              },
+              "normalized_status": "scheduled",
+              "normalized_score": [
+                null,
+                null
+              ],
+              "league": {
+                "id": 33973,
+                "name": "Premier League",
+                "season": 2026
+              },
+              "country": "England"
+            },
+            {
+              "highlightly_match_id": "1325519235",
+              "date": "2027-02-06T15:00:00.000Z",
+              "home": "Fulham",
+              "away": "Manchester City",
+              "home_team_id": 31420,
+              "away_team_id": 43334,
+              "raw_state": {
+                "description": "Not started",
+                "score": {
+                  "current": null,
+                  "penalties": null
+                }
+              },
+              "normalized_status": "scheduled",
+              "normalized_score": [
+                null,
+                null
+              ],
+              "league": {
+                "id": 33973,
+                "name": "Premier League",
+                "season": 2026
+              },
+              "country": "England"
+            },
+            {
+              "highlightly_match_id": "1325508172",
+              "date": "2027-01-30T15:00:00.000Z",
+              "home": "Bournemouth",
+              "away": "Fulham",
+              "home_team_id": 30569,
+              "away_team_id": 31420,
+              "raw_state": {
+                "description": "Not started",
+                "score": {
+                  "current": null,
+                  "penalties": null
+                }
+              },
+              "normalized_status": "scheduled",
+              "normalized_score": [
+                null,
+                null
+              ],
+              "league": {
+                "id": 33973,
+                "name": "Premier League",
+                "season": 2026
+              },
+              "country": "England"
+            }
+          ]
+        }
+      }
     },
     "team_history_coverage": {
       "Brighton & Hove Albion": {
@@ -1337,7 +1530,7 @@
         "sportmonks_request_metadata": {
           "http_status": 200,
           "rate_limit": "2000",
-          "rate_remaining": "1984"
+          "rate_remaining": "1977"
         }
       },
       {
@@ -1686,7 +1879,7 @@
         "sportmonks_request_metadata": {
           "http_status": 200,
           "rate_limit": "2000",
-          "rate_remaining": "1983"
+          "rate_remaining": "1976"
         }
       }
     ],
@@ -1744,9 +1937,9 @@
       "fixture_id": 19721930,
       "kickoff_utc": "2027-03-03T20:00:00+00:00",
       "source_updated_at": null,
-      "source_fetched_at": "2026-11-08T12:52:17.502117+00:00",
-      "source_age_seconds": 475.3,
-      "source_age_minutes": 7.9,
+      "source_fetched_at": "2026-11-08T13:11:15.068100+00:00",
+      "source_age_seconds": 6.3,
+      "source_age_minutes": 0.1,
       "source_freshness": "fresh",
       "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
     },
