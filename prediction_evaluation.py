@@ -213,15 +213,37 @@ def evaluate_prediction_ledger(records: Iterable[Mapping[str, Any]]) -> dict[str
     imported boolean flags are not trusted for leakage protection.
     """
     rows = [dict(row) for row in records]
-    timestamp_eligible = [
-        row for row in rows
-        if _is_before_kickoff(row, "predicted_at")
-        and _valid_probabilities({
+    eligibility_audit = {
+        "records_total": len(rows),
+        "invalid_probabilities": 0,
+        "missing_prediction_timestamp": 0,
+        "missing_kickoff_timestamp": 0,
+        "at_or_after_kickoff": 0,
+        "valid_pre_kickoff_records": 0,
+    }
+    timestamp_eligible = []
+    for row in rows:
+        probabilities = _valid_probabilities({
             "home_win": row.get("model_home_win"),
             "draw": row.get("model_draw"),
             "away_win": row.get("model_away_win"),
-        }) is not None
-    ]
+        })
+        if probabilities is None:
+            eligibility_audit["invalid_probabilities"] += 1
+            continue
+        predicted_at = _parse_datetime(row.get("predicted_at"))
+        if predicted_at is None:
+            eligibility_audit["missing_prediction_timestamp"] += 1
+            continue
+        kickoff_at = _parse_datetime(row.get("kickoff_at"))
+        if kickoff_at is None:
+            eligibility_audit["missing_kickoff_timestamp"] += 1
+            continue
+        if predicted_at >= kickoff_at:
+            eligibility_audit["at_or_after_kickoff"] += 1
+            continue
+        eligibility_audit["valid_pre_kickoff_records"] += 1
+        timestamp_eligible.append(row)
 
     # Repeated runs for the same fixture must not inflate the backtest sample.
     # Keep the latest valid pre-match forecast for each fixture identity.
@@ -258,8 +280,16 @@ def evaluate_prediction_ledger(records: Iterable[Mapping[str, Any]]) -> dict[str
         row for row in eligible
         if _is_before_kickoff(row, "player_snapshot_at") and _json_team_season_records(row)
     ]
+    eligibility_audit.update({
+        "unidentifiable_pre_match_records": len(unidentifiable),
+        "duplicate_records_excluded": len(timestamp_eligible) - len(eligible) - len(unidentifiable),
+        "unique_pre_match_fixtures": len(eligible),
+        "completed_with_valid_scores": len(completed),
+        "awaiting_valid_score": len(eligible) - len(completed),
+    })
     return {
         "records_total": len(rows),
+        "eligibility_audit": eligibility_audit,
         "pre_match_prediction_records": len(timestamp_eligible),
         "pre_match_predictions": len(eligible),
         "duplicate_records_excluded": len(timestamp_eligible) - len(eligible) - len(unidentifiable),
