@@ -23,7 +23,7 @@ from highlightly_match_enrichment import collect_highlightly_match_enrichment
 from highlightly_player_enrichment import collect_highlightly_player_enrichment
 from prediction_evaluation import build_prediction_record, evaluate_prediction_ledger, merge_prediction_records
 from prediction_storage import load_prediction_ledger, save_prediction_records
-from prediction_results import verified_final_score
+from prediction_results import verified_final_score, group_completed_fixture_candidates
 from prediction_readiness import build_prediction_readiness
 from player_availability import assess_player_availability
 from statistics_coverage import build_statistics_coverage
@@ -79,63 +79,53 @@ def _persist_database_ledger():
         st.session_state["_ledger_db_message"] = "Could not save to Neon. Your current browser-session data is still available; check DATABASE_URL."
 
 def _sync_completed_sportmonks_results():
-    """Fetch and persist only exact, completed Sportmonks 90-minute results."""
+    """Fetch each completed fixture once and apply its verified score to blank ledger rows."""
     now = datetime.now(timezone.utc)
     updated = 0
     checked = 0
     skipped = 0
     errors = 0
     records = st.session_state["prediction_ledger"]
-    candidates = []
-    for row in records:
-        if str(row.get("fixture_provider") or "").casefold() != "sportmonks":
-            continue
-        if not str(row.get("fixture_id") or "").strip():
-            continue
-        if row.get("actual_home_goals") not in (None, "") or row.get("actual_away_goals") not in (None, ""):
-            continue
-        try:
-            kickoff = datetime.fromisoformat(str(row.get("kickoff_at") or "").replace("Z", "+00:00"))
-            if kickoff.tzinfo is None:
-                kickoff = kickoff.replace(tzinfo=timezone.utc)
-        except (TypeError, ValueError):
-            skipped += 1
-            continue
-        if kickoff.astimezone(timezone.utc) > now:
-            continue
-        candidates.append(row)
+    # Repeated predictions for one fixture share a single provider lookup.
+    # The helper includes only linked Sportmonks records with a passed kickoff
+    # and blank actual-score fields; manual scores are never overwritten.
+    fixture_groups = group_completed_fixture_candidates(records, now)
+    candidates = fixture_groups[:10]
 
-    # Keep this user-triggered operation bounded to protect provider quota.
-    candidates = candidates[:10]
     if candidates:
         with SportmonksClient() as client:
-            for row in candidates:
+            for group in candidates:
+                representative = group[0]
                 try:
                     fixture = client.fixture(
-                        row["fixture_id"],
+                        representative["fixture_id"],
                         include="participants;scores;state;league;season",
                     )
                     checked += 1
                     if not isinstance(fixture, dict):
                         skipped += 1
                         continue
-                    score = verified_final_score(row, fixture)
-                    if score is None:
+                    fixture_updated = 0
+                    for row in group:
+                        score = verified_final_score(row, fixture)
+                        if score is None:
+                            continue
+                        home_goals, away_goals = score
+                        row["actual_home_goals"] = home_goals
+                        row["actual_away_goals"] = away_goals
+                        row["actual_result"] = (
+                            "home" if home_goals > away_goals
+                            else "away" if home_goals < away_goals
+                            else "draw"
+                        )
+                        row["actual_result_provider"] = "sportmonks"
+                        row["actual_result_fixture_id"] = str(fixture.get("id"))
+                        row["actual_result_verified_at"] = datetime.now(timezone.utc).isoformat()
+                        row["actual_result_verification"] = "exact_fixture_team_competition_season_and_score"
+                        updated += 1
+                        fixture_updated += 1
+                    if not fixture_updated:
                         skipped += 1
-                        continue
-                    home_goals, away_goals = score
-                    row["actual_home_goals"] = home_goals
-                    row["actual_away_goals"] = away_goals
-                    row["actual_result"] = (
-                        "home" if home_goals > away_goals
-                        else "away" if home_goals < away_goals
-                        else "draw"
-                    )
-                    row["actual_result_provider"] = "sportmonks"
-                    row["actual_result_fixture_id"] = str(fixture.get("id"))
-                    row["actual_result_verified_at"] = datetime.now(timezone.utc).isoformat()
-                    row["actual_result_verification"] = "exact_fixture_team_competition_season_and_score"
-                    updated += 1
                 except SportmonksError:
                     errors += 1
                 except Exception:
@@ -148,7 +138,7 @@ def _sync_completed_sportmonks_results():
         "updated": updated,
         "not_verified_or_not_finished": skipped,
         "errors": errors,
-        "limit_reached": len(candidates) == 10,
+        "limit_reached": len(fixture_groups) > 10,
     }
 
 if not st.session_state.get("_ledger_db_loaded"):
@@ -1085,14 +1075,14 @@ with st.expander("Prediction tracking, Opta comparison and backtesting", expande
     else:
         st.info(st.session_state.get("_ledger_db_message", "Neon is not configured; predictions remain in this browser session only."))
     st.caption("When Neon is connected, prediction records are saved across browser sessions and app restarts. CSV import/export remains available as a backup.")
-    st.caption("Automatic result collection checks only completed Sportmonks fixtures and requires exact fixture ID, teams, competition, season and an unambiguous 90-minute score. Manual scores are never overwritten.")
+    st.caption("Automatic result collection checks each unique completed Sportmonks fixture once, then applies its exact verified 90-minute score to every matching blank prediction record. Manual scores are never overwritten.")
     if st.button("Check for completed match results", key="sync_verified_match_results"):
         try:
             with st.spinner("Checking eligible completed Sportmonks fixtures..."):
                 sync_report = _sync_completed_sportmonks_results()
             st.success(
-                f"Checked {sync_report['eligible_checked']} fixture(s); "
-                f"updated {sync_report['updated']} verified result(s)."
+                f"Checked {sync_report['eligible_checked']} unique fixture(s); "
+                f"updated {sync_report['updated']} prediction record(s) with verified result(s)."
             )
             if sync_report["not_verified_or_not_finished"]:
                 st.info(f"{sync_report['not_verified_or_not_finished']} fixture(s) were not confirmed as completed with an exact, valid score.")
