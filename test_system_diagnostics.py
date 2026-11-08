@@ -190,6 +190,38 @@ class SystemDiagnosticsTests(unittest.TestCase):
         self.assertEqual(home["api_ninjas_completed_score_valid"], 6)
         self.assertEqual(home["api_ninjas_exact_matches"], 5)
 
+    def test_highlightly_selected_team_breakdown_is_preserved_in_report(self):
+        breakdown = {
+            "Brighton": {
+                "normalized_team_records": 9,
+                "status_counts": {"finished": 9},
+                "raw_state_descriptions": {"Finished": 9},
+                "completed_score_valid": 0,
+                "finished_missing_score": 9,
+                "sample_records": [{"highlightly_match_id": "brighton-1", "raw_state": {"description": "Finished"}}],
+            },
+            "Fulham": {
+                "normalized_team_records": 10,
+                "status_counts": {"finished": 10},
+                "raw_state_descriptions": {"Finished": 10},
+                "completed_score_valid": 10,
+                "finished_missing_score": 0,
+                "sample_records": [],
+            },
+        }
+        report = self.build(corroboration={
+            "errors": {},
+            "highlightly_diagnostics": {
+                "records_normalized": 280,
+                "selected_team_breakdown": breakdown,
+            },
+            "team_history_coverage": {},
+        })
+        exported = report["corroboration"]["highlightly_diagnostics"]["selected_team_breakdown"]
+        self.assertEqual(exported, breakdown)
+        self.assertEqual(exported["Brighton"]["finished_missing_score"], 9)
+        self.assertEqual(exported["Brighton"]["sample_records"][0]["raw_state"]["description"], "Finished")
+
     def test_api_ninjas_exact_history_coverage_passes(self):
         report = self.build(corroboration={
             "errors": {},
