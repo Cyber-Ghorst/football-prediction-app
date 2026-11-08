@@ -10,6 +10,8 @@ from highlightly import HighlightlyClient, HighlightlyError
 from sportmonks import SportmonksClient, SportmonksError
 from data_layer2 import collect_team_profile
 from sportmonks_layer2 import collect_sportmonks_team_profile, find_upcoming_match_fixture, extract_sportmonks_match_details
+from sportmonks_candidate_verification import verify_highlightly_candidate
+from provider_core import normalize_team_name
 from engine import predict_match, WEIGHTS
 from tvd import run_tvd
 from provider_config import provider_readiness
@@ -398,6 +400,72 @@ try:
                             )
                             corroboration["errors"].update(corroboration_errors)
 
+                            # Target each unmatched Highlightly result by its UTC calendar date.
+                            # This deliberately bypasses the ten-match history sample and remains
+                            # diagnostic-only: no candidate is appended to either team profile.
+                            candidate_rows = []
+                            seen_candidate_keys = set()
+                            for team_report in (corroboration.get("team_history_coverage") or {}).values():
+                                for candidate in team_report.get("unmatched_completed_candidates") or []:
+                                    candidate_key = str(candidate.get("highlightly_match_id") or "|".join((
+                                        str(candidate.get("kickoff_utc") or ""),
+                                        str(candidate.get("home") or ""),
+                                        str(candidate.get("away") or ""),
+                                    )))
+                                    if candidate_key not in seen_candidate_keys:
+                                        seen_candidate_keys.add(candidate_key)
+                                        candidate_rows.append(candidate)
+
+                            candidate_verification = []
+                            if candidate_rows:
+                                try:
+                                    with SportmonksClient() as verifier_client:
+                                        fixtures_by_date = {}
+                                        for candidate in candidate_rows:
+                                            try:
+                                                candidate_kickoff = datetime.fromisoformat(
+                                                    str(candidate.get("kickoff_utc")).replace("Z", "+00:00")
+                                                )
+                                                if candidate_kickoff.tzinfo is None:
+                                                    candidate_kickoff = candidate_kickoff.replace(tzinfo=timezone.utc)
+                                                candidate_date = candidate_kickoff.astimezone(timezone.utc).date().isoformat()
+                                            except (TypeError, ValueError):
+                                                candidate_verification.append({
+                                                    "highlightly_match_id": candidate.get("highlightly_match_id"),
+                                                    "verification_status": "invalid_highlightly_kickoff",
+                                                })
+                                                continue
+
+                                            if candidate_date not in fixtures_by_date:
+                                                fixtures_by_date[candidate_date] = verifier_client.fixtures_between(
+                                                    candidate_date,
+                                                    candidate_date,
+                                                    include="participants;state;scores",
+                                                )
+                                            def exact_team_id(candidate_team_name):
+                                                target_name = normalize_team_name(candidate_team_name or "")
+                                                matches = [
+                                                    row for name, row in team_map.items()
+                                                    if normalize_team_name(name) == target_name
+                                                ]
+                                                return int(matches[0]["id"]) if len(matches) == 1 else None
+
+                                            report = verify_highlightly_candidate(
+                                                candidate,
+                                                fixtures_by_date[candidate_date],
+                                                season_id=int(selected_season_id),
+                                                league_id=int(league_id),
+                                                home_team_id=exact_team_id(candidate.get("home")),
+                                                away_team_id=exact_team_id(candidate.get("away")),
+                                            )
+                                            report["sportmonks_request_metadata"] = dict(
+                                                verifier_client.last_metadata or {}
+                                            )
+                                            candidate_verification.append(report)
+                                except SportmonksError as exc:
+                                    corroboration["errors"]["sportmonks_candidate_verification"] = str(exc)
+                            corroboration["candidate_verification"] = candidate_verification
+
                         if cross_check_highlightly_details or cross_check_highlightly_players:
                             if hl_client is None:
                                 corroboration_errors["highlightly_details"] = corroboration_errors.get(
@@ -455,6 +523,10 @@ try:
                                         st.json(history_check)
                                     else:
                                         st.info("No independent Highlightly history report was available for this team.")
+                            if corroboration.get("candidate_verification"):
+                                with st.expander("Targeted Sportmonks verification of unmatched Highlightly candidates", expanded=True):
+                                    st.caption("Each candidate is checked against Sportmonks fixtures returned for its UTC date, using exact season, competition, home/away team IDs and kickoff. This is diagnostic only; no candidate is imported.")
+                                    st.json(corroboration["candidate_verification"])
                         if corroboration is None:
                             st.warning("Cross-provider result corroboration did not complete; Sportmonks prediction data remains unchanged.")
                         elif corroboration.get("matches"):
