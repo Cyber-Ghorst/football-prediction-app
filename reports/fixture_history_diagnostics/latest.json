@@ -1,0 +1,512 @@
+{
+  "status_summary": [
+    {
+      "status": "1",
+      "fixture_count": 539,
+      "fixtures_with_both_scores": 0,
+      "fixtures_in_past": 0
+    },
+    {
+      "status": "5",
+      "fixture_count": 218,
+      "fixtures_with_both_scores": 218,
+      "fixtures_in_past": 218
+    },
+    {
+      "status": "10",
+      "fixture_count": 1,
+      "fixtures_with_both_scores": 0,
+      "fixtures_in_past": 0
+    },
+    {
+      "status": "15",
+      "fixture_count": 1,
+      "fixtures_with_both_scores": 1,
+      "fixtures_in_past": 0
+    },
+    {
+      "status": "3",
+      "fixture_count": 1,
+      "fixtures_with_both_scores": 1,
+      "fixtures_in_past": 1
+    }
+  ],
+  "recent_past_fixture_samples": [
+    {
+      "fixture_id": "sportmonks:19732632",
+      "starting_at": "2026-11-08 20:00:00+00:00",
+      "status": "3",
+      "home_goals": 1,
+      "away_goals": 1,
+      "raw_state": null,
+      "raw_state_id": "3",
+      "raw_scores": [
+        {
+          "description": "1ST_HALF",
+          "fixture_id": 19732632,
+          "id": 37681012,
+          "participant_id": 83,
+          "score": {
+            "goals": 1,
+            "participant": "away"
+          },
+          "type_id": 1
+        },
+        {
+          "description": "1ST_HALF",
+          "fixture_id": 19732632,
+          "id": 37681013,
+          "participant_id": 7980,
+          "score": {
+            "goals": 1,
+            "participant": "home"
+          },
+          "type_id": 1
+        },
+        {
+          "description": "2ND_HALF",
+          "fixture_id": 19732632,
+          "id": 37681014,
+          "participant_id": 83,
+          "score": {
+            "goals": 1,
+            "participant": "away"
+          },
+          "type_id": 2
+        },
+        {
+          "description": "2ND_HALF",
+          "fixture_id": 19732632,
+          "id": 37681015,
+          "participant_id": 7980,
+          "score": {
+            "goals": 1,
+            "participant": "home"
+          },
+          "type_id": 2
+        },
+        {
+          "description": "CURRENT",
+          "fixture_id": 19732632,
+          "id": 37681010,
+          "participant_id": 83,
+          "score": {
+            "goals": 1,
+            "participant": "away"
+          },
+          "type_id": 1525
+        },
+        {
+          "description": "CURRENT",
+          "fixture_id": 19732632,
+          "id": 37681011,
+          "participant_id": 7980,
+          "score": {
+            "goals": 1,
+            "participant": "home"
+          },
+          "type_id": 1525
+        }
+      ]
+    },
+    {
+      "fixture_id": "sportmonks:19732631",
+      "starting_at": "2026-11-08 17:30:00+00:00",
+      "status": "5",
+      "home_goals": 0,
+      "away_goals": 0,
+      "raw_state": null,
+      "raw_state_id": "5",
+      "raw_scores": [
+        {
+          "description": "1ST_HALF",
+          "fixture_id": 19732631,
+          "id": 37679430,
+          "participant_id": 36,
+          "score": {
+            "goals": 0,
+            "participant": "home"
+          },
+          "type_id": 1
+        },
+        {
+          "description": "1ST_HALF",
+          "fixture_id": 19732631,
+          "id": 37679429,
+          "participant_id": 3457,
+          "score": {
+            "goals": 0,
+            "participant": "away"
+          },
+          "type_id": 1
+        },
+        {
+          "description": "2ND_HALF",
+          "fixture_id": 19732631,
+          "id": 37679432,
+          "participant_id": 36,
+          "score": {
+            "goals": 0,
+            "participant": "home"
+          },
+          "type_id": 2
+        },
+        {
+          "description": "2ND_HALF",
+          "fixture_id": 19732631,
+          "id": 37679431,
+          "participant_id": 3457,
+          "score": {
+            "goals": 0,
+            "participant": "away"
+          },
+          "type_id": 2
+        },
+        {
+          "description": "CURRENT",
+          "fixture_id": 19732631,
+          "id": 37679428,
+          "participant_id": 36,
+          "score": {
+            "goals": 0,
+            "participant": "home"
+          },
+          "type_id": 1525
+        },
+        {
+          "description": "CURRENT",
+          "fixture_id": 19732631,
+          "id": 37679427,
+          "participant_id": 3457,
+          "score": {
+            "goals": 0,
+            "participant": "away"
+          },
+          "type_id": 1525
+        },
+        {
+          "description": "2ND_HALF_ONLY",
+          "fixture_id": 19732631,
+          "id": 37680674,
+          "participant_id": 36,
+          "score": {
+            "goals": 0,
+            "participant": "home"
+          },
+          "type_id": 48996
+        },
+        {
+          "description": "2ND_HALF_ONLY",
+          "fixture_id": 19732631,
+          "id": 37680675,
+          "participant_id": 3457,
+          "score": {
+            "goals": 0,
+            "participant": "away"
+          },
+          "type_id": 48996
+        }
+      ]
+    },
+    {
+      "fixture_id": "sportmonks:19732623",
+      "starting_at": "2026-11-08 17:30:00+00:00",
+      "status": "5",
+      "home_goals": 2,
+      "away_goals": 0,
+      "raw_state": null,
+      "raw_state_id": "5",
+      "raw_scores": [
+        {
+          "description": "1ST_HALF",
+          "fixture_id": 19732623,
+          "id": 37679465,
+          "participant_id": 106,
+          "score": {
+            "goals": 0,
+            "participant": "away"
+          },
+          "type_id": 1
+        },
+        {
+          "description": "1ST_HALF",
+          "fixture_id": 19732623,
+          "id": 37679466,
+          "participant_id": 3477,
+          "score": {
+            "goals": 0,
+            "participant": "home"
+          },
+          "type_id": 1
+        },
+        {
+          "description": "2ND_HALF",
+          "fixture_id": 19732623,
+          "id": 37679467,
+          "participant_id": 106,
+          "score": {
+            "goals": 0,
+            "participant": "away"
+          },
+          "type_id": 2
+        },
+        {
+          "description": "2ND_HALF",
+          "fixture_id": 19732623,
+          "id": 37679468,
+          "participant_id": 3477,
+          "score": {
+            "goals": 2,
+            "participant": "home"
+          },
+          "type_id": 2
+        },
+        {
+          "description": "CURRENT",
+          "fixture_id": 19732623,
+          "id": 37679463,
+          "participant_id": 106,
+          "score": {
+            "goals": 0,
+            "participant": "away"
+          },
+          "type_id": 1525
+        },
+        {
+          "description": "CURRENT",
+          "fixture_id": 19732623,
+          "id": 37679464,
+          "participant_id": 3477,
+          "score": {
+            "goals": 2,
+            "participant": "home"
+          },
+          "type_id": 1525
+        },
+        {
+          "description": "2ND_HALF_ONLY",
+          "fixture_id": 19732623,
+          "id": 37680651,
+          "participant_id": 106,
+          "score": {
+            "goals": 0,
+            "participant": "away"
+          },
+          "type_id": 48996
+        },
+        {
+          "description": "2ND_HALF_ONLY",
+          "fixture_id": 19732623,
+          "id": 37680650,
+          "participant_id": 3477,
+          "score": {
+            "goals": 2,
+            "participant": "home"
+          },
+          "type_id": 48996
+        }
+      ]
+    },
+    {
+      "fixture_id": "sportmonks:19722106",
+      "starting_at": "2026-11-08 16:30:00+00:00",
+      "status": "5",
+      "home_goals": 4,
+      "away_goals": 4,
+      "raw_state": null,
+      "raw_state_id": "5",
+      "raw_scores": [
+        {
+          "description": "1ST_HALF",
+          "fixture_id": 19722106,
+          "id": 37678532,
+          "participant_id": 14,
+          "score": {
+            "goals": 2,
+            "participant": "home"
+          },
+          "type_id": 1
+        },
+        {
+          "description": "1ST_HALF",
+          "fixture_id": 19722106,
+          "id": 37678531,
+          "participant_id": 15,
+          "score": {
+            "goals": 2,
+            "participant": "away"
+          },
+          "type_id": 1
+        },
+        {
+          "description": "2ND_HALF",
+          "fixture_id": 19722106,
+          "id": 37678534,
+          "participant_id": 14,
+          "score": {
+            "goals": 4,
+            "participant": "home"
+          },
+          "type_id": 2
+        },
+        {
+          "description": "2ND_HALF",
+          "fixture_id": 19722106,
+          "id": 37678533,
+          "participant_id": 15,
+          "score": {
+            "goals": 4,
+            "participant": "away"
+          },
+          "type_id": 2
+        },
+        {
+          "description": "CURRENT",
+          "fixture_id": 19722106,
+          "id": 37678530,
+          "participant_id": 14,
+          "score": {
+            "goals": 4,
+            "participant": "home"
+          },
+          "type_id": 1525
+        },
+        {
+          "description": "CURRENT",
+          "fixture_id": 19722106,
+          "id": 37678529,
+          "participant_id": 15,
+          "score": {
+            "goals": 4,
+            "participant": "away"
+          },
+          "type_id": 1525
+        },
+        {
+          "description": "2ND_HALF_ONLY",
+          "fixture_id": 19722106,
+          "id": 37680262,
+          "participant_id": 14,
+          "score": {
+            "goals": 2,
+            "participant": "home"
+          },
+          "type_id": 48996
+        },
+        {
+          "description": "2ND_HALF_ONLY",
+          "fixture_id": 19722106,
+          "id": 37680263,
+          "participant_id": 15,
+          "score": {
+            "goals": 2,
+            "participant": "away"
+          },
+          "type_id": 48996
+        }
+      ]
+    },
+    {
+      "fixture_id": "sportmonks:19732626",
+      "starting_at": "2026-11-08 15:15:00+00:00",
+      "status": "5",
+      "home_goals": 1,
+      "away_goals": 0,
+      "raw_state": null,
+      "raw_state_id": "5",
+      "raw_scores": [
+        {
+          "description": "1ST_HALF",
+          "fixture_id": 19732626,
+          "id": 37676735,
+          "participant_id": 377,
+          "score": {
+            "goals": 0,
+            "participant": "away"
+          },
+          "type_id": 1
+        },
+        {
+          "description": "1ST_HALF",
+          "fixture_id": 19732626,
+          "id": 37676736,
+          "participant_id": 594,
+          "score": {
+            "goals": 0,
+            "participant": "home"
+          },
+          "type_id": 1
+        },
+        {
+          "description": "2ND_HALF",
+          "fixture_id": 19732626,
+          "id": 37676737,
+          "participant_id": 377,
+          "score": {
+            "goals": 0,
+            "participant": "away"
+          },
+          "type_id": 2
+        },
+        {
+          "description": "2ND_HALF",
+          "fixture_id": 19732626,
+          "id": 37676738,
+          "participant_id": 594,
+          "score": {
+            "goals": 1,
+            "participant": "home"
+          },
+          "type_id": 2
+        },
+        {
+          "description": "CURRENT",
+          "fixture_id": 19732626,
+          "id": 37676733,
+          "participant_id": 377,
+          "score": {
+            "goals": 0,
+            "participant": "away"
+          },
+          "type_id": 1525
+        },
+        {
+          "description": "CURRENT",
+          "fixture_id": 19732626,
+          "id": 37676734,
+          "participant_id": 594,
+          "score": {
+            "goals": 1,
+            "participant": "home"
+          },
+          "type_id": 1525
+        },
+        {
+          "description": "2ND_HALF_ONLY",
+          "fixture_id": 19732626,
+          "id": 37679520,
+          "participant_id": 377,
+          "score": {
+            "goals": 0,
+            "participant": "away"
+          },
+          "type_id": 48996
+        },
+        {
+          "description": "2ND_HALF_ONLY",
+          "fixture_id": 19732626,
+          "id": 37679519,
+          "participant_id": 594,
+          "score": {
+            "goals": 1,
+            "participant": "home"
+          },
+          "type_id": 48996
+        }
+      ]
+    }
+  ],
+  "history_filter_requires_recognized_status_and_both_scores": true,
+  "generated_at_utc": "2026-11-08T21:26:20.403290+00:00",
+  "repository": "Cyber-Ghorst/football-prediction-app"
+}
