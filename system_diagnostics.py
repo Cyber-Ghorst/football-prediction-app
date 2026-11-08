@@ -267,6 +267,10 @@ def build_system_diagnostics(
             "action": recommendation,
         })
 
+    # Keep the original check order within each priority group, but always
+    # present failed checks before warnings in the user-facing action plan.
+    recommended_actions.sort(key=lambda action: 0 if action["priority"] == "urgent" else 1)
+
     return {
         "diagnostic_version": 1,
         "generated_at": now.isoformat(),
