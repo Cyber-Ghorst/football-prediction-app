@@ -158,6 +158,11 @@ if not any(getattr(handler, "_football_github_runtime_handler", False) for handl
 
 st.set_page_config(page_title="Football Prediction Lab", page_icon="⚽", layout="wide")
 st.title("⚽ Football Prediction Lab")
+if "github_runtime_log_upload_error" in st.session_state:
+    st.warning(
+        "Automatic GitHub runtime-log upload failed: "
+        + str(st.session_state.pop("github_runtime_log_upload_error"))
+    )
 st.caption("Layer 2 • Sportmonks current-season / API-Football historical data collection + weighted prediction engine + TVD")
 report_download_slot = st.empty()
 report_download_slot.info("Collect data and predict to generate the system report. Its download shortcut will appear here.")
