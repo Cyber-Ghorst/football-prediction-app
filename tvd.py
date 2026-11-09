@@ -16,14 +16,16 @@ MATCHUPS = [
     {"id": "central_penetration", "vulnerability": "central_penetration", "weapon": "between_lines_threat", "label": "Vulnerability between the lines", "threat": "Central penetration", "weight": 14},
 ]
 
-# Automatic rules use only the four matchup dimensions supported by the
-# available team-level fixture statistics. Weights are normalized within this
-# automatic evidence set; manual TVD retains the original seven-rule model.
+# Automatic rules use five evidence dimensions. Counter-attacks remain a
+# distinct dimension and are omitted when the provider does not supply them.
+# Weights are normalized within this automatic evidence set; manual TVD is
+# unchanged.
 AUTO_MATCHUPS = [
-    {"id": "auto_counterattack", "vulnerability": "transition_recovery", "weapon": "counterattack_threat", "label": "Counter-attacks against transition defence", "threat": "Counter-attacks", "weight": 25},
-    {"id": "auto_aerial", "vulnerability": "aerial_defence", "weapon": "aerial_threat", "label": "Aerial threat against aerial defence", "threat": "Successful headers", "weight": 25},
-    {"id": "auto_wide", "vulnerability": "wide_defending", "weapon": "wing_threat", "label": "Wide threat against wide defending", "threat": "Accurate crosses and successful dribbles", "weight": 25},
-    {"id": "auto_central", "vulnerability": "central_penetration", "weapon": "between_lines_threat", "label": "Central chance creation against central defence", "threat": "Key passes and shots inside the box", "weight": 25},
+    {"id": "auto_counterattack", "vulnerability": "transition_recovery", "weapon": "counterattack_threat", "label": "Counter-attacks against transition defence", "threat": "Counter-attacks", "weight": 20},
+    {"id": "auto_aerial", "vulnerability": "aerial_defence", "weapon": "aerial_threat", "label": "Aerial threat against aerial defence", "threat": "Successful headers", "weight": 20},
+    {"id": "auto_wide", "vulnerability": "wide_defending", "weapon": "wing_threat", "label": "Wide threat against wide defending", "threat": "Accurate crosses and successful dribbles", "weight": 20},
+    {"id": "auto_central", "vulnerability": "central_penetration", "weapon": "between_lines_threat", "label": "Central chance creation against central defence", "threat": "Key passes and shots inside the box", "weight": 20},
+    {"id": "auto_high_quality_chances", "vulnerability": "high_quality_chance_exposure", "weapon": "high_quality_chance_creation", "label": "High-quality chance creation against high-quality chances conceded", "threat": "Big chances created", "weight": 20},
 ]
 
 
