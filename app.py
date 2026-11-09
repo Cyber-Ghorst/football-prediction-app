@@ -743,7 +743,7 @@ def _fetch_sm_fixtures(season_id, include_stats, team_ids):
 
 @st.cache_data(ttl=1800, show_spinner=False)
 def get_sm_extended_squad_by_team(season_id, team_id):
-    include = "statistics.details.type"
+    include = "statistics.details"
     filters = f"playerstatisticSeasons:{int(season_id)}"
     return _collect_sportmonks_with_archive(
         "extended_squad_by_team",
