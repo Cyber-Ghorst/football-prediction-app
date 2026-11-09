@@ -130,6 +130,7 @@ jobs:
               or any(name not in [pair[1] for pair in paths] for name in changed)):
               raise SystemExit("Applied file set differs from the validated patch.")
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              output.write("has_patch=true\n")
               output.write("summary<<EOF\n" + summary.replace("\n", " ") + "\nEOF\n")
           with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as report:
               report.write("## Proposed autonomous change\n\n" + summary + "\n\n")
