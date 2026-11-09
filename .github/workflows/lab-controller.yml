@@ -52,7 +52,9 @@ jobs:
               "probe_url": url,
               "probe_type": "streamlit_health_endpoint",
               "deployment_reachable": False,
+              "application_status": "unknown",
               "health_endpoint_confirmed": False,
+              "healthy": None,
           }
 
           class NoRedirect(urllib.request.HTTPRedirectHandler):
@@ -60,48 +62,62 @@ jobs:
                   return None
 
           opener = urllib.request.build_opener(NoRedirect)
+          request = urllib.request.Request(
+              url,
+              headers={"User-Agent": "Prediction-Lab-Controller/1.1"},
+          )
+
           try:
-              request = urllib.request.Request(
-                  url,
-                  headers={"User-Agent": "Prediction-Lab-Controller/1.0"},
-              )
               with opener.open(request, timeout=25) as response:
                   body = response.read(512).decode("utf-8", errors="replace").strip()
                   report["http_status"] = response.status
                   report["response_body"] = body
                   report["deployment_reachable"] = True
-                  report["health_endpoint_confirmed"] = (
-                      response.status == 200 and body.lower() == "ok"
-                  )
-                  report["result"] = (
-                      "healthy" if report["health_endpoint_confirmed"]
-                      else "reachable_but_health_unconfirmed"
-                  )
+                  if response.status == 200 and body.lower() == "ok":
+                      report["application_status"] = "healthy"
+                      report["health_endpoint_confirmed"] = True
+                      report["healthy"] = True
+                      report["result"] = "healthy"
+                  else:
+                      report["application_status"] = "unverified"
+                      report["result"] = "reachable_but_health_unconfirmed"
+                      report["note"] = "The endpoint responded, but did not return the expected HTTP 200 and body 'ok'."
           except urllib.error.HTTPError as exc:
               location = exc.headers.get("Location", "")
               report["http_status"] = exc.code
               report["redirect_location"] = location
+              # An HTTP response proves that the host is reachable, even when
+              # the response indicates authentication or an application error.
+              report["deployment_reachable"] = True
+
               auth_redirect = (
-                  exc.code == 303
+                  exc.code in (301, 302, 303, 307, 308)
                   and "share.streamlit.io/-/auth/app" in location
               )
-              if auth_redirect:
-                  report["deployment_reachable"] = True
+              if auth_redirect or exc.code in (401, 403):
+                  report["application_status"] = "unverified"
                   report["result"] = "reachable_authentication_required"
                   report["note"] = (
-                      "Streamlit requires authentication; endpoint health "
-                      "cannot be confirmed by this unauthenticated probe."
+                      "The deployment is reachable, but Streamlit authentication "
+                      "prevents this unauthenticated probe from confirming app health."
                   )
+              elif 500 <= exc.code <= 599:
+                  report["application_status"] = "unhealthy"
+                  report["healthy"] = False
+                  report["result"] = "application_error"
+                  report["error"] = f"HTTP {exc.code}"
               else:
-                  report["result"] = "probe_failed"
-                  report["error"] = f"HTTPError: {exc}"
+                  report["application_status"] = "unverified"
+                  report["result"] = "reachable_but_health_unconfirmed"
+                  report["note"] = f"Unexpected HTTP response: {exc.code}"
           except Exception as exc:
               report["result"] = "probe_failed"
               report["error"] = f"{type(exc).__name__}: {exc}"
 
-          report["healthy"] = report["health_endpoint_confirmed"]
           print(json.dumps(report, indent=2))
-          if not report["deployment_reachable"]:
+          # Authentication-required is a successful reachability check, not
+          # proof of application health. Fail only on network failure or 5xx.
+          if not report["deployment_reachable"] or report["application_status"] == "unhealthy":
               sys.exit(1)
           PY
 
