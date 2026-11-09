@@ -94,8 +94,15 @@ jobs:
           payload = json.loads(os.environ["CODEX_PAYLOAD"])
           patch = payload.get("patch", "")
           summary = payload.get("summary", "").strip()
-          if not isinstance(patch, str) or not patch.strip():
-              raise SystemExit("Codex returned no patch; no repository changes will be made.")
+          if not isinstance(patch, str):
+              raise SystemExit("Codex returned an invalid patch field.")
+          if not patch.strip():
+              with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+                  output.write("has_patch=false\\n")
+                  output.write("summary<<EOF\\n" + summary.replace("\\n", " ") + "\\nEOF\\n")
+              with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as report:
+                  report.write("## No code change proposed\\n\\n" + summary + "\\n")
+              raise SystemExit(0)
           if len(patch.encode("utf-8")) > 120_000:
               raise SystemExit("Patch exceeds the 120 KB safety limit.")
 
@@ -127,18 +134,22 @@ jobs:
           PY
 
       - name: Install project dependencies
+        if: steps.patch.outputs.has_patch == 'true'
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Run complete unit test suite
+        if: steps.patch.outputs.has_patch == 'true'
         run: python -m unittest discover -v
 
       - name: Run deployment smoke checks
+        if: steps.patch.outputs.has_patch == 'true'
         run: python deployment_smoke_check.py
 
       - name: Create branch and open a pull request
         id: create_pr
+        if: steps.patch.outputs.has_patch == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           SUMMARY: ${{ steps.patch.outputs.summary }}
