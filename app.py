@@ -1911,9 +1911,6 @@ try:
                 else:
                     fixture_detail_fetch_seconds = 0.0
                     st.info("No exact upcoming Sportmonks fixture was found for this home/away pairing. Lineups and player availability remain unknown.")
-                else:
-                    fixture_detail_fetch_seconds = 0.0
-                    st.info("No exact upcoming Sportmonks fixture was found for this home/away pairing. Lineups and player availability remain unknown.")
                 prediction_stage_timings["fixture_detail_enrichment_seconds"] = round(
                     float(fixture_detail_fetch_seconds)
                     + time.perf_counter() - fixture_detail_processing_started,
