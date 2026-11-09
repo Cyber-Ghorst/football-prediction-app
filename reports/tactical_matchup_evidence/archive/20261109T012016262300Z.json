@@ -1,0 +1,24 @@
+{
+  "generated_at": "2026-11-09T01:20:16.262179+00:00",
+  "competition": "Premier League — England",
+  "season": 2026,
+  "home_team": "Brighton & Hove Albion",
+  "away_team": "Fulham",
+  "analysis_mode": "unavailable",
+  "tvd_result": null,
+  "model_compatibility_overrides": {},
+  "automatic_model_integration_minimum_coverage_pct": 70.0,
+  "prediction_engine_modified": false,
+  "neon_prediction_ledger_modified": false,
+  "model_weights": {
+    "recent_form": 0.2,
+    "goals_scored": 0.1,
+    "goals_conceded": 0.1,
+    "home_away": 0.1,
+    "strength_of_schedule": 0.15,
+    "player_availability": 0.05,
+    "tactical": 0.3
+  },
+  "generated_at_utc": "2026-11-09T01:20:16.262300+00:00",
+  "report_name": "tactical_matchup_evidence"
+}
