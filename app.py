@@ -2048,6 +2048,7 @@ try:
             home_team_id=int(team_map[home_name]["id"]),
             away_team_id=int(team_map[away_name]["id"]),
             season_id=int(selected_season_id) if selected_season_id is not None else None,
+            exact_pairing_fixture=prediction_fixture,
         )
         statistics_reports = {
             profile["name"]: build_statistics_coverage(profile.get("matches", []))
