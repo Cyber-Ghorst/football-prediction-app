@@ -1,16 +1,16 @@
 {
-  "generated_at": "2026-11-09T05:35:10.821320+00:00",
-  "season_id": 28083,
-  "home_team": "Arsenal",
-  "away_team": "Fulham",
+  "generated_at": "2026-11-09T05:47:59.036261+00:00",
+  "season_id": 27965,
+  "home_team": "Celta de Vigo",
+  "away_team": "Villarreal",
   "profiles": {
-    "Arsenal": {
+    "Celta de Vigo": {
       "source": "cockroachdb_central_repository",
       "completed_matches": 10,
       "repository_fixture_rows": 380,
       "fallback_used": false
     },
-    "Fulham": {
+    "Villarreal": {
       "source": "cockroachdb_central_repository",
       "completed_matches": 10,
       "repository_fixture_rows": 380,
@@ -19,6 +19,6 @@
   },
   "prediction_engine_modified": false,
   "neon_prediction_ledger_modified": false,
-  "generated_at_utc": "2026-11-09T05:35:34.430747+00:00",
+  "generated_at_utc": "2026-11-09T05:48:19.900783+00:00",
   "report_name": "central_repository_prediction_inputs"
 }
