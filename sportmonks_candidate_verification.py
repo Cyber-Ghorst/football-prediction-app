@@ -135,6 +135,7 @@ def resolve_candidate_team_id(
         "brighton": {"brighton hove albion"},
         "bournemouth": {"afc bournemouth"},
         "leeds": {"leeds united"},
+        "tottenham": {"tottenham hotspur"},
     }
     accepted_names = {target} | explicit_aliases.get(target, set()) if target else set()
     observations: dict[int, set[str]] = {}
