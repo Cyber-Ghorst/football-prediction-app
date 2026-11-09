@@ -16,6 +16,17 @@ MATCHUPS = [
     {"id": "central_penetration", "vulnerability": "central_penetration", "weapon": "between_lines_threat", "label": "Vulnerability between the lines", "threat": "Central penetration", "weight": 14},
 ]
 
+# Automatic rules use only the four matchup dimensions supported by the
+# available team-level fixture statistics. Weights are normalized within this
+# automatic evidence set; manual TVD retains the original seven-rule model.
+AUTO_MATCHUPS = [
+    {"id": "auto_counterattack", "vulnerability": "transition_recovery", "weapon": "counterattack_threat", "label": "Counter-attacks against transition defence", "threat": "Counter-attacks", "weight": 25},
+    {"id": "auto_aerial", "vulnerability": "aerial_defence", "weapon": "aerial_threat", "label": "Aerial threat against aerial defence", "threat": "Successful headers", "weight": 25},
+    {"id": "auto_wide", "vulnerability": "wide_defending", "weapon": "wing_threat", "label": "Wide threat against wide defending", "threat": "Accurate crosses and successful dribbles", "weight": 25},
+    {"id": "auto_central", "vulnerability": "central_penetration", "weapon": "between_lines_threat", "label": "Central chance creation against central defence", "threat": "Key passes and shots inside the box", "weight": 25},
+]
+
+
 def _metric(value: Any, team_name: str, metric_name: str) -> Optional[Dict[str, Any]]:
     if value is None: return None
     if isinstance(value, (int, float)) and not isinstance(value, bool): value = {"score": value, "confidence": 50}
@@ -31,9 +42,9 @@ def _metric(value: Any, team_name: str, metric_name: str) -> Optional[Dict[str, 
 def _risk(score: float) -> str:
     return "HIGH" if score >= 70 else "MODERATE" if score >= 45 else "LOW"
 
-def analyze_direction(attacking_team: Dict[str, Any], defending_team: Dict[str, Any]) -> Dict[str, Any]:
+def analyze_direction(attacking_team: Dict[str, Any], defending_team: Dict[str, Any], matchup_rules=None) -> Dict[str, Any]:
     findings=[]; weighted_total=0.0; effective_weight_total=0.0
-    for rule in MATCHUPS:
+    for rule in (matchup_rules or MATCHUPS):
         weakness=_metric(defending_team.get("vulnerabilities",{}).get(rule["vulnerability"]),defending_team.get("name","Defending team"),rule["vulnerability"])
         weapon=_metric(attacking_team.get("weapons",{}).get(rule["weapon"]),attacking_team.get("name","Attacking team"),rule["weapon"])
         if weakness is None or weapon is None: continue
@@ -47,8 +58,9 @@ def analyze_direction(attacking_team: Dict[str, Any], defending_team: Dict[str, 
     score=weighted_total/effective_weight_total if effective_weight_total else None
     return {"attacking_team":attacking_team.get("name","Team A"),"defending_team":defending_team.get("name","Team B"),"compatibility_score":round(score,1) if score is not None else None,"risk_level":_risk(score) if score is not None else "INSUFFICIENT DATA","data_coverage":round(effective_weight_total,1),"findings":findings,"missing_pairings":len(MATCHUPS)-len(findings)}
 
-def run_tvd(team_a: Dict[str, Any], team_b: Dict[str, Any]) -> Dict[str, Any]:
-    a_attacks_b=analyze_direction(team_a,team_b); b_attacks_a=analyze_direction(team_b,team_a)
+def run_tvd(team_a: Dict[str, Any], team_b: Dict[str, Any], automatic: bool = False) -> Dict[str, Any]:
+    rules = AUTO_MATCHUPS if automatic else MATCHUPS
+    a_attacks_b=analyze_direction(team_a,team_b,rules); b_attacks_a=analyze_direction(team_b,team_a,rules)
     a_score,b_score=a_attacks_b["compatibility_score"],b_attacks_a["compatibility_score"]
     if a_score is None or b_score is None: stronger="INSUFFICIENT DATA"
     elif a_score>b_score: stronger=team_a.get("name","Team A")
