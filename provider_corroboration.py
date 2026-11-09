@@ -313,7 +313,7 @@ def collect_recent_result_corroboration(
                             if callable(close):
                                 close()
 
-                    with ThreadPoolExecutor(max_workers=min(4, len(offsets))) as executor:
+                    with ThreadPoolExecutor(max_workers=min(2, len(offsets))) as executor:
                         page_results.extend(executor.map(fetch_with_independent_client, page_clients))
                 else:
                     for offset in offsets:
