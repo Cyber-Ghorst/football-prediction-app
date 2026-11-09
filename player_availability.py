@@ -147,7 +147,7 @@ def build_sportmonks_availability_evidence(
         "reported_sidelined": list(sidelined_rows) if sidelined_feed_available and isinstance(sidelined_rows, list) else None,
         "reported_unavailable_count": len(sidelined_rows) if sidelined_feed_available and isinstance(sidelined_rows, list) else None,
         "squad_rows_received": len(squad_rows) if isinstance(squad_rows, list) else 0,
-        "reported_sidelined_count": len(sidelined_rows) if isinstance(sidelined_rows, list) else None,
+        "reported_sidelined_count": len(sidelined_rows) if sidelined_feed_available and isinstance(sidelined_rows, list) else None,
     }
 
     def unknown(reason: str, **extra: Any) -> dict[str, Any]:
