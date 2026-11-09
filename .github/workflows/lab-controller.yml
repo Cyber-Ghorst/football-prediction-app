@@ -12,6 +12,23 @@ on:
           - test_suite
           - full_check
         default: health_check
+      season:
+        description: "Season start year (Sportmonks current-season path: 2025+)"
+        required: false
+        type: string
+        default: "2026"
+      competition:
+        description: "Exact competition name, or unique competition name"
+        required: false
+        type: string
+      home_team:
+        description: "Exact home team name"
+        required: false
+        type: string
+      away_team:
+        description: "Exact away team name"
+        required: false
+        type: string
   push:
     branches:
       - "agent-trigger/**"
@@ -34,7 +51,7 @@ jobs:
         startsWith(github.event.comment.body, '/agent run ')
       )
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -49,30 +66,58 @@ jobs:
         env:
           EVENT_NAME: ${{ github.event_name }}
           DISPATCH_OPERATION: ${{ inputs.operation }}
+          DISPATCH_SEASON: ${{ inputs.season }}
+          DISPATCH_COMPETITION: ${{ inputs.competition }}
+          DISPATCH_HOME_TEAM: ${{ inputs.home_team }}
+          DISPATCH_AWAY_TEAM: ${{ inputs.away_team }}
         run: |
           python - <<'PY'
           import json
           import os
+          import shlex
           from pathlib import Path
 
+          request = {}
           if os.environ["EVENT_NAME"] == "workflow_dispatch":
               operation = os.environ.get("DISPATCH_OPERATION", "")
+              request = {
+                  "season": os.environ.get("DISPATCH_SEASON", ""),
+                  "competition": os.environ.get("DISPATCH_COMPETITION", ""),
+                  "home_team": os.environ.get("DISPATCH_HOME_TEAM", ""),
+                  "away_team": os.environ.get("DISPATCH_AWAY_TEAM", ""),
+              }
           elif os.environ["EVENT_NAME"] == "issue_comment":
               event = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text(encoding="utf-8"))
               body = event.get("comment", {}).get("body", "").strip()
               prefix = "/agent run "
-              operation = body[len(prefix):].strip() if body.startswith(prefix) else ""
+              tokens = shlex.split(body[len(prefix):]) if body.startswith(prefix) else []
+              operation = tokens[0] if tokens else ""
+              if operation == "prediction_run":
+                  names = {"--season": "season", "--competition": "competition",
+                           "--home": "home_team", "--away": "away_team"}
+                  args = tokens[1:]
+                  while args:
+                      flag = args.pop(0)
+                      if flag not in names or not args:
+                          raise SystemExit("Prediction command accepts --season, --competition, --home and --away.")
+                      request[names[flag]] = args.pop(0)
           else:
               trigger = json.loads(Path(".agent/trigger.json").read_text(encoding="utf-8"))
               operation = trigger.get("operation", "")
 
-          allowed = {"health_check", "test_suite", "full_check"}
+          allowed = {"health_check", "test_suite", "full_check", "prediction_run"}
           if operation not in allowed:
               raise SystemExit("Rejected unsupported or missing operation")
+          if operation == "prediction_run":
+              missing = [key for key in ("season", "competition", "home_team", "away_team") if not str(request.get(key, "")).strip()]
+              if missing:
+                  raise SystemExit("Prediction run requires season, competition, home team and away team: " + ", ".join(missing))
 
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
-              output.write(f"operation={operation}\n")
+              output.write(f"operation={operation}\\n")
+              output.write("prediction_request=" + json.dumps(request, ensure_ascii=False) + "\\n")
           print(f"Accepted operation: {operation}")
+          PY
 
       - name: Check Streamlit deployment
         if: steps.operation.outputs.operation == 'health_check' || steps.operation.outputs.operation == 'full_check'
@@ -209,6 +254,74 @@ jobs:
           exec > >(tee -a controller-report.txt) 2>&1
           python -m unittest discover -v
 
+      - name: Install prediction-run dependencies
+        if: steps.operation.outputs.operation == 'prediction_run'
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Prepare ephemeral Streamlit secrets
+        if: steps.operation.outputs.operation == 'prediction_run'
+        env:
+          SPORTMONKS_API_TOKEN: ${{ secrets.SPORTMONKS_API_TOKEN }}
+          SPORTMONKS_API_KEY: ${{ secrets.SPORTMONKS_API_KEY }}
+          PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          GITHUB_REPORT_TOKEN: ${{ secrets.GITHUB_REPORT_TOKEN }}
+          APISPORTS_API_KEY: ${{ secrets.APISPORTS_API_KEY }}
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+          HIGHLIGHTLY_API_KEY: ${{ secrets.HIGHLIGHTLY_API_KEY }}
+          API_NINJAS_API_KEY: ${{ secrets.API_NINJAS_API_KEY }}
+          LIVESCORE_FOOTBALL_BASE_URL: ${{ secrets.LIVESCORE_FOOTBALL_BASE_URL }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          keys = (
+              "SPORTMONKS_API_TOKEN", "SPORTMONKS_API_KEY", "PROVIDER_DATABASE_URL",
+              "DATABASE_URL", "GITHUB_REPORT_TOKEN", "APISPORTS_API_KEY",
+              "API_FOOTBALL_KEY", "HIGHLIGHTLY_API_KEY", "API_NINJAS_API_KEY",
+              "LIVESCORE_FOOTBALL_BASE_URL",
+          )
+          target = Path(".streamlit")
+          target.mkdir(exist_ok=True)
+          lines = [f"{key} = {json.dumps(os.environ[key])}" for key in keys if os.environ.get(key)]
+          (target / "secrets.toml").write_text("\\n".join(lines) + "\\n", encoding="utf-8")
+          print("Ephemeral Streamlit secrets file prepared; values were not printed.")
+          PY
+
+      - name: Execute existing Streamlit prediction flow
+        if: steps.operation.outputs.operation == 'prediction_run'
+        env:
+          PREDICTION_REQUEST: ${{ steps.operation.outputs.prediction_request }}
+          SPORTMONKS_API_TOKEN: ${{ secrets.SPORTMONKS_API_TOKEN }}
+          SPORTMONKS_API_KEY: ${{ secrets.SPORTMONKS_API_KEY }}
+          PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          GITHUB_REPORT_TOKEN: ${{ secrets.GITHUB_REPORT_TOKEN }}
+          APISPORTS_API_KEY: ${{ secrets.APISPORTS_API_KEY }}
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+          HIGHLIGHTLY_API_KEY: ${{ secrets.HIGHLIGHTLY_API_KEY }}
+          API_NINJAS_API_KEY: ${{ secrets.API_NINJAS_API_KEY }}
+          LIVESCORE_FOOTBALL_BASE_URL: ${{ secrets.LIVESCORE_FOOTBALL_BASE_URL }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import sys
+          from automated_prediction_run import main
+          request = json.loads(os.environ["PREDICTION_REQUEST"])
+          sys.argv = [
+              "automated_prediction_run.py",
+              "--season", str(request["season"]),
+              "--competition", str(request["competition"]),
+              "--home-team", str(request["home_team"]),
+              "--away-team", str(request["away_team"]),
+          ]
+          raise SystemExit(main())
+          PY
+
       - name: Publish result to trigger issue
         if: always() && github.event_name == 'issue_comment'
         env:
@@ -231,7 +344,7 @@ jobs:
               f"**Operation:** {os.environ.get('OPERATION') or 'rejected / unresolved'}",
               f"**Run:** {os.environ['RUN_URL']}",
           ]
-          for filename, heading in (("controller-report.txt", "Deployment probe / test output"), ("deployment-smoke-report.json", "Application smoke report"), ("integration-smoke-report.json", "Live integration report")):
+          for filename, heading in (("controller-report.txt", "Deployment probe / test output"), ("deployment-smoke-report.json", "Application smoke report"), ("integration-smoke-report.json", "Live integration report"), ("prediction-run-report.json", "Automated prediction run report")):
               path = Path(filename)
               if path.exists():
                   content = path.read_text(encoding="utf-8", errors="replace")
@@ -265,5 +378,6 @@ jobs:
           path: |
             controller-report.txt
             deployment-smoke-report.json
+            prediction-run-report.json
           if-no-files-found: warn
           retention-days: 14
