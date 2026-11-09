@@ -152,6 +152,54 @@ class PlayerAvailabilityTests(unittest.TestCase):
         )
         self.assertIsNone(assess_player_availability(evidence)["score"])
 
+    def test_missing_current_squad_flag_keeps_availability_unknown(self):
+        from player_availability import build_sportmonks_availability_evidence
+
+        evidence = build_sportmonks_availability_evidence(
+            squad_rows=[{"id": 1, "statistics": []}],
+            sidelined_rows=[], sidelined_feed_available=True,
+            team_id=10, season_id=2026, fixture_id=123, kickoff="2026-11-23",
+        )
+        self.assertIsNone(assess_player_availability(evidence)["score"])
+
+    def test_completed_absence_before_kickoff_is_available(self):
+        from player_availability import build_sportmonks_availability_evidence
+
+        squad = [{
+            "id": 1, "in_squad": True,
+            "statistics": [{"player_id": 1, "team_id": 10, "season_id": 2026,
+                "details": [{"type_id": 119, "value": {"total": 900}}]}],
+        }]
+        evidence = build_sportmonks_availability_evidence(
+            squad_rows=squad,
+            sidelined_rows=[{
+                "player_id": 1, "team_id": 10, "completed": True,
+                "start_date": "2026-10-01", "end_date": "2026-10-15",
+            }],
+            sidelined_feed_available=True,
+            team_id=10, season_id=2026, fixture_id=123, kickoff="2026-11-23",
+        )
+        self.assertEqual(assess_player_availability(evidence)["score"], 100.0)
+
+    def test_pending_absence_with_return_before_kickoff_stays_unknown(self):
+        from player_availability import build_sportmonks_availability_evidence
+
+        squad = [{
+            "id": 1, "in_squad": True,
+            "statistics": [{"player_id": 1, "team_id": 10, "season_id": 2026,
+                "details": [{"type_id": 119, "value": {"total": 900}}]}],
+        }]
+        evidence = build_sportmonks_availability_evidence(
+            squad_rows=squad,
+            sidelined_rows=[{
+                "player_id": 1, "team_id": 10, "completed": False,
+                "start_date": "2026-10-01", "end_date": "2026-11-15",
+            }],
+            sidelined_feed_available=True,
+            team_id=10, season_id=2026, fixture_id=123, kickoff="2026-11-23",
+        )
+        self.assertIsNone(assess_player_availability(evidence)["score"])
+
 
 if __name__ == "__main__":
     unittest.main()
