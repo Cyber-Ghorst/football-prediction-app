@@ -265,13 +265,41 @@ jobs:
           from zoneinfo import ZoneInfo
           from urllib.request import Request, urlopen
 
-          run = subprocess.run(
-              ["gh", "run", "view", os.environ["RUN_ID"], "--repo", os.environ["REPOSITORY"], "--log-failed"],
-              capture_output=True, text=True, check=False,
-          )
-          logs = (run.stdout or "") + "\n" + (run.stderr or "")
+          import io
+          import zipfile
+          from urllib.error import HTTPError
+
+          api = f"https://api.github.com/repos/{os.environ['REPOSITORY']}/actions/runs/{os.environ['RUN_ID']}/jobs?per_page=100"
+          headers = {
+              "Accept": "application/vnd.github+json",
+              "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+              "X-GitHub-Api-Version": "2022-11-28",
+          }
+          request = Request(api, headers=headers)
+          with urlopen(request, timeout=30) as response:
+              job_data = json.loads(response.read().decode("utf-8"))
+          agent_jobs = [
+              job for job in job_data.get("jobs", [])
+              if job.get("name") == "Generate one bounded code improvement"
+          ]
+          if not agent_jobs:
+              raise RuntimeError("Could not locate the completed Codex agent job in GitHub Actions.")
+          job_id = agent_jobs[0]["id"]
+          log_url = f"https://api.github.com/repos/{os.environ['REPOSITORY']}/actions/jobs/{job_id}/logs"
+          log_request = Request(log_url, headers=headers)
+          with urlopen(log_request, timeout=60) as response:
+              log_bytes = response.read()
+          try:
+              with zipfile.ZipFile(io.BytesIO(log_bytes)) as archive:
+                  logs = "\\n".join(
+                      archive.read(name).decode("utf-8", errors="replace")
+                      for name in archive.namelist() if not name.endswith("/")
+                  )
+          except zipfile.BadZipFile:
+              logs = log_bytes.decode("utf-8", errors="replace")
+
           quota = bool(re.search(
-              r"quota exceeded|insufficient_quota|credit_balance_exhausted|"
+              r"quota\\s+exceeded|insufficient_quota|credit_balance_exhausted|"
               r"organization_usage_limit_exceeded|organization_spend_limit_exceeded|"
               r"project_spend_limit_exceeded",
               logs, re.IGNORECASE,
