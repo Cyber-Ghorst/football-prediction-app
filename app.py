@@ -7,6 +7,7 @@ import time
 import re
 import traceback
 import logging
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 import requests
 import pandas as pd
@@ -1560,26 +1561,55 @@ try:
         corroboration = None
         with st.spinner("Collecting recent results, standings and available match statistics..."):
             if sportmonks_mode:
-                try:
-                    standings = get_sm_standings(selected_season_id)
-                except SportmonksError as exc:
-                    st.error(f"Sportmonks standings collection failed: {exc}")
-                    st.stop()
-                prediction_stage_timings["standings_collection_seconds"] = round(time.perf_counter() - prediction_stage_started, 3)
-                prediction_stage_started = time.perf_counter()
-                try:
-                    fixtures = get_sm_fixtures(
+                def _timed_provider_collection(collection_fn, *collection_args):
+                    collection_started = time.perf_counter()
+                    try:
+                        return (
+                            collection_fn(*collection_args),
+                            round(time.perf_counter() - collection_started, 3),
+                            None,
+                        )
+                    except Exception as collection_error:
+                        return (
+                            None,
+                            round(time.perf_counter() - collection_started, 3),
+                            collection_error,
+                        )
+
+                fixture_team_ids = [
+                    int(team_map[home_name]["id"]),
+                    int(team_map[away_name]["id"]),
+                ]
+                # These provider reads are independent. Run them concurrently,
+                # while keeping separate durations and the existing cached loaders.
+                with ThreadPoolExecutor(max_workers=2) as provider_pool:
+                    standings_future = provider_pool.submit(
+                        _timed_provider_collection,
+                        get_sm_standings,
+                        selected_season_id,
+                    )
+                    fixtures_future = provider_pool.submit(
+                        _timed_provider_collection,
+                        get_sm_fixtures,
                         selected_season_id,
                         include_stats,
-                        [
-                            int(team_map[home_name]["id"]),
-                            int(team_map[away_name]["id"]),
-                        ],
+                        fixture_team_ids,
                     )
-                except SportmonksError as exc:
-                    st.error(f"Sportmonks fixture collection failed: {exc}")
-                    st.stop()
-                prediction_stage_timings["live_fixture_collection_seconds"] = round(time.perf_counter() - prediction_stage_started, 3)
+                    standings, standings_seconds, standings_error = standings_future.result()
+                    fixtures, fixtures_seconds, fixtures_error = fixtures_future.result()
+
+                prediction_stage_timings["standings_collection_seconds"] = standings_seconds
+                prediction_stage_timings["live_fixture_collection_seconds"] = fixtures_seconds
+                if standings_error is not None:
+                    if isinstance(standings_error, SportmonksError):
+                        st.error(f"Sportmonks standings collection failed: {standings_error}")
+                        st.stop()
+                    raise standings_error
+                if fixtures_error is not None:
+                    if isinstance(fixtures_error, SportmonksError):
+                        st.error(f"Sportmonks fixture collection failed: {fixtures_error}")
+                        st.stop()
+                    raise fixtures_error
                 prediction_stage_started = time.perf_counter()
                 repository_profile_report = {
                     "generated_at": datetime.now(timezone.utc).isoformat(),
