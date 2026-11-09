@@ -491,10 +491,15 @@ def _collect_sportmonks_with_archive(resource_type, request_params, fetcher, ttl
             pass
         raise
 
-    source_ids = [
-        row.get("id") for row in payload
-        if isinstance(row, dict) and row.get("id") is not None
-    ] if isinstance(payload, list) else []
+    if isinstance(payload, list):
+        source_ids = [
+            row.get("id") for row in payload
+            if isinstance(row, dict) and row.get("id") is not None
+        ]
+    elif isinstance(payload, dict) and payload.get("id") is not None:
+        source_ids = [payload.get("id")]
+    else:
+        source_ids = []
     try:
         save_provider_snapshot(
             PROVIDER_DATABASE_URL,
