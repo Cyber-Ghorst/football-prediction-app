@@ -1043,6 +1043,69 @@ def audit_all_repository_team_histories(
         "teams": team_results,
     }
 
+def get_repository_season_snapshot(
+    database_url: str,
+    season_id: str,
+    *,
+    fixture_limit: int = 2000,
+) -> dict[str, list[dict[str, Any]]]:
+    """Read teams, fixtures and normalized statistics for a season on one DB connection."""
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+    canonical_season_id = str(season_id)
+    safe_limit = max(1, min(int(fixture_limit), 2000))
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT DISTINCT t.team_id, t.name, t.short_name, t.country,
+                       t.source_provider, t.provider_updated_at, t.collected_at
+                FROM football_teams AS t
+                JOIN football_fixtures AS f
+                  ON f.home_team_id = t.team_id OR f.away_team_id = t.team_id
+                WHERE f.season_id = %s
+                ORDER BY t.name
+                """,
+                (canonical_season_id,),
+            )
+            teams = _rows_as_dicts(cursor)
+
+            cursor.execute(
+                """
+                SELECT fixture_id, season_id, league_id, home_team_id, away_team_id,
+                       starting_at, status, home_goals, away_goals, venue,
+                       source_provider, provider_updated_at, collected_at, raw_payload
+                FROM football_fixtures
+                WHERE season_id = %s
+                ORDER BY starting_at DESC NULLS LAST
+                LIMIT %s
+                """,
+                (canonical_season_id, safe_limit),
+            )
+            fixtures = _rows_as_dicts(cursor)
+            fixture_ids = list(dict.fromkeys(
+                str(row["fixture_id"]) for row in fixtures if row.get("fixture_id")
+            ))
+            statistics: list[dict[str, Any]] = []
+            if fixture_ids:
+                if len(fixture_ids) > 2000:
+                    raise ValueError("A maximum of 2000 fixture IDs may be queried at once.")
+                placeholders = ", ".join(["%s"] * len(fixture_ids))
+                cursor.execute(
+                    f"""
+                    SELECT statistic_id, fixture_id, team_id, statistic_type,
+                           statistic_value, source_provider, provider_statistic_id,
+                           provider_updated_at, collected_at, raw_payload
+                    FROM football_fixture_statistics
+                    WHERE fixture_id IN ({placeholders})
+                    ORDER BY fixture_id, team_id, statistic_type
+                    """,
+                    tuple(fixture_ids),
+                )
+                statistics = _rows_as_dicts(cursor)
+    return {"teams": teams, "fixtures": fixtures, "statistics": statistics}
+
+
 def get_repository_fixture_statistics(
     database_url: str,
     fixture_ids: list[str],
