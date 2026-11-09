@@ -1,0 +1,19 @@
+{
+  "report_name": "prediction_runtime",
+  "generated_at_utc": "2026-11-09T17:32:12.566228+00:00",
+  "competition": "Premier League — England",
+  "season": 2026,
+  "stages_seconds": {
+    "standings_collection_seconds": 2.28,
+    "live_fixture_collection_seconds": 3.411,
+    "season_snapshot_and_shared_profile_build_seconds": 5.566,
+    "fixture_detail_enrichment_seconds": 2.272,
+    "optional_provider_corroboration_seconds": 7.467,
+    "data_collection_total_seconds": 21.426,
+    "validation_and_report_archiving_seconds": 7.033,
+    "tactical_analysis_and_prediction_seconds": 2.516,
+    "prediction_ledger_write_seconds": 2.373
+  },
+  "elapsed_seconds_before_runtime_report_upload": 33.348,
+  "note": "Diagnostic timings only. No prediction inputs, model weights, recency rules, TVD calculations or ledger contents are changed."
+}
