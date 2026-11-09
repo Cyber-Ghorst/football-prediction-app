@@ -1055,6 +1055,31 @@ try:
                             f"sportmonks:{int(selected_season_id)}",
                             standings,
                         )
+                        # Keep CockroachDB as the prediction-history source, but
+                        # rebuild missing automatic TVD evidence from the already
+                        # collected live Sportmonks fixture payloads. This fallback
+                        # supplies TVD only; it does not replace repository history.
+                        if not isinstance(profile.get("tactical_evidence"), dict):
+                            try:
+                                tactical_fallback_profile = collect_sportmonks_team_profile(
+                                    provider_team, selected_season_id, fixtures, standings
+                                )
+                                tactical_fallback_evidence = tactical_fallback_profile.get(
+                                    "tactical_evidence"
+                                )
+                                if isinstance(tactical_fallback_evidence, dict):
+                                    profile["tactical_evidence"] = tactical_fallback_evidence
+                                    profile.setdefault("data_quality", {})[
+                                        "tactical_evidence_source"
+                                    ] = "live_sportmonks_fixture_statistics_fallback"
+                                else:
+                                    profile["tactical_evidence_error"] = (
+                                        "Live Sportmonks fallback returned no tactical evidence object."
+                                    )
+                            except Exception as tactical_error:
+                                profile["tactical_evidence_error"] = (
+                                    f"{type(tactical_error).__name__}: {tactical_error}"
+                                )
                         if len(profile.get("matches") or []) < 5:
                             raise ValueError(
                                 f"Central repository returned only {len(profile.get('matches') or [])} "
@@ -1850,6 +1875,25 @@ try:
                             "included in the prediction's tactical-compatibility input."
                         )
             st.json(tvd_result)
+        else:
+            st.subheader("Tactical Vulnerability Detector")
+            st.warning(
+                "Automatic TVD could not be generated because one or both team evidence "
+                "profiles are missing. Check the tactical evidence source details below; "
+                "no compatibility score has been assumed."
+            )
+            st.json({
+                home_name: {
+                    "tactical_evidence_available": isinstance(home.get("tactical_evidence"), dict),
+                    "tactical_evidence_error": home.get("tactical_evidence_error"),
+                    "data_quality": home.get("data_quality", {}),
+                },
+                away_name: {
+                    "tactical_evidence_available": isinstance(away.get("tactical_evidence"), dict),
+                    "tactical_evidence_error": away.get("tactical_evidence_error"),
+                    "data_quality": away.get("data_quality", {}),
+                },
+            })
         st.caption(f"Model weights: {WEIGHTS}. Latest five matches carry 60% of recent-history weight; previous five carry 40%.")
 
 except APIFootballError as exc:
