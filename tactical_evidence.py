@@ -164,9 +164,9 @@ def build_tactical_evidence_profile(
             "minimum_team_observations_per_metric": MIN_TEAM_OBSERVATIONS,
             "minimum_league_reference_observations": MIN_REFERENCE_OBSERVATIONS,
             "available_dimensions": sum(
-                any(weapons.get(dimension["weapon_key"]) is not None for dimension in [item])
-                and any(vulnerabilities.get(dimension["vulnerability_key"]) is not None for dimension in [item])
-                for item in AUTOMATIC_DIMENSIONS.values()
+                weapons.get(dimension["weapon_key"]) is not None
+                and vulnerabilities.get(dimension["vulnerability_key"]) is not None
+                for dimension in AUTOMATIC_DIMENSIONS.values()
             ),
             "total_dimensions": len(AUTOMATIC_DIMENSIONS),
             "limitations": [
