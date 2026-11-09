@@ -1,7 +1,7 @@
 {
   "diagnostic_version": 1,
-  "generated_at": "2026-11-09T05:24:33.796651+00:00",
-  "overall_status": "healthy",
+  "generated_at": "2026-11-09T05:35:39.796978+00:00",
+  "overall_status": "attention_required",
   "selected_context": {
     "season_start_year": 2026,
     "competition": "Premier League — England",
@@ -9,10 +9,10 @@
   },
   "summary": {
     "checks_total": 14,
-    "passed": 13,
-    "warnings": 0,
+    "passed": 10,
+    "warnings": 2,
     "failed": 0,
-    "informational": 1
+    "informational": 2
   },
   "checks": [
     {
@@ -23,62 +23,62 @@
     },
     {
       "id": "fixture_identity",
-      "status": "pass",
-      "summary": "The selected upcoming fixture passed exact season, home/away team and scheduled-kickoff checks.",
-      "recommendation": null
+      "status": "warning",
+      "summary": "No exact upcoming fixture was returned for the selected home/away pairing.",
+      "recommendation": "Refresh the selected competition schedule and confirm the exact home/away pairing. Do not substitute another fixture."
     },
     {
       "id": "fixture_freshness",
-      "status": "pass",
-      "summary": "Detailed fixture retrieval is less than 24 hours old.",
-      "recommendation": null
+      "status": "info",
+      "summary": "Fixture retrieval freshness is unknown because a valid retrieval timestamp is unavailable.",
+      "recommendation": "A successful detailed-fixture retrieval is needed before age can be measured."
     },
     {
       "id": "home_history_depth",
       "status": "pass",
-      "summary": "Manchester City: 10 completed score-valid matches available (minimum 5 met; preferred target 10 met).",
+      "summary": "Arsenal: 10 completed score-valid matches available (minimum 5 met; preferred target 10 met).",
       "recommendation": null
     },
     {
       "id": "home_tactical_recency_weighting",
       "status": "pass",
-      "summary": "Manchester City: tactical recency metadata reports latest-five 60% / previous-five 40% over 10 match(es).",
+      "summary": "Arsenal: tactical recency metadata reports latest-five 60% / previous-five 40% over 10 match(es).",
       "recommendation": null
     },
     {
       "id": "home_history_integrity",
       "status": "pass",
-      "summary": "Manchester City: no duplicate fixture IDs or invalid/missing score fields were found in the collected sample.",
+      "summary": "Arsenal: no duplicate fixture IDs or invalid/missing score fields were found in the collected sample.",
       "recommendation": null
     },
     {
       "id": "home_statistics_coverage",
       "status": "pass",
-      "summary": "Manchester City: all 8 core tactical statistics have at least one usable observation.",
+      "summary": "Arsenal: all 8 core tactical statistics have at least one usable observation.",
       "recommendation": null
     },
     {
       "id": "away_history_depth",
       "status": "pass",
-      "summary": "Liverpool: 10 completed score-valid matches available (minimum 5 met; preferred target 10 met).",
+      "summary": "Fulham: 10 completed score-valid matches available (minimum 5 met; preferred target 10 met).",
       "recommendation": null
     },
     {
       "id": "away_tactical_recency_weighting",
       "status": "pass",
-      "summary": "Liverpool: tactical recency metadata reports latest-five 60% / previous-five 40% over 10 match(es).",
+      "summary": "Fulham: tactical recency metadata reports latest-five 60% / previous-five 40% over 10 match(es).",
       "recommendation": null
     },
     {
       "id": "away_history_integrity",
       "status": "pass",
-      "summary": "Liverpool: no duplicate fixture IDs or invalid/missing score fields were found in the collected sample.",
+      "summary": "Fulham: no duplicate fixture IDs or invalid/missing score fields were found in the collected sample.",
       "recommendation": null
     },
     {
       "id": "away_statistics_coverage",
       "status": "pass",
-      "summary": "Liverpool: all 8 core tactical statistics have at least one usable observation.",
+      "summary": "Fulham: all 8 core tactical statistics have at least one usable observation.",
       "recommendation": null
     },
     {
@@ -95,12 +95,25 @@
     },
     {
       "id": "prediction_readiness",
-      "status": "pass",
-      "summary": "Prediction readiness status: ready. Five completed, score-valid matches per team meet the history minimum; ten is preferred.",
-      "recommendation": null
+      "status": "warning",
+      "summary": "Prediction readiness status: fixture_unverified. Five completed, score-valid matches per team meet the history minimum; ten is preferred.",
+      "recommendation": "Review fixture verification and history depth before relying on the forecast."
     }
   ],
-  "recommended_actions": [],
+  "recommended_actions": [
+    {
+      "priority": "next",
+      "check_id": "fixture_identity",
+      "issue": "No exact upcoming fixture was returned for the selected home/away pairing.",
+      "action": "Refresh the selected competition schedule and confirm the exact home/away pairing. Do not substitute another fixture."
+    },
+    {
+      "priority": "next",
+      "check_id": "prediction_readiness",
+      "issue": "Prediction readiness status: fixture_unverified. Five completed, score-valid matches per team meet the history minimum; ten is preferred.",
+      "action": "Review fixture verification and history depth before relying on the forecast."
+    }
+  ],
   "providers": {
     "sportmonks": {
       "provider": "Sportmonks Football API v3",
@@ -149,21 +162,21 @@
     }
   },
   "fixture": {
-    "verified": true,
-    "status": "verified",
-    "reason": "Exact competition-season fixture identity and future kickoff verified.",
-    "fixture_id": 19721857,
-    "kickoff_utc": "2027-05-08T14:00:00+00:00",
+    "verified": false,
+    "status": "not_found",
+    "reason": "No exact upcoming fixture was returned for the selected home/away pairing.",
+    "fixture_id": null,
+    "kickoff_utc": null,
     "source_updated_at": null,
-    "source_fetched_at": "2026-11-09T05:23:44.818885+00:00",
-    "source_age_seconds": 49.0,
-    "source_age_minutes": 0.8,
-    "source_freshness": "fresh",
-    "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
+    "source_fetched_at": null,
+    "source_age_seconds": null,
+    "source_age_minutes": null,
+    "source_freshness": "unknown",
+    "freshness_note": "No successful detailed-fixture retrieval timestamp is attached."
   },
   "teams": {
     "home": {
-      "team": "Manchester City",
+      "team": "Arsenal",
       "completed_matches_available": 10,
       "history_minimum": 5,
       "history_target": 10,
@@ -186,8 +199,8 @@
         "core_metrics_with_any_data": 8,
         "core_metrics_complete": 8,
         "core_metrics_total": 8,
-        "raw_observations_seen": 423,
-        "unmapped_observations": 264,
+        "raw_observations_seen": 428,
+        "unmapped_observations": 269,
         "mapping_visibility": "available",
         "metrics": [
           {
@@ -434,22 +447,22 @@
             "fixtures_seen": 9
           },
           {
+            "provider_statistic": "Injuries",
+            "observations": 9,
+            "fixtures_seen": 9
+          },
+          {
             "provider_statistic": "Hit Woodwork",
             "observations": 8,
             "fixtures_seen": 8
           },
           {
-            "provider_statistic": "Injuries",
-            "observations": 3,
-            "fixtures_seen": 3
+            "provider_statistic": "Penalties",
+            "observations": 1,
+            "fixtures_seen": 1
           },
           {
             "provider_statistic": "Redcards",
-            "observations": 2,
-            "fixtures_seen": 2
-          },
-          {
-            "provider_statistic": "Penalties",
             "observations": 1,
             "fixtures_seen": 1
           },
@@ -461,19 +474,19 @@
         ]
       },
       "tactical_summary": {
-        "playing_style": 85.25,
-        "attacking_approach": 59.666666666666664,
-        "defensive_structure": 35.53333333333333,
+        "playing_style": 73.1,
+        "attacking_approach": 53.06666666666666,
+        "defensive_structure": 35.733333333333334,
         "coverage_metrics": 8,
         "available_metrics": {
-          "average_possession": 66.0,
-          "average_pass_accuracy": 88.2,
-          "average_shots": 15.3,
-          "average_shots_on_target": 5.4,
-          "average_tackles": 13.4,
-          "average_interceptions": 6.2,
-          "average_blocked_shots": 4.6,
-          "average_corners": 6.1
+          "average_possession": 59.9,
+          "average_pass_accuracy": 85.0,
+          "average_shots": 14.0,
+          "average_shots_on_target": 4.8,
+          "average_tackles": 12.8,
+          "average_interceptions": 6.6,
+          "average_blocked_shots": 4.8,
+          "average_corners": 5.7
         },
         "recency_weighting": {
           "matches_used": 10,
@@ -500,7 +513,7 @@
       }
     },
     "away": {
-      "team": "Liverpool",
+      "team": "Fulham",
       "completed_matches_available": 10,
       "history_minimum": 5,
       "history_target": 10,
@@ -523,8 +536,8 @@
         "core_metrics_with_any_data": 8,
         "core_metrics_complete": 8,
         "core_metrics_total": 8,
-        "raw_observations_seen": 422,
-        "unmapped_observations": 264,
+        "raw_observations_seen": 416,
+        "unmapped_observations": 260,
         "mapping_visibility": "available",
         "metrics": [
           {
@@ -615,8 +628,8 @@
           },
           {
             "statistic": "Successful Headers",
-            "team_output_fixtures": 9,
-            "opponent_output_fixtures": 9,
+            "team_output_fixtures": 7,
+            "opponent_output_fixtures": 7,
             "fixtures_checked": 10
           },
           {
@@ -751,11 +764,6 @@
             "fixtures_seen": 10
           },
           {
-            "provider_statistic": "Yellowcards",
-            "observations": 10,
-            "fixtures_seen": 10
-          },
-          {
             "provider_statistic": "Big Chances Missed",
             "observations": 9,
             "fixtures_seen": 9
@@ -766,51 +774,51 @@
             "fixtures_seen": 9
           },
           {
+            "provider_statistic": "Yellowcards",
+            "observations": 9,
+            "fixtures_seen": 9
+          },
+          {
             "provider_statistic": "Assists",
             "observations": 8,
             "fixtures_seen": 8
           },
           {
             "provider_statistic": "Hit Woodwork",
-            "observations": 5,
-            "fixtures_seen": 5
+            "observations": 7,
+            "fixtures_seen": 7
           },
           {
             "provider_statistic": "Injuries",
-            "observations": 5,
-            "fixtures_seen": 5
+            "observations": 6,
+            "fixtures_seen": 6
           },
           {
             "provider_statistic": "Penalties",
-            "observations": 4,
-            "fixtures_seen": 4
+            "observations": 1,
+            "fixtures_seen": 1
           },
           {
             "provider_statistic": "Redcards",
-            "observations": 2,
-            "fixtures_seen": 2
-          },
-          {
-            "provider_statistic": "Yellowred Cards",
-            "observations": 2,
-            "fixtures_seen": 2
+            "observations": 1,
+            "fixtures_seen": 1
           }
         ]
       },
       "tactical_summary": {
-        "playing_style": 57.05,
-        "attacking_approach": 56.199999999999996,
-        "defensive_structure": 51.9,
+        "playing_style": 72.75,
+        "attacking_approach": 53.333333333333336,
+        "defensive_structure": 38.233333333333334,
         "coverage_metrics": 8,
         "available_metrics": {
-          "average_possession": 51.6,
-          "average_pass_accuracy": 81.1,
-          "average_shots": 16.2,
-          "average_shots_on_target": 4.7,
-          "average_tackles": 15.5,
-          "average_interceptions": 10.4,
-          "average_blocked_shots": 5.5,
-          "average_corners": 5.6
+          "average_possession": 58.4,
+          "average_pass_accuracy": 86.1,
+          "average_shots": 13.9,
+          "average_shots_on_target": 4.6,
+          "average_tackles": 14.6,
+          "average_interceptions": 7.7,
+          "average_blocked_shots": 4.0,
+          "average_corners": 6.0
         },
         "recency_weighting": {
           "matches_used": 10,
@@ -839,7 +847,7 @@
   },
   "corroboration": {},
   "prediction_readiness": {
-    "overall_status": "ready",
+    "overall_status": "fixture_unverified",
     "prediction_minimum_history_met": true,
     "ten_match_history_target_met": true,
     "history_policy": {
@@ -850,21 +858,21 @@
     },
     "prediction_allowed_by_history": true,
     "fixture": {
-      "verified": true,
-      "status": "verified",
-      "reason": "Exact competition-season fixture identity and future kickoff verified.",
-      "fixture_id": 19721857,
-      "kickoff_utc": "2027-05-08T14:00:00+00:00",
+      "verified": false,
+      "status": "not_found",
+      "reason": "No exact upcoming fixture was returned for the selected home/away pairing.",
+      "fixture_id": null,
+      "kickoff_utc": null,
       "source_updated_at": null,
-      "source_fetched_at": "2026-11-09T05:23:44.818885+00:00",
-      "source_age_seconds": 49.0,
-      "source_age_minutes": 0.8,
-      "source_freshness": "fresh",
-      "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
+      "source_fetched_at": null,
+      "source_age_seconds": null,
+      "source_age_minutes": null,
+      "source_freshness": "unknown",
+      "freshness_note": "No successful detailed-fixture retrieval timestamp is attached."
     },
     "teams": {
       "home": {
-        "team": "Manchester City",
+        "team": "Arsenal",
         "completed_matches_available": 10,
         "history_minimum": 5,
         "history_target": 10,
@@ -881,7 +889,7 @@
         "confirmed_lineup_evidence": "unknown"
       },
       "away": {
-        "team": "Liverpool",
+        "team": "Fulham",
         "completed_matches_available": 10,
         "history_minimum": 5,
         "history_target": 10,
@@ -913,6 +921,6 @@
     "weights_total": 1.0,
     "model_impact": "Diagnostics only; weights, recency weighting, prediction inputs and missing-data rules are not changed."
   },
-  "generated_at_utc": "2026-11-09T05:24:36.968006+00:00",
+  "generated_at_utc": "2026-11-09T05:35:43.060506+00:00",
   "report_name": "system_diagnostics"
 }
