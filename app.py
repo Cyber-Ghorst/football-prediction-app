@@ -1785,6 +1785,12 @@ try:
                         use_container_width=True,
                         hide_index=True,
                     )
+                    st.markdown("**Automatic TVD evidence coverage**")
+                    st.dataframe(
+                        pd.DataFrame(report.get("tactical_evidence_metrics", [])),
+                        use_container_width=True,
+                        hide_index=True,
+                    )
                     if report["unmapped_statistics"]:
                         st.markdown("**Unmapped provider statistic names**")
                         st.dataframe(
