@@ -158,6 +158,7 @@ def build_sportmonks_availability_evidence(
         "players_without_season_statistics": [],
         "players_with_multiple_season_statistics_rows": [],
         "players_with_minutes_detail": 0,
+        "players_with_zero_minutes_inferred": [],
         "players_missing_minutes_detail": [],
         "player_statistic_values": [],
         "minutes_type_ids_seen": [],
@@ -263,6 +264,8 @@ def build_sportmonks_availability_evidence(
         if not isinstance(details, list):
             return unknown("Season player-statistic details are missing.")
         minutes_detail = None
+        appearances_detail = None
+        bench_detail = None
         player_type_ids = []
         for detail in details:
             if not isinstance(detail, dict):
@@ -289,23 +292,51 @@ def build_sportmonks_availability_evidence(
                 player_type_ids.append(parsed_type_id)
                 if parsed_type_id == 119:
                     minutes_detail = detail
+                elif parsed_type_id == 321:
+                    appearances_detail = detail
+                elif parsed_type_id == 323:
+                    bench_detail = detail
             except (TypeError, ValueError):
                 continue
-        if minutes_detail is None:
-            diagnostics["players_missing_minutes_detail"].append({
+        minutes_evidence_method = "sportmonks_minutes_played_type_119"
+        if minutes_detail is not None:
+            diagnostics["players_with_minutes_detail"] += 1
+            minutes = _minutes_value(minutes_detail.get("value"))
+            if minutes is None:
+                return unknown("A player's minutes-played value is invalid.")
+        else:
+            appearances = _minutes_value(appearances_detail.get("value")) if appearances_detail is not None else None
+            bench_appearances = _minutes_value(bench_detail.get("value")) if bench_detail is not None else None
+            if appearances_detail is not None and appearances == 0:
+                minutes = 0.0
+                minutes_evidence_method = "zero_appearances_type_321"
+            elif appearances_detail is None and bench_appearances is not None and bench_appearances > 0:
+                # Sportmonks exposes appearances (321) and bench starts (323)
+                # as separate season totals. A player with recorded bench
+                # appearances but no appearance record has not entered play.
+                minutes = 0.0
+                minutes_evidence_method = "bench_appearances_without_playing_appearances"
+            else:
+                diagnostics["players_missing_minutes_detail"].append({
+                    "player_id": int(player_id),
+                    "player_name": row.get("display_name") or row.get("name") or row.get("common_name"),
+                    "detail_type_ids": player_type_ids[:20],
+                    "appearances_total": appearances,
+                    "bench_appearances_total": bench_appearances,
+                })
+                return unknown("Minutes-played evidence is missing and zero appearances cannot be established.")
+            diagnostics["players_with_zero_minutes_inferred"].append({
                 "player_id": int(player_id),
                 "player_name": row.get("display_name") or row.get("name") or row.get("common_name"),
-                "detail_type_ids": player_type_ids[:20],
+                "minutes_evidence_method": minutes_evidence_method,
+                "appearances_total": appearances,
+                "bench_appearances_total": bench_appearances,
             })
-            return unknown("Minutes-played evidence (Sportmonks type 119) is missing for a current-squad player.")
-        diagnostics["players_with_minutes_detail"] += 1
-        minutes = _minutes_value(minutes_detail.get("value"))
-        if minutes is None:
-            return unknown("A player's minutes-played value is invalid.")
         current_players[player_id] = {
             "player_id": int(player_id),
             "player_name": row.get("display_name") or row.get("name") or row.get("common_name"),
             "minutes_played": minutes,
+            "minutes_evidence_method": minutes_evidence_method,
         }
 
     if not current_players:
@@ -380,14 +411,13 @@ def build_sportmonks_availability_evidence(
     squad_players = []
     for player_id, row in current_players.items():
         minutes = row["minutes_played"]
-        if player_id in unavailable_ids and minutes <= 0:
-            return unknown("An unavailable player has no season minutes from which to evidence importance.")
         squad_players.append({
             "player_id": row["player_id"],
             "player_name": row["player_name"],
             "status": "unavailable" if player_id in unavailable_ids else "available",
             "importance": round(minutes / max_minutes * 100.0, 2),
             "minutes_played": minutes,
+            "minutes_evidence_method": row["minutes_evidence_method"],
         })
 
     return {
