@@ -1,6 +1,6 @@
 {
   "diagnostic_version": 1,
-  "generated_at": "2026-11-09T01:36:55.277278+00:00",
+  "generated_at": "2026-11-09T01:50:18.797344+00:00",
   "overall_status": "attention_required",
   "selected_context": {
     "season_start_year": 2026,
@@ -218,7 +218,7 @@
         "core_metrics_complete": 8,
         "core_metrics_total": 8,
         "raw_observations_seen": 427,
-        "unmapped_observations": 279,
+        "unmapped_observations": 269,
         "mapping_visibility": "available",
         "metrics": [
           {
@@ -302,6 +302,12 @@
             "fixtures_checked": 10
           },
           {
+            "statistic": "Big Chances Created",
+            "team_output_fixtures": 10,
+            "opponent_output_fixtures": 10,
+            "fixtures_checked": 10
+          },
+          {
             "statistic": "Successful Headers",
             "team_output_fixtures": 8,
             "opponent_output_fixtures": 8,
@@ -340,11 +346,6 @@
           },
           {
             "provider_statistic": "Ball Safe",
-            "observations": 10,
-            "fixtures_seen": 10
-          },
-          {
-            "provider_statistic": "Big Chances Created",
             "observations": 10,
             "fixtures_seen": 10
           },
@@ -549,7 +550,7 @@
         "core_metrics_complete": 8,
         "core_metrics_total": 8,
         "raw_observations_seen": 416,
-        "unmapped_observations": 269,
+        "unmapped_observations": 260,
         "mapping_visibility": "available",
         "metrics": [
           {
@@ -630,6 +631,12 @@
             "statistic": "Counter Attacks",
             "team_output_fixtures": 0,
             "opponent_output_fixtures": 0,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Big Chances Created",
+            "team_output_fixtures": 9,
+            "opponent_output_fixtures": 9,
             "fixtures_checked": 10
           },
           {
@@ -770,11 +777,6 @@
             "fixtures_seen": 10
           },
           {
-            "provider_statistic": "Big Chances Created",
-            "observations": 9,
-            "fixtures_seen": 9
-          },
-          {
             "provider_statistic": "Big Chances Missed",
             "observations": 9,
             "fixtures_seen": 9
@@ -891,7 +893,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "93",
+            "requests_remaining": "90",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -909,7 +911,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "92",
+            "requests_remaining": "89",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -927,7 +929,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "91",
+            "requests_remaining": "88",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -1842,9 +1844,9 @@
         "sportmonks_request_metadata": {
           "request_path": "fixtures/between/2026-09-13/2026-09-13",
           "http_status": 200,
-          "request_seconds": 0.349,
+          "request_seconds": 0.393,
           "rate_limit": "2000",
-          "rate_remaining": "1975"
+          "rate_remaining": "1971"
         }
       },
       {
@@ -2381,9 +2383,9 @@
         "sportmonks_request_metadata": {
           "request_path": "fixtures/between/2026-09-05/2026-09-05",
           "http_status": 200,
-          "request_seconds": 0.657,
+          "request_seconds": 0.661,
           "rate_limit": "2000",
-          "rate_remaining": "1974"
+          "rate_remaining": "1970"
         }
       },
       {
@@ -2768,9 +2770,9 @@
         "sportmonks_request_metadata": {
           "request_path": "fixtures/between/2026-10-24/2026-10-24",
           "http_status": 200,
-          "request_seconds": 0.607,
+          "request_seconds": 0.565,
           "rate_limit": "2000",
-          "rate_remaining": "1973"
+          "rate_remaining": "1969"
         }
       },
       {
@@ -3119,9 +3121,9 @@
         "sportmonks_request_metadata": {
           "request_path": "fixtures/between/2026-10-10/2026-10-10",
           "http_status": 200,
-          "request_seconds": 0.622,
+          "request_seconds": 0.643,
           "rate_limit": "2000",
-          "rate_remaining": "1972"
+          "rate_remaining": "1968"
         }
       }
     ],
@@ -3258,6 +3260,6 @@
     "weights_total": 1.0,
     "model_impact": "Diagnostics only; weights, recency weighting, prediction inputs and missing-data rules are not changed."
   },
-  "generated_at_utc": "2026-11-09T01:36:59.239737+00:00",
+  "generated_at_utc": "2026-11-09T01:50:22.349541+00:00",
   "report_name": "system_diagnostics"
 }
