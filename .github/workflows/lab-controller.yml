@@ -524,7 +524,7 @@ jobs:
           payload = json.dumps({"body": body}).encode("utf-8")
           if latest_comments:
               latest_comment = max(latest_comments, key=lambda comment: comment["id"])
-              target = f"{api}/{latest_comment['id']}"
+              target = f"https://api.github.com/repos/{os.environ['REPOSITORY']}/issues/comments/{latest_comment['id']}"
               method = "PATCH"
               action = f"Updated latest report comment #{latest_comment['id']}"
           else:
