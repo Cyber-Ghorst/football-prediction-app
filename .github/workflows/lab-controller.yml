@@ -33,6 +33,7 @@ jobs:
         if: inputs.operation == 'health_check'
         env:
           APP_URL: https://football-prediction-app-evzek8cthsuavun8hanejj.streamlit.app/
+          HEALTH_URL: https://football-prediction-app-evzek8cthsuavun8hanejj.streamlit.app/_stcore/health
         run: |
           set -o pipefail
           python - <<'PY' | tee controller-report.txt
@@ -43,20 +44,35 @@ jobs:
           import urllib.request
           from datetime import datetime, timezone
 
-          url = os.environ["APP_URL"]
+          url = os.environ["HEALTH_URL"]
           report = {
               "operation": "health_check",
               "checked_at_utc": datetime.now(timezone.utc).isoformat(),
-              "url": url,
+              "app_url": os.environ["APP_URL"],
+              "probe_url": url,
+              "probe_type": "streamlit_health_endpoint",
           }
+
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self, req, fp, code, msg, headers, newurl):
+                  return None
+
+          opener = urllib.request.build_opener(NoRedirect)
           try:
               request = urllib.request.Request(
                   url,
                   headers={"User-Agent": "Prediction-Lab-Controller/1.0"},
               )
-              with urllib.request.urlopen(request, timeout=25) as response:
+              with opener.open(request, timeout=25) as response:
+                  body = response.read(512).decode("utf-8", errors="replace").strip()
                   report["http_status"] = response.status
-                  report["healthy"] = 200 <= response.status < 400
+                  report["response_body"] = body
+                  report["healthy"] = response.status == 200 and body.lower() == "ok"
+          except urllib.error.HTTPError as exc:
+              report["http_status"] = exc.code
+              report["redirect_location"] = exc.headers.get("Location")
+              report["healthy"] = False
+              report["error"] = f"HTTPError: {exc}"
           except Exception as exc:
               report["healthy"] = False
               report["error"] = f"{type(exc).__name__}: {exc}"
