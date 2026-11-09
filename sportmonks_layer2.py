@@ -477,10 +477,13 @@ def extract_sportmonks_match_details(
     home_team_id: int,
     away_team_id: int,
     season_id: int,
+    expected_fixture_id: int | str | None = None,
 ) -> dict[str, Any]:
     """Extract fixture-specific lineups and sidelined reports without inventing availability."""
     if int(fixture.get("season_id", -1)) != int(season_id):
         raise ValueError("Sportmonks match detail season does not match the selected season.")
+    if expected_fixture_id is not None and str(fixture.get("id")) != str(expected_fixture_id):
+        raise ValueError("Sportmonks match detail fixture ID does not match the selected fixture.")
     home, away = _participants(fixture)
     if not home or not away:
         raise ValueError("Sportmonks match detail is missing home/away participants.")
@@ -533,6 +536,7 @@ def extract_sportmonks_match_details(
             "player_id": row.get("player_id") or player.get("id"),
             "player_name": player.get("name") or row.get("player_name"),
             "team_id": participant_id,
+            "season_id": row.get("season_id") or fixture.get("season_id"),
             "category": sideline.get("category") or row.get("category"),
             "reason": sidelined_type.get("name") if isinstance(sidelined_type, dict) else str(sidelined_type or ""),
             "start_date": sideline.get("start_date") or row.get("start_date"),
