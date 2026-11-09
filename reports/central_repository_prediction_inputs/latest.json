@@ -1,16 +1,16 @@
 {
-  "generated_at": "2026-11-09T15:14:16.428484+00:00",
+  "generated_at": "2026-11-09T15:18:53.444852+00:00",
   "season_id": 28083,
-  "home_team": "Aston Villa",
-  "away_team": "Sunderland",
+  "home_team": "AFC Bournemouth",
+  "away_team": "Nottingham Forest",
   "profiles": {
-    "Aston Villa": {
+    "AFC Bournemouth": {
       "source": "cockroachdb_central_repository",
       "completed_matches": 10,
       "repository_fixture_rows": 380,
       "fallback_used": false
     },
-    "Sunderland": {
+    "Nottingham Forest": {
       "source": "cockroachdb_central_repository",
       "completed_matches": 10,
       "repository_fixture_rows": 380,
@@ -19,6 +19,6 @@
   },
   "prediction_engine_modified": false,
   "neon_prediction_ledger_modified": false,
-  "generated_at_utc": "2026-11-09T15:14:22.125304+00:00",
+  "generated_at_utc": "2026-11-09T15:18:59.076010+00:00",
   "report_name": "central_repository_prediction_inputs"
 }
