@@ -653,8 +653,10 @@ if verify_repository_reads:
                     sample_history = get_repository_team_history(
                         PROVIDER_DATABASE_URL, repository_teams[0]["team_id"], limit=10
                     )
+            repository_record_counts = repository_table_counts(PROVIDER_DATABASE_URL)
             repository_verification_report = {
                 "verification_status": "success",
+                "table_record_counts": repository_record_counts,
                 "read_counts": {
                     "leagues": len(repository_leagues),
                     "seasons": len(repository_seasons),
