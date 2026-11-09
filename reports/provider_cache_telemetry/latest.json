@@ -1,44 +1,53 @@
 {
-  "event_count": 4,
+  "event_count": 5,
   "events": [
     {
-      "timestamp_utc": "2026-11-09T10:16:38.225465+00:00",
+      "timestamp_utc": "2026-11-09T10:27:24.138364+00:00",
       "provider": "sportmonks",
-      "resource_type": "standings",
-      "outcome": "cache_miss",
-      "lookup_duration_ms": 2394,
-      "archive_status": "live_fetch_required"
+      "resource_type": "leagues",
+      "outcome": "cache_hit",
+      "lookup_duration_ms": 2665,
+      "row_count": 5,
+      "archive_status": "served"
     },
     {
-      "timestamp_utc": "2026-11-09T10:16:43.288677+00:00",
+      "timestamp_utc": "2026-11-09T10:27:26.318092+00:00",
       "provider": "sportmonks",
-      "resource_type": "standings",
-      "outcome": "cache_miss_then_archived",
-      "lookup_duration_ms": 2394,
-      "live_fetch_duration_ms": 698,
+      "resource_type": "seasons",
+      "outcome": "cache_hit",
+      "lookup_duration_ms": 2179,
+      "row_count": 15,
+      "archive_status": "served"
+    },
+    {
+      "timestamp_utc": "2026-11-09T10:27:28.521049+00:00",
+      "provider": "sportmonks",
+      "resource_type": "teams",
+      "outcome": "cache_hit",
+      "lookup_duration_ms": 2201,
       "row_count": 20,
-      "archive_status": "saved"
+      "archive_status": "served"
     },
     {
-      "timestamp_utc": "2026-11-09T10:16:49.839172+00:00",
+      "timestamp_utc": "2026-11-09T10:27:43.194104+00:00",
       "provider": "sportmonks",
-      "resource_type": "fixtures",
-      "outcome": "cache_miss",
-      "lookup_duration_ms": 2160,
-      "archive_status": "live_fetch_required"
+      "resource_type": "standings",
+      "outcome": "cache_hit",
+      "lookup_duration_ms": 2154,
+      "row_count": 20,
+      "archive_status": "served"
     },
     {
-      "timestamp_utc": "2026-11-09T10:16:58.813116+00:00",
+      "timestamp_utc": "2026-11-09T10:27:46.587660+00:00",
       "provider": "sportmonks",
       "resource_type": "fixtures",
-      "outcome": "cache_miss_then_archived",
-      "lookup_duration_ms": 2160,
-      "live_fetch_duration_ms": 3222,
+      "outcome": "cache_hit",
+      "lookup_duration_ms": 3393,
       "row_count": 380,
-      "archive_status": "saved"
+      "archive_status": "served"
     }
   ],
   "privacy_note": "Only provider/resource names, outcomes, timestamps, durations, row counts and error types. No cache keys, request parameters, payloads, team names, credentials or prediction data.",
-  "generated_at_utc": "2026-11-09T10:17:17.995572+00:00",
+  "generated_at_utc": "2026-11-09T10:28:00.770601+00:00",
   "report_name": "provider_cache_telemetry"
 }
