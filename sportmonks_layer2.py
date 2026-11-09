@@ -258,7 +258,7 @@ def collect_sportmonks_team_profile(
         fixture_statistics_indexes = {
             id(fixture): _fixture_statistics_index(fixture) for fixture in fixtures
         }
-    matches: list[dict[str, Any]] =
+    matches: list[dict[str, Any]] = []
     history_diagnostics = {
         "fixtures_scanned": len(fixtures),
         "same_season_fixtures": 0,
