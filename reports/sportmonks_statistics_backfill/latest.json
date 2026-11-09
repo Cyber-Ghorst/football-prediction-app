@@ -3,186 +3,186 @@
   "season_id": "sportmonks:27965",
   "provider_results": [
     {
-      "fixture_id": "sportmonks:19732658",
-      "home_team": "Getafe",
-      "away_team": "Rayo Vallecano",
-      "statistics_returned": 88,
-      "status": "ready_to_store"
-    },
-    {
-      "fixture_id": "sportmonks:19732655",
-      "home_team": "Real Madrid",
-      "away_team": "Sevilla",
-      "statistics_returned": 84,
-      "status": "ready_to_store"
-    },
-    {
-      "fixture_id": "sportmonks:19732657",
-      "home_team": "Málaga",
-      "away_team": "Real Sociedad",
-      "statistics_returned": 84,
-      "status": "ready_to_store"
-    },
-    {
-      "fixture_id": "sportmonks:19732661",
+      "fixture_id": "sportmonks:19732680",
       "home_team": "Celta de Vigo",
-      "away_team": "Deportivo Alavés",
-      "statistics_returned": 82,
-      "status": "ready_to_store"
-    },
-    {
-      "fixture_id": "sportmonks:19732656",
-      "home_team": "Osasuna",
       "away_team": "Racing Santander",
-      "statistics_returned": 84,
-      "status": "ready_to_store"
-    },
-    {
-      "fixture_id": "sportmonks:19732654",
-      "home_team": "Valencia",
-      "away_team": "Athletic Club",
-      "statistics_returned": 78,
-      "status": "ready_to_store"
-    },
-    {
-      "fixture_id": "sportmonks:19732662",
-      "home_team": "Real Betis",
-      "away_team": "FC Barcelona",
-      "statistics_returned": 86,
-      "status": "ready_to_store"
-    },
-    {
-      "fixture_id": "sportmonks:19732653",
-      "home_team": "Villarreal",
-      "away_team": "Elche",
-      "statistics_returned": 78,
-      "status": "ready_to_store"
-    },
-    {
-      "fixture_id": "sportmonks:19732659",
-      "home_team": "Espanyol",
-      "away_team": "Atlético de Madrid",
-      "statistics_returned": 84,
-      "status": "ready_to_store"
-    },
-    {
-      "fixture_id": "sportmonks:19732660",
-      "home_team": "Deportivo A Coruña",
-      "away_team": "Levante",
-      "statistics_returned": 84,
-      "status": "ready_to_store"
-    },
-    {
-      "fixture_id": "sportmonks:19732668",
-      "home_team": "Levante",
-      "away_team": "Sevilla",
-      "statistics_returned": 90,
-      "status": "ready_to_store"
-    },
-    {
-      "fixture_id": "sportmonks:19732666",
-      "home_team": "Racing Santander",
-      "away_team": "Valencia",
       "statistics_returned": 82,
       "status": "ready_to_store"
     },
     {
-      "fixture_id": "sportmonks:19732671",
-      "home_team": "Real Betis",
-      "away_team": "Osasuna",
-      "statistics_returned": 82,
-      "status": "ready_to_store"
-    },
-    {
-      "fixture_id": "sportmonks:19732663",
-      "home_team": "Real Sociedad",
-      "away_team": "Deportivo A Coruña",
-      "statistics_returned": 86,
-      "status": "ready_to_store"
-    },
-    {
-      "fixture_id": "sportmonks:19732670",
-      "home_team": "Elche",
-      "away_team": "Celta de Vigo",
+      "fixture_id": "sportmonks:19732682",
+      "home_team": "Athletic Club",
+      "away_team": "Deportivo Alavés",
       "statistics_returned": 80,
       "status": "ready_to_store"
     },
     {
-      "fixture_id": "sportmonks:19732664",
-      "home_team": "Real Madrid",
-      "away_team": "Villarreal",
+      "fixture_id": "sportmonks:19732676",
+      "home_team": "Osasuna",
+      "away_team": "Rayo Vallecano",
+      "statistics_returned": 78,
+      "status": "ready_to_store"
+    },
+    {
+      "fixture_id": "sportmonks:19732678",
+      "home_team": "Espanyol",
+      "away_team": "Elche",
       "statistics_returned": 86,
       "status": "ready_to_store"
     },
     {
-      "fixture_id": "sportmonks:19732669",
-      "home_team": "FC Barcelona",
+      "fixture_id": "sportmonks:19732685",
+      "home_team": "Málaga",
+      "away_team": "Villarreal",
+      "statistics_returned": 84,
+      "status": "ready_to_store"
+    },
+    {
+      "fixture_id": "sportmonks:19732690",
+      "home_team": "Real Betis",
       "away_team": "Getafe",
+      "statistics_returned": 88,
+      "status": "ready_to_store"
+    },
+    {
+      "fixture_id": "sportmonks:19732687",
+      "home_team": "FC Barcelona",
+      "away_team": "Racing Santander",
+      "statistics_returned": 86,
+      "status": "ready_to_store"
+    },
+    {
+      "fixture_id": "sportmonks:19732689",
+      "home_team": "Deportivo A Coruña",
+      "away_team": "Sevilla",
+      "statistics_returned": 78,
+      "status": "ready_to_store"
+    },
+    {
+      "fixture_id": "sportmonks:19732691",
+      "home_team": "Atlético de Madrid",
+      "away_team": "Osasuna",
+      "statistics_returned": 84,
+      "status": "ready_to_store"
+    },
+    {
+      "fixture_id": "sportmonks:19732688",
+      "home_team": "Elche",
+      "away_team": "Real Madrid",
       "statistics_returned": 82,
       "status": "ready_to_store"
     },
     {
-      "fixture_id": "sportmonks:19732672",
+      "fixture_id": "sportmonks:19732692",
       "home_team": "Deportivo Alavés",
-      "away_team": "Atlético de Madrid",
-      "statistics_returned": 86,
+      "away_team": "Valencia",
+      "statistics_returned": 80,
       "status": "ready_to_store"
     },
     {
-      "fixture_id": "sportmonks:19732667",
-      "home_team": "Málaga",
+      "fixture_id": "sportmonks:19732684",
+      "home_team": "Rayo Vallecano",
       "away_team": "Espanyol",
       "statistics_returned": 84,
       "status": "ready_to_store"
     },
     {
-      "fixture_id": "sportmonks:19732674",
-      "home_team": "Valencia",
-      "away_team": "Real Sociedad",
-      "statistics_returned": 86,
-      "status": "ready_to_store"
-    },
-    {
-      "fixture_id": "sportmonks:19732673",
+      "fixture_id": "sportmonks:19732693",
       "home_team": "Villarreal",
-      "away_team": "Levante",
-      "statistics_returned": 80,
+      "away_team": "Real Betis",
+      "statistics_returned": 84,
       "status": "ready_to_store"
     },
     {
-      "fixture_id": "sportmonks:19732679",
-      "home_team": "Deportivo A Coruña",
-      "away_team": "Real Betis",
+      "fixture_id": "sportmonks:19732695",
+      "home_team": "Real Sociedad",
+      "away_team": "Atlético de Madrid",
       "statistics_returned": 82,
       "status": "ready_to_store"
     },
     {
-      "fixture_id": "sportmonks:19732681",
-      "home_team": "Atlético de Madrid",
-      "away_team": "Real Madrid",
+      "fixture_id": "sportmonks:19732700",
+      "home_team": "Getafe",
+      "away_team": "Deportivo A Coruña",
       "statistics_returned": 84,
       "status": "ready_to_store"
     },
     {
-      "fixture_id": "sportmonks:19732677",
-      "home_team": "Getafe",
+      "fixture_id": "sportmonks:19732699",
+      "home_team": "Levante",
+      "away_team": "FC Barcelona",
+      "statistics_returned": 82,
+      "status": "ready_to_store"
+    },
+    {
+      "fixture_id": "sportmonks:19732701",
+      "home_team": "Celta de Vigo",
       "away_team": "Málaga",
+      "statistics_returned": 80,
+      "status": "ready_to_store"
+    },
+    {
+      "fixture_id": "sportmonks:19732696",
+      "home_team": "Real Madrid",
+      "away_team": "Rayo Vallecano",
+      "statistics_returned": 86,
+      "status": "ready_to_store"
+    },
+    {
+      "fixture_id": "sportmonks:19732702",
+      "home_team": "Athletic Club",
+      "away_team": "Elche",
+      "statistics_returned": 84,
+      "status": "ready_to_store"
+    },
+    {
+      "fixture_id": "sportmonks:19732698",
+      "home_team": "Osasuna",
+      "away_team": "Espanyol",
       "statistics_returned": 78,
       "status": "ready_to_store"
     },
     {
-      "fixture_id": "sportmonks:19732675",
-      "home_team": "Sevilla",
-      "away_team": "FC Barcelona",
+      "fixture_id": "sportmonks:19732697",
+      "home_team": "Racing Santander",
+      "away_team": "Deportivo Alavés",
       "statistics_returned": 84,
+      "status": "ready_to_store"
+    },
+    {
+      "fixture_id": "sportmonks:19732694",
+      "home_team": "Sevilla",
+      "away_team": "Valencia",
+      "statistics_returned": 82,
+      "status": "ready_to_store"
+    },
+    {
+      "fixture_id": "sportmonks:19732709",
+      "home_team": "Elche",
+      "away_team": "Real Sociedad",
+      "statistics_returned": 84,
+      "status": "ready_to_store"
+    },
+    {
+      "fixture_id": "sportmonks:19732707",
+      "home_team": "Getafe",
+      "away_team": "Celta de Vigo",
+      "statistics_returned": 88,
+      "status": "ready_to_store"
+    },
+    {
+      "fixture_id": "sportmonks:19732708",
+      "home_team": "Espanyol",
+      "away_team": "Sevilla",
+      "statistics_returned": 86,
       "status": "ready_to_store"
     }
   ],
   "storage_result": {
     "fixtures_received": 25,
     "fixtures_with_statistics": 25,
-    "statistics_rows_prepared": 2084,
-    "statistics_rows_written": 2084,
+    "statistics_rows_prepared": 2076,
+    "statistics_rows_written": 2076,
     "skipped": [],
     "prediction_engine_modified": false,
     "neon_prediction_ledger_modified": false
@@ -191,11 +191,11 @@
     "diagnostic_status": "success",
     "summary": {
       "total_fixtures": 760,
-      "fixtures_with_normalized_statistics": 155,
-      "fixtures_without_normalized_statistics": 605,
+      "fixtures_with_normalized_statistics": 180,
+      "fixtures_without_normalized_statistics": 580,
       "completed_scored_fixtures": 218,
-      "completed_scored_with_statistics": 155,
-      "completed_scored_missing_statistics": 63,
+      "completed_scored_with_statistics": 180,
+      "completed_scored_missing_statistics": 38,
       "past_unverified_or_unscored_fixtures": 1,
       "future_or_upcoming_fixtures": 541,
       "unknown_kickoff_fixtures": 0,
@@ -209,8 +209,8 @@
         "status": "5",
         "fixture_cohort": "completed_scored",
         "fixture_count": 118,
-        "fixtures_with_statistics": 55,
-        "fixtures_without_statistics": 63,
+        "fixtures_with_statistics": 80,
+        "fixtures_without_statistics": 38,
         "provider_statistics_field_absent": 118,
         "provider_returned_empty_statistics": 0,
         "provider_statistics_present_but_not_normalized": 0
@@ -1898,6 +1898,6 @@
   "neon_prediction_ledger_modified": false,
   "prediction_engine_modified": false,
   "note": "Only provider-returned fixture statistics were inserted/upserted. Re-running the action selects the next fixtures that still have no statistic rows. Existing fixture scores, identities, prediction outputs and Neon ledger were not changed.",
-  "generated_at_utc": "2026-11-09T04:46:52.979455+00:00",
+  "generated_at_utc": "2026-11-09T04:50:28.486312+00:00",
   "report_name": "sportmonks_statistics_backfill"
 }
