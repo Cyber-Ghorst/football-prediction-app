@@ -200,6 +200,31 @@ class PlayerAvailabilityTests(unittest.TestCase):
         )
         self.assertIsNone(assess_player_availability(evidence)["score"])
 
+    def test_sidelined_fixture_and_season_mismatch_keep_score_unknown(self):
+        from player_availability import build_sportmonks_availability_evidence
+
+        squad = [{
+            "id": 1, "in_squad": True,
+            "statistics": [{"player_id": 1, "team_id": 10, "season_id": 2026,
+                "details": [{"type_id": 119, "value": {"total": 900}}]}],
+        }]
+        for mismatch in (
+            {"fixture_id": 999, "season_id": 2026},
+            {"fixture_id": 123, "season_id": 2025},
+        ):
+            sidelined = {
+                "player_id": 1, "team_id": 10, "completed": False,
+                "start_date": "2026-11-01", "end_date": None,
+                **mismatch,
+            }
+            evidence = build_sportmonks_availability_evidence(
+                squad_rows=squad, sidelined_rows=[sidelined],
+                sidelined_feed_available=True, team_id=10, season_id=2026,
+                fixture_id=123, kickoff="2026-11-23",
+            )
+            self.assertIsNone(assess_player_availability(evidence)["score"])
+
+
 
 if __name__ == "__main__":
     unittest.main()
