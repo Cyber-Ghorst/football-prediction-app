@@ -1,5 +1,7 @@
 """Canonical football data repository schema for CockroachDB.
 
+Includes read-only fixture-statistics coverage and sampling diagnostics.
+
 This module is intentionally isolated from the prediction engine and Neon
 prediction ledger. Provider snapshots remain the immutable raw archive;
 these tables hold normalized, queryable football entities.
