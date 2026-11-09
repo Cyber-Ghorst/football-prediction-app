@@ -314,12 +314,13 @@ class SportmonksClient:
                     )
                     raise
                 detail_rows = self._rows(details_payload)
+                metadata = dict(getattr(self, "last_metadata", {}) or {})
                 print(
                     f"[Sportmonks] Season {season_id}: completed detail batch "
-                    f"{batch_number}/{batch_total}; HTTP {self.last_metadata.get('http_status')}; "
+                    f"{batch_number}/{batch_total}; HTTP {metadata.get('http_status')}; "
                     f"{len(detail_rows)} detail rows; "
-                    f"{self.last_metadata.get('request_seconds', 'unknown')}s; "
-                    f"rate remaining={self.last_metadata.get('rate_remaining')}.",
+                    f"{metadata.get('request_seconds', 'unknown')}s; "
+                    f"rate remaining={metadata.get('rate_remaining')}.",
                     flush=True,
                 )
                 for row in detail_rows:
