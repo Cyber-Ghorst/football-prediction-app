@@ -434,6 +434,35 @@ class ProviderCorroborationTests(unittest.TestCase):
         )
 
 
+    def test_highlightly_rejects_pages_returned_for_the_wrong_offset(self):
+        rows = []
+        for index in range(101):
+            row = highlightly_match()
+            row["id"] = 20000 + index
+            row["homeTeam"] = {"id": 3000 + index, "name": f"Home Club {index}"}
+            row["awayTeam"] = {"id": 4000 + index, "name": f"Away Club {index}"}
+            rows.append(row)
+
+        class WrongOffsetClient(FakePagedHighlightly):
+            def matches(self, **params):
+                page = super().matches(**params)
+                if int(params.get("offset", 0)) == 100:
+                    self.last_metadata["pagination"]["offset"] = 0
+                return page
+
+        report = collect_recent_result_corroboration(
+            sportmonks_fixtures=[sportmonks_fixture()],
+            competition="Premier League", country="England", season=2026,
+            home_team_name="Arsenal", away_team_name="Chelsea",
+            highlightly_client=FakePagedHighlightly(rows),
+            highlightly_client_factory=lambda: WrongOffsetClient(rows),
+            now=NOW,
+        )
+
+        self.assertIn("offset 0 for requested offset 100", report["errors"]["highlightly"])
+        self.assertNotIn("highlightly", report["provider_records_returned"])
+
+
 
 if __name__ == "__main__":
     unittest.main()
