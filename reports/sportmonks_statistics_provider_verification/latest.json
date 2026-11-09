@@ -1,0 +1,89 @@
+{
+  "season_id": "sportmonks:27965",
+  "selected_fixture_count": 5,
+  "verified_fixture_count": 5,
+  "results": [
+    {
+      "fixture_id": "sportmonks:19732623",
+      "starting_at": "2026-11-08 17:30:00+00:00",
+      "home_team": "Villarreal",
+      "away_team": "Getafe",
+      "stored_score": {
+        "home": 2,
+        "away": 0
+      },
+      "provider_fixture_found": true,
+      "provider_statistics_field_present": true,
+      "provider_statistics_count": 82,
+      "provider_statistics_nonempty": true,
+      "provider_error": null
+    },
+    {
+      "fixture_id": "sportmonks:19732631",
+      "starting_at": "2026-11-08 17:30:00+00:00",
+      "home_team": "Celta de Vigo",
+      "away_team": "Levante",
+      "stored_score": {
+        "home": 0,
+        "away": 0
+      },
+      "provider_fixture_found": true,
+      "provider_statistics_field_present": true,
+      "provider_statistics_count": 80,
+      "provider_statistics_nonempty": true,
+      "provider_error": null
+    },
+    {
+      "fixture_id": "sportmonks:19732626",
+      "starting_at": "2026-11-08 15:15:00+00:00",
+      "home_team": "Real Sociedad",
+      "away_team": "Rayo Vallecano",
+      "stored_score": {
+        "home": 1,
+        "away": 0
+      },
+      "provider_fixture_found": true,
+      "provider_statistics_field_present": true,
+      "provider_statistics_count": 86,
+      "provider_statistics_nonempty": true,
+      "provider_error": null
+    },
+    {
+      "fixture_id": "sportmonks:19732630",
+      "starting_at": "2026-11-08 13:00:00+00:00",
+      "home_team": "Elche",
+      "away_team": "Real Betis",
+      "stored_score": {
+        "home": 0,
+        "away": 2
+      },
+      "provider_fixture_found": true,
+      "provider_statistics_field_present": true,
+      "provider_statistics_count": 84,
+      "provider_statistics_nonempty": true,
+      "provider_error": null
+    },
+    {
+      "fixture_id": "sportmonks:19732624",
+      "starting_at": "2026-11-07 20:00:00+00:00",
+      "home_team": "Valencia",
+      "away_team": "Real Madrid",
+      "stored_score": {
+        "home": 0,
+        "away": 3
+      },
+      "provider_fixture_found": true,
+      "provider_statistics_field_present": true,
+      "provider_statistics_count": 84,
+      "provider_statistics_nonempty": true,
+      "provider_error": null
+    }
+  ],
+  "read_only": true,
+  "cockroachdb_modified": false,
+  "neon_prediction_ledger_modified": false,
+  "prediction_engine_modified": false,
+  "interpretation": "A non-empty provider statistics array confirms the provider currently returns statistics for that fixture; an empty or absent field is not evidence that no statistics exist for the whole season.",
+  "generated_at_utc": "2026-11-09T04:27:46.745962+00:00",
+  "report_name": "sportmonks_statistics_provider_verification"
+}
