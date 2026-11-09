@@ -133,6 +133,7 @@ def resolve_candidate_team_id(
         "coventry": {"coventry city"},
         "ipswich": {"ipswich town"},
         "brighton": {"brighton hove albion"},
+        "bournemouth": {"afc bournemouth"},
         "leeds": {"leeds united"},
     }
     accepted_names = {target} | explicit_aliases.get(target, set()) if target else set()
