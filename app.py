@@ -1827,6 +1827,22 @@ try:
             st.caption("The 5% player-availability component is used only when a complete squad roster, known player statuses and evidenced importance weights are supplied. Partial sidelined lists and unconfirmed lineups remain unknown.")
         if tvd_result:
             st.subheader("Tactical Vulnerability Detector")
+            st.caption(
+                "Mode: "
+                + ("Automatic statistical evidence" if automatic_tvd else "Manual evidence")
+                + ". Scores are matchup diagnostics, not win probabilities."
+            )
+            if automatic_tvd:
+                for direction_name, direction in (
+                    (f"{home_name} attacks {away_name}", tvd_result["team_a_attacks_b"]),
+                    (f"{away_name} attacks {home_name}", tvd_result["team_b_attacks_a"]),
+                ):
+                    if direction["data_coverage"] < minimum_automatic_tvd_coverage:
+                        st.warning(
+                            f"{direction_name}: evidence coverage is "
+                            f"{direction['data_coverage']:.1f}%; this direction was not "
+                            "included in the prediction's tactical-compatibility input."
+                        )
             st.json(tvd_result)
         st.caption(f"Model weights: {WEIGHTS}. Latest five matches carry 60% of recent-history weight; previous five carry 40%.")
 
