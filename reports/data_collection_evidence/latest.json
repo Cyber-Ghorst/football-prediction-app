@@ -1682,7 +1682,7 @@
   "player_enrichment": null,
   "system_diagnostics": {
     "diagnostic_version": 1,
-    "generated_at": "2026-11-09T10:17:20.896454+00:00",
+    "generated_at": "2026-11-09T10:18:36.048328+00:00",
     "overall_status": "attention_required",
     "selected_context": {
       "season_start_year": 2026,
@@ -2599,6 +2599,6 @@
       "model_impact": "Diagnostics only; weights, recency weighting, prediction inputs and missing-data rules are not changed."
     }
   },
-  "generated_at_utc": "2026-11-09T10:17:20.898961+00:00",
+  "generated_at_utc": "2026-11-09T10:18:36.050194+00:00",
   "report_name": "data_collection_evidence"
 }
