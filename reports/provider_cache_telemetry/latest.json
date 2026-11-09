@@ -1,26 +1,44 @@
 {
-  "event_count": 2,
+  "event_count": 4,
   "events": [
     {
-      "timestamp_utc": "2026-11-09T10:45:22.154335+00:00",
+      "timestamp_utc": "2026-11-09T11:17:06.373669+00:00",
       "provider": "sportmonks",
-      "resource_type": "fixtures",
+      "resource_type": "standings",
       "outcome": "cache_miss",
-      "lookup_duration_ms": 2250,
+      "lookup_duration_ms": 2690,
       "archive_status": "live_fetch_required"
     },
     {
-      "timestamp_utc": "2026-11-09T10:45:31.433767+00:00",
+      "timestamp_utc": "2026-11-09T11:17:11.532726+00:00",
+      "provider": "sportmonks",
+      "resource_type": "standings",
+      "outcome": "cache_miss_then_archived",
+      "lookup_duration_ms": 2690,
+      "live_fetch_duration_ms": 790,
+      "row_count": 20,
+      "archive_status": "saved"
+    },
+    {
+      "timestamp_utc": "2026-11-09T11:17:18.151081+00:00",
+      "provider": "sportmonks",
+      "resource_type": "fixtures",
+      "outcome": "cache_miss",
+      "lookup_duration_ms": 2245,
+      "archive_status": "live_fetch_required"
+    },
+    {
+      "timestamp_utc": "2026-11-09T11:17:27.417920+00:00",
       "provider": "sportmonks",
       "resource_type": "fixtures",
       "outcome": "cache_miss_then_archived",
-      "lookup_duration_ms": 2250,
-      "live_fetch_duration_ms": 3275,
+      "lookup_duration_ms": 2245,
+      "live_fetch_duration_ms": 3229,
       "row_count": 380,
       "archive_status": "saved"
     }
   ],
   "privacy_note": "Only provider/resource names, outcomes, timestamps, durations, row counts and error types. No cache keys, request parameters, payloads, team names, credentials or prediction data.",
-  "generated_at_utc": "2026-11-09T10:45:38.473633+00:00",
+  "generated_at_utc": "2026-11-09T11:17:46.440729+00:00",
   "report_name": "provider_cache_telemetry"
 }
