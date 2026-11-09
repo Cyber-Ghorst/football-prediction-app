@@ -51,7 +51,40 @@ def _fixture_identity_status(
     away_team_id: int,
     season_id: int | None,
     now: datetime,
+    exact_pairing_fixture: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
+    if not fixture and exact_pairing_fixture:
+        try:
+            fallback_season = int(exact_pairing_fixture.get("season_id"))
+            fallback_season_matches = season_id is not None and fallback_season == int(season_id)
+        except (TypeError, ValueError):
+            fallback_season_matches = False
+        fallback_home, fallback_away = _fixture_participants(exact_pairing_fixture)
+        try:
+            fallback_teams_match = (
+                fallback_home is not None and fallback_away is not None
+                and int(fallback_home.get("id")) == int(home_team_id)
+                and int(fallback_away.get("id")) == int(away_team_id)
+            )
+        except (TypeError, ValueError):
+            fallback_teams_match = False
+        fallback_kickoff = _utc_datetime(exact_pairing_fixture.get("starting_at_timestamp"))
+        if fallback_kickoff is None:
+            fallback_kickoff = _utc_datetime(exact_pairing_fixture.get("starting_at"))
+        if fallback_season_matches and fallback_teams_match and fallback_kickoff and fallback_kickoff <= now:
+            return {
+                "verified": False,
+                "status": "past_fixture",
+                "reason": "The exact home/away pairing exists in the selected season, but its kickoff has already passed. Select a future fixture; this past match cannot verify an upcoming prediction.",
+                "fixture_id": exact_pairing_fixture.get("id"),
+                "kickoff_utc": fallback_kickoff.isoformat(),
+                "source_updated_at": exact_pairing_fixture.get("updated_at") or exact_pairing_fixture.get("updatedAt"),
+                "source_fetched_at": None,
+                "source_age_seconds": None,
+                "source_age_minutes": None,
+                "source_freshness": "unknown",
+                "freshness_note": "No successful detailed-fixture retrieval timestamp is attached to this past fixture.",
+            }
     if not fixture:
         return {
             "verified": False,
@@ -181,6 +214,7 @@ def build_prediction_readiness(
     away_team_id: int,
     season_id: int | None,
     now: datetime | None = None,
+    exact_pairing_fixture: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Return a diagnostic readiness report without changing model inputs."""
     current = now or datetime.now(timezone.utc)
@@ -191,6 +225,7 @@ def build_prediction_readiness(
         away_team_id=away_team_id,
         season_id=season_id,
         now=current,
+        exact_pairing_fixture=exact_pairing_fixture,
     )
     teams = {
         "home": _team_readiness(home_profile),
