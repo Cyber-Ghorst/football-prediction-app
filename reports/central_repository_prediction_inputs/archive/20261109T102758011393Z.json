@@ -1,0 +1,24 @@
+{
+  "generated_at": "2026-11-09T10:27:46.592621+00:00",
+  "season_id": 28083,
+  "home_team": "Brighton & Hove Albion",
+  "away_team": "Fulham",
+  "profiles": {
+    "Brighton & Hove Albion": {
+      "source": "cockroachdb_central_repository",
+      "completed_matches": 10,
+      "repository_fixture_rows": 380,
+      "fallback_used": false
+    },
+    "Fulham": {
+      "source": "cockroachdb_central_repository",
+      "completed_matches": 10,
+      "repository_fixture_rows": 380,
+      "fallback_used": false
+    }
+  },
+  "prediction_engine_modified": false,
+  "neon_prediction_ledger_modified": false,
+  "generated_at_utc": "2026-11-09T10:27:58.011393+00:00",
+  "report_name": "central_repository_prediction_inputs"
+}
