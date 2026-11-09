@@ -82,6 +82,30 @@ class FakeNinjas:
         return self.rows
 
 
+
+class FakePagedHighlightly:
+    def __init__(self, rows, requested_offsets=None):
+        self.rows = rows
+        self.requested_offsets = requested_offsets if requested_offsets is not None else []
+        self.last_metadata = {}
+
+    def matches(self, **params):
+        offset = int(params.get("offset", 0))
+        limit = int(params.get("limit", 100))
+        self.requested_offsets.append(offset)
+        self.last_metadata = {
+            "pagination": {
+                "total_count": len(self.rows),
+                "offset": offset,
+                "limit": limit,
+            }
+        }
+        return self.rows[offset:offset + limit]
+
+    def close(self):
+        return None
+
+
 class ProviderCorroborationTests(unittest.TestCase):
     def test_sportmonks_fixture_canonicalization_keeps_namespaced_ids(self):
         row = canonicalize_sportmonks_fixture(
@@ -369,6 +393,46 @@ class ProviderCorroborationTests(unittest.TestCase):
             highlightly_client=FakeHighlightly([row]), now=NOW,
         )
         self.assertEqual(report["fixtures_matched_across_sources"], 0)
+
+
+    def test_highlightly_pages_use_factory_and_preserve_offset_order(self):
+        rows = []
+        for index in range(101):
+            row = highlightly_match()
+            row["id"] = 10000 + index
+            row["date"] = f"2026-11-{(index % 27) + 1:02d}T15:00:00Z"
+            row["homeTeam"] = {"id": 1000 + index, "name": f"Home Club {index}"}
+            row["awayTeam"] = {"id": 2000 + index, "name": f"Away Club {index}"}
+            rows.append(row)
+
+        requested_offsets = []
+        first_client = FakePagedHighlightly(rows, requested_offsets)
+
+        def client_factory():
+            return FakePagedHighlightly(rows, requested_offsets)
+
+        report = collect_recent_result_corroboration(
+            sportmonks_fixtures=[sportmonks_fixture()],
+            competition="Premier League", country="England", season=2026,
+            home_team_name="Arsenal", away_team_name="Chelsea",
+            highlightly_client=first_client,
+            highlightly_client_factory=client_factory,
+            now=NOW,
+        )
+
+        diagnostics = report["highlightly_diagnostics"]
+        self.assertEqual(requested_offsets, [0, 100])
+        self.assertEqual(diagnostics["pages_requested"], 2)
+        self.assertEqual(diagnostics["raw_rows_received"], 101)
+        self.assertEqual(
+            [page["offset"] for page in diagnostics["page_metadata"]],
+            [0, 100],
+        )
+        self.assertEqual(
+            [page["rows_returned"] for page in diagnostics["page_metadata"]],
+            [100, 1],
+        )
+
 
 
 if __name__ == "__main__":
