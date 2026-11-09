@@ -114,6 +114,7 @@ try:
         get_repository_leagues, get_repository_seasons, get_repository_teams,
         get_repository_fixtures, get_repository_team_history, diagnose_repository_fixture_history,
         audit_all_repository_team_histories, audit_repository_fixture_statistics,
+        diagnose_fixture_statistics_coverage,
     )
 except Exception:
     safe_trace = _redact_runtime_trace(traceback.format_exc())
@@ -671,6 +672,10 @@ with st.sidebar:
             "Audit fixture statistics integrity", use_container_width=True,
             help="Checks all stored fixture statistics for orphan rows, participant mismatches, missing values, duplicates and coverage."
         )
+        investigate_fixture_statistics_coverage = st.button(
+            "Investigate missing fixture statistics", use_container_width=True,
+            help="Read-only breakdown of missing statistics by fixture status, season and stored Sportmonks payload."
+        )
         upload_fixture_report = st.button(
             "Generate and upload fixture diagnostic report",
             use_container_width=True,
@@ -932,6 +937,67 @@ if audit_fixture_statistics:
                 st.json(statistics_audit)
         except Exception as exc:
             st.error(f"Fixture statistics integrity audit failed ({type(exc).__name__}): {exc}")
+
+
+if investigate_fixture_statistics_coverage:
+    if not PROVIDER_DATABASE_URL:
+        st.warning("Add PROVIDER_DATABASE_URL in Streamlit Secrets before investigating fixture statistics.")
+    else:
+        try:
+            with st.spinner("Classifying fixtures and checking their stored Sportmonks statistics payloads..."):
+                coverage_diagnostic = diagnose_fixture_statistics_coverage(PROVIDER_DATABASE_URL)
+                coverage_diagnostic["generated_at_utc"] = datetime.now(timezone.utc).isoformat()
+                coverage_diagnostic["repository"] = "Cyber-Ghorst/football-prediction-app"
+                coverage_diagnostic["report_name"] = "fixture_statistics_coverage_investigation"
+            st.subheader("Fixture statistics coverage investigation")
+            st.success("Read-only coverage investigation completed.")
+            summary = coverage_diagnostic["summary"]
+            st.write(
+                f"Total fixtures: {summary.get('total_fixtures', 0)} · "
+                f"Completed scored missing statistics: "
+                f"{summary.get('completed_scored_missing_statistics', 0)} · "
+                f"Upcoming fixtures: {summary.get('future_or_upcoming_fixtures', 0)}"
+            )
+            st.dataframe([
+                {"Diagnostic": label.replace("_", " ").title(), "Fixtures": value}
+                for label, value in summary.items()
+            ], use_container_width=True, hide_index=True)
+            st.markdown("**Breakdown by season, status and fixture cohort**")
+            st.dataframe(
+                coverage_diagnostic["cohort_breakdown"],
+                use_container_width=True,
+                hide_index=True,
+            )
+            try:
+                github_coverage_report = _upload_report_once(
+                    "fixture_statistics_coverage_investigation", coverage_diagnostic
+                )
+                if github_coverage_report:
+                    st.success("Coverage investigation report archived in GitHub.")
+                    st.markdown(
+                        f"[Latest report]({github_coverage_report['latest_url']}) · "
+                        f"[Timestamped archive]({github_coverage_report['archive_url']})"
+                    )
+                else:
+                    st.caption("This unchanged coverage investigation is already archived in GitHub.")
+            except Exception as upload_exc:
+                st.error(
+                    f"Coverage investigation completed, but GitHub upload failed "
+                    f"({type(upload_exc).__name__}): {upload_exc}"
+                )
+            with st.expander("Missing fixture samples (up to 100)"):
+                st.dataframe(
+                    coverage_diagnostic["missing_fixture_samples"],
+                    use_container_width=True,
+                    hide_index=True,
+                )
+            with st.expander("Full coverage investigation evidence"):
+                st.json(coverage_diagnostic)
+        except Exception as exc:
+            st.error(
+                f"Fixture statistics coverage investigation failed "
+                f"({type(exc).__name__}): {exc}"
+            )
 
 
 client = None
