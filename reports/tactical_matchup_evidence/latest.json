@@ -1,26 +1,26 @@
 {
-  "generated_at": "2026-11-09T05:35:46.310393+00:00",
-  "competition": "Premier League — England",
+  "generated_at": "2026-11-09T05:48:43.294341+00:00",
+  "competition": "La Liga — Spain",
   "season": 2026,
-  "home_team": "Arsenal",
-  "away_team": "Fulham",
+  "home_team": "Celta de Vigo",
+  "away_team": "Villarreal",
   "analysis_mode": "automatic_statistical_evidence",
   "tvd_result": {
     "team_a_attacks_b": {
-      "attacking_team": "Arsenal",
-      "defending_team": "Fulham",
-      "compatibility_score": 27.5,
+      "attacking_team": "Celta de Vigo",
+      "defending_team": "Villarreal",
+      "compatibility_score": 16.9,
       "risk_level": "LOW",
       "data_coverage": 72.0,
       "findings": [
         {
-          "id": "auto_central",
-          "vulnerability": "Central chance creation against central defence",
-          "attacking_weapon": "Key passes and shots inside the box",
-          "vulnerability_score": 51.2,
-          "weapon_score": 65.0,
-          "matchup_score": 33.3,
-          "confidence": 100.0,
+          "id": "auto_aerial",
+          "vulnerability": "Aerial threat against aerial defence",
+          "attacking_weapon": "Successful headers",
+          "vulnerability_score": 48.2,
+          "weapon_score": 41.7,
+          "matchup_score": 20.1,
+          "confidence": 60.0,
           "weight": 20,
           "risk": "LOW",
           "evidence": {
@@ -29,21 +29,12 @@
               "direction": "opponent output conceded by this team",
               "components": [
                 {
-                  "statistic": "Key Passes",
-                  "score": 51.0,
-                  "coverage_pct": 100.0,
+                  "statistic": "Successful Headers",
+                  "score": 48.2,
+                  "coverage_pct": 60.0,
                   "average_value": 9.2,
-                  "observations": 10,
-                  "reference_observations": 200,
-                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
-                },
-                {
-                  "statistic": "Shots Insidebox",
-                  "score": 51.5,
-                  "coverage_pct": 100.0,
-                  "average_value": 8.48,
-                  "observations": 10,
-                  "reference_observations": 200,
+                  "observations": 6,
+                  "reference_observations": 168,
                   "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
                 }
               ],
@@ -58,21 +49,12 @@
               "direction": "team output",
               "components": [
                 {
-                  "statistic": "Key Passes",
-                  "score": 69.5,
-                  "coverage_pct": 100.0,
-                  "average_value": 11.88,
-                  "observations": 10,
-                  "reference_observations": 200,
-                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
-                },
-                {
-                  "statistic": "Shots Insidebox",
-                  "score": 60.5,
-                  "coverage_pct": 100.0,
-                  "average_value": 9.32,
-                  "observations": 10,
-                  "reference_observations": 200,
+                  "statistic": "Successful Headers",
+                  "score": 41.7,
+                  "coverage_pct": 70.0,
+                  "average_value": 8.617,
+                  "observations": 7,
+                  "reference_observations": 168,
                   "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
                 }
               ],
@@ -88,10 +70,10 @@
           "id": "auto_high_quality_chances",
           "vulnerability": "High-quality chance creation against high-quality chances conceded",
           "attacking_weapon": "Big chances created",
-          "vulnerability_score": 56.2,
-          "weapon_score": 56.2,
-          "matchup_score": 31.6,
-          "confidence": 90.0,
+          "vulnerability_score": 41.5,
+          "weapon_score": 41.5,
+          "matchup_score": 17.2,
+          "confidence": 100.0,
           "weight": 20,
           "risk": "LOW",
           "evidence": {
@@ -101,11 +83,11 @@
               "components": [
                 {
                   "statistic": "Big Chances Created",
-                  "score": 56.2,
-                  "coverage_pct": 90.0,
-                  "average_value": 2.95,
-                  "observations": 9,
-                  "reference_observations": 194,
+                  "score": 41.5,
+                  "coverage_pct": 100.0,
+                  "average_value": 1.88,
+                  "observations": 10,
+                  "reference_observations": 236,
                   "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
                 }
               ],
@@ -121,11 +103,11 @@
               "components": [
                 {
                   "statistic": "Big Chances Created",
-                  "score": 56.2,
+                  "score": 41.5,
                   "coverage_pct": 100.0,
-                  "average_value": 2.4,
+                  "average_value": 1.96,
                   "observations": 10,
-                  "reference_observations": 194,
+                  "reference_observations": 236,
                   "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
                 }
               ],
@@ -141,9 +123,9 @@
           "id": "auto_wide",
           "vulnerability": "Wide threat against wide defending",
           "attacking_weapon": "Accurate crosses and successful dribbles",
-          "vulnerability_score": 52.0,
-          "weapon_score": 45.2,
-          "matchup_score": 23.5,
+          "vulnerability_score": 50.2,
+          "weapon_score": 33.3,
+          "matchup_score": 16.7,
           "confidence": 100.0,
           "weight": 20,
           "risk": "LOW",
@@ -154,20 +136,20 @@
               "components": [
                 {
                   "statistic": "Accurate Crosses",
-                  "score": 56.0,
+                  "score": 38.6,
                   "coverage_pct": 100.0,
-                  "average_value": 4.4,
+                  "average_value": 2.24,
                   "observations": 10,
-                  "reference_observations": 200,
+                  "reference_observations": 236,
                   "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
                 },
                 {
                   "statistic": "Successful Dribbles",
-                  "score": 48.0,
+                  "score": 61.9,
                   "coverage_pct": 100.0,
-                  "average_value": 6.64,
+                  "average_value": 8.48,
                   "observations": 10,
-                  "reference_observations": 200,
+                  "reference_observations": 236,
                   "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
                 }
               ],
@@ -183,20 +165,20 @@
               "components": [
                 {
                   "statistic": "Accurate Crosses",
-                  "score": 56.0,
+                  "score": 53.0,
                   "coverage_pct": 100.0,
-                  "average_value": 4.72,
+                  "average_value": 3.24,
                   "observations": 10,
-                  "reference_observations": 200,
+                  "reference_observations": 236,
                   "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
                 },
                 {
                   "statistic": "Successful Dribbles",
-                  "score": 34.5,
+                  "score": 13.6,
                   "coverage_pct": 100.0,
-                  "average_value": 5.92,
+                  "average_value": 4.72,
                   "observations": 10,
-                  "reference_observations": 200,
+                  "reference_observations": 236,
                   "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
                 }
               ],
@@ -209,13 +191,13 @@
           }
         },
         {
-          "id": "auto_aerial",
-          "vulnerability": "Aerial threat against aerial defence",
-          "attacking_weapon": "Successful headers",
-          "vulnerability_score": 33.3,
-          "weapon_score": 59.3,
-          "matchup_score": 19.7,
-          "confidence": 70.0,
+          "id": "auto_central",
+          "vulnerability": "Central chance creation against central defence",
+          "attacking_weapon": "Key passes and shots inside the box",
+          "vulnerability_score": 33.0,
+          "weapon_score": 45.5,
+          "matchup_score": 15.0,
+          "confidence": 100.0,
           "weight": 20,
           "risk": "LOW",
           "evidence": {
@@ -224,12 +206,21 @@
               "direction": "opponent output conceded by this team",
               "components": [
                 {
-                  "statistic": "Successful Headers",
-                  "score": 33.3,
-                  "coverage_pct": 70.0,
-                  "average_value": 12.917,
-                  "observations": 7,
-                  "reference_observations": 162,
+                  "statistic": "Key Passes",
+                  "score": 27.5,
+                  "coverage_pct": 100.0,
+                  "average_value": 6.88,
+                  "observations": 10,
+                  "reference_observations": 236,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                },
+                {
+                  "statistic": "Shots Insidebox",
+                  "score": 38.6,
+                  "coverage_pct": 100.0,
+                  "average_value": 6.2,
+                  "observations": 10,
+                  "reference_observations": 236,
                   "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
                 }
               ],
@@ -244,12 +235,21 @@
               "direction": "team output",
               "components": [
                 {
-                  "statistic": "Successful Headers",
-                  "score": 59.3,
-                  "coverage_pct": 90.0,
-                  "average_value": 15.62,
-                  "observations": 9,
-                  "reference_observations": 162,
+                  "statistic": "Key Passes",
+                  "score": 43.6,
+                  "coverage_pct": 100.0,
+                  "average_value": 8.92,
+                  "observations": 10,
+                  "reference_observations": 236,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                },
+                {
+                  "statistic": "Shots Insidebox",
+                  "score": 47.5,
+                  "coverage_pct": 100.0,
+                  "average_value": 7.32,
+                  "observations": 10,
+                  "reference_observations": 236,
                   "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
                 }
               ],
@@ -265,143 +265,19 @@
       "missing_pairings": 1
     },
     "team_b_attacks_a": {
-      "attacking_team": "Fulham",
-      "defending_team": "Arsenal",
-      "compatibility_score": 20.3,
+      "attacking_team": "Villarreal",
+      "defending_team": "Celta de Vigo",
+      "compatibility_score": 29.7,
       "risk_level": "LOW",
       "data_coverage": 72.0,
       "findings": [
         {
-          "id": "auto_aerial",
-          "vulnerability": "Aerial threat against aerial defence",
-          "attacking_weapon": "Successful headers",
-          "vulnerability_score": 59.3,
-          "weapon_score": 43.2,
-          "matchup_score": 25.6,
-          "confidence": 70.0,
-          "weight": 20,
-          "risk": "LOW",
-          "evidence": {
-            "vulnerability": {
-              "source": "Sportmonks fixture team statistics",
-              "direction": "opponent output conceded by this team",
-              "components": [
-                {
-                  "statistic": "Successful Headers",
-                  "score": 59.3,
-                  "coverage_pct": 90.0,
-                  "average_value": 15.52,
-                  "observations": 9,
-                  "reference_observations": 162,
-                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
-                }
-              ],
-              "recency_weighting": {
-                "latest_five_weight": 0.6,
-                "previous_five_weight": 0.4
-              },
-              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
-            },
-            "weapon": {
-              "source": "Sportmonks fixture team statistics",
-              "direction": "team output",
-              "components": [
-                {
-                  "statistic": "Successful Headers",
-                  "score": 43.2,
-                  "coverage_pct": 70.0,
-                  "average_value": 13.05,
-                  "observations": 7,
-                  "reference_observations": 162,
-                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
-                }
-              ],
-              "recency_weighting": {
-                "latest_five_weight": 0.6,
-                "previous_five_weight": 0.4
-              },
-              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
-            }
-          }
-        },
-        {
-          "id": "auto_wide",
-          "vulnerability": "Wide threat against wide defending",
-          "attacking_weapon": "Accurate crosses and successful dribbles",
-          "vulnerability_score": 33.0,
-          "weapon_score": 58.8,
-          "matchup_score": 19.4,
-          "confidence": 100.0,
-          "weight": 20,
-          "risk": "LOW",
-          "evidence": {
-            "vulnerability": {
-              "source": "Sportmonks fixture team statistics",
-              "direction": "opponent output conceded by this team",
-              "components": [
-                {
-                  "statistic": "Accurate Crosses",
-                  "score": 42.5,
-                  "coverage_pct": 100.0,
-                  "average_value": 3.52,
-                  "observations": 10,
-                  "reference_observations": 200,
-                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
-                },
-                {
-                  "statistic": "Successful Dribbles",
-                  "score": 23.5,
-                  "coverage_pct": 100.0,
-                  "average_value": 4.24,
-                  "observations": 10,
-                  "reference_observations": 200,
-                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
-                }
-              ],
-              "recency_weighting": {
-                "latest_five_weight": 0.6,
-                "previous_five_weight": 0.4
-              },
-              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
-            },
-            "weapon": {
-              "source": "Sportmonks fixture team statistics",
-              "direction": "team output",
-              "components": [
-                {
-                  "statistic": "Accurate Crosses",
-                  "score": 56.0,
-                  "coverage_pct": 100.0,
-                  "average_value": 4.28,
-                  "observations": 10,
-                  "reference_observations": 200,
-                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
-                },
-                {
-                  "statistic": "Successful Dribbles",
-                  "score": 61.5,
-                  "coverage_pct": 100.0,
-                  "average_value": 7.68,
-                  "observations": 10,
-                  "reference_observations": 200,
-                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
-                }
-              ],
-              "recency_weighting": {
-                "latest_five_weight": 0.6,
-                "previous_five_weight": 0.4
-              },
-              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
-            }
-          }
-        },
-        {
           "id": "auto_central",
           "vulnerability": "Central chance creation against central defence",
           "attacking_weapon": "Key passes and shots inside the box",
-          "vulnerability_score": 28.8,
-          "weapon_score": 66.5,
-          "matchup_score": 19.2,
+          "vulnerability_score": 49.4,
+          "weapon_score": 76.2,
+          "matchup_score": 37.6,
           "confidence": 100.0,
           "weight": 20,
           "risk": "LOW",
@@ -412,20 +288,20 @@
               "components": [
                 {
                   "statistic": "Key Passes",
-                  "score": 28.0,
+                  "score": 51.3,
                   "coverage_pct": 100.0,
-                  "average_value": 7.92,
+                  "average_value": 9.4,
                   "observations": 10,
-                  "reference_observations": 200,
+                  "reference_observations": 236,
                   "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
                 },
                 {
                   "statistic": "Shots Insidebox",
-                  "score": 29.5,
+                  "score": 47.5,
                   "coverage_pct": 100.0,
-                  "average_value": 7.0,
+                  "average_value": 7.56,
                   "observations": 10,
-                  "reference_observations": 200,
+                  "reference_observations": 236,
                   "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
                 }
               ],
@@ -441,20 +317,73 @@
               "components": [
                 {
                   "statistic": "Key Passes",
-                  "score": 63.5,
+                  "score": 75.0,
                   "coverage_pct": 100.0,
-                  "average_value": 10.24,
+                  "average_value": 13.88,
                   "observations": 10,
-                  "reference_observations": 200,
+                  "reference_observations": 236,
                   "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
                 },
                 {
                   "statistic": "Shots Insidebox",
-                  "score": 69.5,
+                  "score": 77.5,
                   "coverage_pct": 100.0,
-                  "average_value": 10.4,
+                  "average_value": 11.28,
                   "observations": 10,
-                  "reference_observations": 200,
+                  "reference_observations": 236,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            }
+          }
+        },
+        {
+          "id": "auto_aerial",
+          "vulnerability": "Aerial threat against aerial defence",
+          "attacking_weapon": "Successful headers",
+          "vulnerability_score": 65.5,
+          "weapon_score": 41.7,
+          "matchup_score": 27.3,
+          "confidence": 60.0,
+          "weight": 20,
+          "risk": "LOW",
+          "evidence": {
+            "vulnerability": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "opponent output conceded by this team",
+              "components": [
+                {
+                  "statistic": "Successful Headers",
+                  "score": 65.5,
+                  "coverage_pct": 70.0,
+                  "average_value": 12.7,
+                  "observations": 7,
+                  "reference_observations": 168,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            },
+            "weapon": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "team output",
+              "components": [
+                {
+                  "statistic": "Successful Headers",
+                  "score": 41.7,
+                  "coverage_pct": 60.0,
+                  "average_value": 8.95,
+                  "observations": 6,
+                  "reference_observations": 168,
                   "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
                 }
               ],
@@ -470,10 +399,10 @@
           "id": "auto_high_quality_chances",
           "vulnerability": "High-quality chance creation against high-quality chances conceded",
           "attacking_weapon": "Big chances created",
-          "vulnerability_score": 32.5,
-          "weapon_score": 56.2,
-          "matchup_score": 18.3,
-          "confidence": 90.0,
+          "vulnerability_score": 41.5,
+          "weapon_score": 64.0,
+          "matchup_score": 26.6,
+          "confidence": 100.0,
           "weight": 20,
           "risk": "LOW",
           "evidence": {
@@ -483,11 +412,11 @@
               "components": [
                 {
                   "statistic": "Big Chances Created",
-                  "score": 32.5,
+                  "score": 41.5,
                   "coverage_pct": 100.0,
-                  "average_value": 1.24,
+                  "average_value": 1.2,
                   "observations": 10,
-                  "reference_observations": 194,
+                  "reference_observations": 236,
                   "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
                 }
               ],
@@ -503,11 +432,82 @@
               "components": [
                 {
                   "statistic": "Big Chances Created",
-                  "score": 56.2,
-                  "coverage_pct": 90.0,
-                  "average_value": 2.45,
-                  "observations": 9,
-                  "reference_observations": 194,
+                  "score": 64.0,
+                  "coverage_pct": 100.0,
+                  "average_value": 2.92,
+                  "observations": 10,
+                  "reference_observations": 236,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            }
+          }
+        },
+        {
+          "id": "auto_wide",
+          "vulnerability": "Wide threat against wide defending",
+          "attacking_weapon": "Accurate crosses and successful dribbles",
+          "vulnerability_score": 45.8,
+          "weapon_score": 57.5,
+          "matchup_score": 26.3,
+          "confidence": 100.0,
+          "weight": 20,
+          "risk": "LOW",
+          "evidence": {
+            "vulnerability": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "opponent output conceded by this team",
+              "components": [
+                {
+                  "statistic": "Accurate Crosses",
+                  "score": 53.0,
+                  "coverage_pct": 100.0,
+                  "average_value": 3.76,
+                  "observations": 10,
+                  "reference_observations": 236,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                },
+                {
+                  "statistic": "Successful Dribbles",
+                  "score": 38.6,
+                  "coverage_pct": 100.0,
+                  "average_value": 6.08,
+                  "observations": 10,
+                  "reference_observations": 236,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            },
+            "weapon": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "team output",
+              "components": [
+                {
+                  "statistic": "Accurate Crosses",
+                  "score": 53.0,
+                  "coverage_pct": 100.0,
+                  "average_value": 3.84,
+                  "observations": 10,
+                  "reference_observations": 236,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                },
+                {
+                  "statistic": "Successful Dribbles",
+                  "score": 61.9,
+                  "coverage_pct": 100.0,
+                  "average_value": 8.6,
+                  "observations": 10,
+                  "reference_observations": 236,
                   "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
                 }
               ],
@@ -523,17 +523,17 @@
       "missing_pairings": 1
     },
     "tactical_compatibility": {
-      "Arsenal": 27.5,
-      "Fulham": 20.3
+      "Celta de Vigo": 16.9,
+      "Villarreal": 29.7
     },
-    "stronger_tactical_matchup": "Arsenal",
+    "stronger_tactical_matchup": "Villarreal",
     "analysis_mode": "automatic_statistical_evidence",
     "matchups_total": 5,
     "matchups_available_min_direction": 4
   },
   "model_compatibility_overrides": {
-    "home": 27.5,
-    "away": 20.3
+    "home": 16.9,
+    "away": 29.7
   },
   "automatic_model_integration_minimum_coverage_pct": 70.0,
   "prediction_engine_modified": false,
@@ -547,6 +547,6 @@
     "player_availability": 0.05,
     "tactical": 0.3
   },
-  "generated_at_utc": "2026-11-09T05:35:46.314497+00:00",
+  "generated_at_utc": "2026-11-09T05:48:43.294675+00:00",
   "report_name": "tactical_matchup_evidence"
 }
