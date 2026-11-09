@@ -98,14 +98,16 @@ jobs:
               raise SystemExit("Codex returned an invalid patch field.")
           if not patch.strip():
               with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
-                  output.write("has_patch=false\\n")
-                  output.write("summary<<EOF\\n" + summary.replace("\\n", " ") + "\\nEOF\\n")
+                  output.write("has_patch=false\n")
+                  output.write("summary<<EOF\n" + summary.replace("\n", " ") + "\nEOF\n")
               with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as report:
-                  report.write("## No code change proposed\\n\\n" + summary + "\\n")
+                  report.write("## No code change proposed\n\n" + summary + "\n")
               raise SystemExit(0)
           if len(patch.encode("utf-8")) > 120_000:
               raise SystemExit("Patch exceeds the 120 KB safety limit.")
 
+          if any(marker in patch for marker in ("new file mode ", "deleted file mode ", "rename from ", "rename to ", "--- /dev/null", "+++ /dev/null")):
+              raise SystemExit("Only modifications to existing Python files are accepted.")
           paths = re.findall(r"^diff --git a/(.+) b/(.+)$", patch, flags=re.MULTILINE)
           if not paths:
               raise SystemExit("Patch contains no recognized git diff paths.")
@@ -122,8 +124,10 @@ jobs:
               handle.write(patch)
           subprocess.run(["git", "apply", "--check", "--whitespace=error", "/tmp/autonomous.patch"], check=True)
           subprocess.run(["git", "apply", "--whitespace=error", "/tmp/autonomous.patch"], check=True)
-          changed = subprocess.check_output(["git", "diff", "--name-only"], text=True).splitlines()
-          if not changed or any(name not in [pair[1] for pair in paths] for name in changed):
+          status_rows = subprocess.check_output(["git", "diff", "--name-status"], text=True).splitlines()
+          changed = [row.split("\\t", 1)[1] for row in status_rows if "\\t" in row]
+          if (not status_rows or any(not row.startswith("M\\t") for row in status_rows)
+              or any(name not in [pair[1] for pair in paths] for name in changed)):
               raise SystemExit("Applied file set differs from the validated patch.")
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
               output.write("summary<<EOF\n" + summary.replace("\n", " ") + "\nEOF\n")
