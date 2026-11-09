@@ -434,6 +434,49 @@ class ProviderCorroborationTests(unittest.TestCase):
         )
 
 
+    def test_highlightly_additional_pages_are_fetched_concurrently_with_cap_two(self):
+        import threading
+        import time
+
+        rows = []
+        for index in range(201):
+            row = highlightly_match()
+            row["id"] = 30000 + index
+            row["homeTeam"] = {"id": 5000 + index, "name": f"Home Club {index}"}
+            row["awayTeam"] = {"id": 6000 + index, "name": f"Away Club {index}"}
+            rows.append(row)
+
+        state = {"active": 0, "maximum": 0}
+        lock = threading.Lock()
+
+        class TrackingClient(FakePagedHighlightly):
+            def matches(self, **params):
+                offset = int(params.get("offset", 0))
+                if offset:
+                    with lock:
+                        state["active"] += 1
+                        state["maximum"] = max(state["maximum"], state["active"])
+                    try:
+                        time.sleep(0.03)
+                        return super().matches(**params)
+                    finally:
+                        with lock:
+                            state["active"] -= 1
+                return super().matches(**params)
+
+        report = collect_recent_result_corroboration(
+            sportmonks_fixtures=[sportmonks_fixture()],
+            competition="Premier League", country="England", season=2026,
+            home_team_name="Arsenal", away_team_name="Chelsea",
+            highlightly_client=TrackingClient(rows),
+            highlightly_client_factory=lambda: TrackingClient(rows),
+            now=NOW,
+        )
+
+        self.assertEqual(report["highlightly_diagnostics"]["pages_requested"], 3)
+        self.assertEqual(report["highlightly_diagnostics"]["raw_rows_received"], 201)
+        self.assertEqual(state["maximum"], 2)
+
     def test_highlightly_rejects_pages_returned_for_the_wrong_offset(self):
         rows = []
         for index in range(101):
