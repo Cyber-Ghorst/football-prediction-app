@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "summary": {
+      "type": "string",
+      "description": "Concise explanation of the single proposed improvement or why no safe change is justified."
+    },
+    "patch": {
+      "type": "string",
+      "description": "Complete unified git diff for root-level Python files only. Empty when no safe change is justified."
+    }
+  },
+  "required": ["summary", "patch"]
+}
