@@ -196,12 +196,13 @@ def build_sportmonks_availability_evidence(
         if len(matching_statistics) != 1:
             return unknown("A current-squad player does not have exactly one matching team-season statistic row.")
         statistic = matching_statistics[0]
-        if statistic.get("player_id") is not None:
-            try:
-                if int(statistic["player_id"]) != int(player_id):
-                    return unknown("A player-statistic row belongs to a different player.")
-            except (TypeError, ValueError):
-                return unknown("A player-statistic row has an invalid player ID.")
+        if statistic.get("player_id") is None:
+            return unknown("A team-season statistic row has no player ID.")
+        try:
+            if int(statistic["player_id"]) != int(player_id):
+                return unknown("A player-statistic row belongs to a different player.")
+        except (TypeError, ValueError):
+            return unknown("A player-statistic row has an invalid player ID.")
         if statistic.get("has_values") is False:
             return unknown("A current-squad player has no season-statistic values for an importance estimate.")
 
@@ -308,6 +309,7 @@ def build_sportmonks_availability_evidence(
         "roster_complete": True,
         "squad_players": squad_players,
         "players_assessed": len(squad_players),
+        "current_squad_players": len(current_players),
         "importance_method": "current_squad_season_minutes_played_relative_to_squad_max",
         "reason": "Current extended squad, matching team-season minutes and exact-fixture sidelined feed passed identity and date checks.",
     }
