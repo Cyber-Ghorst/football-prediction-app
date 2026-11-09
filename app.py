@@ -280,6 +280,38 @@ def _upload_report_once(report_name, report):
     return result
 
 
+def _upload_reports_once_parallel(report_items):
+    """Upload independent reports concurrently while preserving rerun deduplication."""
+    uploaded = st.session_state.setdefault("_github_report_fingerprints", {})
+    pending = {}
+    results = {}
+    for report_name, report_payload in report_items.items():
+        payload = dict(report_payload) if isinstance(report_payload, dict) else {"data": report_payload}
+        fingerprint = hashlib.sha256(
+            json.dumps(payload, sort_keys=True, ensure_ascii=False, default=str).encode("utf-8")
+        ).hexdigest()
+        if uploaded.get(report_name) == fingerprint:
+            results[report_name] = None
+        else:
+            pending[report_name] = (payload, fingerprint)
+
+    if not pending:
+        return results
+
+    with ThreadPoolExecutor(max_workers=min(2, len(pending))) as executor:
+        futures = {
+            name: executor.submit(_upload_report_to_github, name, payload)
+            for name, (payload, _) in pending.items()
+        }
+        for name, future in futures.items():
+            try:
+                results[name] = future.result()
+                uploaded[name] = pending[name][1]
+            except Exception as exc:
+                results[name] = exc
+    return results
+
+
 def _load_database_ledger():
     if not DATABASE_URL:
         st.session_state["_ledger_db_status"] = "not_configured"
@@ -2162,22 +2194,23 @@ try:
             "player_enrichment": player_report,
             "system_diagnostics": diagnostic_report,
         }
-        try:
-            github_collection_report = _upload_report_once(
-                "data_collection_evidence", collection_evidence_report
-            )
-            if github_collection_report:
-                st.session_state["_latest_collection_report_github_url"] = github_collection_report.get("latest_url")
-                st.session_state["_latest_collection_report_github_archive_url"] = github_collection_report.get("archive_url")
-        except Exception as upload_error:
-            st.warning(f"Data collection evidence report could not be archived to GitHub ({type(upload_error).__name__}). Check GITHUB_REPORT_TOKEN and GitHub permissions.")
-        try:
-            github_system_report = _upload_report_once("system_diagnostics", diagnostic_report)
-            if github_system_report:
-                st.session_state["_latest_system_report_github_url"] = github_system_report.get("latest_url")
-                st.session_state["_latest_system_report_github_archive_url"] = github_system_report.get("archive_url")
-        except Exception as upload_error:
-            st.warning(f"System report could not be archived to GitHub ({type(upload_error).__name__}). Check GITHUB_REPORT_TOKEN and GitHub permissions.")
+        report_upload_results = _upload_reports_once_parallel({
+            "data_collection_evidence": collection_evidence_report,
+            "system_diagnostics": diagnostic_report,
+        })
+        github_collection_report = report_upload_results.get("data_collection_evidence")
+        if isinstance(github_collection_report, Exception):
+            st.warning(f"Data collection evidence report could not be archived to GitHub ({type(github_collection_report).__name__}). Check GITHUB_REPORT_TOKEN and GitHub permissions.")
+        elif github_collection_report:
+            st.session_state["_latest_collection_report_github_url"] = github_collection_report.get("latest_url")
+            st.session_state["_latest_collection_report_github_archive_url"] = github_collection_report.get("archive_url")
+
+        github_system_report = report_upload_results.get("system_diagnostics")
+        if isinstance(github_system_report, Exception):
+            st.warning(f"System report could not be archived to GitHub ({type(github_system_report).__name__}). Check GITHUB_REPORT_TOKEN and GitHub permissions.")
+        elif github_system_report:
+            st.session_state["_latest_system_report_github_url"] = github_system_report.get("latest_url")
+            st.session_state["_latest_system_report_github_archive_url"] = github_system_report.get("archive_url")
         prediction_stage_timings["validation_and_report_archiving_seconds"] = round(time.perf_counter() - prediction_stage_started, 3)
         prediction_stage_started = time.perf_counter()
         st.subheader("Automated System Health & Diagnostics")
