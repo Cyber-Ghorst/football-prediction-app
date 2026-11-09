@@ -41,6 +41,19 @@ def _utc_datetime(value: Any) -> datetime | None:
     return parsed.astimezone(timezone.utc).replace(microsecond=0)
 
 
+def fixtures_for_utc_date(fixtures: list[dict[str, Any]], date_value: str) -> list[dict[str, Any]]:
+    """Return fixture rows whose kickoff falls on the supplied UTC calendar date."""
+    target_date = str(date_value or "").strip()
+    if not target_date:
+        return []
+    selected = []
+    for fixture in fixtures:
+        kickoff = _utc_datetime(fixture.get("starting_at"))
+        if kickoff and kickoff.date().isoformat() == target_date:
+            selected.append(fixture)
+    return selected
+
+
 def _participant_pair(fixture: Mapping[str, Any]) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
     home = away = None
     for row in _rows(fixture.get("participants")):
