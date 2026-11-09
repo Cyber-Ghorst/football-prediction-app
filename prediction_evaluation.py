@@ -122,7 +122,8 @@ def build_availability_snapshot(
         ("home", home_profile, home_team_id),
         ("away", away_profile, away_team_id),
     ):
-        evidence = profile.get("availability") if isinstance(profile, Mapping) else None
+        profile = profile if isinstance(profile, Mapping) else {}
+        evidence = profile.get("availability")
         assessment = profile.get("player_availability_assessment") if isinstance(profile, Mapping) else None
         evidence = evidence if isinstance(evidence, Mapping) else {}
         assessment = assessment if isinstance(assessment, Mapping) else {}
@@ -132,13 +133,19 @@ def build_availability_snapshot(
             and str(evidence.get("team_id") or "") == str(expected_team_id)
             and str(evidence.get("season_id") or "") == str(season_id)
         )
+        try:
+            availability_score = float(assessment.get("score"))
+        except (TypeError, ValueError):
+            availability_score = None
         valid_roster = (
             evidence.get("roster_complete") is True
             and evidence.get("sidelined_feed_available") is True
             and isinstance(squad_players, list)
             and bool(squad_players)
             and assessment.get("status") == "scored"
-            and assessment.get("score") is not None
+            and availability_score is not None
+            and isfinite(availability_score)
+            and 0 <= availability_score <= 100
         )
         seen_player_ids: set[str] = set()
         normalized_players: list[dict[str, Any]] = []
@@ -240,7 +247,8 @@ def build_prediction_record(
     snapshot_at = _parse_datetime(snapshot.get("fetched_at"))
     availability = dict(availability_snapshot or {})
     availability_at = _parse_datetime(availability.get("captured_at"))
-    availability_teams = availability.get("teams") or {}
+    availability_teams = availability.get("teams")
+    availability_teams = availability_teams if isinstance(availability_teams, Mapping) else {}
     availability_complete = (
         availability.get("status") == "complete"
         and availability.get("complete_teams") == 2
