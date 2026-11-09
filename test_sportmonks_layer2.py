@@ -84,18 +84,19 @@ class SportmonksLayer2Tests(unittest.TestCase):
         teams = [{"team_id": "sportmonks:10", "name": "Home FC"}]
         fixtures = [{"fixture_id": "sportmonks:1", "raw_payload": {"id": 1}}]
         statistics = [{"fixture_id": "sportmonks:1", "team_id": "sportmonks:10"}]
-        with patch("football_repository.get_repository_teams", return_value=teams) as get_teams, \
-             patch("football_repository.get_repository_fixtures", return_value=fixtures) as get_fixtures, \
-             patch("football_repository.get_repository_fixture_statistics", return_value=statistics) as get_statistics:
+        with patch(
+            "football_repository.get_repository_season_snapshot",
+            return_value={"teams": teams, "fixtures": fixtures, "statistics": statistics},
+        ) as get_snapshot:
             snapshot = load_repository_season_snapshot("postgresql://example", "sportmonks:2026")
 
         self.assertEqual(snapshot["season_id"], "sportmonks:2026")
         self.assertEqual(snapshot["teams"], teams)
         self.assertEqual(snapshot["fixtures"], fixtures)
         self.assertEqual(snapshot["statistics"], statistics)
-        get_teams.assert_called_once_with("postgresql://example", season_id="sportmonks:2026")
-        get_fixtures.assert_called_once_with("postgresql://example", season_id="sportmonks:2026", limit=2000)
-        get_statistics.assert_called_once_with("postgresql://example", ["sportmonks:1"])
+        get_snapshot.assert_called_once_with(
+            "postgresql://example", "sportmonks:2026", fixture_limit=2000
+        )
 
     def test_shared_team_profiles_build_league_reference_only_once(self):
         from sportmonks_layer2 import collect_repository_team_profiles
