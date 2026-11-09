@@ -1,6 +1,6 @@
 {
   "diagnostic_version": 1,
-  "generated_at": "2026-11-09T01:56:26.903976+00:00",
+  "generated_at": "2026-11-09T02:12:03.283611+00:00",
   "overall_status": "attention_required",
   "selected_context": {
     "season_start_year": 2026,
@@ -898,7 +898,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "87",
+            "requests_remaining": "84",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -916,7 +916,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "86",
+            "requests_remaining": "83",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -934,7 +934,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "85",
+            "requests_remaining": "82",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -1654,9 +1654,9 @@
         "sportmonks_request_metadata": {
           "request_path": "fixtures/between/2026-09-13/2026-09-13",
           "http_status": 200,
-          "request_seconds": 0.377,
+          "request_seconds": 0.394,
           "rate_limit": "2000",
-          "rate_remaining": "1996"
+          "rate_remaining": "1994"
         }
       },
       {
@@ -2193,9 +2193,9 @@
         "sportmonks_request_metadata": {
           "request_path": "fixtures/between/2026-09-05/2026-09-05",
           "http_status": 200,
-          "request_seconds": 0.614,
+          "request_seconds": 0.634,
           "rate_limit": "2000",
-          "rate_remaining": "1995"
+          "rate_remaining": "1993"
         }
       }
     ],
@@ -2310,6 +2310,6 @@
     "weights_total": 1.0,
     "model_impact": "Diagnostics only; weights, recency weighting, prediction inputs and missing-data rules are not changed."
   },
-  "generated_at_utc": "2026-11-09T01:56:30.292450+00:00",
+  "generated_at_utc": "2026-11-09T02:12:06.382167+00:00",
   "report_name": "system_diagnostics"
 }
