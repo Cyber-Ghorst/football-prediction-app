@@ -1878,7 +1878,7 @@ try:
                     for side, selected_team_name in (("home", home_name), ("away", away_name)):
                         try:
                             squad_rows, squad_seconds, squad_error = squad_future_by_side[side].result()
-                            squad_enrichment_seconds += float(squad_seconds or 0.0)
+                            squad_enrichment_seconds = max(squad_enrichment_seconds, float(squad_seconds or 0.0))
                             squad_fetch_diagnostics[selected_team_name] = {
                                 "status": "error" if squad_error else "retrieved",
                                 "rows_returned": len(squad_rows or []) if not squad_error else 0,
@@ -1916,8 +1916,7 @@ try:
                     st.info("No exact upcoming Sportmonks fixture was found for this home/away pairing. Lineups and player availability remain unknown.")
                 prediction_stage_timings["fixture_detail_enrichment_seconds"] = round(
                     float(fixture_detail_fetch_seconds)
-                    + time.perf_counter() - fixture_detail_processing_started
-                    - squad_enrichment_seconds,
+                    + time.perf_counter() - fixture_detail_processing_started,
                     3,
                 )
                 prediction_stage_timings["squad_enrichment_seconds"] = round(
@@ -2337,6 +2336,7 @@ try:
             "season": int(season),
             "competition": selected_league,
             "selected_fixture": selected_match_fixture,
+            "squad_fetch_diagnostics": squad_fetch_diagnostics,
             "teams": {
                 profile["name"]: {
                     "data_quality": profile.get("data_quality"),
