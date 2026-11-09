@@ -887,6 +887,152 @@ def get_repository_team_history(
 
 
 
+
+def audit_all_repository_team_histories(
+    database_url: str,
+    *,
+    history_limit: int = 10,
+) -> dict[str, Any]:
+    """Audit recent verified completed-match history for every canonical team.
+
+    Uses one bounded database read for teams and one windowed fixture query.
+    A team history is valid only when each row identifies that team on exactly
+    one side, has a recognized completed status and non-negative exact scores.
+    Season consistency and duplicate fixture fingerprints are reported rather
+    than silently filtered.
+    """
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+    safe_limit = max(1, min(int(history_limit), 20))
+    completed_statuses = (
+        "finished", "complete", "completed", "ft", "full time", "5"
+    )
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT team_id, name, source_provider
+                FROM football_teams
+                ORDER BY name, team_id
+                """
+            )
+            teams = _rows_as_dicts(cursor)
+            cursor.execute(
+                """
+                WITH completed AS (
+                    SELECT fixture_id, season_id, league_id, home_team_id AS team_id,
+                           away_team_id, home_team_id, starting_at, status,
+                           home_goals, away_goals, source_provider, TRUE AS is_home
+                    FROM football_fixtures
+                    WHERE LOWER(COALESCE(status, '')) IN
+                        ('finished', 'complete', 'completed', 'ft', 'full time', '5')
+                      AND home_goals IS NOT NULL AND away_goals IS NOT NULL
+                      AND home_goals >= 0 AND away_goals >= 0
+                      AND starting_at < NOW()
+                    UNION ALL
+                    SELECT fixture_id, season_id, league_id, away_team_id AS team_id,
+                           away_team_id, home_team_id, starting_at, status,
+                           home_goals, away_goals, source_provider, FALSE AS is_home
+                    FROM football_fixtures
+                    WHERE LOWER(COALESCE(status, '')) IN
+                        ('finished', 'complete', 'completed', 'ft', 'full time', '5')
+                      AND home_goals IS NOT NULL AND away_goals IS NOT NULL
+                      AND home_goals >= 0 AND away_goals >= 0
+                      AND starting_at < NOW()
+                ),
+                ranked AS (
+                    SELECT *, ROW_NUMBER() OVER (
+                        PARTITION BY team_id
+                        ORDER BY starting_at DESC, fixture_id DESC
+                    ) AS history_rank
+                    FROM completed
+                )
+                SELECT fixture_id, season_id, league_id, team_id, away_team_id,
+                       home_team_id, starting_at, status, home_goals, away_goals,
+                       source_provider, is_home, history_rank
+                FROM ranked
+                WHERE history_rank <= %s
+                ORDER BY team_id, starting_at DESC, fixture_id DESC
+                """,
+                (safe_limit,),
+            )
+            history_rows = _rows_as_dicts(cursor)
+            cursor.execute(
+                """
+                SELECT season_id, league_id, home_team_id, away_team_id,
+                       starting_at, COUNT(*) AS duplicate_count,
+                       ARRAY_AGG(fixture_id ORDER BY fixture_id) AS fixture_ids
+                FROM football_fixtures
+                WHERE starting_at IS NOT NULL
+                GROUP BY season_id, league_id, home_team_id, away_team_id, starting_at
+                HAVING COUNT(*) > 1
+                ORDER BY duplicate_count DESC
+                LIMIT 200
+                """
+            )
+            duplicate_groups = _rows_as_dicts(cursor)
+
+    by_team: dict[str, list[dict[str, Any]]] = {}
+    for row in history_rows:
+        by_team.setdefault(str(row.get("team_id")), []).append(row)
+
+    team_results = []
+    for team in teams:
+        team_id = str(team.get("team_id"))
+        rows = by_team.get(team_id, [])
+        valid_identity = all(
+            (str(row.get("home_team_id")) == team_id) !=
+            (str(row.get("away_team_id")) == team_id)
+            for row in rows
+        )
+        valid_scores = all(
+            isinstance(row.get("home_goals"), int) and row["home_goals"] >= 0
+            and isinstance(row.get("away_goals"), int) and row["away_goals"] >= 0
+            for row in rows
+        )
+        seasons = sorted({str(row.get("season_id")) for row in rows if row.get("season_id") is not None})
+        fixture_ids = [str(row.get("fixture_id")) for row in rows]
+        duplicate_ids = len(fixture_ids) != len(set(fixture_ids))
+        team_results.append({
+            "team_id": team_id,
+            "team_name": team.get("name"),
+            "source_provider": team.get("source_provider"),
+            "history_matches_returned": len(rows),
+            "history_target_met": len(rows) >= safe_limit,
+            "team_identity_valid": valid_identity,
+            "scores_valid": valid_scores,
+            "season_consistent": len(seasons) <= 1,
+            "season_ids": seasons,
+            "duplicate_fixture_ids_in_history": duplicate_ids,
+            "history_status": "pass" if (
+                len(rows) >= safe_limit and valid_identity and valid_scores
+                and len(seasons) <= 1 and not duplicate_ids
+            ) else "review",
+            "matches": rows,
+        })
+
+    passed = sum(item["history_status"] == "pass" for item in team_results)
+    return {
+        "audit_status": "success",
+        "history_limit_per_team": safe_limit,
+        "teams_scanned": len(teams),
+        "teams_with_history": sum(item["history_matches_returned"] > 0 for item in team_results),
+        "teams_meeting_history_target": sum(item["history_target_met"] for item in team_results),
+        "teams_passing_all_checks": passed,
+        "teams_requiring_review": len(team_results) - passed,
+        "duplicate_fixture_groups_found": len(duplicate_groups),
+        "duplicate_fixture_groups": duplicate_groups,
+        "checks": {
+            "recognized_completed_status_and_both_nonnegative_scores_required": True,
+            "home_away_identity_checked": True,
+            "season_consistency_checked": True,
+            "duplicate_fixture_fingerprints_checked": True,
+            "prediction_engine_modified": False,
+            "neon_prediction_ledger_modified": False,
+        },
+        "teams": team_results,
+    }
+
 def get_repository_fixture_statistics(
     database_url: str,
     fixture_ids: list[str],
