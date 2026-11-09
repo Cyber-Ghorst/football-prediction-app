@@ -37,10 +37,17 @@ on:
       - ".agent/trigger.json"
   issue_comment:
     types: [created]
+  schedule:
+    - cron: "13 */6 * * *"
 
 permissions:
+  actions: write
   contents: write
   issues: write
+
+concurrency:
+  group: prediction-lab-controller
+  cancel-in-progress: false
 
 jobs:
   controller:
@@ -87,6 +94,8 @@ jobs:
                   "home_team": os.environ.get("DISPATCH_HOME_TEAM", ""),
                   "away_team": os.environ.get("DISPATCH_AWAY_TEAM", ""),
               }
+          elif os.environ["EVENT_NAME"] == "schedule":
+              operation = "health_check"
           elif os.environ["EVENT_NAME"] == "issue_comment":
               event = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text(encoding="utf-8"))
               body = event.get("comment", {}).get("body", "").strip()
@@ -118,6 +127,73 @@ jobs:
               output.write(f"operation={operation}\n")
               output.write("prediction_request=" + json.dumps(request, ensure_ascii=False) + "\n")
           print(f"Accepted operation: {operation}")
+          PY
+
+      - name: Detect and recover stale controller runs
+        if: github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          CURRENT_RUN_ID: ${{ github.run_id }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from datetime import datetime, timedelta, timezone
+          from urllib.request import Request, urlopen
+
+          repository = os.environ["REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          current_run = int(os.environ["CURRENT_RUN_ID"])
+          base = f"https://api.github.com/repos/{repository}/actions/workflows/lab-controller.yml/runs"
+          headers = {
+              "Accept": "application/vnd.github+json",
+              "Authorization": f"Bearer {token}",
+              "X-GitHub-Api-Version": "2022-11-28",
+          }
+
+          def request_json(url, method="GET"):
+              request = Request(url, headers=headers, method=method)
+              with urlopen(request, timeout=20) as response:
+                  payload = response.read()
+                  return json.loads(payload) if payload else {}
+
+          now = datetime.now(timezone.utc)
+          cutoff = now - timedelta(minutes=45)
+          recovered = []
+          inspected = []
+          for status in ("queued", "in_progress"):
+              data = request_json(f"{base}?status={status}&per_page=100")
+              for run in data.get("workflow_runs", []):
+                  run_id = int(run.get("id", 0))
+                  if not run_id or run_id == current_run:
+                      continue
+                  created = datetime.fromisoformat(run["created_at"].replace("Z", "+00:00"))
+                  started_text = run.get("run_started_at")
+                  reference_time = (
+                      datetime.fromisoformat(started_text.replace("Z", "+00:00"))
+                      if started_text else created
+                  )
+                  age_minutes = int((now - reference_time).total_seconds() // 60)
+                  inspected.append({"run_id": run_id, "status": status, "age_minutes": age_minutes})
+                  if reference_time < cutoff:
+                      try:
+                          request_json(f"https://api.github.com/repos/{repository}/actions/runs/{run_id}/cancel", "POST")
+                          recovered.append({"run_id": run_id, "previous_status": status, "age_minutes": age_minutes, "action": "cancel_requested"})
+                      except Exception as exc:
+                          recovered.append({"run_id": run_id, "previous_status": status, "age_minutes": age_minutes, "action": "cancel_failed", "error_type": type(exc).__name__})
+
+          report = {
+              "checked_at_utc": now.isoformat(),
+              "stale_threshold_minutes": 45,
+              "workflow_scope": "Prediction Lab Controller only",
+              "runs_inspected": inspected,
+              "recovery_actions": recovered,
+              "status": "stale_runs_recovered" if any(x["action"] == "cancel_requested" for x in recovered) else "no_stale_runs",
+          }
+          with open("watchdog-report.json", "w", encoding="utf-8") as handle:
+              json.dump(report, handle, indent=2)
+          print(json.dumps(report, indent=2))
           PY
 
       - name: Check Streamlit deployment
@@ -323,11 +399,11 @@ jobs:
           raise SystemExit(main())
           PY
 
-      - name: Publish result to trigger issue
-        if: always() && github.event_name == 'issue_comment'
+      - name: Publish result to control issue
+        if: always() && (github.event_name == 'issue_comment' || github.event_name == 'schedule')
         env:
           GH_TOKEN: ${{ github.token }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_NUMBER: ${{ github.event.issue.number || 54 }}
           REPOSITORY: ${{ github.repository }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           JOB_STATUS: ${{ job.status }}
@@ -345,7 +421,7 @@ jobs:
               f"**Operation:** {os.environ.get('OPERATION') or 'rejected / unresolved'}",
               f"**Run:** {os.environ['RUN_URL']}",
           ]
-          for filename, heading in (("controller-report.txt", "Deployment probe / test output"), ("deployment-smoke-report.json", "Application smoke report"), ("integration-smoke-report.json", "Live integration report"), ("prediction-run-report.json", "Automated prediction run report")):
+          for filename, heading in (("watchdog-report.json", "Stalled-run watchdog"), ("controller-report.txt", "Deployment probe / test output"), ("deployment-smoke-report.json", "Application smoke report"), ("integration-smoke-report.json", "Live integration report"), ("prediction-run-report.json", "Automated prediction run report")):
               path = Path(filename)
               if path.exists():
                   content = path.read_text(encoding="utf-8", errors="replace")
@@ -380,5 +456,6 @@ jobs:
             controller-report.txt
             deployment-smoke-report.json
             prediction-run-report.json
+            watchdog-report.json
           if-no-files-found: warn
           retention-days: 14
