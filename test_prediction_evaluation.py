@@ -23,6 +23,17 @@ class PredictionEvaluationTests(unittest.TestCase):
         args.update(overrides)
         return build_prediction_record(**args)
 
+    def _verify_score(self, row, home_goals, away_goals):
+        row.update(
+            actual_home_goals=home_goals,
+            actual_away_goals=away_goals,
+            actual_result_provider="sportmonks",
+            actual_result_fixture_id=str(row["fixture_id"]),
+            actual_result_verified_at="2026-11-07T14:00:00+00:00",
+            actual_result_verification="exact_fixture_team_competition_season_and_score",
+        )
+        return row
+
     def test_prediction_and_player_snapshot_must_precede_kickoff(self):
         row = self._record()
         self.assertTrue(row["prediction_before_kickoff"])
@@ -56,7 +67,7 @@ class PredictionEvaluationTests(unittest.TestCase):
 
     def test_model_and_opta_scored_on_same_fixture_subset(self):
         row = self._record()
-        row.update(actual_home_goals="2", actual_away_goals="0")
+        self._verify_score(row, "2", "0")
         report = evaluate_prediction_ledger([row])
         self.assertEqual(report["model"]["matches"], 1)
         self.assertEqual(report["opta_same_fixtures"]["matches"], 1)
@@ -66,7 +77,7 @@ class PredictionEvaluationTests(unittest.TestCase):
 
     def test_late_predictions_are_not_scored(self):
         row = self._record(predicted_at="2026-11-07T13:00:00+00:00")
-        row.update(actual_home_goals="2", actual_away_goals="0")
+        self._verify_score(row, "2", "0")
         report = evaluate_prediction_ledger([row])
         self.assertEqual(report["completed_pre_match_predictions"], 0)
 
@@ -74,7 +85,7 @@ class PredictionEvaluationTests(unittest.TestCase):
         row = self._record()
         row["prediction_before_kickoff"] = True
         row["predicted_at"] = "2026-11-07T13:00:00+00:00"
-        row.update(actual_home_goals="2", actual_away_goals="0")
+        self._verify_score(row, "2", "0")
         report = evaluate_prediction_ledger([row])
         self.assertEqual(report["pre_match_predictions"], 0)
         self.assertEqual(report["completed_pre_match_predictions"], 0)
@@ -87,8 +98,8 @@ class PredictionEvaluationTests(unittest.TestCase):
         later["model_home_win"] = 20
         later["model_draw"] = 30
         later["model_away_win"] = 50
-        earlier.update(actual_home_goals="2", actual_away_goals="0")
-        later.update(actual_home_goals="2", actual_away_goals="0")
+        self._verify_score(earlier, "2", "0")
+        self._verify_score(later, "2", "0")
         report = evaluate_prediction_ledger([earlier, later])
         self.assertEqual(report["pre_match_prediction_records"], 2)
         self.assertEqual(report["pre_match_predictions"], 1)
@@ -101,13 +112,13 @@ class PredictionEvaluationTests(unittest.TestCase):
 
     def test_performance_history_contains_only_completed_pre_match_fixtures(self):
         valid = self._record(fixture_id="fixture-1", fixture_provider="sportmonks")
-        valid.update(actual_home_goals="2", actual_away_goals="0")
+        self._verify_score(valid, "2", "0")
         late = self._record(
             home_team="Liverpool", away_team="Everton",
             predicted_at="2026-11-07T13:00:00+00:00",
             fixture_id="fixture-2", fixture_provider="sportmonks",
         )
-        late.update(actual_home_goals="0", actual_away_goals="1")
+        self._verify_score(late, "0", "1")
 
         report = evaluate_prediction_ledger([valid, late])
         history = report["performance_history"]
@@ -160,19 +171,36 @@ class PredictionEvaluationTests(unittest.TestCase):
             audit["records_total"],
         )
 
+    def test_manual_or_unverified_scores_are_not_included_in_metrics(self):
+        row = self._record()
+        row.update(actual_home_goals="2", actual_away_goals="0")
+        report = evaluate_prediction_ledger([row])
+        self.assertEqual(report["completed_pre_match_predictions"], 0)
+        self.assertEqual(report["unverified_score_records"], 1)
+        self.assertEqual(report["model"]["matches"], 0)
+        self.assertEqual(report["eligibility_audit"]["scores_present_but_unverified"], 1)
+
+    def test_verified_score_must_match_the_saved_fixture_identity(self):
+        row = self._record()
+        self._verify_score(row, "2", "0")
+        row["actual_result_fixture_id"] = "different-fixture"
+        report = evaluate_prediction_ledger([row])
+        self.assertEqual(report["completed_pre_match_predictions"], 0)
+        self.assertEqual(report["unverified_score_records"], 1)
+
     def test_invalid_probability_sum_is_rejected(self):
         with self.assertRaises(ValueError):
             self._record(probabilities={"home_win": 60, "draw": 20, "away_win": 10})
 
     def test_opta_captured_after_kickoff_is_excluded(self):
         row = self._record(opta_captured_at="2026-11-07T13:00:00+00:00")
-        row.update(actual_home_goals="2", actual_away_goals="0")
+        self._verify_score(row, "2", "0")
         report = evaluate_prediction_ledger([row])
         self.assertEqual(report["opta_comparable_fixtures"], 0)
 
     def test_missing_opta_is_not_scored_or_penalized(self):
         row = self._record(opta_probabilities=None)
-        row.update(actual_home_goals="0", actual_away_goals="0")
+        self._verify_score(row, "0", "0")
         report = evaluate_prediction_ledger([row])
         self.assertEqual(report["opta_comparable_fixtures"], 0)
         self.assertEqual(report["opta_same_fixtures"]["matches"], 0)
