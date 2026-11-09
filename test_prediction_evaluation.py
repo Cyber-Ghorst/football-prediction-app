@@ -259,6 +259,40 @@ class PredictionEvaluationTests(unittest.TestCase):
         self.assertEqual([b["matches"] for b in calibration["bins"]], [0, 1, 1, 1, 1, 1, 2])
 
 
+    def test_additional_markets_are_stored_and_scored_only_on_verified_results(self):
+        row = self._record(probabilities={
+            "home_win": 60, "draw": 25, "away_win": 15,
+            "over_1_5": 80, "over_2_5": 40, "btts_yes": 60,
+        })
+        self._verify_score(row, "2", "0")
+        unverified = self._record(
+            home_team="Liverpool", away_team="Everton", fixture_id="fixture-2",
+            probabilities={
+                "home_win": 50, "draw": 30, "away_win": 20,
+                "over_1_5": 90, "over_2_5": 80, "btts_yes": 70,
+            },
+        )
+        unverified.update(actual_home_goals="3", actual_away_goals="2")
+
+        report = evaluate_prediction_ledger([row, unverified])
+        self.assertEqual(row["model_over_1_5"], 80.0)
+        self.assertEqual(row["model_over_2_5"], 40.0)
+        self.assertEqual(row["model_btts_yes"], 60.0)
+        self.assertEqual(report["market_metrics"]["over_1_5"]["matches"], 1)
+        self.assertEqual(report["market_metrics"]["over_1_5"]["accuracy_pct"], 100.0)
+        self.assertEqual(report["market_metrics"]["over_2_5"]["accuracy_pct"], 100.0)
+        self.assertEqual(report["market_metrics"]["btts_yes"]["accuracy_pct"], 0.0)
+
+    def test_invalid_additional_market_probabilities_are_not_saved(self):
+        row = self._record(probabilities={
+            "home_win": 60, "draw": 25, "away_win": 15,
+            "over_1_5": 120, "over_2_5": float("nan"), "btts_yes": -1,
+        })
+        self.assertEqual(row["model_over_1_5"], "")
+        self.assertEqual(row["model_over_2_5"], "")
+        self.assertEqual(row["model_btts_yes"], "")
+
+
 
 if __name__ == "__main__":
     unittest.main()

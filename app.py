@@ -2963,6 +2963,21 @@ with st.expander("Prediction tracking, Opta comparison and backtesting", expande
         else:
             st.info("The historical dashboard will populate as eligible pre-match forecasts receive verified final scores.")
 
+        market_metrics = report.get("market_metrics", {})
+        if market_metrics:
+            market_rows = [
+                {
+                    "Market": market.replace("_", " ").upper(),
+                    "Verified matches": metrics.get("matches", 0),
+                    "Accuracy (%)": metrics.get("accuracy_pct"),
+                    "Brier score": metrics.get("brier"),
+                    "Log loss": metrics.get("log_loss"),
+                    "Mean confidence (%)": metrics.get("mean_binary_confidence_pct"),
+                }
+                for market, metrics in market_metrics.items()
+            ]
+            st.subheader("Additional market performance")
+            st.dataframe(pd.DataFrame(market_rows), use_container_width=True, hide_index=True)
         calibration = report.get("top_outcome_calibration", {})
         st.subheader("Confidence calibration")
         st.caption(

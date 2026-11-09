@@ -14,6 +14,45 @@ import uuid
 
 OUTCOMES = ("home", "draw", "away")
 PROBABILITY_FIELDS = ("home_win", "draw", "away_win")
+BINARY_MARKET_FIELDS = ("over_1_5", "over_2_5", "btts_yes")
+
+
+def _valid_binary_probability(value: Any) -> float | None:
+    try:
+        probability = float(value)
+    except (TypeError, ValueError):
+        return None
+    if not isfinite(probability) or not 0.0 <= probability <= 100.0:
+        return None
+    return probability / 100.0
+
+
+def _score_binary_market(
+    records: Iterable[Mapping[str, Any]],
+    field: str,
+    target,
+) -> dict[str, Any]:
+    briers, log_losses, correct, confidences = [], [], [], []
+    for row in records:
+        score = _verified_actual_score(row)
+        probability = _valid_binary_probability(row.get(field))
+        if score is None or probability is None:
+            continue
+        actual = 1.0 if target(*score) else 0.0
+        predicted = 1.0 if probability >= 0.5 else 0.0
+        briers.append((probability - actual) ** 2)
+        selected_probability = probability if actual == 1.0 else 1.0 - probability
+        log_losses.append(-log(max(selected_probability, 1e-15)))
+        correct.append(predicted == actual)
+        confidences.append(max(probability, 1.0 - probability))
+    count = len(briers)
+    return {
+        "matches": count,
+        "accuracy_pct": round(sum(correct) / count * 100.0, 2) if count else None,
+        "brier": round(sum(briers) / count, 5) if count else None,
+        "log_loss": round(sum(log_losses) / count, 5) if count else None,
+        "mean_binary_confidence_pct": round(sum(confidences) / count * 100.0, 2) if count else None,
+    }
 
 
 def _parse_datetime(value: Any) -> datetime | None:
@@ -99,6 +138,18 @@ def build_prediction_record(
         "model_home_win": round(model["home_win"] * 100, 4),
         "model_draw": round(model["draw"] * 100, 4),
         "model_away_win": round(model["away_win"] * 100, 4),
+        "model_over_1_5": (
+            round(_valid_binary_probability(probabilities.get("over_1_5")) * 100, 4)
+            if _valid_binary_probability(probabilities.get("over_1_5")) is not None else ""
+        ),
+        "model_over_2_5": (
+            round(_valid_binary_probability(probabilities.get("over_2_5")) * 100, 4)
+            if _valid_binary_probability(probabilities.get("over_2_5")) is not None else ""
+        ),
+        "model_btts_yes": (
+            round(_valid_binary_probability(probabilities.get("btts_yes")) * 100, 4)
+            if _valid_binary_probability(probabilities.get("btts_yes")) is not None else ""
+        ),
         "opta_home_win": round(opta["home_win"] * 100, 4) if opta else "",
         "opta_draw": round(opta["draw"] * 100, 4) if opta else "",
         "opta_away_win": round(opta["away_win"] * 100, 4) if opta else "",
@@ -448,6 +499,17 @@ def evaluate_prediction_ledger(records: Iterable[Mapping[str, Any]]) -> dict[str
             for competition in sorted({str(row.get("competition") or "") for row in completed})
         },
         "model": _score_records(completed, "model"),
+        "market_metrics": {
+            "over_1_5": _score_binary_market(
+                completed, "model_over_1_5", lambda home, away: home + away >= 2
+            ),
+            "over_2_5": _score_binary_market(
+                completed, "model_over_2_5", lambda home, away: home + away >= 3
+            ),
+            "btts_yes": _score_binary_market(
+                completed, "model_btts_yes", lambda home, away: home > 0 and away > 0
+            ),
+        },
         "top_outcome_calibration": _top_outcome_calibration(completed, "model"),
         "confidence_bucket_hit_rate": _top_outcome_calibration(completed, "model")["bins"],
         "performance_history": performance_history,
