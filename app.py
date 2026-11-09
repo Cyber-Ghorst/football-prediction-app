@@ -2343,6 +2343,7 @@ try:
                     "player_availability_evidence": {
                         "roster_complete": bool((profile.get("availability") or {}).get("roster_complete")),
                         "players_assessed": (profile.get("availability") or {}).get("players_assessed", 0),
+                        "current_squad_players": (profile.get("availability") or {}).get("current_squad_players", 0),
                         "importance_method": (profile.get("availability") or {}).get("importance_method"),
                         "sidelined_feed_available": (profile.get("availability") or {}).get("sidelined_feed_available", False),
                         "reported_sidelined_count": (profile.get("availability") or {}).get("reported_sidelined_count"),
