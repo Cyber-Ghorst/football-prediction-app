@@ -147,71 +147,24 @@ def _normalize_stat_value(key: str, value: Any) -> float | None:
     return round(number, 3)
 
 
-def _team_statistics(fixture: dict[str, Any], team_id: int) -> dict[str, float]:
-    result: dict[str, float] = {}
-    for row in _rows(fixture.get("statistics")):
-        if row.get("participant_id") is None:
-            continue
-        try:
-            if int(row["participant_id"]) != team_id:
-                continue
-        except (TypeError, ValueError):
-            continue
-        key = _STAT_ALIASES.get(_stat_name(row))
-        if key is None:
-            continue
-        value = _normalize_stat_value(key, _stat_value(row))
-        if value is not None:
-            result[key] = value
-    return result
+def _fixture_statistics_index(fixture: dict[str, Any]) -> dict[int, dict[str, Any]]:
+    """Parse a fixture's provider statistics once, grouped by participant ID."""
+    indexed: dict[int, dict[str, Any]] = {}
+    fixture_id = fixture.get("id")
+    season_id = fixture.get("season_id")
+    updated_at = fixture.get("updated_at") or fixture.get("last_processed_at")
 
-
-def _team_statistics_provenance(fixture: dict[str, Any], team_id: int) -> list[dict[str, Any]]:
-    """Keep source-level observations alongside normalized values for auditing."""
-    observations: list[dict[str, Any]] = []
     for row in _rows(fixture.get("statistics")):
         try:
-            if int(row.get("participant_id")) != team_id:
-                continue
+            team_id = int(row.get("participant_id"))
         except (TypeError, ValueError):
             continue
-        key = _STAT_ALIASES.get(_stat_name(row))
-        if key is None:
-            continue
-        raw_value = _stat_value(row)
-        normalized = _normalize_stat_value(key, raw_value)
-        if normalized is None:
-            continue
-        stat_type = row.get("type") or {}
-        observations.append({
-            "provider": "sportmonks",
-            "fixture_id": fixture.get("id"),
-            "season_id": fixture.get("season_id"),
-            "fixture_updated_at": fixture.get("updated_at") or fixture.get("last_processed_at"),
-            "statistic_type_id": stat_type.get("id") if isinstance(stat_type, dict) else None,
-            "statistic_name": _stat_name(row),
-            "canonical_name": key,
-            "raw_value": raw_value,
-            "normalized_value": normalized,
+
+        team_data = indexed.setdefault(team_id, {
+            "statistics": {},
+            "provenance": [],
+            "raw_diagnostics": [],
         })
-    return observations
-
-
-
-def _team_statistics_raw_diagnostics(fixture: dict[str, Any], team_id: int) -> list[dict[str, Any]]:
-    """Expose every provider statistic row for this team, including unmapped names.
-
-    This is audit-only data: unknown statistic types are never added to the
-    normalized statistics used by tactical ratings or prediction inputs.
-    """
-    observations: list[dict[str, Any]] = []
-    for row in _rows(fixture.get("statistics")):
-        try:
-            if int(row.get("participant_id")) != team_id:
-                continue
-        except (TypeError, ValueError):
-            continue
-
         stat_type = row.get("type") or {}
         raw_name = (
             stat_type.get("name")
@@ -226,9 +179,10 @@ def _team_statistics_raw_diagnostics(fixture: dict[str, Any], team_id: int) -> l
             if canonical_name is not None
             else None
         )
-        observations.append({
+
+        team_data["raw_diagnostics"].append({
             "provider": "sportmonks",
-            "fixture_id": fixture.get("id"),
+            "fixture_id": fixture_id,
             "participant_id": team_id,
             "statistic_type_id": stat_type.get("id") if isinstance(stat_type, dict) else None,
             "statistic_name_raw": str(raw_name or ""),
@@ -237,7 +191,40 @@ def _team_statistics_raw_diagnostics(fixture: dict[str, Any], team_id: int) -> l
             "normalized_value": normalized_value,
             "mapping_status": "mapped" if canonical_name is not None else "unmapped",
         })
-    return observations
+
+        if canonical_name is None or normalized_value is None:
+            continue
+
+        team_data["statistics"][canonical_name] = normalized_value
+        team_data["provenance"].append({
+            "provider": "sportmonks",
+            "fixture_id": fixture_id,
+            "season_id": season_id,
+            "fixture_updated_at": updated_at,
+            "statistic_type_id": stat_type.get("id") if isinstance(stat_type, dict) else None,
+            "statistic_name": normalized_name,
+            "canonical_name": canonical_name,
+            "raw_value": raw_value,
+            "normalized_value": normalized_value,
+        })
+
+    return indexed
+
+
+def _team_statistics(fixture: dict[str, Any], team_id: int) -> dict[str, float]:
+    """Compatibility wrapper; profile collection uses the shared fixture index."""
+    return _fixture_statistics_index(fixture).get(team_id, {}).get("statistics", {})
+
+
+def _team_statistics_provenance(fixture: dict[str, Any], team_id: int) -> list[dict[str, Any]]:
+    """Compatibility wrapper for source-level normalized observations."""
+    return _fixture_statistics_index(fixture).get(team_id, {}).get("provenance", [])
+
+
+def _team_statistics_raw_diagnostics(fixture: dict[str, Any], team_id: int) -> list[dict[str, Any]]:
+    """Compatibility wrapper for all provider statistic rows, mapped or not."""
+    return _fixture_statistics_index(fixture).get(team_id, {}).get("raw_diagnostics", [])
+
 
 def standings_strength(rows: list[dict[str, Any]]) -> dict[int, float]:
     ranks: dict[int, float] = {}
@@ -262,6 +249,7 @@ def collect_sportmonks_team_profile(
     fixtures: list[dict[str, Any]],
     standings: list[dict[str, Any]],
     league_reference_statistics: dict[str, list[float]] | None = None,
+    fixture_statistics_indexes: dict[int, dict[int, dict[str, Any]]] | None = None,
 ) -> dict[str, Any]:
     """Build a profile from one validated Sportmonks season collection."""
     team_id = int(team["id"])
@@ -283,6 +271,11 @@ def collect_sportmonks_team_profile(
     }
 
     for fixture in fixtures:
+        fixture_index = (
+            fixture_statistics_indexes.get(id(fixture))
+            if fixture_statistics_indexes is not None
+            else _fixture_statistics_index(fixture)
+        ) or {}
         fixture_season_id = fixture.get("season_id")
         if fixture_season_id is not None:
             try:
@@ -333,10 +326,10 @@ def collect_sportmonks_team_profile(
             "goals_for": home_goals if is_home else away_goals,
             "goals_against": away_goals if is_home else home_goals,
             "opponent_strength": strength_map.get(opponent_id),
-            "statistics": _team_statistics(fixture, team_id),
-            "opponent_statistics": _team_statistics(fixture, opponent_id),
-            "statistics_provenance": _team_statistics_provenance(fixture, team_id),
-            "statistics_raw_diagnostics": _team_statistics_raw_diagnostics(fixture, team_id),
+            "statistics": fixture_index.get(team_id, {}).get("statistics", {}),
+            "opponent_statistics": fixture_index.get(opponent_id, {}).get("statistics", {}),
+            "statistics_provenance": fixture_index.get(team_id, {}).get("provenance", []),
+            "statistics_raw_diagnostics": fixture_index.get(team_id, {}).get("raw_diagnostics", []),
         })
 
     matches.sort(key=lambda row: str(row.get("date") or ""), reverse=True)
@@ -354,7 +347,7 @@ def collect_sportmonks_team_profile(
                     participant_id = int(participant["id"])
                 except (TypeError, ValueError):
                     continue
-                participant_statistics = _team_statistics(reference_fixture, participant_id)
+                participant_statistics = reference_index.get(participant_id, {}).get("statistics", {})
                 if participant_statistics:
                     league_team_match_statistics.append(participant_statistics)
         league_reference = build_league_reference_statistics(league_team_match_statistics)
@@ -701,8 +694,13 @@ def collect_repository_team_profiles(
     # The league-wide empirical reference is identical for both selected
     # teams. Calculate it once instead of rescanning every fixture/stat row
     # separately for each profile.
+    fixture_statistics_indexes = {
+        id(reference_fixture): _fixture_statistics_index(reference_fixture)
+        for reference_fixture in provider_fixtures
+    }
     league_team_match_statistics = []
     for reference_fixture in provider_fixtures:
+        reference_index = fixture_statistics_indexes[id(reference_fixture)]
         reference_home, reference_away = _participants(reference_fixture)
         for participant in (reference_home, reference_away):
             if not participant or participant.get("id") is None:
@@ -731,6 +729,7 @@ def collect_repository_team_profiles(
             provider_fixtures,
             standings or [],
             league_reference_statistics=league_reference,
+            fixture_statistics_indexes=fixture_statistics_indexes,
         )
         profile["data_quality"]["history_source"] = "cockroachdb_central_repository"
         profile["data_quality"]["repository_fixture_rows"] = len(fixture_rows)
