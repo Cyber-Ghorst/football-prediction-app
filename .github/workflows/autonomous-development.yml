@@ -3,7 +3,7 @@ name: Autonomous Prediction App Development
 on:
   workflow_dispatch:
   schedule:
-    - cron: "41 2 * * *"
+    - cron: "34 21 * * *"
 
 permissions:
   contents: read
