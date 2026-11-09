@@ -50,8 +50,8 @@ def _safe_text(value: object) -> str:
             "SPORTMONKS_API_TOKEN", "SPORTMONKS_API_KEY",
         } and secret:
             text = text.replace(secret, "[REDACTED]")
-    text = re.sub(r"(?i)(Bearer\\s+)[A-Za-z0-9._~+/=-]+", r"\\1[REDACTED]", text)
-    text = re.sub(r"(postgres(?:ql)?://[^:/\\s]+:)[^@/\\s]+@", r"\\1[REDACTED]@", text)
+    text = re.sub(r"(?i)(Bearer\s+)[A-Za-z0-9._~+/=-]+", r"\1[REDACTED]", text)
+    text = re.sub(r"(postgres(?:ql)?://[^:/\s]+:)[^@/\s]+@", r"\1[REDACTED]@", text)
     return text[:1200]
 
 
@@ -123,7 +123,7 @@ def run_prediction(season: int, competition: str, home_team: str, away_team: str
         if value:
             secret_lines.append(f"{key} = {json.dumps(value)}")
     secrets_path = secrets_dir / "secrets.toml"
-    secrets_path.write_text("\\n".join(secret_lines) + "\\n", encoding="utf-8")
+    secrets_path.write_text("\n".join(secret_lines) + "\n", encoding="utf-8")
 
     from streamlit.testing.v1 import AppTest
 
