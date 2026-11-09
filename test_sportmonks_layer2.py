@@ -299,6 +299,15 @@ class SportmonksLayer2Tests(unittest.TestCase):
         self.assertEqual(sidelined["team_id"], 10)
         self.assertFalse(sidelined["completed"])
 
+    def test_extract_match_details_rejects_wrong_fixture_id(self):
+        from sportmonks_layer2 import extract_sportmonks_match_details
+
+        row = fixture(20, 10, 20, 0, 0, state="NS")
+        with self.assertRaises(ValueError):
+            extract_sportmonks_match_details(
+                row, 10, 20, 2026, expected_fixture_id=21
+            )
+
     def test_extract_match_details_rejects_wrong_match_identity(self):
         from sportmonks_layer2 import extract_sportmonks_match_details
 
