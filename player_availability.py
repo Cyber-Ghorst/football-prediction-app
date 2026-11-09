@@ -152,6 +152,8 @@ def build_sportmonks_availability_evidence(
 
     diagnostics: dict[str, Any] = {
         "current_squad_rows_seen": 0,
+        "not_current_squad_rows_seen": 0,
+        "not_current_squad_players": [],
         "matching_team_season_statistics_rows": 0,
         "players_with_minutes_detail": 0,
         "players_missing_minutes_detail": [],
@@ -165,6 +167,17 @@ def build_sportmonks_availability_evidence(
 
     if not isinstance(squad_rows, list) or not squad_rows:
         return unknown("The extended squad endpoint returned no player list.")
+    for squad_row in squad_rows:
+        if not isinstance(squad_row, dict) or not isinstance(squad_row.get("in_squad"), bool):
+            return unknown("An extended squad row is missing its explicit in_squad status.")
+        if squad_row["in_squad"]:
+            diagnostics["current_squad_rows_seen"] += 1
+        else:
+            diagnostics["not_current_squad_rows_seen"] += 1
+            diagnostics["not_current_squad_players"].append({
+                "player_id": squad_row.get("id"),
+                "player_name": squad_row.get("display_name") or squad_row.get("name") or squad_row.get("common_name"),
+            })
     if not sidelined_feed_available:
         return unknown("The exact fixture response did not confirm that the sidelined feed was supplied.")
     if not isinstance(sidelined_rows, list):
@@ -180,7 +193,6 @@ def build_sportmonks_availability_evidence(
             return unknown("An extended squad row is missing its explicit in_squad status.")
         if row["in_squad"] is False:
             continue
-        diagnostics["current_squad_rows_seen"] += 1
         try:
             player_id = str(int(row.get("id")))
         except (TypeError, ValueError):
