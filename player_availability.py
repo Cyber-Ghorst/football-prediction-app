@@ -143,6 +143,9 @@ def build_sportmonks_availability_evidence(
         "season_id": int(season_id),
         "roster_complete": False,
         "sidelined_feed_available": bool(sidelined_feed_available),
+        "injury_data_available": bool(sidelined_feed_available),
+        "reported_sidelined": list(sidelined_rows) if sidelined_feed_available and isinstance(sidelined_rows, list) else None,
+        "reported_unavailable_count": len(sidelined_rows) if sidelined_feed_available and isinstance(sidelined_rows, list) else None,
         "squad_rows_received": len(squad_rows) if isinstance(squad_rows, list) else 0,
         "reported_sidelined_count": len(sidelined_rows) if isinstance(sidelined_rows, list) else None,
     }
