@@ -145,14 +145,14 @@ class UpcomingFixtureEnrichmentTests(unittest.TestCase):
         ]}) as request:
             rows = client.extended_squad_by_team(
                 11,
-                include="statistics.details.type",
+                include="statistics.details",
                 filters="playerstatisticSeasons:2026",
             )
         self.assertEqual(rows[0]["id"], 101)
         request.assert_called_once_with(
             "squads/teams/11/extended",
             {
-                "include": "statistics.details.type",
+                "include": "statistics.details",
                 "filters": "playerstatisticSeasons:2026",
             },
         )
