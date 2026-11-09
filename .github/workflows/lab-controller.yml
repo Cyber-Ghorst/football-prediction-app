@@ -487,14 +487,41 @@ jobs:
               "issue_report_body": body,
           }, indent=2), encoding="utf-8")
           api = f"https://api.github.com/repos/{os.environ['REPOSITORY']}/issues/{os.environ['ISSUE_NUMBER']}/comments"
-          request = Request(api, data=json.dumps({"body": body}).encode("utf-8"), headers={
+          headers = {
               "Accept": "application/vnd.github+json",
               "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
               "X-GitHub-Api-Version": "2022-11-28",
               "Content-Type": "application/json",
-          }, method="POST")
-          with urlopen(request, timeout=20) as response:
-              print(f"Published timestamped latest report (HTTP {response.status})")
+          }
+          # Keep one stable "latest report" comment. Older workflow/run history
+          # remains available in GitHub Actions and the archived app reports.
+          comments = []
+          page = 1
+          while True:
+              list_request = Request(f"{api}?per_page=100&page={page}", headers=headers)
+              with urlopen(list_request, timeout=20) as response:
+                  batch = json.loads(response.read().decode("utf-8"))
+              comments.extend(batch)
+              if len(batch) < 100:
+                  break
+              page += 1
+          latest_comments = [
+              comment for comment in comments
+              if "<!-- prediction-lab-report -->" in comment.get("body", "")
+          ]
+          payload = json.dumps({"body": body}).encode("utf-8")
+          if latest_comments:
+              latest_comment = max(latest_comments, key=lambda comment: comment["id"])
+              target = f"{api}/{latest_comment['id']}"
+              method = "PATCH"
+              action = f"Updated latest report comment #{latest_comment['id']}"
+          else:
+              target = api
+              method = "POST"
+              action = "Created latest report comment"
+          publish_request = Request(target, data=payload, headers=headers, method=method)
+          with urlopen(publish_request, timeout=20) as response:
+              print(f"{action} (HTTP {response.status})")
           PY
 
       - name: Upload controller report
