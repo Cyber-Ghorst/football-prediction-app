@@ -2963,6 +2963,22 @@ with st.expander("Prediction tracking, Opta comparison and backtesting", expande
         else:
             st.info("The historical dashboard will populate as eligible pre-match forecasts receive verified final scores.")
 
+        calibration = report.get("top_outcome_calibration", {})
+        st.subheader("Confidence calibration")
+        st.caption(
+            "Top-outcome confidence compared with observed hit rate, using only "
+            "deduplicated pre-kickoff forecasts with independently verified final scores. "
+            "Sparse bins are descriptive and are not proof of calibration."
+        )
+        if calibration.get("matches"):
+            st.dataframe(
+                pd.DataFrame(calibration.get("bins", [])),
+                use_container_width=True,
+                hide_index=True,
+            )
+        else:
+            st.info("Calibration bins will populate as forecasts receive independently verified final scores.")
+
         model_metrics = report["model"]
         opta_metrics = report["opta_same_fixtures"]
         m1, m2, m3 = st.columns(3)
