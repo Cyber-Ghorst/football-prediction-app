@@ -413,29 +413,79 @@ jobs:
           import json
           import os
           import re
+          from datetime import datetime, timezone
           from pathlib import Path
+          from zoneinfo import ZoneInfo
           from urllib.request import Request, urlopen
 
+          generated = datetime.now(timezone.utc)
+          generated_utc = generated.isoformat(timespec="seconds")
+          generated_eat = generated.astimezone(ZoneInfo("Africa/Nairobi")).isoformat(timespec="seconds")
           sections = [
+              f"**Report generated (UTC):** {generated_utc}",
+              f"**Report generated (Kenya / EAT):** {generated_eat}",
               f"**Workflow result:** {os.environ.get('JOB_STATUS', 'unknown')}",
               f"**Operation:** {os.environ.get('OPERATION') or 'rejected / unresolved'}",
               f"**Run:** {os.environ['RUN_URL']}",
           ]
-          for filename, heading in (("watchdog-report.json", "Stalled-run watchdog"), ("controller-report.txt", "Deployment probe / test output"), ("deployment-smoke-report.json", "Application smoke report"), ("integration-smoke-report.json", "Live integration report"), ("prediction-run-report.json", "Automated prediction run report")):
+          source_timestamps = []
+          report_files = (
+              ("watchdog-report.json", "Stalled-run watchdog"),
+              ("controller-report.txt", "Deployment probe / test output"),
+              ("deployment-smoke-report.json", "Application smoke report"),
+              ("integration-smoke-report.json", "Live integration report"),
+              ("prediction-run-report.json", "Automated prediction run report"),
+          )
+          for filename, heading in report_files:
               path = Path(filename)
-              if path.exists():
-                  content = path.read_text(encoding="utf-8", errors="replace")
-                  if "Ran " in content and " tests " in content:
-                      summary = [
-                          line for line in content.splitlines()
-                          if re.search(r"Ran \d+ tests|^OK$|^FAILED|^FAIL:|^ERROR:|^Traceback", line)
-                      ]
-                      if summary:
-                          content = "\n".join(summary[-30:])
-                  elif len(content) > 7000:
-                      content = content[:7000] + "\n... output truncated"
-                  sections.append(f"### {heading}\n\n{content}")
-          body = "## Prediction Lab agent report\n\n" + "\n\n".join(sections)
+              if not path.exists():
+                  continue
+              content = path.read_text(encoding="utf-8", errors="replace")
+              if filename.endswith(".json"):
+                  try:
+                      payload = json.loads(content)
+                      def collect_times(value, key=""):
+                          if isinstance(value, dict):
+                              for child_key, child in value.items():
+                                  if any(token in child_key.lower() for token in ("checked_at", "completed_at", "predicted_at", "started_at", "generated_at")):
+                                      if isinstance(child, str):
+                                          source_timestamps.append((child_key, child))
+                                  collect_times(child, child_key)
+                          elif isinstance(value, list):
+                              for child in value:
+                                  collect_times(child, key)
+                      collect_times(payload)
+                  except (json.JSONDecodeError, TypeError):
+                      pass
+              if "Ran " in content and " tests " in content:
+                  summary = [
+                      line for line in content.splitlines()
+                      if re.search(r"Ran \\d+ tests|^OK$|^FAILED|^FAIL:|^ERROR:|^Traceback", line)
+                  ]
+                  if summary:
+                      content = "\\n".join(summary[-30:])
+              elif len(content) > 7000:
+                  content = content[:7000] + "\\n... output truncated"
+              sections.append(f"### {heading}\\n\\n{content}")
+
+          if source_timestamps:
+              sections.insert(2, "**Underlying report timestamps:**\\n" + "\\n".join(
+                  f"- {key}: {value}" for key, value in source_timestamps[-12:]
+              ))
+          body = (
+              "<!-- prediction-lab-report -->\\n"
+              "## Prediction Lab — Most Recent Report\\n\\n"
+              + "\\n\\n".join(sections)
+          )
+          Path("latest-controller-report.json").write_text(json.dumps({
+              "report_generated_at_utc": generated_utc,
+              "report_generated_at_eat": generated_eat,
+              "workflow_result": os.environ.get("JOB_STATUS", "unknown"),
+              "operation": os.environ.get("OPERATION") or "rejected / unresolved",
+              "run_url": os.environ["RUN_URL"],
+              "source_timestamps": [{"field": key, "value": value} for key, value in source_timestamps],
+              "issue_report_body": body,
+          }, indent=2), encoding="utf-8")
           api = f"https://api.github.com/repos/{os.environ['REPOSITORY']}/issues/{os.environ['ISSUE_NUMBER']}/comments"
           request = Request(api, data=json.dumps({"body": body}).encode("utf-8"), headers={
               "Accept": "application/vnd.github+json",
@@ -444,7 +494,7 @@ jobs:
               "Content-Type": "application/json",
           }, method="POST")
           with urlopen(request, timeout=20) as response:
-              print(f"Published agent report (HTTP {response.status})")
+              print(f"Published timestamped latest report (HTTP {response.status})")
           PY
 
       - name: Upload controller report
@@ -457,5 +507,6 @@ jobs:
             deployment-smoke-report.json
             prediction-run-report.json
             watchdog-report.json
+            latest-controller-report.json
           if-no-files-found: warn
           retention-days: 14
