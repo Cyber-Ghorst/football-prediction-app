@@ -95,7 +95,10 @@ try:
     from provider_corroboration import collect_recent_result_corroboration
     from highlightly_match_enrichment import collect_highlightly_match_enrichment
     from highlightly_player_enrichment import collect_highlightly_player_enrichment
-    from prediction_evaluation import build_prediction_record, evaluate_prediction_ledger, merge_prediction_records
+    from prediction_evaluation import (
+        build_availability_snapshot, build_prediction_record,
+        evaluate_prediction_ledger, merge_prediction_records,
+    )
     from prediction_storage import load_prediction_ledger, save_prediction_records
     from prediction_results import verified_final_score, group_completed_fixture_candidates, automatic_result_check_due
     from prediction_readiness import build_prediction_readiness
@@ -2616,6 +2619,17 @@ try:
         if record_opta_benchmark and all(value is not None for value in (opta_home, opta_draw, opta_away)) and abs(opta_home + opta_draw + opta_away - 100.0) <= 0.6 and opta_source_url.strip():
             opta_values = {"home_win": opta_home, "draw": opta_draw, "away_win": opta_away}
         player_snapshot = player_report if isinstance(player_report, dict) else None
+        availability_snapshot = None
+        if sportmonks_mode and prediction_fixture:
+            availability_snapshot = build_availability_snapshot(
+                home_profile=home,
+                away_profile=away,
+                fixture_id=prediction_fixture.get("id"),
+                season_id=int(selected_season_id),
+                home_team_id=int(team_map[home_name]["id"]),
+                away_team_id=int(team_map[away_name]["id"]),
+                captured_at=datetime.now(timezone.utc).isoformat(),
+            )
         prediction_row = build_prediction_record(
             competition=str(selected_league_row.get("name") or selected_league.split(" — ")[0]),
             country=selected_country_name,
@@ -2631,6 +2645,7 @@ try:
             opta_source_url=opta_source_url.strip() if opta_values else "",
             opta_captured_at=datetime.now(timezone.utc).isoformat() if opta_values else "",
             player_snapshot=player_snapshot,
+            availability_snapshot=availability_snapshot,
         )
         st.session_state["prediction_ledger"] = merge_prediction_records(
             st.session_state["prediction_ledger"], [prediction_row]
@@ -3010,6 +3025,12 @@ with st.expander("Prediction tracking, Opta comparison and backtesting", expande
             st.info("No Opta benchmark has been captured for a completed fixture yet. Add published Opta probabilities before kickoff to enable a fair same-match comparison.")
         st.write("Player-stat snapshots captured before kickoff:", report["player_snapshots_pre_kickoff"])
         st.write("Team-season snapshots captured before kickoff:", report["team_snapshots_pre_kickoff"])
+        st.write(
+            "Complete Sportmonks player-availability snapshots captured before kickoff:",
+            report["availability_snapshots_pre_kickoff"],
+        )
+        if report["availability_snapshot_coverage_by_competition"]:
+            st.json(report["availability_snapshot_coverage_by_competition"])
         if report["player_snapshot_coverage_by_competition"]:
             st.json(report["player_snapshot_coverage_by_competition"])
         if report["model_metrics_by_competition"]:
