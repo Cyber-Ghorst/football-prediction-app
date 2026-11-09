@@ -115,7 +115,10 @@ class SportmonksLayer2Tests(unittest.TestCase):
         with patch(
             "sportmonks_layer2.build_league_reference_statistics",
             wraps=__import__("sportmonks_layer2").build_league_reference_statistics,
-        ) as build_reference:
+        ) as build_reference, patch(
+            "sportmonks_layer2._fixture_statistics_index",
+            wraps=__import__("sportmonks_layer2")._fixture_statistics_index,
+        ) as build_statistics_index:
             profiles = collect_repository_team_profiles(
                 "postgresql://example",
                 ["sportmonks:10", "sportmonks:20"],
@@ -125,6 +128,9 @@ class SportmonksLayer2Tests(unittest.TestCase):
 
         self.assertEqual(set(profiles), {"sportmonks:10", "sportmonks:20"})
         self.assertEqual(build_reference.call_count, 1)
+        # One parse per provider fixture, reused for both team profiles and
+        # the league reference distribution.
+        self.assertEqual(build_statistics_index.call_count, 1)
         self.assertEqual(
             profiles["sportmonks:10"]["matches"][0]["statistics"]["Ball Possession"],
             60.0,
