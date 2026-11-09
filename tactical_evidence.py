@@ -24,6 +24,11 @@ AUTOMATIC_DIMENSIONS = {
         "vulnerability_key": "transition_recovery",
         "metrics": ("Counter Attacks",),
     },
+    "high_quality_chances": {
+        "weapon_key": "high_quality_chance_creation",
+        "vulnerability_key": "high_quality_chance_exposure",
+        "metrics": ("Big Chances Created",),
+    },
     "aerial": {
         "weapon_key": "aerial_threat",
         "vulnerability_key": "aerial_defence",
@@ -172,6 +177,7 @@ def build_tactical_evidence_profile(
             "limitations": [
                 "These are statistical matchup indicators, not player-tracking or event-location tactical analysis.",
                 "Counter-attack compatibility remains unknown when the provider does not supply Counter Attacks.",
+                "Big Chances Created measures provider-recorded high-quality chances; it is a separate indicator from shots inside the box and key passes.",
                 "No absent statistic is treated as zero or estimated.",
             ],
         },
