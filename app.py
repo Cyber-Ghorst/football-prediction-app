@@ -82,7 +82,7 @@ try:
     from highlightly import HighlightlyClient, HighlightlyError
     from sportmonks import SportmonksClient, SportmonksError
     from data_layer2 import collect_team_profile
-    from sportmonks_layer2 import collect_sportmonks_team_profile, collect_repository_team_profiles, find_upcoming_match_fixture, find_exact_match_fixture, extract_sportmonks_match_details
+    from sportmonks_layer2 import collect_sportmonks_team_profile, collect_repository_team_profiles, load_repository_season_snapshot, find_upcoming_match_fixture, find_exact_match_fixture, extract_sportmonks_match_details
     from sportmonks_candidate_verification import verify_highlightly_candidate
     from provider_core import normalize_team_name
     from engine import predict_match, WEIGHTS, most_likely_outcome
@@ -715,6 +715,15 @@ def get_sm_fixture_detail(fixture_id, include, ttl_seconds=300):
 def _fetch_sm_fixture_detail(fixture_id, include):
     with SportmonksClient() as sm:
         return sm.fixture(fixture_id, include=include)
+
+
+@st.cache_data(ttl=300, max_entries=4, show_spinner=False)
+def _cached_repository_season_snapshot(database_url_fingerprint, season_id):
+    """Reuse one bounded season snapshot across team selections for five minutes."""
+    return load_repository_season_snapshot(
+        PROVIDER_DATABASE_URL,
+        str(season_id),
+    )
 
 
 @st.cache_data(ttl=300, show_spinner=False)
@@ -1578,6 +1587,15 @@ try:
                 repository_profiles = {}
                 repository_profiles_error = None
                 try:
+                    if not PROVIDER_DATABASE_URL:
+                        raise ValueError("PROVIDER_DATABASE_URL is required for central repository history.")
+                    database_fingerprint = hashlib.sha256(
+                        PROVIDER_DATABASE_URL.encode("utf-8")
+                    ).hexdigest()
+                    season_snapshot = _cached_repository_season_snapshot(
+                        database_fingerprint,
+                        f"sportmonks:{int(selected_season_id)}",
+                    )
                     repository_profiles = collect_repository_team_profiles(
                         PROVIDER_DATABASE_URL,
                         [
@@ -1586,6 +1604,7 @@ try:
                         ],
                         f"sportmonks:{int(selected_season_id)}",
                         standings,
+                        season_snapshot=season_snapshot,
                     )
                 except Exception as shared_repository_error:
                     repository_profiles_error = shared_repository_error
