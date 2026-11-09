@@ -11,6 +11,7 @@ on:
           - health_check
           - test_suite
           - full_check
+          - prediction_run
         default: health_check
       season:
         description: "Season start year (Sportmonks current-season path: 2025+)"
@@ -38,7 +39,7 @@ on:
     types: [created]
 
 permissions:
-  contents: read
+  contents: write
   issues: write
 
 jobs:
@@ -267,7 +268,7 @@ jobs:
           SPORTMONKS_API_KEY: ${{ secrets.SPORTMONKS_API_KEY }}
           PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          GITHUB_REPORT_TOKEN: ${{ secrets.GITHUB_REPORT_TOKEN }}
+          GITHUB_REPORT_TOKEN: ${{ secrets.GITHUB_REPORT_TOKEN || github.token }}
           APISPORTS_API_KEY: ${{ secrets.APISPORTS_API_KEY }}
           API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
           HIGHLIGHTLY_API_KEY: ${{ secrets.HIGHLIGHTLY_API_KEY }}
@@ -299,7 +300,7 @@ jobs:
           SPORTMONKS_API_KEY: ${{ secrets.SPORTMONKS_API_KEY }}
           PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          GITHUB_REPORT_TOKEN: ${{ secrets.GITHUB_REPORT_TOKEN }}
+          GITHUB_REPORT_TOKEN: ${{ secrets.GITHUB_REPORT_TOKEN || github.token }}
           APISPORTS_API_KEY: ${{ secrets.APISPORTS_API_KEY }}
           API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
           HIGHLIGHTLY_API_KEY: ${{ secrets.HIGHLIGHTLY_API_KEY }}
