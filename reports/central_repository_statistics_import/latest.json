@@ -1,0 +1,15 @@
+{
+  "generated_at": "2026-11-09T00:52:58.006264+00:00",
+  "season_id": 28083,
+  "league": "Premier League — England",
+  "teams_requested": 20,
+  "fixtures_collected": 380,
+  "fixtures_with_statistics": 100,
+  "statistics_rows_imported": 8430,
+  "central_statistics_table_rows": 8430,
+  "statistics_import_mode": "ten most recent completed fixtures per selected team",
+  "prediction_engine_modified": false,
+  "neon_prediction_ledger_modified": false,
+  "generated_at_utc": "2026-11-09T00:52:58.007247+00:00",
+  "report_name": "central_repository_statistics_import"
+}
