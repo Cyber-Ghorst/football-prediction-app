@@ -305,6 +305,70 @@ class PlayerAvailabilityTests(unittest.TestCase):
         self.assertIsNone(assess_player_availability(evidence)["score"])
 
 
+    def test_bench_only_player_without_playing_appearances_has_zero_minutes(self):
+        from player_availability import build_sportmonks_availability_evidence
+
+        evidence = build_sportmonks_availability_evidence(
+            squad_rows=[
+                {"id": 1, "in_squad": True, "statistics": [{
+                    "player_id": 1, "team_id": 10, "season_id": 2026,
+                    "details": [{"type_id": 119, "value": {"total": 900}}],
+                }]},
+                {"id": 2, "in_squad": True, "statistics": [{
+                    "player_id": 2, "team_id": 10, "season_id": 2026,
+                    "details": [{"type_id": 323, "value": {"total": 3}}],
+                }]},
+            ],
+            sidelined_rows=[], sidelined_feed_available=True,
+            team_id=10, season_id=2026, fixture_id=123, kickoff="2026-11-23",
+        )
+        self.assertTrue(evidence["roster_complete"])
+        self.assertEqual(assess_player_availability(evidence)["score"], 100.0)
+        zero_player = next(p for p in evidence["squad_players"] if p["player_id"] == 2)
+        self.assertEqual(zero_player["minutes_played"], 0.0)
+        self.assertEqual(zero_player["importance"], 0.0)
+        self.assertEqual(zero_player["minutes_evidence_method"], "bench_appearances_without_playing_appearances")
+
+    def test_unavailable_bench_only_player_has_zero_importance(self):
+        from player_availability import build_sportmonks_availability_evidence
+
+        evidence = build_sportmonks_availability_evidence(
+            squad_rows=[
+                {"id": 1, "in_squad": True, "statistics": [{
+                    "player_id": 1, "team_id": 10, "season_id": 2026,
+                    "details": [{"type_id": 119, "value": {"total": 900}}],
+                }]},
+                {"id": 2, "in_squad": True, "statistics": [{
+                    "player_id": 2, "team_id": 10, "season_id": 2026,
+                    "details": [{"type_id": 323, "value": {"total": 3}}],
+                }]},
+            ],
+            sidelined_rows=[{
+                "player_id": 2, "team_id": 10, "completed": False,
+                "start_date": "2026-11-01", "end_date": None,
+            }],
+            sidelined_feed_available=True,
+            team_id=10, season_id=2026, fixture_id=123, kickoff="2026-11-23",
+        )
+        self.assertEqual(assess_player_availability(evidence)["score"], 100.0)
+
+    def test_missing_minutes_with_positive_appearances_stays_unknown(self):
+        from player_availability import build_sportmonks_availability_evidence
+
+        evidence = build_sportmonks_availability_evidence(
+            squad_rows=[{
+                "id": 1, "in_squad": True,
+                "statistics": [{
+                    "player_id": 1, "team_id": 10, "season_id": 2026,
+                    "details": [{"type_id": 321, "value": {"total": 2}}],
+                }],
+            }],
+            sidelined_rows=[], sidelined_feed_available=True,
+            team_id=10, season_id=2026, fixture_id=123, kickoff="2026-11-23",
+        )
+        self.assertIsNone(assess_player_availability(evidence)["score"])
+
+
 
 if __name__ == "__main__":
     unittest.main()
