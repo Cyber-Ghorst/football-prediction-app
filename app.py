@@ -1867,6 +1867,7 @@ try:
                                 home_team_id=int(team_map[home_name]["id"]),
                                 away_team_id=int(team_map[away_name]["id"]),
                                 season_id=int(selected_season_id),
+                                expected_fixture_id=selected_match_fixture.get("id"),
                             )
                             home["lineups"] = match_details["teams"]["home"]
                             away["lineups"] = match_details["teams"]["away"]
