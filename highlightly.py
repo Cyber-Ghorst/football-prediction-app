@@ -93,12 +93,21 @@ class HighlightlyClient:
             envelope = "unrecognized"
             data_type = None
             top_level_keys = []
+        pagination = payload.get("pagination") if isinstance(payload, dict) else None
+        pagination_summary = None
+        if isinstance(pagination, dict):
+            pagination_summary = {
+                "total_count": pagination.get("totalCount"),
+                "offset": pagination.get("offset"),
+                "limit": pagination.get("limit"),
+            }
         self.last_metadata.update({
             "response_payload_type": type(payload).__name__,
             "response_top_level_keys": top_level_keys,
             "response_data_type": data_type,
             "rows_envelope": envelope,
             "extracted_rows_count": len(rows),
+            "pagination": pagination_summary,
         })
         return rows
 
