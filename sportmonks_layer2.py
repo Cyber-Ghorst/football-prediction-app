@@ -218,7 +218,7 @@ def _team_statistics_raw_diagnostics(fixture: dict[str, Any], team_id: int) -> l
             if isinstance(stat_type, dict)
             else str(stat_type or "")
         )
-        normalized_name = str(raw_name or "").strip().casefold()
+        normalized_name = _stat_name(row)
         canonical_name = _STAT_ALIASES.get(normalized_name)
         raw_value = _stat_value(row)
         normalized_value = (
