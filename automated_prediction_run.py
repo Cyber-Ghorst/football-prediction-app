@@ -75,16 +75,26 @@ def _upload_report(report: dict) -> dict:
     }
 
     def put(path: str, message: str, sha: str | None = None) -> dict:
-        body = {"message": message, "content": encoded}
-        if sha:
-            body["sha"] = sha
-        response = requests.put(
-            f"https://api.github.com/repos/{owner_repo}/contents/{path}",
-            headers=headers, json=body, timeout=30,
-        )
-        if response.status_code not in (200, 201):
+        api_url = f"https://api.github.com/repos/{owner_repo}/contents/{path}"
+        current_sha = sha
+        for attempt in range(3):
+            body = {"message": message, "content": encoded}
+            if current_sha:
+                body["sha"] = current_sha
+            response = requests.put(api_url, headers=headers, json=body, timeout=30)
+            if response.status_code in (200, 201):
+                return response.json()
+            if response.status_code == 409 and attempt < 2:
+                current = requests.get(api_url, headers=headers, timeout=20)
+                if current.status_code not in (200, 404):
+                    raise RuntimeError(
+                        f"GitHub report conflict refresh failed (HTTP {current.status_code})."
+                    )
+                current_sha = current.json().get("sha") if current.status_code == 200 else None
+                import time
+                time.sleep(0.25 * (attempt + 1))
+                continue
             raise RuntimeError(f"GitHub report upload failed (HTTP {response.status_code}).")
-        return response.json()
 
     put(archive, "Archive automated prediction run report")
     current = requests.get(
