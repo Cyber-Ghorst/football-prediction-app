@@ -1,20 +1,20 @@
 {
-  "records_total": 51,
+  "records_total": 52,
   "eligibility_audit": {
-    "records_total": 51,
+    "records_total": 52,
     "invalid_probabilities": 0,
     "missing_prediction_timestamp": 0,
     "missing_kickoff_timestamp": 4,
     "at_or_after_kickoff": 4,
-    "valid_pre_kickoff_records": 43,
+    "valid_pre_kickoff_records": 44,
     "unidentifiable_pre_match_records": 0,
     "duplicate_records_excluded": 25,
-    "unique_pre_match_fixtures": 18,
+    "unique_pre_match_fixtures": 19,
     "completed_with_valid_scores": 1,
-    "awaiting_valid_score": 17
+    "awaiting_valid_score": 18
   },
-  "pre_match_prediction_records": 43,
-  "pre_match_predictions": 18,
+  "pre_match_prediction_records": 44,
+  "pre_match_predictions": 19,
   "duplicate_records_excluded": 25,
   "unidentifiable_pre_match_records": 0,
   "completed_pre_match_predictions": 1,
@@ -67,6 +67,6 @@
   },
   "opta_comparable_fixtures": 0,
   "opta_comparison_note": "Opta is scored only on the same deduplicated completed fixtures as the model.",
-  "generated_at_utc": "2026-11-09T15:27:43.104330+00:00",
+  "generated_at_utc": "2026-11-09T15:29:34.182848+00:00",
   "report_name": "prediction_performance"
 }
