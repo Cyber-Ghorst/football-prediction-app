@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-11-09T12:17:16.193075+00:00",
+  "generated_at": "2026-11-09T14:48:37.262275+00:00",
   "season_id": 28083,
-  "home_team": "Brighton & Hove Albion",
+  "home_team": "Manchester City",
   "away_team": "Fulham",
   "profiles": {
-    "Brighton & Hove Albion": {
+    "Manchester City": {
       "source": "cockroachdb_central_repository",
       "completed_matches": 10,
       "repository_fixture_rows": 380,
@@ -19,6 +19,6 @@
   },
   "prediction_engine_modified": false,
   "neon_prediction_ledger_modified": false,
-  "generated_at_utc": "2026-11-09T12:17:22.660782+00:00",
+  "generated_at_utc": "2026-11-09T14:48:42.834313+00:00",
   "report_name": "central_repository_prediction_inputs"
 }
