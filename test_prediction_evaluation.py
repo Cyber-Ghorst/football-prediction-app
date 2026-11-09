@@ -1,7 +1,7 @@
 import unittest
 from prediction_evaluation import (
-    build_prediction_record, evaluate_prediction_ledger,
-    merge_prediction_records, outcome_from_score,
+    build_availability_snapshot, build_prediction_record,
+    evaluate_prediction_ledger, merge_prediction_records, outcome_from_score,
 )
 
 
@@ -33,6 +33,99 @@ class PredictionEvaluationTests(unittest.TestCase):
             actual_result_verification="exact_fixture_team_competition_season_and_score",
         )
         return row
+
+    def _availability_profile(self, team_id, name, fixture_id="fixture-1"):
+        return {
+            "name": name,
+            "availability": {
+                "source": "sportmonks",
+                "fixture_id": fixture_id,
+                "team_id": team_id,
+                "season_id": 2026,
+                "roster_complete": True,
+                "sidelined_feed_available": True,
+                "reported_sidelined_count": 0,
+                "squad_players": [{
+                    "player_id": team_id * 100,
+                    "player_name": f"{name} Player",
+                    "status": "available",
+                    "importance": 100,
+                    "minutes_played": 900,
+                    "minutes_evidence_method": "sportmonks_minutes_played_type_119",
+                }],
+            },
+            "player_availability_assessment": {"status": "scored", "score": 100.0},
+        }
+
+    def test_availability_snapshot_requires_exact_fixture_team_and_season(self):
+        snapshot = build_availability_snapshot(
+            home_profile=self._availability_profile(10, "Arsenal"),
+            away_profile=self._availability_profile(20, "Chelsea"),
+            fixture_id="fixture-1", season_id=2026,
+            home_team_id=10, away_team_id=20,
+            captured_at="2026-11-07T09:30:00+00:00",
+        )
+        self.assertEqual(snapshot["status"], "complete")
+        self.assertEqual(snapshot["complete_teams"], 2)
+        self.assertEqual(len(snapshot["players"]), 2)
+
+        mismatched = build_availability_snapshot(
+            home_profile=self._availability_profile(10, "Arsenal"),
+            away_profile=self._availability_profile(20, "Chelsea", fixture_id="other-fixture"),
+            fixture_id="fixture-1", season_id=2026,
+            home_team_id=10, away_team_id=20,
+            captured_at="2026-11-07T09:30:00+00:00",
+        )
+        self.assertEqual(mismatched["status"], "partial")
+        self.assertEqual(mismatched["complete_teams"], 1)
+
+    def test_complete_availability_snapshot_is_audited_only_before_kickoff(self):
+        snapshot = build_availability_snapshot(
+            home_profile=self._availability_profile(10, "Arsenal"),
+            away_profile=self._availability_profile(20, "Chelsea"),
+            fixture_id="fixture-1", season_id=2026,
+            home_team_id=10, away_team_id=20,
+            captured_at="2026-11-07T09:30:00+00:00",
+        )
+        row = self._record(availability_snapshot=snapshot)
+        self.assertTrue(row["availability_snapshot_before_kickoff"])
+        self.assertEqual(row["availability_snapshot_players_count"], 2)
+        self.assertEqual(row["availability_snapshot_status"], "complete")
+
+        late_snapshot = dict(snapshot)
+        late_snapshot["captured_at"] = "2026-11-07T13:00:00+00:00"
+        late = self._record(availability_snapshot=late_snapshot)
+        self.assertFalse(late["availability_snapshot_before_kickoff"])
+
+    def test_evaluation_counts_only_complete_pre_kickoff_availability_snapshots(self):
+        complete = build_availability_snapshot(
+            home_profile=self._availability_profile(10, "Arsenal"),
+            away_profile=self._availability_profile(20, "Chelsea"),
+            fixture_id="fixture-1", season_id=2026,
+            home_team_id=10, away_team_id=20,
+            captured_at="2026-11-07T09:30:00+00:00",
+        )
+        row = self._record(availability_snapshot=complete)
+        self._verify_score(row, "2", "0")
+
+        partial = build_availability_snapshot(
+            home_profile=self._availability_profile(10, "Arsenal"),
+            away_profile=self._availability_profile(20, "Chelsea", fixture_id="other"),
+            fixture_id="fixture-1", season_id=2026,
+            home_team_id=10, away_team_id=20,
+            captured_at="2026-11-07T09:30:00+00:00",
+        )
+        other = self._record(
+            home_team="Liverpool", away_team="Everton",
+            fixture_id="fixture-2", availability_snapshot=partial,
+        )
+        self._verify_score(other, "1", "0")
+        report = evaluate_prediction_ledger([row, other])
+        self.assertEqual(report["availability_snapshots_pre_kickoff"], 1)
+        self.assertEqual(
+            report["availability_snapshot_coverage_by_competition"]["Premier League"],
+            1,
+        )
 
     def test_prediction_and_player_snapshot_must_precede_kickoff(self):
         row = self._record()
