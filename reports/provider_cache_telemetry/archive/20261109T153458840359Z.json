@@ -1,0 +1,62 @@
+{
+  "event_count": 6,
+  "events": [
+    {
+      "timestamp_utc": "2026-11-09T15:33:52.837300+00:00",
+      "provider": "sportmonks",
+      "resource_type": "leagues",
+      "outcome": "cache_miss",
+      "lookup_duration_ms": 2673,
+      "archive_status": "live_fetch_required"
+    },
+    {
+      "timestamp_utc": "2026-11-09T15:33:58.084189+00:00",
+      "provider": "sportmonks",
+      "resource_type": "leagues",
+      "outcome": "cache_miss_then_archived",
+      "lookup_duration_ms": 2673,
+      "live_fetch_duration_ms": 558,
+      "row_count": 5,
+      "archive_status": "saved"
+    },
+    {
+      "timestamp_utc": "2026-11-09T15:34:05.671937+00:00",
+      "provider": "sportmonks",
+      "resource_type": "seasons",
+      "outcome": "cache_miss",
+      "lookup_duration_ms": 2538,
+      "archive_status": "live_fetch_required"
+    },
+    {
+      "timestamp_utc": "2026-11-09T15:34:11.036011+00:00",
+      "provider": "sportmonks",
+      "resource_type": "seasons",
+      "outcome": "cache_miss_then_archived",
+      "lookup_duration_ms": 2538,
+      "live_fetch_duration_ms": 454,
+      "row_count": 15,
+      "archive_status": "saved"
+    },
+    {
+      "timestamp_utc": "2026-11-09T15:34:18.798409+00:00",
+      "provider": "sportmonks",
+      "resource_type": "teams",
+      "outcome": "cache_miss",
+      "lookup_duration_ms": 2597,
+      "archive_status": "live_fetch_required"
+    },
+    {
+      "timestamp_utc": "2026-11-09T15:34:24.063942+00:00",
+      "provider": "sportmonks",
+      "resource_type": "teams",
+      "outcome": "cache_miss_then_archived",
+      "lookup_duration_ms": 2597,
+      "live_fetch_duration_ms": 580,
+      "row_count": 20,
+      "archive_status": "saved"
+    }
+  ],
+  "privacy_note": "Only provider/resource names, outcomes, timestamps, durations, row counts and error types. No cache keys, request parameters, payloads, team names, credentials or prediction data.",
+  "generated_at_utc": "2026-11-09T15:34:58.840359+00:00",
+  "report_name": "provider_cache_telemetry"
+}
