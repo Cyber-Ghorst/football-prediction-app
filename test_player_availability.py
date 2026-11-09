@@ -269,6 +269,22 @@ class PlayerAvailabilityTests(unittest.TestCase):
         ])
 
 
+    def test_squad_flag_distribution_reports_former_or_youth_players(self):
+        from player_availability import build_sportmonks_availability_evidence
+
+        evidence = build_sportmonks_availability_evidence(
+            squad_rows=[
+                {"id": 1, "in_squad": True, "statistics": []},
+                {"id": 2, "in_squad": False, "name": "Former Player"},
+            ],
+            sidelined_rows=[], sidelined_feed_available=True,
+            team_id=10, season_id=2026, fixture_id=123, kickoff="2026-11-23",
+        )
+        self.assertEqual(evidence["current_squad_rows_seen"], 1)
+        self.assertEqual(evidence["not_current_squad_rows_seen"], 1)
+        self.assertEqual(evidence["not_current_squad_players"][0]["player_name"], "Former Player")
+
+
 
 if __name__ == "__main__":
     unittest.main()
