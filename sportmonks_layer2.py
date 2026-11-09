@@ -254,7 +254,11 @@ def collect_sportmonks_team_profile(
     """Build a profile from one validated Sportmonks season collection."""
     team_id = int(team["id"])
     strength_map = standings_strength(standings)
-    matches: list[dict[str, Any]] = []
+    if fixture_statistics_indexes is None:
+        fixture_statistics_indexes = {
+            id(fixture): _fixture_statistics_index(fixture) for fixture in fixtures
+        }
+    matches: list[dict[str, Any]] =
     history_diagnostics = {
         "fixtures_scanned": len(fixtures),
         "same_season_fixtures": 0,
@@ -271,11 +275,7 @@ def collect_sportmonks_team_profile(
     }
 
     for fixture in fixtures:
-        fixture_index = (
-            fixture_statistics_indexes.get(id(fixture))
-            if fixture_statistics_indexes is not None
-            else _fixture_statistics_index(fixture)
-        ) or {}
+        fixture_index = fixture_statistics_indexes.get(id(fixture), {})
         fixture_season_id = fixture.get("season_id")
         if fixture_season_id is not None:
             try:
@@ -347,7 +347,9 @@ def collect_sportmonks_team_profile(
                     participant_id = int(participant["id"])
                 except (TypeError, ValueError):
                     continue
-                participant_statistics = _team_statistics(reference_fixture, participant_id)
+                participant_statistics = fixture_statistics_indexes.get(
+                    id(reference_fixture), {}
+                ).get(participant_id, {}).get("statistics", {})
                 if participant_statistics:
                     league_team_match_statistics.append(participant_statistics)
         league_reference = build_league_reference_statistics(league_team_match_statistics)
