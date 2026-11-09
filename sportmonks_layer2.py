@@ -347,7 +347,7 @@ def collect_sportmonks_team_profile(
                     participant_id = int(participant["id"])
                 except (TypeError, ValueError):
                     continue
-                participant_statistics = reference_index.get(participant_id, {}).get("statistics", {})
+                participant_statistics = _team_statistics(reference_fixture, participant_id)
                 if participant_statistics:
                     league_team_match_statistics.append(participant_statistics)
         league_reference = build_league_reference_statistics(league_team_match_statistics)
@@ -709,7 +709,7 @@ def collect_repository_team_profiles(
                 participant_id = int(participant["id"])
             except (TypeError, ValueError):
                 continue
-            participant_statistics = _team_statistics(reference_fixture, participant_id)
+            participant_statistics = reference_index.get(participant_id, {}).get("statistics", {})
             if participant_statistics:
                 league_team_match_statistics.append(participant_statistics)
     league_reference = build_league_reference_statistics(league_team_match_statistics)
