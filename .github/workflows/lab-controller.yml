@@ -221,6 +221,7 @@ jobs:
               "probe_type": "streamlit_health_endpoint",
               "deployment_reachable": False,
               "application_status": "unknown",
+              "deployment_health": "unavailable",
               "health_endpoint_confirmed": False,
               "healthy": None,
           }
@@ -243,11 +244,13 @@ jobs:
                   report["deployment_reachable"] = True
                   if response.status == 200 and body.lower() == "ok":
                       report["application_status"] = "healthy"
+                      report["deployment_health"] = "healthy"
                       report["health_endpoint_confirmed"] = True
                       report["healthy"] = True
                       report["result"] = "healthy"
                   else:
                       report["application_status"] = "unverified"
+                      report["deployment_health"] = "reachable_unverified"
                       report["result"] = "reachable_but_health_unconfirmed"
                       report["note"] = "The endpoint responded, but did not return the expected HTTP 200 and body 'ok'."
           except urllib.error.HTTPError as exc:
@@ -264,6 +267,7 @@ jobs:
               )
               if auth_redirect or exc.code in (401, 403):
                   report["application_status"] = "unverified"
+                  report["deployment_health"] = "reachable_unverified"
                   report["result"] = "reachable_authentication_required"
                   report["note"] = (
                       "The deployment is reachable, but Streamlit authentication "
@@ -271,21 +275,28 @@ jobs:
                   )
               elif 500 <= exc.code <= 599:
                   report["application_status"] = "unhealthy"
+                  report["deployment_health"] = "degraded"
                   report["healthy"] = False
                   report["result"] = "application_error"
                   report["error"] = f"HTTP {exc.code}"
               else:
                   report["application_status"] = "unverified"
+                  report["deployment_health"] = "reachable_unverified"
                   report["result"] = "reachable_but_health_unconfirmed"
                   report["note"] = f"Unexpected HTTP response: {exc.code}"
           except Exception as exc:
+              report["deployment_health"] = "unavailable"
+              report["application_status"] = "unavailable"
+              report["healthy"] = False
               report["result"] = "probe_failed"
               report["error"] = f"{type(exc).__name__}: {exc}"
 
+          with open("deployment-health-report.json", "w", encoding="utf-8") as handle:
+              json.dump(report, handle, indent=2)
           print(json.dumps(report, indent=2))
-          # Authentication-required is a successful reachability check, not
-          # proof of application health. Fail only on network failure or 5xx.
-          if not report["deployment_reachable"] or report["application_status"] == "unhealthy":
+          # Authentication-required is reachable but unverified, not healthy.
+          # Fail the job only when unavailable or degraded; keep unverified distinct.
+          if report["deployment_health"] in ("unavailable", "degraded"):
               sys.exit(1)
           PY
 
@@ -431,6 +442,7 @@ jobs:
           source_timestamps = []
           report_files = (
               ("watchdog-report.json", "Stalled-run watchdog"),
+              ("deployment-health-report.json", "Deployment health classification"),
               ("controller-report.txt", "Deployment probe / test output"),
               ("deployment-smoke-report.json", "Application smoke report"),
               ("integration-smoke-report.json", "Live integration report"),
@@ -531,6 +543,7 @@ jobs:
           name: prediction-lab-controller-report
           path: |
             controller-report.txt
+            deployment-health-report.json
             deployment-smoke-report.json
             prediction-run-report.json
             watchdog-report.json
