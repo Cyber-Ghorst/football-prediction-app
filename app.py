@@ -82,7 +82,7 @@ try:
     from highlightly import HighlightlyClient, HighlightlyError
     from sportmonks import SportmonksClient, SportmonksError
     from data_layer2 import collect_team_profile
-    from sportmonks_layer2 import collect_sportmonks_team_profile, collect_repository_team_profile, find_upcoming_match_fixture, find_exact_match_fixture, extract_sportmonks_match_details
+    from sportmonks_layer2 import collect_sportmonks_team_profile, collect_repository_team_profiles, find_upcoming_match_fixture, find_exact_match_fixture, extract_sportmonks_match_details
     from sportmonks_candidate_verification import verify_highlightly_candidate
     from provider_core import normalize_team_name
     from engine import predict_match, WEIGHTS, most_likely_outcome
@@ -1575,15 +1575,29 @@ try:
                     "neon_prediction_ledger_modified": False,
                 }
 
+                repository_profiles = {}
+                repository_profiles_error = None
+                try:
+                    repository_profiles = collect_repository_team_profiles(
+                        PROVIDER_DATABASE_URL,
+                        [
+                            f"sportmonks:{int(team_map[home_name]['id'])}",
+                            f"sportmonks:{int(team_map[away_name]['id'])}",
+                        ],
+                        f"sportmonks:{int(selected_season_id)}",
+                        standings,
+                    )
+                except Exception as shared_repository_error:
+                    repository_profiles_error = shared_repository_error
+
                 def _load_team_profile_with_repository(team_name):
                     provider_team = team_map[team_name]
                     try:
-                        profile = collect_repository_team_profile(
-                            PROVIDER_DATABASE_URL,
-                            f"sportmonks:{int(provider_team['id'])}",
-                            f"sportmonks:{int(selected_season_id)}",
-                            standings,
-                        )
+                        if repository_profiles_error is not None:
+                            raise repository_profiles_error
+                        profile = repository_profiles[
+                            f"sportmonks:{int(provider_team['id'])}"
+                        ]
                         # Keep CockroachDB as the prediction-history source, but
                         # rebuild missing automatic TVD evidence from the already
                         # collected live Sportmonks fixture payloads. This fallback
