@@ -497,8 +497,7 @@ def _fetch_sm_fixtures(season_id, include_stats, team_ids):
         print(
             f"[Sportmonks] Season {season_id}: starting initial schedule request "
             f"(statistics={bool(include_stats)}, selected_teams={len(team_ids)}).",
-            flush=True,
-        )
+            flush=True,        )
         request_started = time.monotonic()
         fixtures = sm.fixtures_by_season(
             season_id,
@@ -519,7 +518,7 @@ with st.sidebar:
     include_stats = st.checkbox("Fetch match statistics (more API requests)", value=True)
     cross_check_recent_results = st.checkbox(
         "Cross-check recent results with Highlightly and API Ninjas",
-        value=True,
+        value=False,
         help="Makes additional read-only requests. Results are diagnostic only and do not change prediction inputs.",
     )
     cross_check_highlightly_details = st.checkbox(
@@ -997,8 +996,7 @@ try:
             left,right=st.columns(2)
             with left:
                 st.markdown("**Defensive vulnerabilities**")
-                for key in vulnerabilities:
-                    value=st.number_input(f"{key}",min_value=0,max_value=100,value=None,placeholder="Unknown",key=f"{prefix}_v_{key}")
+                for key in vulnerabilities:                    value=st.number_input(f"{key}",min_value=0,max_value=100,value=None,placeholder="Unknown",key=f"{prefix}_v_{key}")
                     if value is not None: profile["vulnerabilities"][key]={"score":value,"confidence":confidence}
             with right:
                 st.markdown("**Attacking weapons**")
@@ -1497,8 +1495,7 @@ try:
             home_profile=home,
             away_profile=away,
             readiness=readiness,
-            statistics_coverage=statistics_reports,
-            provider_configuration=provider_readiness(),
+            statistics_coverage=statistics_reports,            provider_configuration=provider_readiness(),
             corroboration=corroboration,
             model_weights=WEIGHTS,
         )
@@ -1997,8 +1994,7 @@ with st.expander("Prediction tracking, Opta comparison and backtesting", expande
                     if st.session_state.get("_latest_performance_report_github_archive_url") else ""
                 )
             )
-        st.write(f"Pre-match forecasts: {report['pre_match_predictions']} • Completed and scored: {report['completed_pre_match_predictions']}")
-        st.subheader("Prediction eligibility audit")
+        st.write(f"Pre-match forecasts: {report['pre_match_predictions']} • Completed and scored: {report['completed_pre_match_predictions']}")        st.subheader("Prediction eligibility audit")
         audit = report["eligibility_audit"]
         audit_rows = [
             {"Category": "Total saved records", "Count": audit["records_total"]},
