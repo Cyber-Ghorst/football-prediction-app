@@ -24,7 +24,7 @@ def _redact_runtime_trace(raw_trace):
     except Exception:
         pass
     raw_trace = re.sub(r"(?i)(Bearer\s+)[A-Za-z0-9._~+/=-]+", r"\1[REDACTED]", raw_trace)
-    raw_trace = re.sub(r"(postgres(?:ql)?://[^:/\s]+:)[^@/\s]+@", r"\\1[REDACTED]@", raw_trace)
+    raw_trace = re.sub(r"(postgres(?:ql)?://[^:/\s]+:)[^@/\s]+@", r"\1[REDACTED]@", raw_trace)
     raw_trace = re.sub(r"(?i)(api[_-]?key|token|password|secret)(\s*[=:]\s*)[^\s,;]+", r"\1\2[REDACTED]", raw_trace)
     return raw_trace[-24000:]
 
