@@ -150,8 +150,17 @@ def build_sportmonks_availability_evidence(
         "reported_sidelined_count": len(sidelined_rows) if sidelined_feed_available and isinstance(sidelined_rows, list) else None,
     }
 
+    diagnostics: dict[str, Any] = {
+        "current_squad_rows_seen": 0,
+        "matching_team_season_statistics_rows": 0,
+        "players_with_minutes_detail": 0,
+        "players_missing_minutes_detail": [],
+        "minutes_type_ids_seen": [],
+        "sample_detail_shapes": [],
+    }
+
     def unknown(reason: str, **extra: Any) -> dict[str, Any]:
-        return {**base, "reason": reason, **extra}
+        return {**base, **diagnostics, "reason": reason, **extra}
 
     if not isinstance(squad_rows, list) or not squad_rows:
         return unknown("The extended squad endpoint returned no player list.")
@@ -170,6 +179,7 @@ def build_sportmonks_availability_evidence(
             return unknown("An extended squad row is missing its explicit in_squad status.")
         if row["in_squad"] is False:
             continue
+        diagnostics["current_squad_rows_seen"] += 1
         try:
             player_id = str(int(row.get("id")))
         except (TypeError, ValueError):
@@ -193,6 +203,7 @@ def build_sportmonks_availability_evidence(
                 continue
             if statistic_team_id == int(team_id) and statistic_season_id == int(season_id):
                 matching_statistics.append(statistic)
+        diagnostics["matching_team_season_statistics_rows"] += len(matching_statistics)
         if len(matching_statistics) != 1:
             return unknown("A current-squad player does not have exactly one matching team-season statistic row.")
         statistic = matching_statistics[0]
@@ -212,17 +223,36 @@ def build_sportmonks_availability_evidence(
         if not isinstance(details, list):
             return unknown("Season player-statistic details are missing.")
         minutes_detail = None
+        player_type_ids = []
         for detail in details:
             if not isinstance(detail, dict):
                 continue
+            detail_type_id = detail.get("type_id")
+            if detail_type_id is None and isinstance(detail.get("type"), dict):
+                detail_type_id = detail["type"].get("id")
+            if len(diagnostics["sample_detail_shapes"]) < 5:
+                diagnostics["sample_detail_shapes"].append({
+                    "keys": sorted(detail.keys()),
+                    "type_id": detail_type_id,
+                    "value_type": type(detail.get("value")).__name__,
+                })
             try:
-                if int(detail.get("type_id")) == 119:
+                parsed_type_id = int(detail_type_id)
+                if parsed_type_id not in diagnostics["minutes_type_ids_seen"]:
+                    diagnostics["minutes_type_ids_seen"].append(parsed_type_id)
+                player_type_ids.append(parsed_type_id)
+                if parsed_type_id == 119:
                     minutes_detail = detail
-                    break
             except (TypeError, ValueError):
                 continue
         if minutes_detail is None:
+            diagnostics["players_missing_minutes_detail"].append({
+                "player_id": int(player_id),
+                "player_name": row.get("display_name") or row.get("name") or row.get("common_name"),
+                "detail_type_ids": player_type_ids[:20],
+            })
             return unknown("Minutes-played evidence (Sportmonks type 119) is missing for a current-squad player.")
+        diagnostics["players_with_minutes_detail"] += 1
         minutes = _minutes_value(minutes_detail.get("value"))
         if minutes is None:
             return unknown("A player's minutes-played value is invalid.")
@@ -318,6 +348,7 @@ def build_sportmonks_availability_evidence(
         **base,
         "roster_complete": True,
         "squad_players": squad_players,
+        **diagnostics,
         "players_assessed": len(squad_players),
         "current_squad_players": len(current_players),
         "importance_method": "current_squad_season_minutes_played_relative_to_squad_max",
