@@ -1642,6 +1642,33 @@ try:
                         st.error(f"Sportmonks fixture collection failed: {fixtures_error}")
                         st.stop()
                     raise fixtures_error
+                # Fixture details are independent of repository history/profile construction.
+                # Start the provider request now so it runs while the season snapshot and
+                # both team profiles are being assembled.
+                selected_match_fixture = find_upcoming_match_fixture(
+                    fixtures,
+                    home_team_id=int(team_map[home_name]["id"]),
+                    away_team_id=int(team_map[away_name]["id"]),
+                    season_id=int(selected_season_id),
+                )
+                fixture_detail_executor = None
+                fixture_detail_future = None
+                if selected_match_fixture:
+                    def _fetch_selected_fixture_detail():
+                        detail_started = time.perf_counter()
+                        with SportmonksClient() as detail_client:
+                            detail_payload = get_sm_fixture_detail(
+                                selected_match_fixture["id"],
+                                "participants;state;lineups.details.type;formations;sidelined.player;sidelined.type;sidelined.sideline",
+                                ttl_seconds=300,
+                            )
+                        return detail_payload, round(time.perf_counter() - detail_started, 3)
+
+                    fixture_detail_executor = ThreadPoolExecutor(max_workers=1)
+                    fixture_detail_future = fixture_detail_executor.submit(
+                        _fetch_selected_fixture_detail
+                    )
+
                 prediction_stage_started = time.perf_counter()
                 repository_profile_report = {
                     "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -1792,20 +1819,10 @@ try:
                     away_team_id=int(team_map[away_name]["id"]),
                     season_id=int(selected_season_id),
                 )
-                selected_match_fixture = find_upcoming_match_fixture(
-                    fixtures,
-                    home_team_id=int(team_map[home_name]["id"]),
-                    away_team_id=int(team_map[away_name]["id"]),
-                    season_id=int(selected_season_id),
-                )
+                fixture_detail_processing_started = time.perf_counter()
                 if selected_match_fixture:
                     try:
-                        with SportmonksClient() as detail_client:
-                            match_detail = get_sm_fixture_detail(
-                                selected_match_fixture["id"],
-                                "participants;state;lineups.details.type;formations;sidelined.player;sidelined.type;sidelined.sideline",
-                                ttl_seconds=300,
-                            )
+                        match_detail, fixture_detail_fetch_seconds = fixture_detail_future.result()
                         if match_detail:
                             match_details = extract_sportmonks_match_details(
                                 match_detail,
@@ -1821,9 +1838,17 @@ try:
                             st.info("Sportmonks returned no detail record for the exact selected fixture; lineups and player availability remain unknown.")
                     except Exception as exc:
                         st.warning(f"Fixture-specific Sportmonks lineups/sidelined data unavailable: {exc}. Prediction inputs remain unchanged.")
+                    finally:
+                        if fixture_detail_executor is not None:
+                            fixture_detail_executor.shutdown(wait=True)
                 else:
+                    fixture_detail_fetch_seconds = 0.0
                     st.info("No exact upcoming Sportmonks fixture was found for this home/away pairing. Lineups and player availability remain unknown.")
-                prediction_stage_timings["fixture_detail_enrichment_seconds"] = round(time.perf_counter() - prediction_stage_started, 3)
+                prediction_stage_timings["fixture_detail_enrichment_seconds"] = round(
+                    float(fixture_detail_fetch_seconds)
+                    + time.perf_counter() - fixture_detail_processing_started,
+                    3,
+                )
                 prediction_stage_started = time.perf_counter()
 
                 if cross_check_recent_results or cross_check_highlightly_details or cross_check_highlightly_players:
