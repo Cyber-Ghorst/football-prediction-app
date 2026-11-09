@@ -261,6 +261,7 @@ def collect_sportmonks_team_profile(
     season_id: int,
     fixtures: list[dict[str, Any]],
     standings: list[dict[str, Any]],
+    league_reference_statistics: dict[str, list[float]] | None = None,
 ) -> dict[str, Any]:
     """Build a profile from one validated Sportmonks season collection."""
     team_id = int(team["id"])
@@ -342,20 +343,23 @@ def collect_sportmonks_team_profile(
     recent = matches[:10]
     form = analyze_form(recent)
     tactics = analyze_tactics(recent)
-    league_team_match_statistics = []
-    for reference_fixture in fixtures:
-        reference_home, reference_away = _participants(reference_fixture)
-        for participant in (reference_home, reference_away):
-            if not participant or participant.get("id") is None:
-                continue
-            try:
-                participant_id = int(participant["id"])
-            except (TypeError, ValueError):
-                continue
-            participant_statistics = _team_statistics(reference_fixture, participant_id)
-            if participant_statistics:
-                league_team_match_statistics.append(participant_statistics)
-    league_reference = build_league_reference_statistics(league_team_match_statistics)
+    if league_reference_statistics is None:
+        league_team_match_statistics = []
+        for reference_fixture in fixtures:
+            reference_home, reference_away = _participants(reference_fixture)
+            for participant in (reference_home, reference_away):
+                if not participant or participant.get("id") is None:
+                    continue
+                try:
+                    participant_id = int(participant["id"])
+                except (TypeError, ValueError):
+                    continue
+                participant_statistics = _team_statistics(reference_fixture, participant_id)
+                if participant_statistics:
+                    league_team_match_statistics.append(participant_statistics)
+        league_reference = build_league_reference_statistics(league_team_match_statistics)
+    else:
+        league_reference = league_reference_statistics
     tactical_evidence = build_tactical_evidence_profile(
         recent, league_reference, team.get("name") or f"Team {team_id}"
     )
@@ -694,6 +698,24 @@ def collect_repository_team_profiles(
     except (TypeError, ValueError) as exc:
         raise ValueError("Central repository IDs are not valid Sportmonks IDs.") from exc
 
+    # The league-wide empirical reference is identical for both selected
+    # teams. Calculate it once instead of rescanning every fixture/stat row
+    # separately for each profile.
+    league_team_match_statistics = []
+    for reference_fixture in provider_fixtures:
+        reference_home, reference_away = _participants(reference_fixture)
+        for participant in (reference_home, reference_away):
+            if not participant or participant.get("id") is None:
+                continue
+            try:
+                participant_id = int(participant["id"])
+            except (TypeError, ValueError):
+                continue
+            participant_statistics = _team_statistics(reference_fixture, participant_id)
+            if participant_statistics:
+                league_team_match_statistics.append(participant_statistics)
+    league_reference = build_league_reference_statistics(league_team_match_statistics)
+
     profiles: dict[str, dict[str, Any]] = {}
     for canonical_team_id in canonical_team_ids:
         team_row = team_rows[canonical_team_id]
@@ -704,7 +726,11 @@ def collect_repository_team_profiles(
             "image_path": None,
         }
         profile = collect_sportmonks_team_profile(
-            team, numeric_season_id, provider_fixtures, standings or []
+            team,
+            numeric_season_id,
+            provider_fixtures,
+            standings or [],
+            league_reference_statistics=league_reference,
         )
         profile["data_quality"]["history_source"] = "cockroachdb_central_repository"
         profile["data_quality"]["repository_fixture_rows"] = len(fixture_rows)
