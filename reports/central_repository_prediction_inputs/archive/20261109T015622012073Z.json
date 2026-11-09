@@ -1,0 +1,24 @@
+{
+  "generated_at": "2026-11-09T01:56:00.356441+00:00",
+  "season_id": 28083,
+  "home_team": "Ipswich Town",
+  "away_team": "Brighton & Hove Albion",
+  "profiles": {
+    "Ipswich Town": {
+      "source": "cockroachdb_central_repository",
+      "completed_matches": 10,
+      "repository_fixture_rows": 380,
+      "fallback_used": false
+    },
+    "Brighton & Hove Albion": {
+      "source": "cockroachdb_central_repository",
+      "completed_matches": 10,
+      "repository_fixture_rows": 380,
+      "fallback_used": false
+    }
+  },
+  "prediction_engine_modified": false,
+  "neon_prediction_ledger_modified": false,
+  "generated_at_utc": "2026-11-09T01:56:22.012073+00:00",
+  "report_name": "central_repository_prediction_inputs"
+}
