@@ -1820,6 +1820,7 @@ try:
                     season_id=int(selected_season_id),
                 )
                 fixture_detail_processing_started = time.perf_counter()
+                fixture_detail_fetch_seconds = 0.0
                 if selected_match_fixture:
                     try:
                         match_detail, fixture_detail_fetch_seconds = fixture_detail_future.result()
