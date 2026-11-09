@@ -1,9 +1,9 @@
 {
   "report_name": "automated_prediction_run",
   "status": "prediction_record_created",
-  "started_at_utc": "2026-11-09T20:15:38.128590+00:00",
-  "completed_at_utc": "2026-11-09T20:16:32.789538+00:00",
-  "elapsed_seconds": 54.66,
+  "started_at_utc": "2026-11-09T20:20:43.179404+00:00",
+  "completed_at_utc": "2026-11-09T20:21:55.147955+00:00",
+  "elapsed_seconds": 71.97,
   "execution_method": "streamlit_app_test_harness",
   "same_app_prediction_flow": true,
   "selection": {
@@ -13,7 +13,7 @@
     "away_team": "Everton"
   },
   "prediction": {
-    "predicted_at": "2026-11-09T20:16:25.942544+00:00",
+    "predicted_at": "2026-11-09T20:21:48.608351+00:00",
     "kickoff_at": "2026-11-23 20:00:00",
     "prediction_before_kickoff": true,
     "fixture_id": "19722101",
@@ -28,14 +28,14 @@
   "app_warnings": [],
   "ledger_persistence": {
     "status": "connected",
-    "message": "Neon connected • 63 saved prediction(s).",
+    "message": "Neon connected • 64 saved prediction(s).",
     "saved_signature_present": true
   },
   "archived_app_reports": {
     "data_collection_evidence_latest_url": "https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/data_collection_evidence/latest.json",
-    "data_collection_evidence_archive_url": "https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/data_collection_evidence/archive/20261109T201617004985Z.json",
+    "data_collection_evidence_archive_url": "https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/data_collection_evidence/archive/20261109T202139632641Z.json",
     "system_diagnostics_latest_url": "https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/system_diagnostics/latest.json",
-    "system_diagnostics_archive_url": "https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/system_diagnostics/archive/20261109T201620592604Z.json"
+    "system_diagnostics_archive_url": "https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/system_diagnostics/archive/20261109T202143068783Z.json"
   },
   "notes": [
     "The existing app.py workflow was executed through Streamlit AppTest; no parallel prediction implementation was used.",
