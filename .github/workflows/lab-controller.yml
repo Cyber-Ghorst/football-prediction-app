@@ -10,6 +10,7 @@ on:
         options:
           - health_check
           - test_suite
+          - full_check
         default: health_check
   push:
     branches:
@@ -65,7 +66,7 @@ jobs:
               trigger = json.loads(Path(".agent/trigger.json").read_text(encoding="utf-8"))
               operation = trigger.get("operation", "")
 
-          allowed = {"health_check", "test_suite"}
+          allowed = {"health_check", "test_suite", "full_check"}
           if operation not in allowed:
               raise SystemExit("Rejected unsupported or missing operation")
 
@@ -166,13 +167,13 @@ jobs:
           PY
 
       - name: Install health-check dependencies
-        if: steps.operation.outputs.operation == 'health_check'
+        if: steps.operation.outputs.operation == 'health_check' || steps.operation.outputs.operation == 'full_check'
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Run application code smoke check
-        if: steps.operation.outputs.operation == 'health_check'
+        if: steps.operation.outputs.operation == 'health_check' || steps.operation.outputs.operation == 'full_check'
         run: |
           set -o pipefail
           python deployment_smoke_check.py | tee deployment-smoke-report.json
@@ -184,7 +185,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run unit tests
-        if: steps.operation.outputs.operation == 'test_suite'
+        if: steps.operation.outputs.operation == 'test_suite' || steps.operation.outputs.operation == 'full_check'
         run: |
           set -o pipefail
           python -m unittest discover -v 2>&1 | tee controller-report.txt
