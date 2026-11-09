@@ -676,9 +676,9 @@ with st.sidebar:
             "Investigate missing fixture statistics", use_container_width=True,
             help="Read-only breakdown of missing statistics by fixture status, season and stored Sportmonks payload."
         )
-        verify_missing_sportmonks_statistics = st.button(
-            "Verify Sportmonks statistics for 5 fixtures", use_container_width=True,
-            help="Read-only provider check for five completed, scored fixtures in season sportmonks:27965. Does not write to either database."
+        backfill_missing_sportmonks_statistics = st.button(
+            "Backfill Sportmonks statistics for 5 fixtures", use_container_width=True,
+            help="Fetches and stores provider-confirmed statistics for five completed fixtures missing statistics in season sportmonks:27965. Does not change predictions or the Neon ledger."
         )
         upload_fixture_report = st.button(
             "Generate and upload fixture diagnostic report",
@@ -943,15 +943,16 @@ if audit_fixture_statistics:
             st.error(f"Fixture statistics integrity audit failed ({type(exc).__name__}): {exc}")
 
 
-if verify_missing_sportmonks_statistics:
+if backfill_missing_sportmonks_statistics:
     if not PROVIDER_DATABASE_URL:
-        st.warning("Add PROVIDER_DATABASE_URL in Streamlit Secrets before running this verification.")
+        st.warning("Add PROVIDER_DATABASE_URL in Streamlit Secrets before running this backfill.")
     else:
         try:
             from pathlib import Path
             import psycopg
+            from football_repository import save_sportmonks_fixture_statistics
 
-            with st.spinner("Selecting five completed fixtures and checking Sportmonks directly..."):
+            with st.spinner("Selecting five missing fixtures and retrieving their statistics from Sportmonks..."):
                 cert_path = Path(__file__).resolve().with_name("root.crt")
                 if not cert_path.is_file():
                     raise FileNotFoundError("CockroachDB CA certificate is missing.")
@@ -964,9 +965,7 @@ if verify_missing_sportmonks_statistics:
                     with connection.cursor() as cursor:
                         cursor.execute(
                             """
-                            SELECT f.fixture_id, f.starting_at,
-                                   ht.name AS home_team, at.name AS away_team,
-                                   f.home_goals, f.away_goals
+                            SELECT f.fixture_id, f.starting_at, ht.name, at.name
                             FROM football_fixtures f
                             JOIN football_teams ht ON ht.team_id = f.home_team_id
                             JOIN football_teams at ON at.team_id = f.away_team_id
@@ -986,68 +985,73 @@ if verify_missing_sportmonks_statistics:
                         )
                         selected_rows = cursor.fetchall()
 
-                verification_rows = []
+                provider_payloads = []
+                provider_results = []
                 with SportmonksClient() as sm_client:
-                    for fixture_id, starting_at, home_team, away_team, home_goals, away_goals in selected_rows:
+                    for fixture_id, starting_at, home_team, away_team in selected_rows:
                         numeric_fixture_id = str(fixture_id).split(":")[-1]
                         try:
                             payload = sm_client.fixture(
                                 numeric_fixture_id,
                                 include="participants;scores;state;statistics.type",
                             )
-                            statistics = (payload or {}).get("statistics") if isinstance(payload, dict) else None
-                            statistics_rows = statistics if isinstance(statistics, list) else []
-                            verification_rows.append({
+                            stats = payload.get("statistics") if isinstance(payload, dict) else None
+                            if not isinstance(stats, list) or not stats:
+                                provider_results.append({
+                                    "fixture_id": str(fixture_id),
+                                    "home_team": home_team,
+                                    "away_team": away_team,
+                                    "statistics_returned": 0,
+                                    "status": "provider_statistics_empty",
+                                })
+                                continue
+                            provider_payloads.append(payload)
+                            provider_results.append({
                                 "fixture_id": str(fixture_id),
-                                "starting_at": starting_at,
                                 "home_team": home_team,
                                 "away_team": away_team,
-                                "stored_score": {"home": home_goals, "away": away_goals},
-                                "provider_fixture_found": bool(payload),
-                                "provider_statistics_field_present": isinstance(payload, dict) and "statistics" in payload,
-                                "provider_statistics_count": len(statistics_rows),
-                                "provider_statistics_nonempty": bool(statistics_rows),
-                                "provider_error": None,
+                                "statistics_returned": len(stats),
+                                "status": "ready_to_store",
                             })
                         except Exception as fixture_exc:
-                            verification_rows.append({
+                            provider_results.append({
                                 "fixture_id": str(fixture_id),
-                                "starting_at": starting_at,
                                 "home_team": home_team,
                                 "away_team": away_team,
-                                "stored_score": {"home": home_goals, "away": away_goals},
-                                "provider_fixture_found": None,
-                                "provider_statistics_field_present": None,
-                                "provider_statistics_count": None,
-                                "provider_statistics_nonempty": None,
-                                "provider_error": type(fixture_exc).__name__,
+                                "statistics_returned": 0,
+                                "status": f"provider_error_{type(fixture_exc).__name__}",
                             })
 
-            verification_report = {
+            with st.spinner("Saving provider-confirmed statistics to CockroachDB..."):
+                storage_result = save_sportmonks_fixture_statistics(
+                    PROVIDER_DATABASE_URL, provider_payloads
+                )
+                coverage_after = diagnose_fixture_statistics_coverage(PROVIDER_DATABASE_URL)
+
+            backfill_report = {
                 "season_id": "sportmonks:27965",
-                "selected_fixture_count": len(selected_rows),
-                "verified_fixture_count": len(verification_rows),
-                "results": verification_rows,
-                "read_only": True,
-                "cockroachdb_modified": False,
+                "provider_results": provider_results,
+                "storage_result": storage_result,
+                "coverage_after_backfill": coverage_after,
+                "cockroachdb_updated": storage_result.get("statistics_rows_written", 0) > 0,
                 "neon_prediction_ledger_modified": False,
                 "prediction_engine_modified": False,
-                "interpretation": "A non-empty provider statistics array confirms the provider currently returns statistics for that fixture; an empty or absent field is not evidence that no statistics exist for the whole season.",
+                "note": "Only provider-returned fixture statistics were inserted/upserted. Existing fixture scores, identities, prediction outputs and Neon ledger were not changed.",
             }
-            _upload_report_to_github("sportmonks_statistics_provider_verification", verification_report)
+            _upload_report_to_github("sportmonks_statistics_backfill", backfill_report)
             st.success(
-                f"Checked {len(verification_rows)} fixture(s) directly with Sportmonks. "
-                "The read-only verification report was uploaded to GitHub."
+                f"Backfill finished: stored {storage_result.get('statistics_rows_written', 0)} "
+                f"statistics rows across {len(provider_payloads)} fixture(s)."
             )
             st.markdown(
-                "[Open latest Sportmonks verification report]"
-                "(https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/sportmonks_statistics_provider_verification/latest.json)"
+                "[Open the backfill report]"
+                "(https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/sportmonks_statistics_backfill/latest.json)"
             )
-            st.json(verification_report)
-        except Exception as verification_exc:
+            st.json(backfill_report)
+        except Exception as backfill_exc:
             st.error(
-                f"Sportmonks statistics verification failed ({type(verification_exc).__name__}). "
-                "No database records or prediction data were changed."
+                f"Sportmonks statistics backfill failed ({type(backfill_exc).__name__}). "
+                "Check the runtime report in GitHub before retrying."
             )
 
 
