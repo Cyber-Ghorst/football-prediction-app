@@ -93,21 +93,22 @@ def save_prediction_records(
                     if isinstance(payload, dict)
                 }
 
-                merged_records = []
+                merged_by_id = dict(existing_by_id)
                 for incoming in cleaned_records:
-                    existing = existing_by_id.get(incoming["record_id"])
+                    existing = merged_by_id.get(incoming["record_id"])
                     merged = merge_prediction_records(
                         [existing] if isinstance(existing, dict) else [],
                         [incoming],
                     )
                     if merged:
-                        merged_records.append(merged[0])
+                        merged_by_id[incoming["record_id"]] = merged[0]
 
                 cursor.executemany(
                     UPSERT_SQL,
                     [
-                        (record["record_id"], Jsonb(record))
-                        for record in merged_records
+                        (record_id, Jsonb(merged_by_id[record_id]))
+                        for record_id in record_ids
+                        if record_id in merged_by_id
                     ],
                 )
 
