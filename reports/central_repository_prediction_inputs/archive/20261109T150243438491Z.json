@@ -1,0 +1,24 @@
+{
+  "generated_at": "2026-11-09T15:02:37.251717+00:00",
+  "season_id": 28083,
+  "home_team": "Tottenham Hotspur",
+  "away_team": "Ipswich Town",
+  "profiles": {
+    "Tottenham Hotspur": {
+      "source": "cockroachdb_central_repository",
+      "completed_matches": 10,
+      "repository_fixture_rows": 380,
+      "fallback_used": false
+    },
+    "Ipswich Town": {
+      "source": "cockroachdb_central_repository",
+      "completed_matches": 10,
+      "repository_fixture_rows": 380,
+      "fallback_used": false
+    }
+  },
+  "prediction_engine_modified": false,
+  "neon_prediction_ledger_modified": false,
+  "generated_at_utc": "2026-11-09T15:02:43.438491+00:00",
+  "report_name": "central_repository_prediction_inputs"
+}
