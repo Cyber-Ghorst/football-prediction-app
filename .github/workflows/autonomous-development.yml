@@ -111,6 +111,8 @@ jobs:
           paths = re.findall(r"^diff --git a/(.+) b/(.+)$", patch, flags=re.MULTILINE)
           if not paths:
               raise SystemExit("Patch contains no recognized git diff paths.")
+          if len(paths) > 3:
+              raise SystemExit("Patch exceeds the three-file safety limit.")
           for old, new in paths:
               if old != new:
                   raise SystemExit("Renames are not accepted by the autonomous patch gate.")
