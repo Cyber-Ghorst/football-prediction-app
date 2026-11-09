@@ -1128,35 +1128,34 @@ def audit_repository_fixture_statistics(database_url: str) -> dict[str, Any]:
                 """
                 WITH duplicate_groups AS (
                     SELECT fixture_id, team_id, statistic_type, source_provider,
-                           COUNT(*) AS duplicate_count,
-                           ARRAY_AGG(statistic_id ORDER BY statistic_id) AS statistic_ids
+                           COUNT(*) AS duplicate_count
                     FROM football_fixture_statistics
                     GROUP BY fixture_id, team_id, statistic_type, source_provider
                     HAVING COUNT(*) > 1
                 )
                 SELECT COUNT(*) AS duplicate_logical_groups,
-                       COALESCE(SUM(duplicate_count - 1), 0) AS excess_duplicate_rows,
-                       COALESCE(
-                           ARRAY_AGG(
-                               JSONB_BUILD_OBJECT(
-                                   'fixture_id', fixture_id,
-                                   'team_id', team_id,
-                                   'statistic_type', statistic_type,
-                                   'source_provider', source_provider,
-                                   'duplicate_count', duplicate_count,
-                                   'statistic_ids', statistic_ids
-                               )
-                           ), ARRAY[]::JSONB[]
-                       ) AS duplicate_samples
-                FROM (
-                    SELECT * FROM duplicate_groups
-                    ORDER BY duplicate_count DESC, fixture_id
-                    LIMIT 100
-                ) AS sampled
+                       COALESCE(SUM(duplicate_count - 1), 0) AS excess_duplicate_rows
+                FROM duplicate_groups
                 """
             )
-            duplicate_rows = _rows_as_dicts(cursor)
-            duplicates = duplicate_rows[0] if duplicate_rows else {}
+            duplicate_summary_rows = _rows_as_dicts(cursor)
+            duplicate_summary = (
+                duplicate_summary_rows[0] if duplicate_summary_rows else {}
+            )
+
+            cursor.execute(
+                """
+                SELECT fixture_id, team_id, statistic_type, source_provider,
+                       COUNT(*) AS duplicate_count,
+                       ARRAY_AGG(statistic_id ORDER BY statistic_id) AS statistic_ids
+                FROM football_fixture_statistics
+                GROUP BY fixture_id, team_id, statistic_type, source_provider
+                HAVING COUNT(*) > 1
+                ORDER BY duplicate_count DESC, fixture_id
+                LIMIT 100
+                """
+            )
+            duplicate_samples = _rows_as_dicts(cursor)
 
             cursor.execute(
                 """
@@ -1177,7 +1176,7 @@ def audit_repository_fixture_statistics(database_url: str) -> dict[str, Any]:
         round(completed_with_stats / total_completed * 100, 2)
         if total_completed else None
     )
-    duplicate_groups = int(duplicates.get("duplicate_logical_groups") or 0)
+    duplicate_groups = int(duplicate_summary.get("duplicate_logical_groups") or 0)
     integrity_issues = {
         "orphan_statistic_rows": int(summary.get("orphan_statistic_rows") or 0),
         "invalid_team_association_rows": int(
@@ -1198,8 +1197,8 @@ def audit_repository_fixture_statistics(database_url: str) -> dict[str, Any]:
         },
         "completed_fixture_statistics_coverage_percent": coverage,
         "integrity_issues": integrity_issues,
-        "duplicate_excess_rows": int(duplicates.get("excess_duplicate_rows") or 0),
-        "duplicate_samples": duplicates.get("duplicate_samples") or [],
+        "duplicate_excess_rows": int(duplicate_summary.get("excess_duplicate_rows") or 0),
+        "duplicate_samples": duplicate_samples,
         "provider_breakdown": provider_breakdown,
         "checks": {
             "orphan_statistics_checked": True,
