@@ -1262,6 +1262,136 @@ def get_completed_scored_fixtures_missing_statistics(
     return [dict(zip(columns, row)) for row in rows]
 
 
+
+def save_sportmonks_fixture_statistics(
+    database_url: str,
+    fixture_payloads: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Persist supplied Sportmonks fixture statistics for already-known fixtures.
+
+    Only statistics explicitly returned by the provider are written. Existing
+    fixture and prediction records are not changed.
+    """
+    import uuid
+
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+    prepared: list[tuple[Any, ...]] = []
+    fixture_ids: set[str] = set()
+    skipped: list[dict[str, str]] = []
+
+    # Resolve provider participant IDs to canonical team IDs once.
+    participant_ids: set[str] = set()
+    for fixture in fixture_payloads:
+        if not isinstance(fixture, dict) or fixture.get("id") is None:
+            continue
+        for statistic in fixture.get("statistics") or []:
+            if isinstance(statistic, dict) and statistic.get("participant_id") is not None:
+                participant_ids.add(str(statistic["participant_id"]))
+
+    team_map: dict[str, str] = {}
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            if participant_ids:
+                cursor.execute(
+                    """
+                    SELECT provider_entity_id, canonical_entity_id
+                    FROM provider_entity_links
+                    WHERE provider = 'sportmonks'
+                      AND entity_type = 'team'
+                      AND provider_entity_id = ANY(%s)
+                    """,
+                    (list(participant_ids),),
+                )
+                team_map = {str(provider_id): str(canonical_id) for provider_id, canonical_id in cursor.fetchall()}
+
+            for fixture in fixture_payloads:
+                if not isinstance(fixture, dict) or fixture.get("id") is None:
+                    skipped.append({"fixture_id": "unknown", "reason": "invalid_fixture_payload"})
+                    continue
+                fixture_id = _provider_id(fixture["id"])
+                if fixture_id in fixture_ids:
+                    skipped.append({"fixture_id": fixture_id, "reason": "duplicate_payload"})
+                    continue
+                fixture_ids.add(fixture_id)
+                statistics = fixture.get("statistics")
+                if not isinstance(statistics, list) or not statistics:
+                    skipped.append({"fixture_id": fixture_id, "reason": "statistics_missing_or_empty"})
+                    continue
+
+                for index, statistic in enumerate(statistics):
+                    if not isinstance(statistic, dict):
+                        continue
+                    statistic_type = statistic.get("type")
+                    if isinstance(statistic_type, dict):
+                        type_id = statistic_type.get("id")
+                        type_name = statistic_type.get("name")
+                    else:
+                        type_id = statistic.get("type_id")
+                        type_name = statistic_type
+                    type_name = str(type_name or statistic.get("name") or statistic.get("code") or "").strip()
+                    if not type_name:
+                        skipped.append({"fixture_id": fixture_id, "reason": "statistic_type_missing"})
+                        continue
+
+                    participant_id = statistic.get("participant_id")
+                    canonical_team_id = team_map.get(str(participant_id)) if participant_id is not None else None
+                    raw_data = statistic.get("data")
+                    if isinstance(raw_data, dict) and "value" in raw_data:
+                        value = raw_data.get("value")
+                    elif raw_data is not None:
+                        value = raw_data
+                    else:
+                        value = statistic.get("value")
+
+                    external_id = statistic.get("id")
+                    stable_key = str(external_id) if external_id is not None else f"{participant_id}:{type_id or type_name}:{index}"
+                    statistic_id = str(uuid.uuid5(
+                        uuid.NAMESPACE_URL,
+                        f"sportmonks:fixture-statistic:{fixture['id']}:{stable_key}",
+                    ))
+                    prepared.append((
+                        statistic_id, fixture_id, canonical_team_id, type_name,
+                        Jsonb(value), "sportmonks",
+                        str(external_id) if external_id is not None else None,
+                        _provider_updated_at(fixture), Jsonb(statistic),
+                    ))
+
+            if prepared:
+                _execute_batched_upsert(
+                    cursor,
+                    table="football_fixture_statistics",
+                    columns=(
+                        "statistic_id", "fixture_id", "team_id", "statistic_type",
+                        "statistic_value", "source_provider", "provider_statistic_id",
+                        "provider_updated_at", "raw_payload",
+                    ),
+                    rows=prepared,
+                    conflict_sql="""
+                        ON CONFLICT (statistic_id) DO UPDATE SET
+                            fixture_id = excluded.fixture_id,
+                            team_id = excluded.team_id,
+                            statistic_type = excluded.statistic_type,
+                            statistic_value = excluded.statistic_value,
+                            source_provider = excluded.source_provider,
+                            provider_statistic_id = excluded.provider_statistic_id,
+                            provider_updated_at = excluded.provider_updated_at,
+                            collected_at = NOW(), raw_payload = excluded.raw_payload
+                    """,
+                    batch_size=100,
+                )
+
+    return {
+        "fixtures_received": len(fixture_payloads),
+        "fixtures_with_statistics": len(fixture_ids) - sum(1 for item in skipped if item["reason"] in {"statistics_missing_or_empty", "invalid_fixture_payload"}),
+        "statistics_rows_prepared": len(prepared),
+        "statistics_rows_written": len(prepared),
+        "skipped": skipped,
+        "prediction_engine_modified": False,
+        "neon_prediction_ledger_modified": False,
+    }
+
+
 def diagnose_fixture_statistics_coverage(database_url: str) -> dict[str, Any]:
     """Explain fixture-statistics gaps by completion state and stored provider payload."""
     if not database_url:
