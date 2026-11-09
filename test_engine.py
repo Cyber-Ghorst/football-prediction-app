@@ -33,6 +33,59 @@ class PredictionEngineTests(unittest.TestCase):
         self.assertEqual(draw["label"], "Most likely outcome: Draw")
         self.assertEqual(away["label"], "Predicted winner: Fulham")
         self.assertEqual(tie["label"], "No single most likely outcome (tied probabilities)")
+    def test_agreed_model_weights_are_preserved_and_sum_to_one(self):
+        from engine import WEIGHTS, TACTICAL_WEIGHTS
+
+        self.assertEqual(WEIGHTS, {
+            "recent_form": 0.20,
+            "goals_scored": 0.10,
+            "goals_conceded": 0.10,
+            "home_away": 0.10,
+            "strength_of_schedule": 0.15,
+            "player_availability": 0.05,
+            "tactical": 0.30,
+        })
+        self.assertAlmostEqual(sum(WEIGHTS.values()), 1.0)
+        self.assertEqual(TACTICAL_WEIGHTS, {
+            "playing_style": 0.06,
+            "defensive_structure": 0.07,
+            "attacking_approach": 0.07,
+            "tactical_compatibility": 0.10,
+        })
+        self.assertAlmostEqual(sum(TACTICAL_WEIGHTS.values()), 0.30)
+
+    def test_recent_five_matches_carry_sixty_percent_weight(self):
+        from engine import _weighted_recent
+
+        self.assertAlmostEqual(_weighted_recent([100] * 5 + [0] * 5), 60.0)
+        self.assertAlmostEqual(_weighted_recent([0] * 5 + [100] * 5), 40.0)
+
+    def test_partial_tactical_inputs_are_renormalized_without_imputation(self):
+        from engine import _tactical_rating
+
+        score, known = _tactical_rating({
+            "playing_style": 60,
+            "attacking_approach": 80,
+            "defensive_structure": None,
+        }, None)
+        expected = (60 * 0.06 + 80 * 0.07) / (0.06 + 0.07)
+        self.assertAlmostEqual(score, expected)
+        self.assertEqual(set(known), {"playing_style", "attacking_approach"})
+
+    def test_tactical_compatibility_override_changes_model_ratings(self):
+        high_home = predict_match(
+            self.teams["Arsenal"], self.teams["Chelsea"],
+            tactical_compatibility={"home": 90, "away": 20},
+        )
+        high_away = predict_match(
+            self.teams["Arsenal"], self.teams["Chelsea"],
+            tactical_compatibility={"home": 20, "away": 90},
+        )
+        self.assertGreater(high_home["home_rating"], high_away["home_rating"])
+        self.assertGreater(high_away["away_rating"], high_home["away_rating"])
+        self.assertNotEqual(high_home["probabilities"], high_away["probabilities"])
+
+
 
 if __name__ == "__main__":
     unittest.main()
