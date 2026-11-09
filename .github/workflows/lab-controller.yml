@@ -218,7 +218,7 @@ jobs:
                   if "Ran " in content and " tests " in content:
                       summary = [
                           line for line in content.splitlines()
-                          if re.search(r"Ran \\d+ tests|^OK$|^FAILED|^FAIL:|^ERROR:|^Traceback", line)
+                          if re.search(r"Ran \d+ tests|^OK$|^FAILED|^FAIL:|^ERROR:|^Traceback", line)
                       ]
                       if summary:
                           content = "\n".join(summary[-30:])
