@@ -217,6 +217,48 @@ class PredictionEvaluationTests(unittest.TestCase):
         self.assertEqual(len(merged), 1)
         self.assertEqual(merged[0]["actual_home_goals"], "1")
 
+    def test_top_outcome_calibration_uses_only_verified_pre_match_scores(self):
+        valid = self._record()
+        self._verify_score(valid, "2", "0")
+        unverified = self._record(home_team="Liverpool", away_team="Everton", fixture_id="fixture-2")
+        unverified.update(actual_home_goals="2", actual_away_goals="0")
+        late = self._record(home_team="Chelsea", away_team="Arsenal", fixture_id="fixture-3",
+                            predicted_at="2026-11-07T13:00:00+00:00")
+        self._verify_score(late, "2", "0")
+
+        report = evaluate_prediction_ledger([valid, unverified, late])
+        calibration = report["top_outcome_calibration"]
+
+        self.assertEqual(calibration["matches"], 1)
+        self.assertEqual(report["confidence_bucket_hit_rate"], calibration["bins"])
+        sixty_bucket = next(b for b in calibration["bins"] if b["confidence_bucket"] == "60–70%")
+        self.assertEqual(sixty_bucket["matches"], 1)
+        self.assertEqual(sixty_bucket["mean_confidence_pct"], 60.0)
+        self.assertEqual(sixty_bucket["observed_hit_rate_pct"], 100.0)
+        self.assertEqual(sixty_bucket["sample_status"], "sparse")
+
+    def test_calibration_bins_handle_empty_and_boundary_confidence(self):
+        from prediction_evaluation import _top_outcome_calibration
+
+        empty = _top_outcome_calibration([])
+        self.assertEqual(empty["matches"], 0)
+        self.assertTrue(all(row["matches"] == 0 for row in empty["bins"]))
+
+        rows = []
+        for index, confidence in enumerate((40, 50, 60, 70, 80, 90, 100)):
+            row = {
+                "model_home_win": confidence,
+                "model_draw": (100 - confidence) / 2,
+                "model_away_win": (100 - confidence) / 2,
+                "actual_home_goals": 1,
+                "actual_away_goals": 0,
+            }
+            rows.append(row)
+        calibration = _top_outcome_calibration(rows)
+        self.assertEqual(calibration["matches"], 7)
+        self.assertEqual([b["matches"] for b in calibration["bins"]], [0, 1, 1, 1, 1, 1, 2])
+
+
 
 if __name__ == "__main__":
     unittest.main()
