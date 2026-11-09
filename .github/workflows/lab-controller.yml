@@ -82,7 +82,7 @@ jobs:
         run: |
           set -o pipefail
           exec > >(tee -a controller-report.txt) 2>&1
-          python - <<'PY' | tee -a controller-report.txt
+          python - <<'PY'
           import json
           import os
           import sys
@@ -192,7 +192,7 @@ jobs:
         run: |
           set -o pipefail
           exec > >(tee -a controller-report.txt) 2>&1
-          python -m unittest discover -v 2>&1 | tee -a controller-report.txt
+          python -m unittest discover -v
 
       - name: Publish result to trigger issue
         if: always() && github.event_name == 'issue_comment'
