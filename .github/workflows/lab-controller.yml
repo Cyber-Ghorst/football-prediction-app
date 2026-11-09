@@ -460,22 +460,22 @@ jobs:
               if "Ran " in content and " tests " in content:
                   summary = [
                       line for line in content.splitlines()
-                      if re.search(r"Ran \\d+ tests|^OK$|^FAILED|^FAIL:|^ERROR:|^Traceback", line)
+                      if re.search(r"Ran \d+ tests|^OK$|^FAILED|^FAIL:|^ERROR:|^Traceback", line)
                   ]
                   if summary:
-                      content = "\\n".join(summary[-30:])
+                      content = "\n".join(summary[-30:])
               elif len(content) > 7000:
-                  content = content[:7000] + "\\n... output truncated"
-              sections.append(f"### {heading}\\n\\n{content}")
+                  content = content[:7000] + "\n... output truncated"
+              sections.append(f"### {heading}\n\n{content}")
 
           if source_timestamps:
-              sections.insert(2, "**Underlying report timestamps:**\\n" + "\\n".join(
+              sections.insert(2, "**Underlying report timestamps:**\n" + "\n".join(
                   f"- {key}: {value}" for key, value in source_timestamps[-12:]
               ))
           body = (
-              "<!-- prediction-lab-report -->\\n"
-              "## Prediction Lab — Most Recent Report\\n\\n"
-              + "\\n\\n".join(sections)
+              "<!-- prediction-lab-report -->\n"
+              "## Prediction Lab — Most Recent Report\n\n"
+              + "\n\n".join(sections)
           )
           Path("latest-controller-report.json").write_text(json.dumps({
               "report_generated_at_utc": generated_utc,
