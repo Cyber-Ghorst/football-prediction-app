@@ -2347,6 +2347,14 @@ try:
             corroboration=corroboration,
             model_weights=WEIGHTS,
         )
+        for profile in (home, away):
+            team_name = profile.get("name")
+            if team_name in squad_fetch_diagnostics:
+                squad_fetch_diagnostics[team_name] = build_squad_fetch_diagnostics(
+                    squad_fetch_diagnostics[team_name],
+                    profile.get("availability"),
+                    profile.get("player_availability_assessment"),
+                )
         collection_evidence_report = {
             "season": int(season),
             "competition": selected_league,
