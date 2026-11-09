@@ -677,8 +677,8 @@ with st.sidebar:
             help="Read-only breakdown of missing statistics by fixture status, season and stored Sportmonks payload."
         )
         backfill_missing_sportmonks_statistics = st.button(
-            "Backfill Sportmonks statistics for 5 fixtures", use_container_width=True,
-            help="Fetches and stores provider-confirmed statistics for five completed fixtures missing statistics in season sportmonks:27965. Does not change predictions or the Neon ledger."
+            "Backfill Sportmonks statistics for next 25 fixtures", use_container_width=True,
+            help="Fetches and stores provider-confirmed statistics for up to 25 completed fixtures missing statistics in season sportmonks:27965. Repeated runs safely move to the next batch. Does not change predictions or the Neon ledger."
         )
         upload_fixture_report = st.button(
             "Generate and upload fixture diagnostic report",
@@ -952,7 +952,7 @@ if backfill_missing_sportmonks_statistics:
             import psycopg
             from football_repository import save_sportmonks_fixture_statistics
 
-            with st.spinner("Selecting five missing fixtures and retrieving their statistics from Sportmonks..."):
+            with st.spinner("Selecting up to 25 missing fixtures and retrieving their statistics from Sportmonks..."):
                 cert_path = Path(__file__).resolve().with_name("root.crt")
                 if not cert_path.is_file():
                     raise FileNotFoundError("CockroachDB CA certificate is missing.")
@@ -979,7 +979,7 @@ if backfill_missing_sportmonks_statistics:
                                   WHERE fs.fixture_id = f.fixture_id
                               )
                             ORDER BY f.starting_at DESC, f.fixture_id
-                            LIMIT 5
+                            LIMIT 25
                             """,
                             ("sportmonks:27965",),
                         )
@@ -1029,6 +1029,7 @@ if backfill_missing_sportmonks_statistics:
                 coverage_after = diagnose_fixture_statistics_coverage(PROVIDER_DATABASE_URL)
 
             backfill_report = {
+                "batch_size_limit": 25,
                 "season_id": "sportmonks:27965",
                 "provider_results": provider_results,
                 "storage_result": storage_result,
@@ -1036,11 +1037,11 @@ if backfill_missing_sportmonks_statistics:
                 "cockroachdb_updated": storage_result.get("statistics_rows_written", 0) > 0,
                 "neon_prediction_ledger_modified": False,
                 "prediction_engine_modified": False,
-                "note": "Only provider-returned fixture statistics were inserted/upserted. Existing fixture scores, identities, prediction outputs and Neon ledger were not changed.",
+                "note": "Only provider-returned fixture statistics were inserted/upserted. Re-running the action selects the next fixtures that still have no statistic rows. Existing fixture scores, identities, prediction outputs and Neon ledger were not changed.",
             }
             _upload_report_to_github("sportmonks_statistics_backfill", backfill_report)
             st.success(
-                f"Backfill finished: stored {storage_result.get('statistics_rows_written', 0)} "
+                f"Batch finished: prepared and upserted {storage_result.get('statistics_rows_written', 0)} "
                 f"statistics rows across {len(provider_payloads)} fixture(s)."
             )
             st.markdown(
