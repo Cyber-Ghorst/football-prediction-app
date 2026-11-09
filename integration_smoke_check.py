@@ -28,6 +28,14 @@ def run_check(name: str, configured: bool, callback) -> dict[str, Any]:
         elif name == "highlightly" and type(exc).__name__ == "HighlightlyError":
             result["safe_detail"] = str(exc)
         cause = exc.__cause__
+        if name in {"api_football", "highlightly"}:
+            variable = "APISPORTS_API_KEY" if name == "api_football" else "HIGHLIGHTLY_API_KEY"
+            credential = os.getenv(variable, "")
+            result["credential_format"] = {
+                "length": len(credential),
+                "contains_control_characters": any(ord(char) < 32 or ord(char) == 127 for char in credential),
+                "has_outer_whitespace": credential != credential.strip(),
+            }
         if cause is not None and name in {"api_football", "highlightly"}:
             result["cause_type"] = type(cause).__name__
             errno = getattr(cause, "errno", None)
