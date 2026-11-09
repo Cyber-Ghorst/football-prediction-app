@@ -1,6 +1,6 @@
 import unittest
 
-from statistics_coverage import build_statistics_coverage
+from statistics_coverage import build_statistics_coverage, build_counter_attack_source_diagnostics
 
 
 class StatisticsCoverageTests(unittest.TestCase):
@@ -76,6 +76,61 @@ class StatisticsCoverageTests(unittest.TestCase):
         self.assertEqual(
             next(row for row in report["metrics"] if row["statistic"] == "Ball Possession")["fixtures_available"],
             10,
+        )
+
+
+    def test_counter_attack_source_diagnostics_finds_type_id_1527(self):
+        matches = [
+            {
+                "fixture_id": 101,
+                "statistics_raw_diagnostics": [
+                    {
+                        "statistic_type_id": 1527,
+                        "statistic_name_raw": "",
+                        "raw_value": 7,
+                        "normalized_value": 7.0,
+                        "canonical_name": "Counter Attacks",
+                        "mapping_status": "mapped",
+                    },
+                    {
+                        "statistic_type_id": 80,
+                        "statistic_name_raw": "Total Shots",
+                        "raw_value": 12,
+                        "mapping_status": "mapped",
+                    },
+                ],
+            },
+            {"fixture_id": 102, "statistics_raw_diagnostics": []},
+        ]
+        report = build_counter_attack_source_diagnostics(matches)
+        self.assertEqual(report["fixtures_checked"], 2)
+        self.assertEqual(report["fixtures_with_counter_attack_rows"], 1)
+        self.assertEqual(report["counter_attack_rows_found"], 1)
+        self.assertEqual(report["counter_attack_rows"][0]["raw_value"], 7)
+        self.assertEqual(
+            report["status"],
+            "counter_attack_rows_found_in_archived_provider_statistics",
+        )
+
+    def test_counter_attack_source_diagnostics_reports_absence(self):
+        matches = [
+            {
+                "fixture_id": 101,
+                "statistics_raw_diagnostics": [
+                    {
+                        "statistic_type_id": 80,
+                        "statistic_name_raw": "Total Shots",
+                        "raw_value": 12,
+                        "mapping_status": "mapped",
+                    }
+                ],
+            }
+        ]
+        report = build_counter_attack_source_diagnostics(matches)
+        self.assertEqual(report["counter_attack_rows_found"], 0)
+        self.assertEqual(
+            report["status"],
+            "no_counter_attack_rows_found_in_archived_provider_statistics",
         )
 
 
