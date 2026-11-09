@@ -351,6 +351,14 @@ class SportmonksClient:
     def teams(self, **params: Any) -> list[dict[str, Any]]:
         return self._rows(self._get("teams", params))
 
+    def squad_by_season(
+        self, season_id: int | str, team_id: int | str, **params: Any
+    ) -> list[dict[str, Any]]:
+        """Fetch the registered player-statistic squad for one exact team season."""
+        return self._rows(
+            self._get(f"squads/seasons/{season_id}/teams/{team_id}", params)
+        )
+
     def standings(self, **params: Any) -> list[dict[str, Any]]:
         return self._rows(self._get("standings", params))
 
