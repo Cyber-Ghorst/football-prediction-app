@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-09T01:02:16.285080+00:00",
+  "generated_at": "2026-11-09T01:19:36.197381+00:00",
   "season_id": 28083,
   "home_team": "Brighton & Hove Albion",
   "away_team": "Fulham",
@@ -19,6 +19,6 @@
   },
   "prediction_engine_modified": false,
   "neon_prediction_ledger_modified": false,
-  "generated_at_utc": "2026-11-09T01:02:42.134982+00:00",
+  "generated_at_utc": "2026-11-09T01:19:58.594448+00:00",
   "report_name": "central_repository_prediction_inputs"
 }
