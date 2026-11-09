@@ -214,8 +214,12 @@ def run_prediction(season: int, competition: str, home_team: str, away_team: str
             "The app's existing Neon ledger persistence is used when DATABASE_URL is configured.",
         ],
     }
-    links = _upload_report(report)
-    report["github_reports"] = links
+    try:
+        report["github_reports"] = _upload_report(report)
+    except Exception as upload_error:
+        report["github_report_upload_error"] = _safe_text(
+            f"{type(upload_error).__name__}: {upload_error}"
+        )
     Path("prediction-run-report.json").write_text(
         json.dumps(report, ensure_ascii=False, indent=2, default=str), encoding="utf-8"
     )
