@@ -256,7 +256,24 @@ def build_sportmonks_availability_evidence(
         except (TypeError, ValueError):
             return unknown("A player-statistic row has an invalid player ID.")
         if statistic.get("has_values") is False:
-            return unknown("A current-squad player has no season-statistic values for an importance estimate.")
+            # Sportmonks explicitly marks a player statistic row with
+            # has_values=false when the player has no statistics for the
+            # selected season. This is direct evidence of zero minutes.
+            player_name = row.get("display_name") or row.get("name") or row.get("common_name")
+            diagnostics["players_with_zero_minutes_inferred"].append({
+                "player_id": int(player_id),
+                "player_name": player_name,
+                "minutes_evidence_method": "sportmonks_has_values_false_no_season_statistics",
+                "appearances_total": 0,
+                "bench_appearances_total": None,
+            })
+            current_players[player_id] = {
+                "player_id": int(player_id),
+                "player_name": player_name,
+                "minutes_played": 0.0,
+                "minutes_evidence_method": "sportmonks_has_values_false_no_season_statistics",
+            }
+            continue
 
         details = statistic.get("details")
         if isinstance(details, dict):

@@ -369,6 +369,33 @@ class PlayerAvailabilityTests(unittest.TestCase):
         self.assertIsNone(assess_player_availability(evidence)["score"])
 
 
+    def test_explicit_has_values_false_is_zero_minutes_evidence(self):
+        from player_availability import build_sportmonks_availability_evidence
+
+        evidence = build_sportmonks_availability_evidence(
+            squad_rows=[
+                {"id": 1, "in_squad": True, "statistics": [{
+                    "player_id": 1, "team_id": 10, "season_id": 2026,
+                    "details": [{"type_id": 119, "value": {"total": 900}}],
+                }]},
+                {"id": 2, "in_squad": True, "statistics": [{
+                    "player_id": 2, "team_id": 10, "season_id": 2026,
+                    "has_values": False,
+                }]},
+            ],
+            sidelined_rows=[], sidelined_feed_available=True,
+            team_id=10, season_id=2026, fixture_id=123, kickoff="2026-11-23",
+        )
+        self.assertTrue(evidence["roster_complete"])
+        zero_player = next(p for p in evidence["squad_players"] if p["player_id"] == 2)
+        self.assertEqual(zero_player["minutes_played"], 0.0)
+        self.assertEqual(zero_player["importance"], 0.0)
+        self.assertEqual(
+            zero_player["minutes_evidence_method"],
+            "sportmonks_has_values_false_no_season_statistics",
+        )
+
+
 
 if __name__ == "__main__":
     unittest.main()
