@@ -299,6 +299,12 @@ class SportmonksClient:
                     f"fixtures/multi/{','.join(str(value) for value in fixture_batch)}",
                 ))
 
+            # Respect instance-level transport overrides used by adapters and
+            # tests; only the unmodified concrete HTTP client is parallelized.
+            use_parallel_sessions = (
+                type(self) is SportmonksClient and "_get" not in self.__dict__
+            )
+
             def fetch_detail_batch(batch_spec):
                 batch_number, fixture_batch, batch_path = batch_spec
                 print(
@@ -306,7 +312,7 @@ class SportmonksClient:
                     f"{batch_number}/{batch_total} ({len(fixture_batch)} fixtures).",
                     flush=True,
                 )
-                if type(self) is SportmonksClient:
+                if use_parallel_sessions:
                     # requests.Session is not shared across worker threads. Each
                     # concurrent batch gets its own short-lived authenticated
                     # session while retaining the same endpoint and include set.
@@ -337,7 +343,7 @@ class SportmonksClient:
                 )
                 return detail_rows, metadata, batch_number
 
-            if type(self) is SportmonksClient and len(batch_specs) > 1:
+            if use_parallel_sessions and len(batch_specs) > 1:
                 from concurrent.futures import ThreadPoolExecutor
                 with ThreadPoolExecutor(
                     max_workers=min(2, len(batch_specs))
