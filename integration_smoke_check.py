@@ -27,6 +27,12 @@ def run_check(name: str, configured: bool, callback) -> dict[str, Any]:
             result["safe_detail"] = str(exc)
         elif name == "highlightly" and type(exc).__name__ == "HighlightlyError":
             result["safe_detail"] = str(exc)
+        cause = exc.__cause__
+        if cause is not None and name in {"api_football", "highlightly"}:
+            result["cause_type"] = type(cause).__name__
+            errno = getattr(cause, "errno", None)
+            if isinstance(errno, int):
+                result["cause_errno"] = errno
         return result
 
 
