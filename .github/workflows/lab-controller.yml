@@ -16,12 +16,22 @@ on:
       - "agent-trigger/**"
     paths:
       - ".agent/trigger.json"
+  issue_comment:
+    types: [created]
 
 permissions:
   contents: read
+  issues: write
 
 jobs:
   controller:
+    if: >-
+      github.event_name != 'issue_comment' ||
+      (
+        github.event.issue.pull_request == null &&
+        contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association) &&
+        startsWith(github.event.comment.body, '/agent run ')
+      )
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -46,6 +56,11 @@ jobs:
 
           if os.environ["EVENT_NAME"] == "workflow_dispatch":
               operation = os.environ.get("DISPATCH_OPERATION", "")
+          elif os.environ["EVENT_NAME"] == "issue_comment":
+              event = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text(encoding="utf-8"))
+              body = event.get("comment", {}).get("body", "").strip()
+              prefix = "/agent run "
+              operation = body[len(prefix):].strip() if body.startswith(prefix) else ""
           else:
               trigger = json.loads(Path(".agent/trigger.json").read_text(encoding="utf-8"))
               operation = trigger.get("operation", "")
@@ -173,6 +188,46 @@ jobs:
         run: |
           set -o pipefail
           python -m unittest discover -v 2>&1 | tee controller-report.txt
+
+      - name: Publish result to trigger issue
+        if: always() && github.event_name == 'issue_comment'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPOSITORY: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          JOB_STATUS: ${{ job.status }}
+          OPERATION: ${{ steps.operation.outputs.operation }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from urllib.request import Request, urlopen
+
+          sections = [
+              f"**Workflow result:** {os.environ.get('JOB_STATUS', 'unknown')}",
+              f"**Operation:** {os.environ.get('OPERATION') or 'rejected / unresolved'}",
+              f"**Run:** {os.environ['RUN_URL']}",
+          ]
+          for filename, heading in (("controller-report.txt", "Deployment probe / test output"), ("deployment-smoke-report.json", "Application smoke report")):
+              path = Path(filename)
+              if path.exists():
+                  content = path.read_text(encoding="utf-8", errors="replace")
+                  if len(content) > 7000:
+                      content = content[:7000] + "\\n... output truncated"
+                  sections.append(f"### {heading}\\n\\n{content}")
+          body = "## Prediction Lab agent report\\n\\n" + "\\n\\n".join(sections)
+          api = f"https://api.github.com/repos/{os.environ['REPOSITORY']}/issues/{os.environ['ISSUE_NUMBER']}/comments"
+          request = Request(api, data=json.dumps({"body": body}).encode("utf-8"), headers={
+              "Accept": "application/vnd.github+json",
+              "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+              "X-GitHub-Api-Version": "2022-11-28",
+              "Content-Type": "application/json",
+          }, method="POST")
+          with urlopen(request, timeout=20) as response:
+              print(f"Published agent report (HTTP {response.status})")
+          PY
 
       - name: Upload controller report
         if: always()
