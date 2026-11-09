@@ -81,7 +81,8 @@ jobs:
           HEALTH_URL: https://football-prediction-app-evzek8cthsuavun8hanejj.streamlit.app/_stcore/health
         run: |
           set -o pipefail
-          python - <<'PY' | tee controller-report.txt
+          exec > >(tee -a controller-report.txt) 2>&1
+          python - <<'PY' | tee -a controller-report.txt
           import json
           import os
           import sys
@@ -169,6 +170,7 @@ jobs:
       - name: Install health-check dependencies
         if: steps.operation.outputs.operation == 'health_check' || steps.operation.outputs.operation == 'full_check'
         run: |
+          exec > >(tee -a controller-report.txt) 2>&1
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
@@ -176,6 +178,7 @@ jobs:
         if: steps.operation.outputs.operation == 'health_check' || steps.operation.outputs.operation == 'full_check'
         run: |
           set -o pipefail
+          exec > >(tee -a controller-report.txt) 2>&1
           python deployment_smoke_check.py | tee deployment-smoke-report.json
 
       - name: Install test dependencies
@@ -188,7 +191,8 @@ jobs:
         if: steps.operation.outputs.operation == 'test_suite' || steps.operation.outputs.operation == 'full_check'
         run: |
           set -o pipefail
-          python -m unittest discover -v 2>&1 | tee controller-report.txt
+          exec > >(tee -a controller-report.txt) 2>&1
+          python -m unittest discover -v 2>&1 | tee -a controller-report.txt
 
       - name: Publish result to trigger issue
         if: always() && github.event_name == 'issue_comment'
