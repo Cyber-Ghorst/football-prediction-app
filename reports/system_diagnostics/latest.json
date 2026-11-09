@@ -1,6 +1,6 @@
 {
   "diagnostic_version": 1,
-  "generated_at": "2026-11-09T01:02:48.599534+00:00",
+  "generated_at": "2026-11-09T01:20:08.780250+00:00",
   "overall_status": "attention_required",
   "selected_context": {
     "season_start_year": 2026,
@@ -865,7 +865,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "99",
+            "requests_remaining": "96",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -883,7 +883,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "98",
+            "requests_remaining": "95",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -901,7 +901,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "97",
+            "requests_remaining": "94",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -1816,9 +1816,9 @@
         "sportmonks_request_metadata": {
           "request_path": "fixtures/between/2026-09-13/2026-09-13",
           "http_status": 200,
-          "request_seconds": 0.368,
+          "request_seconds": 0.401,
           "rate_limit": "2000",
-          "rate_remaining": "1986"
+          "rate_remaining": "1982"
         }
       },
       {
@@ -2355,9 +2355,9 @@
         "sportmonks_request_metadata": {
           "request_path": "fixtures/between/2026-09-05/2026-09-05",
           "http_status": 200,
-          "request_seconds": 0.695,
+          "request_seconds": 0.696,
           "rate_limit": "2000",
-          "rate_remaining": "1985"
+          "rate_remaining": "1981"
         }
       },
       {
@@ -2742,9 +2742,9 @@
         "sportmonks_request_metadata": {
           "request_path": "fixtures/between/2026-10-24/2026-10-24",
           "http_status": 200,
-          "request_seconds": 0.652,
+          "request_seconds": 0.636,
           "rate_limit": "2000",
-          "rate_remaining": "1984"
+          "rate_remaining": "1980"
         }
       },
       {
@@ -3093,9 +3093,9 @@
         "sportmonks_request_metadata": {
           "request_path": "fixtures/between/2026-10-10/2026-10-10",
           "http_status": 200,
-          "request_seconds": 0.65,
+          "request_seconds": 0.631,
           "rate_limit": "2000",
-          "rate_remaining": "1983"
+          "rate_remaining": "1979"
         }
       }
     ],
@@ -3232,6 +3232,6 @@
     "weights_total": 1.0,
     "model_impact": "Diagnostics only; weights, recency weighting, prediction inputs and missing-data rules are not changed."
   },
-  "generated_at_utc": "2026-11-09T01:02:52.272939+00:00",
+  "generated_at_utc": "2026-11-09T01:20:12.803315+00:00",
   "report_name": "system_diagnostics"
 }
