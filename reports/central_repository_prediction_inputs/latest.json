@@ -1,16 +1,16 @@
 {
-  "generated_at": "2026-11-09T15:06:37.167006+00:00",
+  "generated_at": "2026-11-09T15:11:25.703680+00:00",
   "season_id": 28083,
-  "home_team": "Liverpool",
-  "away_team": "Manchester United",
+  "home_team": "Chelsea",
+  "away_team": "Leeds United",
   "profiles": {
-    "Liverpool": {
+    "Chelsea": {
       "source": "cockroachdb_central_repository",
       "completed_matches": 10,
       "repository_fixture_rows": 380,
       "fallback_used": false
     },
-    "Manchester United": {
+    "Leeds United": {
       "source": "cockroachdb_central_repository",
       "completed_matches": 10,
       "repository_fixture_rows": 380,
@@ -19,6 +19,6 @@
   },
   "prediction_engine_modified": false,
   "neon_prediction_ledger_modified": false,
-  "generated_at_utc": "2026-11-09T15:06:43.419812+00:00",
+  "generated_at_utc": "2026-11-09T15:11:31.703651+00:00",
   "report_name": "central_repository_prediction_inputs"
 }
