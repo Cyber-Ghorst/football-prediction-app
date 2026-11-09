@@ -976,6 +976,11 @@ def audit_all_repository_team_histories(
     for row in history_rows:
         by_team.setdefault(str(row.get("team_id")), []).append(row)
 
+    duplicate_fixture_ids = {
+        str(fixture_id)
+        for group in duplicate_groups
+        for fixture_id in (group.get("fixture_ids") or [])
+    }
     team_results = []
     for team in teams:
         team_id = str(team.get("team_id"))
@@ -992,7 +997,10 @@ def audit_all_repository_team_histories(
         )
         seasons = sorted({str(row.get("season_id")) for row in rows if row.get("season_id") is not None})
         fixture_ids = [str(row.get("fixture_id")) for row in rows]
-        duplicate_ids = len(fixture_ids) != len(set(fixture_ids))
+        duplicate_ids = (
+            len(fixture_ids) != len(set(fixture_ids))
+            or any(fixture_id in duplicate_fixture_ids for fixture_id in fixture_ids)
+        )
         team_results.append({
             "team_id": team_id,
             "team_name": team.get("name"),
