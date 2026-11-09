@@ -1,0 +1,42 @@
+{
+  "audit_status": "success",
+  "summary": {
+    "statistic_rows": 18284,
+    "orphan_statistic_rows": 0,
+    "invalid_team_association_rows": 0,
+    "missing_statistic_type_rows": 0,
+    "missing_statistic_value_rows": 0,
+    "fixtures_with_statistics": 218,
+    "fixtures_without_statistics": 542,
+    "completed_scored_fixtures": 218,
+    "completed_scored_fixtures_with_statistics": 218
+  },
+  "completed_fixture_statistics_coverage_percent": 100.0,
+  "integrity_issues": {
+    "orphan_statistic_rows": 0,
+    "invalid_team_association_rows": 0,
+    "missing_statistic_type_rows": 0,
+    "missing_statistic_value_rows": 0,
+    "duplicate_logical_groups": 0
+  },
+  "duplicate_excess_rows": 0,
+  "duplicate_samples": [],
+  "provider_breakdown": [
+    {
+      "source_provider": "sportmonks",
+      "statistic_rows": 18284,
+      "fixtures_covered": 218
+    }
+  ],
+  "checks": {
+    "orphan_statistics_checked": true,
+    "team_associations_checked_against_fixture_participants": true,
+    "missing_statistic_types_and_values_checked": true,
+    "duplicate_logical_statistic_records_checked": true,
+    "prediction_engine_modified": false,
+    "neon_prediction_ledger_modified": false
+  },
+  "generated_at_utc": "2026-11-09T04:57:02.875318+00:00",
+  "repository": "Cyber-Ghorst/football-prediction-app",
+  "report_name": "fixture_statistics_integrity"
+}
