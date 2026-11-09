@@ -44,7 +44,7 @@ from football_repository import (
     ensure_football_repository, repository_table_counts, import_sportmonks_season,
     get_repository_leagues, get_repository_seasons, get_repository_teams,
     get_repository_fixtures, get_repository_team_history, diagnose_repository_fixture_history,
-    audit_all_repository_team_histories,
+    audit_all_repository_team_histories, audit_repository_fixture_statistics,
 )
 
 st.set_page_config(page_title="Football Prediction Lab", page_icon="⚽", layout="wide")
@@ -553,6 +553,10 @@ with st.sidebar:
             "Audit all teams' 10-match histories", use_container_width=True,
             help="Checks every canonical team's latest 10 completed matches, home/away identity, season consistency, scores and duplicate fixtures."
         )
+        audit_fixture_statistics = st.button(
+            "Audit fixture statistics integrity", use_container_width=True,
+            help="Checks all stored fixture statistics for orphan rows, participant mismatches, missing values, duplicates and coverage."
+        )
         upload_fixture_report = st.button(
             "Generate and upload fixture diagnostic report",
             use_container_width=True,
@@ -756,6 +760,64 @@ if audit_all_team_histories:
                 st.json(team_history_audit)
         except Exception as exc:
             st.error(f"Multi-team history audit failed ({type(exc).__name__}): {exc}")
+
+
+if audit_fixture_statistics:
+    if not PROVIDER_DATABASE_URL:
+        st.warning("Add PROVIDER_DATABASE_URL in Streamlit Secrets before auditing fixture statistics.")
+    else:
+        try:
+            with st.spinner("Auditing all normalized fixture-statistic records in CockroachDB..."):
+                statistics_audit = audit_repository_fixture_statistics(PROVIDER_DATABASE_URL)
+                statistics_audit["generated_at_utc"] = datetime.now(timezone.utc).isoformat()
+                statistics_audit["repository"] = "Cyber-Ghorst/football-prediction-app"
+                statistics_audit["report_name"] = "fixture_statistics_integrity"
+            st.subheader("Fixture statistics integrity audit")
+            status_message = (
+                "No relational or duplicate-statistic integrity issues found."
+                if statistics_audit["audit_status"] == "success"
+                else "Integrity issues detected; inspect the evidence below."
+            )
+            if statistics_audit["audit_status"] == "success":
+                st.success(status_message)
+            else:
+                st.warning(status_message)
+            summary = statistics_audit["summary"]
+            st.write(
+                f"Statistic rows: {summary.get('statistic_rows', 0)} · "
+                f"Fixtures with statistics: {summary.get('fixtures_with_statistics', 0)} · "
+                f"Completed-fixture statistics coverage: "
+                f"{statistics_audit.get('completed_fixture_statistics_coverage_percent')}%"
+            )
+            st.dataframe([
+                {"Integrity check": label, "Affected rows/groups": value}
+                for label, value in statistics_audit["integrity_issues"].items()
+            ], use_container_width=True, hide_index=True)
+            st.write(
+                f"Fixtures without statistics: {summary.get('fixtures_without_statistics', 0)} · "
+                f"Completed scored fixtures: {summary.get('completed_scored_fixtures', 0)}"
+            )
+            try:
+                github_statistics_report = _upload_report_once(
+                    "fixture_statistics_integrity", statistics_audit
+                )
+                if github_statistics_report:
+                    st.success("Fixture statistics integrity report archived in GitHub.")
+                    st.markdown(
+                        f"[Latest report]({github_statistics_report['latest_url']}) · "
+                        f"[Timestamped archive]({github_statistics_report['archive_url']})"
+                    )
+                else:
+                    st.caption("This unchanged statistics integrity report is already archived in GitHub.")
+            except Exception as upload_exc:
+                st.error(
+                    f"Statistics audit completed, but GitHub upload failed "
+                    f"({type(upload_exc).__name__}): {upload_exc}"
+                )
+            with st.expander("Full statistics integrity evidence"):
+                st.json(statistics_audit)
+        except Exception as exc:
+            st.error(f"Fixture statistics integrity audit failed ({type(exc).__name__}): {exc}")
 
 
 client = None
