@@ -115,7 +115,6 @@ try:
         get_repository_fixtures, get_repository_team_history, diagnose_repository_fixture_history,
         audit_all_repository_team_histories, audit_repository_fixture_statistics,
         diagnose_fixture_statistics_coverage,
-        get_completed_scored_fixtures_missing_statistics,
     )
 except Exception:
     safe_trace = _redact_runtime_trace(traceback.format_exc())
@@ -677,10 +676,6 @@ with st.sidebar:
             "Investigate missing fixture statistics", use_container_width=True,
             help="Read-only breakdown of missing statistics by fixture status, season and stored Sportmonks payload."
         )
-        verify_missing_sportmonks_statistics = st.button(
-            "Verify Sportmonks statistics for 5 fixtures", use_container_width=True,
-            help="Makes five read-only fixture-detail requests for completed, scored fixtures in season sportmonks:27965. Does not update CockroachDB or predictions."
-        )
         upload_fixture_report = st.button(
             "Generate and upload fixture diagnostic report",
             use_container_width=True,
@@ -942,114 +937,6 @@ if audit_fixture_statistics:
                 st.json(statistics_audit)
         except Exception as exc:
             st.error(f"Fixture statistics integrity audit failed ({type(exc).__name__}): {exc}")
-
-
-if verify_missing_sportmonks_statistics:
-    if not PROVIDER_DATABASE_URL:
-        st.warning("Add PROVIDER_DATABASE_URL in Streamlit Secrets before verifying Sportmonks fixture statistics.")
-    else:
-        try:
-            sample = get_completed_scored_fixtures_missing_statistics(
-                PROVIDER_DATABASE_URL, season_id="sportmonks:27965", limit=5
-            )
-            if not sample:
-                st.warning("No eligible completed, scored fixtures without statistics were found in season sportmonks:27965.")
-            else:
-                verification = {
-                    "generated_at_utc": datetime.now(timezone.utc).isoformat(),
-                    "report_name": "sportmonks_statistics_provider_verification",
-                    "season_id": "sportmonks:27965",
-                    "sample_size": len(sample),
-                    "read_only": True,
-                    "cockroachdb_modified": False,
-                    "prediction_engine_modified": False,
-                    "neon_prediction_ledger_modified": False,
-                    "fixtures": [],
-                }
-                with st.spinner(f"Checking {len(sample)} individual Sportmonks fixture-detail responses..."):
-                    with SportmonksClient() as sm:
-                        for fixture in sample:
-                            provider_fixture_id = str(fixture["fixture_id"]).split(":")[-1]
-                            item = {
-                                "fixture_id": fixture["fixture_id"],
-                                "home_team": fixture["home_team"],
-                                "away_team": fixture["away_team"],
-                                "starting_at": str(fixture["starting_at"]),
-                                "stored_score": f"{fixture['home_goals']}-{fixture['away_goals']}",
-                            }
-                            try:
-                                provider_fixture = sm.fixture(
-                                    provider_fixture_id,
-                                    include="participants;scores;state;statistics.type",
-                                )
-                                metadata = dict(sm.last_metadata)
-                                stats = provider_fixture.get("statistics") if isinstance(provider_fixture, dict) else None
-                                if isinstance(stats, list):
-                                    stat_rows = [row for row in stats if isinstance(row, dict)]
-                                elif isinstance(stats, dict):
-                                    stat_rows = [stats]
-                                else:
-                                    stat_rows = []
-                                statistic_types = []
-                                for stat in stat_rows:
-                                    stat_type = stat.get("type") or {}
-                                    name = stat_type.get("name") if isinstance(stat_type, dict) else None
-                                    type_id = stat_type.get("id") if isinstance(stat_type, dict) else None
-                                    statistic_types.append({"type_id": type_id, "name": name})
-                                item.update({
-                                    "request_status": "success",
-                                    "http_status": metadata.get("http_status"),
-                                    "request_seconds": metadata.get("request_seconds"),
-                                    "rate_remaining": metadata.get("rate_remaining"),
-                                    "provider_fixture_returned": provider_fixture is not None,
-                                    "statistics_field_present": isinstance(provider_fixture, dict) and "statistics" in provider_fixture,
-                                    "statistics_count": len(stat_rows),
-                                    "statistics_types": statistic_types[:100],
-                                })
-                            except SportmonksError as exc:
-                                item.update({
-                                    "request_status": "error",
-                                    "error": str(exc),
-                                    "http_status": (getattr(sm, "last_metadata", {}) or {}).get("http_status"),
-                                })
-                            verification["fixtures"].append(item)
-                successful = [x for x in verification["fixtures"] if x.get("request_status") == "success"]
-                verification["requests_succeeded"] = len(successful)
-                verification["requests_failed"] = len(verification["fixtures"]) - len(successful)
-                verification["provider_returned_statistics"] = sum(
-                    x.get("statistics_count", 0) > 0 for x in successful
-                )
-                verification["provider_returned_no_statistics"] = sum(
-                    x.get("statistics_count", 0) == 0 for x in successful
-                )
-                st.subheader("Sportmonks fixture-statistics provider verification")
-                st.write(
-                    f"Requests succeeded: {verification['requests_succeeded']}/{len(sample)} · "
-                    f"Fixtures with returned statistics: {verification['provider_returned_statistics']} · "
-                    f"Fixtures with no returned statistics: {verification['provider_returned_no_statistics']}"
-                )
-                st.dataframe(verification["fixtures"], use_container_width=True, hide_index=True)
-                try:
-                    github_verification_report = _upload_report_once(
-                        "sportmonks_statistics_provider_verification", verification
-                    )
-                    if github_verification_report:
-                        st.success("Provider verification report archived in GitHub.")
-                        st.markdown(
-                            f"[Latest report]({github_verification_report['latest_url']}) · "
-                            f"[Timestamped archive]({github_verification_report['archive_url']})"
-                        )
-                    else:
-                        st.caption("This unchanged provider verification report is already archived in GitHub.")
-                except Exception as upload_exc:
-                    st.error(
-                        f"Provider verification completed, but GitHub upload failed "
-                        f"({type(upload_exc).__name__}): {upload_exc}"
-                    )
-                with st.expander("Full provider verification evidence"):
-                    st.json(verification)
-        except Exception as exc:
-            st.error(f"Sportmonks provider verification failed ({type(exc).__name__}): {exc}")
 
 
 if investigate_fixture_statistics_coverage:
