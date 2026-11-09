@@ -298,17 +298,15 @@ def _upload_reports_once_parallel(report_items):
     if not pending:
         return results
 
-    with ThreadPoolExecutor(max_workers=min(2, len(pending))) as executor:
-        futures = {
-            name: executor.submit(_upload_report_to_github, name, payload)
-            for name, (payload, _) in pending.items()
-        }
-        for name, future in futures.items():
-            try:
-                results[name] = future.result()
-                uploaded[name] = pending[name][1]
-            except Exception as exc:
-                results[name] = exc
+    # GitHub's Contents API creates commits on the same branch ref. Uploading
+    # separate reports concurrently can race those commits and produce HTTP 409
+    # conflicts, so keep these small report writes sequential.
+    for name, (payload, fingerprint) in pending.items():
+        try:
+            results[name] = _upload_report_to_github(name, payload)
+            uploaded[name] = fingerprint
+        except Exception as exc:
+            results[name] = exc
     return results
 
 
