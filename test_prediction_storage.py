@@ -150,3 +150,21 @@ def test_empty_save_keeps_existing_count(monkeypatch):
 
     assert save_prediction_records("postgresql://example", []) == 1
     assert fake_connection.executemany_calls == 0
+
+
+def test_duplicate_ids_in_same_batch_merge_sequentially(monkeypatch):
+    fake_connection = _install_fake_database(monkeypatch)
+    records = [
+        {"record_id": "same", "home_team": "Brighton", "actual_home_goals": 2},
+        {"record_id": "same", "away_team": "Fulham", "actual_away_goals": 1},
+        {"record_id": "same", "actual_home_goals": ""},
+    ]
+
+    assert save_prediction_records("postgresql://example", records) == 1
+
+    stored = fake_connection.rows["same"]
+    assert stored["home_team"] == "Brighton"
+    assert stored["away_team"] == "Fulham"
+    assert stored["actual_home_goals"] == 2
+    assert stored["actual_away_goals"] == 1
+    assert fake_connection.executemany_calls == 1
