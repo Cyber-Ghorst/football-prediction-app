@@ -269,7 +269,7 @@ jobs:
               ["gh", "run", "view", os.environ["RUN_ID"], "--repo", os.environ["REPOSITORY"], "--log-failed"],
               capture_output=True, text=True, check=False,
           )
-          logs = (run.stdout or "") + "\\n" + (run.stderr or "")
+          logs = (run.stdout or "") + "\n" + (run.stderr or "")
           quota = bool(re.search(
               r"quota exceeded|insufficient_quota|credit_balance_exhausted|"
               r"organization_usage_limit_exceeded|organization_spend_limit_exceeded|"
@@ -296,11 +296,11 @@ jobs:
               )
 
           body = (
-              "## Autonomous Codex Failure Report\\n\\n"
-              f"**Generated (UTC):** {utc}\\n"
-              f"**Generated (Kenya / EAT):** {eat}\\n"
-              f"**Classification:** {status}\\n\\n"
-              f"{detail}\\n\\n"
+              "## Autonomous Codex Failure Report\n\n"
+              f"**Generated (UTC):** {utc}\n"
+              f"**Generated (Kenya / EAT):** {eat}\n"
+              f"**Classification:** {status}\n\n"
+              f"{detail}\n\n"
               f"**Workflow:** {os.environ['RUN_URL']}"
           )
           url = f"https://api.github.com/repos/{os.environ['REPOSITORY']}/issues/54/comments"
@@ -313,5 +313,5 @@ jobs:
           with urlopen(request, timeout=20) as response:
               print(f"Published {status} report (HTTP {response.status}).")
           with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as summary:
-              summary.write(f"## {status}\\n\\n{detail}\\n\\n[Workflow run]({os.environ['RUN_URL']})\\n")
+              summary.write(f"## {status}\n\n{detail}\n\n[Workflow run]({os.environ['RUN_URL']})\n")
           PY
