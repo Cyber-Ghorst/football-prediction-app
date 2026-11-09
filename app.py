@@ -1917,10 +1917,17 @@ try:
                                         candidate_rows.append(candidate)
 
                             candidate_verification = []
+                            candidate_verification_diagnostics = {
+                                "candidates_checked": len(candidate_rows),
+                                "selected_season_fixture_date_hits": 0,
+                                "targeted_date_endpoint_requests": 0,
+                                "verified_from_selected_season_fixtures": 0,
+                                "verified_from_targeted_date_endpoint": 0,
+                            }
+                            candidate_verification_started = time.perf_counter()
                             if candidate_rows:
                                 try:
                                     with SportmonksClient() as verifier_client:
-                                        fixtures_by_date = {}
                                         for candidate in candidate_rows:
                                             try:
                                                 candidate_kickoff = datetime.fromisoformat(
@@ -1936,14 +1943,16 @@ try:
                                                 })
                                                 continue
 
-                                            if candidate_date not in fixtures_by_date:
-                                                fixtures_by_date[candidate_date] = get_sm_fixtures_between(
-                                                    candidate_date,
-                                                    candidate_date,
-                                                    "participants;state;scores",
-                                                    ttl_seconds=300,
-                                                )
-                                            date_fixtures = fixtures_by_date[candidate_date]
+                                            # Reuse the complete selected-season fixture collection first.
+                                            # Only call the date endpoint when that collection cannot verify
+                                            # the candidate, avoiding repeated network requests for fixtures
+                                            # already fetched during the main data-collection stage.
+                                            date_fixtures = fixtures_for_utc_date(
+                                                fixtures or [], candidate_date
+                                            )
+                                            verification_source = "selected_season_fixture_collection"
+                                            if date_fixtures:
+                                                candidate_verification_diagnostics["selected_season_fixture_date_hits"] += 1
 
                                             def resolve_candidate_identity(candidate_team_name, resolution_fixtures):
                                                 target_name = normalize_team_name(candidate_team_name or "")
@@ -1962,64 +1971,80 @@ try:
                                                     resolution_fixtures,
                                                 )
 
-                                            candidate_team_mapping = {
-                                                str(candidate.get("home") or ""): resolve_candidate_identity(
-                                                    candidate.get("home"), date_fixtures
-                                                ),
-                                                str(candidate.get("away") or ""): resolve_candidate_identity(
-                                                    candidate.get("away"), date_fixtures
-                                                ),
-                                            }
-                                            report = verify_highlightly_candidate(
-                                                candidate,
-                                                date_fixtures,
-                                                season_id=int(selected_season_id),
-                                                league_id=int(league_id),
-                                                home_team_id=candidate_team_mapping[str(candidate.get("home") or "")]["team_id"],
-                                                away_team_id=candidate_team_mapping[str(candidate.get("away") or "")]["team_id"],
-                                            )
-                                            report["team_mapping_details"] = candidate_team_mapping
-                                            report["sportmonks_request_metadata"] = dict(
-                                                verifier_client.last_metadata or {}
-                                            )
-
-                                            # The date endpoint can omit a fixture even when the
-                                            # selected-season team-fixture collection already contains
-                                            # it. Retry verification against those independently fetched
-                                            # Sportmonks rows for the same UTC date before marking the
-                                            # candidate unresolved.
-                                            if report.get("verification_status") != "exact_fixture_and_score_agree":
-                                                season_date_fixtures = fixtures_for_utc_date(
-                                                    fixtures or [], candidate_date
+                                            def verify_candidate(candidate_fixtures, source):
+                                                candidate_team_mapping = {
+                                                    str(candidate.get("home") or ""): resolve_candidate_identity(
+                                                        candidate.get("home"), candidate_fixtures
+                                                    ),
+                                                    str(candidate.get("away") or ""): resolve_candidate_identity(
+                                                        candidate.get("away"), candidate_fixtures
+                                                    ),
+                                                }
+                                                result = verify_highlightly_candidate(
+                                                    candidate,
+                                                    candidate_fixtures,
+                                                    season_id=int(selected_season_id),
+                                                    league_id=int(league_id),
+                                                    home_team_id=candidate_team_mapping[str(candidate.get("home") or "")]["team_id"],
+                                                    away_team_id=candidate_team_mapping[str(candidate.get("away") or "")]["team_id"],
                                                 )
-                                                if season_date_fixtures:
-                                                    fallback_team_mapping = {
-                                                        str(candidate.get("home") or ""): resolve_candidate_identity(
-                                                            candidate.get("home"), season_date_fixtures
-                                                        ),
-                                                        str(candidate.get("away") or ""): resolve_candidate_identity(
-                                                            candidate.get("away"), season_date_fixtures
+                                                result["team_mapping_details"] = candidate_team_mapping
+                                                result["verification_source"] = source
+                                                return result
+
+                                            report = verify_candidate(
+                                                date_fixtures, verification_source
+                                            ) if date_fixtures else {
+                                                "highlightly_match_id": candidate.get("highlightly_match_id"),
+                                                "verification_status": "no_selected_season_fixture_for_candidate_date",
+                                                "verification_source": verification_source,
+                                            }
+
+                                            # Fall back to one targeted date request only when the
+                                            # already-collected season fixtures cannot confirm the match.
+                                            if report.get("verification_status") != "exact_fixture_and_score_agree":
+                                                targeted_fixtures = get_sm_fixtures_between(
+                                                    candidate_date,
+                                                    candidate_date,
+                                                    "participants;state;scores",
+                                                    ttl_seconds=300,
+                                                )
+                                                candidate_verification_diagnostics["targeted_date_endpoint_requests"] += 1
+                                                if targeted_fixtures:
+                                                    targeted_report = verify_candidate(
+                                                        targeted_fixtures,
+                                                        "targeted_date_endpoint_fallback",
+                                                    )
+                                                    targeted_report["sportmonks_request_metadata"] = dict(
+                                                        verifier_client.last_metadata or {}
+                                                    )
+                                                    if targeted_report.get("verification_status") == "exact_fixture_and_score_agree":
+                                                        targeted_report["selected_season_fixture_collection_verification"] = report
+                                                        report = targeted_report
+                                                    else:
+                                                        report["targeted_date_endpoint_fallback"] = targeted_report
+                                                else:
+                                                    report["targeted_date_endpoint_fallback"] = {
+                                                        "verification_status": "no_fixtures_returned",
+                                                        "verification_source": "targeted_date_endpoint_fallback",
+                                                        "sportmonks_request_metadata": dict(
+                                                            verifier_client.last_metadata or {}
                                                         ),
                                                     }
-                                                    fallback_report = verify_highlightly_candidate(
-                                                        candidate,
-                                                        season_date_fixtures,
-                                                        season_id=int(selected_season_id),
-                                                        league_id=int(league_id),
-                                                        home_team_id=fallback_team_mapping[str(candidate.get("home") or "")]["team_id"],
-                                                        away_team_id=fallback_team_mapping[str(candidate.get("away") or "")]["team_id"],
-                                                    )
-                                                    fallback_report["team_mapping_details"] = fallback_team_mapping
-                                                    if fallback_report.get("verification_status") == "exact_fixture_and_score_agree":
-                                                        fallback_report["targeted_date_endpoint_verification"] = report
-                                                        fallback_report["verification_source"] = "selected_season_fixture_collection_fallback"
-                                                        report = fallback_report
-                                                    else:
-                                                        report["selected_season_fixture_fallback"] = fallback_report
+
+                                            if report.get("verification_status") == "exact_fixture_and_score_agree":
+                                                if str(report.get("verification_source") or "").startswith("selected_season_fixture_collection"):
+                                                    candidate_verification_diagnostics["verified_from_selected_season_fixtures"] += 1
+                                                else:
+                                                    candidate_verification_diagnostics["verified_from_targeted_date_endpoint"] += 1
                                             candidate_verification.append(report)
                                 except SportmonksError as exc:
                                     corroboration["errors"]["sportmonks_candidate_verification"] = str(exc)
+                            candidate_verification_diagnostics["elapsed_seconds"] = round(
+                                time.perf_counter() - candidate_verification_started, 3
+                            )
                             corroboration["candidate_verification"] = candidate_verification
+                            corroboration["candidate_verification_diagnostics"] = candidate_verification_diagnostics
 
                         if cross_check_highlightly_details or cross_check_highlightly_players:
                             if hl_client is None:
