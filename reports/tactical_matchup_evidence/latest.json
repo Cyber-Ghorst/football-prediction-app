@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-09T01:56:33.213469+00:00",
+  "generated_at": "2026-11-09T02:12:09.161895+00:00",
   "competition": "Premier League — England",
   "season": 2026,
   "home_team": "Ipswich Town",
@@ -547,6 +547,6 @@
     "player_availability": 0.05,
     "tactical": 0.3
   },
-  "generated_at_utc": "2026-11-09T01:56:33.213905+00:00",
+  "generated_at_utc": "2026-11-09T02:12:09.162207+00:00",
   "report_name": "tactical_matchup_evidence"
 }
