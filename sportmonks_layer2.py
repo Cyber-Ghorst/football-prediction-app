@@ -39,6 +39,7 @@ _STAT_ALIASES = {
     "accurate crosses": "Accurate Crosses",
     "successful dribbles": "Successful Dribbles",
     "successful headers": "Successful Headers",
+    "big chances created": "Big Chances Created",
     "key passes": "Key Passes",
     "shots insidebox": "Shots Insidebox",
     "shots inside box": "Shots Insidebox",
