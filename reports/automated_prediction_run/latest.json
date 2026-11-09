@@ -1,9 +1,9 @@
 {
   "report_name": "automated_prediction_run",
   "status": "prediction_record_created",
-  "started_at_utc": "2026-11-09T15:18:12.069373+00:00",
-  "completed_at_utc": "2026-11-09T15:20:45.733046+00:00",
-  "elapsed_seconds": 153.66,
+  "started_at_utc": "2026-11-09T15:24:13.520694+00:00",
+  "completed_at_utc": "2026-11-09T15:26:36.601811+00:00",
+  "elapsed_seconds": 143.08,
   "execution_method": "streamlit_app_test_harness",
   "same_app_prediction_flow": true,
   "selection": {
@@ -13,7 +13,7 @@
     "away_team": "Nottingham Forest"
   },
   "prediction": {
-    "predicted_at": "2026-11-09T15:20:37.870708+00:00",
+    "predicted_at": "2026-11-09T15:26:30.375786+00:00",
     "kickoff_at": "2026-11-21 15:00:00",
     "prediction_before_kickoff": true,
     "fixture_id": "19722103",
@@ -25,19 +25,17 @@
     "model_recency_policy": "latest_5_60pct_previous_5_40pct"
   },
   "app_errors": [],
-  "app_warnings": [
-    "System diagnostics: attention required — review the checks below"
-  ],
+  "app_warnings": [],
   "ledger_persistence": {
     "status": "connected",
-    "message": "Neon connected • 50 saved prediction(s).",
+    "message": "Neon connected • 51 saved prediction(s).",
     "saved_signature_present": true
   },
   "archived_app_reports": {
     "data_collection_evidence_latest_url": "https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/data_collection_evidence/latest.json",
-    "data_collection_evidence_archive_url": "https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/data_collection_evidence/archive/20261109T152027009947Z.json",
+    "data_collection_evidence_archive_url": "https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/data_collection_evidence/archive/20261109T152622551623Z.json",
     "system_diagnostics_latest_url": "https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/system_diagnostics/latest.json",
-    "system_diagnostics_archive_url": "https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/system_diagnostics/archive/20261109T152030965820Z.json"
+    "system_diagnostics_archive_url": "https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/system_diagnostics/archive/20261109T152625346377Z.json"
   },
   "notes": [
     "The existing app.py workflow was executed through Streamlit AppTest; no parallel prediction implementation was used.",
