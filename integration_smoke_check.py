@@ -21,8 +21,13 @@ def run_check(name: str, configured: bool, callback) -> dict[str, Any]:
     try:
         details = callback()
         return {"check": name, "status": "pass", "details": details}
-    except Exception as exc:  # Report type only; never echo exception text or credentials.
-        return {"check": name, "status": "fail", "error_type": type(exc).__name__}
+    except Exception as exc:  # Provider adapters expose credential-safe messages.
+        result = {"check": name, "status": "fail", "error_type": type(exc).__name__}
+        if name == "api_football" and type(exc).__name__ == "APIFootballError":
+            result["safe_detail"] = str(exc)
+        elif name == "highlightly" and type(exc).__name__ == "HighlightlyError":
+            result["safe_detail"] = str(exc)
+        return result
 
 
 def check_cockroach() -> dict[str, Any]:
