@@ -216,23 +216,34 @@ def _upload_report_to_github(report_name, report, latest_path=None):
 
     def _put_file(path, message, existing_sha=None):
         api_url = f"https://api.github.com/repos/{owner_repo}/contents/{path}"
-        payload = {
-            "message": message,
-            "content": base64.b64encode(serialized).decode("ascii"),
-        }
-        if existing_sha:
-            payload["sha"] = existing_sha
-        saved = requests.put(api_url, headers=headers, json=payload, timeout=30)
-        if saved.status_code not in (200, 201):
+        content = base64.b64encode(serialized).decode("ascii")
+        current_sha = existing_sha
+        for attempt in range(3):
+            payload = {"message": message, "content": content}
+            if current_sha:
+                payload["sha"] = current_sha
+            saved = requests.put(api_url, headers=headers, json=payload, timeout=30)
+            if saved.status_code in (200, 201):
+                result = saved.json()
+                return {
+                    "path": path,
+                    "html_url": result.get("content", {}).get("html_url"),
+                    "commit_sha": result.get("commit", {}).get("sha"),
+                }
+            if saved.status_code == 409 and attempt < 2:
+                # Another report may have advanced the same branch between
+                # our GET and PUT. Refresh this path's blob SHA and retry.
+                current = requests.get(api_url, headers=headers, timeout=20)
+                if current.status_code not in (200, 404):
+                    raise RuntimeError(
+                        f"GitHub report conflict refresh failed for {path} (HTTP {current.status_code})."
+                    )
+                current_sha = current.json().get("sha") if current.status_code == 200 else None
+                time.sleep(0.25 * (attempt + 1))
+                continue
             raise RuntimeError(
                 f"GitHub report upload failed for {path} (HTTP {saved.status_code})."
             )
-        result = saved.json()
-        return {
-            "path": path,
-            "html_url": result.get("content", {}).get("html_url"),
-            "commit_sha": result.get("commit", {}).get("sha"),
-        }
 
     # The timestamped archive is immutable; the latest copy is replaced on each run.
     archived = _put_file(archive_path, f"Archive {safe_name} report")
