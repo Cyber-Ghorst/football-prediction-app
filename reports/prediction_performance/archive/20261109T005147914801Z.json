@@ -1,0 +1,72 @@
+{
+  "records_total": 13,
+  "eligibility_audit": {
+    "records_total": 13,
+    "invalid_probabilities": 0,
+    "missing_prediction_timestamp": 0,
+    "missing_kickoff_timestamp": 4,
+    "at_or_after_kickoff": 2,
+    "valid_pre_kickoff_records": 7,
+    "unidentifiable_pre_match_records": 0,
+    "duplicate_records_excluded": 4,
+    "unique_pre_match_fixtures": 3,
+    "completed_with_valid_scores": 1,
+    "awaiting_valid_score": 2
+  },
+  "pre_match_prediction_records": 7,
+  "pre_match_predictions": 3,
+  "duplicate_records_excluded": 4,
+  "unidentifiable_pre_match_records": 0,
+  "completed_pre_match_predictions": 1,
+  "player_snapshots_pre_kickoff": 0,
+  "team_snapshots_pre_kickoff": 0,
+  "team_snapshot_competitions": 0,
+  "player_snapshot_competitions": 0,
+  "player_snapshot_coverage_by_competition": {},
+  "model_metrics_by_competition": {
+    "Premier League": {
+      "matches": 1,
+      "accuracy_pct": 0.0,
+      "multiclass_brier": 0.81259,
+      "log_loss": 1.33181,
+      "mean_top_outcome_confidence_pct": 37.3,
+      "top_outcome_hit_rate_pct": 0.0
+    }
+  },
+  "model": {
+    "matches": 1,
+    "accuracy_pct": 0.0,
+    "multiclass_brier": 0.81259,
+    "log_loss": 1.33181,
+    "mean_top_outcome_confidence_pct": 37.3,
+    "top_outcome_hit_rate_pct": 0.0
+  },
+  "performance_history": [
+    {
+      "kickoff_at": "2026-11-08 16:30:00",
+      "predicted_at": "2026-11-08T16:20:58.469521+00:00",
+      "competition": "Premier League",
+      "home_team": "Manchester United",
+      "away_team": "Aston Villa",
+      "score": "4-4",
+      "actual_outcome": "draw",
+      "predicted_outcome": "away",
+      "correct": false,
+      "top_confidence_pct": 37.3,
+      "brier": 0.81259,
+      "log_loss": 1.33181
+    }
+  ],
+  "opta_same_fixtures": {
+    "matches": 0,
+    "accuracy_pct": null,
+    "multiclass_brier": null,
+    "log_loss": null,
+    "mean_top_outcome_confidence_pct": null,
+    "top_outcome_hit_rate_pct": null
+  },
+  "opta_comparable_fixtures": 0,
+  "opta_comparison_note": "Opta is scored only on the same deduplicated completed fixtures as the model.",
+  "generated_at_utc": "2026-11-09T00:51:47.914801+00:00",
+  "report_name": "prediction_performance"
+}
