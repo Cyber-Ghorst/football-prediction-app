@@ -239,3 +239,79 @@ jobs:
             echo "Use an OpenAI API key with API billing enabled. ChatGPT subscription access does not include API credits."
             echo "After adding it, run this workflow manually once to verify autonomous patch generation."
           } >> "$GITHUB_STEP_SUMMARY"
+
+  quota_failure_report:
+    name: Classify Codex failure and publish billing report
+    needs: agent
+    if: always() && needs.agent.result == 'failure'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      issues: write
+    steps:
+      - name: Detect quota errors and publish a timestamped report
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import re
+          import subprocess
+          from datetime import datetime, timezone
+          from zoneinfo import ZoneInfo
+          from urllib.request import Request, urlopen
+
+          run = subprocess.run(
+              ["gh", "run", "view", os.environ["RUN_ID"], "--repo", os.environ["REPOSITORY"], "--log-failed"],
+              capture_output=True, text=True, check=False,
+          )
+          logs = (run.stdout or "") + "\\n" + (run.stderr or "")
+          quota = bool(re.search(
+              r"quota exceeded|insufficient_quota|credit_balance_exhausted|"
+              r"organization_usage_limit_exceeded|organization_spend_limit_exceeded|"
+              r"project_spend_limit_exceeded",
+              logs, re.IGNORECASE,
+          ))
+
+          now = datetime.now(timezone.utc)
+          utc = now.isoformat(timespec="seconds")
+          eat = now.astimezone(ZoneInfo("Africa/Nairobi")).isoformat(timespec="seconds")
+          if quota:
+              status = "QUOTA / BILLING BLOCK"
+              detail = (
+                  "Codex returned a quota or billing-limit error. No new session or retry was launched; "
+                  "a fresh session cannot restore exhausted credits or a spend limit. Check the API "
+                  "organization balance, organization usage limit, and project/organization spend limits. "
+                  "The next scheduled run will make the next normal attempt after the billing issue is resolved."
+              )
+          else:
+              status = "CODEX AGENT FAILURE (quota not detected)"
+              detail = (
+                  "The Codex agent job failed, but its failed-step logs did not contain a recognised "
+                  "quota/billing error. Review the workflow run for the actual cause. No retry was launched."
+              )
+
+          body = (
+              "## Autonomous Codex Failure Report\\n\\n"
+              f"**Generated (UTC):** {utc}\\n"
+              f"**Generated (Kenya / EAT):** {eat}\\n"
+              f"**Classification:** {status}\\n\\n"
+              f"{detail}\\n\\n"
+              f"**Workflow:** {os.environ['RUN_URL']}"
+          )
+          url = f"https://api.github.com/repos/{os.environ['REPOSITORY']}/issues/54/comments"
+          request = Request(url, data=json.dumps({"body": body}).encode(), headers={
+              "Accept": "application/vnd.github+json",
+              "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+              "X-GitHub-Api-Version": "2022-11-28",
+              "Content-Type": "application/json",
+          }, method="POST")
+          with urlopen(request, timeout=20) as response:
+              print(f"Published {status} report (HTTP {response.status}).")
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as summary:
+              summary.write(f"## {status}\\n\\n{detail}\\n\\n[Workflow run]({os.environ['RUN_URL']})\\n")
+          PY
