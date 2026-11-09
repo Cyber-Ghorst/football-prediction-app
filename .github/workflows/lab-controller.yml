@@ -1,0 +1,87 @@
+name: Prediction Lab Controller
+
+on:
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: "Choose a safe controller operation"
+        required: true
+        type: choice
+        options:
+          - health_check
+          - test_suite
+        default: health_check
+
+permissions:
+  contents: read
+
+jobs:
+  controller:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        if: inputs.operation == 'test_suite'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Check Streamlit deployment
+        if: inputs.operation == 'health_check'
+        env:
+          APP_URL: https://football-prediction-app-evzek8cthsuavun8hanejj.streamlit.app/
+        run: |
+          python - <<'PY' | tee controller-report.txt
+          import json
+          import os
+          import sys
+          import urllib.error
+          import urllib.request
+          from datetime import datetime, timezone
+
+          url = os.environ["APP_URL"]
+          report = {
+              "operation": "health_check",
+              "checked_at_utc": datetime.now(timezone.utc).isoformat(),
+              "url": url,
+          }
+          try:
+              request = urllib.request.Request(
+                  url,
+                  headers={"User-Agent": "Prediction-Lab-Controller/1.0"},
+              )
+              with urllib.request.urlopen(request, timeout=25) as response:
+                  report["http_status"] = response.status
+                  report["healthy"] = 200 <= response.status < 400
+          except Exception as exc:
+              report["healthy"] = False
+              report["error"] = f"{type(exc).__name__}: {exc}"
+
+          print(json.dumps(report, indent=2))
+          if not report["healthy"]:
+              sys.exit(1)
+          PY
+
+      - name: Install test dependencies
+        if: inputs.operation == 'test_suite'
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run unit tests
+        if: inputs.operation == 'test_suite'
+        run: |
+          set -o pipefail
+          python -m unittest discover -v 2>&1 | tee controller-report.txt
+
+      - name: Upload controller report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: prediction-lab-controller-report
+          path: controller-report.txt
+          if-no-files-found: warn
+          retention-days: 14
