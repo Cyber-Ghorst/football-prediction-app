@@ -1,0 +1,26 @@
+{
+  "event_count": 2,
+  "events": [
+    {
+      "timestamp_utc": "2026-11-09T10:31:39.016797+00:00",
+      "provider": "sportmonks",
+      "resource_type": "fixtures",
+      "outcome": "cache_miss",
+      "lookup_duration_ms": 2253,
+      "archive_status": "live_fetch_required"
+    },
+    {
+      "timestamp_utc": "2026-11-09T10:31:48.357451+00:00",
+      "provider": "sportmonks",
+      "resource_type": "fixtures",
+      "outcome": "cache_miss_then_archived",
+      "lookup_duration_ms": 2253,
+      "live_fetch_duration_ms": 3292,
+      "row_count": 380,
+      "archive_status": "saved"
+    }
+  ],
+  "privacy_note": "Only provider/resource names, outcomes, timestamps, durations, row counts and error types. No cache keys, request parameters, payloads, team names, credentials or prediction data.",
+  "generated_at_utc": "2026-11-09T10:31:55.736194+00:00",
+  "report_name": "provider_cache_telemetry"
+}
