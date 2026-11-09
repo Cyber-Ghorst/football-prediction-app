@@ -30,10 +30,10 @@ FROM prediction_ledger
 ORDER BY created_at ASC, record_id ASC
 """
 
-SELECT_ONE_SQL = """
-SELECT payload
+SELECT_MANY_SQL = """
+SELECT record_id, payload
 FROM prediction_ledger
-WHERE record_id = %s
+WHERE record_id = ANY(%s)
 """
 
 UPSERT_SQL = """
@@ -75,27 +75,42 @@ def load_prediction_ledger(database_url: str) -> list[dict[str, Any]]:
 def save_prediction_records(
     database_url: str, records: Iterable[Mapping[str, Any]]
 ) -> int:
-    """Upsert rows by record ID, preserving known values when incoming fields are blank."""
+    """Batch ledger reads and writes while preserving stable-ID merge semantics."""
     if not database_url:
         raise ValueError("DATABASE_URL is required.")
+
     cleaned_records = [_clean_record(row) for row in records]
     with psycopg.connect(database_url, connect_timeout=10) as connection:
         with connection.cursor() as cursor:
             cursor.execute(CREATE_TABLE_SQL)
-            for incoming in cleaned_records:
-                cursor.execute(SELECT_ONE_SQL, (incoming["record_id"],))
-                existing_row = cursor.fetchone()
-                existing = existing_row[0] if existing_row else None
-                merged = merge_prediction_records(
-                    [existing] if isinstance(existing, dict) else [],
-                    [incoming],
-                )
-                if not merged:
-                    continue
-                cursor.execute(
+
+            if cleaned_records:
+                record_ids = list(dict.fromkeys(row["record_id"] for row in cleaned_records))
+                cursor.execute(SELECT_MANY_SQL, (record_ids,))
+                existing_by_id = {
+                    str(record_id): payload
+                    for record_id, payload in cursor.fetchall()
+                    if isinstance(payload, dict)
+                }
+
+                merged_records = []
+                for incoming in cleaned_records:
+                    existing = existing_by_id.get(incoming["record_id"])
+                    merged = merge_prediction_records(
+                        [existing] if isinstance(existing, dict) else [],
+                        [incoming],
+                    )
+                    if merged:
+                        merged_records.append(merged[0])
+
+                cursor.executemany(
                     UPSERT_SQL,
-                    (incoming["record_id"], Jsonb(merged[0])),
+                    [
+                        (record["record_id"], Jsonb(record))
+                        for record in merged_records
+                    ],
                 )
+
             cursor.execute("SELECT COUNT(*) FROM prediction_ledger")
             count = cursor.fetchone()[0]
     return int(count)
