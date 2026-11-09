@@ -582,26 +582,17 @@ def load_repository_season_snapshot(
     season_id: int | str,
 ) -> dict[str, Any]:
     """Load one season's teams, fixtures and normalized statistics for reuse."""
-    from football_repository import (
-        get_repository_fixtures,
-        get_repository_fixture_statistics,
-        get_repository_teams,
-    )
+    from football_repository import get_repository_season_snapshot
 
     canonical_season_id = str(season_id)
-    teams = get_repository_teams(database_url, season_id=canonical_season_id)
-    fixture_rows = get_repository_fixtures(
-        database_url, season_id=canonical_season_id, limit=2000
-    )
-    fixture_ids = [str(row["fixture_id"]) for row in fixture_rows]
-    normalized_statistics = get_repository_fixture_statistics(
-        database_url, fixture_ids
+    snapshot = get_repository_season_snapshot(
+        database_url, canonical_season_id, fixture_limit=2000
     )
     return {
         "season_id": canonical_season_id,
-        "teams": teams,
-        "fixtures": fixture_rows,
-        "statistics": normalized_statistics,
+        "teams": snapshot["teams"],
+        "fixtures": snapshot["fixtures"],
+        "statistics": snapshot["statistics"],
     }
 
 
