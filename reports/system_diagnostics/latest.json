@@ -1,6 +1,6 @@
 {
   "diagnostic_version": 1,
-  "generated_at": "2026-11-09T01:20:08.780250+00:00",
+  "generated_at": "2026-11-09T01:36:55.277278+00:00",
   "overall_status": "attention_required",
   "selected_context": {
     "season_start_year": 2026,
@@ -218,7 +218,7 @@
         "core_metrics_complete": 8,
         "core_metrics_total": 8,
         "raw_observations_seen": 427,
-        "unmapped_observations": 327,
+        "unmapped_observations": 279,
         "mapping_visibility": "available",
         "metrics": [
           {
@@ -294,12 +294,45 @@
             "status": "available"
           }
         ],
-        "unmapped_statistics": [
+        "tactical_evidence_metrics": [
           {
-            "provider_statistic": "Accurate Crosses",
-            "observations": 10,
-            "fixtures_seen": 10
+            "statistic": "Counter Attacks",
+            "team_output_fixtures": 0,
+            "opponent_output_fixtures": 0,
+            "fixtures_checked": 10
           },
+          {
+            "statistic": "Successful Headers",
+            "team_output_fixtures": 8,
+            "opponent_output_fixtures": 8,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Accurate Crosses",
+            "team_output_fixtures": 10,
+            "opponent_output_fixtures": 10,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Successful Dribbles",
+            "team_output_fixtures": 10,
+            "opponent_output_fixtures": 10,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Key Passes",
+            "team_output_fixtures": 10,
+            "opponent_output_fixtures": 10,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Shots Insidebox",
+            "team_output_fixtures": 10,
+            "opponent_output_fixtures": 10,
+            "fixtures_checked": 10
+          }
+        ],
+        "unmapped_statistics": [
           {
             "provider_statistic": "Attacks",
             "observations": 10,
@@ -356,11 +389,6 @@
             "fixtures_seen": 10
           },
           {
-            "provider_statistic": "Key Passes",
-            "observations": 10,
-            "fixtures_seen": 10
-          },
-          {
             "provider_statistic": "Long Passes",
             "observations": 10,
             "fixtures_seen": 10
@@ -376,22 +404,12 @@
             "fixtures_seen": 10
           },
           {
-            "provider_statistic": "Shots Insidebox",
-            "observations": 10,
-            "fixtures_seen": 10
-          },
-          {
             "provider_statistic": "Shots Outsidebox",
             "observations": 10,
             "fixtures_seen": 10
           },
           {
             "provider_statistic": "Substitutions",
-            "observations": 10,
-            "fixtures_seen": 10
-          },
-          {
-            "provider_statistic": "Successful Dribbles",
             "observations": 10,
             "fixtures_seen": 10
           },
@@ -449,11 +467,6 @@
             "provider_statistic": "Yellowcards",
             "observations": 9,
             "fixtures_seen": 9
-          },
-          {
-            "provider_statistic": "Successful Headers",
-            "observations": 8,
-            "fixtures_seen": 8
           },
           {
             "provider_statistic": "Hit Woodwork",
@@ -536,7 +549,7 @@
         "core_metrics_complete": 8,
         "core_metrics_total": 8,
         "raw_observations_seen": 416,
-        "unmapped_observations": 316,
+        "unmapped_observations": 269,
         "mapping_visibility": "available",
         "metrics": [
           {
@@ -612,12 +625,45 @@
             "status": "available"
           }
         ],
-        "unmapped_statistics": [
+        "tactical_evidence_metrics": [
           {
-            "provider_statistic": "Accurate Crosses",
-            "observations": 10,
-            "fixtures_seen": 10
+            "statistic": "Counter Attacks",
+            "team_output_fixtures": 0,
+            "opponent_output_fixtures": 0,
+            "fixtures_checked": 10
           },
+          {
+            "statistic": "Successful Headers",
+            "team_output_fixtures": 7,
+            "opponent_output_fixtures": 7,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Accurate Crosses",
+            "team_output_fixtures": 10,
+            "opponent_output_fixtures": 10,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Successful Dribbles",
+            "team_output_fixtures": 10,
+            "opponent_output_fixtures": 10,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Key Passes",
+            "team_output_fixtures": 10,
+            "opponent_output_fixtures": 10,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Shots Insidebox",
+            "team_output_fixtures": 10,
+            "opponent_output_fixtures": 10,
+            "fixtures_checked": 10
+          }
+        ],
+        "unmapped_statistics": [
           {
             "provider_statistic": "Attacks",
             "observations": 10,
@@ -659,11 +705,6 @@
             "fixtures_seen": 10
           },
           {
-            "provider_statistic": "Key Passes",
-            "observations": 10,
-            "fixtures_seen": 10
-          },
-          {
             "provider_statistic": "Long Passes",
             "observations": 10,
             "fixtures_seen": 10
@@ -684,22 +725,12 @@
             "fixtures_seen": 10
           },
           {
-            "provider_statistic": "Shots Insidebox",
-            "observations": 10,
-            "fixtures_seen": 10
-          },
-          {
             "provider_statistic": "Shots Outsidebox",
             "observations": 10,
             "fixtures_seen": 10
           },
           {
             "provider_statistic": "Substitutions",
-            "observations": 10,
-            "fixtures_seen": 10
-          },
-          {
-            "provider_statistic": "Successful Dribbles",
             "observations": 10,
             "fixtures_seen": 10
           },
@@ -765,11 +796,6 @@
           },
           {
             "provider_statistic": "Hit Woodwork",
-            "observations": 7,
-            "fixtures_seen": 7
-          },
-          {
-            "provider_statistic": "Successful Headers",
             "observations": 7,
             "fixtures_seen": 7
           },
@@ -865,7 +891,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "96",
+            "requests_remaining": "93",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -883,7 +909,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "95",
+            "requests_remaining": "92",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -901,7 +927,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "94",
+            "requests_remaining": "91",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -1816,9 +1842,9 @@
         "sportmonks_request_metadata": {
           "request_path": "fixtures/between/2026-09-13/2026-09-13",
           "http_status": 200,
-          "request_seconds": 0.401,
+          "request_seconds": 0.349,
           "rate_limit": "2000",
-          "rate_remaining": "1982"
+          "rate_remaining": "1975"
         }
       },
       {
@@ -2355,9 +2381,9 @@
         "sportmonks_request_metadata": {
           "request_path": "fixtures/between/2026-09-05/2026-09-05",
           "http_status": 200,
-          "request_seconds": 0.696,
+          "request_seconds": 0.657,
           "rate_limit": "2000",
-          "rate_remaining": "1981"
+          "rate_remaining": "1974"
         }
       },
       {
@@ -2742,9 +2768,9 @@
         "sportmonks_request_metadata": {
           "request_path": "fixtures/between/2026-10-24/2026-10-24",
           "http_status": 200,
-          "request_seconds": 0.636,
+          "request_seconds": 0.607,
           "rate_limit": "2000",
-          "rate_remaining": "1980"
+          "rate_remaining": "1973"
         }
       },
       {
@@ -3093,9 +3119,9 @@
         "sportmonks_request_metadata": {
           "request_path": "fixtures/between/2026-10-10/2026-10-10",
           "http_status": 200,
-          "request_seconds": 0.631,
+          "request_seconds": 0.622,
           "rate_limit": "2000",
-          "rate_remaining": "1979"
+          "rate_remaining": "1972"
         }
       }
     ],
@@ -3232,6 +3258,6 @@
     "weights_total": 1.0,
     "model_impact": "Diagnostics only; weights, recency weighting, prediction inputs and missing-data rules are not changed."
   },
-  "generated_at_utc": "2026-11-09T01:20:12.803315+00:00",
+  "generated_at_utc": "2026-11-09T01:36:59.239737+00:00",
   "report_name": "system_diagnostics"
 }
