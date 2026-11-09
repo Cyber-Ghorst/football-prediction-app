@@ -1070,6 +1070,147 @@ def get_repository_fixture_statistics(
             return _rows_as_dicts(cursor)
 
 
+
+def audit_repository_fixture_statistics(database_url: str) -> dict[str, Any]:
+    """Audit normalized fixture-statistic coverage and relational integrity."""
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT
+                    COUNT(s.statistic_id) AS statistic_rows,
+                    COUNT(s.statistic_id) FILTER (
+                        WHERE f.fixture_id IS NULL
+                    ) AS orphan_statistic_rows,
+                    COUNT(s.statistic_id) FILTER (
+                        WHERE f.fixture_id IS NOT NULL
+                          AND s.team_id IS NOT NULL
+                          AND s.team_id NOT IN (f.home_team_id, f.away_team_id)
+                    ) AS invalid_team_association_rows,
+                    COUNT(s.statistic_id) FILTER (
+                        WHERE s.statistic_type IS NULL OR BTRIM(s.statistic_type) = ''
+                    ) AS missing_statistic_type_rows,
+                    COUNT(s.statistic_id) FILTER (
+                        WHERE s.statistic_value IS NULL
+                           OR s.statistic_value = 'null'::JSONB
+                    ) AS missing_statistic_value_rows,
+                    COUNT(DISTINCT s.fixture_id) FILTER (
+                        WHERE f.fixture_id IS NOT NULL
+                    ) AS fixtures_with_statistics,
+                    COUNT(DISTINCT f.fixture_id) FILTER (
+                        WHERE s.statistic_id IS NULL
+                    ) AS fixtures_without_statistics,
+                    COUNT(DISTINCT f.fixture_id) FILTER (
+                        WHERE LOWER(COALESCE(f.status, '')) IN
+                            ('finished', 'complete', 'completed', 'ft', 'full time', '5')
+                          AND f.home_goals IS NOT NULL AND f.away_goals IS NOT NULL
+                          AND f.starting_at < NOW()
+                    ) AS completed_scored_fixtures,
+                    COUNT(DISTINCT f.fixture_id) FILTER (
+                        WHERE LOWER(COALESCE(f.status, '')) IN
+                            ('finished', 'complete', 'completed', 'ft', 'full time', '5')
+                          AND f.home_goals IS NOT NULL AND f.away_goals IS NOT NULL
+                          AND f.starting_at < NOW()
+                          AND s.statistic_id IS NOT NULL
+                    ) AS completed_scored_fixtures_with_statistics
+                FROM football_fixture_statistics AS s
+                FULL OUTER JOIN football_fixtures AS f
+                    ON f.fixture_id = s.fixture_id
+                """
+            )
+            summary_rows = _rows_as_dicts(cursor)
+            summary = summary_rows[0] if summary_rows else {}
+
+            cursor.execute(
+                """
+                WITH duplicate_groups AS (
+                    SELECT fixture_id, team_id, statistic_type, source_provider,
+                           COUNT(*) AS duplicate_count,
+                           ARRAY_AGG(statistic_id ORDER BY statistic_id) AS statistic_ids
+                    FROM football_fixture_statistics
+                    GROUP BY fixture_id, team_id, statistic_type, source_provider
+                    HAVING COUNT(*) > 1
+                )
+                SELECT COUNT(*) AS duplicate_logical_groups,
+                       COALESCE(SUM(duplicate_count - 1), 0) AS excess_duplicate_rows,
+                       COALESCE(
+                           ARRAY_AGG(
+                               JSONB_BUILD_OBJECT(
+                                   'fixture_id', fixture_id,
+                                   'team_id', team_id,
+                                   'statistic_type', statistic_type,
+                                   'source_provider', source_provider,
+                                   'duplicate_count', duplicate_count,
+                                   'statistic_ids', statistic_ids
+                               )
+                           ), ARRAY[]::JSONB[]
+                       ) AS duplicate_samples
+                FROM (
+                    SELECT * FROM duplicate_groups
+                    ORDER BY duplicate_count DESC, fixture_id
+                    LIMIT 100
+                ) AS sampled
+                """
+            )
+            duplicate_rows = _rows_as_dicts(cursor)
+            duplicates = duplicate_rows[0] if duplicate_rows else {}
+
+            cursor.execute(
+                """
+                SELECT source_provider, COUNT(*) AS statistic_rows,
+                       COUNT(DISTINCT fixture_id) AS fixtures_covered
+                FROM football_fixture_statistics
+                GROUP BY source_provider
+                ORDER BY statistic_rows DESC, source_provider
+                """
+            )
+            provider_breakdown = _rows_as_dicts(cursor)
+
+    total_completed = int(summary.get("completed_scored_fixtures") or 0)
+    completed_with_stats = int(
+        summary.get("completed_scored_fixtures_with_statistics") or 0
+    )
+    coverage = (
+        round(completed_with_stats / total_completed * 100, 2)
+        if total_completed else None
+    )
+    duplicate_groups = int(duplicates.get("duplicate_logical_groups") or 0)
+    integrity_issues = {
+        "orphan_statistic_rows": int(summary.get("orphan_statistic_rows") or 0),
+        "invalid_team_association_rows": int(
+            summary.get("invalid_team_association_rows") or 0
+        ),
+        "missing_statistic_type_rows": int(
+            summary.get("missing_statistic_type_rows") or 0
+        ),
+        "missing_statistic_value_rows": int(
+            summary.get("missing_statistic_value_rows") or 0
+        ),
+        "duplicate_logical_groups": duplicate_groups,
+    }
+    return {
+        "audit_status": "success" if not any(integrity_issues.values()) else "review",
+        "summary": {
+            key: int(value or 0) for key, value in summary.items()
+        },
+        "completed_fixture_statistics_coverage_percent": coverage,
+        "integrity_issues": integrity_issues,
+        "duplicate_excess_rows": int(duplicates.get("excess_duplicate_rows") or 0),
+        "duplicate_samples": duplicates.get("duplicate_samples") or [],
+        "provider_breakdown": provider_breakdown,
+        "checks": {
+            "orphan_statistics_checked": True,
+            "team_associations_checked_against_fixture_participants": True,
+            "missing_statistic_types_and_values_checked": True,
+            "duplicate_logical_statistic_records_checked": True,
+            "prediction_engine_modified": False,
+            "neon_prediction_ledger_modified": False,
+        },
+    }
+
 def diagnose_repository_fixture_history(database_url: str) -> dict[str, Any]:
     """Summarize imported fixture statuses and score coverage to diagnose history reads."""
     if not database_url:
