@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-09T05:48:43.294341+00:00",
+  "generated_at": "2026-11-09T07:10:15.157109+00:00",
   "competition": "La Liga — Spain",
   "season": 2026,
   "home_team": "Celta de Vigo",
@@ -547,6 +547,6 @@
     "player_availability": 0.05,
     "tactical": 0.3
   },
-  "generated_at_utc": "2026-11-09T05:48:43.294675+00:00",
+  "generated_at_utc": "2026-11-09T07:10:15.157416+00:00",
   "report_name": "tactical_matchup_evidence"
 }
