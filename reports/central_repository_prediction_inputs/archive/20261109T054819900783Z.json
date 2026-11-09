@@ -1,0 +1,24 @@
+{
+  "generated_at": "2026-11-09T05:47:59.036261+00:00",
+  "season_id": 27965,
+  "home_team": "Celta de Vigo",
+  "away_team": "Villarreal",
+  "profiles": {
+    "Celta de Vigo": {
+      "source": "cockroachdb_central_repository",
+      "completed_matches": 10,
+      "repository_fixture_rows": 380,
+      "fallback_used": false
+    },
+    "Villarreal": {
+      "source": "cockroachdb_central_repository",
+      "completed_matches": 10,
+      "repository_fixture_rows": 380,
+      "fallback_used": false
+    }
+  },
+  "prediction_engine_modified": false,
+  "neon_prediction_ledger_modified": false,
+  "generated_at_utc": "2026-11-09T05:48:19.900783+00:00",
+  "report_name": "central_repository_prediction_inputs"
+}
