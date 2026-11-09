@@ -40,7 +40,7 @@ def fixture():
 class PredictionReadinessTests(unittest.TestCase):
     NOW = datetime(2026, 11, 7, 12, tzinfo=timezone.utc)
 
-    def report(self, home_count=10, away_count=10, selected_fixture=None):
+    def report(self, home_count=10, away_count=10, selected_fixture=None, exact_pairing_fixture=None):
         return build_prediction_readiness(
             profile("Home FC", home_count),
             profile("Away FC", away_count),
@@ -49,6 +49,7 @@ class PredictionReadinessTests(unittest.TestCase):
             away_team_id=20,
             season_id=2026,
             now=self.NOW,
+            exact_pairing_fixture=exact_pairing_fixture,
         )
 
     def test_ready_requires_exact_fixture_and_ten_matches_each(self):
@@ -116,6 +117,16 @@ class PredictionReadinessTests(unittest.TestCase):
         report = self.report(selected_fixture=None)
         self.assertEqual(report["overall_status"], "fixture_unverified")
         self.assertFalse(report["fixture"]["verified"])
+
+    def test_past_exact_pairing_is_distinguished_from_missing_fixture(self):
+        past = fixture()
+        past["starting_at_timestamp"] = int(datetime(2026, 11, 6, tzinfo=timezone.utc).timestamp())
+        report = self.report(selected_fixture=None, exact_pairing_fixture=past)
+        self.assertEqual(report["fixture"]["status"], "past_fixture")
+        self.assertFalse(report["fixture"]["verified"])
+        self.assertEqual(report["fixture"]["fixture_id"], 123)
+        self.assertIn("kickoff has already passed", report["fixture"]["reason"])
+        self.assertEqual(report["overall_status"], "fixture_unverified")
 
     def test_wrong_home_away_orientation_fails_closed(self):
         row = fixture()
