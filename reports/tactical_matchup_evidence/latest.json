@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-09T20:29:50.734828+00:00",
+  "generated_at": "2026-11-09T20:34:18.879129+00:00",
   "competition": "Premier League — England",
   "season": 2026,
   "home_team": "Brentford",
@@ -547,6 +547,6 @@
     "player_availability": 0.05,
     "tactical": 0.3
   },
-  "generated_at_utc": "2026-11-09T20:29:50.735022+00:00",
+  "generated_at_utc": "2026-11-09T20:34:18.879464+00:00",
   "report_name": "tactical_matchup_evidence"
 }
