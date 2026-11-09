@@ -56,7 +56,7 @@ def analyze_direction(attacking_team: Dict[str, Any], defending_team: Dict[str, 
         findings.append({"id":rule["id"],"vulnerability":rule["label"],"attacking_weapon":rule["threat"],"vulnerability_score":round(weakness["score"],1),"weapon_score":round(weapon["score"],1),"matchup_score":round(score,1),"confidence":round(confidence,1),"weight":rule["weight"],"risk":_risk(score),"evidence":{"vulnerability":weakness["evidence"],"weapon":weapon["evidence"]}})
     findings.sort(key=lambda x:x["matchup_score"],reverse=True)
     score=weighted_total/effective_weight_total if effective_weight_total else None
-    return {"attacking_team":attacking_team.get("name","Team A"),"defending_team":defending_team.get("name","Team B"),"compatibility_score":round(score,1) if score is not None else None,"risk_level":_risk(score) if score is not None else "INSUFFICIENT DATA","data_coverage":round(effective_weight_total,1),"findings":findings,"missing_pairings":len(MATCHUPS)-len(findings)}
+    return {"attacking_team":attacking_team.get("name","Team A"),"defending_team":defending_team.get("name","Team B"),"compatibility_score":round(score,1) if score is not None else None,"risk_level":_risk(score) if score is not None else "INSUFFICIENT DATA","data_coverage":round(effective_weight_total,1),"findings":findings,"missing_pairings":len(matchup_rules or MATCHUPS)-len(findings)}
 
 def run_tvd(team_a: Dict[str, Any], team_b: Dict[str, Any], automatic: bool = False) -> Dict[str, Any]:
     rules = AUTO_MATCHUPS if automatic else MATCHUPS
@@ -66,4 +66,4 @@ def run_tvd(team_a: Dict[str, Any], team_b: Dict[str, Any], automatic: bool = Fa
     elif a_score>b_score: stronger=team_a.get("name","Team A")
     elif b_score>a_score: stronger=team_b.get("name","Team B")
     else: stronger="EVEN"
-    return {"team_a_attacks_b":a_attacks_b,"team_b_attacks_a":b_attacks_a,"tactical_compatibility":{team_a.get("name","Team A"):a_score,team_b.get("name","Team B"):b_score},"stronger_tactical_matchup":stronger}
+    return {"team_a_attacks_b":a_attacks_b,"team_b_attacks_a":b_attacks_a,"tactical_compatibility":{team_a.get("name","Team A"):a_score,team_b.get("name","Team B"):b_score},"stronger_tactical_matchup":stronger,"analysis_mode":"automatic_statistical_evidence" if automatic else "manual_evidence","matchups_total":len(rules),"matchups_available_min_direction":min(len(a_attacks_b["findings"]),len(b_attacks_a["findings"]))}
