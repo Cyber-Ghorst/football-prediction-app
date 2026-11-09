@@ -181,6 +181,20 @@ jobs:
           exec > >(tee -a controller-report.txt) 2>&1
           python deployment_smoke_check.py | tee deployment-smoke-report.json
 
+      - name: Run read-only live integration checks
+        if: steps.operation.outputs.operation == 'health_check' || steps.operation.outputs.operation == 'full_check'
+        env:
+          PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
+          APISPORTS_API_KEY: ${{ secrets.APISPORTS_API_KEY }}
+          HIGHLIGHTLY_API_KEY: ${{ secrets.HIGHLIGHTLY_API_KEY }}
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+          SPORTMONKS_API_TOKEN: ${{ secrets.SPORTMONKS_API_TOKEN }}
+          SPORTMONKS_API_KEY: ${{ secrets.SPORTMONKS_API_KEY }}
+        run: |
+          set -o pipefail
+          exec > >(tee -a controller-report.txt) 2>&1
+          python integration_smoke_check.py | tee integration-smoke-report.json
+
       - name: Install test dependencies
         if: steps.operation.outputs.operation == 'test_suite'
         run: |
@@ -216,7 +230,7 @@ jobs:
               f"**Operation:** {os.environ.get('OPERATION') or 'rejected / unresolved'}",
               f"**Run:** {os.environ['RUN_URL']}",
           ]
-          for filename, heading in (("controller-report.txt", "Deployment probe / test output"), ("deployment-smoke-report.json", "Application smoke report")):
+          for filename, heading in (("controller-report.txt", "Deployment probe / test output"), ("deployment-smoke-report.json", "Application smoke report"), ("integration-smoke-report.json", "Live integration report")):
               path = Path(filename)
               if path.exists():
                   content = path.read_text(encoding="utf-8", errors="replace")
