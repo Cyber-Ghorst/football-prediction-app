@@ -330,6 +330,39 @@ def collect_recent_result_corroboration(
                 if len(page_results) == max_pages and len(page_results[-1][1]) == limit:
                     raise RuntimeError("Highlightly pagination exceeded the safe page limit.")
 
+            # Verify that the provider honoured every requested page. A fast
+            # response is not useful if offsets drift and silently duplicate or
+            # omit fixtures. Older responses without pagination metadata retain
+            # the compatibility path above.
+            if total_count is not None:
+                for offset, page, metadata in page_results:
+                    page_pagination = metadata.get("pagination")
+                    if not isinstance(page_pagination, Mapping):
+                        raise RuntimeError(
+                            f"Highlightly pagination metadata missing at offset {offset}."
+                        )
+                    returned_offset = page_pagination.get("offset")
+                    returned_limit = page_pagination.get("limit")
+                    returned_total = page_pagination.get("total_count")
+                    if returned_offset is not None and int(returned_offset) != offset:
+                        raise RuntimeError(
+                            f"Highlightly returned offset {returned_offset} for requested offset {offset}."
+                        )
+                    if returned_limit is not None and int(returned_limit) != reported_limit:
+                        raise RuntimeError(
+                            f"Highlightly page limit changed at offset {offset}."
+                        )
+                    if returned_total is not None and int(returned_total) != total_count:
+                        raise RuntimeError(
+                            f"Highlightly total count changed while paging at offset {offset}."
+                        )
+                    expected_rows = min(reported_limit, max(0, total_count - offset))
+                    if len(page) != expected_rows:
+                        raise RuntimeError(
+                            f"Highlightly page at offset {offset} returned {len(page)} rows; "
+                            f"expected {expected_rows}."
+                        )
+
             for offset, page, metadata in sorted(page_results, key=lambda item: item[0]):
                 highlightly_diagnostics["pages_requested"] += 1
                 highlightly_diagnostics["page_metadata"].append({
