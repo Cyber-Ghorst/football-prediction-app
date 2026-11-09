@@ -1,6 +1,7 @@
 import unittest
+from unittest.mock import patch
 
-from sportmonks_layer2 import collect_sportmonks_team_profile, standings_strength, find_exact_match_fixture
+from sportmonks_layer2 import collect_sportmonks_team_profile, standings_strength, find_exact_match_fixture, load_repository_season_snapshot
 
 
 def fixture(fid, home_id, away_id, home_goals, away_goals, state="FT"):
@@ -78,6 +79,23 @@ class SportmonksLayer2Tests(unittest.TestCase):
         self.assertEqual(profile["matches"][0]["statistics_provenance"][0]["provider"], "sportmonks")
         self.assertEqual(profile["matches"][0]["statistics_provenance"][0]["fixture_id"], 6)
         self.assertIsNone(profile["player_availability"])
+
+    def test_repository_season_snapshot_loads_season_data_once_as_reusable_bundle(self):
+        teams = [{"team_id": "sportmonks:10", "name": "Home FC"}]
+        fixtures = [{"fixture_id": "sportmonks:1", "raw_payload": {"id": 1}}]
+        statistics = [{"fixture_id": "sportmonks:1", "team_id": "sportmonks:10"}]
+        with patch("football_repository.get_repository_teams", return_value=teams) as get_teams, \
+             patch("football_repository.get_repository_fixtures", return_value=fixtures) as get_fixtures, \
+             patch("football_repository.get_repository_fixture_statistics", return_value=statistics) as get_statistics:
+            snapshot = load_repository_season_snapshot("postgresql://example", "sportmonks:2026")
+
+        self.assertEqual(snapshot["season_id"], "sportmonks:2026")
+        self.assertEqual(snapshot["teams"], teams)
+        self.assertEqual(snapshot["fixtures"], fixtures)
+        self.assertEqual(snapshot["statistics"], statistics)
+        get_teams.assert_called_once_with("postgresql://example", season_id="sportmonks:2026")
+        get_fixtures.assert_called_once_with("postgresql://example", season_id="sportmonks:2026", limit=2000)
+        get_statistics.assert_called_once_with("postgresql://example", ["sportmonks:1"])
 
     def test_history_collection_diagnostics_explain_fixture_exclusions(self):
         valid = fixture(1, 10, 20, 2, 1)
