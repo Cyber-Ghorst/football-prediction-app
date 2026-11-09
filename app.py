@@ -1550,6 +1550,9 @@ try:
         tvd_profiles=(home_tvd,away_tvd)
 
     if st.button("Collect data and predict", type="primary", use_container_width=True):
+        prediction_timing_started = time.perf_counter()
+        prediction_stage_timings = {}
+        prediction_stage_started = prediction_timing_started
         player_report = None
         selected_match_fixture = None
         prediction_fixture = None
@@ -1562,6 +1565,8 @@ try:
                 except SportmonksError as exc:
                     st.error(f"Sportmonks standings collection failed: {exc}")
                     st.stop()
+                prediction_stage_timings["standings_collection_seconds"] = round(time.perf_counter() - prediction_stage_started, 3)
+                prediction_stage_started = time.perf_counter()
                 try:
                     fixtures = get_sm_fixtures(
                         selected_season_id,
@@ -1574,6 +1579,8 @@ try:
                 except SportmonksError as exc:
                     st.error(f"Sportmonks fixture collection failed: {exc}")
                     st.stop()
+                prediction_stage_timings["live_fixture_collection_seconds"] = round(time.perf_counter() - prediction_stage_started, 3)
+                prediction_stage_started = time.perf_counter()
                 repository_profile_report = {
                     "generated_at": datetime.now(timezone.utc).isoformat(),
                     "season_id": int(selected_season_id),
@@ -1608,6 +1615,8 @@ try:
                     )
                 except Exception as shared_repository_error:
                     repository_profiles_error = shared_repository_error
+                prediction_stage_timings["season_snapshot_and_shared_profile_build_seconds"] = round(time.perf_counter() - prediction_stage_started, 3)
+                prediction_stage_started = time.perf_counter()
 
                 def _load_team_profile_with_repository(team_name):
                     provider_team = team_map[team_name]
@@ -1752,6 +1761,8 @@ try:
                         st.warning(f"Fixture-specific Sportmonks lineups/sidelined data unavailable: {exc}. Prediction inputs remain unchanged.")
                 else:
                     st.info("No exact upcoming Sportmonks fixture was found for this home/away pairing. Lineups and player availability remain unknown.")
+                prediction_stage_timings["fixture_detail_enrichment_seconds"] = round(time.perf_counter() - prediction_stage_started, 3)
+                prediction_stage_started = time.perf_counter()
 
                 if cross_check_recent_results or cross_check_highlightly_details or cross_check_highlightly_players:
                     selected_league_row = league_by_id.get(league_id, {})
@@ -2025,10 +2036,14 @@ try:
                         else:
                             st.info("Player statistics were not requested because the exact selected-fixture Highlightly lineup was unavailable.")
 
+                prediction_stage_timings["optional_provider_corroboration_seconds"] = round(time.perf_counter() - prediction_stage_started, 3)
+                prediction_stage_started = time.perf_counter()
             else:
                 standings = get_standings(client, league_id, int(season))
                 home = get_profile(client, team_map[home_name], league_id, int(season), standings, include_stats)
                 away = get_profile(client, team_map[away_name], league_id, int(season), standings, include_stats)
+        prediction_stage_timings["data_collection_total_seconds"] = round(time.perf_counter() - prediction_timing_started, 3)
+        prediction_stage_started = time.perf_counter()
         # Player availability is scored only when the provider supplies a complete
         # roster, known statuses and evidenced player-importance weights.
         for profile in (home, away):
@@ -2133,6 +2148,8 @@ try:
                 st.session_state["_latest_system_report_github_archive_url"] = github_system_report.get("archive_url")
         except Exception as upload_error:
             st.warning(f"System report could not be archived to GitHub ({type(upload_error).__name__}). Check GITHUB_REPORT_TOKEN and GitHub permissions.")
+        prediction_stage_timings["validation_and_report_archiving_seconds"] = round(time.perf_counter() - prediction_stage_started, 3)
+        prediction_stage_started = time.perf_counter()
         st.subheader("Automated System Health & Diagnostics")
         if st.session_state.get("_latest_system_report_github_url"):
             st.caption("System report is archived in GitHub automatically.")
@@ -2321,6 +2338,8 @@ try:
             result=predict_match(home,away,tactical_compatibility=overrides)
         except ValueError as exc:
             st.error(str(exc)); st.stop()
+        prediction_stage_timings["tactical_analysis_and_prediction_seconds"] = round(time.perf_counter() - prediction_stage_started, 3)
+        prediction_stage_started = time.perf_counter()
         selected_league_row = league_by_id.get(league_id, {}) if sportmonks_mode else {}
         selected_country = selected_league_row.get("country") or {}
         selected_country_name = selected_country.get("name") if isinstance(selected_country, dict) else str(selected_country or "")
@@ -2350,6 +2369,22 @@ try:
             st.session_state["prediction_ledger"], [prediction_row]
         )
         _persist_database_ledger()
+        prediction_stage_timings["prediction_ledger_write_seconds"] = round(time.perf_counter() - prediction_stage_started, 3)
+        prediction_runtime_report = {
+            "report_name": "prediction_runtime",
+            "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+            "competition": selected_league,
+            "season": int(season),
+            "stages_seconds": prediction_stage_timings,
+            "elapsed_seconds_before_runtime_report_upload": round(time.perf_counter() - prediction_timing_started, 3),
+            "note": "Diagnostic timings only. No prediction inputs, model weights, recency rules, TVD calculations or ledger contents are changed.",
+        }
+        try:
+            runtime_archive = _upload_report_once("prediction_runtime", prediction_runtime_report)
+            if runtime_archive:
+                st.caption("Prediction runtime breakdown archived in GitHub: " + str(runtime_archive.get("latest_url", "")))
+        except Exception as runtime_error:
+            st.warning(f"Prediction runtime report could not be archived ({type(runtime_error).__name__}).")
         st.subheader(f"{home_name} vs {away_name}")
         probabilities=result["probabilities"]
         outcome = most_likely_outcome(probabilities, home_name, away_name)
