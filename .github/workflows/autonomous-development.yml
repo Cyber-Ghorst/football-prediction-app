@@ -1,0 +1,223 @@
+name: Autonomous Prediction App Development
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "41 2 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: autonomous-prediction-development
+  cancel-in-progress: false
+
+jobs:
+  agent:
+    name: Generate one bounded code improvement
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    outputs:
+      configured: ${{ steps.check_key.outputs.configured }}
+      patch_payload: ${{ steps.run_codex.outputs.final-message }}
+    steps:
+      - name: Check out trusted development instructions
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+
+      - name: Check whether Codex API billing is configured
+        id: check_key
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          if [ -n "$OPENAI_API_KEY" ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+            echo "Codex API credential is configured."
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            {
+              echo "## Autonomous development is not yet activated"
+              echo
+              echo "Add an OPENAI_API_KEY repository Actions secret to enable the coding agent."
+              echo "The key is used only by the Codex action. API usage is billed separately from ChatGPT subscriptions."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::notice::OPENAI_API_KEY is missing. The scheduled development agent was safely skipped."
+          fi
+
+      # Keep Codex as the final step in this job to minimize exposure of its API-key proxy.
+      - name: Generate a minimal patch with Codex
+        id: run_codex
+        if: steps.check_key.outputs.configured == 'true'
+        uses: openai/codex-action@v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          prompt-file: .github/codex/autonomous-development-prompt.md
+          output-schema-file: .github/codex/autonomous-output-schema.json
+          permission-profile: ":read-only"
+          safety-strategy: drop-sudo
+          effort: high
+
+  validate_and_open_pr:
+    name: Validate patch and open review PR
+    needs: agent
+    if: needs.agent.outputs.configured == 'true' && needs.agent.outputs.patch_payload != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Check out current main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ github.token }}
+
+      - name: Validate and apply the agent patch
+        id: patch
+        env:
+          CODEX_PAYLOAD: ${{ needs.agent.outputs.patch_payload }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import re
+          import subprocess
+          from pathlib import PurePosixPath
+
+          payload = json.loads(os.environ["CODEX_PAYLOAD"])
+          patch = payload.get("patch", "")
+          summary = payload.get("summary", "").strip()
+          if not isinstance(patch, str) or not patch.strip():
+              raise SystemExit("Codex returned no patch; no repository changes will be made.")
+          if len(patch.encode("utf-8")) > 120_000:
+              raise SystemExit("Patch exceeds the 120 KB safety limit.")
+
+          paths = re.findall(r"^diff --git a/(.+) b/(.+)$", patch, flags=re.MULTILINE)
+          if not paths:
+              raise SystemExit("Patch contains no recognized git diff paths.")
+          for old, new in paths:
+              if old != new:
+                  raise SystemExit("Renames are not accepted by the autonomous patch gate.")
+              path = PurePosixPath(new)
+              if path.is_absolute() or ".." in path.parts or len(path.parts) != 1 or path.suffix != ".py":
+                  raise SystemExit(f"Blocked path outside the Python source/test allowlist: {new}")
+              if path.name.startswith("."):
+                  raise SystemExit(f"Hidden files are not in the autonomous allowlist: {new}")
+
+          with open("/tmp/autonomous.patch", "w", encoding="utf-8") as handle:
+              handle.write(patch)
+          subprocess.run(["git", "apply", "--check", "--whitespace=error", "/tmp/autonomous.patch"], check=True)
+          subprocess.run(["git", "apply", "--whitespace=error", "/tmp/autonomous.patch"], check=True)
+          changed = subprocess.check_output(["git", "diff", "--name-only"], text=True).splitlines()
+          if not changed or any(name not in [pair[1] for pair in paths] for name in changed):
+              raise SystemExit("Applied file set differs from the validated patch.")
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              output.write("summary<<EOF\n" + summary.replace("\n", " ") + "\nEOF\n")
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as report:
+              report.write("## Proposed autonomous change\n\n" + summary + "\n\n")
+              report.write("Changed files:\n" + "\n".join(f"- {name}" for name in changed) + "\n")
+          print("Patch passed path and whitespace checks.")
+          PY
+
+      - name: Install project dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run complete unit test suite
+        run: python -m unittest discover -v
+
+      - name: Run deployment smoke checks
+        run: python deployment_smoke_check.py
+
+      - name: Create branch and open a pull request
+        id: create_pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SUMMARY: ${{ steps.patch.outputs.summary }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo "No code changes were produced; no PR will be opened."
+            exit 0
+          fi
+          BRANCH="agent/autonomous-${GITHUB_RUN_ID}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$BRANCH"
+          git add -- '*.py'
+          git commit -m "Autonomous development: bounded Python improvement"
+          git push origin "$BRANCH"
+          PR_URL=$(gh pr create --repo "$GITHUB_REPOSITORY" --base main --head "$BRANCH" --title "Autonomous development: validated Python improvement" --body "$(printf '%s\n\n' "$SUMMARY" "Automated checks passed: unit tests and deployment smoke checks." "Workflow: $RUN_URL" "This PR is intentionally not auto-merged; review before merging.")")
+          echo "url=$PR_URL" >> "$GITHUB_OUTPUT"
+          {
+            echo "## Pull request created"
+            echo
+            echo "$PR_URL"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publish timestamped result to the controller issue
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_URL: ${{ steps.create_pr.outputs.url }}
+          JOB_STATUS: ${{ job.status }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          python - <<'PY'
+          import os
+          from datetime import datetime, timezone
+          from zoneinfo import ZoneInfo
+          from urllib.request import Request, urlopen
+          import json
+
+          now = datetime.now(timezone.utc)
+          utc = now.isoformat(timespec="seconds")
+          eat = now.astimezone(ZoneInfo("Africa/Nairobi")).isoformat(timespec="seconds")
+          status = os.environ.get("JOB_STATUS", "unknown")
+          pr = os.environ.get("PR_URL", "").strip() or "No pull request was created."
+          body = (
+              "## Autonomous Prediction App Development Report\n\n"
+              f"**Generated (UTC):** {utc}\n"
+              f"**Generated (Kenya / EAT):** {eat}\n"
+              f"**Validation job:** {status}\n"
+              f"**Pull request:** {pr}\n"
+              f"**Workflow:** {os.environ['RUN_URL']}\n\n"
+              "Changes are proposed through pull requests and are never auto-merged or deployed."
+          )
+          url = f"https://api.github.com/repos/{os.environ['GITHUB_REPOSITORY']}/issues/54/comments"
+          request = Request(url, data=json.dumps({"body": body}).encode(), headers={
+              "Accept": "application/vnd.github+json",
+              "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+              "X-GitHub-Api-Version": "2022-11-28",
+              "Content-Type": "application/json",
+          }, method="POST")
+          with urlopen(request, timeout=20) as response:
+              print(f"Published controller report (HTTP {response.status}).")
+          PY
+
+  missing_api_key:
+    name: Report missing Codex credential
+    needs: agent
+    if: needs.agent.outputs.configured == 'false'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Explain the one-time setup requirement
+        run: |
+          {
+            echo "## One-time setup required"
+            echo
+            echo "Create a repository Actions secret named OPENAI_API_KEY."
+            echo "Path: GitHub repository → Settings → Secrets and variables → Actions → New repository secret."
+            echo
+            echo "Use an OpenAI API key with API billing enabled. ChatGPT subscription access does not include API credits."
+            echo "After adding it, run this workflow manually once to verify autonomous patch generation."
+          } >> "$GITHUB_STEP_SUMMARY"
