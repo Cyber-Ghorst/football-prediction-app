@@ -2,34 +2,34 @@
   "event_count": 3,
   "events": [
     {
-      "timestamp_utc": "2026-11-09T14:56:47.564251+00:00",
+      "timestamp_utc": "2026-11-09T15:02:12.273779+00:00",
       "provider": "sportmonks",
       "resource_type": "leagues",
       "outcome": "cache_hit",
-      "lookup_duration_ms": 2695,
+      "lookup_duration_ms": 2446,
       "row_count": 5,
       "archive_status": "served"
     },
     {
-      "timestamp_utc": "2026-11-09T14:56:50.166082+00:00",
+      "timestamp_utc": "2026-11-09T15:02:14.532780+00:00",
       "provider": "sportmonks",
       "resource_type": "seasons",
       "outcome": "cache_hit",
-      "lookup_duration_ms": 2601,
+      "lookup_duration_ms": 2258,
       "row_count": 15,
       "archive_status": "served"
     },
     {
-      "timestamp_utc": "2026-11-09T14:56:52.631107+00:00",
+      "timestamp_utc": "2026-11-09T15:02:17.093472+00:00",
       "provider": "sportmonks",
       "resource_type": "teams",
       "outcome": "cache_hit",
-      "lookup_duration_ms": 2464,
+      "lookup_duration_ms": 2559,
       "row_count": 20,
       "archive_status": "served"
     }
   ],
   "privacy_note": "Only provider/resource names, outcomes, timestamps, durations, row counts and error types. No cache keys, request parameters, payloads, team names, credentials or prediction data.",
-  "generated_at_utc": "2026-11-09T14:57:22.502121+00:00",
+  "generated_at_utc": "2026-11-09T15:02:45.825649+00:00",
   "report_name": "provider_cache_telemetry"
 }
