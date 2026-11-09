@@ -396,6 +396,25 @@ class PlayerAvailabilityTests(unittest.TestCase):
         )
 
 
+    def test_squad_diagnostic_report_uses_final_evidence_and_assessment(self):
+        from player_availability import build_squad_fetch_diagnostics
+
+        result = build_squad_fetch_diagnostics(
+            {"status": "retrieved", "rows_returned": 30, "roster_complete": False,
+             "reason": "stale reason"},
+            {"roster_complete": True, "current_squad_rows_seen": 29,
+             "players_assessed": 29, "reason": "verified complete roster"},
+            {"score": 100.0, "status": "scored"},
+        )
+        self.assertTrue(result["roster_complete"])
+        self.assertEqual(result["current_squad_players"], 29)
+        self.assertEqual(result["players_assessed"], 29)
+        self.assertEqual(result["reason"], "verified complete roster")
+        self.assertEqual(result["availability_score"], 100.0)
+        self.assertEqual(result["availability_status"], "scored")
+        self.assertEqual(result["rows_returned"], 30)
+
+
 
 if __name__ == "__main__":
     unittest.main()

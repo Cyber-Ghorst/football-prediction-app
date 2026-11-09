@@ -447,3 +447,41 @@ def build_sportmonks_availability_evidence(
         "importance_method": "current_squad_season_minutes_played_relative_to_squad_max",
         "reason": "Current extended squad, matching team-season minutes and exact-fixture sidelined feed passed identity and date checks.",
     }
+
+
+def build_squad_fetch_diagnostics(
+    existing: dict[str, Any] | None,
+    evidence: dict[str, Any] | None,
+    assessment: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Return a final squad diagnostic synchronized with scored evidence."""
+    result = dict(existing) if isinstance(existing, dict) else {}
+    evidence = evidence if isinstance(evidence, dict) else {}
+    assessment = assessment if isinstance(assessment, dict) else {}
+    fields = (
+        "roster_complete",
+        "current_squad_rows_seen",
+        "not_current_squad_rows_seen",
+        "not_current_squad_players",
+        "players_assessed",
+        "matching_team_season_statistics_rows",
+        "players_without_season_statistics",
+        "players_with_multiple_season_statistics_rows",
+        "players_with_minutes_detail",
+        "players_with_zero_minutes_inferred",
+        "minutes_type_ids_seen",
+        "players_missing_minutes_detail",
+        "player_statistic_values",
+        "sample_detail_shapes",
+        "importance_method",
+        "sidelined_feed_available",
+        "reported_sidelined_count",
+        "reason",
+    )
+    for field in fields:
+        if field in evidence:
+            output_field = "current_squad_players" if field == "current_squad_rows_seen" else field
+            result[output_field] = evidence[field]
+    result["availability_score"] = assessment.get("score")
+    result["availability_status"] = assessment.get("status", "unknown")
+    return result

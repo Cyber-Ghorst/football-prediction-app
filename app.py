@@ -99,7 +99,11 @@ try:
     from prediction_storage import load_prediction_ledger, save_prediction_records
     from prediction_results import verified_final_score, group_completed_fixture_candidates, automatic_result_check_due
     from prediction_readiness import build_prediction_readiness
-    from player_availability import assess_player_availability, build_sportmonks_availability_evidence
+    from player_availability import (
+        assess_player_availability,
+        build_sportmonks_availability_evidence,
+        build_squad_fetch_diagnostics,
+    )
     from statistics_coverage import build_statistics_coverage, build_counter_attack_source_diagnostics
     from system_diagnostics import build_system_diagnostics
     from provider_data_storage import (
@@ -2347,6 +2351,14 @@ try:
             corroboration=corroboration,
             model_weights=WEIGHTS,
         )
+        for profile in (home, away):
+            team_name = profile.get("name")
+            if team_name in squad_fetch_diagnostics:
+                squad_fetch_diagnostics[team_name] = build_squad_fetch_diagnostics(
+                    squad_fetch_diagnostics[team_name],
+                    profile.get("availability"),
+                    profile.get("player_availability_assessment"),
+                )
         collection_evidence_report = {
             "season": int(season),
             "competition": selected_league,
