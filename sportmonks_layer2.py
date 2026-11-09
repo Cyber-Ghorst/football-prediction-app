@@ -46,6 +46,7 @@ _STAT_ALIASES = {
     "counter attacks": "Counter Attacks",
     "counter-attacks": "Counter Attacks",
 }
+_STAT_TYPE_ID_NAMES = {1527: "counter attacks"}
 _PERCENTAGE_STATS = {"Ball Possession", "Passes %"}
 
 
@@ -112,7 +113,13 @@ def _scores(fixture: dict[str, Any], home_id: int, away_id: int) -> tuple[int | 
 def _stat_name(row: dict[str, Any]) -> str:
     stat_type = row.get("type") or {}
     if isinstance(stat_type, dict):
-        return str(stat_type.get("name") or "").strip().casefold()
+        name = str(stat_type.get("name") or "").strip().casefold()
+        if name:
+            return name
+        try:
+            return _STAT_TYPE_ID_NAMES.get(int(stat_type.get("id")), "")
+        except (TypeError, ValueError):
+            return ""
     return str(stat_type).strip().casefold()
 
 
