@@ -155,6 +155,7 @@ def build_sportmonks_availability_evidence(
         "matching_team_season_statistics_rows": 0,
         "players_with_minutes_detail": 0,
         "players_missing_minutes_detail": [],
+        "player_statistic_values": [],
         "minutes_type_ids_seen": [],
         "sample_detail_shapes": [],
     }
@@ -238,6 +239,12 @@ def build_sportmonks_availability_evidence(
                 })
             try:
                 parsed_type_id = int(detail_type_id)
+                if parsed_type_id in {119, 321, 322, 323}:
+                    diagnostics["player_statistic_values"].append({
+                        "player_id": int(player_id),
+                        "type_id": parsed_type_id,
+                        "value": detail.get("value"),
+                    })
                 if parsed_type_id not in diagnostics["minutes_type_ids_seen"]:
                     diagnostics["minutes_type_ids_seen"].append(parsed_type_id)
                 player_type_ids.append(parsed_type_id)
