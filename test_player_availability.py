@@ -61,16 +61,17 @@ class PlayerAvailabilityTests(unittest.TestCase):
         self.assertIsNone(result["score"])
 
 
-    def test_sportmonks_squad_and_fixture_sidelined_build_verified_evidence(self):
+    def test_sportmonks_current_squad_and_fixture_sidelined_build_verified_evidence(self):
         from player_availability import build_sportmonks_availability_evidence
 
         squad = [
-            {"player_id": 1, "team_id": 10, "season_id": 2026, "has_values": True,
-             "player": {"id": 1, "name": "Regular Player"},
-             "details": [{"type_id": 119, "value": {"total": 900}}]},
-            {"player_id": 2, "team_id": 10, "season_id": 2026, "has_values": True,
-             "player": {"id": 2, "name": "Unavailable Player"},
-             "details": [{"type_id": 119, "value": {"total": 450}}]},
+            {"id": 1, "in_squad": True, "display_name": "Regular Player",
+             "statistics": [{"player_id": 1, "team_id": 10, "season_id": 2026,
+                 "has_values": True, "details": [{"type_id": 119, "value": {"total": 900}}]}]},
+            {"id": 2, "in_squad": True, "display_name": "Unavailable Player",
+             "statistics": [{"player_id": 2, "team_id": 10, "season_id": 2026,
+                 "has_values": True, "details": [{"type_id": 119, "value": {"total": 450}}]}]},
+            {"id": 3, "in_squad": False, "display_name": "Former Player", "statistics": []},
         ]
         evidence = build_sportmonks_availability_evidence(
             squad_rows=squad,
@@ -86,6 +87,7 @@ class PlayerAvailabilityTests(unittest.TestCase):
         )
         result = assess_player_availability(evidence)
         self.assertTrue(evidence["roster_complete"])
+        self.assertEqual(evidence["players_assessed"], 2)
         self.assertEqual(result["score"], 66.7)
         self.assertEqual(result["status"], "scored")
 
@@ -93,8 +95,9 @@ class PlayerAvailabilityTests(unittest.TestCase):
         from player_availability import build_sportmonks_availability_evidence
 
         squad = [{
-            "player_id": 1, "team_id": 10, "season_id": 2026, "has_values": True,
-            "details": [{"type_id": 119, "value": {"total": 900}}],
+            "id": 1, "in_squad": True,
+            "statistics": [{"player_id": 1, "team_id": 10, "season_id": 2026,
+                "has_values": True, "details": [{"type_id": 119, "value": {"total": 900}}]}],
         }]
         evidence = build_sportmonks_availability_evidence(
             squad_rows=squad, sidelined_rows=[], sidelined_feed_available=True,
@@ -106,8 +109,9 @@ class PlayerAvailabilityTests(unittest.TestCase):
         from player_availability import build_sportmonks_availability_evidence
 
         evidence = build_sportmonks_availability_evidence(
-            squad_rows=[{"player_id": 1, "team_id": 10, "season_id": 2026,
-                         "details": [{"type_id": 119, "value": {"total": 900}}]}],
+            squad_rows=[{"id": 1, "in_squad": True,
+                         "statistics": [{"player_id": 1, "team_id": 10, "season_id": 2026,
+                           "details": [{"type_id": 119, "value": {"total": 900}}]}]}],
             sidelined_rows=[], sidelined_feed_available=False,
             team_id=10, season_id=2026, fixture_id=123, kickoff="2026-11-23",
         )
@@ -117,9 +121,11 @@ class PlayerAvailabilityTests(unittest.TestCase):
         from player_availability import build_sportmonks_availability_evidence
 
         bad_rows = [
-            {"player_id": 1, "team_id": 10, "season_id": 2025,
-             "details": [{"type_id": 119, "value": {"total": 900}}]},
-            {"player_id": 1, "team_id": 10, "season_id": 2026, "details": []},
+            {"id": 1, "in_squad": True, "statistics": [
+                {"player_id": 1, "team_id": 10, "season_id": 2025,
+                 "details": [{"type_id": 119, "value": {"total": 900}}]}]},
+            {"id": 1, "in_squad": True, "statistics": [
+                {"player_id": 1, "team_id": 10, "season_id": 2026, "details": []}]},
         ]
         for rows in bad_rows:
             evidence = build_sportmonks_availability_evidence(
@@ -133,8 +139,9 @@ class PlayerAvailabilityTests(unittest.TestCase):
 
         evidence = build_sportmonks_availability_evidence(
             squad_rows=[{
-                "player_id": 1, "team_id": 10, "season_id": 2026,
-                "details": [{"type_id": 119, "value": {"total": 0}}],
+                "id": 1, "in_squad": True,
+                "statistics": [{"player_id": 1, "team_id": 10, "season_id": 2026,
+                    "details": [{"type_id": 119, "value": {"total": 0}}]}],
             }],
             sidelined_rows=[{
                 "player_id": 1, "team_id": 10, "completed": False,
