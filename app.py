@@ -432,13 +432,13 @@ def get_standings(_client, league_id, season):
 def get_profile(_client, team, league_id, season, standings, include_stats):
     return collect_team_profile(_client, team, league_id, season, standings, include_stats)
 
-def _record_provider_cache_telemetry(resource_type, outcome, **details):
+def _record_provider_cache_telemetry(resource_type, outcome, provider="sportmonks", **details):
     """Store bounded, credential-free provider cache events for GitHub reporting."""
     try:
         events = st.session_state.setdefault("_provider_cache_telemetry_events", [])
         event = {
             "timestamp_utc": datetime.now(timezone.utc).isoformat(),
-            "provider": "sportmonks",
+            "provider": str(provider),
             "resource_type": str(resource_type),
             "outcome": str(outcome),
         }
@@ -450,6 +450,54 @@ def _record_provider_cache_telemetry(resource_type, outcome, **details):
     except Exception:
         pass
 
+
+def _install_optional_provider_cache(client, provider, request_method, ttl_seconds=300):
+    """Cache raw optional-provider HTTP payloads in CockroachDB without changing evidence."""
+    if client is None or not PROVIDER_DATABASE_URL:
+        return False
+    original = getattr(client, request_method, None)
+    if not callable(original) or getattr(client, "_provider_cache_installed", False):
+        return False
+
+    def cached_request(*args, **kwargs):
+        request_params = {"args": args, "kwargs": kwargs}
+        resource_type = f"{request_method}_response"
+        try:
+            cache_key = build_provider_cache_key(provider, resource_type, request_params)
+        except Exception:
+            return original(*args, **kwargs)
+        lookup_started = time.monotonic()
+        try:
+            snapshot = load_provider_snapshot(PROVIDER_DATABASE_URL, cache_key)
+        except Exception as exc:
+            _record_provider_cache_telemetry(resource_type, "cache_read_failed", provider=provider, lookup_duration_ms=round((time.monotonic() - lookup_started) * 1000), archive_status="read_failed", error_type=type(exc).__name__)
+            snapshot = None
+        lookup_ms = round((time.monotonic() - lookup_started) * 1000)
+        if snapshot is not None:
+            metadata = getattr(client, "last_metadata", None)
+            if isinstance(metadata, dict):
+                metadata["provider_cache"] = "hit"
+            payload = snapshot.get("payload")
+            _record_provider_cache_telemetry(resource_type, "cache_hit", provider=provider, lookup_duration_ms=lookup_ms, row_count=len(payload) if isinstance(payload, list) else None, archive_status="fresh_snapshot")
+            return payload
+        fetch_started = time.monotonic()
+        try:
+            payload = original(*args, **kwargs)
+        except Exception as exc:
+            _record_provider_cache_telemetry(resource_type, "provider_fetch_failed", provider=provider, lookup_duration_ms=lookup_ms, live_fetch_duration_ms=round((time.monotonic() - fetch_started) * 1000), archive_status="cache_miss", error_type=type(exc).__name__)
+            raise
+        fetch_ms = round((time.monotonic() - fetch_started) * 1000)
+        try:
+            save_provider_snapshot(PROVIDER_DATABASE_URL, provider=provider, resource_type=resource_type, cache_key=cache_key, request_params=request_params, payload=payload, source_ids=[], ttl_seconds=ttl_seconds)
+        except Exception as exc:
+            _record_provider_cache_telemetry(resource_type, "archive_write_failed", provider=provider, lookup_duration_ms=lookup_ms, live_fetch_duration_ms=fetch_ms, row_count=len(payload) if isinstance(payload, list) else None, archive_status="write_failed", error_type=type(exc).__name__)
+        else:
+            _record_provider_cache_telemetry(resource_type, "cache_miss_then_archived", provider=provider, lookup_duration_ms=lookup_ms, live_fetch_duration_ms=fetch_ms, row_count=len(payload) if isinstance(payload, list) else None, archive_status="saved")
+        return payload
+
+    setattr(client, request_method, cached_request)
+    setattr(client, "_provider_cache_installed", True)
+    return True
 
 def _collect_sportmonks_with_archive(resource_type, request_params, fetcher, ttl_seconds):
     """Read a fresh CockroachDB snapshot or fetch and archive a Sportmonks response."""
@@ -1687,6 +1735,12 @@ try:
                             ninjas_client = APINinjasClient()
                         except APINinjasError as exc:
                             corroboration_errors["api_ninjas"] = str(exc)
+
+                    # Cache raw optional-provider responses separately from prediction data.
+                    if hl_client is not None:
+                        _install_optional_provider_cache(hl_client, "highlightly", "_get", ttl_seconds=300)
+                    if ninjas_client is not None:
+                        _install_optional_provider_cache(ninjas_client, "api_ninjas", "_request", ttl_seconds=300)
 
                     corroboration = None
                     highlightly_enrichment = None
