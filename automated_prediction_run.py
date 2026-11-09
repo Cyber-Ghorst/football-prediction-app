@@ -208,6 +208,17 @@ def run_prediction(season: int, competition: str, home_team: str, away_team: str
         },
         "app_errors": errors,
         "app_warnings": warnings,
+        "ledger_persistence": {
+            "status": str(app.session_state.get("_ledger_db_status", "unknown")),
+            "message": _safe_text(app.session_state.get("_ledger_db_message", "")),
+            "saved_signature_present": bool(app.session_state.get("_ledger_db_last_saved")),
+        },
+        "archived_app_reports": {
+            "data_collection_evidence_latest_url": app.session_state.get("_latest_collection_report_github_url"),
+            "data_collection_evidence_archive_url": app.session_state.get("_latest_collection_report_github_archive_url"),
+            "system_diagnostics_latest_url": app.session_state.get("_latest_system_report_github_url"),
+            "system_diagnostics_archive_url": app.session_state.get("_latest_system_report_github_archive_url"),
+        },
         "notes": [
             "The existing app.py workflow was executed through Streamlit AppTest; no parallel prediction implementation was used.",
             "Provider corroboration remains diagnostic-only and does not alter prediction inputs.",
