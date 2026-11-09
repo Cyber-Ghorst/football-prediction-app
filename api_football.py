@@ -26,6 +26,8 @@ class APIFootballClient:
                 self.api_key = st.secrets.get("APISPORTS_API_KEY")
             except Exception:
                 self.api_key = None
+        if isinstance(self.api_key, str):
+            self.api_key = self.api_key.strip()
         if not self.api_key:
             raise APIFootballError("API-Football v3 key missing. Configure APISPORTS_API_KEY in Streamlit Secrets.")
         self.timeout = timeout
