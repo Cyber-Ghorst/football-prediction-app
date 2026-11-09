@@ -1,26 +1,26 @@
 {
   "report_name": "automated_prediction_run",
   "status": "prediction_record_created",
-  "started_at_utc": "2026-11-09T15:27:32.915178+00:00",
-  "completed_at_utc": "2026-11-09T15:29:36.422098+00:00",
-  "elapsed_seconds": 123.51,
+  "started_at_utc": "2026-11-09T15:30:29.208741+00:00",
+  "completed_at_utc": "2026-11-09T15:32:45.621823+00:00",
+  "elapsed_seconds": 136.41,
   "execution_method": "streamlit_app_test_harness",
   "same_app_prediction_flow": true,
   "selection": {
     "season": 2026,
     "competition": "Premier League — England",
-    "home_team": "Coventry City",
-    "away_team": "Crystal Palace"
+    "home_team": "Hull City",
+    "away_team": "Brighton & Hove Albion"
   },
   "prediction": {
-    "predicted_at": "2026-11-09T15:29:30.590551+00:00",
-    "kickoff_at": "2026-11-21 15:00:00",
+    "predicted_at": "2026-11-09T15:32:38.277441+00:00",
+    "kickoff_at": "2026-11-22 14:00:00",
     "prediction_before_kickoff": true,
-    "fixture_id": "19722099",
+    "fixture_id": "19722098",
     "fixture_provider": "sportmonks",
-    "model_home_win_pct": 53.0,
-    "model_draw_pct": 22.6,
-    "model_away_win_pct": 24.4,
+    "model_home_win_pct": 20.5,
+    "model_draw_pct": 25.1,
+    "model_away_win_pct": 54.4,
     "model_version": "weighted-football-model-v1",
     "model_recency_policy": "latest_5_60pct_previous_5_40pct"
   },
@@ -28,14 +28,14 @@
   "app_warnings": [],
   "ledger_persistence": {
     "status": "connected",
-    "message": "Neon connected • 52 saved prediction(s).",
+    "message": "Neon connected • 53 saved prediction(s).",
     "saved_signature_present": true
   },
   "archived_app_reports": {
     "data_collection_evidence_latest_url": "https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/data_collection_evidence/latest.json",
-    "data_collection_evidence_archive_url": "https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/data_collection_evidence/archive/20261109T152923043896Z.json",
+    "data_collection_evidence_archive_url": "https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/data_collection_evidence/archive/20261109T153228254445Z.json",
     "system_diagnostics_latest_url": "https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/system_diagnostics/latest.json",
-    "system_diagnostics_archive_url": "https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/system_diagnostics/archive/20261109T152925861882Z.json"
+    "system_diagnostics_archive_url": "https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/system_diagnostics/archive/20261109T153232551501Z.json"
   },
   "notes": [
     "The existing app.py workflow was executed through Streamlit AppTest; no parallel prediction implementation was used.",
