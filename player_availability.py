@@ -152,6 +152,8 @@ def build_sportmonks_availability_evidence(
 
     diagnostics: dict[str, Any] = {
         "current_squad_rows_seen": 0,
+        "not_current_squad_rows_seen": 0,
+        "not_current_squad_players": [],
         "matching_team_season_statistics_rows": 0,
         "players_with_minutes_detail": 0,
         "players_missing_minutes_detail": [],
@@ -179,6 +181,11 @@ def build_sportmonks_availability_evidence(
         if not isinstance(row, dict) or not isinstance(row.get("in_squad"), bool):
             return unknown("An extended squad row is missing its explicit in_squad status.")
         if row["in_squad"] is False:
+            diagnostics["not_current_squad_rows_seen"] += 1
+            diagnostics["not_current_squad_players"].append({
+                "player_id": row.get("id"),
+                "player_name": row.get("display_name") or row.get("name") or row.get("common_name"),
+            })
             continue
         diagnostics["current_squad_rows_seen"] += 1
         try:
