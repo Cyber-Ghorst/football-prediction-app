@@ -125,8 +125,8 @@ jobs:
           subprocess.run(["git", "apply", "--check", "--whitespace=error", "/tmp/autonomous.patch"], check=True)
           subprocess.run(["git", "apply", "--whitespace=error", "/tmp/autonomous.patch"], check=True)
           status_rows = subprocess.check_output(["git", "diff", "--name-status"], text=True).splitlines()
-          changed = [row.split("\\t", 1)[1] for row in status_rows if "\\t" in row]
-          if (not status_rows or any(not row.startswith("M\\t") for row in status_rows)
+          changed = [row.split("\t", 1)[1] for row in status_rows if "\t" in row]
+          if (not status_rows or any(not row.startswith("M\t") for row in status_rows)
               or any(name not in [pair[1] for pair in paths] for name in changed)):
               raise SystemExit("Applied file set differs from the validated patch.")
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
