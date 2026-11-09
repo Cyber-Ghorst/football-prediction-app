@@ -297,8 +297,15 @@ def collect_recent_result_corroboration(
                     for page_number in range(1, page_count)
                 ]
                 if offsets and highlightly_client_factory is not None:
-                    def fetch_with_independent_client(offset: int):
-                        client = highlightly_client_factory()
+                    # Construct clients on the Streamlit script thread so
+                    # credential/secrets access never occurs in worker threads.
+                    page_clients = [
+                        (offset, highlightly_client_factory())
+                        for offset in offsets
+                    ]
+
+                    def fetch_with_independent_client(item):
+                        offset, client = item
                         try:
                             return fetch_highlightly_page(client, offset)
                         finally:
@@ -307,7 +314,7 @@ def collect_recent_result_corroboration(
                                 close()
 
                     with ThreadPoolExecutor(max_workers=min(4, len(offsets))) as executor:
-                        page_results.extend(executor.map(fetch_with_independent_client, offsets))
+                        page_results.extend(executor.map(fetch_with_independent_client, page_clients))
                 else:
                     for offset in offsets:
                         page_results.append(fetch_highlightly_page(highlightly_client, offset))
