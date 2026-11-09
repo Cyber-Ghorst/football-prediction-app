@@ -97,6 +97,43 @@ class SportmonksLayer2Tests(unittest.TestCase):
         get_fixtures.assert_called_once_with("postgresql://example", season_id="sportmonks:2026", limit=2000)
         get_statistics.assert_called_once_with("postgresql://example", ["sportmonks:1"])
 
+    def test_shared_team_profiles_build_league_reference_only_once(self):
+        from sportmonks_layer2 import collect_repository_team_profiles
+
+        raw_fixture = fixture(1, 10, 20, 2, 1)
+        snapshot = {
+            "season_id": "2026",
+            "teams": [
+                {"team_id": "sportmonks:10", "name": "Home FC"},
+                {"team_id": "sportmonks:20", "name": "Away FC"},
+            ],
+            "fixtures": [
+                {"fixture_id": "sportmonks:1", "raw_payload": raw_fixture},
+            ],
+            "statistics": [],
+        }
+        with patch(
+            "sportmonks_layer2.build_league_reference_statistics",
+            wraps=__import__("sportmonks_layer2").build_league_reference_statistics,
+        ) as build_reference:
+            profiles = collect_repository_team_profiles(
+                "postgresql://example",
+                ["sportmonks:10", "sportmonks:20"],
+                "2026",
+                season_snapshot=snapshot,
+            )
+
+        self.assertEqual(set(profiles), {"sportmonks:10", "sportmonks:20"})
+        self.assertEqual(build_reference.call_count, 1)
+        self.assertEqual(
+            profiles["sportmonks:10"]["matches"][0]["statistics"]["Ball Possession"],
+            60.0,
+        )
+        self.assertEqual(
+            profiles["sportmonks:20"]["matches"][0]["statistics"]["Ball Possession"],
+            40.0,
+        )
+
     def test_history_collection_diagnostics_explain_fixture_exclusions(self):
         valid = fixture(1, 10, 20, 2, 1)
         wrong_season = fixture(2, 10, 20, 1, 0)
