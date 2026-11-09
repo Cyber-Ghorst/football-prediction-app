@@ -114,6 +114,8 @@ class APINinjasClient:
             or os.getenv("API_NINJAS_API_KEY")
             or os.getenv("API_NINJAS_KEY")
         )
+        if isinstance(self.api_key, str):
+            self.api_key = self.api_key.strip()
 
         if not self.api_key:
             try:
