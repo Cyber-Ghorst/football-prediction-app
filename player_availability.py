@@ -155,6 +155,8 @@ def build_sportmonks_availability_evidence(
         "not_current_squad_rows_seen": 0,
         "not_current_squad_players": [],
         "matching_team_season_statistics_rows": 0,
+        "players_without_season_statistics": [],
+        "players_with_multiple_season_statistics_rows": [],
         "players_with_minutes_detail": 0,
         "players_missing_minutes_detail": [],
         "player_statistic_values": [],
@@ -172,6 +174,32 @@ def build_sportmonks_availability_evidence(
             return unknown("An extended squad row is missing its explicit in_squad status.")
         if squad_row["in_squad"]:
             diagnostics["current_squad_rows_seen"] += 1
+            squad_stats = squad_row.get("statistics")
+            if isinstance(squad_stats, dict):
+                squad_stats = squad_stats.get("data")
+            matching_rows = []
+            if isinstance(squad_stats, list):
+                for squad_stat in squad_stats:
+                    if not isinstance(squad_stat, dict):
+                        continue
+                    try:
+                        matches_team = int(squad_stat.get("team_id")) == int(team_id)
+                        matches_season = int(squad_stat.get("season_id")) == int(season_id)
+                    except (TypeError, ValueError):
+                        continue
+                    if matches_team and matches_season:
+                        matching_rows.append(squad_stat)
+            diagnostics["matching_team_season_statistics_rows"] += len(matching_rows)
+            player_identity = {
+                "player_id": squad_row.get("id"),
+                "player_name": squad_row.get("display_name") or squad_row.get("name") or squad_row.get("common_name"),
+            }
+            if not matching_rows:
+                diagnostics["players_without_season_statistics"].append(player_identity)
+            elif len(matching_rows) > 1:
+                diagnostics["players_with_multiple_season_statistics_rows"].append({
+                    **player_identity, "matching_rows": len(matching_rows)
+                })
         else:
             diagnostics["not_current_squad_rows_seen"] += 1
             diagnostics["not_current_squad_players"].append({
@@ -216,7 +244,6 @@ def build_sportmonks_availability_evidence(
                 continue
             if statistic_team_id == int(team_id) and statistic_season_id == int(season_id):
                 matching_statistics.append(statistic)
-        diagnostics["matching_team_season_statistics_rows"] += len(matching_statistics)
         if len(matching_statistics) != 1:
             return unknown("A current-squad player does not have exactly one matching team-season statistic row.")
         statistic = matching_statistics[0]

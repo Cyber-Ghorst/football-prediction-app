@@ -285,6 +285,26 @@ class PlayerAvailabilityTests(unittest.TestCase):
         self.assertEqual(evidence["not_current_squad_players"][0]["player_name"], "Former Player")
 
 
+    def test_season_statistics_coverage_is_counted_for_entire_current_squad(self):
+        from player_availability import build_sportmonks_availability_evidence
+
+        evidence = build_sportmonks_availability_evidence(
+            squad_rows=[
+                {"id": 1, "in_squad": True, "name": "Player With Stats",
+                 "statistics": [{"player_id": 1, "team_id": 10, "season_id": 2026,
+                    "details": [{"type_id": 119, "value": {"total": 900}}]}]},
+                {"id": 2, "in_squad": True, "name": "Player Without Stats",
+                 "statistics": []},
+            ],
+            sidelined_rows=[], sidelined_feed_available=True,
+            team_id=10, season_id=2026, fixture_id=123, kickoff="2026-11-23",
+        )
+        self.assertEqual(evidence["current_squad_rows_seen"], 2)
+        self.assertEqual(evidence["matching_team_season_statistics_rows"], 1)
+        self.assertEqual(evidence["players_without_season_statistics"][0]["player_name"], "Player Without Stats")
+        self.assertIsNone(assess_player_availability(evidence)["score"])
+
+
 
 if __name__ == "__main__":
     unittest.main()
