@@ -1210,6 +1210,56 @@ def audit_repository_fixture_statistics(database_url: str) -> dict[str, Any]:
         },
     }
 
+def get_completed_scored_fixtures_missing_statistics(
+    database_url: str,
+    *,
+    season_id: str = "sportmonks:27965",
+    limit: int = 5,
+) -> list[dict[str, Any]]:
+    """Return a small read-only sample of completed, scored fixtures with no normalized stats."""
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+    safe_limit = max(1, min(int(limit), 10))
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT
+                    f.fixture_id,
+                    f.season_id,
+                    f.league_id,
+                    ht.name AS home_team,
+                    at.name AS away_team,
+                    f.starting_at,
+                    f.status,
+                    f.home_goals,
+                    f.away_goals
+                FROM football_fixtures f
+                JOIN football_teams ht ON ht.team_id = f.home_team_id
+                JOIN football_teams at ON at.team_id = f.away_team_id
+                WHERE f.season_id = %s
+                  AND f.source_provider = 'sportmonks'
+                  AND f.status = '5'
+                  AND f.home_goals IS NOT NULL
+                  AND f.away_goals IS NOT NULL
+                  AND NOT EXISTS (
+                      SELECT 1
+                      FROM football_fixture_statistics s
+                      WHERE s.fixture_id = f.fixture_id
+                  )
+                ORDER BY f.starting_at DESC, f.fixture_id
+                LIMIT %s
+                """,
+                (str(season_id), safe_limit),
+            )
+            rows = cursor.fetchall()
+    columns = (
+        "fixture_id", "season_id", "league_id", "home_team", "away_team",
+        "starting_at", "status", "home_goals", "away_goals",
+    )
+    return [dict(zip(columns, row)) for row in rows]
+
+
 def diagnose_fixture_statistics_coverage(database_url: str) -> dict[str, Any]:
     """Explain fixture-statistics gaps by completion state and stored provider payload."""
     if not database_url:
