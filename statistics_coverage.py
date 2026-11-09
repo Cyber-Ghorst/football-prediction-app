@@ -109,3 +109,74 @@ def build_statistics_coverage(matches: list[dict[str, Any]]) -> dict[str, Any]:
         ],
         "unmapped_statistics": unmapped_rows,
     }
+
+
+def build_counter_attack_source_diagnostics(matches: list[dict[str, Any]]) -> dict[str, Any]:
+    """Audit archived provider statistic rows for Counter Attacks without imputing data."""
+    recent = list(matches[:10])
+    inventory: dict[tuple[str, str], dict[str, Any]] = {}
+    matching_rows = []
+    fixtures_with_counter_attacks = set()
+
+    for match in recent:
+        fixture_id = match.get("fixture_id")
+        for row in (match.get("statistics_raw_diagnostics") or []):
+            type_id = row.get("statistic_type_id")
+            type_id_text = str(type_id).strip() if type_id is not None else ""
+            raw_name = str(row.get("statistic_name_raw") or "").strip()
+            key = (type_id_text, raw_name)
+            item = inventory.setdefault(key, {
+                "statistic_type_id": type_id,
+                "statistic_name_raw": raw_name or None,
+                "observations": 0,
+            })
+            item["observations"] += 1
+
+            is_counter_attack = (
+                type_id_text == "1527"
+                or "counter attack" in raw_name.casefold()
+                or "counter-attacks" in raw_name.casefold()
+            )
+            if is_counter_attack:
+                if fixture_id is not None:
+                    fixtures_with_counter_attacks.add(str(fixture_id))
+                matching_rows.append({
+                    "fixture_id": fixture_id,
+                    "statistic_type_id": type_id,
+                    "statistic_name_raw": raw_name or None,
+                    "canonical_name": row.get("canonical_name"),
+                    "raw_value": row.get("raw_value"),
+                    "normalized_value": row.get("normalized_value"),
+                    "mapping_status": row.get("mapping_status"),
+                })
+
+    inventory_rows = sorted(
+        inventory.values(),
+        key=lambda row: (
+            str(row.get("statistic_type_id") or ""),
+            str(row.get("statistic_name_raw") or "").casefold(),
+        ),
+    )
+    if matching_rows:
+        status = "counter_attack_rows_found_in_archived_provider_statistics"
+    elif sum(len(match.get("statistics_raw_diagnostics") or []) for match in recent):
+        status = "no_counter_attack_rows_found_in_archived_provider_statistics"
+    else:
+        status = "raw_provider_statistic_rows_not_available"
+
+    return {
+        "provider": "sportmonks",
+        "source": "archived fixture statistic rows read from the central repository",
+        "fixtures_checked": len(recent),
+        "fixtures_with_counter_attack_rows": len(fixtures_with_counter_attacks),
+        "counter_attack_rows_found": len(matching_rows),
+        "counter_attack_rows": matching_rows,
+        "statistic_type_inventory": inventory_rows,
+        "status": status,
+        "note": (
+            "This audits the statistic rows archived by the collector. "
+            "Zero matching rows means no Counter Attacks row was present in the archived "
+            "sample; it does not establish whether the provider omitted it upstream or "
+            "whether an earlier collection step failed to retain it."
+        ),
+    }
