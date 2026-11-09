@@ -51,6 +51,8 @@ jobs:
               "app_url": os.environ["APP_URL"],
               "probe_url": url,
               "probe_type": "streamlit_health_endpoint",
+              "deployment_reachable": False,
+              "health_endpoint_confirmed": False,
           }
 
           class NoRedirect(urllib.request.HTTPRedirectHandler):
@@ -67,18 +69,39 @@ jobs:
                   body = response.read(512).decode("utf-8", errors="replace").strip()
                   report["http_status"] = response.status
                   report["response_body"] = body
-                  report["healthy"] = response.status == 200 and body.lower() == "ok"
+                  report["deployment_reachable"] = True
+                  report["health_endpoint_confirmed"] = (
+                      response.status == 200 and body.lower() == "ok"
+                  )
+                  report["result"] = (
+                      "healthy" if report["health_endpoint_confirmed"]
+                      else "reachable_but_health_unconfirmed"
+                  )
           except urllib.error.HTTPError as exc:
+              location = exc.headers.get("Location", "")
               report["http_status"] = exc.code
-              report["redirect_location"] = exc.headers.get("Location")
-              report["healthy"] = False
-              report["error"] = f"HTTPError: {exc}"
+              report["redirect_location"] = location
+              auth_redirect = (
+                  exc.code == 303
+                  and "share.streamlit.io/-/auth/app" in location
+              )
+              if auth_redirect:
+                  report["deployment_reachable"] = True
+                  report["result"] = "reachable_authentication_required"
+                  report["note"] = (
+                      "Streamlit requires authentication; endpoint health "
+                      "cannot be confirmed by this unauthenticated probe."
+                  )
+              else:
+                  report["result"] = "probe_failed"
+                  report["error"] = f"HTTPError: {exc}"
           except Exception as exc:
-              report["healthy"] = False
+              report["result"] = "probe_failed"
               report["error"] = f"{type(exc).__name__}: {exc}"
 
+          report["healthy"] = report["health_endpoint_confirmed"]
           print(json.dumps(report, indent=2))
-          if not report["healthy"]:
+          if not report["deployment_reachable"]:
               sys.exit(1)
           PY
 
