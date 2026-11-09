@@ -65,6 +65,7 @@ def check_cockroach() -> dict[str, Any]:
 
 def main() -> int:
     from api_football import APIFootballClient
+    from api_ninjas import APINinjasClient
     from highlightly import HighlightlyClient
     from sportmonks import SportmonksClient
 
@@ -78,6 +79,11 @@ def main() -> int:
             "api_football",
             bool(os.getenv("APISPORTS_API_KEY")),
             lambda: _provider_probe(APIFootballClient(), "leagues"),
+        ),
+        run_check(
+            "api_ninjas",
+            bool(os.getenv("API_NINJAS_API_KEY")),
+            lambda: _provider_probe(APINinjasClient(), "test_connection"),
         ),
         run_check(
             "highlightly",
@@ -120,11 +126,13 @@ def _provider_probe(client, method_name: str) -> dict[str, Any]:
             metadata = getattr(client, "last_metadata", {})
             return {"authenticated": True, "records_returned": len(rows), "metadata": metadata}
         result = getattr(client, method_name)()
-        return {
-            "authenticated": True,
-            "records_returned": result.get("records_returned"),
-            "metadata": result.get("metadata", {}),
-        }
+        if isinstance(result, dict):
+            return {
+                "authenticated": True,
+                "records_returned": result.get("records_returned"),
+                "metadata": result.get("metadata", {}),
+            }
+        return {"authenticated": bool(result), "metadata": getattr(client, "last_metadata", {})}
     finally:
         close = getattr(client, "close", None)
         if close:
