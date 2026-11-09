@@ -1,0 +1,80 @@
+{
+  "event_count": 8,
+  "events": [
+    {
+      "timestamp_utc": "2026-11-09T20:55:52.319926+00:00",
+      "provider": "sportmonks",
+      "resource_type": "teams",
+      "outcome": "cache_miss",
+      "lookup_duration_ms": 2710,
+      "archive_status": "live_fetch_required"
+    },
+    {
+      "timestamp_utc": "2026-11-09T20:55:53.069587+00:00",
+      "provider": "sportmonks",
+      "resource_type": "teams",
+      "outcome": "provider_fetch_failed",
+      "lookup_duration_ms": 2710,
+      "live_fetch_duration_ms": 750,
+      "archive_status": "not_written",
+      "error_type": "SportmonksError"
+    },
+    {
+      "timestamp_utc": "2026-11-09T20:56:14.283937+00:00",
+      "provider": "sportmonks",
+      "resource_type": "leagues",
+      "outcome": "cache_miss",
+      "lookup_duration_ms": 2170,
+      "archive_status": "live_fetch_required"
+    },
+    {
+      "timestamp_utc": "2026-11-09T20:56:19.369513+00:00",
+      "provider": "sportmonks",
+      "resource_type": "leagues",
+      "outcome": "cache_miss_then_archived",
+      "lookup_duration_ms": 2170,
+      "live_fetch_duration_ms": 653,
+      "row_count": 5,
+      "archive_status": "saved"
+    },
+    {
+      "timestamp_utc": "2026-11-09T20:56:25.971045+00:00",
+      "provider": "sportmonks",
+      "resource_type": "seasons",
+      "outcome": "cache_miss",
+      "lookup_duration_ms": 2273,
+      "archive_status": "live_fetch_required"
+    },
+    {
+      "timestamp_utc": "2026-11-09T20:56:30.995616+00:00",
+      "provider": "sportmonks",
+      "resource_type": "seasons",
+      "outcome": "cache_miss_then_archived",
+      "lookup_duration_ms": 2273,
+      "live_fetch_duration_ms": 666,
+      "row_count": 15,
+      "archive_status": "saved"
+    },
+    {
+      "timestamp_utc": "2026-11-09T20:56:37.551825+00:00",
+      "provider": "sportmonks",
+      "resource_type": "teams",
+      "outcome": "cache_miss",
+      "lookup_duration_ms": 2203,
+      "archive_status": "live_fetch_required"
+    },
+    {
+      "timestamp_utc": "2026-11-09T20:56:42.588386+00:00",
+      "provider": "sportmonks",
+      "resource_type": "teams",
+      "outcome": "cache_miss_then_archived",
+      "lookup_duration_ms": 2203,
+      "live_fetch_duration_ms": 712,
+      "row_count": 20,
+      "archive_status": "saved"
+    }
+  ],
+  "privacy_note": "Only provider/resource names, outcomes, timestamps, durations, row counts and error types. No cache keys, request parameters, payloads, team names, credentials or prediction data.",
+  "generated_at_utc": "2026-11-09T20:57:23.641785+00:00",
+  "report_name": "provider_cache_telemetry"
+}
