@@ -8,9 +8,15 @@
     },
     {
       "status": "5",
-      "fixture_count": 218,
-      "fixtures_with_both_scores": 218,
-      "fixtures_in_past": 218
+      "fixture_count": 118,
+      "fixtures_with_both_scores": 118,
+      "fixtures_in_past": 118
+    },
+    {
+      "status": "Full Time",
+      "fixture_count": 100,
+      "fixtures_with_both_scores": 100,
+      "fixtures_in_past": 100
     },
     {
       "status": "10",
@@ -310,10 +316,16 @@
     {
       "fixture_id": "sportmonks:19722106",
       "starting_at": "2026-11-08 16:30:00+00:00",
-      "status": "5",
+      "status": "Full Time",
       "home_goals": 4,
       "away_goals": 4,
-      "raw_state": null,
+      "raw_state": {
+        "developer_name": "FT",
+        "id": 5,
+        "name": "Full Time",
+        "short_name": "FT",
+        "state": "FT"
+      },
       "raw_state_id": "5",
       "raw_scores": [
         {
@@ -507,6 +519,7 @@
     }
   ],
   "history_filter_requires_recognized_status_and_both_scores": true,
-  "generated_at_utc": "2026-11-08T21:26:20.403290+00:00",
-  "repository": "Cyber-Ghorst/football-prediction-app"
+  "generated_at_utc": "2026-11-09T03:20:11.016033+00:00",
+  "repository": "Cyber-Ghorst/football-prediction-app",
+  "report_name": "fixture_history"
 }
