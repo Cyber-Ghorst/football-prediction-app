@@ -11,6 +11,11 @@ on:
           - health_check
           - test_suite
         default: health_check
+  push:
+    branches:
+      - "agent-trigger/**"
+    paths:
+      - ".agent/trigger.json"
 
 permissions:
   contents: read
@@ -28,8 +33,33 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Resolve safe operation
+        id: operation
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          DISPATCH_OPERATION: ${{ inputs.operation }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          if os.environ["EVENT_NAME"] == "workflow_dispatch":
+              operation = os.environ.get("DISPATCH_OPERATION", "")
+          else:
+              trigger = json.loads(Path(".agent/trigger.json").read_text(encoding="utf-8"))
+              operation = trigger.get("operation", "")
+
+          allowed = {"health_check", "test_suite"}
+          if operation not in allowed:
+              raise SystemExit("Rejected unsupported or missing operation")
+
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              output.write(f"operation={operation}\\n")
+          print(f"Accepted operation: {operation}")
+
       - name: Check Streamlit deployment
-        if: inputs.operation == 'health_check'
+        if: steps.operation.outputs.operation == 'health_check'
         env:
           APP_URL: https://football-prediction-app-evzek8cthsuavun8hanejj.streamlit.app/
           HEALTH_URL: https://football-prediction-app-evzek8cthsuavun8hanejj.streamlit.app/_stcore/health
@@ -121,25 +151,25 @@ jobs:
           PY
 
       - name: Install health-check dependencies
-        if: inputs.operation == 'health_check'
+        if: steps.operation.outputs.operation == 'health_check'
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Run application code smoke check
-        if: inputs.operation == 'health_check'
+        if: steps.operation.outputs.operation == 'health_check'
         run: |
           set -o pipefail
           python deployment_smoke_check.py | tee deployment-smoke-report.json
 
       - name: Install test dependencies
-        if: inputs.operation == 'test_suite'
+        if: steps.operation.outputs.operation == 'test_suite'
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Run unit tests
-        if: inputs.operation == 'test_suite'
+        if: steps.operation.outputs.operation == 'test_suite'
         run: |
           set -o pipefail
           python -m unittest discover -v 2>&1 | tee controller-report.txt
