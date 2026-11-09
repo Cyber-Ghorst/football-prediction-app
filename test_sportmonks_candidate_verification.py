@@ -154,6 +154,20 @@ class HighlightlyCandidateVerificationTests(unittest.TestCase):
         self.assertEqual(result["status"], "explicit_alias_resolved_from_date_fixtures")
         self.assertEqual(result["matched_provider_names"], ["AFC Bournemouth"])
 
+    def test_candidate_team_id_resolves_tottenham_alias_to_exact_provider_name(self):
+        from sportmonks_candidate_verification import resolve_candidate_team_id
+
+        fixtures = [{
+            "participants": [
+                {"id": 6, "name": "Tottenham Hotspur"},
+                {"id": 20, "name": "Newcastle United"},
+            ]
+        }]
+        result = resolve_candidate_team_id("Tottenham", fixtures)
+        self.assertEqual(result["team_id"], 6)
+        self.assertEqual(result["status"], "explicit_alias_resolved_from_date_fixtures")
+        self.assertEqual(result["matched_provider_names"], ["Tottenham Hotspur"])
+
     def test_alias_resolution_does_not_accept_unlisted_fuzzy_names(self):
         from sportmonks_candidate_verification import resolve_candidate_team_id
 
