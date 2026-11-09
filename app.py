@@ -1901,6 +1901,16 @@ try:
                                 fixture_id=selected_match_fixture.get("id"),
                                 kickoff=selected_match_fixture.get("starting_at"),
                             )
+                            availability_evidence = profile["availability"]
+                            squad_fetch_diagnostics[selected_team_name].update({
+                                "roster_complete": availability_evidence.get("roster_complete"),
+                                "players_assessed": availability_evidence.get("players_assessed", 0),
+                                "current_squad_players": availability_evidence.get("current_squad_rows_seen", 0),
+                                "players_with_minutes_detail": availability_evidence.get("players_with_minutes_detail", 0),
+                                "minutes_type_ids_seen": availability_evidence.get("minutes_type_ids_seen", []),
+                                "players_missing_minutes_detail": availability_evidence.get("players_missing_minutes_detail", []),
+                                "reason": availability_evidence.get("reason"),
+                            })
                         except Exception as squad_exc:
                             squad_fetch_diagnostics[selected_team_name] = {
                                 "status": "error",
@@ -2344,7 +2354,10 @@ try:
                     "player_availability_evidence": {
                         "roster_complete": bool((profile.get("availability") or {}).get("roster_complete")),
                         "players_assessed": (profile.get("availability") or {}).get("players_assessed", 0),
-                        "current_squad_players": (profile.get("availability") or {}).get("current_squad_players", 0),
+                        "current_squad_players": (profile.get("availability") or {}).get("current_squad_rows_seen", 0),
+                        "players_with_minutes_detail": (profile.get("availability") or {}).get("players_with_minutes_detail", 0),
+                        "minutes_type_ids_seen": (profile.get("availability") or {}).get("minutes_type_ids_seen", []),
+                        "players_missing_minutes_detail": (profile.get("availability") or {}).get("players_missing_minutes_detail", []),
                         "importance_method": (profile.get("availability") or {}).get("importance_method"),
                         "sidelined_feed_available": (profile.get("availability") or {}).get("sidelined_feed_available", False),
                         "reported_sidelined_count": (profile.get("availability") or {}).get("reported_sidelined_count"),
