@@ -742,20 +742,21 @@ def _fetch_sm_fixtures(season_id, include_stats, team_ids):
 
 
 @st.cache_data(ttl=1800, show_spinner=False)
-def get_sm_squad_by_season(season_id, team_id):
-    include = "player;details"
+def get_sm_extended_squad_by_team(season_id, team_id):
+    include = "statistics.details.type"
+    filters = f"playerstatisticSeasons:{int(season_id)}"
     return _collect_sportmonks_with_archive(
-        "squad_by_season",
-        {"season_id": int(season_id), "team_id": int(team_id), "include": include},
-        lambda: _fetch_sm_squad_by_season(season_id, team_id, include),
+        "extended_squad_by_team",
+        {"season_id": int(season_id), "team_id": int(team_id), "include": include, "filters": filters},
+        lambda: _fetch_sm_extended_squad_by_team(team_id, include, filters),
         1800,
     )
 
 
-def _fetch_sm_squad_by_season(season_id, team_id, include):
+def _fetch_sm_extended_squad_by_team(team_id, include, filters):
     with SportmonksClient() as sm:
-        return sm.squad_by_season(
-            int(season_id), int(team_id), include=include
+        return sm.extended_squad_by_team(
+            int(team_id), include=include, filters=filters
         )
 
 
@@ -1698,7 +1699,7 @@ try:
                     for side, selected_team_name in (("home", home_name), ("away", away_name)):
                         squad_future_by_side[side] = fixture_detail_executor.submit(
                             _timed_provider_collection,
-                            get_sm_squad_by_season,
+                            get_sm_extended_squad_by_team,
                             selected_season_id,
                             int(team_map[selected_team_name]["id"]),
                         )
