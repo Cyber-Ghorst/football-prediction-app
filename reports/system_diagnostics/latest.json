@@ -1,6 +1,6 @@
 {
   "diagnostic_version": 1,
-  "generated_at": "2026-11-09T02:26:32.553501+00:00",
+  "generated_at": "2026-11-09T02:33:39.100814+00:00",
   "overall_status": "healthy",
   "selected_context": {
     "season_start_year": 2026,
@@ -174,8 +174,8 @@
     "kickoff_utc": "2026-12-20T14:00:00+00:00",
     "source_updated_at": null,
     "source_fetched_at": "2026-11-09T02:25:53.469029+00:00",
-    "source_age_seconds": 39.1,
-    "source_age_minutes": 0.7,
+    "source_age_seconds": 465.6,
+    "source_age_minutes": 7.8,
     "source_freshness": "fresh",
     "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
   },
@@ -885,7 +885,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "81",
+            "requests_remaining": "78",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -903,7 +903,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "80",
+            "requests_remaining": "77",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -921,7 +921,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "79",
+            "requests_remaining": "76",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -1641,9 +1641,9 @@
         "sportmonks_request_metadata": {
           "request_path": "fixtures/between/2026-09-13/2026-09-13",
           "http_status": 200,
-          "request_seconds": 0.364,
+          "request_seconds": 0.663,
           "rate_limit": "2000",
-          "rate_remaining": "1988"
+          "rate_remaining": "1985"
         }
       },
       {
@@ -2180,9 +2180,9 @@
         "sportmonks_request_metadata": {
           "request_path": "fixtures/between/2026-09-05/2026-09-05",
           "http_status": 200,
-          "request_seconds": 0.62,
+          "request_seconds": 0.662,
           "rate_limit": "2000",
-          "rate_remaining": "1987"
+          "rate_remaining": "1984"
         }
       }
     ],
@@ -2241,8 +2241,8 @@
       "kickoff_utc": "2026-12-20T14:00:00+00:00",
       "source_updated_at": null,
       "source_fetched_at": "2026-11-09T02:25:53.469029+00:00",
-      "source_age_seconds": 39.1,
-      "source_age_minutes": 0.7,
+      "source_age_seconds": 465.6,
+      "source_age_minutes": 7.8,
       "source_freshness": "fresh",
       "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
     },
@@ -2297,6 +2297,6 @@
     "weights_total": 1.0,
     "model_impact": "Diagnostics only; weights, recency weighting, prediction inputs and missing-data rules are not changed."
   },
-  "generated_at_utc": "2026-11-09T02:26:36.350784+00:00",
+  "generated_at_utc": "2026-11-09T02:33:42.899517+00:00",
   "report_name": "system_diagnostics"
 }
