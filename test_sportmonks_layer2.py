@@ -32,6 +32,7 @@ def fixture(fid, home_id, away_id, home_goals, away_goals, state="FT"):
             {"participant_id": home_id, "type": {"id": 43, "name": "Attacks"}, "data": {"value": 85}},
             {"participant_id": home_id, "type": {"id": 100, "name": "Passes"}, "data": {"value": 300}},
             {"participant_id": home_id, "type": {"id": 101, "name": "Big Chances Created"}, "data": {"value": 4}},
+            {"participant_id": home_id, "type": {"id": 1527}, "data": {"value": 7}},
         ],
     }
 
@@ -62,6 +63,7 @@ class SportmonksLayer2Tests(unittest.TestCase):
         self.assertEqual(profile["matches"][0]["statistics"]["Blocked Shots"], 3.0)
         self.assertEqual(profile["matches"][0]["statistics"]["Passes %"], 84.0)
         self.assertEqual(profile["matches"][0]["statistics"]["Big Chances Created"], 4.0)
+        self.assertEqual(profile["matches"][0]["statistics"]["Counter Attacks"], 7.0)
         self.assertNotIn("Shots Accuracy", profile["matches"][0]["statistics"])
         self.assertNotIn("Attacks", profile["matches"][0]["statistics"])
         self.assertNotIn("Passes", profile["matches"][0]["statistics"])
@@ -70,6 +72,9 @@ class SportmonksLayer2Tests(unittest.TestCase):
         shots_accuracy = next(row for row in raw_rows if row["statistic_name_raw"] == "Shots Accuracy")
         self.assertEqual(shots_accuracy["mapping_status"], "unmapped")
         self.assertEqual(shots_accuracy["raw_value"], 0.5)
+        counter_row = next(row for row in raw_rows if row["statistic_type_id"] == 1527)
+        self.assertEqual(counter_row["canonical_name"], "Counter Attacks")
+        self.assertEqual(counter_row["mapping_status"], "mapped")
         self.assertEqual(profile["matches"][0]["statistics_provenance"][0]["provider"], "sportmonks")
         self.assertEqual(profile["matches"][0]["statistics_provenance"][0]["fixture_id"], 6)
         self.assertIsNone(profile["player_availability"])
