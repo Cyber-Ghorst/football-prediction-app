@@ -1,7 +1,7 @@
 {
   "diagnostic_version": 1,
-  "generated_at": "2026-11-09T10:34:11.847611+00:00",
-  "overall_status": "attention_required",
+  "generated_at": "2026-11-09T10:45:52.824451+00:00",
+  "overall_status": "healthy",
   "selected_context": {
     "season_start_year": 2026,
     "competition": "Premier League — England",
@@ -9,10 +9,10 @@
   },
   "summary": {
     "checks_total": 14,
-    "passed": 10,
-    "warnings": 2,
+    "passed": 13,
+    "warnings": 0,
     "failed": 0,
-    "informational": 2
+    "informational": 1
   },
   "checks": [
     {
@@ -23,15 +23,15 @@
     },
     {
       "id": "fixture_identity",
-      "status": "warning",
-      "summary": "The exact home/away pairing exists in the selected season, but its kickoff has already passed. Select a future fixture; this past match cannot verify an upcoming prediction.",
-      "recommendation": "Refresh the selected competition schedule and confirm the exact home/away pairing. Do not substitute another fixture."
+      "status": "pass",
+      "summary": "The selected upcoming fixture passed exact season, home/away team and scheduled-kickoff checks.",
+      "recommendation": null
     },
     {
       "id": "fixture_freshness",
-      "status": "info",
-      "summary": "Fixture retrieval freshness is unknown because a valid retrieval timestamp is unavailable.",
-      "recommendation": "A successful detailed-fixture retrieval is needed before age can be measured."
+      "status": "pass",
+      "summary": "Detailed fixture retrieval is less than 24 hours old.",
+      "recommendation": null
     },
     {
       "id": "home_history_depth",
@@ -60,25 +60,25 @@
     {
       "id": "away_history_depth",
       "status": "pass",
-      "summary": "Arsenal: 10 completed score-valid matches available (minimum 5 met; preferred target 10 met).",
+      "summary": "Manchester United: 10 completed score-valid matches available (minimum 5 met; preferred target 10 met).",
       "recommendation": null
     },
     {
       "id": "away_tactical_recency_weighting",
       "status": "pass",
-      "summary": "Arsenal: tactical recency metadata reports latest-five 60% / previous-five 40% over 10 match(es).",
+      "summary": "Manchester United: tactical recency metadata reports latest-five 60% / previous-five 40% over 10 match(es).",
       "recommendation": null
     },
     {
       "id": "away_history_integrity",
       "status": "pass",
-      "summary": "Arsenal: no duplicate fixture IDs or invalid/missing score fields were found in the collected sample.",
+      "summary": "Manchester United: no duplicate fixture IDs or invalid/missing score fields were found in the collected sample.",
       "recommendation": null
     },
     {
       "id": "away_statistics_coverage",
       "status": "pass",
-      "summary": "Arsenal: all 8 core tactical statistics have at least one usable observation.",
+      "summary": "Manchester United: all 8 core tactical statistics have at least one usable observation.",
       "recommendation": null
     },
     {
@@ -95,25 +95,12 @@
     },
     {
       "id": "prediction_readiness",
-      "status": "warning",
-      "summary": "Prediction readiness status: fixture_unverified. Five completed, score-valid matches per team meet the history minimum; ten is preferred.",
-      "recommendation": "Review fixture verification and history depth before relying on the forecast."
+      "status": "pass",
+      "summary": "Prediction readiness status: ready. Five completed, score-valid matches per team meet the history minimum; ten is preferred.",
+      "recommendation": null
     }
   ],
-  "recommended_actions": [
-    {
-      "priority": "next",
-      "check_id": "fixture_identity",
-      "issue": "The exact home/away pairing exists in the selected season, but its kickoff has already passed. Select a future fixture; this past match cannot verify an upcoming prediction.",
-      "action": "Refresh the selected competition schedule and confirm the exact home/away pairing. Do not substitute another fixture."
-    },
-    {
-      "priority": "next",
-      "check_id": "prediction_readiness",
-      "issue": "Prediction readiness status: fixture_unverified. Five completed, score-valid matches per team meet the history minimum; ten is preferred.",
-      "action": "Review fixture verification and history depth before relying on the forecast."
-    }
-  ],
+  "recommended_actions": [],
   "providers": {
     "sportmonks": {
       "provider": "Sportmonks Football API v3",
@@ -162,17 +149,17 @@
     }
   },
   "fixture": {
-    "verified": false,
-    "status": "past_fixture",
-    "reason": "The exact home/away pairing exists in the selected season, but its kickoff has already passed. Select a future fixture; this past match cannot verify an upcoming prediction.",
-    "fixture_id": 19722117,
-    "kickoff_utc": "2026-11-01T16:30:00+00:00",
+    "verified": true,
+    "status": "verified",
+    "reason": "Exact competition-season fixture identity and future kickoff verified.",
+    "fixture_id": 19722097,
+    "kickoff_utc": "2026-11-22T16:30:00+00:00",
     "source_updated_at": null,
-    "source_fetched_at": null,
-    "source_age_seconds": null,
-    "source_age_minutes": null,
-    "source_freshness": "unknown",
-    "freshness_note": "No successful detailed-fixture retrieval timestamp is attached to this past fixture."
+    "source_fetched_at": "2026-11-09T10:45:25.428162+00:00",
+    "source_age_seconds": 27.4,
+    "source_age_minutes": 0.5,
+    "source_freshness": "fresh",
+    "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
   },
   "teams": {
     "home": {
@@ -513,7 +500,7 @@
       }
     },
     "away": {
-      "team": "Arsenal",
+      "team": "Manchester United",
       "completed_matches_available": 10,
       "history_minimum": 5,
       "history_target": 10,
@@ -537,7 +524,7 @@
         "core_metrics_complete": 8,
         "core_metrics_total": 8,
         "raw_observations_seen": 428,
-        "unmapped_observations": 269,
+        "unmapped_observations": 270,
         "mapping_visibility": "available",
         "metrics": [
           {
@@ -628,8 +615,8 @@
           },
           {
             "statistic": "Successful Headers",
-            "team_output_fixtures": 9,
-            "opponent_output_fixtures": 9,
+            "team_output_fixtures": 8,
+            "opponent_output_fixtures": 8,
             "fixtures_checked": 10
           },
           {
@@ -784,24 +771,24 @@
             "fixtures_seen": 9
           },
           {
-            "provider_statistic": "Injuries",
-            "observations": 9,
-            "fixtures_seen": 9
+            "provider_statistic": "Hit Woodwork",
+            "observations": 7,
+            "fixtures_seen": 7
           },
           {
-            "provider_statistic": "Hit Woodwork",
-            "observations": 8,
-            "fixtures_seen": 8
+            "provider_statistic": "Injuries",
+            "observations": 7,
+            "fixtures_seen": 7
           },
           {
             "provider_statistic": "Penalties",
-            "observations": 1,
-            "fixtures_seen": 1
+            "observations": 3,
+            "fixtures_seen": 3
           },
           {
             "provider_statistic": "Redcards",
-            "observations": 1,
-            "fixtures_seen": 1
+            "observations": 3,
+            "fixtures_seen": 3
           },
           {
             "provider_statistic": "Yellowred Cards",
@@ -811,19 +798,19 @@
         ]
       },
       "tactical_summary": {
-        "playing_style": 73.1,
-        "attacking_approach": 53.06666666666666,
-        "defensive_structure": 35.733333333333334,
+        "playing_style": 64.3,
+        "attacking_approach": 66.23333333333333,
+        "defensive_structure": 65.86666666666666,
         "coverage_metrics": 8,
         "available_metrics": {
-          "average_possession": 59.9,
-          "average_pass_accuracy": 85.0,
-          "average_shots": 14.0,
-          "average_shots_on_target": 4.8,
-          "average_tackles": 12.8,
-          "average_interceptions": 6.6,
-          "average_blocked_shots": 4.8,
-          "average_corners": 5.7
+          "average_possession": 54.0,
+          "average_pass_accuracy": 84.0,
+          "average_shots": 18.6,
+          "average_shots_on_target": 5.4,
+          "average_tackles": 18.8,
+          "average_interceptions": 12.7,
+          "average_blocked_shots": 6.3,
+          "average_corners": 6.1
         },
         "recency_weighting": {
           "matches_used": 10,
@@ -852,7 +839,7 @@
   },
   "corroboration": {},
   "prediction_readiness": {
-    "overall_status": "fixture_unverified",
+    "overall_status": "ready",
     "prediction_minimum_history_met": true,
     "ten_match_history_target_met": true,
     "history_policy": {
@@ -863,17 +850,17 @@
     },
     "prediction_allowed_by_history": true,
     "fixture": {
-      "verified": false,
-      "status": "past_fixture",
-      "reason": "The exact home/away pairing exists in the selected season, but its kickoff has already passed. Select a future fixture; this past match cannot verify an upcoming prediction.",
-      "fixture_id": 19722117,
-      "kickoff_utc": "2026-11-01T16:30:00+00:00",
+      "verified": true,
+      "status": "verified",
+      "reason": "Exact competition-season fixture identity and future kickoff verified.",
+      "fixture_id": 19722097,
+      "kickoff_utc": "2026-11-22T16:30:00+00:00",
       "source_updated_at": null,
-      "source_fetched_at": null,
-      "source_age_seconds": null,
-      "source_age_minutes": null,
-      "source_freshness": "unknown",
-      "freshness_note": "No successful detailed-fixture retrieval timestamp is attached to this past fixture."
+      "source_fetched_at": "2026-11-09T10:45:25.428162+00:00",
+      "source_age_seconds": 27.4,
+      "source_age_minutes": 0.5,
+      "source_freshness": "fresh",
+      "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
     },
     "teams": {
       "home": {
@@ -894,7 +881,7 @@
         "confirmed_lineup_evidence": "unknown"
       },
       "away": {
-        "team": "Arsenal",
+        "team": "Manchester United",
         "completed_matches_available": 10,
         "history_minimum": 5,
         "history_target": 10,
@@ -926,6 +913,6 @@
     "weights_total": 1.0,
     "model_impact": "Diagnostics only; weights, recency weighting, prediction inputs and missing-data rules are not changed."
   },
-  "generated_at_utc": "2026-11-09T10:34:15.177494+00:00",
+  "generated_at_utc": "2026-11-09T10:45:55.983925+00:00",
   "report_name": "system_diagnostics"
 }
