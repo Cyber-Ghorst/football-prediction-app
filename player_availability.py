@@ -252,6 +252,16 @@ def build_sportmonks_availability_evidence(
             return unknown("A sidelined record has an invalid player ID.")
         if player_id not in current_players:
             return unknown("A sidelined player is absent from the current squad.")
+        row_fixture_id = row.get("fixture_id")
+        if row_fixture_id is not None and str(row_fixture_id) != str(fixture_id):
+            return unknown("A sidelined record belongs to a different fixture.")
+        row_season_id = row.get("season_id")
+        if row_season_id is not None:
+            try:
+                if int(row_season_id) != int(season_id):
+                    return unknown("A sidelined record belongs to a different season.")
+            except (TypeError, ValueError):
+                return unknown("A sidelined record has an invalid season ID.")
         row_team = row.get("team_id")
         if row_team is not None:
             try:
