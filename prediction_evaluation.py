@@ -230,6 +230,73 @@ def _json_team_season_records(row: Mapping[str, Any]) -> bool:
     )
 
 
+
+def _top_outcome_calibration(
+    records: Iterable[Mapping[str, Any]],
+    prefix: str = "model",
+) -> dict[str, Any]:
+    """Summarize top-outcome confidence against observed hit rate by bucket."""
+    boundaries = ((0, 40), (40, 50), (50, 60), (60, 70), (70, 80), (80, 90), (90, 100.0001))
+    buckets = [
+        {"lower": lower, "upper": upper, "confidences": [], "hits": []}
+        for lower, upper in boundaries
+    ]
+    total = 0
+    for row in records:
+        actual = outcome_from_score(row.get("actual_home_goals"), row.get("actual_away_goals"))
+        probabilities = _valid_probabilities({
+            "home_win": row.get(f"{prefix}_home_win"),
+            "draw": row.get(f"{prefix}_draw"),
+            "away_win": row.get(f"{prefix}_away_win"),
+        })
+        if actual is None or probabilities is None:
+            continue
+        predicted_key = max(probabilities, key=probabilities.get)
+        predicted_outcome = {
+            "home_win": "home", "draw": "draw", "away_win": "away"
+        }[predicted_key]
+        confidence_pct = probabilities[predicted_key] * 100.0
+        for bucket in buckets:
+            if bucket["lower"] <= confidence_pct < bucket["upper"]:
+                bucket["confidences"].append(confidence_pct)
+                bucket["hits"].append(1.0 if predicted_outcome == actual else 0.0)
+                total += 1
+                break
+
+    rows = []
+    for bucket in buckets:
+        count = len(bucket["confidences"])
+        lower, upper = bucket["lower"], bucket["upper"]
+        label = f"{lower}–{int(upper)}%" if upper < 100 else "90–100%"
+        mean_confidence = (
+            round(sum(bucket["confidences"]) / count, 2) if count else None
+        )
+        hit_rate = (
+            round(sum(bucket["hits"]) / count * 100.0, 2) if count else None
+        )
+        rows.append({
+            "confidence_bucket": label,
+            "matches": count,
+            "mean_confidence_pct": mean_confidence,
+            "observed_hit_rate_pct": hit_rate,
+            "absolute_calibration_gap_pct": (
+                round(abs(mean_confidence - hit_rate), 2)
+                if mean_confidence is not None and hit_rate is not None else None
+            ),
+            "sample_status": "sparse" if 0 < count < 20 else "populated" if count >= 20 else "empty",
+        })
+    return {
+        "method": "top predicted outcome confidence compared with observed hit rate",
+        "matches": total,
+        "bins": rows,
+        "note": (
+            "Descriptive reliability view only. Empty or sparse bins do not establish "
+            "calibration; accumulate more independently verified completed fixtures "
+            "before drawing calibration conclusions."
+        ),
+    }
+
+
 def evaluate_prediction_ledger(records: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
     """Evaluate one latest valid pre-kickoff forecast per identifiable fixture.
 
@@ -381,6 +448,8 @@ def evaluate_prediction_ledger(records: Iterable[Mapping[str, Any]]) -> dict[str
             for competition in sorted({str(row.get("competition") or "") for row in completed})
         },
         "model": _score_records(completed, "model"),
+        "top_outcome_calibration": _top_outcome_calibration(completed, "model"),
+        "confidence_bucket_hit_rate": _top_outcome_calibration(completed, "model")["bins"],
         "performance_history": performance_history,
         "opta_same_fixtures": _score_records(opta_rows, "opta"),
         "opta_comparable_fixtures": len(opta_rows),
