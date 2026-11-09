@@ -784,7 +784,7 @@ with st.sidebar:
     include_stats = st.checkbox("Fetch match statistics (more API requests)", value=True)
     cross_check_recent_results = st.checkbox(
         "Cross-check recent results with Highlightly and API Ninjas",
-        value=False,
+        value=True,
         help="Makes additional read-only requests. Results are diagnostic only and do not change prediction inputs.",
     )
     cross_check_highlightly_details = st.checkbox(
