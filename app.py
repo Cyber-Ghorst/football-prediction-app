@@ -4,48 +4,129 @@ import json
 import base64
 import hashlib
 import time
+import re
+import traceback
 from datetime import datetime, timezone
 import requests
 import pandas as pd
 import streamlit as st
-from api_football import APIFootballClient, APIFootballError
-from api_ninjas import APINinjasClient, APINinjasError
-from highlightly import HighlightlyClient, HighlightlyError
-from sportmonks import SportmonksClient, SportmonksError
-from data_layer2 import collect_team_profile
-from sportmonks_layer2 import collect_sportmonks_team_profile, collect_repository_team_profile, find_upcoming_match_fixture, find_exact_match_fixture, extract_sportmonks_match_details
-from sportmonks_candidate_verification import verify_highlightly_candidate
-from provider_core import normalize_team_name
-from engine import predict_match, WEIGHTS, most_likely_outcome
-from tvd import run_tvd
-from provider_config import provider_readiness
-from livescore_football import LiveScoreFootballClient, LiveScoreFootballError
-from competition_crosswalk import build_competition_crosswalk
-from provider_health import assess_api_football_status, assess_livescore_metadata
-from provider_corroboration import collect_recent_result_corroboration
-from highlightly_match_enrichment import collect_highlightly_match_enrichment
-from highlightly_player_enrichment import collect_highlightly_player_enrichment
-from prediction_evaluation import build_prediction_record, evaluate_prediction_ledger, merge_prediction_records
-from prediction_storage import load_prediction_ledger, save_prediction_records
-from prediction_results import verified_final_score, group_completed_fixture_candidates, automatic_result_check_due
-from prediction_readiness import build_prediction_readiness
-from player_availability import assess_player_availability
-from statistics_coverage import build_statistics_coverage, build_counter_attack_source_diagnostics
-from system_diagnostics import build_system_diagnostics
-from provider_data_storage import (
-    check_provider_storage_connection,
-    verify_provider_storage_round_trip,
-    build_provider_cache_key,
-    load_provider_snapshot,
-    save_provider_snapshot,
-    record_provider_collection_run,
-)
-from football_repository import (
-    ensure_football_repository, repository_table_counts, import_sportmonks_season,
-    get_repository_leagues, get_repository_seasons, get_repository_teams,
-    get_repository_fixtures, get_repository_team_history, diagnose_repository_fixture_history,
-    audit_all_repository_team_histories, audit_repository_fixture_statistics,
-)
+# Capture startup/import failures before the rest of the application loads.
+def _redact_runtime_trace(raw_trace):
+    try:
+        secret_values = []
+        for key in st.secrets:
+            value = st.secrets.get(key)
+            if isinstance(value, (str, int, float)) and str(value):
+                secret_values.append(str(value))
+        for secret in sorted(set(secret_values), key=len, reverse=True):
+            raw_trace = raw_trace.replace(secret, "[REDACTED]")
+    except Exception:
+        pass
+    raw_trace = re.sub(r"(?i)(Bearer\\s+)[A-Za-z0-9._~+/=-]+", r"\\1[REDACTED]", raw_trace)
+    raw_trace = re.sub(r"(postgres(?:ql)?://[^:/\\s]+:)[^@/\\s]+@", r"\\1[REDACTED]@", raw_trace)
+    raw_trace = re.sub(r"(?i)(api[_-]?key|token|password|secret)(\\s*[=:]\\s*)[^\\s,;]+", r"\\1\\2[REDACTED]", raw_trace)
+    return raw_trace[-24000:]
+
+
+def _upload_startup_failure(trace_text):
+    token = st.secrets.get("GITHUB_REPORT_TOKEN", "")
+    if not token:
+        raise RuntimeError("GITHUB_REPORT_TOKEN is not configured.")
+    generated = datetime.now(timezone.utc)
+    payload = {
+        "report_name": "streamlit_runtime_logs",
+        "generated_at_utc": generated.isoformat(),
+        "event": "application_startup_or_import_failure",
+        "traceback": trace_text,
+        "sensitive_data_policy": "Secrets and credential patterns are redacted; no prediction ledger or user data is included.",
+    }
+    encoded = base64.b64encode(json.dumps(payload, ensure_ascii=False, indent=2).encode("utf-8")).decode("ascii")
+    owner_repo = "Cyber-Ghorst/football-prediction-app"
+    headers = {
+        "Accept": "application/vnd.github+json",
+        "Authorization": f"Bearer {token}",
+        "X-GitHub-Api-Version": "2022-11-28",
+    }
+
+    def put(path, message, existing_sha=None):
+        body = {"message": message, "content": encoded}
+        if existing_sha:
+            body["sha"] = existing_sha
+        response = requests.put(
+            f"https://api.github.com/repos/{owner_repo}/contents/{path}",
+            headers=headers, json=body, timeout=25,
+        )
+        if response.status_code not in (200, 201):
+            raise RuntimeError(f"GitHub log upload failed (HTTP {response.status_code}).")
+        return response.json().get("content", {}).get("html_url")
+
+    stamp = generated.strftime("%Y%m%dT%H%M%S%fZ")
+    archive = f"reports/streamlit_runtime_logs/archive/{stamp}.json"
+    latest = "reports/streamlit_runtime_logs/latest.json"
+    put(archive, "Archive redacted Streamlit startup failure log")
+    current = requests.get(
+        f"https://api.github.com/repos/{owner_repo}/contents/{latest}",
+        headers=headers, timeout=20,
+    )
+    if current.status_code not in (200, 404):
+        raise RuntimeError(f"GitHub latest-log lookup failed (HTTP {current.status_code}).")
+    existing_sha = current.json().get("sha") if current.status_code == 200 else None
+    latest_url = put(latest, "Update latest redacted Streamlit startup failure log", existing_sha)
+    return latest_url, f"https://github.com/{owner_repo}/tree/main/reports/streamlit_runtime_logs/archive"
+
+
+try:
+    from api_football import APIFootballClient, APIFootballError
+    from api_ninjas import APINinjasClient, APINinjasError
+    from highlightly import HighlightlyClient, HighlightlyError
+    from sportmonks import SportmonksClient, SportmonksError
+    from data_layer2 import collect_team_profile
+    from sportmonks_layer2 import collect_sportmonks_team_profile, collect_repository_team_profile, find_upcoming_match_fixture, find_exact_match_fixture, extract_sportmonks_match_details
+    from sportmonks_candidate_verification import verify_highlightly_candidate
+    from provider_core import normalize_team_name
+    from engine import predict_match, WEIGHTS, most_likely_outcome
+    from tvd import run_tvd
+    from provider_config import provider_readiness
+    from livescore_football import LiveScoreFootballClient, LiveScoreFootballError
+    from competition_crosswalk import build_competition_crosswalk
+    from provider_health import assess_api_football_status, assess_livescore_metadata
+    from provider_corroboration import collect_recent_result_corroboration
+    from highlightly_match_enrichment import collect_highlightly_match_enrichment
+    from highlightly_player_enrichment import collect_highlightly_player_enrichment
+    from prediction_evaluation import build_prediction_record, evaluate_prediction_ledger, merge_prediction_records
+    from prediction_storage import load_prediction_ledger, save_prediction_records
+    from prediction_results import verified_final_score, group_completed_fixture_candidates, automatic_result_check_due
+    from prediction_readiness import build_prediction_readiness
+    from player_availability import assess_player_availability
+    from statistics_coverage import build_statistics_coverage, build_counter_attack_source_diagnostics
+    from system_diagnostics import build_system_diagnostics
+    from provider_data_storage import (
+        check_provider_storage_connection,
+        verify_provider_storage_round_trip,
+        build_provider_cache_key,
+        load_provider_snapshot,
+        save_provider_snapshot,
+        record_provider_collection_run,
+    )
+    from football_repository import (
+        ensure_football_repository, repository_table_counts, import_sportmonks_season,
+        get_repository_leagues, get_repository_seasons, get_repository_teams,
+        get_repository_fixtures, get_repository_team_history, diagnose_repository_fixture_history,
+        audit_all_repository_team_histories, audit_repository_fixture_statistics,
+    )
+except Exception:
+    safe_trace = _redact_runtime_trace(traceback.format_exc())
+    st.set_page_config(page_title="Football Prediction Lab — Startup error", page_icon="⚠️", layout="wide")
+    st.error("The application could not load. A redacted startup traceback is shown below.")
+    st.code(safe_trace)
+    try:
+        latest_log_url, archive_logs_url = _upload_startup_failure(safe_trace)
+        st.success("The redacted startup log was uploaded to GitHub.")
+        st.markdown(f"[Open latest runtime log]({latest_log_url})")
+        st.markdown(f"[Browse archived runtime logs]({archive_logs_url})")
+    except Exception as upload_error:
+        st.warning(f"Automatic GitHub log upload failed: {upload_error}")
+    st.stop()
 
 st.set_page_config(page_title="Football Prediction Lab", page_icon="⚽", layout="wide")
 st.title("⚽ Football Prediction Lab")
