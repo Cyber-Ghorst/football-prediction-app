@@ -1,7 +1,7 @@
 {
   "report_name": "streamlit_runtime_logs",
-  "generated_at_utc": "2026-11-09T04:20:46.096694+00:00",
+  "generated_at_utc": "2026-11-09T11:23:53.765450+00:00",
   "event": "streamlit_application_error",
-  "traceback": "Traceback (most recent call last):\n  File \"/mount/src/football-prediction-app/app.py\", line 112, in <module>\n    from football_repository import (\n    ...<6 lines>...\n    )\nImportError: cannot import name 'get_completed_scored_fixtures_missing_statistics' from 'football_repository' (/mount/src/football-prediction-app/football_repository.py)\n",
+  "traceback": "Traceback (most recent call last):\n  File \"/mount/src/football-prediction-app/app.py\", line 86, in <module>\n    from sportmonks_layer2 import collect_sportmonks_team_profile, collect_repository_team_profiles, load_repository_season_snapshot, find_upcoming_match_fixture, find_exact_match_fixture, extract_sportmonks_match_details\n  File \"/mount/src/football-prediction-app/sportmonks_layer2.py\", line 261\n    matches: list[dict[str, Any]] =\n                                   ^\nSyntaxError: invalid syntax\n",
   "sensitive_data_policy": "Secrets and credential patterns are redacted; no prediction ledger or user data is included."
 }
