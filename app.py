@@ -2001,7 +2001,8 @@ with st.expander("Prediction tracking, Opta comparison and backtesting", expande
                     if st.session_state.get("_latest_performance_report_github_archive_url") else ""
                 )
             )
-        st.write(f"Pre-match forecasts: {report['pre_match_predictions']} • Completed and scored: {report['completed_pre_match_predictions']}")        st.subheader("Prediction eligibility audit")
+        st.write(f"Pre-match forecasts: {report['pre_match_predictions']} • Completed and scored: {report['completed_pre_match_predictions']}")
+        st.subheader("Prediction eligibility audit")
         audit = report["eligibility_audit"]
         audit_rows = [
             {"Category": "Total saved records", "Count": audit["records_total"]},
