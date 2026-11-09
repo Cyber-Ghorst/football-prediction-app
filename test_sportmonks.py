@@ -138,6 +138,25 @@ class UpcomingFixtureEnrichmentTests(unittest.TestCase):
         self.assertEqual(len(requested_ids), 30)
         self.assertTrue(all(fixture.get("state") for fixture in fixtures))
 
+    def test_extended_squad_uses_exact_team_endpoint_and_season_stat_filter(self):
+        client = FakeSportmonksClient([], [])
+        with patch.object(client, "_get", return_value={"data": [
+            {"id": 101, "in_squad": True}
+        ]}) as request:
+            rows = client.extended_squad_by_team(
+                11,
+                include="statistics.details",
+                filters="playerstatisticSeasons:2026",
+            )
+        self.assertEqual(rows[0]["id"], 101)
+        request.assert_called_once_with(
+            "squads/teams/11/extended",
+            {
+                "include": "statistics.details",
+                "filters": "playerstatisticSeasons:2026",
+            },
+        )
+
     def test_unrelated_wrong_season_and_wrong_pair_are_not_hydrated(self):
         now_dt = datetime(2026, 11, 7, tzinfo=timezone.utc)
         now = int(now_dt.timestamp())

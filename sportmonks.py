@@ -351,6 +351,12 @@ class SportmonksClient:
     def teams(self, **params: Any) -> list[dict[str, Any]]:
         return self._rows(self._get("teams", params))
 
+    def extended_squad_by_team(
+        self, team_id: int | str, **params: Any
+    ) -> list[dict[str, Any]]:
+        """Fetch current and historical squad entries with the in_squad flag."""
+        return self._rows(self._get(f"squads/teams/{team_id}/extended", params))
+
     def standings(self, **params: Any) -> list[dict[str, Any]]:
         return self._rows(self._get("standings", params))
 

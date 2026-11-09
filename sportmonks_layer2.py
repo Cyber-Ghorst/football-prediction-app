@@ -477,10 +477,13 @@ def extract_sportmonks_match_details(
     home_team_id: int,
     away_team_id: int,
     season_id: int,
+    expected_fixture_id: int | str | None = None,
 ) -> dict[str, Any]:
     """Extract fixture-specific lineups and sidelined reports without inventing availability."""
     if int(fixture.get("season_id", -1)) != int(season_id):
         raise ValueError("Sportmonks match detail season does not match the selected season.")
+    if expected_fixture_id is not None and str(fixture.get("id")) != str(expected_fixture_id):
+        raise ValueError("Sportmonks match detail fixture ID does not match the selected fixture.")
     home, away = _participants(fixture)
     if not home or not away:
         raise ValueError("Sportmonks match detail is missing home/away participants.")
@@ -532,10 +535,13 @@ def extract_sportmonks_match_details(
         sidelined_by_team[participant_id].append({
             "player_id": row.get("player_id") or player.get("id"),
             "player_name": player.get("name") or row.get("player_name"),
+            "team_id": participant_id,
+            "season_id": row.get("season_id") or fixture.get("season_id"),
             "category": sideline.get("category") or row.get("category"),
             "reason": sidelined_type.get("name") if isinstance(sidelined_type, dict) else str(sidelined_type or ""),
             "start_date": sideline.get("start_date") or row.get("start_date"),
             "end_date": sideline.get("end_date") or row.get("end_date"),
+            "completed": row.get("completed") if "completed" in row else sideline.get("completed"),
             "source": "sportmonks",
             "fixture_id": fixture.get("id"),
         })
@@ -557,14 +563,19 @@ def extract_sportmonks_match_details(
             "source": "sportmonks",
             "fixture_id": fixture.get("id"),
         }
+        sidelined_value = fixture.get("sidelined")
+        sidelined_feed_available = isinstance(sidelined_value, list) or (
+            isinstance(sidelined_value, dict) and isinstance(sidelined_value.get("data"), list)
+        )
         availability[side] = {
-            "injury_data_available": bool(sidelined_rows),
-            "reported_unavailable_count": len(sidelined_rows) if sidelined_rows else None,
+            "injury_data_available": sidelined_feed_available,
+            "sidelined_feed_available": sidelined_feed_available,
+            "reported_unavailable_count": len(sidelined_rows) if sidelined_feed_available else None,
             "reported_sidelined": sidelined_rows,
             "player_availability": None,
-            "source": "sportmonks" if sidelined_rows else None,
+            "source": "sportmonks" if sidelined_feed_available else None,
             "fixture_id": fixture.get("id"),
-            "note": "Provider-reported sidelined records are shown as reported; no availability score is inferred.",
+            "note": "Sidelined records are provider evidence; the availability score also requires a complete season squad and player-minute importance data.",
         }
     return {
         "fixture_id": fixture.get("id"),
