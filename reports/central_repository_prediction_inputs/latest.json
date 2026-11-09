@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-09T15:18:53.444852+00:00",
+  "generated_at": "2026-11-09T15:24:31.981086+00:00",
   "season_id": 28083,
   "home_team": "AFC Bournemouth",
   "away_team": "Nottingham Forest",
@@ -19,6 +19,6 @@
   },
   "prediction_engine_modified": false,
   "neon_prediction_ledger_modified": false,
-  "generated_at_utc": "2026-11-09T15:18:59.076010+00:00",
+  "generated_at_utc": "2026-11-09T15:24:38.472111+00:00",
   "report_name": "central_repository_prediction_inputs"
 }
