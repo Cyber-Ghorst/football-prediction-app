@@ -9,6 +9,7 @@ from typing import Any
 
 from form_analyzer import analyze_form, venue_rating
 from tactical_indicators import analyze_tactics
+from tactical_evidence import build_league_reference_statistics, build_tactical_evidence_profile
 
 
 _COMPLETED = {"finished", "ft", "aet", "penalties", "after extra time", "after penalties"}
@@ -35,6 +36,14 @@ _STAT_ALIASES = {
     "shots blocked": "Blocked Shots",
     "corners": "Corner Kicks",
     "corner kicks": "Corner Kicks",
+    "accurate crosses": "Accurate Crosses",
+    "successful dribbles": "Successful Dribbles",
+    "successful headers": "Successful Headers",
+    "key passes": "Key Passes",
+    "shots insidebox": "Shots Insidebox",
+    "shots inside box": "Shots Insidebox",
+    "counter attacks": "Counter Attacks",
+    "counter-attacks": "Counter Attacks",
 }
 _PERCENTAGE_STATS = {"Ball Possession", "Passes %"}
 
@@ -316,6 +325,7 @@ def collect_sportmonks_team_profile(
             "goals_against": away_goals if is_home else home_goals,
             "opponent_strength": strength_map.get(opponent_id),
             "statistics": _team_statistics(fixture, team_id),
+            "opponent_statistics": _team_statistics(fixture, opponent_id),
             "statistics_provenance": _team_statistics_provenance(fixture, team_id),
             "statistics_raw_diagnostics": _team_statistics_raw_diagnostics(fixture, team_id),
         })
@@ -324,6 +334,23 @@ def collect_sportmonks_team_profile(
     recent = matches[:10]
     form = analyze_form(recent)
     tactics = analyze_tactics(recent)
+    league_team_match_statistics = []
+    for reference_fixture in fixtures:
+        reference_home, reference_away = _participants(reference_fixture)
+        for participant in (reference_home, reference_away):
+            if not participant or participant.get("id") is None:
+                continue
+            try:
+                participant_id = int(participant["id"])
+            except (TypeError, ValueError):
+                continue
+            participant_statistics = _team_statistics(reference_fixture, participant_id)
+            if participant_statistics:
+                league_team_match_statistics.append(participant_statistics)
+    league_reference = build_league_reference_statistics(league_team_match_statistics)
+    tactical_evidence = build_tactical_evidence_profile(
+        recent, league_reference, team.get("name") or f"Team {team_id}"
+    )
     return {
         "id": team_id,
         "name": team.get("name") or f"Team {team_id}",
@@ -339,6 +366,7 @@ def collect_sportmonks_team_profile(
         "tactical_compatibility": None,
         "form_summary": form,
         "tactical_summary": tactics,
+        "tactical_evidence": tactical_evidence,
         "availability": {
             "injury_data_available": False,
             "reported_injuries": None,
