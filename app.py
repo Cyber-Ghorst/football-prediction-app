@@ -2039,7 +2039,7 @@ try:
                                             f"unmatched candidates: {history_check.get('highlightly_results_not_found_in_sportmonks', 0)}."
                                         )
                                         if history_check.get("unmatched_completed_candidates"):
-                                            st.warning("Highlightly reported completed result(s) not found among Sportmonks' completed, score-valid fixtures. Review the candidates below; none has been added automatically.")
+                                            st.info("Highlightly returned result(s) that did not match the initial Sportmonks history join. The targeted checks below verify exact fixture identity and score; unverified records remain excluded from model history.")
                                         st.json(history_check)
                                     else:
                                         st.info("No independent Highlightly history report was available for this team.")
