@@ -9,6 +9,7 @@ from typing import Any
 # Shots on Goal and Shots on Target are aliases for one model input, not two metrics.
 TACTICAL_EVIDENCE_STATISTICS = (
     "Counter Attacks",
+    "Big Chances Created",
     "Successful Headers",
     "Accurate Crosses",
     "Successful Dribbles",
