@@ -985,7 +985,7 @@ try:
                 elif not opta_source_url.strip():
                     st.warning("Add the Opta Analyst source URL so this benchmark can be audited.")
     # TVD inputs are collected before the action button so Streamlit reruns retain them.
-    use_tvd = st.checkbox("Use manually evidenced TVD ratings for this matchup", value=False)
+    use_tvd = st.checkbox("Use manually evidenced TVD ratings instead of automatic statistical TVD", value=False)
     tvd_profiles = None
     if use_tvd:
         st.info("Enter evidence-backed scores only. Blank fields remain unknown and are excluded.")
@@ -1486,6 +1486,7 @@ try:
                     "data_quality": profile.get("data_quality"),
                     "history_collection_diagnostics": profile.get("history_collection_diagnostics"),
                     "player_availability_assessment": profile.get("player_availability_assessment"),
+                    "tactical_evidence": profile.get("tactical_evidence"),
                 }
                 for profile in (home, away)
             },
@@ -1619,13 +1620,82 @@ try:
             st.stop()
         st.subheader("Recent form and data coverage")
         st.json({home_name:home["form_summary"], away_name:away["form_summary"]})
-        tvd_result = run_tvd(tvd_profiles[0],tvd_profiles[1]) if tvd_profiles else None
+        selected_tvd_profiles = tvd_profiles
+        automatic_tvd = False
+        if selected_tvd_profiles is None:
+            home_evidence = home.get("tactical_evidence")
+            away_evidence = away.get("tactical_evidence")
+            if home_evidence and away_evidence:
+                selected_tvd_profiles = (home_evidence, away_evidence)
+                automatic_tvd = True
+        tvd_result = (
+            run_tvd(
+                selected_tvd_profiles[0],
+                selected_tvd_profiles[1],
+                automatic=automatic_tvd,
+            )
+            if selected_tvd_profiles else None
+        )
         overrides = {}
+        minimum_automatic_tvd_coverage = 70.0
         if tvd_result:
-            home_score=tvd_result["team_a_attacks_b"]["compatibility_score"]
-            away_score=tvd_result["team_b_attacks_a"]["compatibility_score"]
-            if home_score is not None: overrides["home"]=home_score
-            if away_score is not None: overrides["away"]=away_score
+            home_direction = tvd_result["team_a_attacks_b"]
+            away_direction = tvd_result["team_b_attacks_a"]
+            home_score = home_direction["compatibility_score"]
+            away_score = away_direction["compatibility_score"]
+            if not automatic_tvd or (
+                home_score is not None
+                and home_direction["data_coverage"] >= minimum_automatic_tvd_coverage
+            ):
+                if home_score is not None:
+                    overrides["home"] = home_score
+            if not automatic_tvd or (
+                away_score is not None
+                and away_direction["data_coverage"] >= minimum_automatic_tvd_coverage
+            ):
+                if away_score is not None:
+                    overrides["away"] = away_score
+
+        tactical_matchup_report = {
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "competition": selected_league,
+            "season": int(season),
+            "home_team": home_name,
+            "away_team": away_name,
+            "analysis_mode": (
+                "automatic_statistical_evidence" if automatic_tvd
+                else "manual_evidence" if tvd_result else "unavailable"
+            ),
+            "tvd_result": tvd_result,
+            "model_compatibility_overrides": overrides,
+            "automatic_model_integration_minimum_coverage_pct": minimum_automatic_tvd_coverage,
+            "prediction_engine_modified": False,
+            "neon_prediction_ledger_modified": False,
+            "model_weights": WEIGHTS,
+        }
+        try:
+            tactical_archive = _upload_report_once(
+                "tactical_matchup_evidence", tactical_matchup_report
+            )
+            if tactical_archive:
+                st.caption(
+                    "Tactical matchup evidence archived in GitHub: "
+                    f"[latest]({tactical_archive['latest_url']}) · "
+                    f"[timestamped archive]({tactical_archive['archive_url']})"
+                )
+        except Exception as report_error:
+            st.warning(
+                "Tactical matchup report could not be uploaded to GitHub: "
+                f"{type(report_error).__name__}. Check GITHUB_REPORT_TOKEN."
+            )
+        if automatic_tvd and tvd_result:
+            st.caption(
+                "Automatic TVD uses league-season empirical percentiles from observed "
+                "team and opponent statistics. A direction enters the model only at "
+                f"{minimum_automatic_tvd_coverage:.0f}% evidence coverage or higher."
+            )
+        elif automatic_tvd and not tvd_result:
+            st.info("Automatic TVD evidence is insufficient for this team pairing; tactical compatibility remains unknown.")
         try:
             result=predict_match(home,away,tactical_compatibility=overrides)
         except ValueError as exc:
