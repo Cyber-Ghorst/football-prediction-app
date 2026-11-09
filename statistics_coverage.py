@@ -7,6 +7,16 @@ from typing import Any
 
 # These are the eight metric inputs currently consumed by tactical_indicators.py.
 # Shots on Goal and Shots on Target are aliases for one model input, not two metrics.
+TACTICAL_EVIDENCE_STATISTICS = (
+    "Counter Attacks",
+    "Successful Headers",
+    "Accurate Crosses",
+    "Successful Dribbles",
+    "Key Passes",
+    "Shots Insidebox",
+)
+
+
 CORE_STATISTICS = (
     ("Ball Possession", "Possession & distribution", ("Ball Possession",)),
     ("Passes %", "Possession & distribution", ("Passes %",)),
@@ -81,5 +91,20 @@ def build_statistics_coverage(matches: list[dict[str, Any]]) -> dict[str, Any]:
         "unmapped_observations": sum(row["observations"] for row in unmapped_rows),
         "mapping_visibility": "available" if raw_rows_seen else "not supplied by this data path",
         "metrics": metric_rows,
+        "tactical_evidence_metrics": [
+            {
+                "statistic": name,
+                "team_output_fixtures": sum(
+                    (match.get("statistics") or {}).get(name) is not None
+                    for match in recent
+                ),
+                "opponent_output_fixtures": sum(
+                    (match.get("opponent_statistics") or {}).get(name) is not None
+                    for match in recent
+                ),
+                "fixtures_checked": total_matches,
+            }
+            for name in TACTICAL_EVIDENCE_STATISTICS
+        ],
         "unmapped_statistics": unmapped_rows,
     }
