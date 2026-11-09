@@ -1,7 +1,106 @@
 {
   "season": 2026,
   "competition": "Premier League — England",
-  "selected_fixture": null,
+  "selected_fixture": {
+    "id": 19722097,
+    "sport_id": 1,
+    "league_id": 8,
+    "season_id": 28083,
+    "stage_id": 77482558,
+    "group_id": null,
+    "aggregate_id": null,
+    "round_id": 407864,
+    "state_id": 1,
+    "venue_id": 230,
+    "name": "Liverpool vs Manchester United",
+    "starting_at": "2026-11-22 16:30:00",
+    "result_info": null,
+    "leg": "1/1",
+    "details": null,
+    "length": 90,
+    "placeholder": false,
+    "has_odds": true,
+    "has_premium_odds": true,
+    "starting_at_timestamp": 1795365000,
+    "participants": [
+      {
+        "id": 14,
+        "sport_id": 1,
+        "country_id": 462,
+        "venue_id": 206,
+        "gender": "male",
+        "name": "Manchester United",
+        "short_code": "MUN",
+        "image_path": "https://cdn.sportmonks.com/images/soccer/teams/14/14.png",
+        "founded": 1878,
+        "type": "domestic",
+        "placeholder": false,
+        "last_played_at": "2026-11-08 16:30:00",
+        "meta": {
+          "location": "away",
+          "winner": null,
+          "position": null
+        }
+      },
+      {
+        "id": 8,
+        "sport_id": 1,
+        "country_id": 462,
+        "venue_id": 230,
+        "gender": "male",
+        "name": "Liverpool",
+        "short_code": "LIV",
+        "image_path": "https://cdn.sportmonks.com/images/soccer/teams/8/8.png",
+        "founded": 1892,
+        "type": "domestic",
+        "placeholder": false,
+        "last_played_at": "2026-11-08 14:00:00",
+        "meta": {
+          "location": "home",
+          "winner": null,
+          "position": null
+        }
+      }
+    ],
+    "scores": [],
+    "state": {
+      "id": 1,
+      "state": "NS",
+      "name": "Not Started",
+      "short_name": "NS",
+      "developer_name": "NS"
+    },
+    "league": {
+      "id": 8,
+      "sport_id": 1,
+      "country_id": 462,
+      "name": "Premier League",
+      "active": true,
+      "short_code": "UK PL",
+      "image_path": "https://cdn.sportmonks.com/images/soccer/leagues/8/8.png",
+      "type": "league",
+      "sub_type": "domestic",
+      "last_played_at": "2026-11-08 16:30:00",
+      "category": 1,
+      "has_jerseys": false
+    },
+    "season": {
+      "id": 28083,
+      "sport_id": 1,
+      "league_id": 8,
+      "tie_breaker_rule_id": 1526,
+      "name": "2026/2027",
+      "finished": false,
+      "pending": false,
+      "is_current": true,
+      "starting_at": "2026-08-21",
+      "ending_at": "2027-05-30",
+      "standings_recalculated_at": "2026-11-09 01:37:27",
+      "games_in_current_week": false
+    },
+    "statistics": [],
+    "fixture_details_fetched_at": "2026-11-09T10:45:25.428162+00:00"
+  },
   "teams": {
     "Liverpool": {
       "data_quality": {
@@ -40,7 +139,7 @@
         "status": "unknown",
         "reason": "The provider has not confirmed a complete squad roster.",
         "source": null,
-        "fixture_id": null,
+        "fixture_id": 19722097,
         "players_assessed": 0
       },
       "tactical_evidence": {
@@ -539,7 +638,7 @@
         "note": "This audits the statistic rows archived by the collector. Zero matching rows means no Counter Attacks row was present in the archived sample; it does not establish whether the provider omitted it upstream or whether an earlier collection step failed to retain it."
       }
     },
-    "Arsenal": {
+    "Manchester United": {
       "data_quality": {
         "provider": "sportmonks",
         "season_id": 28083,
@@ -547,9 +646,9 @@
         "goals_complete": true,
         "opponent_strength_matches": 10,
         "statistics_matches": 10,
-        "statistics_observations": 159,
+        "statistics_observations": 158,
         "statistics_raw_observations": 428,
-        "statistics_unmapped_observations": 269,
+        "statistics_unmapped_observations": 270,
         "fixtures_scanned": 380,
         "history_source": "cockroachdb_central_repository",
         "repository_fixture_rows": 380,
@@ -576,11 +675,11 @@
         "status": "unknown",
         "reason": "The provider has not confirmed a complete squad roster.",
         "source": null,
-        "fixture_id": null,
+        "fixture_id": 19722097,
         "players_assessed": 0
       },
       "tactical_evidence": {
-        "name": "Arsenal",
+        "name": "Manchester United",
         "weapons": {
           "counterattack_threat": null,
           "high_quality_chance_creation": {
@@ -594,7 +693,7 @@
                   "statistic": "Big Chances Created",
                   "score": 56.2,
                   "coverage_pct": 100.0,
-                  "average_value": 2.4,
+                  "average_value": 2.76,
                   "observations": 10,
                   "reference_observations": 194,
                   "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
@@ -608,18 +707,18 @@
             }
           },
           "aerial_threat": {
-            "score": 59.3,
-            "confidence": 90.0,
+            "score": 33.3,
+            "confidence": 80.0,
             "evidence": {
               "source": "Sportmonks fixture team statistics",
               "direction": "team output",
               "components": [
                 {
                   "statistic": "Successful Headers",
-                  "score": 59.3,
-                  "coverage_pct": 90.0,
-                  "average_value": 15.62,
-                  "observations": 9,
+                  "score": 33.3,
+                  "coverage_pct": 80.0,
+                  "average_value": 12.75,
+                  "observations": 8,
                   "reference_observations": 162,
                   "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
                 }
@@ -632,7 +731,7 @@
             }
           },
           "wing_threat": {
-            "score": 45.2,
+            "score": 58.8,
             "confidence": 100.0,
             "evidence": {
               "source": "Sportmonks fixture team statistics",
@@ -642,16 +741,16 @@
                   "statistic": "Accurate Crosses",
                   "score": 56.0,
                   "coverage_pct": 100.0,
-                  "average_value": 4.72,
+                  "average_value": 4.52,
                   "observations": 10,
                   "reference_observations": 200,
                   "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
                 },
                 {
                   "statistic": "Successful Dribbles",
-                  "score": 34.5,
+                  "score": 61.5,
                   "coverage_pct": 100.0,
-                  "average_value": 5.92,
+                  "average_value": 7.2,
                   "observations": 10,
                   "reference_observations": 200,
                   "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
@@ -665,7 +764,7 @@
             }
           },
           "between_lines_threat": {
-            "score": 65.0,
+            "score": 75.8,
             "confidence": 100.0,
             "evidence": {
               "source": "Sportmonks fixture team statistics",
@@ -673,18 +772,18 @@
               "components": [
                 {
                   "statistic": "Key Passes",
-                  "score": 69.5,
+                  "score": 82.2,
                   "coverage_pct": 100.0,
-                  "average_value": 11.88,
+                  "average_value": 14.0,
                   "observations": 10,
                   "reference_observations": 200,
                   "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
                 },
                 {
                   "statistic": "Shots Insidebox",
-                  "score": 60.5,
+                  "score": 69.5,
                   "coverage_pct": 100.0,
-                  "average_value": 9.32,
+                  "average_value": 10.2,
                   "observations": 10,
                   "reference_observations": 200,
                   "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
@@ -701,7 +800,7 @@
         "vulnerabilities": {
           "transition_recovery": null,
           "high_quality_chance_exposure": {
-            "score": 32.5,
+            "score": 71.6,
             "confidence": 100.0,
             "evidence": {
               "source": "Sportmonks fixture team statistics",
@@ -709,9 +808,9 @@
               "components": [
                 {
                   "statistic": "Big Chances Created",
-                  "score": 32.5,
+                  "score": 71.6,
                   "coverage_pct": 100.0,
-                  "average_value": 1.24,
+                  "average_value": 3.56,
                   "observations": 10,
                   "reference_observations": 194,
                   "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
@@ -725,18 +824,18 @@
             }
           },
           "aerial_defence": {
-            "score": 59.3,
-            "confidence": 90.0,
+            "score": 43.2,
+            "confidence": 80.0,
             "evidence": {
               "source": "Sportmonks fixture team statistics",
               "direction": "opponent output conceded by this team",
               "components": [
                 {
                   "statistic": "Successful Headers",
-                  "score": 59.3,
-                  "coverage_pct": 90.0,
-                  "average_value": 15.52,
-                  "observations": 9,
+                  "score": 43.2,
+                  "coverage_pct": 80.0,
+                  "average_value": 13.7,
+                  "observations": 8,
                   "reference_observations": 162,
                   "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
                 }
@@ -749,7 +848,7 @@
             }
           },
           "wide_defending": {
-            "score": 33.0,
+            "score": 52.0,
             "confidence": 100.0,
             "evidence": {
               "source": "Sportmonks fixture team statistics",
@@ -759,16 +858,16 @@
                   "statistic": "Accurate Crosses",
                   "score": 42.5,
                   "coverage_pct": 100.0,
-                  "average_value": 3.52,
+                  "average_value": 3.4,
                   "observations": 10,
                   "reference_observations": 200,
                   "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
                 },
                 {
                   "statistic": "Successful Dribbles",
-                  "score": 23.5,
+                  "score": 61.5,
                   "coverage_pct": 100.0,
-                  "average_value": 4.24,
+                  "average_value": 7.48,
                   "observations": 10,
                   "reference_observations": 200,
                   "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
@@ -782,7 +881,7 @@
             }
           },
           "central_penetration": {
-            "score": 28.8,
+            "score": 55.8,
             "confidence": 100.0,
             "evidence": {
               "source": "Sportmonks fixture team statistics",
@@ -790,18 +889,18 @@
               "components": [
                 {
                   "statistic": "Key Passes",
-                  "score": 28.0,
+                  "score": 51.0,
                   "coverage_pct": 100.0,
-                  "average_value": 7.92,
+                  "average_value": 9.24,
                   "observations": 10,
                   "reference_observations": 200,
                   "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
                 },
                 {
                   "statistic": "Shots Insidebox",
-                  "score": 29.5,
+                  "score": 60.5,
                   "coverage_pct": 100.0,
-                  "average_value": 7.0,
+                  "average_value": 9.04,
                   "observations": 10,
                   "reference_observations": 200,
                   "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
@@ -923,7 +1022,7 @@
           {
             "statistic_type_id": 47,
             "statistic_name_raw": "Penalties",
-            "observations": 1
+            "observations": 3
           },
           {
             "statistic_type_id": 49,
@@ -1003,12 +1102,12 @@
           {
             "statistic_type_id": 64,
             "statistic_name_raw": "Hit Woodwork",
-            "observations": 8
+            "observations": 7
           },
           {
             "statistic_type_id": 65,
             "statistic_name_raw": "Successful Headers",
-            "observations": 9
+            "observations": 8
           },
           {
             "statistic_type_id": 78,
@@ -1038,7 +1137,7 @@
           {
             "statistic_type_id": 83,
             "statistic_name_raw": "Redcards",
-            "observations": 1
+            "observations": 3
           },
           {
             "statistic_type_id": 84,
@@ -1058,7 +1157,7 @@
           {
             "statistic_type_id": 87,
             "statistic_name_raw": "Injuries",
-            "observations": 9
+            "observations": 7
           },
           {
             "statistic_type_id": 98,
@@ -1356,13 +1455,13 @@
         }
       ]
     },
-    "Arsenal": {
+    "Manchester United": {
       "fixtures_checked": 10,
       "core_metrics_with_any_data": 8,
       "core_metrics_complete": 8,
       "core_metrics_total": 8,
       "raw_observations_seen": 428,
-      "unmapped_observations": 269,
+      "unmapped_observations": 270,
       "mapping_visibility": "available",
       "metrics": [
         {
@@ -1453,8 +1552,8 @@
         },
         {
           "statistic": "Successful Headers",
-          "team_output_fixtures": 9,
-          "opponent_output_fixtures": 9,
+          "team_output_fixtures": 8,
+          "opponent_output_fixtures": 8,
           "fixtures_checked": 10
         },
         {
@@ -1609,24 +1708,24 @@
           "fixtures_seen": 9
         },
         {
-          "provider_statistic": "Injuries",
-          "observations": 9,
-          "fixtures_seen": 9
+          "provider_statistic": "Hit Woodwork",
+          "observations": 7,
+          "fixtures_seen": 7
         },
         {
-          "provider_statistic": "Hit Woodwork",
-          "observations": 8,
-          "fixtures_seen": 8
+          "provider_statistic": "Injuries",
+          "observations": 7,
+          "fixtures_seen": 7
         },
         {
           "provider_statistic": "Penalties",
-          "observations": 1,
-          "fixtures_seen": 1
+          "observations": 3,
+          "fixtures_seen": 3
         },
         {
           "provider_statistic": "Redcards",
-          "observations": 1,
-          "fixtures_seen": 1
+          "observations": 3,
+          "fixtures_seen": 3
         },
         {
           "provider_statistic": "Yellowred Cards",
@@ -1637,7 +1736,7 @@
     }
   },
   "prediction_readiness": {
-    "overall_status": "fixture_unverified",
+    "overall_status": "ready",
     "prediction_minimum_history_met": true,
     "ten_match_history_target_met": true,
     "history_policy": {
@@ -1648,17 +1747,17 @@
     },
     "prediction_allowed_by_history": true,
     "fixture": {
-      "verified": false,
-      "status": "past_fixture",
-      "reason": "The exact home/away pairing exists in the selected season, but its kickoff has already passed. Select a future fixture; this past match cannot verify an upcoming prediction.",
-      "fixture_id": 19722117,
-      "kickoff_utc": "2026-11-01T16:30:00+00:00",
+      "verified": true,
+      "status": "verified",
+      "reason": "Exact competition-season fixture identity and future kickoff verified.",
+      "fixture_id": 19722097,
+      "kickoff_utc": "2026-11-22T16:30:00+00:00",
       "source_updated_at": null,
-      "source_fetched_at": null,
-      "source_age_seconds": null,
-      "source_age_minutes": null,
-      "source_freshness": "unknown",
-      "freshness_note": "No successful detailed-fixture retrieval timestamp is attached to this past fixture."
+      "source_fetched_at": "2026-11-09T10:45:25.428162+00:00",
+      "source_age_seconds": 27.4,
+      "source_age_minutes": 0.5,
+      "source_freshness": "fresh",
+      "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
     },
     "teams": {
       "home": {
@@ -1679,7 +1778,7 @@
         "confirmed_lineup_evidence": "unknown"
       },
       "away": {
-        "team": "Arsenal",
+        "team": "Manchester United",
         "completed_matches_available": 10,
         "history_minimum": 5,
         "history_target": 10,
@@ -1702,8 +1801,8 @@
   "player_enrichment": null,
   "system_diagnostics": {
     "diagnostic_version": 1,
-    "generated_at": "2026-11-09T10:41:27.983769+00:00",
-    "overall_status": "attention_required",
+    "generated_at": "2026-11-09T10:45:52.824451+00:00",
+    "overall_status": "healthy",
     "selected_context": {
       "season_start_year": 2026,
       "competition": "Premier League — England",
@@ -1711,10 +1810,10 @@
     },
     "summary": {
       "checks_total": 14,
-      "passed": 10,
-      "warnings": 2,
+      "passed": 13,
+      "warnings": 0,
       "failed": 0,
-      "informational": 2
+      "informational": 1
     },
     "checks": [
       {
@@ -1725,15 +1824,15 @@
       },
       {
         "id": "fixture_identity",
-        "status": "warning",
-        "summary": "The exact home/away pairing exists in the selected season, but its kickoff has already passed. Select a future fixture; this past match cannot verify an upcoming prediction.",
-        "recommendation": "Refresh the selected competition schedule and confirm the exact home/away pairing. Do not substitute another fixture."
+        "status": "pass",
+        "summary": "The selected upcoming fixture passed exact season, home/away team and scheduled-kickoff checks.",
+        "recommendation": null
       },
       {
         "id": "fixture_freshness",
-        "status": "info",
-        "summary": "Fixture retrieval freshness is unknown because a valid retrieval timestamp is unavailable.",
-        "recommendation": "A successful detailed-fixture retrieval is needed before age can be measured."
+        "status": "pass",
+        "summary": "Detailed fixture retrieval is less than 24 hours old.",
+        "recommendation": null
       },
       {
         "id": "home_history_depth",
@@ -1762,25 +1861,25 @@
       {
         "id": "away_history_depth",
         "status": "pass",
-        "summary": "Arsenal: 10 completed score-valid matches available (minimum 5 met; preferred target 10 met).",
+        "summary": "Manchester United: 10 completed score-valid matches available (minimum 5 met; preferred target 10 met).",
         "recommendation": null
       },
       {
         "id": "away_tactical_recency_weighting",
         "status": "pass",
-        "summary": "Arsenal: tactical recency metadata reports latest-five 60% / previous-five 40% over 10 match(es).",
+        "summary": "Manchester United: tactical recency metadata reports latest-five 60% / previous-five 40% over 10 match(es).",
         "recommendation": null
       },
       {
         "id": "away_history_integrity",
         "status": "pass",
-        "summary": "Arsenal: no duplicate fixture IDs or invalid/missing score fields were found in the collected sample.",
+        "summary": "Manchester United: no duplicate fixture IDs or invalid/missing score fields were found in the collected sample.",
         "recommendation": null
       },
       {
         "id": "away_statistics_coverage",
         "status": "pass",
-        "summary": "Arsenal: all 8 core tactical statistics have at least one usable observation.",
+        "summary": "Manchester United: all 8 core tactical statistics have at least one usable observation.",
         "recommendation": null
       },
       {
@@ -1797,25 +1896,12 @@
       },
       {
         "id": "prediction_readiness",
-        "status": "warning",
-        "summary": "Prediction readiness status: fixture_unverified. Five completed, score-valid matches per team meet the history minimum; ten is preferred.",
-        "recommendation": "Review fixture verification and history depth before relying on the forecast."
+        "status": "pass",
+        "summary": "Prediction readiness status: ready. Five completed, score-valid matches per team meet the history minimum; ten is preferred.",
+        "recommendation": null
       }
     ],
-    "recommended_actions": [
-      {
-        "priority": "next",
-        "check_id": "fixture_identity",
-        "issue": "The exact home/away pairing exists in the selected season, but its kickoff has already passed. Select a future fixture; this past match cannot verify an upcoming prediction.",
-        "action": "Refresh the selected competition schedule and confirm the exact home/away pairing. Do not substitute another fixture."
-      },
-      {
-        "priority": "next",
-        "check_id": "prediction_readiness",
-        "issue": "Prediction readiness status: fixture_unverified. Five completed, score-valid matches per team meet the history minimum; ten is preferred.",
-        "action": "Review fixture verification and history depth before relying on the forecast."
-      }
-    ],
+    "recommended_actions": [],
     "providers": {
       "sportmonks": {
         "provider": "Sportmonks Football API v3",
@@ -1864,17 +1950,17 @@
       }
     },
     "fixture": {
-      "verified": false,
-      "status": "past_fixture",
-      "reason": "The exact home/away pairing exists in the selected season, but its kickoff has already passed. Select a future fixture; this past match cannot verify an upcoming prediction.",
-      "fixture_id": 19722117,
-      "kickoff_utc": "2026-11-01T16:30:00+00:00",
+      "verified": true,
+      "status": "verified",
+      "reason": "Exact competition-season fixture identity and future kickoff verified.",
+      "fixture_id": 19722097,
+      "kickoff_utc": "2026-11-22T16:30:00+00:00",
       "source_updated_at": null,
-      "source_fetched_at": null,
-      "source_age_seconds": null,
-      "source_age_minutes": null,
-      "source_freshness": "unknown",
-      "freshness_note": "No successful detailed-fixture retrieval timestamp is attached to this past fixture."
+      "source_fetched_at": "2026-11-09T10:45:25.428162+00:00",
+      "source_age_seconds": 27.4,
+      "source_age_minutes": 0.5,
+      "source_freshness": "fresh",
+      "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
     },
     "teams": {
       "home": {
@@ -2215,7 +2301,7 @@
         }
       },
       "away": {
-        "team": "Arsenal",
+        "team": "Manchester United",
         "completed_matches_available": 10,
         "history_minimum": 5,
         "history_target": 10,
@@ -2239,7 +2325,7 @@
           "core_metrics_complete": 8,
           "core_metrics_total": 8,
           "raw_observations_seen": 428,
-          "unmapped_observations": 269,
+          "unmapped_observations": 270,
           "mapping_visibility": "available",
           "metrics": [
             {
@@ -2330,8 +2416,8 @@
             },
             {
               "statistic": "Successful Headers",
-              "team_output_fixtures": 9,
-              "opponent_output_fixtures": 9,
+              "team_output_fixtures": 8,
+              "opponent_output_fixtures": 8,
               "fixtures_checked": 10
             },
             {
@@ -2486,24 +2572,24 @@
               "fixtures_seen": 9
             },
             {
-              "provider_statistic": "Injuries",
-              "observations": 9,
-              "fixtures_seen": 9
+              "provider_statistic": "Hit Woodwork",
+              "observations": 7,
+              "fixtures_seen": 7
             },
             {
-              "provider_statistic": "Hit Woodwork",
-              "observations": 8,
-              "fixtures_seen": 8
+              "provider_statistic": "Injuries",
+              "observations": 7,
+              "fixtures_seen": 7
             },
             {
               "provider_statistic": "Penalties",
-              "observations": 1,
-              "fixtures_seen": 1
+              "observations": 3,
+              "fixtures_seen": 3
             },
             {
               "provider_statistic": "Redcards",
-              "observations": 1,
-              "fixtures_seen": 1
+              "observations": 3,
+              "fixtures_seen": 3
             },
             {
               "provider_statistic": "Yellowred Cards",
@@ -2513,19 +2599,19 @@
           ]
         },
         "tactical_summary": {
-          "playing_style": 73.1,
-          "attacking_approach": 53.06666666666666,
-          "defensive_structure": 35.733333333333334,
+          "playing_style": 64.3,
+          "attacking_approach": 66.23333333333333,
+          "defensive_structure": 65.86666666666666,
           "coverage_metrics": 8,
           "available_metrics": {
-            "average_possession": 59.9,
-            "average_pass_accuracy": 85.0,
-            "average_shots": 14.0,
-            "average_shots_on_target": 4.8,
-            "average_tackles": 12.8,
-            "average_interceptions": 6.6,
-            "average_blocked_shots": 4.8,
-            "average_corners": 5.7
+            "average_possession": 54.0,
+            "average_pass_accuracy": 84.0,
+            "average_shots": 18.6,
+            "average_shots_on_target": 5.4,
+            "average_tackles": 18.8,
+            "average_interceptions": 12.7,
+            "average_blocked_shots": 6.3,
+            "average_corners": 6.1
           },
           "recency_weighting": {
             "matches_used": 10,
@@ -2554,7 +2640,7 @@
     },
     "corroboration": {},
     "prediction_readiness": {
-      "overall_status": "fixture_unverified",
+      "overall_status": "ready",
       "prediction_minimum_history_met": true,
       "ten_match_history_target_met": true,
       "history_policy": {
@@ -2565,17 +2651,17 @@
       },
       "prediction_allowed_by_history": true,
       "fixture": {
-        "verified": false,
-        "status": "past_fixture",
-        "reason": "The exact home/away pairing exists in the selected season, but its kickoff has already passed. Select a future fixture; this past match cannot verify an upcoming prediction.",
-        "fixture_id": 19722117,
-        "kickoff_utc": "2026-11-01T16:30:00+00:00",
+        "verified": true,
+        "status": "verified",
+        "reason": "Exact competition-season fixture identity and future kickoff verified.",
+        "fixture_id": 19722097,
+        "kickoff_utc": "2026-11-22T16:30:00+00:00",
         "source_updated_at": null,
-        "source_fetched_at": null,
-        "source_age_seconds": null,
-        "source_age_minutes": null,
-        "source_freshness": "unknown",
-        "freshness_note": "No successful detailed-fixture retrieval timestamp is attached to this past fixture."
+        "source_fetched_at": "2026-11-09T10:45:25.428162+00:00",
+        "source_age_seconds": 27.4,
+        "source_age_minutes": 0.5,
+        "source_freshness": "fresh",
+        "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
       },
       "teams": {
         "home": {
@@ -2596,7 +2682,7 @@
           "confirmed_lineup_evidence": "unknown"
         },
         "away": {
-          "team": "Arsenal",
+          "team": "Manchester United",
           "completed_matches_available": 10,
           "history_minimum": 5,
           "history_target": 10,
@@ -2629,6 +2715,6 @@
       "model_impact": "Diagnostics only; weights, recency weighting, prediction inputs and missing-data rules are not changed."
     }
   },
-  "generated_at_utc": "2026-11-09T10:41:27.985569+00:00",
+  "generated_at_utc": "2026-11-09T10:45:52.826893+00:00",
   "report_name": "data_collection_evidence"
 }
