@@ -55,7 +55,7 @@ jobs:
               raise SystemExit("Rejected unsupported or missing operation")
 
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
-              output.write(f"operation={operation}\\n")
+              output.write(f"operation={operation}\n")
           print(f"Accepted operation: {operation}")
 
       - name: Check Streamlit deployment
