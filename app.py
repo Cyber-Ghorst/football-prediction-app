@@ -440,21 +440,31 @@ def _collect_sportmonks_with_archive(resource_type, request_params, fetcher, ttl
     cache_key = build_provider_cache_key(
         "sportmonks", resource_type, request_params
     )
-    if resource_type == "fixtures":
-        print("[Sportmonks] Fixture collection: starting CockroachDB snapshot lookup.", flush=True)
+    print(
+        f"[Sportmonks] {resource_type}: starting CockroachDB snapshot lookup.",
+        flush=True,
+    )
     archive_read_started = time.monotonic()
     try:
         cached = load_provider_snapshot(PROVIDER_DATABASE_URL, cache_key)
-        if resource_type == "fixtures":
+        print(
+            f"[Sportmonks] {resource_type}: snapshot lookup completed in "
+            f"{time.monotonic() - archive_read_started:.2f}s; "
+            f"fresh_snapshot={'yes' if cached else 'no'}.",
+            flush=True,
+        )
+        if cached:
             print(
-                f"[Sportmonks] Fixture collection: snapshot lookup completed in "
-                f"{time.monotonic() - archive_read_started:.2f}s; "
-                f"fresh_snapshot={'yes' if cached else 'no'}.",
+                f"[Sportmonks] {resource_type}: serving fresh CockroachDB snapshot.",
                 flush=True,
             )
-        if cached:
             return cached.get("payload")
-    except Exception:
+    except Exception as archive_read_error:
+        print(
+            f"[Sportmonks] {resource_type}: CockroachDB snapshot lookup failed "
+            f"({type(archive_read_error).__name__}); falling back to live provider.",
+            flush=True,
+        )
         # The archive is an additional persistence layer; a read failure must
         # not prevent a live provider request from supplying prediction data.
         if not st.session_state.get("_provider_archive_read_warning"):
@@ -464,18 +474,19 @@ def _collect_sportmonks_with_archive(resource_type, request_params, fetcher, ttl
             )
             st.session_state["_provider_archive_read_warning"] = True
 
-    if resource_type == "fixtures":
-        print("[Sportmonks] Fixture collection: starting live provider fetch.", flush=True)
+    print(
+        f"[Sportmonks] {resource_type}: starting live provider fetch.",
+        flush=True,
+    )
     provider_fetch_started = time.monotonic()
     try:
         payload = fetcher()
-        if resource_type == "fixtures":
-            print(
-                f"[Sportmonks] Fixture collection: live provider fetch returned "
-                f"{len(payload) if isinstance(payload, list) else 'non-list'} rows in "
-                f"{time.monotonic() - provider_fetch_started:.2f}s.",
-                flush=True,
-            )
+        print(
+            f"[Sportmonks] {resource_type}: live provider fetch returned "
+            f"{len(payload) if isinstance(payload, list) else 'non-list'} rows "
+            f"in {time.monotonic() - provider_fetch_started:.2f}s.",
+            flush=True,
+        )
     except Exception as exc:
         try:
             record_provider_collection_run(
@@ -512,6 +523,11 @@ def _collect_sportmonks_with_archive(resource_type, request_params, fetcher, ttl
             ttl_seconds=ttl_seconds,
         )
     except Exception as exc:
+        print(
+            f"[Sportmonks] {resource_type}: CockroachDB snapshot archive failed "
+            f"({type(exc).__name__}).",
+            flush=True,
+        )
         try:
             record_provider_collection_run(
                 PROVIDER_DATABASE_URL,
@@ -533,6 +549,10 @@ def _collect_sportmonks_with_archive(resource_type, request_params, fetcher, ttl
             )
             st.session_state["_provider_archive_write_warning"] = True
     else:
+        print(
+            f"[Sportmonks] {resource_type}: CockroachDB snapshot archived successfully.",
+            flush=True,
+        )
         try:
             record_provider_collection_run(
                 PROVIDER_DATABASE_URL,
