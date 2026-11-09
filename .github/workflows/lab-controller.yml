@@ -75,7 +75,7 @@ jobs:
           print(f"Accepted operation: {operation}")
 
       - name: Check Streamlit deployment
-        if: steps.operation.outputs.operation == 'health_check'
+        if: steps.operation.outputs.operation == 'health_check' || steps.operation.outputs.operation == 'full_check'
         env:
           APP_URL: https://football-prediction-app-evzek8cthsuavun8hanejj.streamlit.app/
           HEALTH_URL: https://football-prediction-app-evzek8cthsuavun8hanejj.streamlit.app/_stcore/health
