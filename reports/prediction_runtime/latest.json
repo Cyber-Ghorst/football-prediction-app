@@ -1,19 +1,19 @@
 {
   "report_name": "prediction_runtime",
-  "generated_at_utc": "2026-11-09T15:29:32.052850+00:00",
+  "generated_at_utc": "2026-11-09T15:32:40.757452+00:00",
   "competition": "Premier League — England",
   "season": 2026,
   "stages_seconds": {
-    "standings_collection_seconds": 2.479,
-    "live_fixture_collection_seconds": 17.447,
-    "season_snapshot_and_shared_profile_build_seconds": 5.929,
-    "fixture_detail_enrichment_seconds": 15.029,
-    "optional_provider_corroboration_seconds": 65.038,
-    "data_collection_total_seconds": 95.461,
-    "validation_and_report_archiving_seconds": 5.3,
-    "tactical_analysis_and_prediction_seconds": 2.254,
-    "prediction_ledger_write_seconds": 1.462
+    "standings_collection_seconds": 2.245,
+    "live_fixture_collection_seconds": 16.031,
+    "season_snapshot_and_shared_profile_build_seconds": 5.459,
+    "fixture_detail_enrichment_seconds": 13.729,
+    "optional_provider_corroboration_seconds": 76.47,
+    "data_collection_total_seconds": 104.711,
+    "validation_and_report_archiving_seconds": 7.27,
+    "tactical_analysis_and_prediction_seconds": 2.76,
+    "prediction_ledger_write_seconds": 2.48
   },
-  "elapsed_seconds_before_runtime_report_upload": 104.477,
+  "elapsed_seconds_before_runtime_report_upload": 117.22,
   "note": "Diagnostic timings only. No prediction inputs, model weights, recency rules, TVD calculations or ledger contents are changed."
 }
