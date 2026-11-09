@@ -9,7 +9,7 @@ class PredictionEvaluationTests(unittest.TestCase):
     def _record(self, **overrides):
         args = dict(
             competition="Premier League", country="England", season=2026,
-            home_team="Arsenal", away_team="Chelsea",
+            home_team="Arsenal", away_team="Chelsea", fixture_id="fixture-1", fixture_provider="sportmonks",
             probabilities={"home_win": 60, "draw": 25, "away_win": 15},
             predicted_at="2026-11-07T10:00:00+00:00",
             kickoff_at="2026-11-07T12:00:00+00:00",
