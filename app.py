@@ -432,137 +432,134 @@ def get_standings(_client, league_id, season):
 def get_profile(_client, team, league_id, season, standings, include_stats):
     return collect_team_profile(_client, team, league_id, season, standings, include_stats)
 
+def _record_provider_cache_telemetry(resource_type, outcome, **details):
+    """Store bounded, credential-free provider cache events for GitHub reporting."""
+    try:
+        events = st.session_state.setdefault("_provider_cache_telemetry_events", [])
+        event = {
+            "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+            "provider": "sportmonks",
+            "resource_type": str(resource_type),
+            "outcome": str(outcome),
+        }
+        for key in ("lookup_duration_ms", "live_fetch_duration_ms", "row_count", "archive_status", "error_type"):
+            if details.get(key) is not None:
+                event[key] = details[key]
+        events.append(event)
+        del events[:-100]
+    except Exception:
+        pass
+
+
 def _collect_sportmonks_with_archive(resource_type, request_params, fetcher, ttl_seconds):
     """Read a fresh CockroachDB snapshot or fetch and archive a Sportmonks response."""
     if not PROVIDER_DATABASE_URL:
-        return fetcher()
+        started = time.monotonic()
+        try:
+            payload = fetcher()
+        except Exception as exc:
+            _record_provider_cache_telemetry(resource_type, "provider_fetch_failed",
+                live_fetch_duration_ms=round((time.monotonic() - started) * 1000),
+                archive_status="database_not_configured", error_type=type(exc).__name__)
+            raise
+        _record_provider_cache_telemetry(resource_type, "database_not_configured",
+            live_fetch_duration_ms=round((time.monotonic() - started) * 1000),
+            row_count=len(payload) if isinstance(payload, list) else None,
+            archive_status="skipped")
+        return payload
 
-    cache_key = build_provider_cache_key(
-        "sportmonks", resource_type, request_params
-    )
-    print(
-        f"[Sportmonks] {resource_type}: starting CockroachDB snapshot lookup.",
-        flush=True,
-    )
-    archive_read_started = time.monotonic()
+    cache_key = build_provider_cache_key("sportmonks", resource_type, request_params)
+    print(f"[Sportmonks] {resource_type}: starting CockroachDB snapshot lookup.", flush=True)
+    read_started = time.monotonic()
+    lookup_ms = None
+    cache_outcome = "cache_miss"
     try:
         cached = load_provider_snapshot(PROVIDER_DATABASE_URL, cache_key)
+        lookup_ms = round((time.monotonic() - read_started) * 1000)
         print(
-            f"[Sportmonks] {resource_type}: snapshot lookup completed in "
-            f"{time.monotonic() - archive_read_started:.2f}s; "
-            f"fresh_snapshot={'yes' if cached else 'no'}.",
-            flush=True,
-        )
+            f"[Sportmonks] {resource_type}: snapshot lookup completed in {lookup_ms / 1000:.2f}s; "
+            f"fresh_snapshot={'yes' if cached else 'no'}.", flush=True)
         if cached:
-            print(
-                f"[Sportmonks] {resource_type}: serving fresh CockroachDB snapshot.",
-                flush=True,
-            )
-            return cached.get("payload")
-    except Exception as archive_read_error:
+            payload = cached.get("payload")
+            _record_provider_cache_telemetry(resource_type, "cache_hit",
+                lookup_duration_ms=lookup_ms,
+                row_count=len(payload) if isinstance(payload, list) else None,
+                archive_status="served")
+            print(f"[Sportmonks] {resource_type}: serving fresh CockroachDB snapshot.", flush=True)
+            return payload
+    except Exception as read_error:
+        lookup_ms = round((time.monotonic() - read_started) * 1000)
+        cache_outcome = "cache_read_failed"
+        _record_provider_cache_telemetry(resource_type, cache_outcome,
+            lookup_duration_ms=lookup_ms, archive_status="live_fallback",
+            error_type=type(read_error).__name__)
         print(
             f"[Sportmonks] {resource_type}: CockroachDB snapshot lookup failed "
-            f"({type(archive_read_error).__name__}); falling back to live provider.",
-            flush=True,
-        )
-        # The archive is an additional persistence layer; a read failure must
-        # not prevent a live provider request from supplying prediction data.
+            f"({type(read_error).__name__}); falling back to live provider.", flush=True)
         if not st.session_state.get("_provider_archive_read_warning"):
-            st.warning(
-                "CockroachDB snapshot lookup failed. Live Sportmonks collection "
-                "will continue; check the provider archive diagnostics."
-            )
+            st.warning("CockroachDB snapshot lookup failed. Live Sportmonks collection will continue; check the provider archive diagnostics.")
             st.session_state["_provider_archive_read_warning"] = True
 
-    print(
-        f"[Sportmonks] {resource_type}: starting live provider fetch.",
-        flush=True,
-    )
-    provider_fetch_started = time.monotonic()
+    if cache_outcome == "cache_miss":
+        _record_provider_cache_telemetry(resource_type, "cache_miss",
+            lookup_duration_ms=lookup_ms, archive_status="live_fetch_required")
+    print(f"[Sportmonks] {resource_type}: starting live provider fetch.", flush=True)
+    fetch_started = time.monotonic()
     try:
         payload = fetcher()
+        fetch_ms = round((time.monotonic() - fetch_started) * 1000)
+        row_count = len(payload) if isinstance(payload, list) else None
         print(
             f"[Sportmonks] {resource_type}: live provider fetch returned "
-            f"{len(payload) if isinstance(payload, list) else 'non-list'} rows "
-            f"in {time.monotonic() - provider_fetch_started:.2f}s.",
-            flush=True,
-        )
+            f"{row_count if row_count is not None else 'non-list'} rows in {fetch_ms / 1000:.2f}s.",
+            flush=True)
     except Exception as exc:
+        _record_provider_cache_telemetry(resource_type, "provider_fetch_failed",
+            lookup_duration_ms=lookup_ms,
+            live_fetch_duration_ms=round((time.monotonic() - fetch_started) * 1000),
+            archive_status="not_written", error_type=type(exc).__name__)
         try:
-            record_provider_collection_run(
-                PROVIDER_DATABASE_URL,
-                provider="sportmonks",
-                resource_type=resource_type,
-                cache_key=cache_key,
-                succeeded=False,
-                error_type=type(exc).__name__,
-                error_message=str(exc),
-            )
+            record_provider_collection_run(PROVIDER_DATABASE_URL, provider="sportmonks",
+                resource_type=resource_type, cache_key=cache_key, succeeded=False,
+                error_type=type(exc).__name__, error_message=str(exc))
         except Exception:
             pass
         raise
 
     if isinstance(payload, list):
-        source_ids = [
-            row.get("id") for row in payload
-            if isinstance(row, dict) and row.get("id") is not None
-        ]
+        source_ids = [row.get("id") for row in payload if isinstance(row, dict) and row.get("id") is not None]
     elif isinstance(payload, dict) and payload.get("id") is not None:
         source_ids = [payload.get("id")]
     else:
         source_ids = []
     try:
-        save_provider_snapshot(
-            PROVIDER_DATABASE_URL,
-            provider="sportmonks",
-            resource_type=resource_type,
-            cache_key=cache_key,
-            request_params=request_params,
-            payload=payload,
-            source_ids=source_ids,
-            ttl_seconds=ttl_seconds,
-        )
+        save_provider_snapshot(PROVIDER_DATABASE_URL, provider="sportmonks",
+            resource_type=resource_type, cache_key=cache_key,
+            request_params=request_params, payload=payload,
+            source_ids=source_ids, ttl_seconds=ttl_seconds)
     except Exception as exc:
-        print(
-            f"[Sportmonks] {resource_type}: CockroachDB snapshot archive failed "
-            f"({type(exc).__name__}).",
-            flush=True,
-        )
+        _record_provider_cache_telemetry(resource_type, "archive_write_failed",
+            lookup_duration_ms=lookup_ms, live_fetch_duration_ms=fetch_ms,
+            row_count=row_count, archive_status="failed", error_type=type(exc).__name__)
+        print(f"[Sportmonks] {resource_type}: CockroachDB snapshot archive failed ({type(exc).__name__}).", flush=True)
         try:
-            record_provider_collection_run(
-                PROVIDER_DATABASE_URL,
-                provider="sportmonks",
-                resource_type=resource_type,
-                cache_key=cache_key,
-                succeeded=False,
-                error_type=f"ArchiveWrite:{type(exc).__name__}",
-                error_message=str(exc),
-            )
+            record_provider_collection_run(PROVIDER_DATABASE_URL, provider="sportmonks",
+                resource_type=resource_type, cache_key=cache_key, succeeded=False,
+                error_type=f"ArchiveWrite:{type(exc).__name__}", error_message=str(exc))
         except Exception:
             pass
-        # Keep the live response usable even if archival storage is temporarily
-        # unavailable. Warn once per Streamlit session rather than hiding it.
         if not st.session_state.get("_provider_archive_write_warning"):
-            st.warning(
-                "Sportmonks data was collected, but CockroachDB could not archive "
-                "the response. Prediction processing can continue."
-            )
+            st.warning("Sportmonks data was collected, but CockroachDB could not archive the response. Prediction processing can continue.")
             st.session_state["_provider_archive_write_warning"] = True
     else:
-        print(
-            f"[Sportmonks] {resource_type}: CockroachDB snapshot archived successfully.",
-            flush=True,
-        )
+        _record_provider_cache_telemetry(resource_type, "cache_miss_then_archived",
+            lookup_duration_ms=lookup_ms, live_fetch_duration_ms=fetch_ms,
+            row_count=row_count, archive_status="saved")
+        print(f"[Sportmonks] {resource_type}: CockroachDB snapshot archived successfully.", flush=True)
         try:
-            record_provider_collection_run(
-                PROVIDER_DATABASE_URL,
-                provider="sportmonks",
-                resource_type=resource_type,
-                cache_key=cache_key,
-                succeeded=True,
-            )
+            record_provider_collection_run(PROVIDER_DATABASE_URL, provider="sportmonks",
+                resource_type=resource_type, cache_key=cache_key, succeeded=True)
         except Exception:
-            # The snapshot is already safely stored; diagnostics are secondary.
             pass
     return payload
 
@@ -1609,6 +1606,31 @@ try:
                         "Prediction input-source report could not be uploaded to GitHub: "
                         f"{report_error}"
                     )
+
+                # Upload only non-sensitive provider cache metadata after a prediction run.
+                cache_events = st.session_state.get("_provider_cache_telemetry_events", [])
+                uploaded_count = int(st.session_state.get("_provider_cache_telemetry_uploaded_count", 0))
+                pending_cache_events = cache_events[uploaded_count:]
+                if pending_cache_events:
+                    try:
+                        cache_report = {
+                            "event_count": len(pending_cache_events),
+                            "events": pending_cache_events,
+                            "privacy_note": "Only provider/resource names, outcomes, timestamps, durations, row counts and error types. No cache keys, request parameters, payloads, team names, credentials or prediction data.",
+                        }
+                        cache_archive = _upload_report_once("provider_cache_telemetry", cache_report)
+                        if cache_archive:
+                            st.caption(
+                                "Provider cache telemetry archived in GitHub: "
+                                f"[latest]({cache_archive['latest_url']}) · "
+                                f"[archive]({cache_archive['archive_url']})"
+                            )
+                        st.session_state["_provider_cache_telemetry_uploaded_count"] = len(cache_events)
+                    except Exception as telemetry_error:
+                        st.warning(
+                            "Provider cache telemetry could not be uploaded to GitHub: "
+                            f"{type(telemetry_error).__name__}. It will be retried on a later run."
+                        )
 
                 # Ledger identity uses the closest exact pairing in this season,
                 # including live/completed fixtures. Lineup enrichment stays upcoming-only.
