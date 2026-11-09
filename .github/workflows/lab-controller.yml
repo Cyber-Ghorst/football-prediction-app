@@ -202,6 +202,7 @@ jobs:
           python - <<'PY'
           import json
           import os
+          import re
           from pathlib import Path
           from urllib.request import Request, urlopen
 
@@ -214,7 +215,14 @@ jobs:
               path = Path(filename)
               if path.exists():
                   content = path.read_text(encoding="utf-8", errors="replace")
-                  if len(content) > 7000:
+                  if "Ran " in content and " tests " in content:
+                      summary = [
+                          line for line in content.splitlines()
+                          if re.search(r"Ran \\d+ tests|^OK$|^FAILED|^FAIL:|^ERROR:|^Traceback", line)
+                      ]
+                      if summary:
+                          content = "\n".join(summary[-30:])
+                  elif len(content) > 7000:
                       content = content[:7000] + "\n... output truncated"
                   sections.append(f"### {heading}\n\n{content}")
           body = "## Prediction Lab agent report\n\n" + "\n\n".join(sections)
