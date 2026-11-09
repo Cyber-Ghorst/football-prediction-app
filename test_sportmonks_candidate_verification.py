@@ -31,6 +31,17 @@ class HighlightlyCandidateVerificationTests(unittest.TestCase):
             "home_team_id": 10, "away_team_id": 20,
         }
 
+    def test_fixtures_for_utc_date_uses_utc_calendar_day(self):
+        from sportmonks_candidate_verification import fixtures_for_utc_date
+
+        fixtures = [
+            {"id": 1, "starting_at": "2026-09-19T16:30:00+00:00"},
+            {"id": 2, "starting_at": "2026-09-20T00:30:00+08:00"},
+            {"id": 3, "starting_at": "2026-09-20T01:00:00+00:00"},
+        ]
+        result = fixtures_for_utc_date(fixtures, "2026-09-19")
+        self.assertEqual([row["id"] for row in result], [1, 2])
+
     def test_exact_completed_fixture_and_score_agree(self):
         result = verify_highlightly_candidate(self.candidate, [sm_fixture()], **self.identity)
         self.assertEqual(result["verification_status"], "exact_fixture_and_score_agree")
