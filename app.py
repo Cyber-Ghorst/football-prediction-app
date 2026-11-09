@@ -1910,6 +1910,7 @@ try:
                                 "players_with_minutes_detail": availability_evidence.get("players_with_minutes_detail", 0),
                                 "minutes_type_ids_seen": availability_evidence.get("minutes_type_ids_seen", []),
                                 "players_missing_minutes_detail": availability_evidence.get("players_missing_minutes_detail", []),
+                                "player_statistic_values": availability_evidence.get("player_statistic_values", []),
                                 "sample_detail_shapes": availability_evidence.get("sample_detail_shapes", []),
                                 "reason": availability_evidence.get("reason"),
                             })
@@ -2361,6 +2362,7 @@ try:
                         "players_with_minutes_detail": (profile.get("availability") or {}).get("players_with_minutes_detail", 0),
                         "minutes_type_ids_seen": (profile.get("availability") or {}).get("minutes_type_ids_seen", []),
                         "players_missing_minutes_detail": (profile.get("availability") or {}).get("players_missing_minutes_detail", []),
+                        "player_statistic_values": (profile.get("availability") or {}).get("player_statistic_values", []),
                         "sample_detail_shapes": (profile.get("availability") or {}).get("sample_detail_shapes", []),
                         "importance_method": (profile.get("availability") or {}).get("importance_method"),
                         "sidelined_feed_available": (profile.get("availability") or {}).get("sidelined_feed_available", False),
