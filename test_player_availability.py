@@ -225,6 +225,28 @@ class PlayerAvailabilityTests(unittest.TestCase):
             self.assertIsNone(assess_player_availability(evidence)["score"])
 
 
+    def test_missing_minutes_reports_available_statistic_type_ids(self):
+        from player_availability import build_sportmonks_availability_evidence
+
+        evidence = build_sportmonks_availability_evidence(
+            squad_rows=[{
+                "id": 1, "in_squad": True,
+                "statistics": [{
+                    "player_id": 1, "team_id": 10, "season_id": 2026,
+                    "details": [
+                        {"type_id": 52, "value": {"total": 2}},
+                        {"type_id": 79, "value": {"total": 1}},
+                    ],
+                }],
+            }],
+            sidelined_rows=[], sidelined_feed_available=True,
+            team_id=10, season_id=2026, fixture_id=123, kickoff="2026-11-23",
+        )
+        self.assertIsNone(assess_player_availability(evidence)["score"])
+        self.assertEqual(evidence["minutes_type_ids_seen"], [52, 79])
+        self.assertEqual(evidence["players_missing_minutes_detail"][0]["detail_type_ids"], [52, 79])
+
+
 
 if __name__ == "__main__":
     unittest.main()
