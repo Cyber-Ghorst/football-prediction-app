@@ -99,7 +99,7 @@ try:
     from prediction_storage import load_prediction_ledger, save_prediction_records
     from prediction_results import verified_final_score, group_completed_fixture_candidates, automatic_result_check_due
     from prediction_readiness import build_prediction_readiness
-    from player_availability import assess_player_availability
+    from player_availability import assess_player_availability, build_sportmonks_availability_evidence
     from statistics_coverage import build_statistics_coverage, build_counter_attack_source_diagnostics
     from system_diagnostics import build_system_diagnostics
     from provider_data_storage import (
@@ -739,6 +739,24 @@ def _fetch_sm_fixtures(season_id, include_stats, team_ids):
             flush=True,
         )
         return fixtures
+
+
+@st.cache_data(ttl=1800, show_spinner=False)
+def get_sm_squad_by_season(season_id, team_id):
+    include = "player;details"
+    return _collect_sportmonks_with_archive(
+        "squad_by_season",
+        {"season_id": int(season_id), "team_id": int(team_id), "include": include},
+        lambda: _fetch_sm_squad_by_season(season_id, team_id, include),
+        1800,
+    )
+
+
+def _fetch_sm_squad_by_season(season_id, team_id, include):
+    with SportmonksClient() as sm:
+        return sm.squad_by_season(
+            int(season_id), int(team_id), include=include
+        )
 
 
 @st.cache_data(ttl=300, show_spinner=False)
@@ -1662,21 +1680,28 @@ try:
                 )
                 fixture_detail_executor = None
                 fixture_detail_future = None
+                squad_future_by_side = {}
                 if selected_match_fixture:
                     def _fetch_selected_fixture_detail():
                         detail_started = time.perf_counter()
-                        with SportmonksClient() as detail_client:
-                            detail_payload = get_sm_fixture_detail(
-                                selected_match_fixture["id"],
-                                "participants;state;lineups.details.type;formations;sidelined.player;sidelined.type;sidelined.sideline",
-                                ttl_seconds=300,
-                            )
+                        detail_payload = get_sm_fixture_detail(
+                            selected_match_fixture["id"],
+                            "participants;state;lineups.details.type;formations;sidelined.player;sidelined.type;sidelined.sideline",
+                            ttl_seconds=300,
+                        )
                         return detail_payload, round(time.perf_counter() - detail_started, 3)
 
-                    fixture_detail_executor = ThreadPoolExecutor(max_workers=1)
+                    fixture_detail_executor = ThreadPoolExecutor(max_workers=3)
                     fixture_detail_future = fixture_detail_executor.submit(
                         _fetch_selected_fixture_detail
                     )
+                    for side, selected_team_name in (("home", home_name), ("away", away_name)):
+                        squad_future_by_side[side] = fixture_detail_executor.submit(
+                            _timed_provider_collection,
+                            get_sm_squad_by_season,
+                            selected_season_id,
+                            int(team_map[selected_team_name]["id"]),
+                        )
 
                 prediction_stage_started = time.perf_counter()
                 repository_profile_report = {
@@ -1830,6 +1855,8 @@ try:
                 )
                 fixture_detail_processing_started = time.perf_counter()
                 fixture_detail_fetch_seconds = 0.0
+                squad_enrichment_seconds = 0.0
+                squad_fetch_diagnostics = {}
                 if selected_match_fixture:
                     try:
                         match_detail, fixture_detail_fetch_seconds = fixture_detail_future.result()
@@ -1848,16 +1875,53 @@ try:
                             st.info("Sportmonks returned no detail record for the exact selected fixture; lineups and player availability remain unknown.")
                     except Exception as exc:
                         st.warning(f"Fixture-specific Sportmonks lineups/sidelined data unavailable: {exc}. Prediction inputs remain unchanged.")
-                    finally:
-                        if fixture_detail_executor is not None:
-                            fixture_detail_executor.shutdown(wait=True)
+                    for side, selected_team_name in (("home", home_name), ("away", away_name)):
+                        try:
+                            squad_rows, squad_seconds, squad_error = squad_future_by_side[side].result()
+                            squad_enrichment_seconds += float(squad_seconds or 0.0)
+                            squad_fetch_diagnostics[selected_team_name] = {
+                                "status": "error" if squad_error else "retrieved",
+                                "rows_returned": len(squad_rows or []) if not squad_error else 0,
+                                "elapsed_seconds": squad_seconds,
+                                "error": str(squad_error) if squad_error else None,
+                            }
+                            if squad_error:
+                                st.warning(f"Season squad data for {selected_team_name} is unavailable: {squad_error}. Player availability remains unknown.")
+                                continue
+                            profile = home if side == "home" else away
+                            existing_availability = profile.get("availability") or {}
+                            profile["availability"] = build_sportmonks_availability_evidence(
+                                squad_rows=squad_rows,
+                                sidelined_rows=existing_availability.get("reported_sidelined"),
+                                sidelined_feed_available=existing_availability.get("sidelined_feed_available") is True,
+                                team_id=int(team_map[selected_team_name]["id"]),
+                                season_id=int(selected_season_id),
+                                fixture_id=selected_match_fixture.get("id"),
+                                kickoff=selected_match_fixture.get("starting_at"),
+                            )
+                        except Exception as squad_exc:
+                            squad_fetch_diagnostics[selected_team_name] = {
+                                "status": "error",
+                                "rows_returned": 0,
+                                "error": f"{type(squad_exc).__name__}: {squad_exc}",
+                            }
+                            st.warning(f"Season squad enrichment for {selected_team_name} failed: {squad_exc}. Player availability remains unknown.")
+                    if fixture_detail_executor is not None:
+                        fixture_detail_executor.shutdown(wait=True)
+                else:
+                    fixture_detail_fetch_seconds = 0.0
+                    st.info("No exact upcoming Sportmonks fixture was found for this home/away pairing. Lineups and player availability remain unknown.")
                 else:
                     fixture_detail_fetch_seconds = 0.0
                     st.info("No exact upcoming Sportmonks fixture was found for this home/away pairing. Lineups and player availability remain unknown.")
                 prediction_stage_timings["fixture_detail_enrichment_seconds"] = round(
                     float(fixture_detail_fetch_seconds)
-                    + time.perf_counter() - fixture_detail_processing_started,
+                    + time.perf_counter() - fixture_detail_processing_started
+                    - squad_enrichment_seconds,
                     3,
+                )
+                prediction_stage_timings["squad_enrichment_seconds"] = round(
+                    squad_enrichment_seconds, 3
                 )
                 prediction_stage_started = time.perf_counter()
 
@@ -2278,6 +2342,14 @@ try:
                     "data_quality": profile.get("data_quality"),
                     "history_collection_diagnostics": profile.get("history_collection_diagnostics"),
                     "player_availability_assessment": profile.get("player_availability_assessment"),
+                    "player_availability_evidence": {
+                        "roster_complete": bool((profile.get("availability") or {}).get("roster_complete")),
+                        "players_assessed": (profile.get("availability") or {}).get("players_assessed", 0),
+                        "importance_method": (profile.get("availability") or {}).get("importance_method"),
+                        "sidelined_feed_available": (profile.get("availability") or {}).get("sidelined_feed_available", False),
+                        "reported_sidelined_count": (profile.get("availability") or {}).get("reported_sidelined_count"),
+                        "reason": (profile.get("availability") or {}).get("reason"),
+                    },
                     "tactical_evidence": profile.get("tactical_evidence"),
                     "counter_attack_source_diagnostics": build_counter_attack_source_diagnostics(profile.get("matches", [])),
                 }
@@ -2635,12 +2707,14 @@ try:
             st.json({
                 home_name: {
                     "availability_assessment": home.get("player_availability_assessment"),
-                    "reported_sidelined": home["availability"],
+                    "availability_evidence": home["availability"],
+                    "reported_sidelined": home["availability"].get("reported_sidelined", []),
                     "lineups": home["lineups"],
                 },
                 away_name: {
                     "availability_assessment": away.get("player_availability_assessment"),
-                    "reported_sidelined": away["availability"],
+                    "availability_evidence": away["availability"],
+                    "reported_sidelined": away["availability"].get("reported_sidelined", []),
                     "lineups": away["lineups"],
                 },
             })
