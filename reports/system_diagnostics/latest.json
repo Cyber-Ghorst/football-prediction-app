@@ -1,6 +1,6 @@
 {
   "diagnostic_version": 1,
-  "generated_at": "2026-11-09T20:13:12.102542+00:00",
+  "generated_at": "2026-11-09T20:16:17.000354+00:00",
   "overall_status": "healthy",
   "selected_context": {
     "season_start_year": 2026,
@@ -174,8 +174,8 @@
     "kickoff_utc": "2026-11-23T20:00:00+00:00",
     "source_updated_at": null,
     "source_fetched_at": "2026-11-09T19:56:46.268847+00:00",
-    "source_age_seconds": 985.8,
-    "source_age_minutes": 16.4,
+    "source_age_seconds": 1170.7,
+    "source_age_minutes": 19.5,
     "source_freshness": "fresh",
     "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
   },
@@ -883,9 +883,7 @@
           "offset": 0,
           "rows_returned": 100,
           "response": {
-            "http_status": 200,
-            "requests_limit": "100",
-            "requests_remaining": "17",
+            "provider_cache": "hit",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -901,9 +899,7 @@
           "offset": 100,
           "rows_returned": 100,
           "response": {
-            "http_status": 200,
-            "requests_limit": "100",
-            "requests_remaining": "16",
+            "provider_cache": "hit",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -919,9 +915,7 @@
           "offset": 200,
           "rows_returned": 90,
           "response": {
-            "http_status": 200,
-            "requests_limit": "100",
-            "requests_remaining": "15",
+            "provider_cache": "hit",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -2781,8 +2775,8 @@
       "kickoff_utc": "2026-11-23T20:00:00+00:00",
       "source_updated_at": null,
       "source_fetched_at": "2026-11-09T19:56:46.268847+00:00",
-      "source_age_seconds": 985.8,
-      "source_age_minutes": 16.4,
+      "source_age_seconds": 1170.7,
+      "source_age_minutes": 19.5,
       "source_freshness": "fresh",
       "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
     },
@@ -2837,6 +2831,6 @@
     "weights_total": 1.0,
     "model_impact": "Diagnostics only; weights, recency weighting, prediction inputs and missing-data rules are not changed."
   },
-  "generated_at_utc": "2026-11-09T20:13:15.740004+00:00",
+  "generated_at_utc": "2026-11-09T20:16:20.592604+00:00",
   "report_name": "system_diagnostics"
 }
