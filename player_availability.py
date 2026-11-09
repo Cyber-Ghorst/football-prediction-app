@@ -230,6 +230,12 @@ def build_sportmonks_availability_evidence(
             detail_type_id = detail.get("type_id")
             if detail_type_id is None and isinstance(detail.get("type"), dict):
                 detail_type_id = detail["type"].get("id")
+            if len(diagnostics["sample_detail_shapes"]) < 5:
+                diagnostics["sample_detail_shapes"].append({
+                    "keys": sorted(detail.keys()),
+                    "type_id": detail_type_id,
+                    "value_type": type(detail.get("value")).__name__,
+                })
             try:
                 parsed_type_id = int(detail_type_id)
                 if parsed_type_id not in diagnostics["minutes_type_ids_seen"]:
@@ -239,12 +245,6 @@ def build_sportmonks_availability_evidence(
                     minutes_detail = detail
             except (TypeError, ValueError):
                 continue
-            if len(diagnostics["sample_detail_shapes"]) < 5:
-                diagnostics["sample_detail_shapes"].append({
-                    "keys": sorted(detail.keys()),
-                    "type_id": parsed_type_id,
-                    "value_type": type(detail.get("value")).__name__,
-                })
         if minutes_detail is None:
             diagnostics["players_missing_minutes_detail"].append({
                 "player_id": int(player_id),
