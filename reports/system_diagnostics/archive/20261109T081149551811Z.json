@@ -1,0 +1,913 @@
+{
+  "diagnostic_version": 1,
+  "generated_at": "2026-11-09T08:11:46.232985+00:00",
+  "overall_status": "healthy",
+  "selected_context": {
+    "season_start_year": 2026,
+    "competition": "Premier League — England",
+    "primary_provider": "sportmonks"
+  },
+  "summary": {
+    "checks_total": 14,
+    "passed": 13,
+    "warnings": 0,
+    "failed": 0,
+    "informational": 1
+  },
+  "checks": [
+    {
+      "id": "primary_provider_configuration",
+      "status": "pass",
+      "summary": "The selected season uses sportmonks; its credential is configured. Connectivity is assessed separately.",
+      "recommendation": null
+    },
+    {
+      "id": "fixture_identity",
+      "status": "pass",
+      "summary": "The selected upcoming fixture passed exact season, home/away team and scheduled-kickoff checks.",
+      "recommendation": null
+    },
+    {
+      "id": "fixture_freshness",
+      "status": "pass",
+      "summary": "Detailed fixture retrieval is less than 24 hours old.",
+      "recommendation": null
+    },
+    {
+      "id": "home_history_depth",
+      "status": "pass",
+      "summary": "Brighton & Hove Albion: 10 completed score-valid matches available (minimum 5 met; preferred target 10 met).",
+      "recommendation": null
+    },
+    {
+      "id": "home_tactical_recency_weighting",
+      "status": "pass",
+      "summary": "Brighton & Hove Albion: tactical recency metadata reports latest-five 60% / previous-five 40% over 10 match(es).",
+      "recommendation": null
+    },
+    {
+      "id": "home_history_integrity",
+      "status": "pass",
+      "summary": "Brighton & Hove Albion: no duplicate fixture IDs or invalid/missing score fields were found in the collected sample.",
+      "recommendation": null
+    },
+    {
+      "id": "home_statistics_coverage",
+      "status": "pass",
+      "summary": "Brighton & Hove Albion: all 8 core tactical statistics have at least one usable observation.",
+      "recommendation": null
+    },
+    {
+      "id": "away_history_depth",
+      "status": "pass",
+      "summary": "Sunderland: 10 completed score-valid matches available (minimum 5 met; preferred target 10 met).",
+      "recommendation": null
+    },
+    {
+      "id": "away_tactical_recency_weighting",
+      "status": "pass",
+      "summary": "Sunderland: tactical recency metadata reports latest-five 60% / previous-five 40% over 10 match(es).",
+      "recommendation": null
+    },
+    {
+      "id": "away_history_integrity",
+      "status": "pass",
+      "summary": "Sunderland: no duplicate fixture IDs or invalid/missing score fields were found in the collected sample.",
+      "recommendation": null
+    },
+    {
+      "id": "away_statistics_coverage",
+      "status": "pass",
+      "summary": "Sunderland: all 8 core tactical statistics have at least one usable observation.",
+      "recommendation": null
+    },
+    {
+      "id": "independent_provider_corroboration",
+      "status": "info",
+      "summary": "Independent result corroboration was not run for this collection.",
+      "recommendation": "Enable the optional cross-check if independent result comparison is needed."
+    },
+    {
+      "id": "model_weight_configuration",
+      "status": "pass",
+      "summary": "The supplied top-level model weights are non-negative and sum to 1.0.",
+      "recommendation": null
+    },
+    {
+      "id": "prediction_readiness",
+      "status": "pass",
+      "summary": "Prediction readiness status: ready. Five completed, score-valid matches per team meet the history minimum; ten is preferred.",
+      "recommendation": null
+    }
+  ],
+  "recommended_actions": [],
+  "providers": {
+    "sportmonks": {
+      "provider": "Sportmonks Football API v3",
+      "role": "Primary current-season provider",
+      "credential_configured": true,
+      "credential_required": true,
+      "adapter": "implemented",
+      "app_integration": "current-season Layer 2 path active; exact competition/season coverage and data-quality gates enforced",
+      "limitation": "Coverage is limited to competitions/seasons enabled by the account; each selected competition must pass data-quality gates."
+    },
+    "highlightly": {
+      "provider": "Highlightly",
+      "role": "Independent current-season corroboration and secondary source",
+      "credential_configured": true,
+      "credential_required": true,
+      "adapter": "implemented",
+      "app_integration": "adapter and authenticated smoke test available; canonical normalizer exists; not yet active in Layer 2 reconciliation",
+      "limitation": "Coverage, fields, quotas and refresh intervals are plan-dependent; match data is not yet active in Layer 2 reconciliation."
+    },
+    "api_football": {
+      "provider": "API-Football v3",
+      "role": "Historical specialist source and secondary detail provider",
+      "credential_configured": true,
+      "credential_required": true,
+      "adapter": "implemented",
+      "app_integration": "historical Layer 2 path active for supported seasons; account status/quota diagnostic available",
+      "limitation": "The configured account is limited to seasons 2022–2024; do not request newer seasons from this account."
+    },
+    "api_ninjas": {
+      "provider": "API Ninjas",
+      "role": "Independent fixtures/results/standings and club/squad corroboration",
+      "credential_configured": true,
+      "credential_required": true,
+      "adapter": "implemented",
+      "app_integration": "adapter and authenticated smoke test available; canonical normalizer exists; not yet active in Layer 2 reconciliation",
+      "limitation": "The current adapter does not supply detailed fixture statistics, injuries or lineups; not yet active in Layer 2 reconciliation."
+    },
+    "livescore_football": {
+      "provider": "LiveScoreFootball",
+      "role": "Conditional competition-specific corroboration for fixtures/results/standings",
+      "credential_configured": false,
+      "credential_required": false,
+      "adapter": "implemented",
+      "app_integration": "read-only adapter, metadata freshness and exact competition crosswalk checks available; automatic fallback remains disabled",
+      "limitation": "Database-backed snapshots can be delayed; require exact competition/season crosswalk and fresh sync metadata for every use."
+    }
+  },
+  "fixture": {
+    "verified": true,
+    "status": "verified",
+    "reason": "Exact competition-season fixture identity and future kickoff verified.",
+    "fixture_id": 19721861,
+    "kickoff_utc": "2027-05-08T14:00:00+00:00",
+    "source_updated_at": null,
+    "source_fetched_at": "2026-11-09T08:10:56.713048+00:00",
+    "source_age_seconds": 49.5,
+    "source_age_minutes": 0.8,
+    "source_freshness": "fresh",
+    "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
+  },
+  "teams": {
+    "home": {
+      "team": "Brighton & Hove Albion",
+      "completed_matches_available": 10,
+      "history_minimum": 5,
+      "history_target": 10,
+      "history_collection_diagnostics": {
+        "fixtures_scanned": 380,
+        "same_season_fixtures": 380,
+        "season_eligible_fixtures": 380,
+        "fixtures_missing_season_id": 0,
+        "team_fixtures": 38,
+        "completed_fixtures": 10,
+        "fixtures_with_valid_scores": 10,
+        "excluded_wrong_season": 0,
+        "excluded_missing_participants": 0,
+        "excluded_other_team": 342,
+        "excluded_not_completed": 28,
+        "excluded_missing_scores": 0
+      },
+      "statistics_coverage": {
+        "fixtures_checked": 10,
+        "core_metrics_with_any_data": 8,
+        "core_metrics_complete": 8,
+        "core_metrics_total": 8,
+        "raw_observations_seen": 427,
+        "unmapped_observations": 269,
+        "mapping_visibility": "available",
+        "metrics": [
+          {
+            "group": "Possession & distribution",
+            "statistic": "Ball Possession",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 10,
+            "status": "available"
+          },
+          {
+            "group": "Possession & distribution",
+            "statistic": "Passes %",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 10,
+            "status": "available"
+          },
+          {
+            "group": "Attacking",
+            "statistic": "Total Shots",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 20,
+            "status": "available"
+          },
+          {
+            "group": "Attacking",
+            "statistic": "Shots on Target / Goal",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 10,
+            "status": "available"
+          },
+          {
+            "group": "Defending",
+            "statistic": "Tackles",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 10,
+            "status": "available"
+          },
+          {
+            "group": "Defending",
+            "statistic": "Interceptions",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 10,
+            "status": "available"
+          },
+          {
+            "group": "Defending",
+            "statistic": "Blocked Shots",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 10,
+            "status": "available"
+          },
+          {
+            "group": "Attacking",
+            "statistic": "Corner Kicks",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 10,
+            "status": "available"
+          }
+        ],
+        "tactical_evidence_metrics": [
+          {
+            "statistic": "Counter Attacks",
+            "team_output_fixtures": 0,
+            "opponent_output_fixtures": 0,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Big Chances Created",
+            "team_output_fixtures": 10,
+            "opponent_output_fixtures": 10,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Successful Headers",
+            "team_output_fixtures": 8,
+            "opponent_output_fixtures": 8,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Accurate Crosses",
+            "team_output_fixtures": 10,
+            "opponent_output_fixtures": 10,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Successful Dribbles",
+            "team_output_fixtures": 10,
+            "opponent_output_fixtures": 10,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Key Passes",
+            "team_output_fixtures": 10,
+            "opponent_output_fixtures": 10,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Shots Insidebox",
+            "team_output_fixtures": 10,
+            "opponent_output_fixtures": 10,
+            "fixtures_checked": 10
+          }
+        ],
+        "unmapped_statistics": [
+          {
+            "provider_statistic": "Attacks",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Ball Safe",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Big Chances Missed",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Dangerous Attacks",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Dribble Attempts",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Duels Won",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Fouls",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Free Kicks",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Goal Kicks",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Goals",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Long Passes",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Passes",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Saves",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Shots Outsidebox",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Substitutions",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Successful Dribbles Percentage",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Successful Long Passes",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Successful Long Passes Percentage",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Successful Passes",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Tackles Won",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Throwins",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Total Crosses",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Assists",
+            "observations": 9,
+            "fixtures_seen": 9
+          },
+          {
+            "provider_statistic": "Injuries",
+            "observations": 9,
+            "fixtures_seen": 9
+          },
+          {
+            "provider_statistic": "Offsides",
+            "observations": 9,
+            "fixtures_seen": 9
+          },
+          {
+            "provider_statistic": "Yellowcards",
+            "observations": 9,
+            "fixtures_seen": 9
+          },
+          {
+            "provider_statistic": "Hit Woodwork",
+            "observations": 7,
+            "fixtures_seen": 7
+          },
+          {
+            "provider_statistic": "Redcards",
+            "observations": 4,
+            "fixtures_seen": 4
+          },
+          {
+            "provider_statistic": "Penalties",
+            "observations": 2,
+            "fixtures_seen": 2
+          }
+        ]
+      },
+      "tactical_summary": {
+        "playing_style": 68.05000000000001,
+        "attacking_approach": 56.333333333333336,
+        "defensive_structure": 40.266666666666666,
+        "coverage_metrics": 8,
+        "available_metrics": {
+          "average_possession": 58.5,
+          "average_pass_accuracy": 82.7,
+          "average_shots": 16.5,
+          "average_shots_on_target": 5.1,
+          "average_tackles": 15.2,
+          "average_interceptions": 8.6,
+          "average_blocked_shots": 3.8,
+          "average_corners": 5.0
+        },
+        "recency_weighting": {
+          "matches_used": 10,
+          "recent_matches": 5,
+          "recent_weight": 0.6,
+          "previous_matches": 5,
+          "previous_weight": 0.4,
+          "note": "Latest five matches carry 60%; previous five carry 40%. If a metric is absent from one window, the available window is renormalized."
+        },
+        "note": "Tactical ratings are shown only when the underlying statistics are present; unavailable metrics remain unknown."
+      },
+      "tactical_recency_weighting": {
+        "matches_used": 10,
+        "recent_matches": 5,
+        "recent_weight": 0.6,
+        "previous_matches": 5,
+        "previous_weight": 0.4,
+        "note": "Latest five matches carry 60%; previous five carry 40%. If a metric is absent from one window, the available window is renormalized."
+      },
+      "integrity": {
+        "matches_checked": 10,
+        "duplicate_fixture_ids": [],
+        "invalid_or_missing_score_fields": []
+      }
+    },
+    "away": {
+      "team": "Sunderland",
+      "completed_matches_available": 10,
+      "history_minimum": 5,
+      "history_target": 10,
+      "history_collection_diagnostics": {
+        "fixtures_scanned": 380,
+        "same_season_fixtures": 380,
+        "season_eligible_fixtures": 380,
+        "fixtures_missing_season_id": 0,
+        "team_fixtures": 38,
+        "completed_fixtures": 10,
+        "fixtures_with_valid_scores": 10,
+        "excluded_wrong_season": 0,
+        "excluded_missing_participants": 0,
+        "excluded_other_team": 342,
+        "excluded_not_completed": 28,
+        "excluded_missing_scores": 0
+      },
+      "statistics_coverage": {
+        "fixtures_checked": 10,
+        "core_metrics_with_any_data": 8,
+        "core_metrics_complete": 8,
+        "core_metrics_total": 8,
+        "raw_observations_seen": 428,
+        "unmapped_observations": 269,
+        "mapping_visibility": "available",
+        "metrics": [
+          {
+            "group": "Possession & distribution",
+            "statistic": "Ball Possession",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 10,
+            "status": "available"
+          },
+          {
+            "group": "Possession & distribution",
+            "statistic": "Passes %",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 10,
+            "status": "available"
+          },
+          {
+            "group": "Attacking",
+            "statistic": "Total Shots",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 20,
+            "status": "available"
+          },
+          {
+            "group": "Attacking",
+            "statistic": "Shots on Target / Goal",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 10,
+            "status": "available"
+          },
+          {
+            "group": "Defending",
+            "statistic": "Tackles",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 10,
+            "status": "available"
+          },
+          {
+            "group": "Defending",
+            "statistic": "Interceptions",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 10,
+            "status": "available"
+          },
+          {
+            "group": "Defending",
+            "statistic": "Blocked Shots",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 10,
+            "status": "available"
+          },
+          {
+            "group": "Attacking",
+            "statistic": "Corner Kicks",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 10,
+            "status": "available"
+          }
+        ],
+        "tactical_evidence_metrics": [
+          {
+            "statistic": "Counter Attacks",
+            "team_output_fixtures": 0,
+            "opponent_output_fixtures": 0,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Big Chances Created",
+            "team_output_fixtures": 10,
+            "opponent_output_fixtures": 10,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Successful Headers",
+            "team_output_fixtures": 9,
+            "opponent_output_fixtures": 9,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Accurate Crosses",
+            "team_output_fixtures": 10,
+            "opponent_output_fixtures": 10,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Successful Dribbles",
+            "team_output_fixtures": 10,
+            "opponent_output_fixtures": 10,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Key Passes",
+            "team_output_fixtures": 10,
+            "opponent_output_fixtures": 10,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Shots Insidebox",
+            "team_output_fixtures": 10,
+            "opponent_output_fixtures": 10,
+            "fixtures_checked": 10
+          }
+        ],
+        "unmapped_statistics": [
+          {
+            "provider_statistic": "Attacks",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Ball Safe",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Dangerous Attacks",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Dribble Attempts",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Duels Won",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Fouls",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Free Kicks",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Goal Kicks",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Long Passes",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Offsides",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Passes",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Saves",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Shots Outsidebox",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Substitutions",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Successful Dribbles Percentage",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Successful Long Passes",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Successful Long Passes Percentage",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Successful Passes",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Tackles Won",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Throwins",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Total Crosses",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Yellowcards",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Big Chances Missed",
+            "observations": 9,
+            "fixtures_seen": 9
+          },
+          {
+            "provider_statistic": "Goals",
+            "observations": 9,
+            "fixtures_seen": 9
+          },
+          {
+            "provider_statistic": "Injuries",
+            "observations": 9,
+            "fixtures_seen": 9
+          },
+          {
+            "provider_statistic": "Assists",
+            "observations": 7,
+            "fixtures_seen": 7
+          },
+          {
+            "provider_statistic": "Hit Woodwork",
+            "observations": 5,
+            "fixtures_seen": 5
+          },
+          {
+            "provider_statistic": "Penalties",
+            "observations": 4,
+            "fixtures_seen": 4
+          },
+          {
+            "provider_statistic": "Redcards",
+            "observations": 4,
+            "fixtures_seen": 4
+          },
+          {
+            "provider_statistic": "Yellowred Cards",
+            "observations": 2,
+            "fixtures_seen": 2
+          }
+        ]
+      },
+      "tactical_summary": {
+        "playing_style": 45.099999999999994,
+        "attacking_approach": 35.9,
+        "defensive_structure": 39.93333333333333,
+        "coverage_metrics": 8,
+        "available_metrics": {
+          "average_possession": 47.6,
+          "average_pass_accuracy": 76.2,
+          "average_shots": 12.0,
+          "average_shots_on_target": 3.3,
+          "average_tackles": 14.9,
+          "average_interceptions": 8.2,
+          "average_blocked_shots": 4.0,
+          "average_corners": 4.0
+        },
+        "recency_weighting": {
+          "matches_used": 10,
+          "recent_matches": 5,
+          "recent_weight": 0.6,
+          "previous_matches": 5,
+          "previous_weight": 0.4,
+          "note": "Latest five matches carry 60%; previous five carry 40%. If a metric is absent from one window, the available window is renormalized."
+        },
+        "note": "Tactical ratings are shown only when the underlying statistics are present; unavailable metrics remain unknown."
+      },
+      "tactical_recency_weighting": {
+        "matches_used": 10,
+        "recent_matches": 5,
+        "recent_weight": 0.6,
+        "previous_matches": 5,
+        "previous_weight": 0.4,
+        "note": "Latest five matches carry 60%; previous five carry 40%. If a metric is absent from one window, the available window is renormalized."
+      },
+      "integrity": {
+        "matches_checked": 10,
+        "duplicate_fixture_ids": [],
+        "invalid_or_missing_score_fields": []
+      }
+    }
+  },
+  "corroboration": {},
+  "prediction_readiness": {
+    "overall_status": "ready",
+    "prediction_minimum_history_met": true,
+    "ten_match_history_target_met": true,
+    "history_policy": {
+      "minimum_matches_per_team": 5,
+      "preferred_target_per_team": 10,
+      "target_is_advisory": true,
+      "note": "Prediction history eligibility requires five completed, score-valid matches per team. Five to nine matches are allowed with a limited-sample label; ten remains the preferred target."
+    },
+    "prediction_allowed_by_history": true,
+    "fixture": {
+      "verified": true,
+      "status": "verified",
+      "reason": "Exact competition-season fixture identity and future kickoff verified.",
+      "fixture_id": 19721861,
+      "kickoff_utc": "2027-05-08T14:00:00+00:00",
+      "source_updated_at": null,
+      "source_fetched_at": "2026-11-09T08:10:56.713048+00:00",
+      "source_age_seconds": 49.5,
+      "source_age_minutes": 0.8,
+      "source_freshness": "fresh",
+      "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
+    },
+    "teams": {
+      "home": {
+        "team": "Brighton & Hove Albion",
+        "completed_matches_available": 10,
+        "history_minimum": 5,
+        "history_target": 10,
+        "history_status": "target_met",
+        "prediction_allowed_by_history": true,
+        "matches_with_statistics": 10,
+        "matches_with_opponent_strength": 10,
+        "tactical_components_available": {
+          "playing_style": true,
+          "defensive_structure": true,
+          "attacking_approach": true
+        },
+        "player_availability_evidence": "unknown",
+        "confirmed_lineup_evidence": "unknown"
+      },
+      "away": {
+        "team": "Sunderland",
+        "completed_matches_available": 10,
+        "history_minimum": 5,
+        "history_target": 10,
+        "history_status": "target_met",
+        "prediction_allowed_by_history": true,
+        "matches_with_statistics": 10,
+        "matches_with_opponent_strength": 10,
+        "tactical_components_available": {
+          "playing_style": true,
+          "defensive_structure": true,
+          "attacking_approach": true
+        },
+        "player_availability_evidence": "unknown",
+        "confirmed_lineup_evidence": "unknown"
+      }
+    },
+    "model_impact": "Diagnostic only. This report does not change prediction inputs, model weights, recency weighting or TVD rules."
+  },
+  "model_configuration": {
+    "weights": {
+      "recent_form": 0.2,
+      "goals_scored": 0.1,
+      "goals_conceded": 0.1,
+      "home_away": 0.1,
+      "strength_of_schedule": 0.15,
+      "player_availability": 0.05,
+      "tactical": 0.3
+    },
+    "weights_total": 1.0,
+    "model_impact": "Diagnostics only; weights, recency weighting, prediction inputs and missing-data rules are not changed."
+  },
+  "generated_at_utc": "2026-11-09T08:11:49.551811+00:00",
+  "report_name": "system_diagnostics"
+}
