@@ -996,8 +996,15 @@ try:
             left,right=st.columns(2)
             with left:
                 st.markdown("**Defensive vulnerabilities**")
-                for key in vulnerabilities:                    value=st.number_input(f"{key}",min_value=0,max_value=100,value=None,placeholder="Unknown",key=f"{prefix}_v_{key}")
-                    if value is not None: profile["vulnerabilities"][key]={"score":value,"confidence":confidence}
+                for key in vulnerabilities:
+                    value = st.number_input(
+                        f"{key}", min_value=0, max_value=100, value=None,
+                        placeholder="Unknown", key=f"{prefix}_v_{key}"
+                    )
+                    if value is not None:
+                        profile["vulnerabilities"][key] = {
+                            "score": value, "confidence": confidence
+                        }
             with right:
                 st.markdown("**Attacking weapons**")
                 for key in weapons:
