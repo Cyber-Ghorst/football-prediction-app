@@ -701,6 +701,58 @@ if verify_repository_reads:
             )
 
 
+if audit_all_team_histories:
+    if not PROVIDER_DATABASE_URL:
+        st.warning("Add PROVIDER_DATABASE_URL in Streamlit Secrets before auditing team histories.")
+    else:
+        try:
+            with st.spinner("Auditing the latest 10 verified completed matches for every repository team..."):
+                team_history_audit = audit_all_repository_team_histories(
+                    PROVIDER_DATABASE_URL, history_limit=10
+                )
+                team_history_audit["generated_at_utc"] = datetime.now(timezone.utc).isoformat()
+                team_history_audit["repository"] = "Cyber-Ghorst/football-prediction-app"
+            st.subheader("Multi-team history verification audit")
+            st.write(
+                f"Teams scanned: {team_history_audit['teams_scanned']} · "
+                f"Passing all checks: {team_history_audit['teams_passing_all_checks']} · "
+                f"Requiring review: {team_history_audit['teams_requiring_review']}"
+            )
+            st.dataframe([
+                {
+                    "Team": item["team_name"],
+                    "Matches": item["history_matches_returned"],
+                    "10-match target": item["history_target_met"],
+                    "Home/away identity": item["team_identity_valid"],
+                    "Valid scores": item["scores_valid"],
+                    "Season consistent": item["season_consistent"],
+                    "Status": item["history_status"],
+                }
+                for item in team_history_audit["teams"]
+            ], use_container_width=True, hide_index=True)
+            try:
+                github_audit_report = _upload_report_once(
+                    "multi_team_history_verification", team_history_audit
+                )
+                if github_audit_report:
+                    st.success("Multi-team history audit archived in GitHub.")
+                    st.markdown(
+                        f"[Latest report]({github_audit_report['latest_url']}) · "
+                        f"[Timestamped archive]({github_audit_report['archive_url']})"
+                    )
+                else:
+                    st.caption("This unchanged multi-team audit is already archived in GitHub.")
+            except Exception as upload_exc:
+                st.error(
+                    f"Audit completed, but GitHub report upload failed "
+                    f"({type(upload_exc).__name__}): {upload_exc}"
+                )
+            with st.expander("Full audit evidence"):
+                st.json(team_history_audit)
+        except Exception as exc:
+            st.error(f"Multi-team history audit failed ({type(exc).__name__}): {exc}")
+
+
 client = None
 leagues = []
 if int(season) <= 2024:
