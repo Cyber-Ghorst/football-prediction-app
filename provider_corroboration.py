@@ -196,6 +196,7 @@ def collect_recent_result_corroboration(
     home_team_name: str,
     away_team_name: str,
     highlightly_client: Any | None = None,
+    highlightly_client_factory: Any | None = None,
     api_ninjas_client: Any | None = None,
     now: datetime | None = None,
 ) -> dict[str, Any]:
@@ -260,24 +261,76 @@ def collect_recent_result_corroboration(
     if highlightly_client is not None:
         try:
             rows: list[dict[str, Any]] = []
-            offset, limit, max_pages = 0, 100, 10
-            for _ in range(max_pages):
-                page = highlightly_client.matches(
+            limit, max_pages = 100, 10
+
+            def fetch_highlightly_page(client: Any, offset: int) -> tuple[int, list[dict[str, Any]], dict[str, Any]]:
+                page = client.matches(
                     leagueName=competition, season=int(season),
                     countryName=country, limit=limit, offset=offset,
                 )
+                metadata = dict(getattr(client, "last_metadata", {}) or {})
+                return offset, page, metadata
+
+            first_offset, first_page, first_metadata = fetch_highlightly_page(
+                highlightly_client, 0
+            )
+            page_results = [(first_offset, first_page, first_metadata)]
+            pagination = first_metadata.get("pagination")
+            total_count = pagination.get("total_count") if isinstance(pagination, Mapping) else None
+            reported_limit = pagination.get("limit") if isinstance(pagination, Mapping) else None
+            try:
+                total_count = int(total_count)
+                reported_limit = int(reported_limit)
+                if total_count < 0 or reported_limit <= 0:
+                    raise ValueError
+                page_count = (total_count + reported_limit - 1) // reported_limit
+            except (TypeError, ValueError):
+                total_count = None
+                reported_limit = limit
+                page_count = 0
+
+            if total_count is not None:
+                if page_count > max_pages:
+                    raise RuntimeError("Highlightly pagination exceeded the safe page limit.")
+                offsets = [
+                    page_number * reported_limit
+                    for page_number in range(1, page_count)
+                ]
+                if offsets and highlightly_client_factory is not None:
+                    def fetch_with_independent_client(offset: int):
+                        client = highlightly_client_factory()
+                        try:
+                            return fetch_highlightly_page(client, offset)
+                        finally:
+                            close = getattr(client, "close", None)
+                            if callable(close):
+                                close()
+
+                    with ThreadPoolExecutor(max_workers=min(4, len(offsets))) as executor:
+                        page_results.extend(executor.map(fetch_with_independent_client, offsets))
+                else:
+                    for offset in offsets:
+                        page_results.append(fetch_highlightly_page(highlightly_client, offset))
+            else:
+                # Compatibility fallback for clients/providers that omit the
+                # documented pagination envelope: retain safe sequential paging.
+                offset = limit
+                while len(first_page) == limit and len(page_results) < max_pages:
+                    page_results.append(fetch_highlightly_page(highlightly_client, offset))
+                    if len(page_results[-1][1]) < limit:
+                        break
+                    offset += limit
+                if len(page_results) == max_pages and len(page_results[-1][1]) == limit:
+                    raise RuntimeError("Highlightly pagination exceeded the safe page limit.")
+
+            for offset, page, metadata in sorted(page_results, key=lambda item: item[0]):
                 highlightly_diagnostics["pages_requested"] += 1
                 highlightly_diagnostics["page_metadata"].append({
                     "offset": offset,
                     "rows_returned": len(page),
-                    "response": dict(getattr(highlightly_client, "last_metadata", {}) or {}),
+                    "response": metadata,
                 })
                 rows.extend(page)
-                if len(page) < limit:
-                    break
-                offset += limit
-            else:
-                raise RuntimeError("Highlightly pagination exceeded the safe page limit.")
 
             highlightly_diagnostics["raw_rows_received"] = len(rows)
             normalized = []
