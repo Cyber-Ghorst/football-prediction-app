@@ -34,6 +34,7 @@ jobs:
         env:
           APP_URL: https://football-prediction-app-evzek8cthsuavun8hanejj.streamlit.app/
         run: |
+          set -o pipefail
           python - <<'PY' | tee controller-report.txt
           import json
           import os
