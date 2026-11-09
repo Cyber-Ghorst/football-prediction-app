@@ -44,6 +44,7 @@ from football_repository import (
     ensure_football_repository, repository_table_counts, import_sportmonks_season,
     get_repository_leagues, get_repository_seasons, get_repository_teams,
     get_repository_fixtures, get_repository_team_history, diagnose_repository_fixture_history,
+    audit_all_repository_team_histories,
 )
 
 st.set_page_config(page_title="Football Prediction Lab", page_icon="⚽", layout="wide")
@@ -547,6 +548,10 @@ with st.sidebar:
         verify_repository_reads = st.button(
             "Verify central repository reads", use_container_width=True,
             help="Reads leagues, seasons, teams, fixtures and a team's verified completed-match history from CockroachDB."
+        )
+        audit_all_team_histories = st.button(
+            "Audit all teams' 10-match histories", use_container_width=True,
+            help="Checks every canonical team's latest 10 completed matches, home/away identity, season consistency, scores and duplicate fixtures."
         )
         upload_fixture_report = st.button(
             "Generate and upload fixture diagnostic report",
