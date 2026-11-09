@@ -25,6 +25,8 @@ class HighlightlyClient:
                 self.api_key = st.secrets.get("HIGHLIGHTLY_API_KEY") or st.secrets.get("API_FOOTBALL_KEY")
             except Exception:
                 self.api_key = None
+        if isinstance(self.api_key, str):
+            self.api_key = self.api_key.strip()
         if not self.api_key:
             raise HighlightlyError("Highlightly key missing. Configure HIGHLIGHTLY_API_KEY in Streamlit Secrets.")
         self.base_url = (base_url or os.getenv("HIGHLIGHTLY_BASE_URL") or self.BASE_URL).rstrip("/")
