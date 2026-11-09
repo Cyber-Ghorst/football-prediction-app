@@ -267,6 +267,35 @@ def _sync_result(cursor, resource_type: str, received: int, upserted: int,
     )
 
 
+def _execute_batched_upsert(
+    cursor,
+    *,
+    table: str,
+    columns: tuple[str, ...],
+    rows: list[tuple[Any, ...]],
+    conflict_sql: str,
+    batch_size: int = 100,
+) -> int:
+    """Write rows in bounded multi-value INSERT statements."""
+    if not rows:
+        return 0
+    if batch_size < 1:
+        raise ValueError("batch_size must be positive.")
+    row_placeholder = "(" + ", ".join(["%s"] * len(columns)) + ")"
+    column_sql = ", ".join(columns)
+    written = 0
+    for offset in range(0, len(rows), batch_size):
+        batch = rows[offset:offset + batch_size]
+        values_sql = ", ".join([row_placeholder] * len(batch))
+        parameters = tuple(value for row in batch for value in row)
+        cursor.execute(
+            f"INSERT INTO {table} ({column_sql}) VALUES {values_sql} {conflict_sql}",
+            parameters,
+        )
+        written += len(batch)
+    return written
+
+
 def import_sportmonks_season(
     database_url: str,
     *,
@@ -276,12 +305,12 @@ def import_sportmonks_season(
     fixtures: list[dict[str, Any]],
     progress_callback=None,
 ) -> dict[str, Any]:
-    """Idempotently import one Sportmonks competition season into canonical tables.
+    """Bulk-import one Sportmonks season into the canonical CockroachDB repository.
 
-    Raw provider snapshots are maintained separately by provider_data_storage.
-    This importer writes only to CockroachDB and never accesses the Neon ledger.
+    All writes remain in one transaction. Provider snapshots are maintained
+    separately, and this importer never accesses the Neon prediction ledger.
     """
-    from psycopg.types.json import Jsonb
+    import uuid
 
     if not database_url:
         raise ValueError("PROVIDER_DATABASE_URL is required.")
@@ -290,23 +319,191 @@ def import_sportmonks_season(
     if str(season.get("league_id")) != str(league.get("id")):
         raise ValueError("Selected Sportmonks season does not belong to the selected league.")
 
-    counts = {"leagues": 0, "seasons": 0, "teams": 0, "fixtures": 0, "statistics": 0, "skipped_fixtures": 0}
+    counts = {
+        "leagues": 0, "seasons": 0, "teams": 0, "fixtures": 0,
+        "statistics": 0, "skipped_fixtures": 0,
+    }
     import_started = time.monotonic()
     print(
-        f"[Repository import] Starting CockroachDB transaction for season {season_id}: "
+        f"[Repository import] Starting bulk CockroachDB import for season {season_id}: "
         f"{len(teams)} teams, {len(fixtures)} fixtures.",
         flush=True,
     )
     if progress_callback:
-        progress_callback(f"Starting database import: {len(teams)} teams and {len(fixtures)} fixtures.")
-    with _connect(database_url) as connection:
-        print(
-            f"[Repository import] Database connection established in "
-            f"{time.monotonic() - import_started:.2f}s.",
-            flush=True,
+        progress_callback(f"Preparing bulk import: {len(teams)} teams and {len(fixtures)} fixtures.")
+
+    # Prepare normalized rows before opening the transaction. This keeps Python
+    # parsing and UUID generation out of the database write window.
+    team_rows: list[tuple[Any, ...]] = []
+    link_rows: list[tuple[Any, ...]] = []
+
+    def add_link(entity_type: str, provider_id: Any, canonical_id: str) -> None:
+        provider_entity_id = str(provider_id)
+        link_id = str(uuid.uuid5(
+            uuid.NAMESPACE_URL,
+            f"sportmonks:{entity_type}:{provider_entity_id}",
+        ))
+        link_rows.append((
+            link_id, "sportmonks", entity_type, provider_entity_id, canonical_id,
+        ))
+
+    add_link("league", league.get("id"), league_id)
+    add_link("season", season.get("id"), season_id)
+
+    for team in teams:
+        if team.get("id") is None or not team.get("name"):
+            continue
+        team_id = _provider_id(team["id"])
+        team_rows.append((
+            team_id, str(team["name"]),
+            team.get("short_code") or team.get("short_name"),
+            _nested_name(team.get("country")),
+            team.get("image_path") or team.get("logo"),
+            "sportmonks", _provider_updated_at(team), Jsonb(team),
+        ))
+        add_link("team", team["id"], team_id)
+
+    fixture_rows: list[tuple[Any, ...]] = []
+    statistic_rows: list[tuple[Any, ...]] = []
+    statistics_fixture_ids: list[str] = []
+    seen_statistics_fixture_ids: set[str] = set()
+
+    for fixture in fixtures:
+        participants = fixture.get("participants")
+        if not isinstance(participants, list):
+            participants = []
+        home = away = None
+        for participant in participants:
+            meta = participant.get("meta") if isinstance(participant, dict) else {}
+            location = str((meta or {}).get("location") or "").lower()
+            if location == "home":
+                home = participant
+            elif location == "away":
+                away = participant
+
+        if (
+            fixture.get("id") is None or not home or not away
+            or home.get("id") is None or away.get("id") is None
+        ):
+            counts["skipped_fixtures"] += 1
+            continue
+
+        fixture_season_id = _provider_id(fixture.get("season_id") or season.get("id"))
+        fixture_league_id = _provider_id(fixture.get("league_id") or league.get("id"))
+        if fixture_season_id != season_id or fixture_league_id != league_id:
+            counts["skipped_fixtures"] += 1
+            continue
+
+        home_id = _provider_id(home.get("id"))
+        away_id = _provider_id(away.get("id"))
+        if home_id == away_id:
+            counts["skipped_fixtures"] += 1
+            continue
+
+        scores = fixture.get("scores") if isinstance(fixture.get("scores"), list) else []
+        preferred_score_group = None
+        for preferred_code in ("CURRENT", "2ND_HALF"):
+            candidates = []
+            for score in scores:
+                if not isinstance(score, dict):
+                    continue
+                description = str(score.get("description") or "").upper()
+                score_type = score.get("type") if isinstance(score.get("type"), dict) else {}
+                type_code = str(score_type.get("code") or "").upper()
+                if description == preferred_code or type_code == preferred_code:
+                    candidates.append(score)
+            if candidates:
+                preferred_score_group = candidates
+                break
+
+        home_goals = away_goals = None
+        if preferred_score_group:
+            by_participant = {}
+            for score in preferred_score_group:
+                value = score.get("score")
+                value = value.get("goals") if isinstance(value, dict) else value
+                try:
+                    by_participant[str(score.get("participant_id"))] = int(value)
+                except (TypeError, ValueError):
+                    continue
+            home_goals = by_participant.get(str(home.get("id")))
+            away_goals = by_participant.get(str(away.get("id")))
+
+        canonical_fixture_id = _provider_id(fixture["id"])
+        state = fixture.get("state")
+        status = _nested_name(state) or (
+            str(fixture.get("state_id")) if fixture.get("state_id") is not None else None
         )
+        fixture_rows.append((
+            canonical_fixture_id, season_id, league_id, home_id, away_id,
+            fixture.get("starting_at"), status, home_goals, away_goals,
+            _nested_name(fixture.get("venue")), "sportmonks",
+            _provider_updated_at(fixture), Jsonb(fixture),
+        ))
+        add_link("fixture", fixture["id"], canonical_fixture_id)
+
+        # Only replace a fixture's normalized statistics when the provider
+        # explicitly supplied the statistics field (including an empty list).
+        if "statistics" not in fixture:
+            continue
+        if canonical_fixture_id not in seen_statistics_fixture_ids:
+            statistics_fixture_ids.append(canonical_fixture_id)
+            seen_statistics_fixture_ids.add(canonical_fixture_id)
+
+        supplied_statistics = fixture.get("statistics")
+        if not isinstance(supplied_statistics, list):
+            continue
+        for statistic_index, statistic in enumerate(supplied_statistics):
+            if not isinstance(statistic, dict):
+                continue
+            statistic_type = statistic.get("type")
+            if isinstance(statistic_type, dict):
+                statistic_type_id = statistic_type.get("id")
+                statistic_type_name = statistic_type.get("name")
+            else:
+                statistic_type_id = None
+                statistic_type_name = str(statistic_type or "").strip()
+            if not statistic_type_name:
+                statistic_type_name = str(
+                    statistic.get("name") or statistic.get("code") or ""
+                ).strip()
+            if not statistic_type_name:
+                continue
+
+            participant_id = statistic.get("participant_id")
+            canonical_participant_id = (
+                _provider_id(participant_id) if participant_id is not None else None
+            )
+            raw_data = statistic.get("data")
+            if isinstance(raw_data, dict) and "value" in raw_data:
+                statistic_value = raw_data.get("value")
+            elif raw_data is not None:
+                statistic_value = raw_data
+            else:
+                statistic_value = statistic.get("value")
+
+            external_statistic_id = statistic.get("id")
+            stable_identity = (
+                str(external_statistic_id) if external_statistic_id is not None
+                else f"{participant_id}:{statistic_type_id or statistic_type_name}:{statistic_index}"
+            )
+            statistic_id = str(uuid.uuid5(
+                uuid.NAMESPACE_URL,
+                f"sportmonks:fixture-statistic:{fixture['id']}:{stable_identity}",
+            ))
+            statistic_rows.append((
+                statistic_id, canonical_fixture_id, canonical_participant_id,
+                statistic_type_name, Jsonb(statistic_value), "sportmonks",
+                str(external_statistic_id) if external_statistic_id is not None else None,
+                _provider_updated_at(fixture), Jsonb(statistic),
+            ))
+
+    counts["teams"] = len(team_rows)
+    counts["fixtures"] = len(fixture_rows)
+    counts["statistics"] = len(statistic_rows)
+
+    with _connect(database_url) as connection:
         with connection.cursor() as cursor:
-            stage_started = time.monotonic()
             cursor.execute(
                 """
                 INSERT INTO football_leagues
@@ -320,20 +517,15 @@ def import_sportmonks_season(
                     provider_updated_at = excluded.provider_updated_at,
                     collected_at = NOW(), raw_payload = excluded.raw_payload
                 """,
-                (league_id, str(league.get("name") or "Unknown league"),
-                 _nested_name(league.get("country")),
-                 _nested_name(league.get("type") or league.get("competition_type")),
-                 league.get("image_path") or league.get("logo"),
-                 _provider_updated_at(league), Jsonb(league)),
+                (
+                    league_id, str(league.get("name") or "Unknown league"),
+                    _nested_name(league.get("country")),
+                    _nested_name(league.get("type") or league.get("competition_type")),
+                    league.get("image_path") or league.get("logo"),
+                    _provider_updated_at(league), Jsonb(league),
+                ),
             )
-            _entity_link(cursor, "league", league.get("id"), league_id)
             counts["leagues"] = 1
-            print(
-                f"[Repository import] League upsert and crosswalk completed in "
-                f"{time.monotonic() - stage_started:.2f}s.",
-                flush=True,
-            )
-            stage_started = time.monotonic()
 
             cursor.execute(
                 """
@@ -348,149 +540,45 @@ def import_sportmonks_season(
                     provider_updated_at = excluded.provider_updated_at,
                     collected_at = NOW(), raw_payload = excluded.raw_payload
                 """,
-                (season_id, league_id, str(season.get("name") or ""),
-                 season.get("starting_at") or None, season.get("ending_at") or None,
-                 season.get("is_current"), _provider_updated_at(season), Jsonb(season)),
+                (
+                    season_id, league_id, str(season.get("name") or ""),
+                    season.get("starting_at") or None, season.get("ending_at") or None,
+                    season.get("is_current"), _provider_updated_at(season), Jsonb(season),
+                ),
             )
-            _entity_link(cursor, "season", season.get("id"), season_id)
             counts["seasons"] = 1
-            print(
-                f"[Repository import] Season upsert and crosswalk completed in "
-                f"{time.monotonic() - stage_started:.2f}s.",
-                flush=True,
-            )
-            stage_started = time.monotonic()
 
-            for team in teams:
-                if team.get("id") is None or not team.get("name"):
-                    continue
-                team_id = _provider_id(team["id"])
-                cursor.execute(
-                    """
-                    INSERT INTO football_teams
-                        (team_id, name, short_name, country, logo_url,
-                         source_provider, provider_updated_at, raw_payload)
-                    VALUES (%s, %s, %s, %s, %s, 'sportmonks', %s, %s)
+            _execute_batched_upsert(
+                cursor,
+                table="football_teams",
+                columns=(
+                    "team_id", "name", "short_name", "country", "logo_url",
+                    "source_provider", "provider_updated_at", "raw_payload",
+                ),
+                rows=team_rows,
+                conflict_sql="""
                     ON CONFLICT (team_id) DO UPDATE SET
                         name = excluded.name, short_name = excluded.short_name,
                         country = excluded.country, logo_url = excluded.logo_url,
                         source_provider = excluded.source_provider,
                         provider_updated_at = excluded.provider_updated_at,
                         collected_at = NOW(), raw_payload = excluded.raw_payload
-                    """,
-                    (team_id, str(team["name"]), team.get("short_code") or team.get("short_name"),
-                     _nested_name(team.get("country")), team.get("image_path") or team.get("logo"),
-                     _provider_updated_at(team), Jsonb(team)),
-                )
-                _entity_link(cursor, "team", team["id"], team_id)
-                counts["teams"] += 1
-            print(
-                f"[Repository import] Team upserts completed: {counts['teams']} teams in "
-                f"{time.monotonic() - stage_started:.2f}s.",
-                flush=True,
+                """,
+                batch_size=50,
             )
             if progress_callback:
-                progress_callback(f"Teams saved: {counts['teams']}/{len(teams)}. Starting fixture import...")
-            stage_started = time.monotonic()
-            print(
-                f"[Repository import] Entering fixture loop for {len(fixtures)} fixtures.",
-                flush=True,
-            )
+                progress_callback(f"Bulk-saved {counts['teams']} teams. Writing {counts['fixtures']} fixtures in batches...")
 
-            for fixture_index, fixture in enumerate(fixtures, start=1):
-                if progress_callback:
-                    progress_callback(f"Processing fixture {fixture_index}/{len(fixtures)}")
-                print(
-                    f"[Repository import] Fixture {fixture_index}/{len(fixtures)} starting; "
-                    f"provider_id={fixture.get('id')}.",
-                    flush=True,
-                )
-                participants = fixture.get("participants")
-                if not isinstance(participants, list):
-                    participants = []
-                home = away = None
-                for participant in participants:
-                    meta = participant.get("meta") if isinstance(participant, dict) else {}
-                    location = str((meta or {}).get("location") or "").lower()
-                    if location == "home":
-                        home = participant
-                    elif location == "away":
-                        away = participant
-                if (
-                    fixture.get("id") is None or not home or not away
-                    or home.get("id") is None or away.get("id") is None
-                ):
-                    counts["skipped_fixtures"] += 1
-                    if fixture_index % 25 == 0 or fixture_index == len(fixtures):
-                        print(
-                            f"[Repository import] Fixture progress {fixture_index}/{len(fixtures)}; "
-                            f"upserted={counts['fixtures']}, skipped={counts['skipped_fixtures']}, "
-                            f"statistics={counts['statistics']}.",
-                            flush=True,
-                        )
-                    continue
-                fixture_season_id = _provider_id(fixture.get("season_id") or season.get("id"))
-                fixture_league_id = _provider_id(fixture.get("league_id") or league.get("id"))
-                if fixture_season_id != season_id or fixture_league_id != league_id:
-                    counts["skipped_fixtures"] += 1
-                    if fixture_index % 25 == 0 or fixture_index == len(fixtures):
-                        print(
-                            f"[Repository import] Fixture progress {fixture_index}/{len(fixtures)}; "
-                            f"upserted={counts['fixtures']}, skipped={counts['skipped_fixtures']}, "
-                            f"statistics={counts['statistics']}.",
-                            flush=True,
-                        )
-                    continue
-                home_id = _provider_id(home.get("id"))
-                away_id = _provider_id(away.get("id"))
-                if home_id == away_id:
-                    counts["skipped_fixtures"] += 1
-                    if fixture_index % 25 == 0 or fixture_index == len(fixtures):
-                        print(
-                            f"[Repository import] Fixture progress {fixture_index}/{len(fixtures)}; "
-                            f"upserted={counts['fixtures']}, skipped={counts['skipped_fixtures']}, "
-                            f"statistics={counts['statistics']}.",
-                            flush=True,
-                        )
-                    continue
-                state = fixture.get("state")
-                status = _nested_name(state) or (str(fixture.get("state_id")) if fixture.get("state_id") is not None else None)
-                venue = fixture.get("venue")
-                scores = fixture.get("scores") if isinstance(fixture.get("scores"), list) else []
-                preferred_score_group = None
-                for preferred_code in ("CURRENT", "2ND_HALF"):
-                    candidates = []
-                    for score in scores:
-                        if not isinstance(score, dict):
-                            continue
-                        description = str(score.get("description") or "").upper()
-                        score_type = score.get("type") if isinstance(score.get("type"), dict) else {}
-                        type_code = str(score_type.get("code") or "").upper()
-                        if description == preferred_code or type_code == preferred_code:
-                            candidates.append(score)
-                    if candidates:
-                        preferred_score_group = candidates
-                        break
-                home_goals = away_goals = None
-                if preferred_score_group:
-                    by_participant = {}
-                    for score in preferred_score_group:
-                        value = score.get("score")
-                        value = value.get("goals") if isinstance(value, dict) else value
-                        try:
-                            by_participant[str(score.get("participant_id"))] = int(value)
-                        except (TypeError, ValueError):
-                            continue
-                    home_goals = by_participant.get(str(home.get("id")))
-                    away_goals = by_participant.get(str(away.get("id")))
-                cursor.execute(
-                    """
-                    INSERT INTO football_fixtures
-                        (fixture_id, season_id, league_id, home_team_id, away_team_id,
-                         starting_at, status, home_goals, away_goals, venue,
-                         source_provider, provider_updated_at, raw_payload)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
-                            'sportmonks', %s, %s)
+            _execute_batched_upsert(
+                cursor,
+                table="football_fixtures",
+                columns=(
+                    "fixture_id", "season_id", "league_id", "home_team_id", "away_team_id",
+                    "starting_at", "status", "home_goals", "away_goals", "venue",
+                    "source_provider", "provider_updated_at", "raw_payload",
+                ),
+                rows=fixture_rows,
+                conflict_sql="""
                     ON CONFLICT (fixture_id) DO UPDATE SET
                         season_id = excluded.season_id, league_id = excluded.league_id,
                         home_team_id = excluded.home_team_id, away_team_id = excluded.away_team_id,
@@ -499,151 +587,98 @@ def import_sportmonks_season(
                         venue = excluded.venue, source_provider = excluded.source_provider,
                         provider_updated_at = excluded.provider_updated_at,
                         collected_at = NOW(), raw_payload = excluded.raw_payload
-                    """,
-                    (_provider_id(fixture["id"]), season_id, league_id, home_id, away_id,
-                     fixture.get("starting_at"), status, home_goals, away_goals,
-                     _nested_name(venue), _provider_updated_at(fixture), Jsonb(fixture)),
-                )
-                canonical_fixture_id = _provider_id(fixture["id"])
-                _entity_link(cursor, "fixture", fixture["id"], canonical_fixture_id)
-                counts["fixtures"] += 1
-                print(
-                    f"[Repository import] Fixture {fixture_index}: fixture row and provider link written.",
-                    flush=True,
-                )
-
-                # Replace the normalized statistics for this fixture atomically.
-                # Raw fixture payloads remain preserved in football_fixtures.
-                cursor.execute(
-                    "DELETE FROM football_fixture_statistics WHERE fixture_id = %s",
-                    (canonical_fixture_id,),
-                )
-                print(
-                    f"[Repository import] Fixture {fixture_index}: old normalized statistics cleared.",
-                    flush=True,
-                )
-                statistic_rows = fixture.get("statistics")
-                if not isinstance(statistic_rows, list):
-                    statistic_rows = []
-                print(
-                    f"[Repository import] Fixture {fixture_index}: processing {len(statistic_rows)} statistic rows.",
-                    flush=True,
-                )
-                import uuid
-                for statistic_index, statistic in enumerate(statistic_rows):
-                    if not isinstance(statistic, dict):
-                        continue
-                    statistic_type = statistic.get("type")
-                    if isinstance(statistic_type, dict):
-                        statistic_type_id = statistic_type.get("id")
-                        statistic_type_name = statistic_type.get("name")
-                    else:
-                        statistic_type_id = None
-                        statistic_type_name = str(statistic_type or "").strip()
-                    if not statistic_type_name:
-                        statistic_type_name = str(
-                            statistic.get("name") or statistic.get("code") or ""
-                        ).strip()
-                    if not statistic_type_name:
-                        continue
-                    participant_id = statistic.get("participant_id")
-                    canonical_participant_id = (
-                        _provider_id(participant_id) if participant_id is not None else None
-                    )
-                    raw_data = statistic.get("data")
-                    if isinstance(raw_data, dict) and "value" in raw_data:
-                        statistic_value = raw_data.get("value")
-                    elif raw_data is not None:
-                        statistic_value = raw_data
-                    else:
-                        statistic_value = statistic.get("value")
-                    external_statistic_id = statistic.get("id")
-                    stable_identity = (
-                        str(external_statistic_id) if external_statistic_id is not None
-                        else f"{participant_id}:{statistic_type_id or statistic_type_name}:{statistic_index}"
-                    )
-                    statistic_id = str(uuid.uuid5(
-                        uuid.NAMESPACE_URL,
-                        f"sportmonks:fixture-statistic:{fixture['id']}:{stable_identity}",
-                    ))
-                    cursor.execute(
-                        """
-                        INSERT INTO football_fixture_statistics
-                            (statistic_id, fixture_id, team_id, statistic_type,
-                             statistic_value, source_provider, provider_statistic_id,
-                             provider_updated_at, raw_payload)
-                        VALUES (%s, %s, %s, %s, %s, 'sportmonks', %s, %s, %s)
-                        ON CONFLICT (statistic_id) DO UPDATE SET
-                            fixture_id = excluded.fixture_id,
-                            team_id = excluded.team_id,
-                            statistic_type = excluded.statistic_type,
-                            statistic_value = excluded.statistic_value,
-                            source_provider = excluded.source_provider,
-                            provider_statistic_id = excluded.provider_statistic_id,
-                            provider_updated_at = excluded.provider_updated_at,
-                            collected_at = NOW(),
-                            raw_payload = excluded.raw_payload
-                        """,
-                        (
-                            statistic_id, canonical_fixture_id,
-                            canonical_participant_id, statistic_type_name,
-                            Jsonb(statistic_value),
-                            str(external_statistic_id) if external_statistic_id is not None else None,
-                            _provider_updated_at(fixture), Jsonb(statistic),
-                        ),
-                    )
-                    counts["statistics"] += 1
-
-                print(
-                    f"[Repository import] Fixture {fixture_index}: completed; "
-                    f"{len(statistic_rows)} statistic rows examined.",
-                    flush=True,
-                )
-                if progress_callback:
-                    progress_callback(f"Completed fixture {fixture_index}/{len(fixtures)} — {counts['statistics']} statistics rows saved.")
-                if fixture_index % 25 == 0 or fixture_index == len(fixtures):
-                    print(
-                        f"[Repository import] Fixture progress {fixture_index}/{len(fixtures)}; "
-                        f"upserted={counts['fixtures']}, skipped={counts['skipped_fixtures']}, "
-                        f"statistics={counts['statistics']}; "
-                        f"elapsed={time.monotonic() - stage_started:.1f}s.",
-                        flush=True,
-                    )
-
-            print(
-                f"[Repository import] Fixture/statistics writes completed in "
-                f"{time.monotonic() - stage_started:.1f}s.",
-                flush=True,
+                """,
+                batch_size=40,
             )
-            stage_started = time.monotonic()
-            print("[Repository import] Writing synchronization state.", flush=True)
+            if progress_callback:
+                progress_callback(f"Bulk-saved {counts['fixtures']} fixtures. Updating provider crosswalks...")
+
+            _execute_batched_upsert(
+                cursor,
+                table="provider_entity_links",
+                columns=(
+                    "link_id", "provider", "entity_type", "provider_entity_id",
+                    "canonical_entity_id",
+                ),
+                rows=link_rows,
+                conflict_sql="""
+                    ON CONFLICT (provider, entity_type, provider_entity_id)
+                    DO UPDATE SET canonical_entity_id = excluded.canonical_entity_id,
+                                  last_seen_at = NOW()
+                """,
+                batch_size=100,
+            )
+
+            # Delete old normalized statistics only for fixtures whose provider
+            # response explicitly included a statistics field.
+            for offset in range(0, len(statistics_fixture_ids), 100):
+                batch_ids = statistics_fixture_ids[offset:offset + 100]
+                placeholders = ", ".join(["%s"] * len(batch_ids))
+                cursor.execute(
+                    f"DELETE FROM football_fixture_statistics WHERE fixture_id IN ({placeholders})",
+                    tuple(batch_ids),
+                )
+
+            _execute_batched_upsert(
+                cursor,
+                table="football_fixture_statistics",
+                columns=(
+                    "statistic_id", "fixture_id", "team_id", "statistic_type",
+                    "statistic_value", "source_provider", "provider_statistic_id",
+                    "provider_updated_at", "raw_payload",
+                ),
+                rows=statistic_rows,
+                conflict_sql="""
+                    ON CONFLICT (statistic_id) DO UPDATE SET
+                        fixture_id = excluded.fixture_id,
+                        team_id = excluded.team_id,
+                        statistic_type = excluded.statistic_type,
+                        statistic_value = excluded.statistic_value,
+                        source_provider = excluded.source_provider,
+                        provider_statistic_id = excluded.provider_statistic_id,
+                        provider_updated_at = excluded.provider_updated_at,
+                        collected_at = NOW(), raw_payload = excluded.raw_payload
+                """,
+                batch_size=100,
+            )
+            if progress_callback:
+                progress_callback(
+                    f"Bulk writes complete: {counts['fixtures']} fixtures and "
+                    f"{counts['statistics']} statistics. Saving sync state..."
+                )
+
             _sync_result(cursor, "leagues", 1, counts["leagues"])
             _sync_result(cursor, "seasons", 1, counts["seasons"])
             _sync_result(cursor, "teams", len(teams), counts["teams"])
             _sync_result(cursor, "fixtures", len(fixtures), counts["fixtures"])
-            _sync_result(cursor, "fixture_statistics", counts["statistics"], counts["statistics"])
-            print(
-                f"[Repository import] Synchronization state written in "
-                f"{time.monotonic() - stage_started:.2f}s; transaction will now commit.",
-                flush=True,
+            _sync_result(
+                cursor, "fixture_statistics",
+                counts["statistics"], counts["statistics"],
             )
+
+    duration = time.monotonic() - import_started
     print(
-        f"[Repository import] Transaction committed; total duration "
-        f"{time.monotonic() - import_started:.2f}s.",
+        f"[Repository import] Bulk transaction committed in {duration:.2f}s; "
+        f"fixtures={counts['fixtures']}, statistics={counts['statistics']}, "
+        f"links={len(link_rows)}.",
         flush=True,
     )
+    if progress_callback:
+        progress_callback(f"Database transaction committed in {duration:.1f}s.")
     return {
         "provider": "sportmonks",
         "league": league.get("name"),
         "season": season.get("name"),
         "received": {"teams": len(teams), "fixtures": len(fixtures)},
         "upserted": counts,
+        "provider_links_written": len(link_rows),
         "statistics_source": "fixture raw_payload.statistics when supplied by provider",
         "idempotent": True,
         "raw_snapshots_preserved": True,
         "neon_prediction_ledger_modified": False,
+        "import_mode": "chunked_bulk_upsert",
+        "transaction_duration_seconds": round(duration, 2),
     }
-
 
 def _rows_as_dicts(cursor) -> list[dict[str, Any]]:
     """Convert the current cursor result into ordinary dictionaries."""
