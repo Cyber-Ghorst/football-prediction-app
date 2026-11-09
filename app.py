@@ -332,9 +332,10 @@ def _sync_completed_sportmonks_results():
             for group in candidates:
                 representative = group[0]
                 try:
-                    fixture = client.fixture(
+                    fixture = get_sm_fixture_detail(
                         representative["fixture_id"],
-                        include="participants;scores;state;league;season",
+                        "participants;scores;state;league;season",
+                        ttl_seconds=300,
                     )
                     checked += 1
                     if not isinstance(fixture, dict):
@@ -626,6 +627,43 @@ def _fetch_sm_fixtures(season_id, include_stats, team_ids):
             flush=True,
         )
         return fixtures
+
+
+@st.cache_data(ttl=300, show_spinner=False)
+def get_sm_fixture_detail(fixture_id, include, ttl_seconds=300):
+    """Read or archive one Sportmonks fixture-detail response."""
+    normalized_id = str(fixture_id)
+    include_value = str(include or "")
+    return _collect_sportmonks_with_archive(
+        "fixture_detail",
+        {"fixture_id": normalized_id, "include": include_value},
+        lambda: _fetch_sm_fixture_detail(normalized_id, include_value),
+        int(ttl_seconds),
+    )
+
+
+def _fetch_sm_fixture_detail(fixture_id, include):
+    with SportmonksClient() as sm:
+        return sm.fixture(fixture_id, include=include)
+
+
+@st.cache_data(ttl=300, show_spinner=False)
+def get_sm_fixtures_between(start_date, end_date, include, ttl_seconds=300):
+    """Read or archive a Sportmonks date-range fixture response."""
+    start_value = str(start_date)
+    end_value = str(end_date)
+    include_value = str(include or "")
+    return _collect_sportmonks_with_archive(
+        "fixtures_between",
+        {"start_date": start_value, "end_date": end_value, "include": include_value},
+        lambda: _fetch_sm_fixtures_between(start_value, end_value, include_value),
+        int(ttl_seconds),
+    )
+
+
+def _fetch_sm_fixtures_between(start_date, end_date, include):
+    with SportmonksClient() as sm:
+        return sm.fixtures_between(start_date, end_date, include=include)
 
 with st.sidebar:
     st.header("Data configuration")
@@ -1564,9 +1602,10 @@ try:
                 if selected_match_fixture:
                     try:
                         with SportmonksClient() as detail_client:
-                            match_detail = detail_client.fixture(
+                            match_detail = get_sm_fixture_detail(
                                 selected_match_fixture["id"],
-                                include="participants;state;lineups.details.type;formations;sidelined.player;sidelined.type;sidelined.sideline",
+                                "participants;state;lineups.details.type;formations;sidelined.player;sidelined.type;sidelined.sideline",
+                                ttl_seconds=300,
                             )
                         if match_detail:
                             match_details = extract_sportmonks_match_details(
@@ -1656,10 +1695,11 @@ try:
                                                 continue
 
                                             if candidate_date not in fixtures_by_date:
-                                                fixtures_by_date[candidate_date] = verifier_client.fixtures_between(
+                                                fixtures_by_date[candidate_date] = get_sm_fixtures_between(
                                                     candidate_date,
                                                     candidate_date,
-                                                    include="participants;state;scores",
+                                                    "participants;state;scores",
+                                                    ttl_seconds=300,
                                                 )
                                             candidate_team_mapping = {}
 
