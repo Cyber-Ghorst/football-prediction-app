@@ -1906,9 +1906,11 @@ try:
                                 "roster_complete": availability_evidence.get("roster_complete"),
                                 "players_assessed": availability_evidence.get("players_assessed", 0),
                                 "current_squad_players": availability_evidence.get("current_squad_rows_seen", 0),
+                                "matching_team_season_statistics_rows": availability_evidence.get("matching_team_season_statistics_rows", 0),
                                 "players_with_minutes_detail": availability_evidence.get("players_with_minutes_detail", 0),
                                 "minutes_type_ids_seen": availability_evidence.get("minutes_type_ids_seen", []),
                                 "players_missing_minutes_detail": availability_evidence.get("players_missing_minutes_detail", []),
+                                "sample_detail_shapes": availability_evidence.get("sample_detail_shapes", []),
                                 "reason": availability_evidence.get("reason"),
                             })
                         except Exception as squad_exc:
@@ -2355,9 +2357,11 @@ try:
                         "roster_complete": bool((profile.get("availability") or {}).get("roster_complete")),
                         "players_assessed": (profile.get("availability") or {}).get("players_assessed", 0),
                         "current_squad_players": (profile.get("availability") or {}).get("current_squad_rows_seen", 0),
+                        "matching_team_season_statistics_rows": (profile.get("availability") or {}).get("matching_team_season_statistics_rows", 0),
                         "players_with_minutes_detail": (profile.get("availability") or {}).get("players_with_minutes_detail", 0),
                         "minutes_type_ids_seen": (profile.get("availability") or {}).get("minutes_type_ids_seen", []),
                         "players_missing_minutes_detail": (profile.get("availability") or {}).get("players_missing_minutes_detail", []),
+                        "sample_detail_shapes": (profile.get("availability") or {}).get("sample_detail_shapes", []),
                         "importance_method": (profile.get("availability") or {}).get("importance_method"),
                         "sidelined_feed_available": (profile.get("availability") or {}).get("sidelined_feed_available", False),
                         "reported_sidelined_count": (profile.get("availability") or {}).get("reported_sidelined_count"),
