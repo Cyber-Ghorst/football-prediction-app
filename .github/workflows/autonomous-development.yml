@@ -88,7 +88,6 @@ jobs:
           import json
           import os
           import re
-          import subprocess
           from pathlib import PurePosixPath
 
           payload = json.loads(os.environ["CODEX_PAYLOAD"])
@@ -267,7 +266,6 @@ jobs:
 
           import io
           import zipfile
-          from urllib.error import HTTPError
 
           api = f"https://api.github.com/repos/{os.environ['REPOSITORY']}/actions/runs/{os.environ['RUN_ID']}/jobs?per_page=100"
           headers = {
@@ -291,7 +289,7 @@ jobs:
               log_bytes = response.read()
           try:
               with zipfile.ZipFile(io.BytesIO(log_bytes)) as archive:
-                  logs = "\\n".join(
+                  logs = "\n".join(
                       archive.read(name).decode("utf-8", errors="replace")
                       for name in archive.namelist() if not name.endswith("/")
                   )
@@ -299,7 +297,7 @@ jobs:
               logs = log_bytes.decode("utf-8", errors="replace")
 
           quota = bool(re.search(
-              r"quota\\s+exceeded|insufficient_quota|credit_balance_exhausted|"
+              r"quota\s+exceeded|insufficient_quota|credit_balance_exhausted|"
               r"organization_usage_limit_exceeded|organization_spend_limit_exceeded|"
               r"project_spend_limit_exceeded",
               logs, re.IGNORECASE,
