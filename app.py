@@ -2773,11 +2773,12 @@ with st.expander("Prediction tracking, Opta comparison and backtesting", expande
             {"Category": "Unidentifiable pre-match records", "Count": audit["unidentifiable_pre_match_records"]},
             {"Category": "Duplicate records excluded", "Count": audit["duplicate_records_excluded"]},
             {"Category": "Unique pre-match fixtures", "Count": audit["unique_pre_match_fixtures"]},
-            {"Category": "Awaiting a valid final score", "Count": audit["awaiting_valid_score"]},
-            {"Category": "Completed with valid scores", "Count": audit["completed_with_valid_scores"]},
+            {"Category": "Awaiting a final score", "Count": audit["awaiting_valid_score"]},
+            {"Category": "Score entered but not independently verified", "Count": audit["scores_present_but_unverified"]},
+            {"Category": "Completed with independently verified scores", "Count": audit["completed_with_verified_scores"]},
         ]
         st.dataframe(pd.DataFrame(audit_rows), use_container_width=True, hide_index=True)
-        st.caption("Exclusion categories are mutually exclusive. Fixture-level counts are calculated after duplicate removal; a valid score does not by itself prove that a result came from the automatic verifier.")
+        st.caption("Only final scores carrying the exact Sportmonks fixture, team, competition, season and verification timestamp trail are included in accuracy, Brier and log-loss metrics. Manually entered or otherwise unverified scores remain visible in the ledger but are excluded.")
         if report["duplicate_records_excluded"]:
             st.caption(f"Excluded {report['duplicate_records_excluded']} repeated forecast record(s); only the latest valid pre-kickoff forecast per identifiable fixture is scored.")
         if report["unidentifiable_pre_match_records"]:

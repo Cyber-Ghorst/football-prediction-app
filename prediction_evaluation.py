@@ -160,6 +160,30 @@ def _score_records(records: Iterable[Mapping[str, Any]], prefix: str) -> dict[st
     }
 
 
+def _verified_actual_score(row: Mapping[str, Any]) -> tuple[int, int] | None:
+    """Accept only scores carrying the exact automatic Sportmonks verification trail."""
+    if str(row.get("actual_result_verification") or "") != (
+        "exact_fixture_team_competition_season_and_score"
+    ):
+        return None
+    if str(row.get("actual_result_provider") or "").casefold() != "sportmonks":
+        return None
+    if str(row.get("fixture_provider") or "").casefold() != "sportmonks":
+        return None
+    fixture_id = str(row.get("fixture_id") or "").strip()
+    verified_fixture_id = str(row.get("actual_result_fixture_id") or "").strip()
+    if not fixture_id or verified_fixture_id != fixture_id:
+        return None
+    if _parse_datetime(row.get("actual_result_verified_at")) is None:
+        return None
+    if outcome_from_score(row.get("actual_home_goals"), row.get("actual_away_goals")) is None:
+        return None
+    try:
+        return int(row["actual_home_goals"]), int(row["actual_away_goals"])
+    except (KeyError, TypeError, ValueError, OverflowError):
+        return None
+
+
 def _is_before_kickoff(row: Mapping[str, Any], timestamp_field: str) -> bool:
     kickoff = _parse_datetime(row.get("kickoff_at"))
     observed = _parse_datetime(row.get(timestamp_field))
@@ -261,9 +285,12 @@ def evaluate_prediction_ledger(records: Iterable[Mapping[str, Any]]) -> dict[str
             latest_by_fixture[identity] = row
 
     eligible = list(latest_by_fixture.values())
-    completed = [row for row in eligible if outcome_from_score(
-        row.get("actual_home_goals"), row.get("actual_away_goals")
-    ) is not None]
+    score_present = [
+        row for row in eligible
+        if outcome_from_score(row.get("actual_home_goals"), row.get("actual_away_goals")) is not None
+    ]
+    completed = [row for row in score_present if _verified_actual_score(row) is not None]
+    unverified_score_rows = [row for row in score_present if _verified_actual_score(row) is None]
     opta_rows = [
         row for row in completed
         if _valid_probabilities({
@@ -321,8 +348,9 @@ def evaluate_prediction_ledger(records: Iterable[Mapping[str, Any]]) -> dict[str
         "unidentifiable_pre_match_records": len(unidentifiable),
         "duplicate_records_excluded": len(timestamp_eligible) - len(eligible) - len(unidentifiable),
         "unique_pre_match_fixtures": len(eligible),
-        "completed_with_valid_scores": len(completed),
-        "awaiting_valid_score": len(eligible) - len(completed),
+        "completed_with_verified_scores": len(completed),
+        "scores_present_but_unverified": len(unverified_score_rows),
+        "awaiting_valid_score": len(eligible) - len(score_present),
     })
     return {
         "records_total": len(rows),
@@ -332,6 +360,7 @@ def evaluate_prediction_ledger(records: Iterable[Mapping[str, Any]]) -> dict[str
         "duplicate_records_excluded": len(timestamp_eligible) - len(eligible) - len(unidentifiable),
         "unidentifiable_pre_match_records": len(unidentifiable),
         "completed_pre_match_predictions": len(completed),
+        "unverified_score_records": len(unverified_score_rows),
         "player_snapshots_pre_kickoff": len(player_snapshots),
         "team_snapshots_pre_kickoff": len(team_snapshots),
         "team_snapshot_competitions": len({str(row.get("competition") or "") for row in team_snapshots}),
