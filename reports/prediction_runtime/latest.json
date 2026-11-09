@@ -1,20 +1,20 @@
 {
   "report_name": "prediction_runtime",
-  "generated_at_utc": "2026-11-09T20:21:50.511024+00:00",
+  "generated_at_utc": "2026-11-09T20:29:55.762501+00:00",
   "competition": "Premier League — England",
   "season": 2026,
   "stages_seconds": {
-    "standings_collection_seconds": 2.328,
-    "live_fixture_collection_seconds": 3.873,
-    "season_snapshot_and_shared_profile_build_seconds": 5.96,
-    "fixture_detail_enrichment_seconds": 14.448,
-    "squad_enrichment_seconds": 3.017,
-    "optional_provider_corroboration_seconds": 24.562,
-    "data_collection_total_seconds": 41.471,
-    "validation_and_report_archiving_seconds": 6.252,
-    "tactical_analysis_and_prediction_seconds": 2.73,
-    "prediction_ledger_write_seconds": 1.903
+    "standings_collection_seconds": 12.65,
+    "live_fixture_collection_seconds": 16.847,
+    "season_snapshot_and_shared_profile_build_seconds": 5.374,
+    "fixture_detail_enrichment_seconds": 14.695,
+    "squad_enrichment_seconds": 13.193,
+    "optional_provider_corroboration_seconds": 23.837,
+    "data_collection_total_seconds": 53.88,
+    "validation_and_report_archiving_seconds": 6.964,
+    "tactical_analysis_and_prediction_seconds": 2.851,
+    "prediction_ledger_write_seconds": 2.184
   },
-  "elapsed_seconds_before_runtime_report_upload": 52.355,
+  "elapsed_seconds_before_runtime_report_upload": 65.879,
   "note": "Diagnostic timings only. No prediction inputs, model weights, recency rules, TVD calculations or ledger contents are changed."
 }
