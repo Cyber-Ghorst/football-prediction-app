@@ -114,8 +114,8 @@ jobs:
                   raise SystemExit("Prediction run requires season, competition, home team and away team: " + ", ".join(missing))
 
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
-              output.write(f"operation={operation}\\n")
-              output.write("prediction_request=" + json.dumps(request, ensure_ascii=False) + "\\n")
+              output.write(f"operation={operation}\n")
+              output.write("prediction_request=" + json.dumps(request, ensure_ascii=False) + "\n")
           print(f"Accepted operation: {operation}")
           PY
 
@@ -287,7 +287,7 @@ jobs:
           target = Path(".streamlit")
           target.mkdir(exist_ok=True)
           lines = [f"{key} = {json.dumps(os.environ[key])}" for key in keys if os.environ.get(key)]
-          (target / "secrets.toml").write_text("\\n".join(lines) + "\\n", encoding="utf-8")
+          (target / "secrets.toml").write_text("\n".join(lines) + "\n", encoding="utf-8")
           print("Ephemeral Streamlit secrets file prepared; values were not printed.")
           PY
 
