@@ -6,6 +6,7 @@ import hashlib
 import time
 import re
 import traceback
+import logging
 from datetime import datetime, timezone
 import requests
 import pandas as pd
@@ -22,9 +23,9 @@ def _redact_runtime_trace(raw_trace):
             raw_trace = raw_trace.replace(secret, "[REDACTED]")
     except Exception:
         pass
-    raw_trace = re.sub(r"(?i)(Bearer\\s+)[A-Za-z0-9._~+/=-]+", r"\\1[REDACTED]", raw_trace)
-    raw_trace = re.sub(r"(postgres(?:ql)?://[^:/\\s]+:)[^@/\\s]+@", r"\\1[REDACTED]@", raw_trace)
-    raw_trace = re.sub(r"(?i)(api[_-]?key|token|password|secret)(\\s*[=:]\\s*)[^\\s,;]+", r"\\1\\2[REDACTED]", raw_trace)
+    raw_trace = re.sub(r"(?i)(Bearer\s+)[A-Za-z0-9._~+/=-]+", r"\1[REDACTED]", raw_trace)
+    raw_trace = re.sub(r"(postgres(?:ql)?://[^:/\s]+:)[^@/\s]+@", r"\\1[REDACTED]@", raw_trace)
+    raw_trace = re.sub(r"(?i)(api[_-]?key|token|password|secret)(\s*[=:]\s*)[^\s,;]+", r"\1\2[REDACTED]", raw_trace)
     return raw_trace[-24000:]
 
 
@@ -137,7 +138,7 @@ class _GitHubRuntimeLogHandler(logging.Handler):
         if not (record.exc_info or "scriptrunner" in record.name.lower()):
             return
         try:
-            details = f"Logger: {record.name}\\nMessage: {record.getMessage()}\\n"
+            details = f"Logger: {record.name}\nMessage: {record.getMessage()}\n"
             if record.exc_info:
                 details += "".join(traceback.format_exception(*record.exc_info))
             safe_details = _redact_runtime_trace(details)
