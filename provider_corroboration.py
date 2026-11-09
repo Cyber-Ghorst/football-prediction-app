@@ -6,7 +6,9 @@ Provider observations retain namespaced IDs and field-level conflicts.
 """
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
+import time
 from typing import Any, Mapping
 
 from canonical_data import (
@@ -122,6 +124,68 @@ def _api_ninjas_league_slug(client: Any, competition: str) -> str | None:
     return str(matches[0]["id"]) if len(matches) == 1 else None
 
 
+def _collect_api_ninjas_records(
+    *,
+    client: Any,
+    competition: str,
+    season: int,
+    home_team_name: str,
+    away_team_name: str,
+    competition_key_value: str,
+) -> dict[str, Any]:
+    """Fetch and normalize API Ninjas team histories independently."""
+    started = time.perf_counter()
+    result: dict[str, Any] = {
+        "records": [],
+        "provider_count": 0,
+        "team_requests": 0,
+        "raw_rows_received": 0,
+        "error": None,
+        "metadata": {},
+    }
+    try:
+        league_slug = _api_ninjas_league_slug(client, competition)
+        if league_slug is None:
+            result["error"] = (
+                "No unique exact competition-name mapping exists in the API Ninjas league catalogue."
+            )
+        else:
+            rows = []
+            for team_name in (home_team_name, away_team_name):
+                result["team_requests"] += 1
+                rows.extend(client.team_matches(
+                    team=team_name, league=league_slug, season=int(season)
+                ))
+            result["raw_rows_received"] = len(rows)
+            seen: set[str] = set()
+            normalized = []
+            for row in rows:
+                match_id = str(row.get("game_id") or row.get("fixture_id") or "")
+                if match_id and match_id in seen:
+                    continue
+                if match_id:
+                    seen.add(match_id)
+                if str(row.get("league") or league_slug) != league_slug:
+                    continue
+                row_season = row.get("season")
+                if row_season is not None and str(row_season) != str(int(season)):
+                    continue
+                try:
+                    normalized.append(canonicalize_api_ninjas_match(
+                        row, competition_key=competition_key_value, season=int(season)
+                    ))
+                except (ValueError, TypeError, KeyError):
+                    continue
+            result["records"] = normalized
+            result["provider_count"] = len(normalized)
+    except Exception as exc:
+        result["error"] = str(exc)
+    finally:
+        result["elapsed_seconds"] = round(time.perf_counter() - started, 3)
+        result["metadata"] = dict(getattr(client, "last_metadata", {}) or {})
+    return result
+
+
 def collect_recent_result_corroboration(
     *,
     sportmonks_fixtures: list[dict[str, Any]],
@@ -176,6 +240,23 @@ def collect_recent_result_corroboration(
         "page_metadata": [],
     }
 
+    # Overlap the independent API Ninjas fetch with Highlightly pagination.
+    # Each provider client is confined to one thread; results are merged below.
+    api_ninjas_executor = None
+    api_ninjas_future = None
+    if api_ninjas_client is not None:
+        api_ninjas_executor = ThreadPoolExecutor(max_workers=1)
+        api_ninjas_future = api_ninjas_executor.submit(
+            _collect_api_ninjas_records,
+            client=api_ninjas_client,
+            competition=competition,
+            season=int(season),
+            home_team_name=home_team_name,
+            away_team_name=away_team_name,
+            competition_key_value=key,
+        )
+
+    highlightly_started = time.perf_counter()
     if highlightly_client is not None:
         try:
             rows: list[dict[str, Any]] = []
@@ -384,42 +465,33 @@ def collect_recent_result_corroboration(
                 getattr(highlightly_client, "last_metadata", {}) or {}
             )
 
-    if api_ninjas_client is not None:
+    highlightly_elapsed = round(time.perf_counter() - highlightly_started, 3)
+    api_ninjas_diagnostics: dict[str, Any] = {
+        "team_requests": 0,
+        "raw_rows_received": 0,
+        "records_normalized": 0,
+        "elapsed_seconds": 0.0,
+        "metadata": {},
+    }
+    if api_ninjas_future is not None:
         try:
-            league_slug = _api_ninjas_league_slug(api_ninjas_client, competition)
-            if league_slug is None:
-                provider_counts["api_ninjas"] = 0
-                errors["api_ninjas"] = "No unique exact competition-name mapping exists in the API Ninjas league catalogue."
-            else:
-                rows = []
-                for team_name in (home_team_name, away_team_name):
-                    rows.extend(api_ninjas_client.team_matches(
-                        team=team_name, league=league_slug, season=int(season)
-                    ))
-                seen: set[str] = set()
-                normalized = []
-                for row in rows:
-                    match_id = str(row.get("game_id") or row.get("fixture_id") or "")
-                    if match_id and match_id in seen:
-                        continue
-                    if match_id:
-                        seen.add(match_id)
-                    if str(row.get("league") or league_slug) != league_slug:
-                        continue
-                    row_season = row.get("season")
-                    if row_season is not None and str(row_season) != str(int(season)):
-                        continue
-                    try:
-                        normalized.append(canonicalize_api_ninjas_match(
-                            row, competition_key=key, season=int(season)
-                        ))
-                    except (ValueError, TypeError, KeyError):
-                        continue
-                home_records.extend(normalized)
-                away_records.extend(normalized)
-                provider_counts["api_ninjas"] = len(normalized)
-        except Exception as exc:
-            errors["api_ninjas"] = str(exc)
+            api_result = api_ninjas_future.result()
+            normalized_api_ninjas = api_result.get("records") or []
+            home_records.extend(normalized_api_ninjas)
+            away_records.extend(normalized_api_ninjas)
+            provider_counts["api_ninjas"] = int(api_result.get("provider_count") or 0)
+            api_ninjas_diagnostics.update({
+                "team_requests": api_result.get("team_requests", 0),
+                "raw_rows_received": api_result.get("raw_rows_received", 0),
+                "records_normalized": len(normalized_api_ninjas),
+                "elapsed_seconds": api_result.get("elapsed_seconds", 0.0),
+                "metadata": api_result.get("metadata") or {},
+            })
+            if api_result.get("error"):
+                errors["api_ninjas"] = str(api_result["error"])
+        finally:
+            if api_ninjas_executor is not None:
+                api_ninjas_executor.shutdown(wait=True)
 
     # Restrict the diagnostic to fixtures involving either selected team.
     selected = {normalize_team_name(home_team_name), normalize_team_name(away_team_name)}
@@ -649,6 +721,11 @@ def collect_recent_result_corroboration(
         "fixtures_with_both_agreement_and_conflict": mixed,
         "field_level_summary": field_level_summary,
         "providers_matched": sorted(matched_providers),
+        "provider_timings_seconds": {
+            "highlightly": highlightly_elapsed,
+            "api_ninjas": api_ninjas_diagnostics["elapsed_seconds"],
+        },
+        "api_ninjas_diagnostics": api_ninjas_diagnostics,
         "errors": errors,
         "matches": reconciled,
         "interpretation": (
