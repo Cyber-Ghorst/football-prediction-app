@@ -28,7 +28,7 @@ def _redact_runtime_trace(raw_trace):
     return raw_trace[-24000:]
 
 
-def _upload_startup_failure(trace_text):
+def _upload_startup_failure(trace_text, event_name="streamlit_application_error"):
     token = st.secrets.get("GITHUB_REPORT_TOKEN", "")
     if not token:
         raise RuntimeError("GITHUB_REPORT_TOKEN is not configured.")
@@ -36,7 +36,7 @@ def _upload_startup_failure(trace_text):
     payload = {
         "report_name": "streamlit_runtime_logs",
         "generated_at_utc": generated.isoformat(),
-        "event": "application_startup_or_import_failure",
+        "event": event_name,
         "traceback": trace_text,
         "sensitive_data_policy": "Secrets and credential patterns are redacted; no prediction ledger or user data is included.",
     }
@@ -127,6 +127,33 @@ except Exception:
     except Exception as upload_error:
         st.warning(f"Automatic GitHub log upload failed: {upload_error}")
     st.stop()
+
+# Streamlit records uncaught script exceptions through its logger. Forward only
+# error-level exception records; the traceback is redacted before leaving the app.
+class _GitHubRuntimeLogHandler(logging.Handler):
+    def emit(self, record):
+        if record.levelno < logging.ERROR:
+            return
+        if not (record.exc_info or "scriptrunner" in record.name.lower()):
+            return
+        try:
+            details = f"Logger: {record.name}\\nMessage: {record.getMessage()}\\n"
+            if record.exc_info:
+                details += "".join(traceback.format_exception(*record.exc_info))
+            safe_details = _redact_runtime_trace(details)
+            _upload_startup_failure(safe_details, "streamlit_runtime_exception")
+        except Exception as upload_error:
+            try:
+                st.session_state["github_runtime_log_upload_error"] = str(upload_error)
+            except Exception:
+                pass
+
+
+_runtime_logger = logging.getLogger("streamlit")
+if not any(getattr(handler, "_football_github_runtime_handler", False) for handler in _runtime_logger.handlers):
+    _runtime_handler = _GitHubRuntimeLogHandler()
+    _runtime_handler._football_github_runtime_handler = True
+    _runtime_logger.addHandler(_runtime_handler)
 
 st.set_page_config(page_title="Football Prediction Lab", page_icon="⚽", layout="wide")
 st.title("⚽ Football Prediction Lab")
