@@ -1210,6 +1210,194 @@ def audit_repository_fixture_statistics(database_url: str) -> dict[str, Any]:
         },
     }
 
+def diagnose_fixture_statistics_coverage(database_url: str) -> dict[str, Any]:
+    """Explain fixture-statistics gaps by completion state and stored provider payload."""
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                WITH fixture_stats AS (
+                    SELECT fixture_id, COUNT(*) AS statistic_rows
+                    FROM football_fixture_statistics
+                    GROUP BY fixture_id
+                ),
+                classified AS (
+                    SELECT
+                        f.fixture_id, f.season_id, f.league_id, f.starting_at,
+                        COALESCE(f.status, '<NULL>') AS status,
+                        f.home_goals, f.away_goals, f.source_provider,
+                        f.collected_at,
+                        COALESCE(fs.statistic_rows, 0) AS statistic_rows,
+                        (f.raw_payload->'statistics') IS NOT NULL AS raw_statistics_present,
+                        CASE
+                            WHEN (f.raw_payload->'statistics') IS NULL
+                                THEN 'not_in_stored_provider_payload'
+                            WHEN f.raw_payload->'statistics' = '[]'::JSONB
+                                THEN 'provider_returned_empty_statistics'
+                            ELSE 'provider_payload_contains_statistics'
+                        END AS statistics_payload_state,
+                        CASE
+                            WHEN LOWER(COALESCE(f.status, '')) IN
+                                ('finished', 'complete', 'completed', 'ft', 'full time', '5')
+                             AND f.home_goals IS NOT NULL AND f.away_goals IS NOT NULL
+                             AND f.starting_at < NOW()
+                                THEN 'completed_scored'
+                            WHEN f.starting_at < NOW()
+                                THEN 'past_unverified_or_unscored'
+                            WHEN f.starting_at >= NOW()
+                                THEN 'future_or_upcoming'
+                            ELSE 'unknown_kickoff'
+                        END AS fixture_cohort
+                    FROM football_fixtures AS f
+                    LEFT JOIN fixture_stats AS fs ON fs.fixture_id = f.fixture_id
+                )
+                SELECT
+                    COUNT(*) AS total_fixtures,
+                    COUNT(*) FILTER (WHERE statistic_rows > 0) AS fixtures_with_normalized_statistics,
+                    COUNT(*) FILTER (WHERE statistic_rows = 0) AS fixtures_without_normalized_statistics,
+                    COUNT(*) FILTER (WHERE fixture_cohort = 'completed_scored') AS completed_scored_fixtures,
+                    COUNT(*) FILTER (WHERE fixture_cohort = 'completed_scored' AND statistic_rows > 0)
+                        AS completed_scored_with_statistics,
+                    COUNT(*) FILTER (WHERE fixture_cohort = 'completed_scored' AND statistic_rows = 0)
+                        AS completed_scored_missing_statistics,
+                    COUNT(*) FILTER (WHERE fixture_cohort = 'past_unverified_or_unscored')
+                        AS past_unverified_or_unscored_fixtures,
+                    COUNT(*) FILTER (WHERE fixture_cohort = 'future_or_upcoming')
+                        AS future_or_upcoming_fixtures,
+                    COUNT(*) FILTER (WHERE fixture_cohort = 'unknown_kickoff')
+                        AS unknown_kickoff_fixtures,
+                    COUNT(*) FILTER (WHERE statistics_payload_state = 'not_in_stored_provider_payload')
+                        AS missing_statistics_from_stored_provider_payload,
+                    COUNT(*) FILTER (WHERE statistics_payload_state = 'provider_returned_empty_statistics')
+                        AS provider_payload_with_empty_statistics,
+                    COUNT(*) FILTER (WHERE statistics_payload_state = 'provider_payload_contains_statistics'
+                                      AND statistic_rows = 0)
+                        AS provider_statistics_present_but_not_normalized
+                FROM classified
+                """
+            )
+            summary_rows = _rows_as_dicts(cursor)
+            summary = summary_rows[0] if summary_rows else {}
+
+            cursor.execute(
+                """
+                WITH fixture_stats AS (
+                    SELECT fixture_id, COUNT(*) AS statistic_rows
+                    FROM football_fixture_statistics
+                    GROUP BY fixture_id
+                )
+                SELECT
+                    f.season_id,
+                    COALESCE(f.status, '<NULL>') AS status,
+                    CASE
+                        WHEN LOWER(COALESCE(f.status, '')) IN
+                            ('finished', 'complete', 'completed', 'ft', 'full time', '5')
+                         AND f.home_goals IS NOT NULL AND f.away_goals IS NOT NULL
+                         AND f.starting_at < NOW()
+                            THEN 'completed_scored'
+                        WHEN f.starting_at < NOW()
+                            THEN 'past_unverified_or_unscored'
+                        WHEN f.starting_at >= NOW()
+                            THEN 'future_or_upcoming'
+                        ELSE 'unknown_kickoff'
+                    END AS fixture_cohort,
+                    COUNT(*) AS fixture_count,
+                    COUNT(*) FILTER (WHERE COALESCE(fs.statistic_rows, 0) > 0)
+                        AS fixtures_with_statistics,
+                    COUNT(*) FILTER (WHERE COALESCE(fs.statistic_rows, 0) = 0)
+                        AS fixtures_without_statistics,
+                    COUNT(*) FILTER (WHERE f.raw_payload->'statistics' IS NULL)
+                        AS provider_statistics_field_absent,
+                    COUNT(*) FILTER (WHERE f.raw_payload->'statistics' = '[]'::JSONB)
+                        AS provider_returned_empty_statistics,
+                    COUNT(*) FILTER (
+                        WHERE f.raw_payload->'statistics' IS NOT NULL
+                          AND f.raw_payload->'statistics' <> '[]'::JSONB
+                          AND COALESCE(fs.statistic_rows, 0) = 0
+                    ) AS provider_statistics_present_but_not_normalized
+                FROM football_fixtures AS f
+                LEFT JOIN fixture_stats AS fs ON fs.fixture_id = f.fixture_id
+                GROUP BY f.season_id, COALESCE(f.status, '<NULL>'),
+                    CASE
+                        WHEN LOWER(COALESCE(f.status, '')) IN
+                            ('finished', 'complete', 'completed', 'ft', 'full time', '5')
+                         AND f.home_goals IS NOT NULL AND f.away_goals IS NOT NULL
+                         AND f.starting_at < NOW()
+                            THEN 'completed_scored'
+                        WHEN f.starting_at < NOW()
+                            THEN 'past_unverified_or_unscored'
+                        WHEN f.starting_at >= NOW()
+                            THEN 'future_or_upcoming'
+                        ELSE 'unknown_kickoff'
+                    END
+                ORDER BY f.season_id, fixture_cohort, status
+                """
+            )
+            cohort_breakdown = _rows_as_dicts(cursor)
+
+            cursor.execute(
+                """
+                WITH fixture_stats AS (
+                    SELECT fixture_id, COUNT(*) AS statistic_rows
+                    FROM football_fixture_statistics
+                    GROUP BY fixture_id
+                )
+                SELECT
+                    f.fixture_id, f.season_id, f.league_id,
+                    home.name AS home_team, away.name AS away_team,
+                    f.starting_at, f.status, f.home_goals, f.away_goals,
+                    f.source_provider, f.collected_at,
+                    CASE
+                        WHEN f.raw_payload->'statistics' IS NULL
+                            THEN 'not_in_stored_provider_payload'
+                        WHEN f.raw_payload->'statistics' = '[]'::JSONB
+                            THEN 'provider_returned_empty_statistics'
+                        ELSE 'provider_payload_contains_statistics'
+                    END AS statistics_payload_state,
+                    COALESCE(fs.statistic_rows, 0) AS normalized_statistic_rows,
+                    CASE
+                        WHEN LOWER(COALESCE(f.status, '')) IN
+                            ('finished', 'complete', 'completed', 'ft', 'full time', '5')
+                         AND f.home_goals IS NOT NULL AND f.away_goals IS NOT NULL
+                         AND f.starting_at < NOW()
+                            THEN 'completed_scored'
+                        WHEN f.starting_at < NOW()
+                            THEN 'past_unverified_or_unscored'
+                        WHEN f.starting_at >= NOW()
+                            THEN 'future_or_upcoming'
+                        ELSE 'unknown_kickoff'
+                    END AS fixture_cohort
+                FROM football_fixtures AS f
+                LEFT JOIN fixture_stats AS fs ON fs.fixture_id = f.fixture_id
+                LEFT JOIN football_teams AS home ON home.team_id = f.home_team_id
+                LEFT JOIN football_teams AS away ON away.team_id = f.away_team_id
+                WHERE COALESCE(fs.statistic_rows, 0) = 0
+                ORDER BY f.starting_at DESC NULLS LAST, f.fixture_id
+                LIMIT 100
+                """
+            )
+            missing_fixture_samples = _rows_as_dicts(cursor)
+
+    return {
+        "diagnostic_status": "success",
+        "summary": {key: int(value or 0) for key, value in summary.items()},
+        "cohort_breakdown": cohort_breakdown,
+        "missing_fixture_samples": missing_fixture_samples,
+        "interpretation_guide": {
+            "not_in_stored_provider_payload": "The stored fixture response did not contain a statistics field; this does not by itself prove the provider has no statistics.",
+            "provider_returned_empty_statistics": "The stored provider response explicitly contained an empty statistics list.",
+            "provider_payload_contains_statistics": "The stored response included a non-empty statistics payload; if normalized rows are zero, investigate the importer.",
+            "completed_scored": "Recognized completed status, both scores present, and kickoff is in the past.",
+        },
+        "read_only": True,
+        "prediction_engine_modified": False,
+        "neon_prediction_ledger_modified": False,
+    }
+
+
 def diagnose_repository_fixture_history(database_url: str) -> dict[str, Any]:
     """Summarize imported fixture statuses and score coverage to diagnose history reads."""
     if not database_url:
