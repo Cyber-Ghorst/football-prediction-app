@@ -215,9 +215,9 @@ jobs:
               if path.exists():
                   content = path.read_text(encoding="utf-8", errors="replace")
                   if len(content) > 7000:
-                      content = content[:7000] + "\\n... output truncated"
-                  sections.append(f"### {heading}\\n\\n{content}")
-          body = "## Prediction Lab agent report\\n\\n" + "\\n\\n".join(sections)
+                      content = content[:7000] + "\n... output truncated"
+                  sections.append(f"### {heading}\n\n{content}")
+          body = "## Prediction Lab agent report\n\n" + "\n\n".join(sections)
           api = f"https://api.github.com/repos/{os.environ['REPOSITORY']}/issues/{os.environ['ISSUE_NUMBER']}/comments"
           request = Request(api, data=json.dumps({"body": body}).encode("utf-8"), headers={
               "Accept": "application/vnd.github+json",
