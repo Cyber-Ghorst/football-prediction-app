@@ -69,6 +69,6 @@
   },
   "opta_comparable_fixtures": 0,
   "opta_comparison_note": "Opta is scored only on the same deduplicated completed fixtures as the model.",
-  "generated_at_utc": "2026-11-09T17:28:17.451453+00:00",
+  "generated_at_utc": "2026-11-09T17:31:35.036642+00:00",
   "report_name": "prediction_performance"
 }
