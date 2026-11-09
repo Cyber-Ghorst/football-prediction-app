@@ -84,7 +84,7 @@ try:
     from sportmonks import SportmonksClient, SportmonksError
     from data_layer2 import collect_team_profile
     from sportmonks_layer2 import collect_sportmonks_team_profile, collect_repository_team_profiles, load_repository_season_snapshot, find_upcoming_match_fixture, find_exact_match_fixture, extract_sportmonks_match_details
-    from sportmonks_candidate_verification import verify_highlightly_candidate
+    from sportmonks_candidate_verification import verify_highlightly_candidate, resolve_candidate_team_id, fixtures_for_utc_date
     from provider_core import normalize_team_name
     from engine import predict_match, WEIGHTS, most_likely_outcome
     from tvd import run_tvd
@@ -1943,44 +1943,79 @@ try:
                                                     "participants;state;scores",
                                                     ttl_seconds=300,
                                                 )
-                                            candidate_team_mapping = {}
+                                            date_fixtures = fixtures_by_date[candidate_date]
 
-                                            def exact_team_id(candidate_team_name):
+                                            def resolve_candidate_identity(candidate_team_name, resolution_fixtures):
                                                 target_name = normalize_team_name(candidate_team_name or "")
                                                 matches = [
                                                     row for name, row in team_map.items()
                                                     if normalize_team_name(name) == target_name
                                                 ]
                                                 if len(matches) == 1:
-                                                    candidate_team_mapping[str(candidate_team_name)] = {
+                                                    return {
                                                         "team_id": int(matches[0]["id"]),
                                                         "status": "exact_name_resolved_from_selected_season_team_list",
                                                         "matched_provider_names": [str(matches[0].get("name") or "")],
                                                     }
-                                                    return int(matches[0]["id"])
-                                                # Candidate opponents may not be present in the selected
-                                                # season's team list. Resolve only from exact participant
-                                                # names returned by Sportmonks for this candidate date.
-                                                from sportmonks_candidate_verification import resolve_candidate_team_id
-                                                resolution = resolve_candidate_team_id(
+                                                return resolve_candidate_team_id(
                                                     candidate_team_name,
-                                                    fixtures_by_date[candidate_date],
+                                                    resolution_fixtures,
                                                 )
-                                                candidate_team_mapping[str(candidate_team_name)] = resolution
-                                                return resolution["team_id"]
 
+                                            candidate_team_mapping = {
+                                                str(candidate.get("home") or ""): resolve_candidate_identity(
+                                                    candidate.get("home"), date_fixtures
+                                                ),
+                                                str(candidate.get("away") or ""): resolve_candidate_identity(
+                                                    candidate.get("away"), date_fixtures
+                                                ),
+                                            }
                                             report = verify_highlightly_candidate(
                                                 candidate,
-                                                fixtures_by_date[candidate_date],
+                                                date_fixtures,
                                                 season_id=int(selected_season_id),
                                                 league_id=int(league_id),
-                                                home_team_id=exact_team_id(candidate.get("home")),
-                                                away_team_id=exact_team_id(candidate.get("away")),
+                                                home_team_id=candidate_team_mapping[str(candidate.get("home") or "")]["team_id"],
+                                                away_team_id=candidate_team_mapping[str(candidate.get("away") or "")]["team_id"],
                                             )
                                             report["team_mapping_details"] = candidate_team_mapping
                                             report["sportmonks_request_metadata"] = dict(
                                                 verifier_client.last_metadata or {}
                                             )
+
+                                            # The date endpoint can omit a fixture even when the
+                                            # selected-season team-fixture collection already contains
+                                            # it. Retry verification against those independently fetched
+                                            # Sportmonks rows for the same UTC date before marking the
+                                            # candidate unresolved.
+                                            if report.get("verification_status") != "exact_fixture_and_score_agree":
+                                                season_date_fixtures = fixtures_for_utc_date(
+                                                    fixtures or [], candidate_date
+                                                )
+                                                if season_date_fixtures:
+                                                    fallback_team_mapping = {
+                                                        str(candidate.get("home") or ""): resolve_candidate_identity(
+                                                            candidate.get("home"), season_date_fixtures
+                                                        ),
+                                                        str(candidate.get("away") or ""): resolve_candidate_identity(
+                                                            candidate.get("away"), season_date_fixtures
+                                                        ),
+                                                    }
+                                                    fallback_report = verify_highlightly_candidate(
+                                                        candidate,
+                                                        season_date_fixtures,
+                                                        season_id=int(selected_season_id),
+                                                        league_id=int(league_id),
+                                                        home_team_id=fallback_team_mapping[str(candidate.get("home") or "")]["team_id"],
+                                                        away_team_id=fallback_team_mapping[str(candidate.get("away") or "")]["team_id"],
+                                                    )
+                                                    fallback_report["team_mapping_details"] = fallback_team_mapping
+                                                    if fallback_report.get("verification_status") == "exact_fixture_and_score_agree":
+                                                        fallback_report["targeted_date_endpoint_verification"] = report
+                                                        fallback_report["verification_source"] = "selected_season_fixture_collection_fallback"
+                                                        report = fallback_report
+                                                    else:
+                                                        report["selected_season_fixture_fallback"] = fallback_report
                                             candidate_verification.append(report)
                                 except SportmonksError as exc:
                                     corroboration["errors"]["sportmonks_candidate_verification"] = str(exc)
