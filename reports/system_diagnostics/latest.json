@@ -1,6 +1,6 @@
 {
   "diagnostic_version": 1,
-  "generated_at": "2026-11-09T11:27:57.206236+00:00",
+  "generated_at": "2026-11-09T11:42:17.128061+00:00",
   "overall_status": "attention_required",
   "selected_context": {
     "season_start_year": 2026,
@@ -916,6 +916,6 @@
     "weights_total": 1.0,
     "model_impact": "Diagnostics only; weights, recency weighting, prediction inputs and missing-data rules are not changed."
   },
-  "generated_at_utc": "2026-11-09T11:28:00.087431+00:00",
+  "generated_at_utc": "2026-11-09T11:42:17.135638+00:00",
   "report_name": "system_diagnostics"
 }
