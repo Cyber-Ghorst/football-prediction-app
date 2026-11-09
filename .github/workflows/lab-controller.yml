@@ -24,7 +24,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Python
-        if: inputs.operation == 'test_suite'
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -121,6 +120,18 @@ jobs:
               sys.exit(1)
           PY
 
+      - name: Install health-check dependencies
+        if: inputs.operation == 'health_check'
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run application code smoke check
+        if: inputs.operation == 'health_check'
+        run: |
+          set -o pipefail
+          python deployment_smoke_check.py | tee deployment-smoke-report.json
+
       - name: Install test dependencies
         if: inputs.operation == 'test_suite'
         run: |
@@ -138,6 +149,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: prediction-lab-controller-report
-          path: controller-report.txt
+          path: |
+            controller-report.txt
+            deployment-smoke-report.json
           if-no-files-found: warn
           retention-days: 14
