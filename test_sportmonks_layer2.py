@@ -276,6 +276,29 @@ class SportmonksLayer2Tests(unittest.TestCase):
         self.assertEqual(details["availability"]["home"]["reported_sidelined"][0]["player_name"], "Unavailable Player")
         self.assertIsNone(details["availability"]["home"]["player_availability"])
 
+    def test_empty_sidelined_include_is_distinguished_from_missing_feed(self):
+        from sportmonks_layer2 import extract_sportmonks_match_details
+
+        row = fixture(20, 10, 20, 0, 0, state="NS")
+        row["sidelined"] = []
+        details = extract_sportmonks_match_details(row, 10, 20, 2026)
+        self.assertTrue(details["availability"]["home"]["sidelined_feed_available"])
+        self.assertEqual(details["availability"]["home"]["reported_unavailable_count"], 0)
+
+    def test_sidelined_completed_and_team_identity_are_preserved(self):
+        from sportmonks_layer2 import extract_sportmonks_match_details
+
+        row = fixture(20, 10, 20, 0, 0, state="NS")
+        row["sidelined"] = [{
+            "participant_id": 10, "player_id": 102, "completed": False,
+            "player": {"id": 102, "name": "Unavailable Player"},
+            "sideline": {"category": "Hamstring", "start_date": "2026-11-01", "end_date": None},
+        }]
+        details = extract_sportmonks_match_details(row, 10, 20, 2026)
+        sidelined = details["availability"]["home"]["reported_sidelined"][0]
+        self.assertEqual(sidelined["team_id"], 10)
+        self.assertFalse(sidelined["completed"])
+
     def test_extract_match_details_rejects_wrong_match_identity(self):
         from sportmonks_layer2 import extract_sportmonks_match_details
 
