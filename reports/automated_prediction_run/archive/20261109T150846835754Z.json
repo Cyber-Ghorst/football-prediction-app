@@ -1,0 +1,48 @@
+{
+  "report_name": "automated_prediction_run",
+  "status": "prediction_record_created",
+  "started_at_utc": "2026-11-09T15:06:07.406331+00:00",
+  "completed_at_utc": "2026-11-09T15:08:46.835622+00:00",
+  "elapsed_seconds": 159.43,
+  "execution_method": "streamlit_app_test_harness",
+  "same_app_prediction_flow": true,
+  "selection": {
+    "season": 2026,
+    "competition": "Premier League — England",
+    "home_team": "Liverpool",
+    "away_team": "Manchester United"
+  },
+  "prediction": {
+    "predicted_at": "2026-11-09T15:08:40.210664+00:00",
+    "kickoff_at": "2026-11-22 16:30:00",
+    "prediction_before_kickoff": true,
+    "fixture_id": "19722097",
+    "fixture_provider": "sportmonks",
+    "model_home_win_pct": 56.2,
+    "model_draw_pct": 22.6,
+    "model_away_win_pct": 21.2,
+    "model_version": "weighted-football-model-v1",
+    "model_recency_policy": "latest_5_60pct_previous_5_40pct"
+  },
+  "app_errors": [],
+  "app_warnings": [
+    "Highlightly reported completed result(s) not found among Sportmonks' completed, score-valid fixtures. Review the candidates below; none has been added automatically.",
+    "Highlightly reported completed result(s) not found among Sportmonks' completed, score-valid fixtures. Review the candidates below; none has been added automatically."
+  ],
+  "ledger_persistence": {
+    "status": "connected",
+    "message": "Neon connected • 47 saved prediction(s).",
+    "saved_signature_present": true
+  },
+  "archived_app_reports": {
+    "data_collection_evidence_latest_url": "https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/data_collection_evidence/latest.json",
+    "data_collection_evidence_archive_url": "https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/data_collection_evidence/archive/20261109T150830710711Z.json",
+    "system_diagnostics_latest_url": "https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/system_diagnostics/latest.json",
+    "system_diagnostics_archive_url": "https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/system_diagnostics/archive/20261109T150834029277Z.json"
+  },
+  "notes": [
+    "The existing app.py workflow was executed through Streamlit AppTest; no parallel prediction implementation was used.",
+    "Provider corroboration remains diagnostic-only and does not alter prediction inputs.",
+    "The app's existing Neon ledger persistence is used when DATABASE_URL is configured."
+  ]
+}
