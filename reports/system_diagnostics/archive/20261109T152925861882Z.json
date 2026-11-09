@@ -1,0 +1,2725 @@
+{
+  "diagnostic_version": 1,
+  "generated_at": "2026-11-09T15:29:23.039051+00:00",
+  "overall_status": "healthy",
+  "selected_context": {
+    "season_start_year": 2026,
+    "competition": "Premier League — England",
+    "primary_provider": "sportmonks"
+  },
+  "summary": {
+    "checks_total": 17,
+    "passed": 14,
+    "warnings": 0,
+    "failed": 0,
+    "informational": 3
+  },
+  "checks": [
+    {
+      "id": "primary_provider_configuration",
+      "status": "pass",
+      "summary": "The selected season uses sportmonks; its credential is configured. Connectivity is assessed separately.",
+      "recommendation": null
+    },
+    {
+      "id": "fixture_identity",
+      "status": "pass",
+      "summary": "The selected upcoming fixture passed exact season, home/away team and scheduled-kickoff checks.",
+      "recommendation": null
+    },
+    {
+      "id": "fixture_freshness",
+      "status": "pass",
+      "summary": "Detailed fixture retrieval is less than 24 hours old.",
+      "recommendation": null
+    },
+    {
+      "id": "home_history_depth",
+      "status": "pass",
+      "summary": "Coventry City: 10 completed score-valid matches available (minimum 5 met; preferred target 10 met).",
+      "recommendation": null
+    },
+    {
+      "id": "home_tactical_recency_weighting",
+      "status": "pass",
+      "summary": "Coventry City: tactical recency metadata reports latest-five 60% / previous-five 40% over 10 match(es).",
+      "recommendation": null
+    },
+    {
+      "id": "home_history_integrity",
+      "status": "pass",
+      "summary": "Coventry City: no duplicate fixture IDs or invalid/missing score fields were found in the collected sample.",
+      "recommendation": null
+    },
+    {
+      "id": "home_statistics_coverage",
+      "status": "pass",
+      "summary": "Coventry City: all 8 core tactical statistics have at least one usable observation.",
+      "recommendation": null
+    },
+    {
+      "id": "away_history_depth",
+      "status": "pass",
+      "summary": "Crystal Palace: 10 completed score-valid matches available (minimum 5 met; preferred target 10 met).",
+      "recommendation": null
+    },
+    {
+      "id": "away_tactical_recency_weighting",
+      "status": "pass",
+      "summary": "Crystal Palace: tactical recency metadata reports latest-five 60% / previous-five 40% over 10 match(es).",
+      "recommendation": null
+    },
+    {
+      "id": "away_history_integrity",
+      "status": "pass",
+      "summary": "Crystal Palace: no duplicate fixture IDs or invalid/missing score fields were found in the collected sample.",
+      "recommendation": null
+    },
+    {
+      "id": "away_statistics_coverage",
+      "status": "pass",
+      "summary": "Crystal Palace: all 8 core tactical statistics have at least one usable observation.",
+      "recommendation": null
+    },
+    {
+      "id": "independent_provider_corroboration",
+      "status": "info",
+      "summary": "No corroboration request errors were reported in the supplied diagnostic context. This does not imply that every provider agreed.",
+      "recommendation": null
+    },
+    {
+      "id": "api_ninjas_history_corroboration",
+      "status": "pass",
+      "summary": "All selected-team API Ninjas completed results match Sportmonks history exactly (Coventry City: 10/10; Crystal Palace: 10/10).",
+      "recommendation": null
+    },
+    {
+      "id": "highlightly_history_coverage",
+      "status": "info",
+      "summary": "Highlightly returned score-valid selected-team history (Crystal Palace: 7/10); unmatched candidates are assessed separately.",
+      "recommendation": null
+    },
+    {
+      "id": "unmatched_external_results",
+      "status": "info",
+      "summary": "3 Highlightly candidate(s) were independently verified against exact Sportmonks fixtures and scores; none were imported.",
+      "recommendation": null
+    },
+    {
+      "id": "model_weight_configuration",
+      "status": "pass",
+      "summary": "The supplied top-level model weights are non-negative and sum to 1.0.",
+      "recommendation": null
+    },
+    {
+      "id": "prediction_readiness",
+      "status": "pass",
+      "summary": "Prediction readiness status: ready. Five completed, score-valid matches per team meet the history minimum; ten is preferred.",
+      "recommendation": null
+    }
+  ],
+  "recommended_actions": [],
+  "providers": {
+    "sportmonks": {
+      "provider": "Sportmonks Football API v3",
+      "role": "Primary current-season provider",
+      "credential_configured": true,
+      "credential_required": true,
+      "adapter": "implemented",
+      "app_integration": "current-season Layer 2 path active; exact competition/season coverage and data-quality gates enforced",
+      "limitation": "Coverage is limited to competitions/seasons enabled by the account; each selected competition must pass data-quality gates."
+    },
+    "highlightly": {
+      "provider": "Highlightly",
+      "role": "Independent current-season corroboration and secondary source",
+      "credential_configured": true,
+      "credential_required": true,
+      "adapter": "implemented",
+      "app_integration": "adapter and authenticated smoke test available; canonical normalizer exists; not yet active in Layer 2 reconciliation",
+      "limitation": "Coverage, fields, quotas and refresh intervals are plan-dependent; match data is not yet active in Layer 2 reconciliation."
+    },
+    "api_football": {
+      "provider": "API-Football v3",
+      "role": "Historical specialist source and secondary detail provider",
+      "credential_configured": true,
+      "credential_required": true,
+      "adapter": "implemented",
+      "app_integration": "historical Layer 2 path active for supported seasons; account status/quota diagnostic available",
+      "limitation": "The configured account is limited to seasons 2022–2024; do not request newer seasons from this account."
+    },
+    "api_ninjas": {
+      "provider": "API Ninjas",
+      "role": "Independent fixtures/results/standings and club/squad corroboration",
+      "credential_configured": true,
+      "credential_required": true,
+      "adapter": "implemented",
+      "app_integration": "adapter and authenticated smoke test available; canonical normalizer exists; not yet active in Layer 2 reconciliation",
+      "limitation": "The current adapter does not supply detailed fixture statistics, injuries or lineups; not yet active in Layer 2 reconciliation."
+    },
+    "livescore_football": {
+      "provider": "LiveScoreFootball",
+      "role": "Conditional competition-specific corroboration for fixtures/results/standings",
+      "credential_configured": false,
+      "credential_required": false,
+      "adapter": "implemented",
+      "app_integration": "read-only adapter, metadata freshness and exact competition crosswalk checks available; automatic fallback remains disabled",
+      "limitation": "Database-backed snapshots can be delayed; require exact competition/season crosswalk and fresh sync metadata for every use."
+    }
+  },
+  "fixture": {
+    "verified": true,
+    "status": "verified",
+    "reason": "Exact competition-season fixture identity and future kickoff verified.",
+    "fixture_id": 19722099,
+    "kickoff_utc": "2026-11-21T15:00:00+00:00",
+    "source_updated_at": null,
+    "source_fetched_at": "2026-11-09T15:27:53.223243+00:00",
+    "source_age_seconds": 89.8,
+    "source_age_minutes": 1.5,
+    "source_freshness": "fresh",
+    "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
+  },
+  "teams": {
+    "home": {
+      "team": "Coventry City",
+      "completed_matches_available": 10,
+      "history_minimum": 5,
+      "history_target": 10,
+      "history_collection_diagnostics": {
+        "fixtures_scanned": 380,
+        "same_season_fixtures": 380,
+        "season_eligible_fixtures": 380,
+        "fixtures_missing_season_id": 0,
+        "team_fixtures": 38,
+        "completed_fixtures": 10,
+        "fixtures_with_valid_scores": 10,
+        "excluded_wrong_season": 0,
+        "excluded_missing_participants": 0,
+        "excluded_other_team": 342,
+        "excluded_not_completed": 28,
+        "excluded_missing_scores": 0
+      },
+      "statistics_coverage": {
+        "fixtures_checked": 10,
+        "core_metrics_with_any_data": 8,
+        "core_metrics_complete": 8,
+        "core_metrics_total": 8,
+        "raw_observations_seen": 420,
+        "unmapped_observations": 263,
+        "mapping_visibility": "available",
+        "metrics": [
+          {
+            "group": "Possession & distribution",
+            "statistic": "Ball Possession",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 10,
+            "status": "available"
+          },
+          {
+            "group": "Possession & distribution",
+            "statistic": "Passes %",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 10,
+            "status": "available"
+          },
+          {
+            "group": "Attacking",
+            "statistic": "Total Shots",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 20,
+            "status": "available"
+          },
+          {
+            "group": "Attacking",
+            "statistic": "Shots on Target / Goal",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 10,
+            "status": "available"
+          },
+          {
+            "group": "Defending",
+            "statistic": "Tackles",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 10,
+            "status": "available"
+          },
+          {
+            "group": "Defending",
+            "statistic": "Interceptions",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 10,
+            "status": "available"
+          },
+          {
+            "group": "Defending",
+            "statistic": "Blocked Shots",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 10,
+            "status": "available"
+          },
+          {
+            "group": "Attacking",
+            "statistic": "Corner Kicks",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 10,
+            "status": "available"
+          }
+        ],
+        "tactical_evidence_metrics": [
+          {
+            "statistic": "Counter Attacks",
+            "team_output_fixtures": 0,
+            "opponent_output_fixtures": 0,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Big Chances Created",
+            "team_output_fixtures": 9,
+            "opponent_output_fixtures": 9,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Successful Headers",
+            "team_output_fixtures": 8,
+            "opponent_output_fixtures": 8,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Accurate Crosses",
+            "team_output_fixtures": 10,
+            "opponent_output_fixtures": 10,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Successful Dribbles",
+            "team_output_fixtures": 10,
+            "opponent_output_fixtures": 10,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Key Passes",
+            "team_output_fixtures": 10,
+            "opponent_output_fixtures": 10,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Shots Insidebox",
+            "team_output_fixtures": 10,
+            "opponent_output_fixtures": 10,
+            "fixtures_checked": 10
+          }
+        ],
+        "unmapped_statistics": [
+          {
+            "provider_statistic": "Assists",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Attacks",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Ball Safe",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Dangerous Attacks",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Dribble Attempts",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Duels Won",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Fouls",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Free Kicks",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Goal Kicks",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Goals",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Long Passes",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Offsides",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Passes",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Saves",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Shots Outsidebox",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Substitutions",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Successful Dribbles Percentage",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Successful Long Passes",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Successful Long Passes Percentage",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Successful Passes",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Tackles Won",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Throwins",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Total Crosses",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Yellowcards",
+            "observations": 9,
+            "fixtures_seen": 9
+          },
+          {
+            "provider_statistic": "Big Chances Missed",
+            "observations": 7,
+            "fixtures_seen": 7
+          },
+          {
+            "provider_statistic": "Injuries",
+            "observations": 7,
+            "fixtures_seen": 7
+          },
+          {
+            "provider_statistic": "Hit Woodwork",
+            "observations": 4,
+            "fixtures_seen": 4
+          },
+          {
+            "provider_statistic": "Penalties",
+            "observations": 3,
+            "fixtures_seen": 3
+          },
+          {
+            "provider_statistic": "Redcards",
+            "observations": 2,
+            "fixtures_seen": 2
+          },
+          {
+            "provider_statistic": "Yellowred Cards",
+            "observations": 1,
+            "fixtures_seen": 1
+          }
+        ]
+      },
+      "tactical_summary": {
+        "playing_style": 34.35,
+        "attacking_approach": 32.699999999999996,
+        "defensive_structure": 35.53333333333333,
+        "coverage_metrics": 8,
+        "available_metrics": {
+          "average_possession": 39.3,
+          "average_pass_accuracy": 75.9,
+          "average_shots": 11.4,
+          "average_shots_on_target": 3.3,
+          "average_tackles": 12.1,
+          "average_interceptions": 10.3,
+          "average_blocked_shots": 3.0,
+          "average_corners": 3.5
+        },
+        "recency_weighting": {
+          "matches_used": 10,
+          "recent_matches": 5,
+          "recent_weight": 0.6,
+          "previous_matches": 5,
+          "previous_weight": 0.4,
+          "note": "Latest five matches carry 60%; previous five carry 40%. If a metric is absent from one window, the available window is renormalized."
+        },
+        "note": "Tactical ratings are shown only when the underlying statistics are present; unavailable metrics remain unknown."
+      },
+      "tactical_recency_weighting": {
+        "matches_used": 10,
+        "recent_matches": 5,
+        "recent_weight": 0.6,
+        "previous_matches": 5,
+        "previous_weight": 0.4,
+        "note": "Latest five matches carry 60%; previous five carry 40%. If a metric is absent from one window, the available window is renormalized."
+      },
+      "integrity": {
+        "matches_checked": 10,
+        "duplicate_fixture_ids": [],
+        "invalid_or_missing_score_fields": []
+      }
+    },
+    "away": {
+      "team": "Crystal Palace",
+      "completed_matches_available": 10,
+      "history_minimum": 5,
+      "history_target": 10,
+      "history_collection_diagnostics": {
+        "fixtures_scanned": 380,
+        "same_season_fixtures": 380,
+        "season_eligible_fixtures": 380,
+        "fixtures_missing_season_id": 0,
+        "team_fixtures": 38,
+        "completed_fixtures": 10,
+        "fixtures_with_valid_scores": 10,
+        "excluded_wrong_season": 0,
+        "excluded_missing_participants": 0,
+        "excluded_other_team": 342,
+        "excluded_not_completed": 28,
+        "excluded_missing_scores": 0
+      },
+      "statistics_coverage": {
+        "fixtures_checked": 10,
+        "core_metrics_with_any_data": 8,
+        "core_metrics_complete": 8,
+        "core_metrics_total": 8,
+        "raw_observations_seen": 420,
+        "unmapped_observations": 262,
+        "mapping_visibility": "available",
+        "metrics": [
+          {
+            "group": "Possession & distribution",
+            "statistic": "Ball Possession",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 10,
+            "status": "available"
+          },
+          {
+            "group": "Possession & distribution",
+            "statistic": "Passes %",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 10,
+            "status": "available"
+          },
+          {
+            "group": "Attacking",
+            "statistic": "Total Shots",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 20,
+            "status": "available"
+          },
+          {
+            "group": "Attacking",
+            "statistic": "Shots on Target / Goal",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 10,
+            "status": "available"
+          },
+          {
+            "group": "Defending",
+            "statistic": "Tackles",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 10,
+            "status": "available"
+          },
+          {
+            "group": "Defending",
+            "statistic": "Interceptions",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 10,
+            "status": "available"
+          },
+          {
+            "group": "Defending",
+            "statistic": "Blocked Shots",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 10,
+            "status": "available"
+          },
+          {
+            "group": "Attacking",
+            "statistic": "Corner Kicks",
+            "fixtures_available": 10,
+            "fixtures_checked": 10,
+            "coverage_pct": 100.0,
+            "raw_observations": 10,
+            "status": "available"
+          }
+        ],
+        "tactical_evidence_metrics": [
+          {
+            "statistic": "Counter Attacks",
+            "team_output_fixtures": 0,
+            "opponent_output_fixtures": 0,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Big Chances Created",
+            "team_output_fixtures": 10,
+            "opponent_output_fixtures": 10,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Successful Headers",
+            "team_output_fixtures": 8,
+            "opponent_output_fixtures": 8,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Accurate Crosses",
+            "team_output_fixtures": 10,
+            "opponent_output_fixtures": 10,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Successful Dribbles",
+            "team_output_fixtures": 10,
+            "opponent_output_fixtures": 10,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Key Passes",
+            "team_output_fixtures": 10,
+            "opponent_output_fixtures": 10,
+            "fixtures_checked": 10
+          },
+          {
+            "statistic": "Shots Insidebox",
+            "team_output_fixtures": 10,
+            "opponent_output_fixtures": 10,
+            "fixtures_checked": 10
+          }
+        ],
+        "unmapped_statistics": [
+          {
+            "provider_statistic": "Attacks",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Ball Safe",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Big Chances Missed",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Dangerous Attacks",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Dribble Attempts",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Duels Won",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Fouls",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Free Kicks",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Goal Kicks",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Long Passes",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Offsides",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Passes",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Saves",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Shots Outsidebox",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Substitutions",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Successful Dribbles Percentage",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Successful Long Passes",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Successful Long Passes Percentage",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Successful Passes",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Tackles Won",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Throwins",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Total Crosses",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
+            "provider_statistic": "Goals",
+            "observations": 9,
+            "fixtures_seen": 9
+          },
+          {
+            "provider_statistic": "Yellowcards",
+            "observations": 9,
+            "fixtures_seen": 9
+          },
+          {
+            "provider_statistic": "Assists",
+            "observations": 8,
+            "fixtures_seen": 8
+          },
+          {
+            "provider_statistic": "Hit Woodwork",
+            "observations": 7,
+            "fixtures_seen": 7
+          },
+          {
+            "provider_statistic": "Injuries",
+            "observations": 6,
+            "fixtures_seen": 6
+          },
+          {
+            "provider_statistic": "Redcards",
+            "observations": 2,
+            "fixtures_seen": 2
+          },
+          {
+            "provider_statistic": "Penalties",
+            "observations": 1,
+            "fixtures_seen": 1
+          }
+        ]
+      },
+      "tactical_summary": {
+        "playing_style": 40.8,
+        "attacking_approach": 33.86666666666667,
+        "defensive_structure": 47.0,
+        "coverage_metrics": 8,
+        "available_metrics": {
+          "average_possession": 43.0,
+          "average_pass_accuracy": 77.2,
+          "average_shots": 11.0,
+          "average_shots_on_target": 3.8,
+          "average_tackles": 20.7,
+          "average_interceptions": 10.0,
+          "average_blocked_shots": 2.5,
+          "average_corners": 3.5
+        },
+        "recency_weighting": {
+          "matches_used": 10,
+          "recent_matches": 5,
+          "recent_weight": 0.6,
+          "previous_matches": 5,
+          "previous_weight": 0.4,
+          "note": "Latest five matches carry 60%; previous five carry 40%. If a metric is absent from one window, the available window is renormalized."
+        },
+        "note": "Tactical ratings are shown only when the underlying statistics are present; unavailable metrics remain unknown."
+      },
+      "tactical_recency_weighting": {
+        "matches_used": 10,
+        "recent_matches": 5,
+        "recent_weight": 0.6,
+        "previous_matches": 5,
+        "previous_weight": 0.4,
+        "note": "Latest five matches carry 60%; previous five carry 40%. If a metric is absent from one window, the available window is renormalized."
+      },
+      "integrity": {
+        "matches_checked": 10,
+        "duplicate_fixture_ids": [],
+        "invalid_or_missing_score_fields": []
+      }
+    }
+  },
+  "corroboration": {
+    "errors": {},
+    "provider_records_returned": {
+      "highlightly": 290,
+      "api_ninjas": 74
+    },
+    "highlightly_diagnostics": {
+      "requested_filters": {
+        "leagueName": "Premier League",
+        "countryName": "England",
+        "season": 2026,
+        "limit": 100,
+        "max_pages": 10
+      },
+      "pages_requested": 3,
+      "raw_rows_received": 290,
+      "rejected_competition_mismatch": 0,
+      "competition_missing_in_response": 0,
+      "rejected_country_missing": 0,
+      "rejected_country_mismatch": 0,
+      "country_missing_but_retained": 0,
+      "season_missing_in_response": 0,
+      "rejected_season_mismatch": 0,
+      "rejected_invalid_season": 0,
+      "normalization_failures": 0,
+      "records_normalized": 290,
+      "completed_score_valid_records": 100,
+      "selected_team_records": 29,
+      "page_metadata": [
+        {
+          "offset": 0,
+          "rows_returned": 100,
+          "response": {
+            "provider_cache": "hit",
+            "response_payload_type": "dict",
+            "response_top_level_keys": [
+              "data",
+              "pagination",
+              "plan"
+            ],
+            "response_data_type": "list",
+            "rows_envelope": "data_list",
+            "extracted_rows_count": 100
+          }
+        },
+        {
+          "offset": 100,
+          "rows_returned": 100,
+          "response": {
+            "provider_cache": "hit",
+            "response_payload_type": "dict",
+            "response_top_level_keys": [
+              "data",
+              "pagination",
+              "plan"
+            ],
+            "response_data_type": "list",
+            "rows_envelope": "data_list",
+            "extracted_rows_count": 100
+          }
+        },
+        {
+          "offset": 200,
+          "rows_returned": 90,
+          "response": {
+            "provider_cache": "hit",
+            "response_payload_type": "dict",
+            "response_top_level_keys": [
+              "data",
+              "pagination",
+              "plan"
+            ],
+            "response_data_type": "list",
+            "rows_envelope": "data_list",
+            "extracted_rows_count": 90
+          }
+        }
+      ],
+      "team_name_catalog": {
+        "Tottenham": {
+          "normalized_name": "tottenham",
+          "appearances": 29,
+          "source_team_ids": [
+            "40781"
+          ]
+        },
+        "Nottingham Forest": {
+          "normalized_name": "nottingham forest",
+          "appearances": 29,
+          "source_team_ids": [
+            "56099"
+          ]
+        },
+        "Sunderland": {
+          "normalized_name": "sunderland",
+          "appearances": 29,
+          "source_team_ids": [
+            "635630"
+          ]
+        },
+        "Brentford": {
+          "normalized_name": "brentford",
+          "appearances": 29,
+          "source_team_ids": [
+            "47589"
+          ]
+        },
+        "Manchester United": {
+          "normalized_name": "manchester united",
+          "appearances": 29,
+          "source_team_ids": [
+            "28867"
+          ]
+        },
+        "Everton": {
+          "normalized_name": "everton",
+          "appearances": 29,
+          "source_team_ids": [
+            "39079"
+          ]
+        },
+        "Liverpool": {
+          "normalized_name": "liverpool",
+          "appearances": 29,
+          "source_team_ids": [
+            "34824"
+          ]
+        },
+        "Ipswich": {
+          "normalized_name": "ipswich",
+          "appearances": 29,
+          "source_team_ids": [
+            "49291"
+          ]
+        },
+        "Leeds": {
+          "normalized_name": "leeds",
+          "appearances": 29,
+          "source_team_ids": [
+            "54397"
+          ]
+        },
+        "Brighton": {
+          "normalized_name": "brighton",
+          "appearances": 29,
+          "source_team_ids": [
+            "44185"
+          ]
+        },
+        "Crystal Palace": {
+          "normalized_name": "crystal palace",
+          "appearances": 29,
+          "source_team_ids": [
+            "45036"
+          ]
+        },
+        "Fulham": {
+          "normalized_name": "fulham",
+          "appearances": 29,
+          "source_team_ids": [
+            "31420"
+          ]
+        },
+        "Coventry": {
+          "normalized_name": "coventry",
+          "appearances": 29,
+          "source_team_ids": [
+            "1146230"
+          ]
+        },
+        "Manchester City": {
+          "normalized_name": "manchester city",
+          "appearances": 29,
+          "source_team_ids": [
+            "43334"
+          ]
+        },
+        "Chelsea": {
+          "normalized_name": "chelsea",
+          "appearances": 29,
+          "source_team_ids": [
+            "42483"
+          ]
+        },
+        "Arsenal": {
+          "normalized_name": "arsenal",
+          "appearances": 29,
+          "source_team_ids": [
+            "36526"
+          ]
+        },
+        "Bournemouth": {
+          "normalized_name": "bournemouth",
+          "appearances": 29,
+          "source_team_ids": [
+            "30569"
+          ]
+        },
+        "Newcastle United": {
+          "normalized_name": "newcastle united",
+          "appearances": 29,
+          "source_team_ids": [
+            "29718"
+          ]
+        },
+        "Aston Villa": {
+          "normalized_name": "aston villa",
+          "appearances": 29,
+          "source_team_ids": [
+            "56950"
+          ]
+        },
+        "Hull City": {
+          "normalized_name": "hull city",
+          "appearances": 29,
+          "source_team_ids": [
+            "55248"
+          ]
+        }
+      },
+      "selected_team_breakdown": {
+        "Coventry City": {
+          "normalized_team_records": 0,
+          "status_counts": {},
+          "raw_state_descriptions": {},
+          "completed_score_valid": 0,
+          "finished_missing_score": 0,
+          "sample_records": []
+        },
+        "Crystal Palace": {
+          "normalized_team_records": 29,
+          "status_counts": {
+            "scheduled": 19,
+            "finished": 10
+          },
+          "raw_state_descriptions": {
+            "Not started": 19,
+            "Finished": 10
+          },
+          "completed_score_valid": 10,
+          "finished_missing_score": 0,
+          "sample_records": [
+            {
+              "highlightly_match_id": "1325561785",
+              "date": "2027-03-13T15:00:00.000Z",
+              "home": "Crystal Palace",
+              "away": "Fulham",
+              "home_team_id": 45036,
+              "away_team_id": 31420,
+              "raw_state": {
+                "description": "Not started",
+                "score": {
+                  "current": null,
+                  "penalties": null
+                }
+              },
+              "normalized_status": "scheduled",
+              "normalized_score": [
+                null,
+                null
+              ],
+              "league": {
+                "id": 33973,
+                "name": "Premier League",
+                "season": 2026
+              },
+              "country": "England"
+            },
+            {
+              "highlightly_match_id": "1325549871",
+              "date": "2027-03-03T20:00:00.000Z",
+              "home": "Arsenal",
+              "away": "Crystal Palace",
+              "home_team_id": 36526,
+              "away_team_id": 45036,
+              "raw_state": {
+                "description": "Not started",
+                "score": {
+                  "current": null,
+                  "penalties": null
+                }
+              },
+              "normalized_status": "scheduled",
+              "normalized_score": [
+                null,
+                null
+              ],
+              "league": {
+                "id": 33973,
+                "name": "Premier League",
+                "season": 2026
+              },
+              "country": "England"
+            },
+            {
+              "highlightly_match_id": "1325543063",
+              "date": "2027-02-27T15:00:00.000Z",
+              "home": "Crystal Palace",
+              "away": "Sunderland",
+              "home_team_id": 45036,
+              "away_team_id": 635630,
+              "raw_state": {
+                "description": "Not started",
+                "score": {
+                  "current": null,
+                  "penalties": null
+                }
+              },
+              "normalized_status": "scheduled",
+              "normalized_score": [
+                null,
+                null
+              ],
+              "league": {
+                "id": 33973,
+                "name": "Premier League",
+                "season": 2026
+              },
+              "country": "England"
+            },
+            {
+              "highlightly_match_id": "1325533702",
+              "date": "2027-02-20T15:00:00.000Z",
+              "home": "Bournemouth",
+              "away": "Crystal Palace",
+              "home_team_id": 30569,
+              "away_team_id": 45036,
+              "raw_state": {
+                "description": "Not started",
+                "score": {
+                  "current": null,
+                  "penalties": null
+                }
+              },
+              "normalized_status": "scheduled",
+              "normalized_score": [
+                null,
+                null
+              ],
+              "league": {
+                "id": 33973,
+                "name": "Premier League",
+                "season": 2026
+              },
+              "country": "England"
+            },
+            {
+              "highlightly_match_id": "1325526043",
+              "date": "2027-02-10T20:00:00.000Z",
+              "home": "Crystal Palace",
+              "away": "Brentford",
+              "home_team_id": 45036,
+              "away_team_id": 47589,
+              "raw_state": {
+                "description": "Not started",
+                "score": {
+                  "current": null,
+                  "penalties": null
+                }
+              },
+              "normalized_status": "scheduled",
+              "normalized_score": [
+                null,
+                null
+              ],
+              "league": {
+                "id": 33973,
+                "name": "Premier League",
+                "season": 2026
+              },
+              "country": "England"
+            },
+            {
+              "highlightly_match_id": "1325517533",
+              "date": "2027-02-06T15:00:00.000Z",
+              "home": "Crystal Palace",
+              "away": "Coventry",
+              "home_team_id": 45036,
+              "away_team_id": 1146230,
+              "raw_state": {
+                "description": "Not started",
+                "score": {
+                  "current": null,
+                  "penalties": null
+                }
+              },
+              "normalized_status": "scheduled",
+              "normalized_score": [
+                null,
+                null
+              ],
+              "league": {
+                "id": 33973,
+                "name": "Premier League",
+                "season": 2026
+              },
+              "country": "England"
+            }
+          ]
+        }
+      }
+    },
+    "team_history_coverage": {
+      "Coventry City": {
+        "highlightly_completed_score_valid": 0,
+        "highlightly_exact_matches": 0,
+        "highlightly_unmatched_count": 0,
+        "sportmonks_completed_score_valid": 10,
+        "api_ninjas_completed_score_valid": 10,
+        "api_ninjas_exact_matches": 10,
+        "api_ninjas_unmatched_count": 0,
+        "api_ninjas_unmatched_candidates": [],
+        "exact_matches_across_sources": 0,
+        "highlightly_results_not_found_in_sportmonks": 0,
+        "latest_highlightly_completed_match": null,
+        "unmatched_completed_candidates": [],
+        "interpretation": "Provider-specific unmatched results are review candidates, not accepted extra matches. Exact competition, season, home/away teams and kickoff must match before joining."
+      },
+      "Crystal Palace": {
+        "highlightly_completed_score_valid": 10,
+        "highlightly_exact_matches": 7,
+        "highlightly_unmatched_count": 3,
+        "sportmonks_completed_score_valid": 10,
+        "api_ninjas_completed_score_valid": 10,
+        "api_ninjas_exact_matches": 10,
+        "api_ninjas_unmatched_count": 0,
+        "api_ninjas_unmatched_candidates": [],
+        "exact_matches_across_sources": 7,
+        "highlightly_results_not_found_in_sportmonks": 3,
+        "latest_highlightly_completed_match": {
+          "kickoff_utc": "2026-11-08T14:00:00+00:00",
+          "home": "Crystal Palace",
+          "away": "Liverpool",
+          "score": [
+            1,
+            3
+          ],
+          "highlightly_match_id": "1325398393"
+        },
+        "unmatched_completed_candidates": [
+          {
+            "kickoff_utc": "2026-10-31T17:30:00+00:00",
+            "home": "Tottenham",
+            "away": "Crystal Palace",
+            "score": [
+              2,
+              0
+            ],
+            "highlightly_match_id": "1325395840",
+            "review_status": "candidate_only_not_added_to_prediction_history"
+          },
+          {
+            "kickoff_utc": "2026-09-20T13:00:00+00:00",
+            "home": "Leeds",
+            "away": "Crystal Palace",
+            "score": [
+              0,
+              0
+            ],
+            "highlightly_match_id": "1325358396",
+            "review_status": "candidate_only_not_added_to_prediction_history"
+          },
+          {
+            "kickoff_utc": "2026-09-12T14:00:00+00:00",
+            "home": "Crystal Palace",
+            "away": "Ipswich",
+            "score": [
+              2,
+              3
+            ],
+            "highlightly_match_id": "1325349035",
+            "review_status": "candidate_only_not_added_to_prediction_history"
+          }
+        ],
+        "interpretation": "Provider-specific unmatched results are review candidates, not accepted extra matches. Exact competition, season, home/away teams and kickoff must match before joining."
+      }
+    },
+    "candidate_verification": [
+      {
+        "highlightly_candidate": {
+          "kickoff_utc": "2026-10-31T17:30:00+00:00",
+          "home": "Tottenham",
+          "away": "Crystal Palace",
+          "score": [
+            2,
+            0
+          ],
+          "highlightly_match_id": "1325395840"
+        },
+        "sportmonks_date_query": "2026-10-31",
+        "sportmonks_fixtures_returned_for_date": 19,
+        "date_fixture_participant_catalog": [
+          {
+            "team_id": 3,
+            "provider_names": [
+              "Sunderland"
+            ],
+            "fixture_ids": [
+              19722119
+            ]
+          },
+          {
+            "team_id": 6,
+            "provider_names": [
+              "Tottenham Hotspur"
+            ],
+            "fixture_ids": [
+              19722114
+            ]
+          },
+          {
+            "team_id": 9,
+            "provider_names": [
+              "Manchester City"
+            ],
+            "fixture_ids": [
+              19722116
+            ]
+          },
+          {
+            "team_id": 11,
+            "provider_names": [
+              "Fulham"
+            ],
+            "fixture_ids": [
+              19722122
+            ]
+          },
+          {
+            "team_id": 14,
+            "provider_names": [
+              "Manchester United"
+            ],
+            "fixture_ids": [
+              19722120
+            ]
+          },
+          {
+            "team_id": 15,
+            "provider_names": [
+              "Aston Villa"
+            ],
+            "fixture_ids": [
+              19722122
+            ]
+          },
+          {
+            "team_id": 18,
+            "provider_names": [
+              "Chelsea"
+            ],
+            "fixture_ids": [
+              19722120
+            ]
+          },
+          {
+            "team_id": 22,
+            "provider_names": [
+              "Hull City"
+            ],
+            "fixture_ids": [
+              19722118
+            ]
+          },
+          {
+            "team_id": 36,
+            "provider_names": [
+              "Celta de Vigo"
+            ],
+            "fixture_ids": [
+              19732634
+            ]
+          },
+          {
+            "team_id": 37,
+            "provider_names": [
+              "Roma"
+            ],
+            "fixture_ids": [
+              19713518
+            ]
+          },
+          {
+            "team_id": 51,
+            "provider_names": [
+              "Crystal Palace"
+            ],
+            "fixture_ids": [
+              19722114
+            ]
+          },
+          {
+            "team_id": 52,
+            "provider_names": [
+              "AFC Bournemouth"
+            ],
+            "fixture_ids": [
+              19722123
+            ]
+          },
+          {
+            "team_id": 60,
+            "provider_names": [
+              "SD Eibar"
+            ],
+            "fixture_ids": [
+              19745007
+            ]
+          },
+          {
+            "team_id": 63,
+            "provider_names": [
+              "Nottingham Forest"
+            ],
+            "fixture_ids": [
+              19722121
+            ]
+          },
+          {
+            "team_id": 71,
+            "provider_names": [
+              "Leeds United"
+            ],
+            "fixture_ids": [
+              19722123
+            ]
+          },
+          {
+            "team_id": 78,
+            "provider_names": [
+              "Brighton & Hove Albion"
+            ],
+            "fixture_ids": [
+              19722116
+            ]
+          },
+          {
+            "team_id": 83,
+            "provider_names": [
+              "FC Barcelona"
+            ],
+            "fixture_ids": [
+              19732638
+            ]
+          },
+          {
+            "team_id": 113,
+            "provider_names": [
+              "AC Milan"
+            ],
+            "fixture_ids": [
+              19713520
+            ]
+          },
+          {
+            "team_id": 116,
+            "provider_names": [
+              "Ipswich Town"
+            ],
+            "fixture_ids": [
+              19722118
+            ]
+          },
+          {
+            "team_id": 117,
+            "provider_names": [
+              "Coventry City"
+            ],
+            "fixture_ids": [
+              19722119
+            ]
+          },
+          {
+            "team_id": 126,
+            "provider_names": [
+              "Málaga"
+            ],
+            "fixture_ids": [
+              19732641
+            ]
+          },
+          {
+            "team_id": 231,
+            "provider_names": [
+              "Girona"
+            ],
+            "fixture_ids": [
+              19745003
+            ]
+          },
+          {
+            "team_id": 236,
+            "provider_names": [
+              "Brentford"
+            ],
+            "fixture_ids": [
+              19722121
+            ]
+          },
+          {
+            "team_id": 346,
+            "provider_names": [
+              "Udinese"
+            ],
+            "fixture_ids": [
+              19713518
+            ]
+          },
+          {
+            "team_id": 377,
+            "provider_names": [
+              "Rayo Vallecano"
+            ],
+            "fixture_ids": [
+              19732634
+            ]
+          },
+          {
+            "team_id": 384,
+            "provider_names": [
+              "Celta Fortuna"
+            ],
+            "fixture_ids": [
+              19745009
+            ]
+          },
+          {
+            "team_id": 485,
+            "provider_names": [
+              "Real Betis"
+            ],
+            "fixture_ids": [
+              19732641
+            ]
+          },
+          {
+            "team_id": 618,
+            "provider_names": [
+              "Almería"
+            ],
+            "fixture_ids": [
+              19745007
+            ]
+          },
+          {
+            "team_id": 758,
+            "provider_names": [
+              "Sabadell"
+            ],
+            "fixture_ids": [
+              19745011
+            ]
+          },
+          {
+            "team_id": 931,
+            "provider_names": [
+              "Córdoba"
+            ],
+            "fixture_ids": [
+              19745009
+            ]
+          },
+          {
+            "team_id": 1628,
+            "provider_names": [
+              "Monza"
+            ],
+            "fixture_ids": [
+              19713526
+            ]
+          },
+          {
+            "team_id": 2930,
+            "provider_names": [
+              "Inter"
+            ],
+            "fixture_ids": [
+              19713520
+            ]
+          },
+          {
+            "team_id": 2975,
+            "provider_names": [
+              "Deportivo Alavés"
+            ],
+            "fixture_ids": [
+              19732638
+            ]
+          },
+          {
+            "team_id": 3169,
+            "provider_names": [
+              "Albacete"
+            ],
+            "fixture_ids": [
+              19745011
+            ]
+          },
+          {
+            "team_id": 3457,
+            "provider_names": [
+              "Levante"
+            ],
+            "fixture_ids": [
+              19732636
+            ]
+          },
+          {
+            "team_id": 7980,
+            "provider_names": [
+              "Atlético de Madrid"
+            ],
+            "fixture_ids": [
+              19732636
+            ]
+          },
+          {
+            "team_id": 8513,
+            "provider_names": [
+              "Bologna"
+            ],
+            "fixture_ids": [
+              19713526
+            ]
+          },
+          {
+            "team_id": 9656,
+            "provider_names": [
+              "Real Sociedad II"
+            ],
+            "fixture_ids": [
+              19745003
+            ]
+          }
+        ],
+        "expected_identity": {
+          "season_id": 28083,
+          "league_id": 8,
+          "home_team_id": 6,
+          "away_team_id": 51
+        },
+        "team_mapping_status": "exact_team_ids_resolved",
+        "same_season_and_competition_fixtures": 8,
+        "exact_home_away_team_fixtures": 1,
+        "exact_kickoff_fixtures": 1,
+        "exact_completed_score_valid_fixtures": 1,
+        "candidate_score_agreement": true,
+        "sportmonks_candidates": [
+          {
+            "fixture_id": 19722114,
+            "season_id": 28083,
+            "league_id": 8,
+            "kickoff_utc": "2026-10-31 17:30:00",
+            "kickoff_exact_match": true,
+            "home": "Tottenham Hotspur",
+            "away": "Crystal Palace",
+            "home_team_id": 6,
+            "away_team_id": 51,
+            "state_id": 5,
+            "state": "FT",
+            "completed": true,
+            "score": [
+              2,
+              0
+            ],
+            "score_valid": true
+          }
+        ],
+        "verification_status": "exact_fixture_and_score_agree",
+        "team_mapping_details": {
+          "Tottenham": {
+            "team_id": 6,
+            "status": "explicit_alias_resolved_from_date_fixtures",
+            "matched_provider_names": [
+              "Tottenham Hotspur"
+            ],
+            "candidate_matches": [
+              {
+                "team_id": 6,
+                "provider_names": [
+                  "Tottenham Hotspur"
+                ]
+              }
+            ]
+          },
+          "Crystal Palace": {
+            "team_id": 51,
+            "status": "exact_name_resolved_from_selected_season_team_list",
+            "matched_provider_names": [
+              "Crystal Palace"
+            ]
+          }
+        },
+        "sportmonks_request_metadata": {}
+      },
+      {
+        "highlightly_candidate": {
+          "kickoff_utc": "2026-09-20T13:00:00+00:00",
+          "home": "Leeds",
+          "away": "Crystal Palace",
+          "score": [
+            0,
+            0
+          ],
+          "highlightly_match_id": "1325358396"
+        },
+        "sportmonks_date_query": "2026-09-20",
+        "sportmonks_fixtures_returned_for_date": 20,
+        "date_fixture_participant_catalog": [
+          {
+            "team_id": 3,
+            "provider_names": [
+              "Sunderland"
+            ],
+            "fixture_ids": [
+              19722157
+            ]
+          },
+          {
+            "team_id": 8,
+            "provider_names": [
+              "Liverpool"
+            ],
+            "fixture_ids": [
+              19722163
+            ]
+          },
+          {
+            "team_id": 9,
+            "provider_names": [
+              "Manchester City"
+            ],
+            "fixture_ids": [
+              19722157
+            ]
+          },
+          {
+            "team_id": 11,
+            "provider_names": [
+              "Fulham"
+            ],
+            "fixture_ids": [
+              19722159
+            ]
+          },
+          {
+            "team_id": 14,
+            "provider_names": [
+              "Manchester United"
+            ],
+            "fixture_ids": [
+              19722159
+            ]
+          },
+          {
+            "team_id": 51,
+            "provider_names": [
+              "Crystal Palace"
+            ],
+            "fixture_ids": [
+              19722158
+            ]
+          },
+          {
+            "team_id": 52,
+            "provider_names": [
+              "AFC Bournemouth"
+            ],
+            "fixture_ids": [
+              19722163
+            ]
+          },
+          {
+            "team_id": 71,
+            "provider_names": [
+              "Leeds United"
+            ],
+            "fixture_ids": [
+              19722158
+            ]
+          },
+          {
+            "team_id": 93,
+            "provider_names": [
+              "Real Oviedo"
+            ],
+            "fixture_ids": [
+              19745067
+            ]
+          },
+          {
+            "team_id": 102,
+            "provider_names": [
+              "Genoa"
+            ],
+            "fixture_ids": [
+              19713571
+            ]
+          },
+          {
+            "team_id": 103,
+            "provider_names": [
+              "Granada"
+            ],
+            "fixture_ids": [
+              19745070
+            ]
+          },
+          {
+            "team_id": 106,
+            "provider_names": [
+              "Getafe"
+            ],
+            "fixture_ids": [
+              19732677
+            ]
+          },
+          {
+            "team_id": 109,
+            "provider_names": [
+              "Fiorentina"
+            ],
+            "fixture_ids": [
+              19713576
+            ]
+          },
+          {
+            "team_id": 113,
+            "provider_names": [
+              "AC Milan"
+            ],
+            "fixture_ids": [
+              19713573
+            ]
+          },
+          {
+            "team_id": 126,
+            "provider_names": [
+              "Málaga"
+            ],
+            "fixture_ids": [
+              19732677
+            ]
+          },
+          {
+            "team_id": 214,
+            "provider_names": [
+              "Valencia"
+            ],
+            "fixture_ids": [
+              19732674
+            ]
+          },
+          {
+            "team_id": 268,
+            "provider_names": [
+              "Como"
+            ],
+            "fixture_ids": [
+              19713575
+            ]
+          },
+          {
+            "team_id": 361,
+            "provider_names": [
+              "Real Valladolid"
+            ],
+            "fixture_ids": [
+              19745072
+            ]
+          },
+          {
+            "team_id": 384,
+            "provider_names": [
+              "Celta Fortuna"
+            ],
+            "fixture_ids": [
+              19745076
+            ]
+          },
+          {
+            "team_id": 398,
+            "provider_names": [
+              "Parma"
+            ],
+            "fixture_ids": [
+              19713571
+            ]
+          },
+          {
+            "team_id": 429,
+            "provider_names": [
+              "Deportivo A Coruña"
+            ],
+            "fixture_ids": [
+              19732679
+            ]
+          },
+          {
+            "team_id": 485,
+            "provider_names": [
+              "Real Betis"
+            ],
+            "fixture_ids": [
+              19732679
+            ]
+          },
+          {
+            "team_id": 594,
+            "provider_names": [
+              "Real Sociedad"
+            ],
+            "fixture_ids": [
+              19732674
+            ]
+          },
+          {
+            "team_id": 597,
+            "provider_names": [
+              "Napoli"
+            ],
+            "fixture_ids": [
+              19713576
+            ]
+          },
+          {
+            "team_id": 618,
+            "provider_names": [
+              "Almería"
+            ],
+            "fixture_ids": [
+              19745076
+            ]
+          },
+          {
+            "team_id": 625,
+            "provider_names": [
+              "Juventus"
+            ],
+            "fixture_ids": [
+              19713574
+            ]
+          },
+          {
+            "team_id": 708,
+            "provider_names": [
+              "Atalanta"
+            ],
+            "fixture_ids": [
+              19713574
+            ]
+          },
+          {
+            "team_id": 758,
+            "provider_names": [
+              "Sabadell"
+            ],
+            "fixture_ids": [
+              19745067
+            ]
+          },
+          {
+            "team_id": 844,
+            "provider_names": [
+              "Leganés"
+            ],
+            "fixture_ids": [
+              19745070
+            ]
+          },
+          {
+            "team_id": 2921,
+            "provider_names": [
+              "Las Palmas"
+            ],
+            "fixture_ids": [
+              19745069
+            ]
+          },
+          {
+            "team_id": 3457,
+            "provider_names": [
+              "Levante"
+            ],
+            "fixture_ids": [
+              19732673
+            ]
+          },
+          {
+            "team_id": 3468,
+            "provider_names": [
+              "Real Madrid"
+            ],
+            "fixture_ids": [
+              19732681
+            ]
+          },
+          {
+            "team_id": 3477,
+            "provider_names": [
+              "Villarreal"
+            ],
+            "fixture_ids": [
+              19732673
+            ]
+          },
+          {
+            "team_id": 4070,
+            "provider_names": [
+              "Frosinone"
+            ],
+            "fixture_ids": [
+              19713575
+            ]
+          },
+          {
+            "team_id": 7790,
+            "provider_names": [
+              "Lecce"
+            ],
+            "fixture_ids": [
+              19713573
+            ]
+          },
+          {
+            "team_id": 7980,
+            "provider_names": [
+              "Atlético de Madrid"
+            ],
+            "fixture_ids": [
+              19732681
+            ]
+          },
+          {
+            "team_id": 8366,
+            "provider_names": [
+              "Burgos"
+            ],
+            "fixture_ids": [
+              19745069
+            ]
+          },
+          {
+            "team_id": 10579,
+            "provider_names": [
+              "Dorking Wanderers"
+            ],
+            "fixture_ids": [
+              19879001
+            ]
+          },
+          {
+            "team_id": 12330,
+            "provider_names": [
+              "Ceuta"
+            ],
+            "fixture_ids": [
+              19745072
+            ]
+          },
+          {
+            "team_id": 128526,
+            "provider_names": [
+              "Southall"
+            ],
+            "fixture_ids": [
+              19879001
+            ]
+          }
+        ],
+        "expected_identity": {
+          "season_id": 28083,
+          "league_id": 8,
+          "home_team_id": 71,
+          "away_team_id": 51
+        },
+        "team_mapping_status": "exact_team_ids_resolved",
+        "same_season_and_competition_fixtures": 4,
+        "exact_home_away_team_fixtures": 1,
+        "exact_kickoff_fixtures": 1,
+        "exact_completed_score_valid_fixtures": 1,
+        "candidate_score_agreement": true,
+        "sportmonks_candidates": [
+          {
+            "fixture_id": 19722158,
+            "season_id": 28083,
+            "league_id": 8,
+            "kickoff_utc": "2026-09-20 13:00:00",
+            "kickoff_exact_match": true,
+            "home": "Leeds United",
+            "away": "Crystal Palace",
+            "home_team_id": 71,
+            "away_team_id": 51,
+            "state_id": 5,
+            "state": "FT",
+            "completed": true,
+            "score": [
+              0,
+              0
+            ],
+            "score_valid": true
+          }
+        ],
+        "verification_status": "exact_fixture_and_score_agree",
+        "team_mapping_details": {
+          "Leeds": {
+            "team_id": 71,
+            "status": "explicit_alias_resolved_from_date_fixtures",
+            "matched_provider_names": [
+              "Leeds United"
+            ],
+            "candidate_matches": [
+              {
+                "team_id": 71,
+                "provider_names": [
+                  "Leeds United"
+                ]
+              }
+            ]
+          },
+          "Crystal Palace": {
+            "team_id": 51,
+            "status": "exact_name_resolved_from_selected_season_team_list",
+            "matched_provider_names": [
+              "Crystal Palace"
+            ]
+          }
+        },
+        "sportmonks_request_metadata": {}
+      },
+      {
+        "highlightly_candidate": {
+          "kickoff_utc": "2026-09-12T14:00:00+00:00",
+          "home": "Crystal Palace",
+          "away": "Ipswich",
+          "score": [
+            2,
+            3
+          ],
+          "highlightly_match_id": "1325349035"
+        },
+        "sportmonks_date_query": "2026-09-12",
+        "sportmonks_fixtures_returned_for_date": 19,
+        "date_fixture_participant_catalog": [
+          {
+            "team_id": 3,
+            "provider_names": [
+              "Sunderland"
+            ],
+            "fixture_ids": [
+              19722165
+            ]
+          },
+          {
+            "team_id": 6,
+            "provider_names": [
+              "Tottenham Hotspur"
+            ],
+            "fixture_ids": [
+              19722164
+            ]
+          },
+          {
+            "team_id": 8,
+            "provider_names": [
+              "Liverpool"
+            ],
+            "fixture_ids": [
+              19722167
+            ]
+          },
+          {
+            "team_id": 11,
+            "provider_names": [
+              "Fulham"
+            ],
+            "fixture_ids": [
+              19722167
+            ]
+          },
+          {
+            "team_id": 13,
+            "provider_names": [
+              "Everton"
+            ],
+            "fixture_ids": [
+              19722164
+            ]
+          },
+          {
+            "team_id": 15,
+            "provider_names": [
+              "Aston Villa"
+            ],
+            "fixture_ids": [
+              19722172
+            ]
+          },
+          {
+            "team_id": 18,
+            "provider_names": [
+              "Chelsea"
+            ],
+            "fixture_ids": [
+              19722171
+            ]
+          },
+          {
+            "team_id": 19,
+            "provider_names": [
+              "Arsenal"
+            ],
+            "fixture_ids": [
+              19722165
+            ]
+          },
+          {
+            "team_id": 22,
+            "provider_names": [
+              "Hull City"
+            ],
+            "fixture_ids": [
+              19722171
+            ]
+          },
+          {
+            "team_id": 43,
+            "provider_names": [
+              "Lazio"
+            ],
+            "fixture_ids": [
+              19713583
+            ]
+          },
+          {
+            "team_id": 51,
+            "provider_names": [
+              "Crystal Palace"
+            ],
+            "fixture_ids": [
+              19722169
+            ]
+          },
+          {
+            "team_id": 52,
+            "provider_names": [
+              "AFC Bournemouth"
+            ],
+            "fixture_ids": [
+              19722173
+            ]
+          },
+          {
+            "team_id": 63,
+            "provider_names": [
+              "Nottingham Forest"
+            ],
+            "fixture_ids": [
+              19722172
+            ]
+          },
+          {
+            "team_id": 102,
+            "provider_names": [
+              "Genoa"
+            ],
+            "fixture_ids": [
+              19713585
+            ]
+          },
+          {
+            "team_id": 103,
+            "provider_names": [
+              "Granada"
+            ],
+            "fixture_ids": [
+              19745082
+            ]
+          },
+          {
+            "team_id": 113,
+            "provider_names": [
+              "AC Milan"
+            ],
+            "fixture_ids": [
+              19713583
+            ]
+          },
+          {
+            "team_id": 116,
+            "provider_names": [
+              "Ipswich Town"
+            ],
+            "fixture_ids": [
+              19722169
+            ]
+          },
+          {
+            "team_id": 231,
+            "provider_names": [
+              "Girona"
+            ],
+            "fixture_ids": [
+              19745083
+            ]
+          },
+          {
+            "team_id": 236,
+            "provider_names": [
+              "Brentford"
+            ],
+            "fixture_ids": [
+              19722173
+            ]
+          },
+          {
+            "team_id": 377,
+            "provider_names": [
+              "Rayo Vallecano"
+            ],
+            "fixture_ids": [
+              19732696
+            ]
+          },
+          {
+            "team_id": 459,
+            "provider_names": [
+              "Osasuna"
+            ],
+            "fixture_ids": [
+              19732698
+            ]
+          },
+          {
+            "team_id": 528,
+            "provider_names": [
+              "Espanyol"
+            ],
+            "fixture_ids": [
+              19732698
+            ]
+          },
+          {
+            "team_id": 585,
+            "provider_names": [
+              "Cagliari"
+            ],
+            "fixture_ids": [
+              19713587
+            ]
+          },
+          {
+            "team_id": 618,
+            "provider_names": [
+              "Almería"
+            ],
+            "fixture_ids": [
+              19745084
+            ]
+          },
+          {
+            "team_id": 708,
+            "provider_names": [
+              "Atalanta"
+            ],
+            "fixture_ids": [
+              19713587
+            ]
+          },
+          {
+            "team_id": 931,
+            "provider_names": [
+              "Córdoba"
+            ],
+            "fixture_ids": [
+              19745084
+            ]
+          },
+          {
+            "team_id": 1099,
+            "provider_names": [
+              "Elche"
+            ],
+            "fixture_ids": [
+              19732702
+            ]
+          },
+          {
+            "team_id": 2921,
+            "provider_names": [
+              "Las Palmas"
+            ],
+            "fixture_ids": [
+              19745086
+            ]
+          },
+          {
+            "team_id": 2975,
+            "provider_names": [
+              "Deportivo Alavés"
+            ],
+            "fixture_ids": [
+              19732697
+            ]
+          },
+          {
+            "team_id": 3169,
+            "provider_names": [
+              "Albacete"
+            ],
+            "fixture_ids": [
+              19745082
+            ]
+          },
+          {
+            "team_id": 3468,
+            "provider_names": [
+              "Real Madrid"
+            ],
+            "fixture_ids": [
+              19732696
+            ]
+          },
+          {
+            "team_id": 4070,
+            "provider_names": [
+              "Frosinone"
+            ],
+            "fixture_ids": [
+              19713585
+            ]
+          },
+          {
+            "team_id": 6827,
+            "provider_names": [
+              "Cádiz"
+            ],
+            "fixture_ids": [
+              19745086
+            ]
+          },
+          {
+            "team_id": 9656,
+            "provider_names": [
+              "Real Sociedad II"
+            ],
+            "fixture_ids": [
+              19745088
+            ]
+          },
+          {
+            "team_id": 9818,
+            "provider_names": [
+              "Racing Santander"
+            ],
+            "fixture_ids": [
+              19732697
+            ]
+          },
+          {
+            "team_id": 10008,
+            "provider_names": [
+              "Castellón"
+            ],
+            "fixture_ids": [
+              19745083
+            ]
+          },
+          {
+            "team_id": 13258,
+            "provider_names": [
+              "Athletic Club"
+            ],
+            "fixture_ids": [
+              19732702
+            ]
+          },
+          {
+            "team_id": 238115,
+            "provider_names": [
+              "FC Andorra"
+            ],
+            "fixture_ids": [
+              19745088
+            ]
+          }
+        ],
+        "expected_identity": {
+          "season_id": 28083,
+          "league_id": 8,
+          "home_team_id": 51,
+          "away_team_id": 116
+        },
+        "team_mapping_status": "exact_team_ids_resolved",
+        "same_season_and_competition_fixtures": 7,
+        "exact_home_away_team_fixtures": 1,
+        "exact_kickoff_fixtures": 1,
+        "exact_completed_score_valid_fixtures": 1,
+        "candidate_score_agreement": true,
+        "sportmonks_candidates": [
+          {
+            "fixture_id": 19722169,
+            "season_id": 28083,
+            "league_id": 8,
+            "kickoff_utc": "2026-09-12 14:00:00",
+            "kickoff_exact_match": true,
+            "home": "Crystal Palace",
+            "away": "Ipswich Town",
+            "home_team_id": 51,
+            "away_team_id": 116,
+            "state_id": 5,
+            "state": "FT",
+            "completed": true,
+            "score": [
+              2,
+              3
+            ],
+            "score_valid": true
+          }
+        ],
+        "verification_status": "exact_fixture_and_score_agree",
+        "team_mapping_details": {
+          "Crystal Palace": {
+            "team_id": 51,
+            "status": "exact_name_resolved_from_selected_season_team_list",
+            "matched_provider_names": [
+              "Crystal Palace"
+            ]
+          },
+          "Ipswich": {
+            "team_id": 116,
+            "status": "explicit_alias_resolved_from_date_fixtures",
+            "matched_provider_names": [
+              "Ipswich Town"
+            ],
+            "candidate_matches": [
+              {
+                "team_id": 116,
+                "provider_names": [
+                  "Ipswich Town"
+                ]
+              }
+            ]
+          }
+        },
+        "sportmonks_request_metadata": {}
+      }
+    ],
+    "providers_matched": [
+      "api_ninjas",
+      "highlightly",
+      "sportmonks"
+    ],
+    "candidate_review_summary": {
+      "unmatched_candidates_seen": 3,
+      "verified_exact_fixture_and_score": [
+        {
+          "highlightly_match_id": "1325395840",
+          "home": "Tottenham",
+          "away": "Crystal Palace",
+          "kickoff_utc": "2026-10-31T17:30:00+00:00",
+          "score": [
+            2,
+            0
+          ],
+          "verification_status": "exact_fixture_and_score_agree"
+        },
+        {
+          "highlightly_match_id": "1325358396",
+          "home": "Leeds",
+          "away": "Crystal Palace",
+          "kickoff_utc": "2026-09-20T13:00:00+00:00",
+          "score": [
+            0,
+            0
+          ],
+          "verification_status": "exact_fixture_and_score_agree"
+        },
+        {
+          "highlightly_match_id": "1325349035",
+          "home": "Crystal Palace",
+          "away": "Ipswich",
+          "kickoff_utc": "2026-09-12T14:00:00+00:00",
+          "score": [
+            2,
+            3
+          ],
+          "verification_status": "exact_fixture_and_score_agree"
+        }
+      ],
+      "unresolved_candidates": [],
+      "verified_candidates_added_to_prediction_history": 0,
+      "note": "Targeted verification confirms identity and score only. Verified candidates are not imported or appended; primary Sportmonks season history remains the prediction source."
+    }
+  },
+  "prediction_readiness": {
+    "overall_status": "ready",
+    "prediction_minimum_history_met": true,
+    "ten_match_history_target_met": true,
+    "history_policy": {
+      "minimum_matches_per_team": 5,
+      "preferred_target_per_team": 10,
+      "target_is_advisory": true,
+      "note": "Prediction history eligibility requires five completed, score-valid matches per team. Five to nine matches are allowed with a limited-sample label; ten remains the preferred target."
+    },
+    "prediction_allowed_by_history": true,
+    "fixture": {
+      "verified": true,
+      "status": "verified",
+      "reason": "Exact competition-season fixture identity and future kickoff verified.",
+      "fixture_id": 19722099,
+      "kickoff_utc": "2026-11-21T15:00:00+00:00",
+      "source_updated_at": null,
+      "source_fetched_at": "2026-11-09T15:27:53.223243+00:00",
+      "source_age_seconds": 89.8,
+      "source_age_minutes": 1.5,
+      "source_freshness": "fresh",
+      "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
+    },
+    "teams": {
+      "home": {
+        "team": "Coventry City",
+        "completed_matches_available": 10,
+        "history_minimum": 5,
+        "history_target": 10,
+        "history_status": "target_met",
+        "prediction_allowed_by_history": true,
+        "matches_with_statistics": 10,
+        "matches_with_opponent_strength": 10,
+        "tactical_components_available": {
+          "playing_style": true,
+          "defensive_structure": true,
+          "attacking_approach": true
+        },
+        "player_availability_evidence": "unknown",
+        "confirmed_lineup_evidence": "unknown"
+      },
+      "away": {
+        "team": "Crystal Palace",
+        "completed_matches_available": 10,
+        "history_minimum": 5,
+        "history_target": 10,
+        "history_status": "target_met",
+        "prediction_allowed_by_history": true,
+        "matches_with_statistics": 10,
+        "matches_with_opponent_strength": 10,
+        "tactical_components_available": {
+          "playing_style": true,
+          "defensive_structure": true,
+          "attacking_approach": true
+        },
+        "player_availability_evidence": "unknown",
+        "confirmed_lineup_evidence": "unknown"
+      }
+    },
+    "model_impact": "Diagnostic only. This report does not change prediction inputs, model weights, recency weighting or TVD rules."
+  },
+  "model_configuration": {
+    "weights": {
+      "recent_form": 0.2,
+      "goals_scored": 0.1,
+      "goals_conceded": 0.1,
+      "home_away": 0.1,
+      "strength_of_schedule": 0.15,
+      "player_availability": 0.05,
+      "tactical": 0.3
+    },
+    "weights_total": 1.0,
+    "model_impact": "Diagnostics only; weights, recency weighting, prediction inputs and missing-data rules are not changed."
+  },
+  "generated_at_utc": "2026-11-09T15:29:25.861882+00:00",
+  "report_name": "system_diagnostics"
+}
