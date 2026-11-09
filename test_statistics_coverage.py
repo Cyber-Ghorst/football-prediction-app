@@ -17,7 +17,9 @@ class StatisticsCoverageTests(unittest.TestCase):
                     "Interceptions": 8,
                     "Blocked Shots": 3,
                     "Corner Kicks": 6,
+                    "Big Chances Created": 4,
                 },
+                "opponent_statistics": {"Big Chances Created": 2},
                 "statistics_raw_diagnostics": [
                     {"statistic_name_raw": "Shots Accuracy", "mapping_status": "unmapped"},
                     {"statistic_name_raw": "Ball Possession %", "canonical_name": "Ball Possession", "mapping_status": "mapped"},
@@ -52,6 +54,9 @@ class StatisticsCoverageTests(unittest.TestCase):
         self.assertEqual(report["unmapped_statistics"][0]["provider_statistic"], "Shots Accuracy")
         self.assertEqual(report["unmapped_statistics"][0]["fixtures_seen"], 2)
         self.assertEqual(report["mapping_visibility"], "available")
+        big_chance_coverage = next(row for row in report["tactical_evidence_metrics"] if row["statistic"] == "Big Chances Created")
+        self.assertEqual(big_chance_coverage["team_output_fixtures"], 1)
+        self.assertEqual(big_chance_coverage["opponent_output_fixtures"], 1)
 
     def test_missing_statistics_remain_missing_and_do_not_become_zero(self):
         report = build_statistics_coverage([{"fixture_id": 1, "statistics": {}}])
