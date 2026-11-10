@@ -73,14 +73,16 @@ def _pagination(data: Any) -> dict[str, Any]:
 
 def run_sync(
     *, client_factory=OpenScoresClient, database_url: str | None = None,
-    max_leagues: int = 6, now: datetime | None = None,
+    max_leagues: int | None = None, now: datetime | None = None,
 ) -> dict[str, Any]:
     """Fetch one globally filtered fixture stream, then group by explicit provider identities."""
     db_url = (database_url or os.getenv("PROVIDER_DATABASE_URL", "")).strip()
     if not db_url:
         raise ValueError("PROVIDER_DATABASE_URL is required")
-    if isinstance(max_leagues, bool) or not isinstance(max_leagues, int) or not 1 <= max_leagues <= 6:
-        raise ValueError("max_leagues must be between 1 and 6")
+    if max_leagues is not None and (
+        isinstance(max_leagues, bool) or not isinstance(max_leagues, int) or max_leagues < 1
+    ):
+        raise ValueError("max_leagues must be a positive integer or None")
 
     window_start = _as_utc(now or datetime.now(timezone.utc))
     if window_start is None:
@@ -105,6 +107,8 @@ def run_sync(
         "fixtures_missing_league_id": 0,
         "fixtures_missing_season_id": 0,
         "fixtures_unknown_league_id": 0,
+        "fixtures_duplicate_provider_id": 0,
+        "fixtures_conflicting_provider_id": 0,
         "fixtures_outside_window": 0,
         "fixtures_non_scheduled": 0,
         "fixtures_accepted_for_window": 0,
@@ -120,6 +124,8 @@ def run_sync(
     }
 
     observations_by_id: dict[str, dict[str, Any]] = {}
+    candidate_by_id: dict[str, tuple[dict[str, Any], str, str]] = {}
+    conflicting_provider_ids: set[str] = set()
     grouped_records: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
     grouped_retrieval: dict[tuple[str, str], str | None] = {}
     league_names: dict[str, str] = {}
@@ -130,7 +136,8 @@ def run_sync(
         if leagues is None:
             raise RuntimeError("OpenScores league collection could not be normalized")
         report["leagues_discovered"] = len(leagues)
-        for league in leagues[:max_leagues]:
+        selected_leagues = leagues if max_leagues is None else leagues[:max_leagues]
+        for league in selected_leagues:
             league_id = league.get("id") or league.get("league_id")
             if league_id is not None:
                 league_names[str(league_id)] = str(
@@ -190,7 +197,6 @@ def run_sync(
             records, league_id=league_id, season_id=season_id,
             retrieved_at_utc=grouped_retrieval.get((league_id, season_id)),
         )
-        accepted = 0
         outside_window = 0
         non_scheduled = 0
         for fixture in normalized["fixtures"]:
@@ -201,9 +207,19 @@ def run_sync(
             if str(fixture.get("status") or "").strip().casefold() != "scheduled":
                 non_scheduled += 1
                 continue
+            provider_fixture_id = str(fixture["provider_fixture_id"])
             fixture["reconciliation_status"] = "pending_entity_mapping"
-            observations_by_id[str(fixture["provider_fixture_id"])] = fixture
-            accepted += 1
+            if provider_fixture_id in conflicting_provider_ids:
+                continue
+            previous = candidate_by_id.get(provider_fixture_id)
+            if previous is None:
+                candidate_by_id[provider_fixture_id] = (fixture, league_id, season_id)
+            else:
+                report["fixtures_duplicate_provider_id"] += 1
+                if (previous[1], previous[2]) != (league_id, season_id):
+                    candidate_by_id.pop(provider_fixture_id, None)
+                    conflicting_provider_ids.add(provider_fixture_id)
+                    report["fixtures_conflicting_provider_id"] += 1
 
         item = per_competition.setdefault(league_id, {
             "name": league_names[league_id],
@@ -222,11 +238,15 @@ def run_sync(
         item["fixtures_rejected"] += normalized["fixtures_rejected"]
         item["fixtures_outside_window"] += outside_window
         item["fixtures_non_scheduled"] += non_scheduled
-        item["fixtures_accepted_for_window"] += accepted
         report["fixtures_normalized"] += normalized["fixtures_normalized"]
         report["fixtures_rejected"] += normalized["fixtures_rejected"]
         report["fixtures_outside_window"] += outside_window
         report["fixtures_non_scheduled"] += non_scheduled
+
+    for provider_fixture_id, (fixture, league_id, _season_id) in candidate_by_id.items():
+        if provider_fixture_id not in conflicting_provider_ids:
+            observations_by_id[provider_fixture_id] = fixture
+            per_competition[league_id]["fixtures_accepted_for_window"] += 1
 
     report["competitions"] = sorted(
         per_competition.values(), key=lambda item: item["league_id"]
@@ -270,6 +290,7 @@ def main() -> int:
                 "seasons_sampled", "fixtures_received", "fixtures_normalized",
                 "fixtures_rejected", "fixtures_missing_league_id",
                 "fixtures_missing_season_id", "fixtures_unknown_league_id",
+                "fixtures_duplicate_provider_id", "fixtures_conflicting_provider_id",
                 "fixtures_outside_window", "fixtures_non_scheduled",
                 "fixtures_accepted_for_window", "pages_fetched",
                 "pagination_truncated", "observations_upserted",
