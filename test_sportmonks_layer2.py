@@ -429,7 +429,7 @@ class SportmonksLayer2Tests(unittest.TestCase):
             ("Ball Possession", "101%"),
             ("Ball Possession", "nan"),
             ("Ball Possession", "inf"),
-            ("Passes %", 1.5),
+            ("Passes %", 101.5),
             ("Total Shots", -1),
             ("Total Shots", "nan"),
             ("Total Shots", "inf"),
