@@ -144,7 +144,7 @@ def run_sync(
 
             pagination = fixture_result.get("data", {}).get("pagination", {}) if isinstance(fixture_result.get("data"), dict) else {}
             total_pages = pagination.get("total_pages") if isinstance(pagination, dict) else None
-            truncated = (len(fixtures) >= page_size) or (isinstance(total_pages, int) and total_pages > 1)
+            truncated = total_pages > 1 if isinstance(total_pages, int) else len(fixtures) >= page_size
             report["fixtures_received"] += normalized["fixtures_received"]
             report["fixtures_normalized"] += normalized["fixtures_normalized"]
             report["fixtures_rejected"] += normalized["fixtures_rejected"]
