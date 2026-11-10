@@ -409,6 +409,24 @@ class SportmonksLayer2Tests(unittest.TestCase):
         self.assertEqual(diagnostic["exact_home_away"], 1)
         self.assertEqual(diagnostic["future_kickoff"], 1)
 
+    def test_upcoming_fixture_diagnostics_reject_ambiguous_schedule_duplicate(self):
+        from datetime import datetime, timezone
+        from sportmonks_layer2 import diagnose_upcoming_match_fixture
+
+        row = fixture(32, 10, 20, 0, 0, state="unknown")
+        row["state_id"] = 1
+        row["state"] = {}
+        row["starting_at_timestamp"] = int(
+            datetime(2026, 11, 8, tzinfo=timezone.utc).timestamp()
+        )
+        row["_schedule_duplicate"] = True
+        now = int(datetime(2026, 11, 7, tzinfo=timezone.utc).timestamp())
+        diagnostic = diagnose_upcoming_match_fixture(
+            [row], 10, 20, 2026, now_timestamp=now
+        )
+        self.assertFalse(diagnostic["verified"])
+        self.assertEqual(diagnostic["exact_home_away"], 0)
+
     def test_upcoming_fixture_diagnostics_report_unparseable_kickoff(self):
         from datetime import datetime, timezone
         from sportmonks_layer2 import diagnose_upcoming_match_fixture
