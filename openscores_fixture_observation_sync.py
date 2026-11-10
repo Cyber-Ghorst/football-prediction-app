@@ -226,6 +226,9 @@ def run_sync(
                         if season_id in ambiguous_season_ids and not explicit_league_id:
                             report["fixtures_ambiguous_season_id"] += 1
                             continue
+                        if explicit_league_id and explicit_league_id not in league_names:
+                            report["fixtures_unknown_league_id"] += 1
+                            continue
                         if explicit_league_id and explicit_league_id != league_id:
                             report["fixtures_season_league_mismatch"] += 1
                             continue
