@@ -26,10 +26,19 @@ SENSITIVE_PARAM_NAMES = {
 def _validate_request_params(value: Mapping[str, Any]) -> dict[str, Any]:
     if not isinstance(value, Mapping):
         raise ValueError("request_params must be an object.")
+
+    def reject_secrets(item: Any) -> None:
+        if isinstance(item, Mapping):
+            for key, nested in item.items():
+                if str(key).strip().casefold() in SENSITIVE_PARAM_NAMES:
+                    raise ValueError("Credentials must never be included in snapshot request parameters.")
+                reject_secrets(nested)
+        elif isinstance(item, (list, tuple)):
+            for nested in item:
+                reject_secrets(nested)
+
     params = dict(value)
-    for key in params:
-        if str(key).strip().casefold() in SENSITIVE_PARAM_NAMES:
-            raise ValueError("Credentials must never be included in snapshot request parameters.")
+    reject_secrets(params)
     return params
 
 
