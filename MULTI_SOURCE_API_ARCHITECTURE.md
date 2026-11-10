@@ -390,7 +390,7 @@ The current Layer 2 flow now supports a controlled field-level fallback from Hig
 - Only supported canonical metrics with valid finite, non-negative values and valid percentage ranges are eligible.
 - A Highlightly value is inserted only when the corresponding Layer 2 field is missing. Existing Sportmonks values remain authoritative, whether they agree or conflict; no values are averaged.
 - Duplicate Highlightly rows that disagree for the same canonical metric are skipped as ambiguous.
-- Added values carry provider, Sportmonks fixture ID, Highlightly match ID, raw and normalized values, collection timestamp and fallback marker in match-level provenance and diagnostics.
+- Added values carry provider, Sportmonks fixture ID, Highlightly match ID, raw and normalized values, collection start and completion timestamps, and a fallback marker in match-level provenance and diagnostics.
 - The team's tactical summary is recomputed from the enriched match rows so supported missing statistics can contribute to the existing tactical analysis. Prediction weights and 60/40 history weighting are unchanged.
 - The separate tactical_evidence object consumed by automatic TVD is deliberately not rebuilt from Highlightly. TVD continues to use its existing primary-source evidence path until its own provider-quality and league-reference integration is separately validated.
 - This fallback does not infer injuries, player availability, confirmed lineups or squad membership. Those fields remain on their existing verified-source rules.
