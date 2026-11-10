@@ -56,8 +56,8 @@ class ProviderRoleConfigTests(unittest.TestCase):
         rows = {row["provider_id"]: row for row in provider_readiness()}
         candidates = ("openligadb", "openfootball", "open_matchday", "bzzoiro")
         for provider in candidates:
-            self.assertEqual(rows[provider]["adapter"], "candidate_only_not_implemented")
-            self.assertIn("candidate registered only", rows[provider]["app_integration"])
+            self.assertEqual(rows[provider]["adapter"], "implemented")
+            self.assertIn("adapter implemented", rows[provider]["app_integration"])
         self.assertFalse(rows["openligadb"]["credential_required"])
         self.assertFalse(rows["openfootball"]["credential_required"])
         self.assertFalse(rows["open_matchday"]["credential_required"])
