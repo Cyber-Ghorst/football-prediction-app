@@ -74,7 +74,11 @@ def _team_names(row: Mapping[str, Any]) -> set[str]:
     return names
 
 
-def _highlightly_audit(client: HighlightlyClient, target: Mapping[str, Any]) -> dict[str, Any]:
+def _highlightly_audit(
+    client: HighlightlyClient,
+    target: Mapping[str, Any],
+    league_catalogue: list[Mapping[str, Any]],
+) -> dict[str, Any]:
     rows = []
     page_size = 100
     for page in range(10):
@@ -110,6 +114,18 @@ def _highlightly_audit(client: HighlightlyClient, target: Mapping[str, Any]) -> 
 
     dates = sorted(value for value in (_date_value(row) for row in exact) if value)
     teams = sorted({name for row in exact for name in _team_names(row)})
+    catalogue_candidates = []
+    for league in league_catalogue:
+        if normalize_competition_name(str(league.get("name") or "")) != normalize_competition_name(target["name"]):
+            continue
+        country = league.get("country")
+        country_name = country.get("name") if isinstance(country, Mapping) else country
+        catalogue_candidates.append({
+            "id": league.get("id"),
+            "name": league.get("name"),
+            "country": country_name or league.get("countryName"),
+            "season": league.get("season"),
+        })
     return {
         "status": "exact_coverage" if exact else "no_exact_coverage",
         "rows_returned": len(rows),
@@ -119,6 +135,7 @@ def _highlightly_audit(client: HighlightlyClient, target: Mapping[str, Any]) -> 
         "earliest_fixture": dates[0] if dates else None,
         "latest_fixture": dates[-1] if dates else None,
         "identity_samples": [_identity_sample(row) for row in rows[:3]],
+        "league_catalogue_candidates": catalogue_candidates,
         "request_metadata": dict(client.last_metadata or {}),
     }
 
@@ -152,6 +169,20 @@ def _api_ninjas_audit(client: APINinjasClient, target: Mapping[str, Any]) -> dic
 
 
 def run_audit() -> dict[str, Any]:
+    highlightly_leagues: list[Mapping[str, Any]] = []
+    highlightly_catalogue_error = None
+    try:
+        with HighlightlyClient() as catalogue_client:
+            for page in range(10):
+                batch = catalogue_client.leagues(limit=100, offset=page * 100)
+                highlightly_leagues.extend(batch)
+                if len(batch) < 100:
+                    break
+            else:
+                highlightly_catalogue_error = "Highlightly league catalogue exceeded the safe 10-page limit"
+    except Exception as exc:
+        highlightly_catalogue_error = f"{type(exc).__name__}: {str(exc)[:200]}"
+
     report: dict[str, Any] = {
         "operation": "openscores_secondary_provider_coverage_audit",
         "checked_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -160,6 +191,8 @@ def run_audit() -> dict[str, Any]:
         "provider_entity_links_written": 0,
         "prediction_ledger_touched": False,
         "targets": [],
+        "highlightly_league_catalogue_count": len(highlightly_leagues),
+        "highlightly_league_catalogue_error": highlightly_catalogue_error,
     }
     for target in TARGETS:
         row = {
@@ -169,7 +202,7 @@ def run_audit() -> dict[str, Any]:
             "providers": {},
         }
         for provider, client_type, fn in (
-            ("highlightly", HighlightlyClient, _highlightly_audit),
+            ("highlightly", HighlightlyClient, lambda client, target: _highlightly_audit(client, target, highlightly_leagues)),
             ("api_ninjas", APINinjasClient, _api_ninjas_audit),
         ):
             client = None
