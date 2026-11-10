@@ -79,7 +79,7 @@ These priorities are selection order, not automatic permission to substitute. A 
 
 - **Active prediction paths:** Sportmonks for current seasons after 2024; API-Football for historical seasons supported by the account (2022–2024).
 - **Opt-in field-level fallback:** Highlightly can fill missing supported match-statistic fields and exact-fixture lineups, and can discover recent results that are imported only after an exact completed Sportmonks fixture and full-time score agree. Sportmonks remains authoritative; Highlightly is not promoted globally and does not supply injury/availability inferences.
-- **Diagnostic/canonicalization only:** API Ninjas. Its fixtures/results/standings are corroborated but are not yet imported into Layer 2 histories.
+- **Conditional result discovery:** API Ninjas can supply independent result candidates, but its score is never imported directly. An opt-in history fallback may append only the corresponding exact completed Sportmonks result after full-time score agreement. Its other fields remain diagnostic/canonicalization-only.
 - **Conditional corroboration only:** LiveScoreFootball. It remains outside automatic Layer 2 fallback until exact competition, season, team identity and source freshness checks pass.
 - **Reconciliation foundation:** canonical normalizers and field-level conflict/provenance logic exist. The next integration milestone is to fetch records from each provider, apply validated crosswalks and timestamps, reconcile them, and surface provenance/conflicts in Streamlit.
 - **No model changes:** no provider issue authorizes changes to prediction weights, TVD rules, or 60/40 recency weighting. Missing data remains unknown; disagreements remain visible and are never averaged.
@@ -429,11 +429,11 @@ Unit tests cover exact-fixture matching, preservation of existing Sportmonks lin
 
 ## Opt-in verified result-history fallback (2026-11-10)
 
-The app now has a separate opt-in control to fill missing recent result history using Highlightly only as a discovery/corroboration source and Sportmonks as the authoritative result source.
+The app now has a separate opt-in control to fill missing recent result history using Highlightly or API Ninjas as discovery/corroboration sources and Sportmonks as the authoritative result source.
 
-- A candidate is eligible only when one Sportmonks fixture matches the exact season, competition, home/away team IDs and kickoff, is explicitly completed, has valid non-negative full-time scores, and its score exactly agrees with Highlightly.
+- A candidate from either secondary provider is eligible only when one Sportmonks fixture matches the exact season, competition, home/away team IDs and kickoff, is explicitly completed, has valid non-negative full-time scores, and its score exactly agrees with that candidate provider.
 - Ambiguous duplicate exact fixtures, missing timestamps, score conflicts, incomplete matches, unresolved team IDs and non-exact kickoff matches are rejected.
-- The appended history row uses the verified Sportmonks score and namespaced provider identity. Highlightly is retained only as the independent corroboration reference.
+- The appended history row uses the verified Sportmonks score and namespaced provider identity. The candidate provider (Highlightly or API Ninjas) is retained only as the independent corroboration reference.
 - The fallback is disabled by default and runs only when explicitly enabled. It is bounded to the existing ten-match history window and does not invent statistics or opponent strength.
 - Recent form, goals for/against, venue ratings and the tactical summary are recomputed from the updated ten-match window. Match statistics remain empty for the inserted result unless separately sourced and validated. Existing TVD tactical_evidence is deliberately not rebuilt by this result-only fallback.
 - API Ninjas remains a separate optional corroboration path; it is not required for this fallback and does not supply missing match statistics.
