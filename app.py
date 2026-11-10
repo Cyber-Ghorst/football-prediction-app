@@ -1549,7 +1549,7 @@ try:
             if not league:
                 continue
             country = league.get("country") or {}
-            league_options[f"{league.get('name', 'Unknown league')} — {country.get('name', 'Unknown country')}"] = league_id_value
+            league_options[f"{league.get('name', 'Unknown league')} — {country.get('name', 'Unknown country')} (Sportmonks ID {league_id_value})"] = league_id_value
         if not league_options:
             st.warning(f"Sportmonks returned no covered competitions with a season starting in {int(season)}. This is a coverage result, not a reason to substitute another competition.")
             st.stop()
