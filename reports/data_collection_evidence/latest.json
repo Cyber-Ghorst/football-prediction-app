@@ -2,110 +2,110 @@
   "season": 2026,
   "competition": "Premier League — England",
   "selected_fixture": {
-    "id": 19722096,
-    "sport_id": 1,
-    "league_id": 8,
-    "season_id": 28083,
-    "stage_id": 77482558,
-    "group_id": null,
     "aggregate_id": null,
-    "round_id": 407864,
-    "state_id": 1,
-    "venue_id": 151,
-    "name": "Manchester City vs Fulham",
-    "starting_at": "2026-11-21 12:30:00",
-    "result_info": null,
-    "leg": "1/1",
     "details": null,
-    "length": 90,
-    "placeholder": false,
+    "fixture_details_fetched_at": "2026-11-10T07:07:16.297627+00:00",
+    "group_id": null,
     "has_odds": true,
     "has_premium_odds": true,
-    "starting_at_timestamp": 1795264200,
+    "id": 19722096,
+    "league": {
+      "active": true,
+      "category": 1,
+      "country_id": 462,
+      "has_jerseys": false,
+      "id": 8,
+      "image_path": "https://cdn.sportmonks.com/images/soccer/leagues/8/8.png",
+      "last_played_at": "2026-11-08 16:30:00",
+      "name": "Premier League",
+      "short_code": "UK PL",
+      "sport_id": 1,
+      "sub_type": "domestic",
+      "type": "league"
+    },
+    "league_id": 8,
+    "leg": "1/1",
+    "length": 90,
+    "name": "Manchester City vs Fulham",
     "participants": [
       {
-        "id": 11,
-        "sport_id": 1,
         "country_id": 462,
-        "venue_id": 485,
-        "gender": "male",
-        "name": "Fulham",
-        "short_code": "FUL",
-        "image_path": "https://cdn.sportmonks.com/images/soccer/teams/11/11.png",
         "founded": 1879,
-        "type": "domestic",
-        "placeholder": false,
+        "gender": "male",
+        "id": 11,
+        "image_path": "https://cdn.sportmonks.com/images/soccer/teams/11/11.png",
         "last_played_at": "2026-11-07 15:00:00",
         "meta": {
           "location": "away",
-          "winner": null,
-          "position": null
-        }
+          "position": null,
+          "winner": null
+        },
+        "name": "Fulham",
+        "placeholder": false,
+        "short_code": "FUL",
+        "sport_id": 1,
+        "type": "domestic",
+        "venue_id": 485
       },
       {
-        "id": 9,
-        "sport_id": 1,
         "country_id": 462,
-        "venue_id": 151,
-        "gender": "male",
-        "name": "Manchester City",
-        "short_code": "MCI",
-        "image_path": "https://cdn.sportmonks.com/images/soccer/teams/9/9.png",
         "founded": 1880,
-        "type": "domestic",
-        "placeholder": false,
+        "gender": "male",
+        "id": 9,
+        "image_path": "https://cdn.sportmonks.com/images/soccer/teams/9/9.png",
         "last_played_at": "2026-11-07 17:30:00",
         "meta": {
           "location": "home",
-          "winner": null,
-          "position": null
-        }
+          "position": null,
+          "winner": null
+        },
+        "name": "Manchester City",
+        "placeholder": false,
+        "short_code": "MCI",
+        "sport_id": 1,
+        "type": "domestic",
+        "venue_id": 151
       }
     ],
+    "placeholder": false,
+    "result_info": null,
+    "round_id": 407864,
     "scores": [],
+    "season": {
+      "ending_at": "2027-05-30",
+      "finished": false,
+      "games_in_current_week": false,
+      "id": 28083,
+      "is_current": true,
+      "league_id": 8,
+      "name": "2026/2027",
+      "pending": false,
+      "sport_id": 1,
+      "standings_recalculated_at": "2026-11-09 01:37:27",
+      "starting_at": "2026-08-21",
+      "tie_breaker_rule_id": 1526
+    },
+    "season_id": 28083,
+    "sport_id": 1,
+    "stage_id": 77482558,
+    "starting_at": "2026-11-21 12:30:00",
+    "starting_at_timestamp": 1795264200,
     "state": {
+      "developer_name": "NS",
       "id": 1,
-      "state": "NS",
       "name": "Not Started",
       "short_name": "NS",
-      "developer_name": "NS"
+      "state": "NS"
     },
-    "league": {
-      "id": 8,
-      "sport_id": 1,
-      "country_id": 462,
-      "name": "Premier League",
-      "active": true,
-      "short_code": "UK PL",
-      "image_path": "https://cdn.sportmonks.com/images/soccer/leagues/8/8.png",
-      "type": "league",
-      "sub_type": "domestic",
-      "last_played_at": "2026-11-08 16:30:00",
-      "category": 1,
-      "has_jerseys": false
-    },
-    "season": {
-      "id": 28083,
-      "sport_id": 1,
-      "league_id": 8,
-      "tie_breaker_rule_id": 1526,
-      "name": "2026/2027",
-      "finished": false,
-      "pending": false,
-      "is_current": true,
-      "starting_at": "2026-08-21",
-      "ending_at": "2027-05-30",
-      "standings_recalculated_at": "2026-11-09 01:37:27",
-      "games_in_current_week": false
-    },
+    "state_id": 1,
     "statistics": [],
-    "fixture_details_fetched_at": "2026-11-10T07:07:16.297627+00:00"
+    "venue_id": 151
   },
   "squad_fetch_diagnostics": {
     "Manchester City": {
       "status": "retrieved",
       "rows_returned": 30,
-      "elapsed_seconds": 7.017,
+      "elapsed_seconds": 2.85,
       "error": null,
       "roster_complete": true,
       "players_assessed": 24,
@@ -844,7 +844,7 @@
     "Fulham": {
       "status": "retrieved",
       "rows_returned": 28,
-      "elapsed_seconds": 6.709,
+      "elapsed_seconds": 2.832,
       "error": null,
       "roster_complete": true,
       "players_assessed": 26,
@@ -4608,8 +4608,8 @@
       "kickoff_utc": "2026-11-21T12:30:00+00:00",
       "source_updated_at": null,
       "source_fetched_at": "2026-11-10T07:07:16.297627+00:00",
-      "source_age_seconds": 29.1,
-      "source_age_minutes": 0.5,
+      "source_age_seconds": 485.4,
+      "source_age_minutes": 8.1,
       "source_freshness": "fresh",
       "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
     },
@@ -4689,7 +4689,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "92",
+            "requests_remaining": "88",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -4712,7 +4712,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "91",
+            "requests_remaining": "86",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -4735,7 +4735,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "90",
+            "requests_remaining": "87",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -5383,14 +5383,14 @@
       "sportmonks"
     ],
     "provider_timings_seconds": {
-      "highlightly": 11.301,
-      "api_ninjas": 5.445
+      "highlightly": 11.633,
+      "api_ninjas": 5.325
     },
     "api_ninjas_diagnostics": {
       "team_requests": 2,
       "raw_rows_received": 76,
       "records_normalized": 74,
-      "elapsed_seconds": 5.445,
+      "elapsed_seconds": 5.325,
       "metadata": {
         "Manchester City": {
           "http_status": 200,
@@ -5446,27 +5446,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "finished",
                 "source_id": "19722105",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "finished",
                 "source_id": "1325403499",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "finished",
                 "source_id": "epl-20261107-mnc-nfo",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-11-07T19:26:30+00:00"
               }
             ],
@@ -5481,27 +5481,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 3,
                 "source_id": "19722105",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 3,
                 "source_id": "1325403499",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 3,
                 "source_id": "epl-20261107-mnc-nfo",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-11-07T19:26:30+00:00"
               }
             ],
@@ -5516,27 +5516,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 1,
                 "source_id": "19722105",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 1,
                 "source_id": "1325403499",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 1,
                 "source_id": "epl-20261107-mnc-nfo",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-11-07T19:26:30+00:00"
               }
             ],
@@ -5551,27 +5551,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "2026-11-07 17:30:00",
                 "source_id": "19722105",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "2026-11-07T17:30:00+00:00",
                 "source_id": "1325403499",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "2026-11-07T17:30:00+00:00",
                 "source_id": "epl-20261107-mnc-nfo",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-11-07T19:26:30+00:00"
               }
             ],
@@ -5615,7 +5615,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722105",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -5625,7 +5625,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325403499",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -5635,7 +5635,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261107-mnc-nfo",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-11-07T19:26:30+00:00"
           },
           {
@@ -5645,7 +5645,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722105",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -5655,7 +5655,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325403499",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -5665,7 +5665,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261107-mnc-nfo",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-11-07T19:26:30+00:00"
           },
           {
@@ -5675,7 +5675,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722105",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -5685,7 +5685,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325403499",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -5695,7 +5695,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261107-mnc-nfo",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-11-07T19:26:30+00:00"
           },
           {
@@ -5705,7 +5705,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722105",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -5715,7 +5715,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325403499",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -5725,7 +5725,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261107-mnc-nfo",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-11-07T19:26:30+00:00"
           }
         ],
@@ -5771,27 +5771,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "finished",
                 "source_id": "19722109",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "finished",
                 "source_id": "1325400095",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "finished",
                 "source_id": "epl-20261107-new-ful",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-11-07T16:57:31+00:00"
               }
             ],
@@ -5806,27 +5806,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 1,
                 "source_id": "19722109",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 1,
                 "source_id": "1325400095",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 1,
                 "source_id": "epl-20261107-new-ful",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-11-07T16:57:31+00:00"
               }
             ],
@@ -5841,27 +5841,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 1,
                 "source_id": "19722109",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 1,
                 "source_id": "1325400095",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 1,
                 "source_id": "epl-20261107-new-ful",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-11-07T16:57:31+00:00"
               }
             ],
@@ -5876,27 +5876,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "2026-11-07 15:00:00",
                 "source_id": "19722109",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "2026-11-07T15:00:00+00:00",
                 "source_id": "1325400095",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "2026-11-07T15:00:00+00:00",
                 "source_id": "epl-20261107-new-ful",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-11-07T16:57:31+00:00"
               }
             ],
@@ -5940,7 +5940,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722109",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -5950,7 +5950,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325400095",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -5960,7 +5960,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261107-new-ful",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-11-07T16:57:31+00:00"
           },
           {
@@ -5970,7 +5970,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722109",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -5980,7 +5980,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325400095",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -5990,7 +5990,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261107-new-ful",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-11-07T16:57:31+00:00"
           },
           {
@@ -6000,7 +6000,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722109",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -6010,7 +6010,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325400095",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -6020,7 +6020,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261107-new-ful",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-11-07T16:57:31+00:00"
           },
           {
@@ -6030,7 +6030,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722109",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -6040,7 +6040,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325400095",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -6050,7 +6050,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261107-new-ful",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-11-07T16:57:31+00:00"
           }
         ],
@@ -6096,27 +6096,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "finished",
                 "source_id": "19722122",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "finished",
                 "source_id": "1325388181",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "finished",
                 "source_id": "epl-20261031-ful-avl",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-31T21:58:01+00:00"
               }
             ],
@@ -6131,27 +6131,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 1,
                 "source_id": "19722122",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 1,
                 "source_id": "1325388181",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 1,
                 "source_id": "epl-20261031-ful-avl",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-31T21:58:01+00:00"
               }
             ],
@@ -6166,27 +6166,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 1,
                 "source_id": "19722122",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 1,
                 "source_id": "1325388181",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 1,
                 "source_id": "epl-20261031-ful-avl",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-31T21:58:01+00:00"
               }
             ],
@@ -6201,27 +6201,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "2026-10-31 20:00:00",
                 "source_id": "19722122",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "2026-10-31T20:00:00+00:00",
                 "source_id": "1325388181",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "2026-10-31T20:00:00+00:00",
                 "source_id": "epl-20261031-ful-avl",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-31T21:58:01+00:00"
               }
             ],
@@ -6265,7 +6265,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722122",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -6275,7 +6275,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325388181",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -6285,7 +6285,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261031-ful-avl",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-31T21:58:01+00:00"
           },
           {
@@ -6295,7 +6295,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722122",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -6305,7 +6305,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325388181",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -6315,7 +6315,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261031-ful-avl",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-31T21:58:01+00:00"
           },
           {
@@ -6325,7 +6325,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722122",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -6335,7 +6335,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325388181",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -6345,7 +6345,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261031-ful-avl",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-31T21:58:01+00:00"
           },
           {
@@ -6355,7 +6355,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722122",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -6365,7 +6365,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325388181",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -6375,7 +6375,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261031-ful-avl",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-31T21:58:01+00:00"
           }
         ],
@@ -6421,27 +6421,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "finished",
                 "source_id": "19722116",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "finished",
                 "source_id": "1325394138",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "finished",
                 "source_id": "epl-20261031-bha-mnc",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-31T16:54:30+00:00"
               }
             ],
@@ -6456,27 +6456,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 0,
                 "source_id": "19722116",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 0,
                 "source_id": "1325394138",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 0,
                 "source_id": "epl-20261031-bha-mnc",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-31T16:54:30+00:00"
               }
             ],
@@ -6491,27 +6491,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 1,
                 "source_id": "19722116",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 1,
                 "source_id": "1325394138",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 1,
                 "source_id": "epl-20261031-bha-mnc",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-31T16:54:30+00:00"
               }
             ],
@@ -6526,27 +6526,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "2026-10-31 15:00:00",
                 "source_id": "19722116",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "2026-10-31T15:00:00+00:00",
                 "source_id": "1325394138",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "2026-10-31T15:00:00+00:00",
                 "source_id": "epl-20261031-bha-mnc",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-31T16:54:30+00:00"
               }
             ],
@@ -6590,7 +6590,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722116",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -6600,7 +6600,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325394138",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -6610,7 +6610,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261031-bha-mnc",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-31T16:54:30+00:00"
           },
           {
@@ -6620,7 +6620,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722116",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -6630,7 +6630,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325394138",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -6640,7 +6640,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261031-bha-mnc",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-31T16:54:30+00:00"
           },
           {
@@ -6650,7 +6650,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722116",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -6660,7 +6660,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325394138",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -6670,7 +6670,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261031-bha-mnc",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-31T16:54:30+00:00"
           },
           {
@@ -6680,7 +6680,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722116",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -6690,7 +6690,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325394138",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -6700,7 +6700,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261031-bha-mnc",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-31T16:54:30+00:00"
           }
         ],
@@ -6742,20 +6742,20 @@
               "api_ninjas"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "finished",
                 "source_id": "19722130",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "finished",
                 "source_id": "epl-20261024-ful-cov",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:14:11+00:00"
               }
             ],
@@ -6769,20 +6769,20 @@
               "api_ninjas"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 0,
                 "source_id": "19722130",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 0,
                 "source_id": "epl-20261024-ful-cov",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:14:11+00:00"
               }
             ],
@@ -6796,20 +6796,20 @@
               "api_ninjas"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 1,
                 "source_id": "19722130",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 1,
                 "source_id": "epl-20261024-ful-cov",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:14:11+00:00"
               }
             ],
@@ -6823,20 +6823,20 @@
               "api_ninjas"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "2026-10-24 14:00:00",
                 "source_id": "19722130",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "2026-10-24T14:00:00+00:00",
                 "source_id": "epl-20261024-ful-cov",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:14:11+00:00"
               }
             ],
@@ -6874,7 +6874,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722130",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -6884,7 +6884,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261024-ful-cov",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:14:11+00:00"
           },
           {
@@ -6894,7 +6894,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722130",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -6904,7 +6904,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261024-ful-cov",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:14:11+00:00"
           },
           {
@@ -6914,7 +6914,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722130",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -6924,7 +6924,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261024-ful-cov",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:14:11+00:00"
           },
           {
@@ -6934,7 +6934,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722130",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -6944,7 +6944,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261024-ful-cov",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:14:11+00:00"
           }
         ],
@@ -6990,27 +6990,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "finished",
                 "source_id": "19722132",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "finished",
                 "source_id": "1325380522",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "finished",
                 "source_id": "epl-20261024-mnc-avl",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:14:11+00:00"
               }
             ],
@@ -7025,27 +7025,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 2,
                 "source_id": "19722132",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 2,
                 "source_id": "1325380522",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 2,
                 "source_id": "epl-20261024-mnc-avl",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:14:11+00:00"
               }
             ],
@@ -7060,27 +7060,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 1,
                 "source_id": "19722132",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 1,
                 "source_id": "1325380522",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 1,
                 "source_id": "epl-20261024-mnc-avl",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:14:11+00:00"
               }
             ],
@@ -7095,27 +7095,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "2026-10-24 11:30:00",
                 "source_id": "19722132",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "2026-10-24T11:30:00+00:00",
                 "source_id": "1325380522",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "2026-10-24T11:30:00+00:00",
                 "source_id": "epl-20261024-mnc-avl",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:14:11+00:00"
               }
             ],
@@ -7159,7 +7159,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722132",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -7169,7 +7169,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325380522",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -7179,7 +7179,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261024-mnc-avl",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:14:11+00:00"
           },
           {
@@ -7189,7 +7189,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722132",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -7199,7 +7199,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325380522",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -7209,7 +7209,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261024-mnc-avl",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:14:11+00:00"
           },
           {
@@ -7219,7 +7219,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722132",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -7229,7 +7229,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325380522",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -7239,7 +7239,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261024-mnc-avl",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:14:11+00:00"
           },
           {
@@ -7249,7 +7249,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722132",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -7259,7 +7259,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325380522",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -7269,7 +7269,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261024-mnc-avl",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:14:11+00:00"
           }
         ],
@@ -7315,27 +7315,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "finished",
                 "source_id": "19722139",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "finished",
                 "source_id": "1325374565",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "finished",
                 "source_id": "epl-20261017-hul-ful",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:14:11+00:00"
               }
             ],
@@ -7350,27 +7350,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 1,
                 "source_id": "19722139",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 1,
                 "source_id": "1325374565",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 1,
                 "source_id": "epl-20261017-hul-ful",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:14:11+00:00"
               }
             ],
@@ -7385,27 +7385,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 0,
                 "source_id": "19722139",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 0,
                 "source_id": "1325374565",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 0,
                 "source_id": "epl-20261017-hul-ful",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:14:11+00:00"
               }
             ],
@@ -7420,27 +7420,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "2026-10-17 14:00:00",
                 "source_id": "19722139",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "2026-10-17T14:00:00+00:00",
                 "source_id": "1325374565",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "2026-10-17T14:00:00+00:00",
                 "source_id": "epl-20261017-hul-ful",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:14:11+00:00"
               }
             ],
@@ -7484,7 +7484,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722139",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -7494,7 +7494,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325374565",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -7504,7 +7504,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261017-hul-ful",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:14:11+00:00"
           },
           {
@@ -7514,7 +7514,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722139",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -7524,7 +7524,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325374565",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -7534,7 +7534,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261017-hul-ful",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:14:11+00:00"
           },
           {
@@ -7544,7 +7544,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722139",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -7554,7 +7554,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325374565",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -7564,7 +7564,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261017-hul-ful",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:14:11+00:00"
           },
           {
@@ -7574,7 +7574,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722139",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -7584,7 +7584,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325374565",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -7594,7 +7594,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261017-hul-ful",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:14:11+00:00"
           }
         ],
@@ -7636,20 +7636,20 @@
               "api_ninjas"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "finished",
                 "source_id": "19722137",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "finished",
                 "source_id": "epl-20261017-ips-mnc",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:14:11+00:00"
               }
             ],
@@ -7663,20 +7663,20 @@
               "api_ninjas"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 3,
                 "source_id": "19722137",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 3,
                 "source_id": "epl-20261017-ips-mnc",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:14:11+00:00"
               }
             ],
@@ -7690,20 +7690,20 @@
               "api_ninjas"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 2,
                 "source_id": "19722137",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 2,
                 "source_id": "epl-20261017-ips-mnc",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:14:11+00:00"
               }
             ],
@@ -7717,20 +7717,20 @@
               "api_ninjas"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "2026-10-17 14:00:00",
                 "source_id": "19722137",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "2026-10-17T14:00:00+00:00",
                 "source_id": "epl-20261017-ips-mnc",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:14:11+00:00"
               }
             ],
@@ -7768,7 +7768,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722137",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -7778,7 +7778,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261017-ips-mnc",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:14:11+00:00"
           },
           {
@@ -7788,7 +7788,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722137",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -7798,7 +7798,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261017-ips-mnc",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:14:11+00:00"
           },
           {
@@ -7808,7 +7808,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722137",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -7818,7 +7818,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261017-ips-mnc",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:14:11+00:00"
           },
           {
@@ -7828,7 +7828,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722137",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -7838,7 +7838,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261017-ips-mnc",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:14:11+00:00"
           }
         ],
@@ -7884,27 +7884,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "finished",
                 "source_id": "19722146",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "finished",
                 "source_id": "1325368608",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "finished",
                 "source_id": "epl-20261011-mnc-liv",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:14:11+00:00"
               }
             ],
@@ -7919,27 +7919,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 0,
                 "source_id": "19722146",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 0,
                 "source_id": "1325368608",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 0,
                 "source_id": "epl-20261011-mnc-liv",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:14:11+00:00"
               }
             ],
@@ -7954,27 +7954,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 3,
                 "source_id": "19722146",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 3,
                 "source_id": "1325368608",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 3,
                 "source_id": "epl-20261011-mnc-liv",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:14:11+00:00"
               }
             ],
@@ -7989,27 +7989,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "2026-10-11 15:30:00",
                 "source_id": "19722146",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "2026-10-11T15:30:00+00:00",
                 "source_id": "1325368608",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "2026-10-11T15:30:00+00:00",
                 "source_id": "epl-20261011-mnc-liv",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:14:11+00:00"
               }
             ],
@@ -8053,7 +8053,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722146",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -8063,7 +8063,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325368608",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -8073,7 +8073,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261011-mnc-liv",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:14:11+00:00"
           },
           {
@@ -8083,7 +8083,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722146",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -8093,7 +8093,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325368608",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -8103,7 +8103,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261011-mnc-liv",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:14:11+00:00"
           },
           {
@@ -8113,7 +8113,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722146",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -8123,7 +8123,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325368608",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -8133,7 +8133,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261011-mnc-liv",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:14:11+00:00"
           },
           {
@@ -8143,7 +8143,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722146",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -8153,7 +8153,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325368608",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -8163,7 +8163,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261011-mnc-liv",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:14:11+00:00"
           }
         ],
@@ -8205,20 +8205,20 @@
               "api_ninjas"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "finished",
                 "source_id": "19722147",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "finished",
                 "source_id": "epl-20261010-ful-ips",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:14:11+00:00"
               }
             ],
@@ -8232,20 +8232,20 @@
               "api_ninjas"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 2,
                 "source_id": "19722147",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 2,
                 "source_id": "epl-20261010-ful-ips",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:14:11+00:00"
               }
             ],
@@ -8259,20 +8259,20 @@
               "api_ninjas"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 1,
                 "source_id": "19722147",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 1,
                 "source_id": "epl-20261010-ful-ips",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:14:11+00:00"
               }
             ],
@@ -8286,20 +8286,20 @@
               "api_ninjas"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "2026-10-10 14:00:00",
                 "source_id": "19722147",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "2026-10-10T14:00:00+00:00",
                 "source_id": "epl-20261010-ful-ips",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:14:11+00:00"
               }
             ],
@@ -8337,7 +8337,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722147",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -8347,7 +8347,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261010-ful-ips",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:14:11+00:00"
           },
           {
@@ -8357,7 +8357,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722147",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -8367,7 +8367,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261010-ful-ips",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:14:11+00:00"
           },
           {
@@ -8377,7 +8377,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722147",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -8387,7 +8387,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261010-ful-ips",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:14:11+00:00"
           },
           {
@@ -8397,7 +8397,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722147",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -8407,7 +8407,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20261010-ful-ips",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:14:11+00:00"
           }
         ],
@@ -8453,27 +8453,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "finished",
                 "source_id": "19722159",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "finished",
                 "source_id": "1325357545",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "finished",
                 "source_id": "epl-20260920-man-ful",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -8488,27 +8488,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 1,
                 "source_id": "19722159",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 1,
                 "source_id": "1325357545",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 1,
                 "source_id": "epl-20260920-man-ful",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -8523,27 +8523,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 1,
                 "source_id": "19722159",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 1,
                 "source_id": "1325357545",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 1,
                 "source_id": "epl-20260920-man-ful",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -8558,27 +8558,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "2026-09-20 15:30:00",
                 "source_id": "19722159",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "2026-09-20T15:30:00+00:00",
                 "source_id": "1325357545",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "2026-09-20T15:30:00+00:00",
                 "source_id": "epl-20260920-man-ful",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -8622,7 +8622,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722159",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -8632,7 +8632,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325357545",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -8642,7 +8642,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260920-man-ful",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -8652,7 +8652,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722159",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -8662,7 +8662,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325357545",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -8672,7 +8672,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260920-man-ful",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -8682,7 +8682,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722159",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -8692,7 +8692,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325357545",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -8702,7 +8702,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260920-man-ful",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -8712,7 +8712,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722159",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -8722,7 +8722,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325357545",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -8732,7 +8732,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260920-man-ful",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           }
         ],
@@ -8778,27 +8778,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "finished",
                 "source_id": "19722157",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "finished",
                 "source_id": "1325359247",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "finished",
                 "source_id": "epl-20260920-sun-mnc",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -8813,27 +8813,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 5,
                 "source_id": "19722157",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 5,
                 "source_id": "1325359247",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 5,
                 "source_id": "epl-20260920-sun-mnc",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -8848,27 +8848,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 3,
                 "source_id": "19722157",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 3,
                 "source_id": "1325359247",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 3,
                 "source_id": "epl-20260920-sun-mnc",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -8883,27 +8883,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "2026-09-20 13:00:00",
                 "source_id": "19722157",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "2026-09-20T13:00:00+00:00",
                 "source_id": "1325359247",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "2026-09-20T13:00:00+00:00",
                 "source_id": "epl-20260920-sun-mnc",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -8947,7 +8947,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722157",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -8957,7 +8957,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325359247",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -8967,7 +8967,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260920-sun-mnc",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -8977,7 +8977,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722157",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -8987,7 +8987,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325359247",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -8997,7 +8997,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260920-sun-mnc",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -9007,7 +9007,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722157",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -9017,7 +9017,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325359247",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -9027,7 +9027,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260920-sun-mnc",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -9037,7 +9037,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722157",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -9047,7 +9047,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325359247",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -9057,7 +9057,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260920-sun-mnc",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           }
         ],
@@ -9103,27 +9103,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "finished",
                 "source_id": "19722166",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "finished",
                 "source_id": "1325351588",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "finished",
                 "source_id": "epl-20260913-mnc-man",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -9138,27 +9138,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 0,
                 "source_id": "19722166",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 0,
                 "source_id": "1325351588",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 0,
                 "source_id": "epl-20260913-mnc-man",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -9173,27 +9173,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 1,
                 "source_id": "19722166",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 1,
                 "source_id": "1325351588",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 1,
                 "source_id": "epl-20260913-mnc-man",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -9208,27 +9208,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "2026-09-13 15:30:00",
                 "source_id": "19722166",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "2026-09-13T15:30:00+00:00",
                 "source_id": "1325351588",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "2026-09-13T15:30:00+00:00",
                 "source_id": "epl-20260913-mnc-man",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -9272,7 +9272,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722166",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -9282,7 +9282,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325351588",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -9292,7 +9292,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260913-mnc-man",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -9302,7 +9302,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722166",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -9312,7 +9312,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325351588",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -9322,7 +9322,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260913-mnc-man",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -9332,7 +9332,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722166",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -9342,7 +9342,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325351588",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -9352,7 +9352,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260913-mnc-man",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -9362,7 +9362,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722166",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -9372,7 +9372,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325351588",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -9382,7 +9382,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260913-mnc-man",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           }
         ],
@@ -9428,27 +9428,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "finished",
                 "source_id": "19722167",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "finished",
                 "source_id": "1325350737",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "finished",
                 "source_id": "epl-20260912-ful-liv",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -9463,27 +9463,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 0,
                 "source_id": "19722167",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 0,
                 "source_id": "1325350737",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 0,
                 "source_id": "epl-20260912-ful-liv",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -9498,27 +9498,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 0,
                 "source_id": "19722167",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 0,
                 "source_id": "1325350737",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 0,
                 "source_id": "epl-20260912-ful-liv",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -9533,27 +9533,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "2026-09-12 14:00:00",
                 "source_id": "19722167",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "2026-09-12T14:00:00+00:00",
                 "source_id": "1325350737",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "2026-09-12T14:00:00+00:00",
                 "source_id": "epl-20260912-ful-liv",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -9597,7 +9597,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722167",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -9607,7 +9607,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325350737",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -9617,7 +9617,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260912-ful-liv",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -9627,7 +9627,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722167",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -9637,7 +9637,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325350737",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -9647,7 +9647,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260912-ful-liv",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -9657,7 +9657,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722167",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -9667,7 +9667,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325350737",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -9677,7 +9677,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260912-ful-liv",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -9687,7 +9687,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722167",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -9697,7 +9697,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325350737",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -9707,7 +9707,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260912-ful-liv",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           }
         ],
@@ -9749,20 +9749,20 @@
               "api_ninjas"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "finished",
                 "source_id": "19722176",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "finished",
                 "source_id": "epl-20260905-cov-mnc",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -9776,20 +9776,20 @@
               "api_ninjas"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 1,
                 "source_id": "19722176",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 1,
                 "source_id": "epl-20260905-cov-mnc",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -9803,20 +9803,20 @@
               "api_ninjas"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 0,
                 "source_id": "19722176",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 0,
                 "source_id": "epl-20260905-cov-mnc",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -9830,20 +9830,20 @@
               "api_ninjas"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "2026-09-05 14:00:00",
                 "source_id": "19722176",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "2026-09-05T14:00:00+00:00",
                 "source_id": "epl-20260905-cov-mnc",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -9881,7 +9881,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722176",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -9891,7 +9891,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260905-cov-mnc",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -9901,7 +9901,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722176",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -9911,7 +9911,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260905-cov-mnc",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -9921,7 +9921,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722176",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -9931,7 +9931,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260905-cov-mnc",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -9941,7 +9941,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722176",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -9951,7 +9951,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260905-cov-mnc",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           }
         ],
@@ -9997,27 +9997,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "finished",
                 "source_id": "19722179",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "finished",
                 "source_id": "1325340525",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "finished",
                 "source_id": "epl-20260905-cry-ful",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -10032,27 +10032,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 2,
                 "source_id": "19722179",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 2,
                 "source_id": "1325340525",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 2,
                 "source_id": "epl-20260905-cry-ful",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -10067,27 +10067,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 3,
                 "source_id": "19722179",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 3,
                 "source_id": "1325340525",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 3,
                 "source_id": "epl-20260905-cry-ful",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -10102,27 +10102,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "2026-09-05 14:00:00",
                 "source_id": "19722179",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "2026-09-05T14:00:00+00:00",
                 "source_id": "1325340525",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "2026-09-05T14:00:00+00:00",
                 "source_id": "epl-20260905-cry-ful",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -10166,7 +10166,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722179",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -10176,7 +10176,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325340525",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -10186,7 +10186,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260905-cry-ful",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -10196,7 +10196,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722179",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -10206,7 +10206,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325340525",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -10216,7 +10216,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260905-cry-ful",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -10226,7 +10226,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722179",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -10236,7 +10236,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325340525",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -10246,7 +10246,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260905-cry-ful",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -10256,7 +10256,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722179",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -10266,7 +10266,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325340525",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -10276,7 +10276,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260905-cry-ful",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           }
         ],
@@ -10322,27 +10322,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "finished",
                 "source_id": "19722185",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "finished",
                 "source_id": "1325335419",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "finished",
                 "source_id": "epl-20260830-ful-sun",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -10357,27 +10357,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 1,
                 "source_id": "19722185",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 1,
                 "source_id": "1325335419",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 1,
                 "source_id": "epl-20260830-ful-sun",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -10392,27 +10392,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 0,
                 "source_id": "19722185",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 0,
                 "source_id": "1325335419",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 0,
                 "source_id": "epl-20260830-ful-sun",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -10427,27 +10427,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "2026-08-30 13:00:00",
                 "source_id": "19722185",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "2026-08-30T13:00:00+00:00",
                 "source_id": "1325335419",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "2026-08-30T13:00:00+00:00",
                 "source_id": "epl-20260830-ful-sun",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -10491,7 +10491,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722185",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -10501,7 +10501,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325335419",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -10511,7 +10511,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260830-ful-sun",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -10521,7 +10521,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722185",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -10531,7 +10531,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325335419",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -10541,7 +10541,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260830-ful-sun",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -10551,7 +10551,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722185",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -10561,7 +10561,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325335419",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -10571,7 +10571,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260830-ful-sun",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -10581,7 +10581,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722185",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -10591,7 +10591,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325335419",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -10601,7 +10601,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260830-ful-sun",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           }
         ],
@@ -10647,27 +10647,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "finished",
                 "source_id": "19722189",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "finished",
                 "source_id": "1325332015",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "finished",
                 "source_id": "epl-20260828-mnc-cry",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -10682,27 +10682,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 1,
                 "source_id": "19722189",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 1,
                 "source_id": "1325332015",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 1,
                 "source_id": "epl-20260828-mnc-cry",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -10717,27 +10717,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 4,
                 "source_id": "19722189",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 4,
                 "source_id": "1325332015",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 4,
                 "source_id": "epl-20260828-mnc-cry",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -10752,27 +10752,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "2026-08-28 19:00:00",
                 "source_id": "19722189",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "2026-08-28T19:00:00+00:00",
                 "source_id": "1325332015",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "2026-08-28T19:00:00+00:00",
                 "source_id": "epl-20260828-mnc-cry",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -10816,7 +10816,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722189",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -10826,7 +10826,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325332015",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -10836,7 +10836,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260828-mnc-cry",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -10846,7 +10846,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722189",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -10856,7 +10856,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325332015",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -10866,7 +10866,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260828-mnc-cry",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -10876,7 +10876,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722189",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -10886,7 +10886,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325332015",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -10896,7 +10896,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260828-mnc-cry",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -10906,7 +10906,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722189",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -10916,7 +10916,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325332015",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -10926,7 +10926,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260828-mnc-cry",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           }
         ],
@@ -10972,27 +10972,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "finished",
                 "source_id": "19722194",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "finished",
                 "source_id": "1325327760",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "finished",
                 "source_id": "epl-20260824-che-ful",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -11007,27 +11007,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 2,
                 "source_id": "19722194",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 2,
                 "source_id": "1325327760",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 2,
                 "source_id": "epl-20260824-che-ful",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -11042,27 +11042,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 3,
                 "source_id": "19722194",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": 3,
                 "source_id": "1325327760",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 3,
                 "source_id": "epl-20260824-che-ful",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -11077,27 +11077,27 @@
               "highlightly"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "2026-08-24 19:00:00",
                 "source_id": "19722194",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "highlightly",
                 "value": "2026-08-24T19:00:00+00:00",
                 "source_id": "1325327760",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "2026-08-24T19:00:00+00:00",
                 "source_id": "epl-20260824-che-ful",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -11141,7 +11141,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722194",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -11151,7 +11151,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325327760",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -11161,7 +11161,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260824-che-ful",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -11171,7 +11171,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722194",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -11181,7 +11181,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325327760",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -11191,7 +11191,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260824-che-ful",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -11201,7 +11201,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722194",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -11211,7 +11211,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325327760",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -11221,7 +11221,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260824-che-ful",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -11231,7 +11231,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722194",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -11241,7 +11241,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "1325327760",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -11251,7 +11251,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260824-che-ful",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           }
         ],
@@ -11293,20 +11293,20 @@
               "api_ninjas"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "finished",
                 "source_id": "19722196",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "finished",
                 "source_id": "epl-20260823-bou-mnc",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -11320,20 +11320,20 @@
               "api_ninjas"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 2,
                 "source_id": "19722196",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 2,
                 "source_id": "epl-20260823-bou-mnc",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -11347,20 +11347,20 @@
               "api_ninjas"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": 1,
                 "source_id": "19722196",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": 1,
                 "source_id": "epl-20260823-bou-mnc",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -11374,20 +11374,20 @@
               "api_ninjas"
             ],
             "conflicting_providers": [],
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "observations": [
               {
                 "provider": "sportmonks",
                 "value": "2026-08-23 13:00:00",
                 "source_id": "19722196",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": null
               },
               {
                 "provider": "api_ninjas",
                 "value": "2026-08-23T13:00:00+00:00",
                 "source_id": "epl-20260823-bou-mnc",
-                "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+                "fetched_at": "2026-11-10T07:15:10.041657+00:00",
                 "source_updated_at": "2026-10-27T23:21:33+00:00"
               }
             ],
@@ -11425,7 +11425,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722196",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -11435,7 +11435,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260823-bou-mnc",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -11445,7 +11445,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722196",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -11455,7 +11455,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260823-bou-mnc",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -11465,7 +11465,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722196",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -11475,7 +11475,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260823-bou-mnc",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           },
           {
@@ -11485,7 +11485,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "19722196",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": null
           },
           {
@@ -11495,7 +11495,7 @@
             "selected_provider": "sportmonks",
             "field_status": "corroborated",
             "source_id": "epl-20260823-bou-mnc",
-            "fetched_at": "2026-11-10T07:07:34.088882+00:00",
+            "fetched_at": "2026-11-10T07:15:10.041657+00:00",
             "source_updated_at": "2026-10-27T23:21:33+00:00"
           }
         ],
@@ -12337,13 +12337,13 @@
       "targeted_date_endpoint_requests": 0,
       "verified_from_selected_season_fixtures": 5,
       "verified_from_targeted_date_endpoint": 0,
-      "elapsed_seconds": 0.005
+      "elapsed_seconds": 0.006
     }
   },
   "player_enrichment": null,
   "system_diagnostics": {
     "diagnostic_version": 1,
-    "generated_at": "2026-11-10T07:07:45.433919+00:00",
+    "generated_at": "2026-11-10T07:15:21.724370+00:00",
     "overall_status": "healthy",
     "selected_context": {
       "season_start_year": 2026,
@@ -12517,8 +12517,8 @@
       "kickoff_utc": "2026-11-21T12:30:00+00:00",
       "source_updated_at": null,
       "source_fetched_at": "2026-11-10T07:07:16.297627+00:00",
-      "source_age_seconds": 29.1,
-      "source_age_minutes": 0.5,
+      "source_age_seconds": 485.4,
+      "source_age_minutes": 8.1,
       "source_freshness": "fresh",
       "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
     },
@@ -13228,7 +13228,7 @@
             "response": {
               "http_status": 200,
               "requests_limit": "100",
-              "requests_remaining": "92",
+              "requests_remaining": "88",
               "response_payload_type": "dict",
               "response_top_level_keys": [
                 "data",
@@ -13251,7 +13251,7 @@
             "response": {
               "http_status": 200,
               "requests_limit": "100",
-              "requests_remaining": "91",
+              "requests_remaining": "86",
               "response_payload_type": "dict",
               "response_top_level_keys": [
                 "data",
@@ -13274,7 +13274,7 @@
             "response": {
               "http_status": 200,
               "requests_limit": "100",
-              "requests_remaining": "90",
+              "requests_remaining": "87",
               "response_payload_type": "dict",
               "response_top_level_keys": [
                 "data",
@@ -14801,8 +14801,8 @@
         "kickoff_utc": "2026-11-21T12:30:00+00:00",
         "source_updated_at": null,
         "source_fetched_at": "2026-11-10T07:07:16.297627+00:00",
-        "source_age_seconds": 29.1,
-        "source_age_minutes": 0.5,
+        "source_age_seconds": 485.4,
+        "source_age_minutes": 8.1,
         "source_freshness": "fresh",
         "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
       },
@@ -14858,6 +14858,6 @@
       "model_impact": "Diagnostics only; weights, recency weighting, prediction inputs and missing-data rules are not changed."
     }
   },
-  "generated_at_utc": "2026-11-10T07:07:45.438783+00:00",
+  "generated_at_utc": "2026-11-10T07:15:21.730540+00:00",
   "report_name": "data_collection_evidence"
 }
