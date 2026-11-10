@@ -772,3 +772,171 @@ def merge_prediction_records(
                 pass
             merged[key][field] = value
     return list(merged.values())
+
+
+def _benchmark_text_key(value: Any) -> str:
+    import re
+    return re.sub(r"[^a-z0-9]+", "", str(value or "").casefold())
+
+
+def evaluate_tipmaster_benchmark(
+    records: Iterable[Mapping[str, Any]],
+    benchmark_records: Iterable[Mapping[str, Any]],
+    *,
+    kickoff_tolerance_minutes: int = 15,
+) -> dict[str, Any]:
+    """Score TipMaster crowd shares against verified results on exact matched fixtures.
+
+    Fixture matching requires exact normalized competition, home and away names,
+    plus kickoff within the configured tolerance. Ambiguous matches are excluded.
+    Shares are crowd agreement distributions, not calibrated probabilities.
+    This function is descriptive only and is never called by prediction code.
+    """
+    if kickoff_tolerance_minutes < 0:
+        raise ValueError("kickoff_tolerance_minutes cannot be negative.")
+
+    rows = [dict(row) for row in records]
+    timestamp_eligible = []
+    for row in rows:
+        probs = _valid_probabilities({
+            "home_win": row.get("model_home_win"),
+            "draw": row.get("model_draw"),
+            "away_win": row.get("model_away_win"),
+        })
+        predicted_at = _parse_datetime(row.get("predicted_at"))
+        kickoff = _parse_datetime(row.get("kickoff_at"))
+        if probs is None or predicted_at is None or kickoff is None or predicted_at >= kickoff:
+            continue
+        timestamp_eligible.append(row)
+
+    latest_by_fixture: dict[str, dict[str, Any]] = {}
+    for row in timestamp_eligible:
+        identity = _fixture_identity(row)
+        if not identity:
+            continue
+        previous = latest_by_fixture.get(identity)
+        current_at = _parse_datetime(row.get("predicted_at"))
+        previous_at = _parse_datetime(previous.get("predicted_at")) if previous else None
+        if previous is None or (current_at and (previous_at is None or current_at > previous_at)):
+            latest_by_fixture[identity] = row
+
+    completed = [row for row in latest_by_fixture.values() if _verified_actual_score(row)]
+    candidates = []
+    invalid_benchmark = 0
+    for raw in benchmark_records:
+        item = dict(raw)
+        if item.get("source") != "tipmaster" or item.get("prediction_inputs_eligible") is not False:
+            invalid_benchmark += 1
+            continue
+        kickoff = _parse_datetime(item.get("kickoff_at"))
+        locked = _parse_datetime(item.get("prediction_locked_at"))
+        groups = item.get("groups")
+        if kickoff is None or locked is None or locked >= kickoff or not isinstance(groups, dict):
+            invalid_benchmark += 1
+            continue
+        candidates.append(item)
+
+    used_ids: set[str] = set()
+    matched_pairs: list[tuple[dict[str, Any], dict[str, Any]]] = []
+    ambiguous = 0
+    for prediction in completed:
+        pred_kickoff = _parse_datetime(prediction.get("kickoff_at"))
+        pred_key = (
+            _benchmark_text_key(prediction.get("competition")),
+            _benchmark_text_key(prediction.get("home_team")),
+            _benchmark_text_key(prediction.get("away_team")),
+        )
+        if pred_kickoff is None or not all(pred_key):
+            continue
+        matches = []
+        for item in candidates:
+            source_id = str(item.get("source_match_id") or "")
+            if not source_id or source_id in used_ids:
+                continue
+            item_key = (
+                _benchmark_text_key(item.get("competition")),
+                _benchmark_text_key(item.get("home_team")),
+                _benchmark_text_key(item.get("away_team")),
+            )
+            item_kickoff = _parse_datetime(item.get("kickoff_at"))
+            if item_key != pred_key or item_kickoff is None:
+                continue
+            delta = abs((item_kickoff - pred_kickoff).total_seconds()) / 60.0
+            if delta <= kickoff_tolerance_minutes:
+                matches.append(item)
+        if len(matches) > 1:
+            ambiguous += 1
+            continue
+        if len(matches) == 1:
+            chosen = matches[0]
+            used_ids.add(str(chosen["source_match_id"]))
+            matched_pairs.append((prediction, chosen))
+
+    group_rows: dict[str, list[tuple[dict[str, Any], dict[str, Any], dict[str, Any]]]] = {}
+    for prediction, item in matched_pairs:
+        actual = outcome_from_score(
+            prediction.get("actual_home_goals"), prediction.get("actual_away_goals")
+        )
+        if actual is None:
+            continue
+        for group_id, group in item.get("groups", {}).items():
+            if not isinstance(group, dict):
+                continue
+            shares = group.get("shares")
+            if not isinstance(shares, dict):
+                continue
+            try:
+                probs = {name: float(shares[name]) for name in OUTCOMES}
+            except (KeyError, TypeError, ValueError):
+                continue
+            if any(not isfinite(value) or value < 0 or value > 1 for value in probs.values()):
+                continue
+            if abs(sum(probs.values()) - 1.0) > 0.02:
+                continue
+            group_rows.setdefault(str(group_id), []).append((prediction, item, {
+                "probs": probs, "actual": actual, "sample": int(group.get("sample") or 0)
+            }))
+
+    metrics = {}
+    for group_id, observations in sorted(group_rows.items()):
+        briers, losses, correct, samples = [], [], [], []
+        model_rows = []
+        for prediction, item, observation in observations:
+            probs = observation["probs"]
+            actual = observation["actual"]
+            briers.append(sum(
+                (probs[outcome] - (1.0 if outcome == actual else 0.0)) ** 2
+                for outcome in OUTCOMES
+            ))
+            losses.append(-log(max(probs[actual], 1e-15)))
+            correct.append(max(probs, key=probs.get) == actual)
+            samples.append(observation["sample"])
+            model_rows.append(prediction)
+        metrics[group_id] = {
+            "matches": len(observations),
+            "crowd_consensus_accuracy_pct": round(sum(correct) / len(correct) * 100.0, 2),
+            "distributional_brier": round(sum(briers) / len(briers), 5),
+            "distributional_log_loss": round(sum(losses) / len(losses), 5),
+            "mean_cohort_size": round(sum(samples) / len(samples), 1),
+            "model_same_fixtures": _score_records(model_rows, "model"),
+            "interpretation": "Crowd agreement distribution only; not calibrated probabilities.",
+        }
+
+    return {
+        "source": "TipMaster National consensus",
+        "source_url": "https://tipmaster.de/agents/",
+        "matched_verified_fixtures": len(matched_pairs),
+        "completed_verified_model_fixtures": len(completed),
+        "unmatched_verified_fixtures": max(0, len(completed) - len(matched_pairs)),
+        "ambiguous_fixture_matches_excluded": ambiguous,
+        "invalid_benchmark_records_excluded": invalid_benchmark,
+        "kickoff_tolerance_minutes": kickoff_tolerance_minutes,
+        "groups": metrics,
+        "prediction_inputs_eligible": False,
+        "note": (
+            "TipMaster outcome shares represent crowd agreement, not calibrated "
+            "probabilities. Scores are descriptive and calculated only on the "
+            "same uniquely matched fixtures with exact Sportmonks-verified results. "
+            "No benchmark value enters prediction generation, model weights or TVD."
+        ),
+    }
