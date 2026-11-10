@@ -57,8 +57,10 @@ def _score_by_participant(fixture: Mapping[str, Any]) -> dict[str, int]:
     rows = _rows(fixture.get("scores"))
     current = [row for row in rows if str(row.get("description") or "").casefold() == "current"]
     result: dict[str, int] = {}
+    conflicted_participants: set[str] = set()
     # Only explicit CURRENT scores represent the full-time score. Never infer
-    # a final score from period rows, and use the shared strict score parser.
+    # a final score from period rows. Conflicting duplicate CURRENT rows make
+    # that participant's score unknown rather than silently choosing the last.
     for row in current:
         participant_id = row.get("participant_id")
         score = row.get("score")
@@ -66,7 +68,14 @@ def _score_by_participant(fixture: Mapping[str, Any]) -> dict[str, int]:
         parsed_goals = _int_or_none(goals)
         if participant_id is None or parsed_goals is None:
             continue
-        result[str(participant_id)] = parsed_goals
+        key = str(participant_id)
+        if key in conflicted_participants:
+            continue
+        if key in result and result[key] != parsed_goals:
+            result.pop(key, None)
+            conflicted_participants.add(key)
+            continue
+        result[key] = parsed_goals
     return result
 
 
