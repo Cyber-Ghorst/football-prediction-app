@@ -446,7 +446,11 @@ def run_reconciliation(
         report["status"] = "fail"
         return report
 
-    report["reconciliation"] = reconcile_openscores_observations(db_url)
+    report["reconciliation"] = reconcile_openscores_observations(
+        db_url,
+        include_outside_upcoming_window=True,
+        preserve_outside_window_status=True,
+    )
     matched = int(report["reconciliation"].get("matched", 0))
     report["status"] = "pass" if matched > 0 else "fail"
     return report
