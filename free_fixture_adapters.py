@@ -354,6 +354,51 @@ class BzzoiroAdapter(_HttpAdapter):
         return output
 
 
+def normalize_livescore_football_events(
+    events: Iterable[Mapping[str, Any]],
+    *,
+    league_key: str,
+    source_url: str,
+    fetched_at: datetime | None = None,
+) -> list[dict[str, Any]]:
+    """Normalize LiveScoreFootball events while requiring event-level identities."""
+    fetched = fetched_at or _utc_now()
+    output = []
+    for event in events:
+        if not isinstance(event, Mapping):
+            continue
+        competitions = event.get("competitions") or []
+        competition = competitions[0] if competitions and isinstance(competitions[0], Mapping) else {}
+        competitors = competition.get("competitors") or []
+        home = away = None
+        for competitor in competitors:
+            if not isinstance(competitor, Mapping):
+                continue
+            side = str(competitor.get("homeAway") or competitor.get("home_away") or "").casefold()
+            team = competitor.get("team") if isinstance(competitor.get("team"), Mapping) else competitor
+            if side == "home":
+                home = team
+            elif side == "away":
+                away = team
+        status = event.get("status") if isinstance(event.get("status"), Mapping) else {}
+        status_type = status.get("type") if isinstance(status.get("type"), Mapping) else {}
+        status_value = status_type.get("name") or status.get("display") or event.get("status") or "unknown"
+        season = event.get("season") if isinstance(event.get("season"), Mapping) else {}
+        output.append(_observation(
+            "livescore_football", event, fetched_at=fetched, source_url=source_url,
+            licence="LiveScoreFootball public API; upstream snapshot freshness and reuse terms require review",
+            fixture_id=event.get("id") or event.get("uid"),
+            competition=competition.get("id") or competition.get("name") or league_key,
+            season=event.get("season_id") or season.get("id") or season.get("year"),
+            home=home, away=away,
+            home_id=home.get("id") if isinstance(home, Mapping) else None,
+            away_id=away.get("id") if isinstance(away, Mapping) else None,
+            kickoff=event.get("date") or event.get("startDate") or event.get("start_date"),
+            status=status_value,
+        ).to_dict())
+    return output
+
+
 def eligible_observations(rows: Iterable[Mapping[str, Any]]) -> list[dict[str, Any]]:
     """Return only timestamped scheduled observations for later canonical review."""
     return [dict(row) for row in rows if row.get("eligible_for_review") is True]
