@@ -21,6 +21,18 @@ class ProviderCoreTests(unittest.TestCase):
         self.assertEqual(result.status, "conflict")
         self.assertEqual(result.conflicting_providers, ("api_ninjas",))
 
+    def test_future_fixture_discovery_excludes_non_discovery_providers(self):
+        result = resolve_field("future_fixtures", [
+            self.obs("openscores", "openscores-observation"),
+            self.obs("highlightly", "match-enrichment"),
+            self.obs("api_ninjas", "result-corroboration"),
+            self.obs("api_football", "historical-record"),
+            self.obs("sportmonks", "scheduled-fixture"),
+        ], now=NOW)
+        self.assertEqual(result.provider, "sportmonks")
+        self.assertEqual(result.value, "scheduled-fixture")
+        self.assertEqual(result.status, "single_source")
+
     def test_unverified_livescore_is_never_selected(self):
         result = resolve_field("results", [
             self.obs("livescore_football", {"home": 1, "away": 1}),
@@ -28,6 +40,13 @@ class ProviderCoreTests(unittest.TestCase):
         ], now=NOW)
         self.assertEqual(result.provider, "api_ninjas")
         self.assertEqual(result.value, {"home": 2, "away": 1})
+
+    def test_livescore_not_allowed_for_future_fixture_discovery_even_if_verified(self):
+        result = resolve_field("future_fixtures", [
+            self.obs("livescore_football", "snapshot-row"),
+            self.obs("sportmonks", "scheduled-fixture"),
+        ], now=NOW, livescore_verified=True)
+        self.assertEqual(result.provider, "sportmonks")
 
     def test_livescore_not_allowed_for_statistics_even_if_verified(self):
         result = resolve_field("statistics", [
@@ -57,7 +76,7 @@ class ProviderCoreTests(unittest.TestCase):
         self.assertEqual(result.status, "conflict")
 
     def test_current_season_domains_prioritize_sportmonks(self):
-        for domain in ("fixtures", "results", "standings"):
+        for domain in ("fixtures", "future_fixtures", "results", "standings"):
             result = resolve_field(domain, [
                 self.obs("api_ninjas", "secondary"),
                 self.obs("highlightly", "corroboration"),
