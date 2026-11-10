@@ -42,6 +42,23 @@ class HighlightlyCandidateVerificationTests(unittest.TestCase):
         result = fixtures_for_utc_date(fixtures, "2026-09-19")
         self.assertEqual([row["id"] for row in result], [1, 2])
 
+    def test_finished_state_labels_do_not_match_substrings(self):
+        from sportmonks_candidate_verification import _finished
+
+        for label, expected in (
+            ("Finished", True),
+            ("Full Time", True),
+            ("AET", True),
+            ("after penalties", True),
+            ("Penalties", False),
+            ("Penalty Shootout", False),
+            ("unfinished", False),
+            ("not finished", False),
+            ("pre-finished", False),
+        ):
+            with self.subTest(label=label):
+                self.assertEqual(_finished({"state_id": None, "state": {"name": label}}), expected)
+
     def test_exact_completed_fixture_and_score_agree(self):
         result = verify_highlightly_candidate(self.candidate, [sm_fixture()], **self.identity)
         self.assertEqual(result["verification_status"], "exact_fixture_and_score_agree")

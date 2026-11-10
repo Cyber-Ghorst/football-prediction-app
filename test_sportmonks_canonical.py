@@ -81,6 +81,31 @@ class SportmonksCanonicalTests(unittest.TestCase):
                 )
                 self.assertEqual(result["status"], expected)
 
+    def test_status_labels_require_exact_finished_state(self):
+        for label, expected in (
+            ("Finished", "finished"),
+            ("Full Time", "finished"),
+            ("AET", "finished"),
+            ("after penalties", "finished"),
+            ("Penalties", "live"),
+            ("Penalty Shootout", "live"),
+            ("1st Half", "live"),
+            ("not live", "unknown"),
+            ("not in play", "unknown"),
+            ("NS", "scheduled"),
+            ("unfinished", "unknown"),
+            ("not finished", "unknown"),
+            ("pre-finished", "unknown"),
+        ):
+            with self.subTest(label=label):
+                row = self.fixture()
+                row["state_id"] = None
+                row["state"] = {"name": label}
+                result = canonicalize_sportmonks_fixture(
+                    row, competition_key="eng-premier-league", season=2026
+                )
+                self.assertEqual(result["status"], expected)
+
     def test_missing_participant_or_kickoff_fails_closed(self):
         bad = self.fixture()
         bad["participants"] = bad["participants"][:1]
