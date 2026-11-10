@@ -1,4 +1,4 @@
 {
-  "operation": "openscores_sportmonks_reconciliation",
-  "audit_revision": "reviewed_mapping_reconciliation_20261110"
+  "operation": "openscores_secondary_provider_coverage_audit",
+  "audit_revision": "secondary_provider_coverage_20261110"
 }
