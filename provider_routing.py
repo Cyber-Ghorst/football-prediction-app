@@ -70,8 +70,8 @@ class ProviderRegistry:
         return resolved["primary"] + resolved["co_primary"]
 
 
-# OpenScores coverage is deliberately explicit and currently disabled until its
-# raw fixture payloads are normalized, reconciled and round-trip tested.
+# OpenScores is retained only as a disabled result-validation observation
+# source. Its staged fixture observations are not future-fixture candidates.
 OPENSCORES_COMPETITIONS = (
     "premier league", "la liga", "serie a", "bundesliga", "ligue 1",
     "2026 fifa world cup",
