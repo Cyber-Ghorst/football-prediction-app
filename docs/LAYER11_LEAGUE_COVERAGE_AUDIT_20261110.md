@@ -28,7 +28,7 @@ The repository README still describes a 33-competition catalogue. That figure is
 | Highlightly | Credential configured in the latest committed runtime diagnostic; adapter implemented | Official documentation advertises 950+ leagues across 170+ countries. The account-specific catalogue audit returned HTTP 429 twice, so the actual account catalogue count and plan tier remain unverified. | Keep as an existing opt-in corroboration provider; do not promote it to broad fixture discovery until the authenticated catalogue and quota recover. |
 | API-Football v3 | Credential configured in the latest committed runtime diagnostic; adapter implemented | Configured account is restricted to seasons 2022–2024. | Not a source for the upcoming 2026/27 fixture window under the recorded account restriction. |
 | API Ninjas | Credential configured in the latest committed runtime diagnostic; adapter implemented | No current aggregate account competition catalogue recorded. Latest diagnostic describes it as not yet active in Layer 2 reconciliation. | Candidate secondary discovery/corroboration source after adapter integration and live coverage/quota checks. |
-| LiveScoreFootball | Public read-only API; no key required | Fresh 2026-11-10 audit: 35 active competitions across 17 countries, 3,161 stored matches, 863 club records, 42 standings groups and 0 international competitions. | Broad enough to retain as a catalogue/corroboration source. Automatic fallback remains blocked because per-competition sync timestamps are absent from the current catalogue response. |
+| LiveScoreFootball | Public read-only API; no key required | Fresh 2026-11-10 audit: 35 active competitions across 17 countries, 3,161 stored matches, 863 club records, 42 standings groups and 0 international competitions. | Broad enough to retain as a catalogue/corroboration source. Global and 35/35 per-competition sync checks pass; the existing exact competition/season crosswalk and per-event freshness gates still control each fallback. |
 
 ## What the code already supports
 
@@ -43,7 +43,7 @@ The repository README still describes a 33-competition catalogue. That figure is
 
 1. The latest committed system diagnostic (2026-11-10 08:02 UTC) is a selected-fixture readiness report, not an aggregate league-coverage report.
 2. It confirms Sportmonks, Highlightly, API-Football and API Ninjas credentials are configured, but does not expose a complete per-provider competition/season count.
-3. The 2026-11-10 LiveScoreFootball audit refreshed the catalogue count, but per-competition freshness remains unverifiable from the current response schema.
+3. The 2026-11-10 audit verified global and 35/35 per-competition freshness after correcting the app to read top-level `lastSyncedAt`.
 4. Highlightly's authenticated catalogue could not be enumerated because its API returned HTTP 429; the public 950+ figure must not be treated as this account's accessible count.
 5. A competition should count toward **usable app coverage** only after the app verifies its provider, competition, season, fixture availability, data freshness and prediction-readiness gates. Raw provider catalogue counts must be reported separately.
 
