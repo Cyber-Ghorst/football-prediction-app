@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 import json
 import uuid
+import threading
 from datetime import datetime, timedelta, timezone
 from typing import Any, Mapping
 from pathlib import Path
@@ -67,6 +68,33 @@ CREATE INDEX IF NOT EXISTS provider_collection_runs_lookup
     ON provider_collection_runs (cache_key, attempted_at DESC);
 """
 
+
+
+_SCHEMA_INITIALIZATION_LOCK = threading.Lock()
+_INITIALIZED_DATABASES: set[str] = set()
+
+
+def _database_fingerprint(database_url: str) -> str:
+    """Return a non-reversible key for process-local schema initialization state."""
+    return hashlib.sha256(str(database_url).encode("utf-8")).hexdigest()
+
+
+def _ensure_provider_storage_once(database_url: str, connection: Any) -> bool:
+    """Create storage tables once per database per process, on the supplied connection."""
+    fingerprint = _database_fingerprint(database_url)
+    if fingerprint in _INITIALIZED_DATABASES:
+        return False
+    with _SCHEMA_INITIALIZATION_LOCK:
+        if fingerprint in _INITIALIZED_DATABASES:
+            return False
+        with connection.cursor() as cursor:
+            for statement in CREATE_TABLES_SQL.split(";"):
+                if statement.strip():
+                    cursor.execute(statement)
+        _INITIALIZED_DATABASES.add(fingerprint)
+    return True
+
+
 FRESH_SNAPSHOT_SQL = """
 SELECT snapshot_id, provider, resource_type, request_params, source_ids,
        payload, retrieved_at, expires_at, payload_sha256
@@ -122,14 +150,11 @@ def build_provider_cache_key(
 
 
 def ensure_provider_storage(database_url: str) -> None:
-    """Create provider snapshot and collection-run tables if they do not exist."""
+    """Create provider tables once per database per process."""
     if not database_url:
         raise ValueError("PROVIDER_DATABASE_URL is required.")
     with _connect(database_url) as connection:
-        with connection.cursor() as cursor:
-            for statement in CREATE_TABLES_SQL.split(";"):
-                if statement.strip():
-                    cursor.execute(statement)
+        _ensure_provider_storage_once(database_url, connection)
 
 
 def check_provider_storage_connection(database_url: str) -> bool:
@@ -201,10 +226,8 @@ def save_provider_snapshot(
     snapshot_id = str(uuid.uuid4())
 
     with _connect(database_url) as connection:
+        _ensure_provider_storage_once(database_url, connection)
         with connection.cursor() as cursor:
-            for statement in CREATE_TABLES_SQL.split(";"):
-                if statement.strip():
-                    cursor.execute(statement)
             cursor.execute(
                 INSERT_SNAPSHOT_SQL,
                 (
@@ -274,10 +297,8 @@ def record_provider_collection_run(
     run_id = str(uuid.uuid4())
     message = str(error_message)[:1000] if error_message else None
     with _connect(database_url) as connection:
+        _ensure_provider_storage_once(database_url, connection)
         with connection.cursor() as cursor:
-            for statement in CREATE_TABLES_SQL.split(";"):
-                if statement.strip():
-                    cursor.execute(statement)
             cursor.execute(
                 INSERT_RUN_SQL,
                 (
@@ -287,3 +308,81 @@ def record_provider_collection_run(
                 ),
             )
     return run_id
+
+
+def save_provider_snapshot_and_record_run(
+    database_url: str,
+    *,
+    provider: str,
+    resource_type: str,
+    cache_key: str,
+    request_params: Mapping[str, Any],
+    payload: Any,
+    source_ids: Any = None,
+    ttl_seconds: int = 1800,
+    retrieved_at: datetime | None = None,
+    http_status: int | None = None,
+) -> dict[str, Any]:
+    """Save an immutable snapshot and success audit row using one DB connection.
+
+    A savepoint keeps the snapshot even if the secondary audit-row insert fails,
+    matching the previous two-connection best-effort audit behavior.
+    """
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+    if not provider or not resource_type or not cache_key:
+        raise ValueError("provider, resource_type and cache_key are required.")
+    if isinstance(ttl_seconds, bool) or not isinstance(ttl_seconds, int) or ttl_seconds < 0:
+        raise ValueError("ttl_seconds must be a non-negative integer.")
+    safe_payload = _json_safe(payload)
+    safe_params = _json_safe(dict(request_params))
+    safe_source_ids = _json_safe(source_ids if source_ids is not None else [])
+    if not isinstance(safe_payload, (dict, list)):
+        raise ValueError("Provider payload must be a JSON object or array.")
+    captured = retrieved_at or datetime.now(timezone.utc)
+    if captured.tzinfo is None:
+        captured = captured.replace(tzinfo=timezone.utc)
+    expires = captured + timedelta(seconds=ttl_seconds) if ttl_seconds else None
+    payload_text = json.dumps(safe_payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    payload_hash = hashlib.sha256(payload_text.encode("utf-8")).hexdigest()
+    snapshot_id = str(uuid.uuid4())
+    run_id = str(uuid.uuid4())
+    attempted = datetime.now(timezone.utc)
+
+    with _connect(database_url) as connection:
+        _ensure_provider_storage_once(database_url, connection)
+        with connection.cursor() as cursor:
+            cursor.execute(
+                INSERT_SNAPSHOT_SQL,
+                (
+                    snapshot_id, cache_key, provider.strip().lower(),
+                    resource_type.strip().lower(), Jsonb(safe_params),
+                    Jsonb(safe_source_ids), Jsonb(safe_payload), captured,
+                    expires, payload_hash,
+                ),
+            )
+            run_recorded = True
+            run_error_type = None
+            cursor.execute("SAVEPOINT provider_collection_run_audit")
+            try:
+                cursor.execute(
+                    INSERT_RUN_SQL,
+                    (
+                        run_id, cache_key, provider.strip().lower(),
+                        resource_type.strip().lower(), attempted, True,
+                        http_status, None, None,
+                    ),
+                )
+            except Exception as exc:
+                run_recorded = False
+                run_error_type = type(exc).__name__
+                cursor.execute("ROLLBACK TO SAVEPOINT provider_collection_run_audit")
+            finally:
+                cursor.execute("RELEASE SAVEPOINT provider_collection_run_audit")
+
+    return {
+        "snapshot_id": snapshot_id,
+        "run_id": run_id if run_recorded else None,
+        "run_recorded": run_recorded,
+        "run_error_type": run_error_type,
+    }
