@@ -43,6 +43,9 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         self.assertTrue(result[0]["eligible_for_review"])
         self.assertEqual(result[0]["provider_fixture_id"], "42")
         self.assertEqual(result[0]["home_team_key"], "1")
+        self.assertEqual(result[0]["competition_key"], "bl1")
+        self.assertEqual(result[0]["competition_name"], "Bundesliga")
+        self.assertEqual(result[0]["season_key"], "2026")
         self.assertTrue(result[0]["kickoff_utc"].endswith("Z"))
         self.assertIn("/getmatchdata/bl1/2026", client._get_json.call_args.args[0])
         client.close()
@@ -64,6 +67,9 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         self.assertTrue(rows[0]["eligible_for_review"])
         self.assertEqual(rows[1]["exclusion_reason"], "kickoff_missing_timezone_or_precision")
         self.assertTrue(rows[0]["provider_fixture_id"].startswith("openfootball:dataset:"))
+        self.assertEqual(rows[0]["competition_key"], "eng.1")
+        self.assertEqual(rows[0]["competition_name"], "Premier League")
+        self.assertEqual(rows[0]["season_key"], "2026-27")
         client.close()
 
     def test_openfootball_date_only_is_never_prediction_ready(self):
@@ -89,6 +95,8 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         )[0]
         self.assertFalse(row["eligible_for_review"])
         self.assertEqual(row["exclusion_reason"], "kickoff_missing_timezone_or_precision")
+        self.assertEqual(row["competition_key"], "ENG_1_premier-league")
+        self.assertEqual(row["season_key"], "2627")
         self.assertIn("non-commercial-only", row["licence"])
         client.close()
 
@@ -112,6 +120,8 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         row = client.upcoming()[0]
         self.assertTrue(row["eligible_for_review"])
         self.assertEqual(row["provider_fixture_id"], "99")
+        self.assertEqual(row["competition_key"], "10")
+        self.assertEqual(row["season_key"], "2026")
         self.assertNotIn("secret", str(row))
         self.assertEqual(client._get_json.call_args.kwargs["headers"]["Authorization"], "Token secret")
         self.assertEqual(client._get_json.call_args.args[0], BzzoiroAdapter.BASE_URL)
