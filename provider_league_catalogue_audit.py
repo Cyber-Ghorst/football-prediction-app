@@ -96,12 +96,25 @@ def audit_livescore() -> dict[str, Any]:
         coverage = [assess_livescore_competition_coverage(row) for row in all_leagues]
         fresh = sum(row["fallback_eligible"] for row in coverage)
         countries = Counter(str(row.get("country") or "Unknown") for row in all_leagues)
-        clubs = sum(int((row.get("coverage") or {}).get("clubCount") or 0)
+        clubs = sum(int((row.get("coverage") or {}).get("clubs") or 0)
                     for row in all_leagues)
-        matches = sum(int((row.get("coverage") or {}).get("matchCount") or 0)
+        matches = sum(int((row.get("coverage") or {}).get("matches") or 0)
                       for row in all_leagues)
-        standings = sum(int((row.get("coverage") or {}).get("standingsCount") or 0)
+        standings = sum(int((row.get("coverage") or {}).get("standingsGroups") or 0)
                         for row in all_leagues)
+        first = all_leagues[0] if all_leagues else {}
+        timestamp_candidates = {}
+        for row in all_leagues:
+            values = {}
+            for key, value in row.items():
+                if any(token in str(key).casefold() for token in ("sync", "updated", "timestamp", "generated")):
+                    values[str(key)] = value
+            nested = row.get("coverage") if isinstance(row.get("coverage"), dict) else {}
+            for key, value in nested.items():
+                if any(token in str(key).casefold() for token in ("sync", "updated", "timestamp", "generated")):
+                    values["coverage." + str(key)] = value
+            if values:
+                timestamp_candidates[str(row.get("slug") or row.get("name") or len(timestamp_candidates))] = values
         return {
             "status": "responding", "catalogue_count": len(all_leagues),
             "available_count": len(available), "country_count": len(countries),
@@ -112,6 +125,12 @@ def audit_livescore() -> dict[str, Any]:
             "fresh_competition_count": fresh,
             "club_count": clubs, "stored_match_count": matches,
             "standings_record_count": standings,
+            "competition_schema": {
+                "root_fields": sorted(str(key) for key in first.keys()),
+                "coverage_fields": sorted(str(key) for key in
+                    (first.get("coverage") or {}).keys()),
+                "timestamp_candidates": timestamp_candidates,
+            },
             "metadata_freshness": assess_livescore_metadata(metadata),
             "metadata": {
                 "service": metadata.get("service"),
