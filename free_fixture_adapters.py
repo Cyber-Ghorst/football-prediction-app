@@ -66,7 +66,8 @@ def _parse_aware_datetime(value: Any) -> datetime | None:
 
 def _text(value: Any) -> str:
     if isinstance(value, Mapping):
-        value = (value.get("name") or value.get("teamName") or value.get("TeamName")\n                     or value.get("displayName") or value.get("title"))
+        value = (value.get("name") or value.get("teamName") or value.get("TeamName")
+                     or value.get("displayName") or value.get("title"))
     return str(value).strip() if value is not None else ""
 
 
