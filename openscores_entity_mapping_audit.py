@@ -171,7 +171,17 @@ def build_entity_mapping_candidates(
     season_rows = []
     for league in leagues:
         source_id = str(league.get("id") or league.get("league_id") or "")
-        candidate = _unique_name_candidates(league, canonical_leagues, require_country=True)
+        # Normalize OpenScores country_code into a country name before
+        # generating review candidates; otherwise country-qualified matches
+        # are incorrectly classified as missing-country candidates.
+        source_country = _league_country(league) or {
+            "DEU": "Germany", "ESP": "Spain", "FRA": "France",
+            "ENG": "England", "ITA": "Italy",
+        }.get(str(league.get("country_code") or "").upper(), "")
+        candidate_source = {**league, "country": source_country}
+        candidate = _unique_name_candidates(
+            candidate_source, canonical_leagues, require_country=True
+        )
         canonical_league_id = (
             candidate["candidates"][0]["canonical_id"]
             if candidate["status"] == "unique_name_candidate_requires_review" else None
