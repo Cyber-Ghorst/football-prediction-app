@@ -447,6 +447,8 @@ def collect_sportmonks_team_profile(
             ).isoformat(),
             "_kickoff_timestamp": kickoff_timestamp,
             "collection_fetched_at": fixture.get("collection_fetched_at"),
+            "repository_collected_at": fixture.get("repository_collected_at"),
+            "provider_updated_at": fixture.get("provider_updated_at"),
             "venue": "home" if is_home else "away",
             "opponent_id": opponent_id,
             "opponent_name": opponent.get("name"),
@@ -529,6 +531,22 @@ def collect_sportmonks_team_profile(
     collection_timestamp_epochs = [
         value for value in collection_timestamp_epochs if value is not None
     ]
+    repository_collection_epochs = [
+        _kickoff_timestamp({"starting_at": match.get("repository_collected_at")})
+        for match in recent
+        if match.get("repository_collected_at")
+    ]
+    repository_collection_epochs = [
+        value for value in repository_collection_epochs if value is not None
+    ]
+    provider_update_epochs = [
+        _kickoff_timestamp({"starting_at": match.get("provider_updated_at")})
+        for match in recent
+        if match.get("provider_updated_at")
+    ]
+    provider_update_epochs = [
+        value for value in provider_update_epochs if value is not None
+    ]
     team_fixture_accounting_gap = (
         history_diagnostics["team_fixtures"]
         - history_diagnostics["completed_fixtures"]
@@ -541,6 +559,14 @@ def collect_sportmonks_team_profile(
         "history_collection_fetched_at": (
             datetime.fromtimestamp(max(collection_timestamp_epochs), tz=timezone.utc).isoformat()
             if collection_timestamp_epochs else None
+        ),
+        "history_repository_collected_at": (
+            datetime.fromtimestamp(max(repository_collection_epochs), tz=timezone.utc).isoformat()
+            if repository_collection_epochs else None
+        ),
+        "history_provider_updated_at": (
+            datetime.fromtimestamp(max(provider_update_epochs), tz=timezone.utc).isoformat()
+            if provider_update_epochs else None
         ),
         "history_order": "newest_first_by_parsed_utc_kickoff",
         "statistics_core_metrics": [label for label, _group, _aliases in _CORE_STATISTICS],
@@ -942,6 +968,10 @@ def collect_repository_team_profiles(
         if not isinstance(raw_fixture, dict):
             continue
         fixture_payload = dict(raw_fixture)
+        if row.get("collected_at") is not None:
+            fixture_payload.setdefault("repository_collected_at", row.get("collected_at"))
+        if row.get("provider_updated_at") is not None:
+            fixture_payload.setdefault("provider_updated_at", row.get("provider_updated_at"))
         normalized_rows = statistics_by_fixture.get(str(row.get("fixture_id")))
         if normalized_rows:
             fixture_payload["statistics"] = normalized_rows
