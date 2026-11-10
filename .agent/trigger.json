@@ -1,4 +1,4 @@
 {
-  "operation": "openscores_secondary_provider_coverage_audit",
-  "audit_revision": "highlightly_league_id_verification_20261110"
+  "operation": "openscores_highlightly_fixture_identity_audit",
+  "audit_revision": "highlightly_crosswalk_validation_20261110"
 }
