@@ -87,9 +87,9 @@ def _finished(fixture: Mapping[str, Any]) -> bool:
     # Only recognized complete labels count as finished. Avoid substring
     # matches such as "unfinished" or "not finished".
     return label in {
-        "finished", "ft", "aet", "penalties", "after extra time",
-        "after penalties", "full time", "full-time",
-        "finished after extra time", "finished after penalties",
+        "finished", "ft", "aet", "after extra time", "after penalties",
+        "full time", "full-time", "finished after extra time",
+        "finished after penalties",
     }
 
 
