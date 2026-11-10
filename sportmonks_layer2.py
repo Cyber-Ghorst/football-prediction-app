@@ -271,6 +271,7 @@ def _fixture_statistics_index(fixture: dict[str, Any]) -> dict[int, dict[str, An
             "raw_diagnostics": [],
             "conflicts": [],
             "invalid_statistics": [],
+            "invalid_names": set(),
             "conflicted_names": set(),
         })
         stat_type = row.get("type") or {}
@@ -315,6 +316,7 @@ def _fixture_statistics_index(fixture: dict[str, Any]) -> dict[int, dict[str, An
                 "raw_value": raw_value,
                 "fixture_id": fixture_id,
             })
+            team_data["invalid_names"].add(canonical_name)
             # If the provider sends both valid and invalid rows for one
             # canonical metric, remove that metric rather than choosing one.
             if canonical_name in team_data["statistics"]:
@@ -332,6 +334,14 @@ def _fixture_statistics_index(fixture: dict[str, Any]) -> dict[int, dict[str, An
             continue
 
         if canonical_name in team_data["conflicted_names"]:
+            continue
+        if canonical_name in team_data["invalid_names"]:
+            team_data["conflicted_names"].add(canonical_name)
+            team_data["conflicts"].append({
+                "canonical_name": canonical_name,
+                "reason": "valid_and_invalid_duplicate_observations",
+                "fixture_id": fixture_id,
+            })
             continue
         if canonical_name in team_data["statistics"]:
             existing_value = team_data["statistics"][canonical_name]
