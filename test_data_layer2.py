@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import Mock
 
 from data_layer2 import _standings_rank_map, collect_team_profile
+from form_analyzer import venue_rating
 
 
 class Layer2NormalizationTests(unittest.TestCase):
@@ -19,6 +20,35 @@ class Layer2NormalizationTests(unittest.TestCase):
         self.assertEqual(result[10], 100.0)
         self.assertAlmostEqual(result[20], 200.0 / 3)
         self.assertAlmostEqual(result[30], 100.0 / 3)
+
+    def test_venue_rating_uses_latest_five_sixty_percent_weight(self):
+        latest_wins = [
+            {"venue": "home", "goals_for": 2, "goals_against": 0}
+            for _ in range(5)
+        ]
+        previous_losses = [
+            {"venue": "home", "goals_for": 0, "goals_against": 2}
+            for _ in range(5)
+        ]
+        self.assertEqual(venue_rating(latest_wins + previous_losses, "home"), 60.0)
+        self.assertEqual(venue_rating(previous_losses + latest_wins, "home"), 40.0)
+
+    def test_venue_rating_keeps_recency_positions_before_venue_filtering(self):
+        matches = [
+            {"venue": "away", "goals_for": 0, "goals_against": 1},
+            {"venue": "home", "goals_for": 2, "goals_against": 0},
+            {"venue": "away", "goals_for": 0, "goals_against": 1},
+            {"venue": "home", "goals_for": 2, "goals_against": 0},
+            {"venue": "away", "goals_for": 0, "goals_against": 1},
+            {"venue": "home", "goals_for": 0, "goals_against": 2},
+            {"venue": "away", "goals_for": 0, "goals_against": 1},
+            {"venue": "home", "goals_for": 0, "goals_against": 2},
+            {"venue": "away", "goals_for": 0, "goals_against": 1},
+            {"venue": "home", "goals_for": 0, "goals_against": 2},
+        ]
+        # Home results are two recent wins (weight 0.24) and three older
+        # losses (weight 0.24), so the recency-aware venue rating is 50%.
+        self.assertEqual(venue_rating(matches, "home"), 50.0)
 
     def test_non_final_fixtures_are_excluded(self):
         client = Mock()

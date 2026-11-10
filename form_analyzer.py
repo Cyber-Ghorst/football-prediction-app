@@ -40,14 +40,20 @@ def analyze_form(matches: list[dict[str, Any]]) -> dict[str, Any]:
 
 
 def venue_rating(matches: list[dict], venue: str) -> float | None:
-    selected = [m for m in matches[:10] if m.get("venue") == venue]
-    if not selected:
-        return None
+    """Rate home/away results using their positions in the full latest-ten window.
+
+    Venue filtering must not reset recency: a match's 60/40 weighting comes
+    from its position in the team's complete chronological history.
+    """
     points = []
-    for m in selected:
-        gf, ga = m.get("goals_for"), m.get("goals_against")
-        if gf is not None and ga is not None:
+    for match in matches[:10]:
+        if match.get("venue") != venue:
+            points.append(None)
+            continue
+        gf, ga = match.get("goals_for"), match.get("goals_against")
+        if gf is None or ga is None:
+            points.append(None)
+        else:
             points.append(3 if gf > ga else 1 if gf == ga else 0)
-    if not points:
-        return None
-    return round(sum(points) / (3 * len(points)) * 100, 1)
+    average = weighted_average(points)
+    return round(average / 3 * 100, 1) if average is not None else None
