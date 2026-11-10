@@ -2,6 +2,7 @@ import unittest
 from datetime import datetime, timezone
 
 from provider_corroboration import (
+    _current_scores,
     canonicalize_sportmonks_fixture,
     collect_recent_result_corroboration,
 )
@@ -115,6 +116,29 @@ class ProviderCorroborationTests(unittest.TestCase):
         self.assertEqual(row["source_ids"]["sportmonks"], "700")
         self.assertEqual(row["home_score"], 2)
         self.assertEqual(row["status"], "finished")
+
+    def test_current_score_parser_rejects_boolean_fractional_and_negative_values(self):
+        for invalid in (True, 1.5, -1, "1.5", "unknown"):
+            fixture = {
+                "scores": [
+                    {"participant_id": 10, "score": {"goals": invalid}},
+                    {"participant_id": 20, "score": {"goals": 2}},
+                ]
+            }
+            self.assertEqual(
+                _current_scores(fixture, 10, 20),
+                (None, 2),
+                msg=f"accepted invalid home score {invalid!r}",
+            )
+
+    def test_current_score_parser_accepts_non_negative_whole_numbers(self):
+        fixture = {
+            "scores": [
+                {"participant_id": 10, "score": {"goals": " 3 "}},
+                {"participant_id": 20, "score": {"goals": 0}},
+            ]
+        }
+        self.assertEqual(_current_scores(fixture, 10, 20), (3, 0))
 
     def test_team_history_uses_sportmonks_season_id_not_calendar_year(self):
         report = collect_recent_result_corroboration(
