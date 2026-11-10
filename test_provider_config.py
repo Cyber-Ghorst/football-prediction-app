@@ -11,7 +11,7 @@ class ProviderRoleConfigTests(unittest.TestCase):
             [
                 'sportmonks', 'highlightly', 'api_football', 'api_ninjas',
                 'livescore_football', 'openligadb', 'openfootball',
-                'open_matchday', 'worldcup26', 'bzzoiro',
+                'open_matchday', 'worldcup26', 'bzzoiro', 'openscores',
             ],
         )
 
@@ -27,7 +27,7 @@ class ProviderRoleConfigTests(unittest.TestCase):
 
     def test_readiness_exposes_role_and_credential_status_without_secret_values(self):
         rows = provider_readiness()
-        self.assertEqual(len(rows), 10)
+        self.assertEqual(len(rows), 11)
         for row in rows:
             self.assertIn('role', row)
             self.assertIn('limitation', row)
@@ -45,6 +45,9 @@ class ProviderRoleConfigTests(unittest.TestCase):
         self.assertFalse(rows["worldcup26"]["credential_required"])
         self.assertTrue(rows["bzzoiro"]["credential_required"])
         self.assertEqual(rows["bzzoiro"]["credential_name"], "BZZOIRO_API_TOKEN")
+        self.assertEqual(rows["openscores"]["role"], "Read-only historical result observations and entity-mapping audit; not a future-fixture source")
+        self.assertEqual(rows["openscores"]["credential_name"], "OPENSCORES_API_KEY")
+        self.assertIn("not a future-fixture source", rows["openscores"]["app_integration"])
 
 
 if __name__ == '__main__':
