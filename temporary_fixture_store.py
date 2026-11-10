@@ -21,6 +21,8 @@ CREATE TABLE IF NOT EXISTS upcoming_fixture_staging (
     season_id TEXT NOT NULL,
     starting_at TIMESTAMPTZ NOT NULL,
     status TEXT NOT NULL,
+    home_team_id TEXT NOT NULL,
+    away_team_id TEXT NOT NULL,
     home_team TEXT NOT NULL,
     away_team TEXT NOT NULL,
     competition TEXT NOT NULL,
@@ -33,13 +35,15 @@ CREATE TABLE IF NOT EXISTS upcoming_fixture_staging (
 UPSERT_SQL = """
 INSERT INTO upcoming_fixture_staging (
     fixture_id, league_id, season_id, starting_at, status,
-    home_team, away_team, competition, country, payload, collected_at
-) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NOW())
+    home_team_id, away_team_id, home_team, away_team, competition, country, payload, collected_at
+) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NOW())
 ON CONFLICT (fixture_id) DO UPDATE SET
     league_id = EXCLUDED.league_id,
     season_id = EXCLUDED.season_id,
     starting_at = EXCLUDED.starting_at,
     status = EXCLUDED.status,
+    home_team_id = EXCLUDED.home_team_id,
+    away_team_id = EXCLUDED.away_team_id,
     home_team = EXCLUDED.home_team,
     away_team = EXCLUDED.away_team,
     competition = EXCLUDED.competition,
@@ -80,6 +84,8 @@ def _prepare(fixture: dict[str, Any]) -> tuple[Any, ...]:
         str(fixture.get("season_id") or season.get("id") or ""),
         kickoff,
         _name(fixture.get("state") or fixture.get("status")) or str(fixture.get("state_id") or "scheduled"),
+        str(home.get("id")),
+        str(away.get("id")),
         _name(home),
         _name(away),
         _name(league) or "Unknown competition",
@@ -121,3 +127,65 @@ def sync_temporary_upcoming_fixtures(
         "active_fixtures": active_count,
         "prediction_ledger_modified": 0,
     }
+
+
+def search_temporary_upcoming_fixtures(
+    database_url: str,
+    *,
+    search_term: str = "",
+    league_id: str | None = None,
+    season_id: str | None = None,
+    window_days: int = 7,
+    limit: int = 300,
+) -> list[dict[str, Any]]:
+    """Search only the active Neon staging catalogue within a strict 1–7 day window."""
+    if not database_url:
+        raise ValueError("DATABASE_URL is required.")
+    if isinstance(window_days, bool) or not isinstance(window_days, int) or not 1 <= window_days <= 7:
+        raise ValueError("window_days must be an integer from 1 through 7.")
+    safe_limit = max(1, min(int(limit), 500))
+    clauses = [
+        "starting_at > NOW()",
+        f"starting_at <= NOW() + INTERVAL '{window_days} days'",
+        "LOWER(status) IN ('ns', 'not started', 'scheduled', 'to be played', "
+        "'fixture not started', 'not played', 'tbd', '1', "
+        "'postponed', 'postponed fixture', 'pst', 'ppd')",
+    ]
+    params: list[Any] = []
+    if league_id:
+        clauses.append("league_id = %s")
+        params.append(str(league_id))
+    if season_id:
+        clauses.append("season_id = %s")
+        params.append(str(season_id))
+    term = str(search_term or "").strip()
+    if term:
+        clauses.append(
+            "(home_team ILIKE %s OR away_team ILIKE %s OR competition ILIKE %s "
+            "OR COALESCE(country, '') ILIKE %s)"
+        )
+        pattern = f"%{term}%"
+        params.extend((pattern, pattern, pattern, pattern))
+    params.append(safe_limit)
+    with psycopg.connect(database_url, connect_timeout=10) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"""
+                SELECT fixture_id, season_id, league_id, home_team_id, away_team_id,
+                       home_team, away_team, competition, country, starting_at,
+                       status, payload->>'venue' AS venue, 'sportmonks' AS source_provider,
+                       payload->>'updated_at' AS provider_updated_at
+                FROM upcoming_fixture_staging
+                WHERE {" AND ".join(clauses)}
+                ORDER BY starting_at ASC, fixture_id ASC
+                LIMIT %s
+                """,
+                tuple(params),
+            )
+            rows = cursor.fetchall()
+            columns = (
+                "fixture_id", "season_id", "league_id", "home_team_id", "away_team_id",
+                "home_team", "away_team", "competition", "country", "starting_at",
+                "status", "venue", "source_provider", "provider_updated_at",
+            )
+            return [dict(zip(columns, row)) for row in rows]
