@@ -6,8 +6,9 @@ from openscores_fixture_observation_sync import run_sync
 
 
 class FakeClient:
-    def __init__(self, fixtures=None):
+    def __init__(self, fixtures=None, total_pages=1):
         self.calls = []
+        self.total_pages = total_pages
         self.fixtures = fixtures if fixtures is not None else [{
             "id": 77, "season_id": 2026,
             "scheduled_kickoff_at": "2026-11-12T19:00:00Z",
@@ -29,7 +30,7 @@ class FakeClient:
         self.calls.append(("fixtures", filters))
         return {
             "retrieved_at_utc": "2026-11-10T17:00:00Z",
-            "data": {"items": self.fixtures, "pagination": {"page": 1, "total_pages": 1}},
+            "data": {"items": self.fixtures, "pagination": {"page": 1, "total_pages": self.total_pages}},
         }
 
 
@@ -98,6 +99,11 @@ class OpenScoresObservationSyncTests(unittest.TestCase):
         self.assertEqual(report["fixtures_non_scheduled"], 1)
         self.assertEqual(report["fixtures_accepted_for_window"], 0)
         save.assert_called_once_with("postgresql://db", [])
+
+    def test_reports_truncated_provider_pagination(self):
+        client = FakeClient(total_pages=2)
+        report, _, _, _ = self._run(client)
+        self.assertTrue(report["pagination_truncated"])
 
     def test_requires_database_before_provider_calls(self):
         client = FakeClient()
