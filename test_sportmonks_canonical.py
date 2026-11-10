@@ -26,6 +26,31 @@ class SportmonksCanonicalTests(unittest.TestCase):
         self.assertEqual((result["home_score"], result["away_score"]), (2, 1))
         self.assertEqual(result["source_ids"]["sportmonks"], "12345")
 
+    def test_period_scores_are_not_used_when_current_scores_are_missing(self):
+        row = self.fixture()
+        row["scores"] = [
+            {"participant_id": 100, "description": "1ST_HALF", "score": {"goals": 1}},
+            {"participant_id": 100, "description": "2ND_HALF", "score": {"goals": 2}},
+            {"participant_id": 200, "description": "1ST_HALF", "score": {"goals": 0}},
+            {"participant_id": 200, "description": "2ND_HALF", "score": {"goals": 1}},
+        ]
+        result = canonicalize_sportmonks_fixture(
+            row, competition_key="eng-premier-league", season=2026
+        )
+        self.assertIsNone(result["home_score"])
+        self.assertIsNone(result["away_score"])
+
+    def test_current_scores_reject_boolean_fractional_and_negative_values(self):
+        for invalid in (True, 1.5, -1, "1.5", "-1"):
+            with self.subTest(invalid=invalid):
+                row = self.fixture()
+                row["scores"][0]["score"]["goals"] = invalid
+                result = canonicalize_sportmonks_fixture(
+                    row, competition_key="eng-premier-league", season=2026
+                )
+                self.assertIsNone(result["home_score"])
+                self.assertEqual(result["away_score"], 1)
+
     def test_identity_matches_other_provider_without_comparing_ids(self):
         sm = canonicalize_sportmonks_fixture(
             self.fixture(), competition_key="eng-premier-league", season=2026
