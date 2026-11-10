@@ -505,10 +505,18 @@ Layer 3 adds evidence-based checks around the canonical records delivered by Lay
 - Score-pair agreement, separate status/kickoff agreement and Wilson confidence intervals retain the original definitions. A minimum of 30 unique paired score fixtures remains required for a sample-sufficient descriptive score.
 - If CockroachDB history is unavailable, the current-run diagnostic remains available and the UI explicitly labels the report as non-persistent; a storage failure never blocks prediction or changes its inputs.
 
+### Third implementation milestone: conflict triage and immutable audit records (completed 2026-11-10)
+
+- `conflict_audit.py` creates one event per conflicted field from exact reconciled fixtures. Each event retains canonical fixture identity, every provider observation and source ID, the selected value/provider, corroborating/conflicting providers, the decision reason and timestamp.
+- `provider_data_storage.py` appends events to CockroachDB's `provider_conflict_resolution_audit` table and loads the latest 90-day audit history by competition and season.
+- The Streamlit report exposes persistent audit history and distinguishes a configured-priority policy selection from a human override. No manual override is performed.
+- If there is no unique eligible selected observation, the field remains explicitly unresolved. No averaging, guessing or fabricated replacement is allowed.
+- Audit persistence failures are diagnostic only and do not block prediction. Current-run source observations remain visible.
+- This milestone does not change provider priorities, model inputs, prediction weights, TVD or tactical recency weighting.
+
 ### Remaining Layer 3 work
 
-1. Add conflict triage and auditable resolution records, retaining raw observations and the selected authoritative value.
-2. Implement dynamic league discovery and registration with explicit competition/season crosswalks and identity checks.
-3. Add a league coverage dashboard distinguishing discovered, supported, incomplete and prediction-ready competitions.
-4. Validate the quality-control layer against archived reports and sufficient historical samples before considering any provider-priority changes.
+1. Implement dynamic league discovery and registration with explicit competition/season crosswalks and identity checks.
+2. Add a league coverage dashboard distinguishing discovered, supported, incomplete and prediction-ready competitions.
+3. Validate the quality-control layer against archived reports and sufficient historical samples before considering any provider-priority changes.
 The reliability report is a descriptive baseline, not a source ranking or an automated model adjustment.
