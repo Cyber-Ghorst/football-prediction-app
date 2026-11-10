@@ -1390,8 +1390,9 @@ try:
                 "transport_status": "responding" if ninjas_ok else "unknown",
                 "credential_configured": True,
                 "quota_metadata": ninjas_metadata,
-                "fallback_enabled": False,
-                "note": "Connection verified; match records are not yet wired into Layer 2.",
+                "opt_in_result_history_fallback_available": True,
+                "enabled_by_default": False,
+                "note": "Connection verified; exact completed results may be imported into Layer 2 only after Sportmonks fixture identity and full-time score agreement. Missing statistics, injuries and lineups remain unavailable from API Ninjas.",
             })
         except APINinjasError as exc:
             st.warning(f"API Ninjas connection could not be verified: {exc}")
@@ -1402,8 +1403,13 @@ try:
             st.json({
                 **highlightly_status,
                 "credential_configured": True,
-                "fallback_enabled": False,
-                "note": "Connection verified; match records are not yet wired into Layer 2.",
+                "opt_in_fallbacks_available": [
+                    "missing supported match statistics",
+                    "exact-fixture lineups",
+                    "Sportmonks-verified recent result history",
+                ],
+                "enabled_by_default": False,
+                "note": "Connection verified; each opt-in fallback is restricted to exact competition, season, fixture and team identity. Existing Sportmonks values remain authoritative; injury/availability inference is not enabled.",
             })
         except HighlightlyError as exc:
             st.warning(f"Highlightly connection could not be verified: {exc}")
@@ -1438,7 +1444,7 @@ try:
                 source_provider=crosswalk_provider,
             )
             st.write(f"**{crosswalk_provider.replace('_', ' ').title()} → LiveScoreFootball competition crosswalk**")
-            st.caption("Verification requires exact competition/country identity, matching season, active stored data, and a fresh per-competition coverage.lastSyncedAt timestamp. Fixture-level update timestamps must also be fresh before any individual fixture can be considered. Automatic fallback remains disabled.")
+            st.caption("The missing-score fallback is opt-in and disabled by default. It requires exact competition/country identity, matching season, active stored data, fresh global and per-competition sync metadata, and a fresh event update timestamp plus exact completed Sportmonks fixture identity before a score can be used.")
             if crosswalk:
                 st.dataframe([
                     {key: row.get(key) for key in (
