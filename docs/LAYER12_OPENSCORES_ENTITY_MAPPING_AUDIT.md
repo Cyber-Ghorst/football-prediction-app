@@ -38,8 +38,10 @@ Use the Prediction Lab Controller operation:
 
 The controller report and downloadable workflow artifact contain
 `openscores-entity-mapping-audit.json`, including observation counts,
-canonical entity counts, candidate lists, ambiguity statuses and explicit
-zero-write safety indicators.
+canonical entity counts, candidate lists, ambiguity statuses, explicit
+external-ID namespaces found in fixture/team/league/season payloads, and
+zero-write safety indicators. External IDs are evidence only; a shared ID must
+be checked against canonical provider links before a mapping is approved.
 
 ## Activation status
 
