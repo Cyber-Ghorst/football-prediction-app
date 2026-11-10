@@ -113,18 +113,18 @@ def main() -> int:
             "error": str(exc),
         }
     serialized = json.dumps(report, indent=2, default=str)
-    Path("sportmonks-catalogue-access-report.json").write_text(serialized + "\\n", encoding="utf-8")
+    Path("sportmonks-catalogue-access-report.json").write_text(serialized + "\n", encoding="utf-8")
     print(serialized)
     summary_path = os.getenv("GITHUB_STEP_SUMMARY")
     if summary_path:
         with open(summary_path, "a", encoding="utf-8") as summary:
-            summary.write("## Sportmonks account catalogue access audit\\n\\n")
-            summary.write(f"- Status: {report['status']}\\n")
-            summary.write(f"- Leagues visible: {report.get('league_catalogue_count', 0)}\\n")
-            summary.write(f"- Seasons visible: {report.get('season_catalogue_count', 0)}\\n")
-            summary.write("- Database touched: no\\n- Entity links written: 0\\n")
+            summary.write("## Sportmonks account catalogue access audit\n\n")
+            summary.write(f"- Status: {report['status']}\n")
+            summary.write(f"- Leagues visible: {report.get('league_catalogue_count', 0)}\n")
+            summary.write(f"- Seasons visible: {report.get('season_catalogue_count', 0)}\n")
+            summary.write("- Database touched: no\n- Entity links written: 0\n")
             for item in report.get("targets", []):
-                summary.write(f"- {item['name']} ({item['country_code'] or 'international'}): {item['status']} ({item['candidate_count']} candidates)\\n")
+                summary.write(f"- {item['name']} ({item['country_code'] or 'international'}): {item['status']} ({item['candidate_count']} candidates)\n")
     return 0 if report["status"] in {"pass", "partial"} else 1
 
 
