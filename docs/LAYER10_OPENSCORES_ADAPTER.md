@@ -41,15 +41,19 @@ with OpenScoresClient() as client:
 
 The live connection test requires a valid key. Unit tests use mocked HTTP responses and do not require network access or credentials.
 
+## Autonomous response-shape diagnostic
+
+The autonomous `openscores_connection_check` operation makes exactly one authenticated, read-only `list_leagues` request. It searches known wrapper paths (including nested `leagues`, `items`, `results` and `competitions` collections) for league records containing an identifier and a name. It reports the count only when such a record collection is found.
+
+When no collection is recognised, the report includes schema-only diagnostics: root type, safe field names, nested value types and list/text lengths. It never includes league names, IDs, arbitrary provider values, raw payloads, credentials or exception messages. This allows the returned shape to be diagnosed without exposing provider data unnecessarily.
+
+The report remains read-only: no fixtures are imported and the prediction ledger is not touched. The same diagnostic is available through the Streamlit connection test because both call `OpenScoresClient.test_connection()`.
+
 ## Known limitations / next validation
 
-- No authenticated live call has been made as part of this implementation until a valid key is configured in the deployment.
 - The Streamlit app's Provider readiness panel includes a **Test OpenScores connection** control. It performs one authenticated, read-only `list_leagues` request and reports connection status, returned league count and UTC check time; it never displays the key or imports fixture data.
-
 - The autonomous Prediction Lab Controller supports the `openscores_connection_check` operation. Trigger it from the control issue with `/agent run openscores_connection_check`, or select it from the workflow-dispatch operation list.
 - For autonomous runs, configure `OPENSCORES_API_KEY` separately as a GitHub Actions repository secret. Streamlit Community Cloud secrets are not shared with GitHub Actions.
-- The controller makes exactly one read-only `list_leagues` request and publishes a credential-safe report with authentication status, returned league count, UTC timestamp and exception category only. It does not print exception messages, import fixtures, or touch the prediction ledger.
-- This workflow check is independent of the Streamlit UI button; both use the same `OpenScoresClient.test_connection()` method.
 - Validate actual response shapes and coverage before building normalization or persistence.
 - OpenScores does not document structured shot-level xG, shot coordinates or xG chain endpoints in the current public tools reference; do not market this adapter as an xG provider.
 - This adapter is secondary research/corroboration only. It must not enter production model inputs without a separate, tested, explicitly approved integration objective.

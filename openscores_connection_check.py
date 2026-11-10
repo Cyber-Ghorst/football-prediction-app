@@ -1,4 +1,4 @@
-"""Autonomous, read-only OpenScores authentication check for the lab controller."""
+"""Autonomous, read-only OpenScores authentication and response-shape check."""
 from __future__ import annotations
 
 import json
@@ -10,7 +10,7 @@ from openscores import OpenScoresClient
 
 
 def run_check(client_factory: Callable[[], OpenScoresClient] = OpenScoresClient) -> dict:
-    """Make one authenticated list_leagues request and return credential-safe status."""
+    """Make one authenticated list_leagues request and return credential-safe diagnostics."""
     report = {
         "operation": "openscores_connection_check",
         "checked_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -18,6 +18,9 @@ def run_check(client_factory: Callable[[], OpenScoresClient] = OpenScoresClient)
         "status": "fail",
         "authenticated": False,
         "league_count_returned": None,
+        "league_collection_found": False,
+        "league_collection_path": None,
+        "response_shape": None,
         "provider_retrieved_at_utc": None,
         "read_only": True,
         "prediction_ledger_touched": False,
@@ -30,6 +33,9 @@ def run_check(client_factory: Callable[[], OpenScoresClient] = OpenScoresClient)
             "status": "pass",
             "authenticated": True,
             "league_count_returned": result.get("league_count_returned"),
+            "league_collection_found": result.get("league_collection_found", False),
+            "league_collection_path": result.get("league_collection_path"),
+            "response_shape": result.get("response_shape"),
             "provider_retrieved_at_utc": result.get("retrieved_at_utc"),
         })
     except Exception as exc:
@@ -52,6 +58,9 @@ def main() -> int:
             summary.write(f"- Status: **{report['status']}**\n")
             summary.write(f"- Authenticated: {report['authenticated']}\n")
             summary.write(f"- Leagues returned: {report['league_count_returned']}\n")
+            summary.write(f"- League collection found: {report['league_collection_found']}\n")
+            summary.write(f"- Response root type: {(report.get('response_shape') or {}).get('root_type')}\n")
+            summary.write(f"- League collection path: {report['league_collection_path']}\n")
             summary.write(f"- Checked (UTC): {report['checked_at_utc']}\n")
             summary.write("- Read-only: yes; fixtures imported: no; prediction ledger touched: no\n")
             if report.get("error_type"):
