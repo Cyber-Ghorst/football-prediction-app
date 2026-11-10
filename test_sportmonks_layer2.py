@@ -107,9 +107,21 @@ class SportmonksLayer2Tests(unittest.TestCase):
         self.assertEqual(profile["matches"][0]["goals_for"], 2)
         self.assertEqual(profile["matches"][0]["opponent_strength"], 50.0)
         self.assertEqual(profile["matches"][0]["statistics"]["Ball Possession"], 60.0)
-        self.assertEqual(profile["matches"][0]["statistics"]["Total Shots"], 14.0)
+        # Provider emits two different values for the same canonical metric;
+        # strict integrity handling must leave it unknown rather than pick one.
+        self.assertNotIn("Total Shots", profile["matches"][0]["statistics"])
+        self.assertTrue(any(
+            item["canonical_name"] == "Total Shots"
+            and item["reason"] == "conflicting_duplicate_observations"
+            for item in profile["matches"][0]["statistics_conflicts"]
+        ))
         self.assertEqual(profile["matches"][0]["statistics"]["Blocked Shots"], 3.0)
-        self.assertEqual(profile["matches"][0]["statistics"]["Passes %"], 84.0)
+        self.assertNotIn("Passes %", profile["matches"][0]["statistics"])
+        self.assertTrue(any(
+            item["canonical_name"] == "Passes %"
+            and item["reason"] == "conflicting_duplicate_observations"
+            for item in profile["matches"][0]["statistics_conflicts"]
+        ))
         self.assertEqual(profile["matches"][0]["statistics"]["Big Chances Created"], 4.0)
         self.assertEqual(profile["matches"][0]["statistics"]["Counter Attacks"], 7.0)
         self.assertNotIn("Shots Accuracy", profile["matches"][0]["statistics"])
@@ -126,6 +138,53 @@ class SportmonksLayer2Tests(unittest.TestCase):
         self.assertEqual(profile["matches"][0]["statistics_provenance"][0]["provider"], "sportmonks")
         self.assertEqual(profile["matches"][0]["statistics_provenance"][0]["fixture_id"], 6)
         self.assertIsNone(profile["player_availability"])
+
+    def test_conflicting_duplicate_supported_statistics_are_excluded(self):
+        row = fixture(1, 10, 20, 2, 1)
+        row["statistics"].append({
+            "participant_id": 10,
+            "type": {"id": 3, "name": "Total Shots"},
+            "data": {"value": 99},
+        })
+        profile = collect_sportmonks_team_profile(
+            {"id": 10, "name": "Home FC"}, 2026, [row], []
+        )
+        match = profile["matches"][0]
+        self.assertNotIn("Total Shots", match["statistics"])
+        self.assertTrue(any(
+            item["canonical_name"] == "Total Shots"
+            and item["reason"] == "conflicting_duplicate_observations"
+            for item in match["statistics_conflicts"]
+        ))
+        self.assertFalse(any(
+            item["canonical_name"] == "Total Shots"
+            for item in match["statistics_provenance"]
+        ))
+
+    def test_invalid_duplicate_supported_statistic_is_excluded_regardless_of_row_order(self):
+        for reverse in (False, True):
+            with self.subTest(invalid_first=reverse):
+                row = fixture(1, 10, 20, 2, 1)
+                valid = next(
+                    item for item in row["statistics"]
+                    if item["participant_id"] == 10
+                    and item["type"].get("name") == "Total Shots"
+                )
+                invalid = {
+                    "participant_id": 10,
+                    "type": {"id": 3, "name": "Total Shots"},
+                    "data": {"value": "not-a-number"},
+                }
+                row["statistics"].append(invalid)
+                if reverse:
+                    row["statistics"].remove(valid)
+                    row["statistics"].append(valid)
+                profile = collect_sportmonks_team_profile(
+                    {"id": 10, "name": "Home FC"}, 2026, [row], []
+                )
+                match = profile["matches"][0]
+                self.assertNotIn("Total Shots", match["statistics"])
+                self.assertTrue(match["statistics_conflicts"])
 
     def test_repository_season_snapshot_loads_season_data_once_as_reusable_bundle(self):
         teams = [{"team_id": "sportmonks:10", "name": "Home FC"}]
@@ -519,11 +578,12 @@ class SportmonksLayer2Tests(unittest.TestCase):
         expected_labels = [label for label, _group, _aliases in CORE_STATISTICS]
 
         self.assertEqual(diagnostics["statistics_core_metrics"], expected_labels)
-        self.assertEqual(diagnostics["statistics_coverage_by_metric"], {
-            label: 1 for label in expected_labels
-        })
-        self.assertEqual(diagnostics["matches_with_complete_core_statistics"], 1)
-        self.assertEqual(diagnostics["core_statistics_completeness_pct"], 100.0)
+        expected_coverage = {label: 1 for label in expected_labels}
+        expected_coverage["Total Shots"] = 0
+        expected_coverage["Passes %"] = 0
+        self.assertEqual(diagnostics["statistics_coverage_by_metric"], expected_coverage)
+        self.assertEqual(diagnostics["matches_with_complete_core_statistics"], 0)
+        self.assertEqual(diagnostics["core_statistics_completeness_pct"], 75.0)
 
 
     def test_duplicate_fixture_ids_are_reported_and_excluded_from_history(self):
