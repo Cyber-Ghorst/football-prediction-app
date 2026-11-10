@@ -127,13 +127,14 @@ def _api_ninjas_league_slug(client: Any, competition: str) -> str | None:
 def _collect_api_ninjas_records(
     *,
     client: Any,
+    team_clients: list[Any] | None = None,
     competition: str,
     season: int,
     home_team_name: str,
     away_team_name: str,
     competition_key_value: str,
 ) -> dict[str, Any]:
-    """Fetch and normalize API Ninjas team histories independently."""
+    """Fetch and normalize API Ninjas team histories with isolated sessions."""
     started = time.perf_counter()
     result: dict[str, Any] = {
         "records": [],
@@ -143,6 +144,8 @@ def _collect_api_ninjas_records(
         "error": None,
         "metadata": {},
     }
+    clients = list(team_clients or [client])
+    team_names = (home_team_name, away_team_name)
     try:
         league_slug = _api_ninjas_league_slug(client, competition)
         if league_slug is None:
@@ -150,13 +153,35 @@ def _collect_api_ninjas_records(
                 "No unique exact competition-name mapping exists in the API Ninjas league catalogue."
             )
         else:
-            rows = []
-            for team_name in (home_team_name, away_team_name):
-                result["team_requests"] += 1
-                rows.extend(client.team_matches(
+            requests_to_make = [
+                (team_names[index], clients[index] if index < len(clients) else client)
+                for index in range(len(team_names))
+            ]
+
+            def fetch_team(item):
+                team_name, team_client = item
+                team_rows = team_client.team_matches(
                     team=team_name, league=league_slug, season=int(season)
-                ))
+                )
+                metadata = dict(getattr(team_client, "last_metadata", {}) or {})
+                return team_name, team_rows, metadata
+
+            if len(clients) > 1:
+                # Each client owns its own requests.Session; never share one
+                # mutable session between worker threads.
+                with ThreadPoolExecutor(max_workers=min(2, len(requests_to_make))) as executor:
+                    team_results = list(executor.map(fetch_team, requests_to_make))
+            else:
+                team_results = [fetch_team(item) for item in requests_to_make]
+
+            rows = []
+            team_metadata = {}
+            for team_name, team_rows, metadata in team_results:
+                result["team_requests"] += 1
+                rows.extend(team_rows)
+                team_metadata[team_name] = metadata
             result["raw_rows_received"] = len(rows)
+            result["metadata"] = team_metadata
             seen: set[str] = set()
             normalized = []
             for row in rows:
@@ -182,7 +207,13 @@ def _collect_api_ninjas_records(
         result["error"] = str(exc)
     finally:
         result["elapsed_seconds"] = round(time.perf_counter() - started, 3)
-        result["metadata"] = dict(getattr(client, "last_metadata", {}) or {})
+        if not result["metadata"]:
+            result["metadata"] = dict(getattr(client, "last_metadata", {}) or {})
+        # The factory-created client is short-lived and is safe to close here.
+        for extra_client in clients[1:]:
+            close = getattr(extra_client, "close", None)
+            if callable(close):
+                close()
     return result
 
 
@@ -198,6 +229,7 @@ def collect_recent_result_corroboration(
     highlightly_client: Any | None = None,
     highlightly_client_factory: Any | None = None,
     api_ninjas_client: Any | None = None,
+    api_ninjas_client_factory: Any | None = None,
     now: datetime | None = None,
 ) -> dict[str, Any]:
     """Fetch independent match records and reconcile against Sportmonks fixtures.
@@ -246,10 +278,19 @@ def collect_recent_result_corroboration(
     api_ninjas_executor = None
     api_ninjas_future = None
     if api_ninjas_client is not None:
+        # Build the second authenticated session on the caller thread so
+        # Streamlit secrets access never occurs inside a worker thread.
+        team_clients = [api_ninjas_client]
+        if api_ninjas_client_factory is not None:
+            try:
+                team_clients.append(api_ninjas_client_factory())
+            except Exception as exc:
+                errors["api_ninjas_client_factory"] = str(exc)
         api_ninjas_executor = ThreadPoolExecutor(max_workers=1)
         api_ninjas_future = api_ninjas_executor.submit(
             _collect_api_ninjas_records,
             client=api_ninjas_client,
+            team_clients=team_clients,
             competition=competition,
             season=int(season),
             home_team_name=home_team_name,
