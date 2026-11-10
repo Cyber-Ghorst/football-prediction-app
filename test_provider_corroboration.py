@@ -116,6 +116,23 @@ class ProviderCorroborationTests(unittest.TestCase):
         self.assertEqual(row["home_score"], 2)
         self.assertEqual(row["status"], "finished")
 
+    def test_sportmonks_score_parser_rejects_boolean_fractional_and_negative_values(self):
+        for invalid in (True, 1.5, -1, "1.5", "unknown"):
+            row = canonicalize_sportmonks_fixture(
+                sportmonks_fixture(home_score=invalid, away_score=2),
+                competition="Premier League", country="England", season=2026,
+            )
+            self.assertIsNone(row["home_score"], msg=f"accepted invalid score {invalid!r}")
+            self.assertEqual(row["away_score"], 2)
+
+    def test_sportmonks_score_parser_accepts_digit_strings_and_whole_numbers(self):
+        row = canonicalize_sportmonks_fixture(
+            sportmonks_fixture(home_score=" 3 ", away_score=0),
+            competition="Premier League", country="England", season=2026,
+        )
+        self.assertEqual(row["home_score"], 3)
+        self.assertEqual(row["away_score"], 0)
+
     def test_team_history_uses_sportmonks_season_id_not_calendar_year(self):
         report = collect_recent_result_corroboration(
             sportmonks_fixtures=[sportmonks_fixture(season_id=25678)],
