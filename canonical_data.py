@@ -313,12 +313,15 @@ def reconcile_match_pair(
         for record in sources:
             provider = str(record.get("source") or "")
             value = record.get(field)
-            if not provider or value is None:
+            # A missing collection timestamp is not evidence of freshness.
+            # Exclude the observation instead of silently stamping it as now.
+            collected_at = fetched_at.get(provider)
+            if not provider or value is None or collected_at is None:
                 continue
             observations.append(Observation(
                 provider=provider,
                 value=value,
-                fetched_at=fetched_at.get(provider) or now or datetime.now(timezone.utc),
+                fetched_at=collected_at,
                 source_id=(record.get("source_ids") or {}).get(provider),
             ))
         resolved = resolve_field(
