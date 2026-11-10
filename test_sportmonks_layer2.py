@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 
-from sportmonks_layer2 import collect_sportmonks_team_profile, standings_strength, find_exact_match_fixture, load_repository_season_snapshot
+from sportmonks_layer2 import collect_sportmonks_team_profile, standings_strength, find_exact_match_fixture, load_repository_season_snapshot, _state
 
 
 def fixture(fid, home_id, away_id, home_goals, away_goals, state="FT"):
@@ -186,6 +186,14 @@ class SportmonksLayer2Tests(unittest.TestCase):
         row["season_id"] = 999
         profile = collect_sportmonks_team_profile({"id": 10, "name": "Home FC"}, 2026, [row], [])
         self.assertEqual(profile["matches"], [])
+
+    def test_all_documented_in_play_state_ids_are_not_treated_as_completed(self):
+        for state_id in (2, 3, 4, 6, 9, 21, 22, 25):
+            with self.subTest(state_id=state_id):
+                row = fixture(1, 10, 20, 1, 0, state="unknown")
+                row["state_id"] = state_id
+                row["state"] = {}
+                self.assertEqual(_state(row), "live")
 
     def test_documented_finished_state_id_is_accepted(self):
         row = fixture(1, 10, 20, 1, 0, state="unknown")
