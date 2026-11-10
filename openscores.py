@@ -240,6 +240,59 @@ class OpenScoresClient:
         except (ValueError, json.JSONDecodeError) as exc:
             raise OpenScoresError("OpenScores returned invalid JSON.") from exc
 
+    def list_tools(self) -> dict[str, Any]:
+        """Read the server's published tool schemas without invoking a data tool."""
+        request_id = next(self._request_ids)
+        body = {"jsonrpc": "2.0", "id": request_id, "method": "tools/list"}
+        self.last_metadata = {}
+        try:
+            response = self.session.post(
+                self.ENDPOINT,
+                json=body,
+                timeout=self.timeout,
+                allow_redirects=False,
+            )
+            self.last_metadata = {
+                "http_status": response.status_code,
+                "request_id": request_id,
+                "method": "tools/list",
+                "retry_after": response.headers.get("Retry-After"),
+            }
+            if response.status_code in (401, 403):
+                raise OpenScoresError(
+                    f"OpenScores authentication/access failed (HTTP {response.status_code})."
+                )
+            if response.status_code == 429:
+                raise OpenScoresError(
+                    "OpenScores rate limit reached (HTTP 429); respect Retry-After before retrying."
+                )
+            response.raise_for_status()
+            envelope = self._decode_response(response)
+            if "error" in envelope:
+                error = envelope.get("error")
+                message = error.get("message") if isinstance(error, dict) else None
+                safe_message = str(message or "JSON-RPC request failed")[:180]
+                raise OpenScoresError(f"OpenScores tool discovery failed: {safe_message}.")
+            result = envelope.get("result")
+            tools = result.get("tools") if isinstance(result, dict) else None
+            if not isinstance(tools, list):
+                raise OpenScoresError("OpenScores tools/list returned no valid tool catalogue.")
+            return {
+                "provider": "openscores",
+                "tools": tools,
+                "retrieved_at_utc": datetime.now(timezone.utc).isoformat(),
+            }
+        except OpenScoresError:
+            raise
+        except requests.Timeout as exc:
+            raise OpenScoresError("OpenScores request timed out.") from exc
+        except requests.RequestException as exc:
+            status = getattr(getattr(exc, "response", None), "status_code", None)
+            suffix = f" (HTTP {status})" if status else ""
+            raise OpenScoresError(f"OpenScores network request failed{suffix}.") from exc
+        except (ValueError, json.JSONDecodeError) as exc:
+            raise OpenScoresError("OpenScores returned invalid JSON.") from exc
+
     def list_leagues(self) -> dict[str, Any]:
         return self.call_tool("list_leagues")
 
