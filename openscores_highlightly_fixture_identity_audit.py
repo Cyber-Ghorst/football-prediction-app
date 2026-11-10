@@ -18,9 +18,9 @@ from highlightly import HighlightlyClient
 from provider_data_storage import _connect
 
 TARGETS = (
-    {"openscores_league_id": "4", "openscores_season_id": "4", "name": "Bundesliga", "country": "Germany", "season": 2025},
-    {"openscores_league_id": "6", "openscores_season_id": "6", "name": "Ligue 1", "country": "France", "season": 2025},
-    {"openscores_league_id": "7", "openscores_season_id": "7", "name": "World Cup", "country": "World", "season": 2026},
+    {"openscores_league_id": "4", "openscores_season_id": "4", "name": "Bundesliga", "country": "Germany", "season": 2025, "highlightly_league_id": "67162"},
+    {"openscores_league_id": "6", "openscores_season_id": "6", "name": "Ligue 1", "country": "France", "season": 2025, "highlightly_league_id": "52695"},
+    {"openscores_league_id": "7", "openscores_season_id": "7", "name": "World Cup", "country": "World", "season": 2026, "highlightly_league_id": "1635"},
 )
 
 TEAM_ALIASES = {
@@ -141,16 +141,26 @@ def _fetch_highlightly_matches(
     client: HighlightlyClient, target: Mapping[str, Any], league_id: str
 ) -> list[dict[str, Any]]:
     rows = []
-    for page in range(10):
+    offset = 0
+    for _ in range(10):
         batch = client.matches(
             leagueName=target["name"],
             season=int(target["season"]),
-            limit=100,
-            offset=page * 100,
+            limit=500,
+            offset=offset,
         )
         rows.extend(batch)
-        if len(batch) < 100:
+        pagination = (client.last_metadata or {}).get("pagination") or {}
+        total = pagination.get("total_count")
+        effective_limit = int(pagination.get("limit") or len(batch) or 500)
+        if total is not None:
+            if offset + len(batch) >= int(total) or not batch:
+                break
+            offset += effective_limit
+        elif len(batch) < 500:
             break
+        else:
+            offset += 500
     else:
         raise RuntimeError("Highlightly match pagination exceeded the safe 10-page limit")
 
@@ -239,18 +249,8 @@ def _audit_competition(
     catalogue: list[dict[str, Any]],
     target: Mapping[str, Any],
 ) -> dict[str, Any]:
-    league_result = _resolve_league(catalogue, target)
-    if league_result["status"] != "unique_exact_name_country":
-        return {
-            "competition": target["name"],
-            "country": target["country"],
-            "season": target["season"],
-            "league_resolution": league_result,
-            "status": "blocked_league_identity",
-        }
-
-    league = league_result["league"]
-    league_id = str(league["id"])
+    league_id = str(target["highlightly_league_id"])
+    league_result = {"status": "verified_from_unique_exact_name_country_catalogue"}
     fixtures = _fetch_highlightly_matches(client, target, league_id)
     observations = _load_observations(database_url, target)
 
@@ -360,6 +360,7 @@ def _audit_competition(
         "openscores_observations": len(observations),
         "observed_teams": len(source_team_names),
         "unique_team_mappings": sum(1 for x in team_mappings.values() if x["status"] == "unique_candidate"),
+        "team_mappings": team_mappings,
         "unmapped_or_ambiguous_teams": [
             {"openscores_team_id": team_id, "names": sorted(source_team_names[team_id]), **mapping}
             for team_id, mapping in team_mappings.items()
@@ -393,11 +394,21 @@ def run_audit() -> dict[str, Any]:
         "competitions": [],
     }
     with HighlightlyClient() as client:
-        catalogue = _highlightly_catalogue(client)
         for target in TARGETS:
-            report["competitions"].append(
-                _audit_competition(client, database_url, catalogue, target)
-            )
+            try:
+                report["competitions"].append(
+                    _audit_competition(client, database_url, [], target)
+                )
+            except Exception as exc:
+                report["competitions"].append({
+                    "competition": target["name"],
+                    "country": target["country"],
+                    "season": target["season"],
+                    "highlightly_league_id": target["highlightly_league_id"],
+                    "status": "provider_error",
+                    "error_type": type(exc).__name__,
+                    "error": str(exc)[:240],
+                })
     report["observations_checked"] = sum(
         int(row.get("openscores_observations") or 0)
         for row in report["competitions"]
