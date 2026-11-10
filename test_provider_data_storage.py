@@ -23,6 +23,13 @@ class FakeCursor:
             if self.connection.fail_run_insert:
                 raise RuntimeError("audit insert failed")
             self.connection.runs.append(params)
+        elif normalized.startswith("INSERT INTO provider_reliability_history"):
+            self.connection.reliability.append(params)
+        elif normalized.startswith("SELECT snapshot_id, competition, season, primary_provider"):
+            self.connection.reliability_rows = self.connection.reliability_rows or [
+                tuple(row) for row in self.connection.reliability
+            ]
+            self.result = self.connection.reliability_rows[:params[2]]
         elif normalized.startswith("SELECT snapshot_id"):
             self.result = self.connection.fresh if "expires_at > NOW()" in normalized else self.connection.latest
         else:
@@ -30,6 +37,9 @@ class FakeCursor:
 
     def fetchone(self):
         return self.result
+
+    def fetchall(self):
+        return self.result or []
 
     def __enter__(self):
         return self
@@ -42,6 +52,8 @@ class FakeConnection:
     def __init__(self):
         self.snapshots = []
         self.runs = []
+        self.reliability = []
+        self.reliability_rows = []
         self.fresh = None
         self.latest = None
         self.fail_run_insert = False
@@ -227,6 +239,55 @@ class ProviderStorageTests(unittest.TestCase):
             storage.load_provider_snapshot("postgresql://example", "key", allow_stale=True)["snapshot_id"],
             "stale",
         )
+
+
+    def test_reliability_history_is_append_only_and_preserves_match_evidence(self):
+        captured = datetime(2026, 11, 10, tzinfo=timezone.utc)
+        snapshot_id = storage.save_provider_reliability_snapshot(
+            "postgresql://example",
+            competition="Premier League",
+            season=2026,
+            primary_provider="Sportmonks",
+            matches=[{"kickoff_utc": "2026-11-01T15:00:00Z", "home_score": 2}],
+            captured_at=captured,
+        )
+        self.assertTrue(snapshot_id)
+        self.assertEqual(len(self.connection.reliability), 1)
+        row = self.connection.reliability[0]
+        self.assertEqual(row[1:4], ("Premier League", 2026, "sportmonks"))
+        self.assertEqual(row[4], captured)
+        self.assertEqual(row[5].obj[0]["home_score"], 2)
+        self.assertEqual(row[6], 1)
+
+    def test_load_reliability_history_is_scoped_and_limited(self):
+        self.connection.reliability_rows = [
+            ("id-1", "Premier League", 2026, "sportmonks", datetime.now(timezone.utc), [], 0)
+        ]
+        rows = storage.load_provider_reliability_history(
+            "postgresql://example", competition="Premier League", season=2026, limit=20
+        )
+        self.assertEqual(rows[0]["snapshot_id"], "id-1")
+
+    def test_reliability_history_rejects_invalid_scope_and_payload(self):
+        with self.assertRaises(ValueError):
+            storage.save_provider_reliability_snapshot(
+                "postgresql://example", competition="", season=2026,
+                primary_provider="sportmonks", matches=[]
+            )
+        with self.assertRaises(ValueError):
+            storage.save_provider_reliability_snapshot(
+                "postgresql://example", competition="Premier League", season=True,
+                primary_provider="sportmonks", matches=[]
+            )
+        with self.assertRaises(ValueError):
+            storage.save_provider_reliability_snapshot(
+                "postgresql://example", competition="Premier League", season=2026,
+                primary_provider="sportmonks", matches="not-an-array"
+            )
+        with self.assertRaises(ValueError):
+            storage.load_provider_reliability_history(
+                "postgresql://example", competition="Premier League", season=2026, limit=0
+            )
 
     def test_invalid_payload_or_ttl_is_rejected(self):
         base = {
