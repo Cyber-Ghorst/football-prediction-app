@@ -20,7 +20,10 @@ from football_repository import (
     import_sportmonks_season,
 )
 from openscores import OpenScoresClient
-from openscores_observation_store import reconcile_openscores_observations
+from openscores_observation_store import (
+    ensure_provider_entity_link_verifications,
+    reconcile_openscores_observations,
+)
 from provider_data_storage import _connect
 from sportmonks import SportmonksClient
 
@@ -177,6 +180,12 @@ def unique_team_crosswalks(
                 "canonical_entity_id": f"sportmonks:{candidates[0]['id']}",
                 "name": str(team.get("name") or ""),
                 "basis": "exact_unique_name_within_matched_season_roster",
+                "verification_method": "exact_unique_name_within_matched_season_roster",
+                "evidence": {
+                    "openscores_team_name": str(team.get("name") or ""),
+                    "sportmonks_team_name": str(candidates[0].get("name") or ""),
+                    "sportmonks_team_id": str(candidates[0]["id"]),
+                },
             })
     return mappings
 
@@ -224,41 +233,62 @@ def write_explicit_openscores_links(
     database_url: str,
     mappings: list[Mapping[str, Any]],
 ) -> dict[str, Any]:
-    """Insert only reviewed deterministic mappings; refuse to overwrite conflicts."""
+    """Persist explicit links with an auditable verified-mapping record."""
+    ensure_provider_entity_link_verifications(database_url)
     conflicts = []
     inserted = 0
     existing = 0
     with _connect(database_url) as connection:
         with connection.cursor() as cursor:
             for mapping in mappings:
+                entity_type = str(mapping["entity_type"])
+                provider_id = str(mapping["provider_entity_id"])
+                canonical_id = str(mapping["canonical_entity_id"])
                 cursor.execute(
                     """
-                    SELECT canonical_entity_id
-                    FROM provider_entity_links
-                    WHERE provider = 'openscores'
-                      AND entity_type = %s AND provider_entity_id = %s
+                    SELECT l.link_id, l.canonical_entity_id,
+                           v.verification_status, v.canonical_entity_id
+                    FROM provider_entity_links AS l
+                    LEFT JOIN provider_entity_link_verifications AS v
+                      ON v.link_id = l.link_id
+                    WHERE l.provider = 'openscores'
+                      AND l.entity_type = %s AND l.provider_entity_id = %s
                     """,
-                    (mapping["entity_type"], str(mapping["provider_entity_id"])),
+                    (entity_type, provider_id),
                 )
                 row = cursor.fetchone()
-                if row and str(row[0]) != str(mapping["canonical_entity_id"]):
+                if row and str(row[1]) != canonical_id:
                     conflicts.append({
-                        "entity_type": mapping["entity_type"],
-                        "provider_entity_id": str(mapping["provider_entity_id"]),
+                        "entity_type": entity_type,
+                        "provider_entity_id": provider_id,
+                        "reason": "canonical_entity_conflict",
+                    })
+                elif row and row[2] == "rejected":
+                    conflicts.append({
+                        "entity_type": entity_type,
+                        "provider_entity_id": provider_id,
+                        "reason": "mapping_previously_rejected",
+                    })
+                elif row and row[3] is not None and str(row[3]) != canonical_id:
+                    conflicts.append({
+                        "entity_type": entity_type,
+                        "provider_entity_id": provider_id,
+                        "reason": "verification_record_conflict",
                     })
             if conflicts:
                 return {
-                    "inserted": 0, "existing": 0, "conflicts": conflicts,
-                    "status": "conflict_no_writes",
+                    "inserted": 0, "existing": 0, "verified": 0,
+                    "conflicts": conflicts, "status": "conflict_no_writes",
                 }
 
+            verified = 0
             for mapping in mappings:
                 provider_id = str(mapping["provider_entity_id"])
                 entity_type = str(mapping["entity_type"])
                 canonical_id = str(mapping["canonical_entity_id"])
                 cursor.execute(
                     """
-                    SELECT canonical_entity_id
+                    SELECT link_id
                     FROM provider_entity_links
                     WHERE provider = 'openscores'
                       AND entity_type = %s AND provider_entity_id = %s
@@ -267,31 +297,62 @@ def write_explicit_openscores_links(
                 )
                 row = cursor.fetchone()
                 if row:
+                    link_id = str(row[0])
                     existing += 1
                     cursor.execute(
                         """
                         UPDATE provider_entity_links
                         SET last_seen_at = NOW()
-                        WHERE provider = 'openscores'
-                          AND entity_type = %s AND provider_entity_id = %s
+                        WHERE link_id = %s
                         """,
-                        (entity_type, provider_id),
+                        (link_id,),
                     )
-                    continue
-                link_id = str(uuid.uuid5(
-                    uuid.NAMESPACE_URL, f"openscores:{entity_type}:{provider_id}"
-                ))
+                else:
+                    link_id = str(uuid.uuid5(
+                        uuid.NAMESPACE_URL, f"openscores:{entity_type}:{provider_id}"
+                    ))
+                    cursor.execute(
+                        """
+                        INSERT INTO provider_entity_links (
+                            link_id, provider, entity_type, provider_entity_id,
+                            canonical_entity_id
+                        ) VALUES (%s, 'openscores', %s, %s, %s)
+                        """,
+                        (link_id, entity_type, provider_id, canonical_id),
+                    )
+                    inserted += 1
+
+                evidence = json.dumps(mapping.get("evidence") or {}, sort_keys=True)
+                method = str(
+                    mapping.get("verification_method")
+                    or mapping.get("basis")
+                    or "deterministic_exact_identity_match"
+                )
                 cursor.execute(
                     """
-                    INSERT INTO provider_entity_links (
+                    INSERT INTO provider_entity_link_verifications (
                         link_id, provider, entity_type, provider_entity_id,
-                        canonical_entity_id
-                    ) VALUES (%s, 'openscores', %s, %s, %s)
+                        canonical_entity_id, verification_status,
+                        verification_method, evidence, verified_at
+                    ) VALUES (
+                        %s, 'openscores', %s, %s, %s, 'verified',
+                        %s, %s::JSONB, NOW()
+                    )
+                    ON CONFLICT (provider, entity_type, provider_entity_id)
+                    DO UPDATE SET
+                        verification_status = 'verified',
+                        verification_method = EXCLUDED.verification_method,
+                        evidence = EXCLUDED.evidence,
+                        verified_at = NOW(),
+                        updated_at = NOW()
                     """,
-                    (link_id, entity_type, provider_id, canonical_id),
+                    (link_id, entity_type, provider_id, canonical_id, method, evidence),
                 )
-                inserted += 1
-    return {"inserted": inserted, "existing": existing, "conflicts": [], "status": "pass"}
+                verified += 1
+    return {
+        "inserted": inserted, "existing": existing, "verified": verified,
+        "conflicts": [], "status": "pass",
+    }
 
 
 def _pending_mapping_diagnostics(database_url: str) -> dict[str, Any]:
@@ -351,6 +412,7 @@ def run_reconciliation(
         "canonical_fixtures_imported": 0,
         "explicit_entity_links_inserted": 0,
         "explicit_entity_links_existing": 0,
+        "explicit_entity_links_verified": 0,
         "entity_link_conflicts": [],
         "competition_results": [],
         "reconciliation": None,
@@ -462,11 +524,26 @@ def run_reconciliation(
                     "entity_type": "league",
                     "provider_entity_id": source_league_id,
                     "canonical_entity_id": f"sportmonks:{sm_league['id']}",
+                    "verification_method": "exact_competition_name_and_country",
+                    "evidence": {
+                        "openscores_competition_name": source_league.get("name"),
+                        "openscores_country_code": source_league.get("country_code"),
+                        "sportmonks_competition_name": sm_league.get("name"),
+                        "sportmonks_country": _country_name(sm_league),
+                        "sportmonks_league_id": str(sm_league["id"]),
+                    },
                 },
                 {
                     "entity_type": "season",
                     "provider_entity_id": str(source_seasons[0].get("id") or source_seasons[0].get("season_id")),
                     "canonical_entity_id": canonical_season_id,
+                    "verification_method": "same_league_and_exact_season_year_pair",
+                    "evidence": {
+                        "openscores_season": source_seasons[0].get("name") or source_seasons[0].get("season_name"),
+                        "sportmonks_season": sm_season.get("name") or sm_season.get("starting_at"),
+                        "sportmonks_league_id": str(sm_league["id"]),
+                        "sportmonks_season_id": sm_season_id,
+                    },
                 },
                 *team_mappings,
             ]
@@ -483,6 +560,7 @@ def run_reconciliation(
 
             report["explicit_entity_links_inserted"] += written["inserted"]
             report["explicit_entity_links_existing"] += written["existing"]
+            report["explicit_entity_links_verified"] += written.get("verified", 0)
             report["competitions_imported"] += 1
             report["competition_results"].append({
                 "openscores_league_id": source_league_id,

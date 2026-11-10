@@ -4,6 +4,7 @@ from openscores_sportmonks_reconciliation import (
     find_unique_sportmonks_league,
     find_unique_sportmonks_season,
     unique_team_crosswalks,
+    write_explicit_openscores_links,
 )
 
 
@@ -74,6 +75,81 @@ class OpenScoresSportmonksReconciliationTests(unittest.TestCase):
         self.assertEqual(len(mappings), 1)
         self.assertEqual(mappings[0]["provider_entity_id"], "os-1")
         self.assertEqual(mappings[0]["canonical_entity_id"], "sportmonks:19")
+
+
+class MappingWriterCursor:
+    def __init__(self, preflight_row=None, existing_link_row=None):
+        self.calls = []
+        self.fetchone_rows = [preflight_row, existing_link_row]
+    def __enter__(self): return self
+    def __exit__(self, *args): return False
+    def execute(self, sql, params=None):
+        self.calls.append((sql, params))
+    def fetchone(self):
+        return self.fetchone_rows.pop(0) if self.fetchone_rows else None
+
+
+class MappingWriterConnection:
+    def __init__(self, cursor):
+        self.cursor_obj = cursor
+    def __enter__(self): return self
+    def __exit__(self, *args): return False
+    def cursor(self): return self.cursor_obj
+
+
+class OpenScoresMappingVerificationTests(unittest.TestCase):
+    def test_mapping_writer_creates_verification_record_with_evidence(self):
+        from unittest.mock import patch
+        cursor = MappingWriterCursor()
+        connection = MappingWriterConnection(cursor)
+        mapping = {
+            "entity_type": "league",
+            "provider_entity_id": "os-league-2",
+            "canonical_entity_id": "sportmonks:8",
+            "verification_method": "exact_competition_name_and_country",
+            "evidence": {"openscores_name": "Premier League", "sportmonks_id": 8},
+        }
+        with patch(
+            "openscores_sportmonks_reconciliation.ensure_provider_entity_link_verifications"
+        ), patch(
+            "openscores_sportmonks_reconciliation._connect",
+            return_value=connection,
+        ):
+            result = write_explicit_openscores_links("postgresql://db", [mapping])
+        self.assertEqual(result["status"], "pass")
+        self.assertEqual(result["inserted"], 1)
+        self.assertEqual(result["verified"], 1)
+        sql = "\\n".join(call[0] for call in cursor.calls)
+        self.assertIn("INSERT INTO provider_entity_links", sql)
+        self.assertIn("INSERT INTO provider_entity_link_verifications", sql)
+        self.assertIn("'verified'", sql)
+        self.assertTrue(any(
+            params and "exact_competition_name_and_country" in params
+            for _, params in cursor.calls
+        ))
+
+    def test_conflicting_existing_mapping_is_not_overwritten(self):
+        from unittest.mock import patch
+        cursor = MappingWriterCursor(
+            preflight_row=("existing-link", "sportmonks:999", "verified", "sportmonks:999")
+        )
+        connection = MappingWriterConnection(cursor)
+        mapping = {
+            "entity_type": "league",
+            "provider_entity_id": "os-league-2",
+            "canonical_entity_id": "sportmonks:8",
+        }
+        with patch(
+            "openscores_sportmonks_reconciliation.ensure_provider_entity_link_verifications"
+        ), patch(
+            "openscores_sportmonks_reconciliation._connect",
+            return_value=connection,
+        ):
+            result = write_explicit_openscores_links("postgresql://db", [mapping])
+        self.assertEqual(result["status"], "conflict_no_writes")
+        self.assertEqual(result["inserted"], 0)
+        self.assertEqual(result["verified"], 0)
+        self.assertEqual(len(cursor.calls), 1)
 
 
 if __name__ == "__main__":
