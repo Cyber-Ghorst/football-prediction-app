@@ -78,6 +78,25 @@ CREATE TABLE IF NOT EXISTS provider_reliability_history (
 );
 CREATE INDEX IF NOT EXISTS provider_reliability_history_scope
     ON provider_reliability_history (competition, season, captured_at DESC);
+
+CREATE TABLE IF NOT EXISTS provider_conflict_resolution_audit (
+    audit_id TEXT PRIMARY KEY,
+    competition TEXT NOT NULL,
+    season INTEGER NOT NULL,
+    fixture_identity JSONB NOT NULL,
+    field_name TEXT NOT NULL,
+    triage_status TEXT NOT NULL,
+    selected_provider TEXT,
+    selected_value JSONB,
+    observations JSONB NOT NULL,
+    corroborating_providers JSONB NOT NULL,
+    conflicting_providers JSONB NOT NULL,
+    resolution_reason TEXT NOT NULL,
+    recorded_at TIMESTAMPTZ NOT NULL,
+    manual_override BOOLEAN NOT NULL DEFAULT FALSE
+);
+CREATE INDEX IF NOT EXISTS provider_conflict_audit_scope
+    ON provider_conflict_resolution_audit (competition, season, recorded_at DESC);
 """
 
 
@@ -488,5 +507,108 @@ def load_provider_reliability_history(
     names = (
         "snapshot_id", "competition", "season", "primary_provider",
         "captured_at", "matches", "matches_count",
+    )
+    return [dict(zip(names, row)) for row in rows]
+
+
+INSERT_CONFLICT_AUDIT_SQL = """
+INSERT INTO provider_conflict_resolution_audit (
+    audit_id, competition, season, fixture_identity, field_name,
+    triage_status, selected_provider, selected_value, observations,
+    corroborating_providers, conflicting_providers, resolution_reason,
+    recorded_at, manual_override
+) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+"""
+
+LOAD_CONFLICT_AUDIT_SQL = """
+SELECT audit_id, competition, season, fixture_identity, field_name,
+       triage_status, selected_provider, selected_value, observations,
+       corroborating_providers, conflicting_providers, resolution_reason,
+       recorded_at, manual_override
+FROM provider_conflict_resolution_audit
+WHERE competition = %s AND season = %s
+  AND recorded_at >= NOW() - INTERVAL '90 days'
+ORDER BY recorded_at DESC
+LIMIT %s
+"""
+
+
+def save_conflict_resolution_audit(
+    database_url: str,
+    *,
+    events: list[Mapping[str, Any]],
+) -> int:
+    """Append conflict decisions and their complete observations atomically."""
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+    if not isinstance(events, list):
+        raise ValueError("events must be a list.")
+    if not events:
+        return 0
+    prepared = []
+    for event in events:
+        if not isinstance(event, Mapping):
+            raise ValueError("Every conflict audit event must be an object.")
+        competition = str(event.get("competition") or "").strip()
+        season = event.get("season")
+        field_name = str(event.get("field") or "").strip()
+        status = str(event.get("triage_status") or "").strip()
+        if not competition or isinstance(season, bool) or not isinstance(season, int) or season < 1:
+            raise ValueError("Each event requires a competition and positive integer season.")
+        if not field_name or status not in {"resolved_by_configured_priority", "unresolved"}:
+            raise ValueError("Each event requires a field and supported triage status.")
+        fixture_identity = _json_safe(event.get("fixture_identity") or {})
+        observations = _json_safe(event.get("observations") or [])
+        if not isinstance(fixture_identity, dict) or not isinstance(observations, list):
+            raise ValueError("Fixture identity must be an object and observations an array.")
+        recorded_at = event.get("recorded_at")
+        if isinstance(recorded_at, str):
+            recorded_at = datetime.fromisoformat(recorded_at.replace("Z", "+00:00"))
+        if not isinstance(recorded_at, datetime):
+            raise ValueError("Each event requires a valid recorded_at timestamp.")
+        if recorded_at.tzinfo is None:
+            recorded_at = recorded_at.replace(tzinfo=timezone.utc)
+        prepared.append((
+            str(uuid.uuid4()), competition, season, Jsonb(fixture_identity),
+            field_name, status, event.get("selected_provider"),
+            Jsonb(_json_safe(event.get("selected_value"))),
+            Jsonb(observations),
+            Jsonb(_json_safe(event.get("corroborating_providers") or [])),
+            Jsonb(_json_safe(event.get("conflicting_providers") or [])),
+            str(event.get("resolution_reason") or ""),
+            recorded_at.astimezone(timezone.utc),
+            bool(event.get("manual_override", False)),
+        ))
+    with _connect(database_url) as connection:
+        _ensure_provider_storage_once(database_url, connection)
+        with connection.cursor() as cursor:
+            for row in prepared:
+                cursor.execute(INSERT_CONFLICT_AUDIT_SQL, row)
+    return len(prepared)
+
+
+def load_conflict_resolution_audit(
+    database_url: str,
+    *,
+    competition: str,
+    season: int,
+    limit: int = 200,
+) -> list[dict[str, Any]]:
+    """Load recent immutable conflict decisions for one competition/season."""
+    if not database_url or not str(competition or "").strip():
+        raise ValueError("database_url and competition are required.")
+    if isinstance(season, bool) or not isinstance(season, int) or season < 1:
+        raise ValueError("season must be a positive integer.")
+    if isinstance(limit, bool) or not isinstance(limit, int) or not 1 <= limit <= 1000:
+        raise ValueError("limit must be an integer between 1 and 1000.")
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(LOAD_CONFLICT_AUDIT_SQL, (str(competition).strip(), season, limit))
+            rows = cursor.fetchall()
+    names = (
+        "audit_id", "competition", "season", "fixture_identity", "field_name",
+        "triage_status", "selected_provider", "selected_value", "observations",
+        "corroborating_providers", "conflicting_providers", "resolution_reason",
+        "recorded_at", "manual_override",
     )
     return [dict(zip(names, row)) for row in rows]
