@@ -71,7 +71,7 @@ def _norm(value: Any) -> str:
     text = unicodedata.normalize("NFKD", str(value or ""))
     text = "".join(ch for ch in text if not unicodedata.combining(ch))
     text = text.casefold().replace("&", " and ")
-    return re.sub(r"\\s+", " ", re.sub(r"[^a-z0-9]+", " ", text)).strip()
+    return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9]+", " ", text)).strip()
 
 
 def _parse_dt(value: Any) -> datetime | None:
