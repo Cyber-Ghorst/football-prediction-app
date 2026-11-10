@@ -7,6 +7,7 @@ collection is wired to Layer 2 with strict season/team identity and completeness
 from __future__ import annotations
 
 import os
+import datetime as _datetime
 import time
 from typing import Any, Mapping
 
@@ -156,6 +157,7 @@ class SportmonksClient:
         """Flatten Sportmonks' stages -> rounds -> fixtures schedule response."""
         fixtures: list[dict[str, Any]] = []
         seen: set[int] = set()
+        duplicate_ids: set[int] = set()
         for stage in SportmonksClient._rows(payload):
             for round_row in SportmonksClient._rows(stage.get("rounds")):
                 for fixture_row in SportmonksClient._rows(round_row.get("fixtures")):
@@ -172,6 +174,12 @@ class SportmonksClient:
                     if key not in seen:
                         seen.add(key)
                         fixtures.append(fixture)
+                    else:
+                        duplicate_ids.add(key)
+        duplicate_list = sorted(duplicate_ids)
+        for fixture in fixtures:
+            fixture["_schedule_duplicate_fixture_ids"] = duplicate_list
+            fixture["_schedule_unique_fixture_count"] = len(seen)
         return fixtures
 
     @staticmethod
@@ -185,6 +193,55 @@ class SportmonksClient:
             except (TypeError, ValueError):
                 continue
         return ids
+
+    @staticmethod
+    def _fixture_kickoff_timestamp(fixture: dict[str, Any]) -> int | None:
+        """Parse fixture kickoff into UTC epoch seconds for reliable ordering."""
+        raw_timestamp = fixture.get("starting_at_timestamp")
+        if raw_timestamp is not None:
+            try:
+                value = float(raw_timestamp)
+                if value > 100_000_000_000:
+                    value /= 1000
+                return int(value)
+            except (TypeError, ValueError, OverflowError):
+                pass
+        raw_date = fixture.get("starting_at")
+        if not raw_date:
+            return None
+        try:
+            parsed = _datetime.datetime.fromisoformat(
+                str(raw_date).strip().replace("Z", "+00:00")
+            )
+            if parsed.tzinfo is None:
+                parsed = parsed.replace(tzinfo=timezone.utc)
+            return int(parsed.astimezone(timezone.utc).timestamp())
+        except (TypeError, ValueError, OverflowError):
+            return None
+
+    @staticmethod
+    def _fixture_is_completed(fixture: dict[str, Any]) -> bool:
+        """Recognize completed fixtures from either Sportmonks state IDs or labels."""
+        try:
+            if int(fixture.get("state_id")) in {5, 7, 8}:
+                return True
+        except (TypeError, ValueError):
+            pass
+        state = fixture.get("state") or fixture.get("status") or {}
+        if isinstance(state, dict):
+            label = state.get("short_name") or state.get("name") or ""
+        else:
+            label = state
+        normalized = str(label).strip().casefold()
+        # "PEN" / "Penalties" can describe a live shootout; only explicit
+        # completed-state labels may promote a fixture into historical results.
+        return (
+            normalized in {"ft", "aet", "ft_pen", "finished", "full time",
+                           "after extra time", "after penalties"}
+            or any(marker in normalized for marker in (
+                "finished", "full time", "after extra", "after penalties"
+            ))
+        )
 
     def fixtures_by_season(
         self,
@@ -208,6 +265,10 @@ class SportmonksClient:
             )
         payload = self._get(f"schedules/seasons/{season_id}")
         fixtures = self._flatten_schedule_fixtures(payload)
+        # The endpoint is scoped to this season. Preserve request provenance
+        # when nested schedule rows omit their own season_id.
+        for fixture in fixtures:
+            fixture.setdefault("season_id", int(season_id))
 
         selected_ids: set[int] = set()
         for value in team_ids or ():
@@ -224,11 +285,7 @@ class SportmonksClient:
                 team_id: [] for team_id in selected_ids
             }
             for fixture in fixtures:
-                try:
-                    state_id = int(fixture.get("state_id") or 0)
-                except (TypeError, ValueError):
-                    state_id = 0
-                if state_id not in {5, 7, 8}:
+                if not self._fixture_is_completed(fixture):
                     continue
                 for team_id in self._fixture_team_ids(fixture) & selected_ids:
                     recent_by_team[team_id].append(fixture)
@@ -236,7 +293,10 @@ class SportmonksClient:
             for team_fixtures in recent_by_team.values():
                 ordered = sorted(
                     team_fixtures,
-                    key=lambda row: str(row.get("starting_at") or ""),
+                    key=lambda row: (
+                        self._fixture_kickoff_timestamp(row) is not None,
+                        self._fixture_kickoff_timestamp(row) or 0,
+                    ),
                     reverse=True,
                 )
                 for fixture in ordered[:10]:
@@ -255,8 +315,10 @@ class SportmonksClient:
             for fixture in fixtures:
                 try:
                     fixture_season = int(fixture.get("season_id"))
-                    kickoff = int(fixture.get("starting_at_timestamp"))
+                    kickoff = self._fixture_kickoff_timestamp(fixture)
                     fixture_id = int(fixture.get("id"))
+                    if kickoff is None:
+                        continue
                 except (TypeError, ValueError):
                     continue
                 if fixture_season != int(season_id):
@@ -364,13 +426,15 @@ class SportmonksClient:
 
             # Merge only after all batches succeed; a failed batch must fail the
             # collection rather than silently accepting a partial history.
-            from datetime import datetime, timezone
-            details_fetched_at = datetime.now(timezone.utc).isoformat()
+            details_fetched_at = _datetime.datetime.now(_datetime.timezone.utc).isoformat()
             for fixture_id, detail in details_by_id.items():
                 base = detail_targets.get(fixture_id)
                 if base is not None:
                     base.update(detail)
                     base["fixture_details_fetched_at"] = details_fetched_at
+        collection_fetched_at = _datetime.datetime.now(_datetime.timezone.utc).isoformat()
+        for fixture in fixtures:
+            fixture["collection_fetched_at"] = collection_fetched_at
         return fixtures
 
     def seasons(self, **params: Any) -> list[dict[str, Any]]:
