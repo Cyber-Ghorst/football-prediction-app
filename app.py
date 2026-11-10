@@ -9,7 +9,7 @@ import traceback
 import logging
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 import requests
 import pandas as pd
 import streamlit as st
@@ -96,6 +96,14 @@ try:
     from tvd import run_tvd
     from temporary_fixture_store import search_temporary_upcoming_fixtures
     from provider_config import provider_readiness
+    from free_fixture_adapters import BzzoiroAdapter
+    from free_fixture_observation_pipeline import (
+        collect_openligadb_observations,
+        collect_openfootball_observations,
+        collect_openmatchday_observations,
+        collect_livescore_observations,
+        collect_bzzoiro_observations,
+    )
     from provider_entity_crosswalk import save_explicit_provider_entity_links
     from provider_crosswalk_review_report import build_provider_crosswalk_review_report
     from livescore_football import LiveScoreFootballClient, LiveScoreFootballError
