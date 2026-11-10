@@ -17,13 +17,21 @@ class StreamlitApplicationSmokeTests(unittest.TestCase):
             side_effect=SportmonksError(
                 "Sportmonks token missing. Configure SPORTMONKS_API_TOKEN in Streamlit Secrets."
             ),
-        ):
+        ), patch("app.fetch_tipmaster_consensus", return_value={"matches": [], "counts": {}}):
             app = AppTest.from_file("app.py").run(timeout=60)
 
         self.assertEqual(
             len(app.exception),
             0,
             msg="The Streamlit app raised an uncaught exception during startup.",
+        )
+        metric_labels = {item.label for item in app.metric}
+        self.assertIn("Stored benchmark records", metric_labels)
+        self.assertIn("Neon persistence", metric_labels)
+        self.assertIn("Feed refresh", metric_labels)
+        self.assertTrue(
+            any(item.label == "Refresh TipMaster benchmark now" for item in app.button),
+            msg="The manual TipMaster refresh control is not rendered.",
         )
         self.assertTrue(
             any(
