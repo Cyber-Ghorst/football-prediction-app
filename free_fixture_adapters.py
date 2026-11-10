@@ -79,6 +79,11 @@ def _stable_dataset_id(provider: str, competition: str, season: str,
     digest = hashlib.sha256(material.encode("utf-8")).hexdigest()[:24]
     return f"{provider}:dataset:{digest}"
 
+def _stable_dataset_team_id(provider: str, competition: str, team_name: str) -> str:
+    material = "|".join((provider, competition, team_name.casefold()))
+    digest = hashlib.sha256(material.encode("utf-8")).hexdigest()[:24]
+    return f"{provider}:team:{digest}"
+
 
 def _observation(
     provider: str,
@@ -104,6 +109,11 @@ def _observation(
     competition_key, season_key = _text(competition), _text(season)
     competition_display = _text(competition_name) or competition_key
     season_display = _text(season_name) or season_key
+    if provider in {"openfootball", "open_matchday"} and competition_key:
+        if home_id is None and home_name:
+            home_id = _stable_dataset_team_id(provider, competition_key, home_name)
+        if away_id is None and away_name:
+            away_id = _stable_dataset_team_id(provider, competition_key, away_name)
     parsed = _parse_aware_datetime(kickoff)
     status_text = _text(status).casefold().replace("_", " ")
     if status_text.startswith("status "):
