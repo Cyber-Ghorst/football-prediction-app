@@ -68,6 +68,7 @@ def livescore_event(event_id="ls-500", *, home="Coventry", away="Fulham",
                     kickoff="2026-11-09T14:00:00Z", home_score=2, away_score=1):
     return {
         "id": event_id,
+        "updatedAt": "2026-11-10T11:45:00Z",
         "status": {"type": {"state": "post", "completed": True}},
         "competitions": [{
             "date": kickoff,
@@ -153,6 +154,21 @@ class LiveScoreLayer2FallbackTests(unittest.TestCase):
         self.assertEqual(report["status"], "skipped")
         self.assertEqual(report["verified_matches"], [])
         self.assertEqual(client.fixture_calls, [])
+
+    def test_stale_or_missing_event_timestamp_blocks_exact_score_fallback(self):
+        stale_event = livescore_event()
+        stale_event["updatedAt"] = "2026-11-07T10:00:00Z"
+        missing_timestamp_event = livescore_event(event_id="missing-timestamp")
+        missing_timestamp_event.pop("updatedAt")
+        client = FakeLiveScoreClient({
+            "2026-11-09": [stale_event, missing_timestamp_event]
+        })
+
+        report = self.collect(client)
+
+        self.assertEqual(report["verified_matches"], [])
+        self.assertEqual(report["stale_or_unverifiable_event_matches"], 2)
+        self.assertEqual(report["status"], "no_exact_fresh_livescore_matches")
 
     def test_valid_current_sportmonks_scores_are_never_overwritten(self):
         current_scores = [
