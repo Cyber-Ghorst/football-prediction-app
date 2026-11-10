@@ -1037,12 +1037,15 @@ with st.sidebar:
             "Fetch source schedules into the immutable CockroachDB observation archive. "
             "This does not publish fixtures to the prediction catalogue or alter predictions."
         )
+        stage_provider = st.selectbox(
+            "Free fixture source",
+            ["openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro"],
+            key="free_fixture_stage_provider",
+        )
+        bzzoiro_configured = bool(st.secrets.get("BZZOIRO_API_TOKEN", "")) if stage_provider == "bzzoiro" else False
+        if stage_provider == "bzzoiro":
+            st.caption("Bzzoiro API token: " + ("configured" if bzzoiro_configured else "not configured"))
         with st.form("free_fixture_observation_stage_form"):
-            stage_provider = st.selectbox(
-                "Free fixture source",
-                ["openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro"],
-                key="free_fixture_stage_provider",
-            )
             if stage_provider == "openligadb":
                 stage_league_shortcut = st.text_input(
                     "OpenLigaDB league shortcut", value="bl1", key="stage_openligadb_shortcut"
@@ -1092,11 +1095,6 @@ with st.sidebar:
                 stage_date_to = st.date_input(
                     "End date (UTC)", value=datetime.now(timezone.utc).date() + timedelta(days=7),
                     key="stage_livescore_date_to"
-                )
-            else:
-                bzzoiro_configured = bool(st.secrets.get("BZZOIRO_API_TOKEN", ""))
-                st.caption(
-                    "Bzzoiro API token: " + ("configured" if bzzoiro_configured else "not configured")
                 )
             submit_fixture_stage = st.form_submit_button(
                 "Fetch and archive observations",
