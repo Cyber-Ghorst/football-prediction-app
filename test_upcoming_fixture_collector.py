@@ -7,6 +7,7 @@ from upcoming_fixture_collector import (
     FIXTURE_INCLUDE,
     collect_upcoming_fixtures,
     normalize_upcoming_fixtures,
+    select_highlighted_fixtures,
 )
 
 
@@ -103,6 +104,44 @@ class UpcomingFixtureCollectorTests(unittest.TestCase):
         self.assertFalse(short["target_met"])
         self.assertEqual(short["target_shortfall"], 78)
         self.assertEqual(short["fixtures_found"], 12)
+
+
+    def test_highlights_major_leagues_before_earlier_lower_tier_fixtures(self):
+        major_earlier = fixture(1, NOW + timedelta(hours=2), league_id=8)
+        major_earlier["league"]["name"] = "Premier League"
+        lower_tier_earlier = fixture(2, NOW + timedelta(hours=1), league_id=99)
+        lower_tier_earlier["league"]["name"] = "Kenyan Premier League"
+        result = normalize_upcoming_fixtures(
+            [lower_tier_earlier, major_earlier], now=NOW
+        )
+        self.assertEqual(result["highlighted_fixtures"][0]["id"], "1")
+        self.assertEqual(result["highlighted_fixtures"][0]["highlight_priority"], 1)
+        self.assertEqual(result["fixtures_found"], 2)
+        self.assertEqual(result["highlighted_count"], 2)
+
+    def test_highlight_selection_is_capped_at_50_and_keeps_major_tier_order(self):
+        rows = []
+        for index in range(60):
+            row = fixture(index + 1, NOW + timedelta(minutes=index + 1))
+            row["league"]["name"] = (
+                "UEFA Champions League" if index < 8 else "Unknown Competition"
+            )
+            rows.append(row)
+        result = normalize_upcoming_fixtures(rows, now=NOW)
+        self.assertEqual(result["fixtures_found"], 60)
+        self.assertEqual(result["highlighted_count"], 50)
+        self.assertEqual(len(result["highlighted_fixtures"]), 50)
+        self.assertTrue(all(
+            row["highlight_priority"] == 1
+            for row in result["highlighted_fixtures"][:8]
+        ))
+        self.assertEqual(
+            sum(1 for row in result["fixtures"] if row["is_highlighted"]), 50
+        )
+
+    def test_select_highlighted_fixtures_rejects_invalid_limit(self):
+        with self.assertRaises(ValueError):
+            select_highlighted_fixtures([], limit=0)
 
     def test_rejects_window_longer_than_one_week(self):
         with self.assertRaises(ValueError):
