@@ -19,7 +19,7 @@ from provider_data_storage import _connect
 
 def _key(value: Any) -> str:
     """Case/whitespace-normalized exact label; punctuation and words are preserved."""
-    return re.sub(r"\\s+", " ", str(value or "").strip()).casefold()
+    return re.sub(r"\s+", " ", str(value or "").strip()).casefold()
 
 
 def exact_name_candidates(
@@ -42,7 +42,7 @@ def exact_name_candidates(
                 canonical_country = str(canonical.get("country") or "").strip()
                 if country and canonical_country and _key(country) != _key(canonical_country):
                     continue
-                if require_country and country and not canonical_country:
+                if require_country and (not country or not canonical_country):
                     continue
                 candidates.append(canonical)
         if len(candidates) == 1:
@@ -227,17 +227,17 @@ def main() -> int:
     report = run_review()
     serialized = json.dumps(report, indent=2, default=str)
     Path("openscores-mapping-review-report.json").write_text(
-        serialized + "\\n", encoding="utf-8"
+        serialized + "\n", encoding="utf-8"
     )
     print(serialized)
     summary_path = os.getenv("GITHUB_STEP_SUMMARY")
     if summary_path:
         with open(summary_path, "a", encoding="utf-8") as summary:
-            summary.write("## OpenScores mapping candidate review (read-only)\\n\\n")
-            summary.write(f"- Summary: {report['summary']}\\n")
-            summary.write("- Crosswalk rows written: 0\\n")
-            summary.write("- Prediction ledger touched: false\\n")
-            summary.write("\\nNo candidate is auto-approved.\\n")
+            summary.write("## OpenScores mapping candidate review (read-only)\n\n")
+            summary.write(f"- Summary: {report['summary']}\n")
+            summary.write("- Crosswalk rows written: 0\n")
+            summary.write("- Prediction ledger touched: false\n")
+            summary.write("\nNo candidate is auto-approved.\n")
     return 0
 
 
