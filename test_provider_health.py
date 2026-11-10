@@ -59,6 +59,16 @@ class ProviderHealthTests(unittest.TestCase):
         missing = {**fresh, "coverage": {"hasData": True}}
         self.assertFalse(assess_livescore_competition_coverage(missing, now=self.now)["fallback_eligible"])
 
+    def test_livescore_competition_accepts_top_level_sync_timestamp(self):
+        row = {
+            "name": "Premier League", "slug": "eng.1", "active": True,
+            "lastSyncedAt": self.now.isoformat(),
+            "coverage": {"hasData": True, "matches": 380},
+        }
+        result = assess_livescore_competition_coverage(row, now=self.now)
+        self.assertTrue(result["fallback_eligible"])
+        self.assertEqual(result["freshness"]["status"], "fresh")
+
     def test_livescore_fixture_requires_its_own_update_timestamp(self):
         fresh = assess_livescore_fixture_freshness(
             {"id": "fixture-1", "updatedAt": self.now.isoformat()}, now=self.now
