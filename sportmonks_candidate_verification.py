@@ -33,7 +33,7 @@ def _as_int(value: Any) -> int | None:
         return value
     if isinstance(value, float):
         return int(value) if math.isfinite(value) and value.is_integer() else None
-    if isinstance(value, str) and re.fullmatch(r"\\s*-?\\d+\\s*", value):
+    if isinstance(value, str) and re.fullmatch(r"\s*-?\d+\s*", value):
         try:
             return int(value.strip())
         except ValueError:
