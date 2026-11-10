@@ -78,7 +78,7 @@ def _team_quality(
             continue
         fixture_id = match.get("fixture_id")
         if fixture_id is None or not str(fixture_id).strip():
-            failures.append(f"{name}: history row {index + 1} has no fixture ID.")
+            add("fixture_identity", "fail", f"{name}: history row {index + 1} has no fixture ID.")
         else:
             fixture_ids.append(str(fixture_id))
 
