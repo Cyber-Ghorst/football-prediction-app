@@ -676,7 +676,7 @@ def save_discovered_competition_registry(
             raise ValueError("Each registry record must be an object.")
         required = (
             "identity_key", "provider", "provider_competition_id",
-            "provider_season_id", "competition_name", "country", "season_name",
+            "provider_season_id", "competition_name", "season_name",
         )
         if any(not str(row.get(key) or "").strip() for key in required):
             raise ValueError("Registry records require provider, competition/season IDs, name, country and season.")
