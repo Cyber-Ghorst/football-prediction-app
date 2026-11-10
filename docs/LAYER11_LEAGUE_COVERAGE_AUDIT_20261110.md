@@ -8,14 +8,15 @@
 
 The application has five football data-source adapters, but it does **not** yet have one verified, aggregate count of competitions that are simultaneously discoverable, credential-accessible, fixture-covered, fresh and prediction-ready.
 
-The strongest recent catalogue evidence available for LiveScoreFootball is from **2026-11-07**:
+The strongest recent catalogue evidence available for LiveScoreFootball is from **2026-11-10**:
 
-- 35 active club competitions.
-- 35 club competitions reporting stored matches.
-- 3,001 stored matches.
+- 35 active competitions across 17 countries.
+- 35 competitions reporting stored match data.
+- 3,161 stored matches, 863 club records and 42 standings groups.
 - 0 international competitions.
+- Global service metadata sync was fresh at audit time.
 
-This is a provider catalogue/snapshot count, **not** a claim that all 35 competitions are currently crosswalk-verified or prediction-ready in this app. The LiveScoreFootball service is database-backed and may lag its upstream listener. Its fallback remains disabled by default and requires fresh global, per-competition and per-event timestamps plus exact competition/season/fixture identity.
+This is a provider catalogue/snapshot count, **not** a claim that all 35 competitions are currently crosswalk-verified or prediction-ready in this app. The LiveScoreFootball service is database-backed and may lag its upstream listener. Its current league records expose coverage counts but no per-competition sync timestamp; therefore the strict per-competition freshness gate verifies 0 of 35 competitions for automatic fallback. Global metadata freshness alone is insufficient.
 
 The repository README still describes a 33-competition catalogue. That figure is stale relative to the 2026-11-07 observation and must not be used as the current count.
 
@@ -24,10 +25,10 @@ The repository README still describes a 33-competition catalogue. That figure is
 | Provider | Account/configuration evidence | Competition/season coverage evidence | Fixture-discovery suitability now |
 |---|---|---|---|
 | Sportmonks | Credential configured in the latest committed runtime diagnostic (2026-11-10 08:02 UTC); primary current-season provider | Account-enabled competitions/seasons only. Latest diagnostic proves one selected 2026/27 Premier League fixture and selected team histories; it does not enumerate the account's full competition catalogue. | Best primary source for current-season fixture discovery after querying its actual account catalogue and season coverage. |
-| Highlightly | Credential configured in the latest committed runtime diagnostic; adapter implemented | Coverage and quotas are plan-dependent. Latest diagnostic describes it as not yet active in Layer 2 reconciliation. | Potential corroboration/discovery source after live catalogue and quota validation; do not count all returned leagues as integrated coverage. |
+| Highlightly | Credential configured in the latest committed runtime diagnostic; adapter implemented | Official documentation advertises 950+ leagues across 170+ countries. The account-specific catalogue audit returned HTTP 429 twice, so the actual account catalogue count and plan tier remain unverified. | Keep as an existing opt-in corroboration provider; do not promote it to broad fixture discovery until the authenticated catalogue and quota recover. |
 | API-Football v3 | Credential configured in the latest committed runtime diagnostic; adapter implemented | Configured account is restricted to seasons 2022–2024. | Not a source for the upcoming 2026/27 fixture window under the recorded account restriction. |
 | API Ninjas | Credential configured in the latest committed runtime diagnostic; adapter implemented | No current aggregate account competition catalogue recorded. Latest diagnostic describes it as not yet active in Layer 2 reconciliation. | Candidate secondary discovery/corroboration source after adapter integration and live coverage/quota checks. |
-| LiveScoreFootball | Public read-only API; no key required | Latest recorded observation: 35 active club competitions, all 35 reporting matches, 3,001 matches, 0 international competitions (2026-11-07). | Useful secondary source only when its snapshot freshness and exact crosswalk checks pass; not currently an authoritative automatic fallback. |
+| LiveScoreFootball | Public read-only API; no key required | Fresh 2026-11-10 audit: 35 active competitions across 17 countries, 3,161 stored matches, 863 club records, 42 standings groups and 0 international competitions. | Broad enough to retain as a catalogue/corroboration source. Automatic fallback remains blocked because per-competition sync timestamps are absent from the current catalogue response. |
 
 ## What the code already supports
 
@@ -42,8 +43,8 @@ The repository README still describes a 33-competition catalogue. That figure is
 
 1. The latest committed system diagnostic (2026-11-10 08:02 UTC) is a selected-fixture readiness report, not an aggregate league-coverage report.
 2. It confirms Sportmonks, Highlightly, API-Football and API Ninjas credentials are configured, but does not expose a complete per-provider competition/season count.
-3. The latest recorded LiveScoreFootball catalogue count is dated 2026-11-07. It must be refreshed before being used as a live operational guarantee.
-4. The README's 33-competition figure conflicts with the newer 35-competition observation and needs correction after a fresh catalogue refresh.
+3. The 2026-11-10 LiveScoreFootball audit refreshed the catalogue count, but per-competition freshness remains unverifiable from the current response schema.
+4. Highlightly's authenticated catalogue could not be enumerated because its API returned HTTP 429; the public 950+ figure must not be treated as this account's accessible count.
 5. A competition should count toward **usable app coverage** only after the app verifies its provider, competition, season, fixture availability, data freshness and prediction-readiness gates. Raw provider catalogue counts must be reported separately.
 
 ## Layer 11 design decision
