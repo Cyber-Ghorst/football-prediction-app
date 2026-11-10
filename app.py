@@ -2011,6 +2011,7 @@ try:
                     squad_enrichment_seconds, 3
                 )
                 prediction_stage_started = time.perf_counter()
+                livescore_fallback_report = None
 
                 if cross_check_recent_results or use_verified_result_history_fallback or cross_check_highlightly_details or cross_check_highlightly_players or use_highlightly_statistics_fallback or use_highlightly_lineups_fallback:
                     selected_league_row = league_by_id.get(league_id, {})
@@ -2479,6 +2480,21 @@ try:
                             }
                         if livescore_fallback_report is not None:
                             st.json(livescore_fallback_report)
+                            try:
+                                livescore_archive = _upload_report_once(
+                                    "livescore_layer2_fallback", livescore_fallback_report
+                                )
+                                if livescore_archive:
+                                    st.caption(
+                                        "LiveScore Layer 2 fallback report archived in GitHub: "
+                                        + str(livescore_archive.get("latest_url", ""))
+                                    )
+                            except Exception as livescore_archive_error:
+                                st.warning(
+                                    "LiveScore fallback report could not be archived ("
+                                    + type(livescore_archive_error).__name__
+                                    + ")."
+                                )
                         st.caption(
                             "LiveScoreFootball is used only when its global sync and exact competition-season crosswalk are fresh. "
                             "Only missing full-time results on already-known completed Sportmonks fixtures can be filled; "
