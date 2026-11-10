@@ -3,7 +3,7 @@ When all inputs exist, original Layer 1 weights and calculations are preserved.
 Unknown components are excluded and remaining known weights are normalized.
 """
 from __future__ import annotations
-from math import exp, factorial
+from math import exp, factorial, isfinite
 from typing import Dict, List
 
 WEIGHTS = {"recent_form": 0.20, "goals_scored": 0.10, "goals_conceded": 0.10,
@@ -97,6 +97,84 @@ def most_likely_outcome(probabilities: Dict[str, float], home_name: str = "Home"
     leaders = [label for label, value in outcomes if value == highest]
     label = leaders[0] if len(leaders) == 1 else "No single most likely outcome (tied probabilities)"
     return {"label": label, "probability": highest}
+
+
+def _snapshot_number(value):
+    """Return finite numeric feature values; preserve unknowns as None."""
+    if value is None:
+        return None
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return None
+    return number if isfinite(number) else None
+
+
+def build_prediction_feature_snapshot(
+    home: Dict,
+    away: Dict,
+    result: Dict,
+    *,
+    tactical_compatibility: Dict[str, float] | None = None,
+    captured_at: str | None = None,
+) -> Dict:
+    """Capture the exact engine inputs and calculated features for one forecast.
+
+    The returned object is an audit snapshot, not a new source of model inputs.
+    Only fields consumed by predict_match plus available source metadata are kept.
+    """
+    overrides = tactical_compatibility or {}
+
+    def team_snapshot(team: Dict, side: str, venue_key: str) -> Dict:
+        provenance_keys = (
+            "source", "provider", "data_source", "fetched_at",
+            "statistics_source", "statistics_fetched_at",
+            "matches_source", "matches_fetched_at", "last_updated_at",
+        )
+        provenance = {
+            key: team[key] for key in provenance_keys
+            if team.get(key) not in (None, "")
+        }
+        matches = []
+        for match in team.get("matches", [])[:10]:
+            matches.append({
+                "goals_for": _snapshot_number(match.get("goals_for")),
+                "goals_against": _snapshot_number(match.get("goals_against")),
+                "opponent_strength": _snapshot_number(match.get("opponent_strength")),
+            })
+        return {
+            "team_name": team.get("name", "Home" if side == "home" else "Away"),
+            "team_id": team.get("id"),
+            "venue_rating": _snapshot_number(team.get(venue_key)),
+            "player_availability": _snapshot_number(team.get("player_availability")),
+            "playing_style": _snapshot_number(team.get("playing_style")),
+            "defensive_structure": _snapshot_number(team.get("defensive_structure")),
+            "attacking_approach": _snapshot_number(team.get("attacking_approach")),
+            "tactical_compatibility": _snapshot_number(
+                overrides.get(side) if overrides.get(side) is not None
+                else team.get("tactical_compatibility")
+            ),
+            "recent_matches": matches,
+            "source_provenance": provenance,
+        }
+
+    output_keys = (
+        "home_rating", "away_rating", "home_expected_goals",
+        "away_expected_goals", "component_ratings", "model_weights",
+        "tactical_component_ratings", "tactical_compatibility_used",
+        "data_coverage", "probabilities",
+    )
+    calculated = {key: result.get(key) for key in output_keys if key in result}
+    return {
+        "schema_version": "prediction-features-v1",
+        "captured_at": captured_at or "",
+        "recency_policy": "latest_5_60pct_previous_5_40pct",
+        "teams": {
+            "home": team_snapshot(home, "home", "home_rating"),
+            "away": team_snapshot(away, "away", "away_rating"),
+        },
+        "calculated": calculated,
+    }
 
 
 def predict_match(home: Dict, away: Dict, max_goals: int = 8, tactical_compatibility: Dict[str, float] | None = None) -> Dict:
