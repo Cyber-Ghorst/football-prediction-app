@@ -6,6 +6,7 @@ scores, opponent mappings, or availability ratings are created.
 from __future__ import annotations
 
 from typing import Any
+from datetime import datetime, timezone
 
 from form_analyzer import analyze_form, venue_rating
 from tactical_indicators import analyze_tactics
@@ -243,6 +244,29 @@ def standings_strength(rows: list[dict[str, Any]]) -> dict[int, float]:
     return {team_id: (maximum - rank + 1) / maximum * 100 for team_id, rank in ranks.items()}
 
 
+def _kickoff_timestamp(fixture: dict[str, Any]) -> int | None:
+    """Parse a Sportmonks kickoff as UTC epoch seconds."""
+    raw_timestamp = fixture.get("starting_at_timestamp")
+    if raw_timestamp is not None:
+        try:
+            value = float(raw_timestamp)
+            if value > 100_000_000_000:
+                value /= 1000
+            return int(value)
+        except (TypeError, ValueError, OverflowError):
+            pass
+    raw_date = fixture.get("starting_at") or fixture.get("date")
+    if not raw_date:
+        return None
+    try:
+        parsed = datetime.fromisoformat(str(raw_date).strip().replace("Z", "+00:00"))
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=timezone.utc)
+        return int(parsed.astimezone(timezone.utc).timestamp())
+    except (TypeError, ValueError, OverflowError):
+        return None
+
+
 def collect_sportmonks_team_profile(
     team: dict[str, Any],
     season_id: int,
@@ -259,8 +283,23 @@ def collect_sportmonks_team_profile(
             id(fixture): _fixture_statistics_index(fixture) for fixture in fixtures
         }
     matches: list[dict[str, Any]] = []
+    duplicate_fixture_ids = sorted({
+        str(value)
+        for fixture in fixtures
+        for value in (fixture.get("_schedule_duplicate_fixture_ids") or [])
+        if value not in (None, "")
+    })
+    unique_fixture_counts = [
+        int(fixture["_schedule_unique_fixture_count"])
+        for fixture in fixtures
+        if fixture.get("_schedule_unique_fixture_count") is not None
+    ]
     history_diagnostics = {
         "fixtures_scanned": len(fixtures),
+        "schedule_unique_fixture_count": max(unique_fixture_counts) if unique_fixture_counts else len(fixtures),
+        "duplicate_fixture_id_count": len(duplicate_fixture_ids),
+        "duplicate_fixture_ids": duplicate_fixture_ids,
+        "history_integrity_status": "issues_detected" if duplicate_fixture_ids else "clean",
         "same_season_fixtures": 0,
         "season_eligible_fixtures": 0,
         "fixtures_missing_season_id": 0,
@@ -332,7 +371,7 @@ def collect_sportmonks_team_profile(
             "statistics_raw_diagnostics": fixture_index.get(team_id, {}).get("raw_diagnostics", []),
         })
 
-    matches.sort(key=lambda row: str(row.get("date") or ""), reverse=True)
+    matches.sort(key=lambda row: _kickoff_timestamp({"date": row.get("date")}) or -1, reverse=True)
     recent = matches[:10]
     form = analyze_form(recent)
     tactics = analyze_tactics(recent)
@@ -399,6 +438,10 @@ def collect_sportmonks_team_profile(
                 for m in recent
             ),
             "fixtures_scanned": len(fixtures),
+            "schedule_unique_fixture_count": history_diagnostics["schedule_unique_fixture_count"],
+            "duplicate_fixture_id_count": history_diagnostics["duplicate_fixture_id_count"],
+            "duplicate_fixture_ids": history_diagnostics["duplicate_fixture_ids"],
+            "history_integrity_status": history_diagnostics["history_integrity_status"],
         },
     }
 
@@ -419,8 +462,10 @@ def find_exact_match_fixture(
         try:
             if int(fixture.get("season_id")) != int(season_id):
                 continue
-            kickoff = int(fixture.get("starting_at_timestamp"))
         except (TypeError, ValueError):
+            continue
+        kickoff = _kickoff_timestamp(fixture)
+        if kickoff is None:
             continue
         home, away = _participants(fixture)
         if not home or not away:
@@ -431,10 +476,10 @@ def find_exact_match_fixture(
         except (TypeError, ValueError):
             continue
         candidates.append(fixture)
-    future = [row for row in candidates if int(row["starting_at_timestamp"]) > current]
+    future = [row for row in candidates if (_kickoff_timestamp(row) or 0) > current]
     if future:
-        return min(future, key=lambda row: int(row["starting_at_timestamp"]))
-    return max(candidates, key=lambda row: int(row["starting_at_timestamp"])) if candidates else None
+        return min(future, key=lambda row: _kickoff_timestamp(row) or 0)
+    return max(candidates, key=lambda row: _kickoff_timestamp(row) or 0) if candidates else None
 
 
 def find_upcoming_match_fixture(
@@ -463,13 +508,13 @@ def find_upcoming_match_fixture(
         try:
             if int(home.get("id")) != int(home_team_id) or int(away.get("id")) != int(away_team_id):
                 continue
-            kickoff = int(fixture.get("starting_at_timestamp"))
         except (TypeError, ValueError):
             continue
-        if kickoff <= current:
+        kickoff = _kickoff_timestamp(fixture)
+        if kickoff is None or kickoff <= current:
             continue
         candidates.append(fixture)
-    return min(candidates, key=lambda row: int(row["starting_at_timestamp"])) if candidates else None
+    return min(candidates, key=lambda row: _kickoff_timestamp(row) or 0) if candidates else None
 
 
 def extract_sportmonks_match_details(
