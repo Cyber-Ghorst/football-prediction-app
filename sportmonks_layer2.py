@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 from form_analyzer import analyze_form, venue_rating
 from tactical_indicators import analyze_tactics
 from tactical_evidence import build_league_reference_statistics, build_tactical_evidence_profile
+from statistics_coverage import CORE_STATISTICS as _CORE_STATISTICS
 
 
 _COMPLETED = {"finished", "ft", "aet", "penalties", "after extra time", "after penalties"}
@@ -49,9 +50,6 @@ _STAT_ALIASES = {
 }
 _STAT_TYPE_ID_NAMES = {1527: "counter attacks"}
 _PERCENTAGE_STATS = {"Ball Possession", "Passes %"}
-_CORE_STATISTICS = (
-    "Ball Possession", "Passes %", "Total Shots", "Shots on Goal", "Corner Kicks",
-)
 
 
 def _rows(value: Any) -> list[dict[str, Any]]:
@@ -493,14 +491,20 @@ def collect_sportmonks_team_profile(
         recent, league_reference, team.get("name") or f"Team {team_id}"
     )
     statistics_coverage = {
-        metric: sum(metric in (match.get("statistics") or {}) for match in recent)
-        for metric in _CORE_STATISTICS
+        label: sum(
+            any(name in (match.get("statistics") or {}) for name in aliases)
+            for match in recent
+        )
+        for label, _group, aliases in _CORE_STATISTICS
     }
     matches_with_any_statistics = sum(
         bool(match.get("statistics")) for match in recent
     )
     matches_with_complete_core_statistics = sum(
-        all(metric in (match.get("statistics") or {}) for metric in _CORE_STATISTICS)
+        all(
+            any(name in (match.get("statistics") or {}) for name in aliases)
+            for _label, _group, aliases in _CORE_STATISTICS
+        )
         for match in recent
     )
     total_core_observations = sum(statistics_coverage.values())
@@ -539,7 +543,7 @@ def collect_sportmonks_team_profile(
             if collection_timestamp_epochs else None
         ),
         "history_order": "newest_first_by_parsed_utc_kickoff",
-        "statistics_core_metrics": list(_CORE_STATISTICS),
+        "statistics_core_metrics": [label for label, _group, _aliases in _CORE_STATISTICS],
         "statistics_coverage_by_metric": statistics_coverage,
         "matches_with_any_statistics": matches_with_any_statistics,
         "matches_with_complete_core_statistics": matches_with_complete_core_statistics,
