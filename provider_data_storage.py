@@ -79,19 +79,21 @@ def _database_fingerprint(database_url: str) -> str:
     return hashlib.sha256(str(database_url).encode("utf-8")).hexdigest()
 
 
-def _ensure_provider_storage_once(database_url: str) -> bool:
-    """Create provider tables once per database per process, committing before release."""
+def _ensure_provider_storage_once(database_url: str, connection: Any) -> bool:
+    """Create provider tables once, committing DDL before other workers proceed."""
     fingerprint = _database_fingerprint(database_url)
     if fingerprint in _INITIALIZED_DATABASES:
         return False
     with _SCHEMA_INITIALIZATION_LOCK:
         if fingerprint in _INITIALIZED_DATABASES:
             return False
-        with _connect(database_url) as connection:
-            with connection.cursor() as cursor:
-                for statement in CREATE_TABLES_SQL.split(";"):
-                    if statement.strip():
-                        cursor.execute(statement)
+        with connection.cursor() as cursor:
+            for statement in CREATE_TABLES_SQL.split(";"):
+                if statement.strip():
+                    cursor.execute(statement)
+        # Commit before publishing the initialized marker so concurrent writers
+        # never try to insert while another worker's DDL is still uncommitted.
+        connection.commit()
         _INITIALIZED_DATABASES.add(fingerprint)
     return True
 
@@ -153,7 +155,8 @@ def ensure_provider_storage(database_url: str) -> None:
     """Create provider tables once per database per process."""
     if not database_url:
         raise ValueError("PROVIDER_DATABASE_URL is required.")
-    _ensure_provider_storage_once(database_url)
+    with _connect(database_url) as connection:
+        _ensure_provider_storage_once(database_url, connection)
 
 
 def check_provider_storage_connection(database_url: str) -> bool:
@@ -224,8 +227,8 @@ def save_provider_snapshot(
     payload_hash = hashlib.sha256(payload_text.encode("utf-8")).hexdigest()
     snapshot_id = str(uuid.uuid4())
 
-    _ensure_provider_storage_once(database_url)
     with _connect(database_url) as connection:
+        _ensure_provider_storage_once(database_url, connection)
         with connection.cursor() as cursor:
             cursor.execute(
                 INSERT_SNAPSHOT_SQL,
@@ -295,8 +298,8 @@ def record_provider_collection_run(
         attempted = attempted.replace(tzinfo=timezone.utc)
     run_id = str(uuid.uuid4())
     message = str(error_message)[:1000] if error_message else None
-    _ensure_provider_storage_once(database_url)
     with _connect(database_url) as connection:
+        _ensure_provider_storage_once(database_url, connection)
         with connection.cursor() as cursor:
             cursor.execute(
                 INSERT_RUN_SQL,
@@ -348,10 +351,10 @@ def save_provider_snapshot_and_record_run(
     run_id = str(uuid.uuid4())
     attempted = datetime.now(timezone.utc)
 
-    _ensure_provider_storage_once(database_url)
     run_recorded = True
     run_error_type = None
     with _connect(database_url) as connection:
+        _ensure_provider_storage_once(database_url, connection)
         with connection.cursor() as cursor:
             cursor.execute(
                 INSERT_SNAPSHOT_SQL,
