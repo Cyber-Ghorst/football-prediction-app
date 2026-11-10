@@ -361,7 +361,7 @@ class BzzoiroAdapter(_HttpAdapter):
                     self.provider, row, fetched_at=fetched, source_url=self.endpoint,
                     licence="Bzzoiro API licence; app display/derived outputs only, no raw-feed redistribution",
                     fixture_id=row.get("id") or row.get("event_id") or row.get("fixture_id"),
-                    competition=row.get("league_id") or league.get("id") or row.get("competition_id") or "unknown-league",
+                    competition=row.get("league_id") or league.get("id") or row.get("competition_id"),
                     competition_name=league.get("name") or row.get("competition") or row.get("league_name"),
                     season=row.get("season_id") or season.get("id") or row.get("season"),
                     season_name=season.get("name") or season.get("year") or row.get("season_name") or row.get("season_id"),
