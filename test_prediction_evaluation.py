@@ -127,6 +127,47 @@ class PredictionEvaluationTests(unittest.TestCase):
             1,
         )
 
+    def test_feature_snapshot_is_serialized_and_marked_pre_kickoff(self):
+        import json
+
+        features = {
+            "schema_version": "prediction-features-v1",
+            "captured_at": "2026-11-07T10:00:00+00:00",
+            "teams": {"home": {"recent_matches": [{"goals_for": 2}]}, "away": {}},
+            "calculated": {"model_weights": {"recent_form": 0.2}},
+        }
+        row = self._record(feature_snapshot=features)
+        self.assertEqual(row["feature_snapshot_schema_version"], "prediction-features-v1")
+        self.assertTrue(row["feature_snapshot_before_kickoff"])
+        self.assertEqual(json.loads(row["feature_snapshot_json"]), features)
+
+        late_features = dict(features, captured_at="2026-11-07T13:00:00+00:00")
+        late = self._record(feature_snapshot=late_features)
+        self.assertFalse(late["feature_snapshot_before_kickoff"])
+
+    def test_feature_snapshot_is_immutable_when_same_record_is_merged(self):
+        original = self._record(feature_snapshot={
+            "schema_version": "prediction-features-v1",
+            "captured_at": "2026-11-07T10:00:00+00:00",
+            "calculated": {"home_rating": 61.0},
+        })
+        incoming = dict(original)
+        incoming["feature_snapshot_json"] = '{"schema_version":"tampered"}'
+        incoming["feature_snapshot_schema_version"] = "tampered"
+        incoming["feature_snapshot_at"] = "2026-11-07T11:00:00+00:00"
+        merged = merge_prediction_records([original], [incoming])[0]
+        self.assertEqual(merged["feature_snapshot_json"], original["feature_snapshot_json"])
+        self.assertEqual(merged["feature_snapshot_schema_version"], "prediction-features-v1")
+        self.assertEqual(merged["feature_snapshot_at"], "2026-11-07T10:00:00+00:00")
+
+    def test_non_finite_feature_snapshot_values_are_rejected(self):
+        with self.assertRaises(ValueError):
+            self._record(feature_snapshot={
+                "schema_version": "prediction-features-v1",
+                "captured_at": "2026-11-07T10:00:00+00:00",
+                "invalid": float("nan"),
+            })
+
     def test_prediction_and_player_snapshot_must_precede_kickoff(self):
         row = self._record()
         self.assertTrue(row["prediction_before_kickoff"])

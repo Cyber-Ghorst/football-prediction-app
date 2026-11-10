@@ -234,6 +234,7 @@ def build_prediction_record(
     opta_captured_at: str | None = None,
     player_snapshot: Mapping[str, Any] | None = None,
     availability_snapshot: Mapping[str, Any] | None = None,
+    feature_snapshot: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Create a portable, auditable prediction row."""
     model = _valid_probabilities(probabilities)
@@ -246,6 +247,8 @@ def build_prediction_record(
     snapshot = dict(player_snapshot or {})
     snapshot_at = _parse_datetime(snapshot.get("fetched_at"))
     availability = dict(availability_snapshot or {})
+    features = dict(feature_snapshot or {})
+    feature_snapshot_json = json.dumps(features, ensure_ascii=False, separators=(",", ":"), allow_nan=False) if features else ""
     availability_at = _parse_datetime(availability.get("captured_at"))
     availability_teams = availability.get("teams")
     availability_teams = availability_teams if isinstance(availability_teams, Mapping) else {}
@@ -272,6 +275,15 @@ def build_prediction_record(
         "fixture_provider": fixture_provider or "",
         "model_version": "weighted-football-model-v1",
         "model_recency_policy": "latest_5_60pct_previous_5_40pct",
+        "feature_snapshot_schema_version": str(features.get("schema_version") or "") if features else "",
+        "feature_snapshot_at": str(features.get("captured_at") or created) if features else "",
+        "feature_snapshot_before_kickoff": bool(
+            features and kickoff and created_dt and created_dt < kickoff
+            and _parse_datetime(features.get("captured_at") or created) is not None
+            and _parse_datetime(features.get("captured_at") or created) <= created_dt
+            and _parse_datetime(features.get("captured_at") or created) < kickoff
+        ),
+        "feature_snapshot_json": feature_snapshot_json,
         "model_home_win": round(model["home_win"] * 100, 4),
         "model_draw": round(model["draw"] * 100, 4),
         "model_away_win": round(model["away_win"] * 100, 4),
@@ -729,6 +741,12 @@ def evaluate_prediction_ledger(records: Iterable[Mapping[str, Any]]) -> dict[str
     }
 
 
+IMMUTABLE_PREDICTION_FIELDS = frozenset({
+    "feature_snapshot_schema_version", "feature_snapshot_at",
+    "feature_snapshot_before_kickoff", "feature_snapshot_json",
+})
+
+
 def merge_prediction_records(
     existing: Iterable[Mapping[str, Any]], incoming: Iterable[Mapping[str, Any]]
 ) -> list[dict[str, Any]]:
@@ -743,6 +761,8 @@ def merge_prediction_records(
             merged[key] = record
             continue
         for field, value in record.items():
+            if field in IMMUTABLE_PREDICTION_FIELDS and merged[key].get(field) not in (None, ""):
+                continue
             if value is None or value == "":
                 continue
             try:
