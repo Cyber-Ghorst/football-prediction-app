@@ -40,6 +40,22 @@ class SportmonksCanonicalTests(unittest.TestCase):
         self.assertTrue(match_identity(sm, ninjas))
         self.assertNotEqual(sm["source_ids"]["sportmonks"], ninjas["source_ids"]["api_ninjas"])
 
+    def test_state_ids_without_expanded_state_are_normalized(self):
+        for state_id, expected in (
+            (1, "scheduled"),
+            (2, "live"), (3, "live"), (4, "live"), (6, "live"),
+            (9, "live"), (21, "live"), (22, "live"), (25, "live"),
+            (5, "finished"), (7, "finished"), (8, "finished"),
+        ):
+            with self.subTest(state_id=state_id):
+                row = self.fixture()
+                row["state_id"] = state_id
+                row["state"] = {}
+                result = canonicalize_sportmonks_fixture(
+                    row, competition_key="eng-premier-league", season=2026
+                )
+                self.assertEqual(result["status"], expected)
+
     def test_missing_participant_or_kickoff_fails_closed(self):
         bad = self.fixture()
         bad["participants"] = bad["participants"][:1]
