@@ -132,7 +132,7 @@ def build_prediction_feature_snapshot(
             "matches_source", "matches_fetched_at", "last_updated_at",
         )
         provenance = {
-            key: team[key] for key in provenance_keys
+            key: str(team[key]) for key in provenance_keys
             if team.get(key) not in (None, "")
         }
         matches = []
@@ -144,7 +144,7 @@ def build_prediction_feature_snapshot(
             })
         return {
             "team_name": team.get("name", "Home" if side == "home" else "Away"),
-            "team_id": team.get("id"),
+            "team_id": str(team.get("id")) if team.get("id") is not None else None,
             "venue_rating": _snapshot_number(team.get(venue_key)),
             "player_availability": _snapshot_number(team.get("player_availability")),
             "playing_style": _snapshot_number(team.get("playing_style")),
