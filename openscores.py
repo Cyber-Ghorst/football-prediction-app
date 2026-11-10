@@ -13,6 +13,7 @@ from datetime import datetime, timezone
 import itertools
 import json
 import os
+import time
 from typing import Any
 
 import requests
@@ -180,6 +181,19 @@ class OpenScoresClient:
             shape["text_length"] = len(data)
         return shape
 
+    def _post_with_retry(self, body: dict[str, Any]) -> requests.Response:
+        """Retry transient transport failures; never retry auth or rate-limit responses."""
+        for attempt in range(3):
+            try:
+                return self.session.post(
+                    self.ENDPOINT, json=body, timeout=self.timeout, allow_redirects=False
+                )
+            except (requests.ConnectionError, requests.Timeout):
+                if attempt == 2:
+                    raise
+                time.sleep(0.5 * (2 ** attempt))
+        raise AssertionError("unreachable retry state")
+
     def call_tool(self, name: str, arguments: dict[str, Any] | None = None) -> dict[str, Any]:
         """Call one documented read-only tool and retain source provenance."""
         request_id = next(self._request_ids)
@@ -191,12 +205,7 @@ class OpenScoresClient:
         }
         self.last_metadata = {}
         try:
-            response = self.session.post(
-                self.ENDPOINT,
-                json=body,
-                timeout=self.timeout,
-                allow_redirects=False,
-            )
+            response = self._post_with_retry(body)
             self.last_metadata = {
                 "http_status": response.status_code,
                 "request_id": request_id,
@@ -246,12 +255,7 @@ class OpenScoresClient:
         body = {"jsonrpc": "2.0", "id": request_id, "method": "tools/list"}
         self.last_metadata = {}
         try:
-            response = self.session.post(
-                self.ENDPOINT,
-                json=body,
-                timeout=self.timeout,
-                allow_redirects=False,
-            )
+            response = self._post_with_retry(body)
             self.last_metadata = {
                 "http_status": response.status_code,
                 "request_id": request_id,
