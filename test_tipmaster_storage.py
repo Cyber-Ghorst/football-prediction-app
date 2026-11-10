@@ -14,7 +14,7 @@ class FakeCursor:
         normalized = " ".join(query.split())
         self.connection.calls.append(normalized)
         if normalized.startswith("SELECT payload"):
-            self.rows = [(value[1]) for value in self.connection.records.values()]
+            self.rows = [(value[1],) for value in self.connection.records.values()]
 
     def executemany(self, query, params):
         self.connection.calls.append(" ".join(query.split()))
