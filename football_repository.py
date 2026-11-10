@@ -847,6 +847,68 @@ def get_repository_fixtures(
             return _rows_as_dicts(cursor)
 
 
+
+def search_upcoming_repository_fixtures(
+    database_url: str,
+    *,
+    search_term: str = "",
+    league_id: str | None = None,
+    season_id: str | None = None,
+    window_days: int = 7,
+    limit: int = 300,
+) -> list[dict[str, Any]]:
+    """Search stored Sportmonks fixtures within a strict rolling 1–7 day window."""
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+    if isinstance(window_days, bool) or not isinstance(window_days, int) or not 1 <= window_days <= 7:
+        raise ValueError("window_days must be an integer from 1 through 7.")
+    safe_limit = max(1, min(int(limit), 500))
+    clauses = [
+        "f.source_provider = 'sportmonks'",
+        "f.starting_at > NOW()",
+        f"f.starting_at <= NOW() + INTERVAL '{window_days} days'",
+        "LOWER(COALESCE(f.status, '')) IN "
+        "('ns', 'not started', 'scheduled', 'to be played', "
+        "'fixture not started', 'not played', 'tbd', '1')",
+    ]
+    params: list[Any] = []
+    if league_id:
+        clauses.append("f.league_id = %s")
+        params.append(str(league_id))
+    if season_id:
+        clauses.append("f.season_id = %s")
+        params.append(str(season_id))
+    term = str(search_term or "").strip()
+    if term:
+        clauses.append(
+            "(ht.name ILIKE %s OR at.name ILIKE %s OR l.name ILIKE %s "
+            "OR COALESCE(l.country, '') ILIKE %s)"
+        )
+        pattern = f"%{term}%"
+        params.extend((pattern, pattern, pattern, pattern))
+    params.append(safe_limit)
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"""
+                SELECT f.fixture_id, f.season_id, f.league_id,
+                       f.home_team_id, f.away_team_id,
+                       ht.name AS home_team, at.name AS away_team,
+                       l.name AS competition, l.country,
+                       f.starting_at, f.status, f.venue,
+                       f.source_provider, f.provider_updated_at
+                FROM football_fixtures AS f
+                JOIN football_teams AS ht ON ht.team_id = f.home_team_id
+                JOIN football_teams AS at ON at.team_id = f.away_team_id
+                JOIN football_leagues AS l ON l.league_id = f.league_id
+                WHERE {" AND ".join(clauses)}
+                ORDER BY f.starting_at ASC, f.fixture_id ASC
+                LIMIT %s
+                """,
+                tuple(params),
+            )
+            return _rows_as_dicts(cursor)
+
 def get_repository_team_history(
     database_url: str,
     team_id: str,
