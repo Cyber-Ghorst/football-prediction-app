@@ -268,3 +268,35 @@ class UpcomingFixtureEnrichmentTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class SportmonksDateRangePaginationTests(unittest.TestCase):
+    def test_fixtures_between_all_pages_collects_complete_date_range(self):
+        client = object.__new__(SportmonksClient)
+        calls = []
+
+        def fake_get(path, params=None):
+            calls.append((path, dict(params or {})))
+            page = (params or {}).get("page")
+            if page == 1:
+                return {
+                    "data": [{"id": index} for index in range(50)],
+                    "pagination": {"has_more": True},
+                }
+            return {
+                "data": [{"id": 50}],
+                "pagination": {"has_more": False},
+            }
+
+        client._get = fake_get
+        rows = client.fixtures_between_all_pages(
+            "2026-11-10", "2026-11-17",
+            include="league;season;participants;state",
+        )
+        self.assertEqual(len(rows), 51)
+        self.assertEqual([call[1]["page"] for call in calls], [1, 2])
+        self.assertTrue(all(call[1]["per_page"] == 50 for call in calls))
+        self.assertTrue(all(
+            call[0] == "fixtures/between/2026-11-10/2026-11-17"
+            for call in calls
+        ))
