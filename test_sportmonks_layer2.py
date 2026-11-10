@@ -204,6 +204,46 @@ class SportmonksLayer2Tests(unittest.TestCase):
         profile = collect_sportmonks_team_profile({"id": 10, "name": "Home FC"}, 2026, [row], [])
         self.assertEqual(profile["matches"], [])
 
+    def test_state_labels_require_exact_completed_values(self):
+        from sportmonks_layer2 import _state
+
+        for label, expected in (
+            ("Finished", "finished"),
+            ("FT", "finished"),
+            ("Full Time", "finished"),
+            ("AET", "finished"),
+            ("after penalties", "finished"),
+            ("Penalties", "live"),
+            ("Penalty Shootout", "live"),
+            ("Extra Time", "live"),
+            ("1st Half", "live"),
+            ("NS", "scheduled"),
+            ("Not Started", "scheduled"),
+            ("unfinished", "unknown"),
+            ("not finished", "unknown"),
+            ("pre-finished", "unknown"),
+            ("not live", "unknown"),
+        ):
+            with self.subTest(label=label):
+                self.assertEqual(
+                    _state({"state_id": None, "state": {"name": label}}),
+                    expected,
+                )
+
+    def test_malformed_state_ids_are_not_coerced_to_finished(self):
+        from sportmonks_layer2 import _state
+
+        for state_id in (True, 5.9, "5.9", "finished"):
+            with self.subTest(state_id=state_id):
+                self.assertEqual(
+                    _state({"state_id": state_id, "state": {"name": "unknown"}}),
+                    "unknown",
+                )
+        self.assertEqual(
+            _state({"state_id": "5", "state": {"name": "unknown"}}),
+            "finished",
+        )
+
     def test_all_documented_in_play_state_ids_are_not_treated_as_completed(self):
         from sportmonks_layer2 import _state
         for state_id in (2, 3, 4, 6, 9, 21, 22, 25):
