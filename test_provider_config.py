@@ -11,6 +11,13 @@ class ProviderRoleConfigTests(unittest.TestCase):
     def test_livescore_is_limited_to_fixtures_results_and_standings(self):
         self.assertEqual(set(PROVIDER_ROLES['livescore_football']['domains']), {'fixtures', 'results', 'standings'})
 
+    def test_readiness_reports_current_opt_in_layer2_integrations(self):
+        rows = {row["provider_id"]: row for row in provider_readiness()}
+        self.assertIn("opt-in missing-score fallback", rows["livescore_football"]["app_integration"])
+        self.assertIn("missing-stat", rows["highlightly"]["app_integration"])
+        self.assertIn("exact result candidates", rows["api_ninjas"]["app_integration"])
+        self.assertIn("active", rows["sportmonks"]["app_integration"])
+
     def test_readiness_exposes_role_and_credential_status_without_secret_values(self):
         rows = provider_readiness()
         self.assertEqual(len(rows), 5)
