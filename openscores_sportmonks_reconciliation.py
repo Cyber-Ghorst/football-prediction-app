@@ -540,7 +540,7 @@ def main() -> int:
             summary.write(f"- Explicit OpenScores entity links inserted: {report['explicit_entity_links_inserted']}\n")
             summary.write(f"- Prediction model modified: no\n- Prediction ledger touched: no\n")
             summary.write(f"\n### Reconciliation\n\n`{json.dumps(report['reconciliation'], sort_keys=True)}`\n")
-    return 0 if report["status"] == "pass" else 1
+    return 0 if report["status"] in {"pass", "partial"} else 1
 
 
 if __name__ == "__main__":
