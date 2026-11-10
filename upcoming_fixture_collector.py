@@ -17,6 +17,64 @@ WINDOW_DAYS = 7
 DAILY_FIXTURE_TARGET = 90
 FIXTURE_INCLUDE = "league;season;participants;state;venue;scores"
 
+# Explicit name-based tiers avoid reliance on provider-specific numeric league IDs.
+MAJOR_COMPETITION_TIERS = {
+    1: (
+        "premier league", "english premier league", "epl", "la liga", "laliga",
+        "serie a", "bundesliga", "ligue 1", "champions league",
+        "uefa champions league", "europa league", "uefa europa league",
+    ),
+    2: (
+        "championship", "english championship", "eredivisie", "primeira liga",
+        "liga portugal", "scottish premiership", "mls", "major league soccer",
+        "brasileirao", "serie a brazil", "copa libertadores",
+        "africa cup of nations", "afcon", "caf champions league",
+        "african champions league", "asian champions league",
+        "afc champions league", "world cup", "fifa world cup",
+        "uefa conference league", "conference league",
+    ),
+}
+MAX_HIGHLIGHTED_FIXTURES = 50
+
+
+def _competition_priority(fixture: Mapping[str, Any]) -> int:
+    """Return a lower-is-better tier for recognized major competitions."""
+    league = fixture.get("league") if isinstance(fixture.get("league"), dict) else {}
+    name = str(league.get("name") or fixture.get("league_name") or "").strip().casefold()
+    normalized = " ".join(name.replace("_", " ").replace("-", " ").split())
+    for tier, aliases in MAJOR_COMPETITION_TIERS.items():
+        if normalized in aliases:
+            return tier
+    return 3
+
+
+def select_highlighted_fixtures(
+    fixtures: list[dict[str, Any]],
+    *,
+    limit: int = MAX_HIGHLIGHTED_FIXTURES,
+) -> list[dict[str, Any]]:
+    """Select up to 50 major-competition fixtures without shrinking the catalogue."""
+    if isinstance(limit, bool) or not isinstance(limit, int) or limit < 1:
+        raise ValueError("limit must be a positive integer.")
+    ranked = []
+    for fixture in fixtures:
+        if not isinstance(fixture, dict):
+            continue
+        row = dict(fixture)
+        row["highlight_priority"] = _competition_priority(row)
+        row["is_highlighted"] = True
+        ranked.append(row)
+    ranked.sort(
+        key=lambda row: (
+            row["highlight_priority"],
+            row.get("starting_at_timestamp", 0),
+            int(row.get("id", 0)) if str(row.get("id", "")).isdigit() else 0,
+        )
+    )
+    return ranked[:min(limit, MAX_HIGHLIGHTED_FIXTURES)]
+
+
+
 
 def _rows(value: Any) -> list[dict[str, Any]]:
     if isinstance(value, list):
@@ -173,11 +231,22 @@ def normalize_upcoming_fixtures(
         accepted.values(),
         key=lambda row: (row["starting_at_timestamp"], int(row["id"])),
     )
+    highlighted = select_highlighted_fixtures(rows)
+    highlighted_ids = {row["id"] for row in highlighted}
+    for row in rows:
+        row["is_highlighted"] = row["id"] in highlighted_ids
+        row["highlight_priority"] = _competition_priority(row)
     competition_keys = {
         (str(row["league_id"]), str(row["season_id"])) for row in rows
     }
     return {
         "fixtures": rows,
+        "highlighted_fixtures": highlighted,
+        "highlight_limit": MAX_HIGHLIGHTED_FIXTURES,
+        "highlighted_count": len(highlighted),
+        "major_competition_fixture_count": sum(
+            1 for row in rows if row["highlight_priority"] < 3
+        ),
         "fixtures_found": len(rows),
         "competitions_found": len(competition_keys),
         "window_start_utc": current.isoformat(),
