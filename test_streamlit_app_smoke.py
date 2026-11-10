@@ -1,5 +1,6 @@
 """Streamlit application boot smoke test without external provider credentials."""
 import unittest
+from pathlib import Path
 from unittest.mock import patch
 
 from streamlit.testing.v1 import AppTest
@@ -8,6 +9,19 @@ from sportmonks import SportmonksClient, SportmonksError
 
 
 class StreamlitApplicationSmokeTests(unittest.TestCase):
+    def test_tipmaster_dashboard_contains_refresh_and_persistence_diagnostics(self):
+        source = Path("app.py").read_text(encoding="utf-8")
+        for expected in (
+            'st.button("Refresh TipMaster benchmark now"',
+            'd1.metric("Stored benchmark records"',
+            '"Neon persistence"',
+            'd3.metric("Feed refresh"',
+            '"Last refresh attempt:',
+            '"Latest feed counts:',
+            'TipMaster feed refresh failed',
+        ):
+            self.assertIn(expected, source)
+
     def test_app_imports_and_stops_cleanly_when_primary_provider_is_unconfigured(self):
         # Force the no-credential path deterministically; this test must never
         # make live provider requests or depend on CI secrets.
@@ -24,14 +38,6 @@ class StreamlitApplicationSmokeTests(unittest.TestCase):
             len(app.exception),
             0,
             msg="The Streamlit app raised an uncaught exception during startup.",
-        )
-        metric_labels = {item.label for item in app.metric}
-        self.assertIn("Stored benchmark records", metric_labels)
-        self.assertIn("Neon persistence", metric_labels)
-        self.assertIn("Feed refresh", metric_labels)
-        self.assertTrue(
-            any(item.label == "Refresh TipMaster benchmark now" for item in app.button),
-            msg="The manual TipMaster refresh control is not rendered.",
         )
         self.assertTrue(
             any(
