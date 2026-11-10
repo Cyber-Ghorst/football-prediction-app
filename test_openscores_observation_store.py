@@ -151,8 +151,11 @@ class OpenScoresObservationStoreTests(unittest.TestCase):
         self.assertEqual(report["pending_entity_mapping"], 1)
         self.assertEqual(report["matched"], 0)
         sql = "\n".join(call[0] for call in cursor.calls)
-        self.assertIn("pending_entity_mapping", sql)
         self.assertIn("outside_upcoming_window", sql)
+        self.assertTrue(any(
+            params and "pending_entity_mapping" in params
+            for _, params in cursor.calls
+        ))
         self.assertNotIn("INSERT INTO football_fixtures", sql)
 
     def test_unique_sportmonks_fixture_fingerprint_is_linked(self):
