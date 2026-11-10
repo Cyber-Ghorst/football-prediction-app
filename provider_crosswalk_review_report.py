@@ -49,6 +49,12 @@ def build_provider_crosswalk_review_report(
     existing_league_links = load_provider_entity_links(
         database_url, provider=provider_name, entity_type="league"
     )
+    existing_season_links = load_provider_entity_links(
+        database_url, provider=provider_name, entity_type="season"
+    )
+    existing_team_links = load_provider_entity_links(
+        database_url, provider=provider_name, entity_type="team"
+    )
     season_candidates = build_entity_crosswalk_candidates(
         provider_name, "season", source["seasons"], canonical_seasons,
         canonical_parent_ids=existing_league_links,
@@ -56,6 +62,18 @@ def build_provider_crosswalk_review_report(
     team_candidates = build_entity_crosswalk_candidates(
         provider_name, "team", source["teams"], canonical_teams
     )
+
+    for candidates, existing in (
+        (league_candidates, existing_league_links),
+        (season_candidates, existing_season_links),
+        (team_candidates, existing_team_links),
+    ):
+        for candidate in candidates:
+            linked_id = existing.get(str(candidate.get("provider_entity_id")))
+            if linked_id:
+                candidate["canonical_entity_id"] = linked_id
+                candidate["status"] = "already_linked"
+                candidate["reason"] = "An existing provider-to-canonical link is already stored."
 
     return {
         "provider": provider_name,
@@ -68,12 +86,13 @@ def build_provider_crosswalk_review_report(
         },
         "existing_link_counts": {
             "leagues": len(existing_league_links),
-            "seasons": len(load_provider_entity_links(
-                database_url, provider=provider_name, entity_type="season"
-            )),
-            "teams": len(load_provider_entity_links(
-                database_url, provider=provider_name, entity_type="team"
-            )),
+            "seasons": len(existing_season_links),
+            "teams": len(existing_team_links),
+        },
+        "canonical_options": {
+            "leagues": [str(row["league_id"]) for row in canonical_leagues if row.get("league_id")],
+            "seasons": [str(row["season_id"]) for row in canonical_seasons if row.get("season_id")],
+            "teams": [str(row["team_id"]) for row in canonical_teams if row.get("team_id")],
         },
         "candidates": {
             "leagues": league_candidates,
