@@ -14,6 +14,16 @@ class FakeSportmonks:
             {"id": 301, "name": "Ligue 1", "country": {"name": "France"}},
             {"id":  international_id(), "name": "World Cup", "country": {"name": "World"}},
         ]
+    def _get(self, path, params=None):
+        if path == "my/leagues":
+            return {"data": self.available_leagues()}
+        raise AssertionError("Unexpected endpoint: " + path)
+    def _all_pages(self, path, **params):
+        query = path.rsplit("/", 1)[-1].casefold()
+        return [
+            row for row in self.available_leagues()
+            if query in str(row.get("name", "")).casefold()
+        ]
     def available_seasons(self):
         return [
             {"id": 1001, "league_id": 82, "name": "2025/2026"},
