@@ -221,9 +221,16 @@ def save_explicit_provider_entity_links(
                 cursor.execute(
                     """INSERT INTO provider_entity_links (
                            link_id, provider, entity_type, provider_entity_id, canonical_entity_id
-                       ) VALUES (%s, %s, %s, %s, %s)
-                       ON CONFLICT (provider, entity_type, provider_entity_id) DO NOTHING""",
+                       ) VALUES (%s, %s, %s, %s, %s)""",
                     (link_id, provider, entity_type, provider_id, canonical_id),
+                )
+                cursor.execute(
+                    """INSERT INTO provider_entity_link_approval_audit (
+                           audit_id, link_id, provider, entity_type, provider_entity_id,
+                           canonical_entity_id, approval_reason
+                       ) VALUES (%s, %s, %s, %s, %s, %s, %s)""",
+                    (str(uuid.uuid4()), link_id, provider, entity_type, provider_id,
+                     canonical_id, reason),
                 )
                 saved += 1
     return saved
