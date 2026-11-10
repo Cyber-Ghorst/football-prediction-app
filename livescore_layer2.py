@@ -138,6 +138,9 @@ def collect_livescore_verified_result_fallback(
         "date_requests": 0,
         "date_cache_hits": 0,
         "date_request_limit_reached": 0,
+        "date_request_errors": [],
+        "ambiguous_event_matches": 0,
+        "no_exact_event_matches": 0,
         "max_unique_date_requests": max(1, min(int(max_unique_date_requests), 10)),
         "collection_started_at": started_at,
         "collection_completed_at": None,
@@ -202,14 +205,22 @@ def collect_livescore_verified_result_fallback(
             if report["date_requests"] >= limit:
                 report["date_request_limit_reached"] += 1
                 continue
-            by_date[date_key] = client.fixtures(
-                slug,
-                status="finished",
-                date_from=date_key,
-                date_to=date_key,
-                max_pages=1,
-                page_size=200,
-            )
+            try:
+                by_date[date_key] = client.fixtures(
+                    slug,
+                    status="finished",
+                    date_from=date_key,
+                    date_to=date_key,
+                    max_pages=1,
+                    page_size=200,
+                )
+            except Exception as exc:
+                by_date[date_key] = []
+                report["date_request_errors"].append({
+                    "date": date_key,
+                    "error_type": type(exc).__name__,
+                    "message": str(exc),
+                })
             report["date_requests"] += 1
         else:
             report["date_cache_hits"] += 1
@@ -231,7 +242,11 @@ def collect_livescore_verified_result_fallback(
                 and match_identity(canonical_sm, canonical_live, kickoff_tolerance_seconds=300)
             ):
                 exact_events.append((event, canonical_live))
-        if len(exact_events) != 1:
+        if len(exact_events) > 1:
+            report["ambiguous_event_matches"] += 1
+            continue
+        if not exact_events:
+            report["no_exact_event_matches"] += 1
             continue
 
         raw_event, canonical_live = exact_events[0]
