@@ -424,6 +424,7 @@ class SportmonksLayer2Tests(unittest.TestCase):
         self.assertEqual(_normalize_stat_value("Ball Possession", "0.60"), 60.0)
         self.assertEqual(_normalize_stat_value("Passes %", "1%"), 1.0)
         self.assertEqual(_normalize_stat_value("Total Shots", 12), 12.0)
+        self.assertEqual(_normalize_stat_value("Passes %", 1.5), 1.5)
         for key, value in (
             ("Ball Possession", -1),
             ("Ball Possession", "101%"),
