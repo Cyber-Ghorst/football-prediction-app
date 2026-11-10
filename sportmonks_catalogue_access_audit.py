@@ -114,6 +114,70 @@ def build_catalogue_report(client_factory=SportmonksClient) -> dict[str, Any]:
                     "error": str(exc),
                 }
 
+        # Country -> leagues is a separate documented route. A country
+        # include may expose catalogue records not returned by /leagues, so
+        # verify each candidate through both country-scoped and ID endpoints.
+        report["country_league_endpoint_probes"] = {}
+        for country_name, country_probe in report["country_search_probes"].items():
+            rows = country_probe.get("countries", []) if country_probe.get("status") == "ok" else []
+            for country_row in rows:
+                country_id = country_row.get("id")
+                if country_id is None:
+                    continue
+                try:
+                    country_leagues = client._all_pages(
+                        f"leagues/countries/{country_id}",
+                        include="country",
+                    )
+                    report["country_league_endpoint_probes"][country_name] = {
+                        "status": "ok",
+                        "country_id": country_id,
+                        "count": len(country_leagues),
+                        "matches": [
+                            {
+                                "id": str(row.get("id")),
+                                "name": row.get("name"),
+                                "country": _country_name(row),
+                                "active": row.get("active"),
+                                "type": row.get("type"),
+                                "sub_type": row.get("sub_type"),
+                            }
+                            for row in country_leagues
+                            if _norm(row.get("name")) in {"bundesliga", "ligue 1"}
+                            or "bundesliga" in _norm(row.get("name"))
+                            or "ligue 1" in _norm(row.get("name"))
+                        ],
+                    }
+                except Exception as exc:
+                    report["country_league_endpoint_probes"][country_name] = {
+                        "status": "error",
+                        "country_id": country_id,
+                        "error_type": type(exc).__name__,
+                        "error": str(exc),
+                    }
+
+        report["direct_league_id_probes"] = {}
+        for target_name, provider_id in (("Bundesliga", 82), ("Ligue 1", 301)):
+            try:
+                payload = client._get(
+                    f"leagues/{provider_id}",
+                    {"include": "country;seasons"},
+                )
+                league_rows = client._rows(payload)
+                report["direct_league_id_probes"][target_name] = {
+                    "status": "ok",
+                    "http_status": client.last_metadata.get("http_status"),
+                    "count": len(league_rows),
+                    "data": league_rows[0] if league_rows else None,
+                }
+            except Exception as exc:
+                report["direct_league_id_probes"][target_name] = {
+                    "status": "error",
+                    "error_type": type(exc).__name__,
+                    "error": str(exc),
+                    "http_status": client.last_metadata.get("http_status"),
+                }
+
         search_queries = {
             "Bundesliga": ("Bundesliga",),
             "Ligue 1": ("Ligue 1", "Ligue"),
