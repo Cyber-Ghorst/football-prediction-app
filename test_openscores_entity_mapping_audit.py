@@ -23,9 +23,9 @@ class OpenScoresEntityMappingAuditTests(unittest.TestCase):
 
     def test_unique_name_candidates_are_review_only(self):
         result = build_entity_mapping_candidates(
-            leagues=[{"id": "os-league", "name": "Premier League", "country": "England"}],
+            leagues=[{"id": "os-league", "name": "Premier League", "country": "England", "country_code": "GB"}],
             seasons_by_league={"os-league": [{"id": "os-season", "name": "2026/2027",
-                                              "starting_at": "2026-08-01", "ending_at": "2027-05-31"}]},
+                                              "starting_at": "2026-08-01", "ending_at": "2027-05-31", "is_current": True}]},
             observed_teams=[{"provider_team_id": "os-team", "name": "Arsenal", "observation_count": 3}],
             canonical_leagues=[{"id": "sm-league", "name": "Premier League",
                                  "country": "England", "source_provider": "sportmonks"}],
@@ -37,6 +37,9 @@ class OpenScoresEntityMappingAuditTests(unittest.TestCase):
         self.assertEqual(result["leagues"][0]["status"], "unique_name_candidate_requires_review")
         self.assertEqual(result["seasons"][0]["status"], "unique_candidate_requires_review")
         self.assertEqual(result["teams"][0]["status"], "unique_name_candidate_requires_review")
+        self.assertEqual(result["leagues"][0]["country_code"], "GB")
+        self.assertTrue(result["seasons"][0]["is_current"])
+        self.assertEqual(result["seasons"][0]["starting_at"], "2026-08-01")
         self.assertFalse(result["leagues"][0]["automatic_mapping_created"])
         self.assertFalse(result["seasons"][0]["automatic_mapping_created"])
         self.assertFalse(result["teams"][0]["automatic_mapping_created"])
