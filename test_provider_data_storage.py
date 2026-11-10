@@ -154,8 +154,8 @@ class ProviderStorageTests(unittest.TestCase):
         storage.save_provider_snapshot("postgresql://example", **kwargs)
         first_write_connections = self.connect_calls
         storage.save_provider_snapshot("postgresql://example", **kwargs)
-        self.assertEqual(first_write_connections, 2)  # one schema setup + one insert
-        self.assertEqual(self.connect_calls, 3)  # second insert skips repeated DDL setup
+        self.assertEqual(first_write_connections, 1)  # schema setup and insert share a connection
+        self.assertEqual(self.connect_calls, 2)  # second insert skips repeated DDL setup
 
     def test_snapshot_and_success_audit_share_one_connection(self):
         database_url = "postgresql://example"
