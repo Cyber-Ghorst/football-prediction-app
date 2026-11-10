@@ -7,7 +7,7 @@ collection is wired to Layer 2 with strict season/team identity and completeness
 from __future__ import annotations
 
 import os
-from datetime import datetime, timezone
+import datetime as _datetime
 import time
 from typing import Any, Mapping
 
@@ -210,7 +210,7 @@ class SportmonksClient:
         if not raw_date:
             return None
         try:
-            parsed = datetime.fromisoformat(
+            parsed = _datetime.datetime.fromisoformat(
                 str(raw_date).strip().replace("Z", "+00:00")
             )
             if parsed.tzinfo is None:
@@ -233,9 +233,11 @@ class SportmonksClient:
         else:
             label = state
         normalized = str(label).strip().casefold()
+        # "PEN" / "Penalties" can describe a live shootout; only explicit
+        # completed-state labels may promote a fixture into historical results.
         return (
-            normalized in {"ft", "aet", "pen", "finished", "full time",
-                           "after extra time", "after penalties", "penalties"}
+            normalized in {"ft", "aet", "ft_pen", "finished", "full time",
+                           "after extra time", "after penalties"}
             or any(marker in normalized for marker in (
                 "finished", "full time", "after extra", "after penalties"
             ))
@@ -424,13 +426,13 @@ class SportmonksClient:
 
             # Merge only after all batches succeed; a failed batch must fail the
             # collection rather than silently accepting a partial history.
-            details_fetched_at = datetime.now(timezone.utc).isoformat()
+            details_fetched_at = _datetime.datetime.now(_datetime.timezone.utc).isoformat()
             for fixture_id, detail in details_by_id.items():
                 base = detail_targets.get(fixture_id)
                 if base is not None:
                     base.update(detail)
                     base["fixture_details_fetched_at"] = details_fetched_at
-        collection_fetched_at = datetime.now(timezone.utc).isoformat()
+        collection_fetched_at = _datetime.datetime.now(_datetime.timezone.utc).isoformat()
         for fixture in fixtures:
             fixture["collection_fetched_at"] = collection_fetched_at
         return fixtures
