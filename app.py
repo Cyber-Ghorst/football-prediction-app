@@ -3009,6 +3009,14 @@ with st.expander("Prediction tracking, Opta comparison and backtesting", expande
         else:
             st.info("Calibration bins will populate as forecasts receive independently verified final scores.")
 
+        sample_assessment = report.get("evaluation_sample_assessment", {})
+        if sample_assessment.get("status") == "insufficient_sample":
+            st.warning(sample_assessment.get("message", "Evaluation sample is too small for reliability claims."))
+        elif sample_assessment.get("status") == "no_verified_results":
+            st.info(sample_assessment.get("message", "No verified completed predictions are available yet."))
+        elif sample_assessment.get("status") == "descriptive_sample":
+            st.caption(sample_assessment.get("message", "Evaluation metrics remain descriptive."))
+
         model_metrics = report["model"]
         opta_metrics = report["opta_same_fixtures"]
         m1, m2, m3 = st.columns(3)
