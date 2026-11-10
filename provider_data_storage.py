@@ -349,6 +349,9 @@ def save_provider_snapshot_and_record_run(
     attempted = datetime.now(timezone.utc)
 
     _ensure_provider_storage_once(database_url)
+    _ensure_provider_storage_once(database_url)
+    run_recorded = True
+    run_error_type = None
     with _connect(database_url) as connection:
         with connection.cursor() as cursor:
             cursor.execute(
@@ -360,10 +363,11 @@ def save_provider_snapshot_and_record_run(
                     expires, payload_hash,
                 ),
             )
-            run_recorded = True
-            run_error_type = None
-            cursor.execute("SAVEPOINT provider_collection_run_audit")
-            try:
+        # Commit the immutable source observation first. The optional audit row
+        # must never cause a successfully archived provider response to roll back.
+        connection.commit()
+        try:
+            with connection.cursor() as cursor:
                 cursor.execute(
                     INSERT_RUN_SQL,
                     (
@@ -372,12 +376,11 @@ def save_provider_snapshot_and_record_run(
                         http_status, None, None,
                     ),
                 )
-            except Exception as exc:
-                run_recorded = False
-                run_error_type = type(exc).__name__
-                cursor.execute("ROLLBACK TO SAVEPOINT provider_collection_run_audit")
-            finally:
-                cursor.execute("RELEASE SAVEPOINT provider_collection_run_audit")
+            connection.commit()
+        except Exception as exc:
+            run_recorded = False
+            run_error_type = type(exc).__name__
+            connection.rollback()
 
     return {
         "snapshot_id": snapshot_id,
