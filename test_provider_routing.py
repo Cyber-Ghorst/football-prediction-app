@@ -54,7 +54,7 @@ class ProviderRoutingTests(unittest.TestCase):
         registry = default_provider_registry()
         self.assertEqual(
             set(FREE_FIXTURE_CANDIDATES),
-            {"openligadb", "openfootball", "open_matchday", "worldcup26", "bzzoiro"},
+            {"openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro"},
         )
         self.assertEqual(registry.primary_sources("future_fixtures"), ["sportmonks"])
         self.assertEqual(registry.primary_sources("future_fixtures", "premier league"), ["sportmonks"])
