@@ -55,6 +55,61 @@ def build_catalogue_report(client_factory=SportmonksClient) -> dict[str, Any]:
         for season in seasons:
             key = str(season.get("league_id") or "")
             season_counts[key] = season_counts.get(key, 0) + 1
+        # Cross-check the account-scoped catalogue through Sportmonks' Core API
+        # and the documented name-search route. These are reads only.
+        try:
+            my_leagues = client._rows(client._get("my/leagues"))
+            report["my_leagues"] = {
+                "status": "ok",
+                "count": len(my_leagues),
+                "league_ids": sorted(str(row.get("id")) for row in my_leagues if row.get("id") is not None),
+            }
+        except Exception as exc:
+            report["my_leagues"] = {
+                "status": "error",
+                "error_type": type(exc).__name__,
+                "error": str(exc),
+            }
+
+        search_queries = {
+            "Bundesliga": ("Bundesliga",),
+            "Ligue 1": ("Ligue 1", "Ligue"),
+            "World Cup": ("World Cup", "FIFA World Cup"),
+        }
+        report["name_search_probes"] = {}
+        for target_name, queries in search_queries.items():
+            probe_rows = []
+            for query in queries:
+                try:
+                    rows = client._all_pages(
+                        f"leagues/search/{query}",
+                        include="country",
+                    )
+                    probe_rows.append({
+                        "query": query,
+                        "status": "ok",
+                        "count": len(rows),
+                        "matches": [
+                            {
+                                "id": str(row.get("id")),
+                                "name": row.get("name"),
+                                "country": _country_name(row),
+                                "country_id": row.get("country_id"),
+                                "type": row.get("type"),
+                                "sub_type": row.get("sub_type"),
+                            }
+                            for row in rows
+                        ],
+                    })
+                except Exception as exc:
+                    probe_rows.append({
+                        "query": query,
+                        "status": "error",
+                        "error_type": type(exc).__name__,
+                        "error": str(exc),
+                    })
+            report["name_search_probes"][target_name] = probe_rows
+
         report["catalogue_leagues"] = [
             {
                 "sportmonks_league_id": str(league.get("id")),
