@@ -143,6 +143,13 @@ class UpcomingFixtureCollectorTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             select_highlighted_fixtures([], limit=0)
 
+    def test_postponed_fixture_with_new_kickoff_is_retained_in_window(self):
+        postponed = fixture(77, NOW + timedelta(days=2), state="Postponed")
+        result = normalize_upcoming_fixtures([postponed], now=NOW, window_days=7)
+        self.assertEqual(result["fixtures_found"], 1)
+        self.assertEqual(result["fixtures"][0]["id"], "77")
+        self.assertEqual(result["fixtures"][0]["state"]["short_name"], "Postponed")
+
     def test_rejects_window_longer_than_one_week(self):
         with self.assertRaises(ValueError):
             normalize_upcoming_fixtures([], now=NOW, window_days=8)
