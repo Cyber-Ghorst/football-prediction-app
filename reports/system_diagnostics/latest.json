@@ -1,6 +1,6 @@
 {
   "diagnostic_version": 1,
-  "generated_at": "2026-11-10T07:15:21.724370+00:00",
+  "generated_at": "2026-11-10T07:24:51.022399+00:00",
   "overall_status": "healthy",
   "selected_context": {
     "season_start_year": 2026,
@@ -36,49 +36,49 @@
     {
       "id": "home_history_depth",
       "status": "pass",
-      "summary": "Manchester City: 10 completed score-valid matches available (minimum 5 met; preferred target 10 met).",
+      "summary": "Chelsea: 10 completed score-valid matches available (minimum 5 met; preferred target 10 met).",
       "recommendation": null
     },
     {
       "id": "home_tactical_recency_weighting",
       "status": "pass",
-      "summary": "Manchester City: tactical recency metadata reports latest-five 60% / previous-five 40% over 10 match(es).",
+      "summary": "Chelsea: tactical recency metadata reports latest-five 60% / previous-five 40% over 10 match(es).",
       "recommendation": null
     },
     {
       "id": "home_history_integrity",
       "status": "pass",
-      "summary": "Manchester City: no duplicate fixture IDs or invalid/missing score fields were found in the collected sample.",
+      "summary": "Chelsea: no duplicate fixture IDs or invalid/missing score fields were found in the collected sample.",
       "recommendation": null
     },
     {
       "id": "home_statistics_coverage",
       "status": "pass",
-      "summary": "Manchester City: all 8 core tactical statistics have at least one usable observation.",
+      "summary": "Chelsea: all 8 core tactical statistics have at least one usable observation.",
       "recommendation": null
     },
     {
       "id": "away_history_depth",
       "status": "pass",
-      "summary": "Fulham: 10 completed score-valid matches available (minimum 5 met; preferred target 10 met).",
+      "summary": "Leeds United: 10 completed score-valid matches available (minimum 5 met; preferred target 10 met).",
       "recommendation": null
     },
     {
       "id": "away_tactical_recency_weighting",
       "status": "pass",
-      "summary": "Fulham: tactical recency metadata reports latest-five 60% / previous-five 40% over 10 match(es).",
+      "summary": "Leeds United: tactical recency metadata reports latest-five 60% / previous-five 40% over 10 match(es).",
       "recommendation": null
     },
     {
       "id": "away_history_integrity",
       "status": "pass",
-      "summary": "Fulham: no duplicate fixture IDs or invalid/missing score fields were found in the collected sample.",
+      "summary": "Leeds United: no duplicate fixture IDs or invalid/missing score fields were found in the collected sample.",
       "recommendation": null
     },
     {
       "id": "away_statistics_coverage",
       "status": "pass",
-      "summary": "Fulham: all 8 core tactical statistics have at least one usable observation.",
+      "summary": "Leeds United: all 8 core tactical statistics have at least one usable observation.",
       "recommendation": null
     },
     {
@@ -90,19 +90,19 @@
     {
       "id": "api_ninjas_history_corroboration",
       "status": "pass",
-      "summary": "All selected-team API Ninjas completed results match Sportmonks history exactly (Manchester City: 10/10; Fulham: 10/10).",
+      "summary": "All selected-team API Ninjas completed results match Sportmonks history exactly (Chelsea: 10/10; Leeds United: 10/10).",
       "recommendation": null
     },
     {
       "id": "highlightly_history_coverage",
       "status": "info",
-      "summary": "Highlightly returned score-valid selected-team history (Manchester City: 7/10; Fulham: 8/10); unmatched candidates are assessed separately.",
+      "summary": "Highlightly returned score-valid selected-team history (Chelsea: 8/10); unmatched candidates are assessed separately.",
       "recommendation": null
     },
     {
       "id": "unmatched_external_results",
       "status": "info",
-      "summary": "5 Highlightly candidate(s) were independently verified against exact Sportmonks fixtures and scores; none were imported.",
+      "summary": "2 Highlightly candidate(s) were independently verified against exact Sportmonks fixtures and scores; none were imported.",
       "recommendation": null
     },
     {
@@ -170,23 +170,26 @@
     "verified": true,
     "status": "verified",
     "reason": "Exact competition-season fixture identity and future kickoff verified.",
-    "fixture_id": 19722096,
-    "kickoff_utc": "2026-11-21T12:30:00+00:00",
+    "fixture_id": 19722100,
+    "kickoff_utc": "2026-11-21T15:00:00+00:00",
     "source_updated_at": null,
-    "source_fetched_at": "2026-11-10T07:07:16.297627+00:00",
-    "source_age_seconds": 485.4,
-    "source_age_minutes": 8.1,
+    "source_fetched_at": "2026-11-10T07:24:25.423546+00:00",
+    "source_age_seconds": 25.6,
+    "source_age_minutes": 0.4,
     "source_freshness": "fresh",
     "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
   },
   "teams": {
     "home": {
-      "team": "Manchester City",
+      "team": "Chelsea",
       "completed_matches_available": 10,
       "history_minimum": 5,
       "history_target": 10,
       "history_collection_diagnostics": {
         "fixtures_scanned": 380,
+        "schedule_unique_fixture_count": 380,
+        "duplicate_fixture_id_count": 0,
+        "duplicate_fixture_ids": [],
         "same_season_fixtures": 380,
         "season_eligible_fixtures": 380,
         "fixtures_missing_season_id": 0,
@@ -197,14 +200,42 @@
         "excluded_missing_participants": 0,
         "excluded_other_team": 342,
         "excluded_not_completed": 28,
-        "excluded_missing_scores": 0
+        "excluded_missing_scores": 0,
+        "excluded_invalid_kickoff": 0,
+        "excluded_invalid_scores": 0,
+        "excluded_duplicate_fixture_id": 0,
+        "history_shortfall": 0,
+        "history_latest_match_at": "2026-11-08T14:00:00+00:00",
+        "history_oldest_match_at": "2026-08-24T19:00:00+00:00",
+        "history_collection_fetched_at": null,
+        "history_order": "newest_first_by_parsed_utc_kickoff",
+        "statistics_core_metrics": [
+          "Ball Possession",
+          "Passes %",
+          "Total Shots",
+          "Shots on Goal",
+          "Corner Kicks"
+        ],
+        "statistics_coverage_by_metric": {
+          "Ball Possession": 10,
+          "Passes %": 10,
+          "Total Shots": 10,
+          "Shots on Goal": 0,
+          "Corner Kicks": 10
+        },
+        "matches_with_any_statistics": 10,
+        "matches_with_complete_core_statistics": 0,
+        "core_statistics_completeness_pct": 80.0,
+        "team_fixture_accounting_gap": 0,
+        "team_fixture_accounting_status": "balanced",
+        "history_integrity_status": "ok"
       },
       "statistics_coverage": {
         "fixtures_checked": 10,
         "core_metrics_with_any_data": 8,
         "core_metrics_complete": 8,
         "core_metrics_total": 8,
-        "raw_observations_seen": 423,
+        "raw_observations_seen": 421,
         "unmapped_observations": 264,
         "mapping_visibility": "available",
         "metrics": [
@@ -296,8 +327,8 @@
           },
           {
             "statistic": "Successful Headers",
-            "team_output_fixtures": 9,
-            "opponent_output_fixtures": 9,
+            "team_output_fixtures": 7,
+            "opponent_output_fixtures": 7,
             "fixtures_checked": 10
           },
           {
@@ -382,11 +413,6 @@
             "fixtures_seen": 10
           },
           {
-            "provider_statistic": "Offsides",
-            "observations": 10,
-            "fixtures_seen": 10
-          },
-          {
             "provider_statistic": "Passes",
             "observations": 10,
             "fixtures_seen": 10
@@ -447,19 +473,29 @@
             "fixtures_seen": 10
           },
           {
-            "provider_statistic": "Assists",
+            "provider_statistic": "Offsides",
             "observations": 9,
             "fixtures_seen": 9
           },
           {
-            "provider_statistic": "Hit Woodwork",
+            "provider_statistic": "Injuries",
             "observations": 8,
             "fixtures_seen": 8
           },
           {
-            "provider_statistic": "Injuries",
-            "observations": 3,
-            "fixtures_seen": 3
+            "provider_statistic": "Assists",
+            "observations": 7,
+            "fixtures_seen": 7
+          },
+          {
+            "provider_statistic": "Hit Woodwork",
+            "observations": 4,
+            "fixtures_seen": 4
+          },
+          {
+            "provider_statistic": "Penalties",
+            "observations": 2,
+            "fixtures_seen": 2
           },
           {
             "provider_statistic": "Redcards",
@@ -467,31 +503,26 @@
             "fixtures_seen": 2
           },
           {
-            "provider_statistic": "Penalties",
-            "observations": 1,
-            "fixtures_seen": 1
-          },
-          {
             "provider_statistic": "Yellowred Cards",
-            "observations": 1,
-            "fixtures_seen": 1
+            "observations": 2,
+            "fixtures_seen": 2
           }
         ]
       },
       "tactical_summary": {
-        "playing_style": 85.25,
-        "attacking_approach": 59.666666666666664,
-        "defensive_structure": 35.53333333333333,
+        "playing_style": 58.050000000000004,
+        "attacking_approach": 54.36666666666667,
+        "defensive_structure": 43.4,
         "coverage_metrics": 8,
         "available_metrics": {
-          "average_possession": 66.0,
-          "average_pass_accuracy": 88.2,
-          "average_shots": 15.3,
-          "average_shots_on_target": 5.4,
-          "average_tackles": 13.4,
-          "average_interceptions": 6.2,
-          "average_blocked_shots": 4.6,
-          "average_corners": 6.1
+          "average_possession": 50.3,
+          "average_pass_accuracy": 82.9,
+          "average_shots": 13.4,
+          "average_shots_on_target": 5.8,
+          "average_tackles": 16.8,
+          "average_interceptions": 9.6,
+          "average_blocked_shots": 3.4,
+          "average_corners": 5.3
         },
         "recency_weighting": {
           "matches_used": 10,
@@ -518,12 +549,15 @@
       }
     },
     "away": {
-      "team": "Fulham",
+      "team": "Leeds United",
       "completed_matches_available": 10,
       "history_minimum": 5,
       "history_target": 10,
       "history_collection_diagnostics": {
         "fixtures_scanned": 380,
+        "schedule_unique_fixture_count": 380,
+        "duplicate_fixture_id_count": 0,
+        "duplicate_fixture_ids": [],
         "same_season_fixtures": 380,
         "season_eligible_fixtures": 380,
         "fixtures_missing_season_id": 0,
@@ -534,15 +568,43 @@
         "excluded_missing_participants": 0,
         "excluded_other_team": 342,
         "excluded_not_completed": 28,
-        "excluded_missing_scores": 0
+        "excluded_missing_scores": 0,
+        "excluded_invalid_kickoff": 0,
+        "excluded_invalid_scores": 0,
+        "excluded_duplicate_fixture_id": 0,
+        "history_shortfall": 0,
+        "history_latest_match_at": "2026-11-07T12:30:00+00:00",
+        "history_oldest_match_at": "2026-08-22T14:00:00+00:00",
+        "history_collection_fetched_at": null,
+        "history_order": "newest_first_by_parsed_utc_kickoff",
+        "statistics_core_metrics": [
+          "Ball Possession",
+          "Passes %",
+          "Total Shots",
+          "Shots on Goal",
+          "Corner Kicks"
+        ],
+        "statistics_coverage_by_metric": {
+          "Ball Possession": 10,
+          "Passes %": 10,
+          "Total Shots": 10,
+          "Shots on Goal": 0,
+          "Corner Kicks": 10
+        },
+        "matches_with_any_statistics": 10,
+        "matches_with_complete_core_statistics": 0,
+        "core_statistics_completeness_pct": 80.0,
+        "team_fixture_accounting_gap": 0,
+        "team_fixture_accounting_status": "balanced",
+        "history_integrity_status": "ok"
       },
       "statistics_coverage": {
         "fixtures_checked": 10,
         "core_metrics_with_any_data": 8,
         "core_metrics_complete": 8,
         "core_metrics_total": 8,
-        "raw_observations_seen": 416,
-        "unmapped_observations": 260,
+        "raw_observations_seen": 413,
+        "unmapped_observations": 255,
         "mapping_visibility": "available",
         "metrics": [
           {
@@ -633,8 +695,8 @@
           },
           {
             "statistic": "Successful Headers",
-            "team_output_fixtures": 7,
-            "opponent_output_fixtures": 7,
+            "team_output_fixtures": 9,
+            "opponent_output_fixtures": 9,
             "fixtures_checked": 10
           },
           {
@@ -769,61 +831,51 @@
             "fixtures_seen": 10
           },
           {
+            "provider_statistic": "Yellowcards",
+            "observations": 10,
+            "fixtures_seen": 10
+          },
+          {
             "provider_statistic": "Big Chances Missed",
             "observations": 9,
             "fixtures_seen": 9
           },
           {
+            "provider_statistic": "Injuries",
+            "observations": 9,
+            "fixtures_seen": 9
+          },
+          {
             "provider_statistic": "Goals",
-            "observations": 9,
-            "fixtures_seen": 9
-          },
-          {
-            "provider_statistic": "Yellowcards",
-            "observations": 9,
-            "fixtures_seen": 9
-          },
-          {
-            "provider_statistic": "Assists",
             "observations": 8,
             "fixtures_seen": 8
           },
           {
-            "provider_statistic": "Hit Woodwork",
-            "observations": 7,
-            "fixtures_seen": 7
-          },
-          {
-            "provider_statistic": "Injuries",
+            "provider_statistic": "Assists",
             "observations": 6,
             "fixtures_seen": 6
           },
           {
-            "provider_statistic": "Penalties",
-            "observations": 1,
-            "fixtures_seen": 1
-          },
-          {
-            "provider_statistic": "Redcards",
-            "observations": 1,
-            "fixtures_seen": 1
+            "provider_statistic": "Hit Woodwork",
+            "observations": 3,
+            "fixtures_seen": 3
           }
         ]
       },
       "tactical_summary": {
-        "playing_style": 72.75,
-        "attacking_approach": 53.333333333333336,
-        "defensive_structure": 38.233333333333334,
+        "playing_style": 47.55,
+        "attacking_approach": 38.733333333333334,
+        "defensive_structure": 41.166666666666664,
         "coverage_metrics": 8,
         "available_metrics": {
-          "average_possession": 58.4,
-          "average_pass_accuracy": 86.1,
-          "average_shots": 13.9,
-          "average_shots_on_target": 4.6,
-          "average_tackles": 14.6,
-          "average_interceptions": 7.7,
-          "average_blocked_shots": 4.0,
-          "average_corners": 6.0
+          "average_possession": 47.6,
+          "average_pass_accuracy": 77.8,
+          "average_shots": 12.0,
+          "average_shots_on_target": 3.7,
+          "average_tackles": 16.2,
+          "average_interceptions": 9.0,
+          "average_blocked_shots": 3.4,
+          "average_corners": 4.3
         },
         "recency_weighting": {
           "matches_used": 10,
@@ -877,7 +929,7 @@
       "normalization_failures": 0,
       "records_normalized": 290,
       "completed_score_valid_records": 100,
-      "selected_team_records": 56,
+      "selected_team_records": 29,
       "page_metadata": [
         {
           "offset": 0,
@@ -885,7 +937,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "88",
+            "requests_remaining": "84",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -908,7 +960,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "86",
+            "requests_remaining": "83",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -931,7 +983,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "87",
+            "requests_remaining": "82",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -1092,7 +1144,7 @@
         }
       },
       "selected_team_breakdown": {
-        "Manchester City": {
+        "Chelsea": {
           "normalized_team_records": 29,
           "status_counts": {
             "scheduled": 19,
@@ -1106,12 +1158,12 @@
           "finished_missing_score": 0,
           "sample_records": [
             {
-              "highlightly_match_id": "1325560934",
+              "highlightly_match_id": "1325560083",
               "date": "2027-03-13T15:00:00.000Z",
-              "home": "Coventry",
-              "away": "Manchester City",
-              "home_team_id": 1146230,
-              "away_team_id": 43334,
+              "home": "Chelsea",
+              "away": "Arsenal",
+              "home_team_id": 42483,
+              "away_team_id": 36526,
               "raw_state": {
                 "description": "Not started",
                 "score": {
@@ -1132,12 +1184,12 @@
               "country": "England"
             },
             {
-              "highlightly_match_id": "1325555828",
+              "highlightly_match_id": "1325553275",
               "date": "2027-03-03T20:00:00.000Z",
-              "home": "Manchester City",
-              "away": "Everton",
-              "home_team_id": 43334,
-              "away_team_id": 39079,
+              "home": "Chelsea",
+              "away": "Coventry",
+              "home_team_id": 42483,
+              "away_team_id": 1146230,
               "raw_state": {
                 "description": "Not started",
                 "score": {
@@ -1158,12 +1210,12 @@
               "country": "England"
             },
             {
-              "highlightly_match_id": "1325545616",
+              "highlightly_match_id": "1325541361",
               "date": "2027-02-27T15:00:00.000Z",
-              "home": "Hull City",
-              "away": "Manchester City",
-              "home_team_id": 55248,
-              "away_team_id": 43334,
+              "home": "Aston Villa",
+              "away": "Chelsea",
+              "home_team_id": 56950,
+              "away_team_id": 42483,
               "raw_state": {
                 "description": "Not started",
                 "score": {
@@ -1184,12 +1236,12 @@
               "country": "England"
             },
             {
-              "highlightly_match_id": "1325538808",
+              "highlightly_match_id": "1325536255",
               "date": "2027-02-20T15:00:00.000Z",
-              "home": "Manchester City",
-              "away": "Newcastle United",
-              "home_team_id": 43334,
-              "away_team_id": 29718,
+              "home": "Chelsea",
+              "away": "Ipswich",
+              "home_team_id": 42483,
+              "away_team_id": 49291,
               "raw_state": {
                 "description": "Not started",
                 "score": {
@@ -1210,12 +1262,12 @@
               "country": "England"
             },
             {
-              "highlightly_match_id": "1325532000",
+              "highlightly_match_id": "1325531149",
               "date": "2027-02-10T20:00:00.000Z",
-              "home": "Tottenham",
-              "away": "Manchester City",
-              "home_team_id": 40781,
-              "away_team_id": 43334,
+              "home": "Newcastle United",
+              "away": "Chelsea",
+              "home_team_id": 29718,
+              "away_team_id": 42483,
               "raw_state": {
                 "description": "Not started",
                 "score": {
@@ -1236,12 +1288,12 @@
               "country": "England"
             },
             {
-              "highlightly_match_id": "1325519235",
+              "highlightly_match_id": "1325521788",
               "date": "2027-02-06T15:00:00.000Z",
-              "home": "Fulham",
-              "away": "Manchester City",
-              "home_team_id": 31420,
-              "away_team_id": 43334,
+              "home": "Manchester United",
+              "away": "Chelsea",
+              "home_team_id": 28867,
+              "away_team_id": 42483,
               "raw_state": {
                 "description": "Not started",
                 "score": {
@@ -1263,239 +1315,18 @@
             }
           ]
         },
-        "Fulham": {
-          "normalized_team_records": 29,
-          "status_counts": {
-            "scheduled": 19,
-            "finished": 10
-          },
-          "raw_state_descriptions": {
-            "Not started": 19,
-            "Finished": 10
-          },
-          "completed_score_valid": 10,
+        "Leeds United": {
+          "normalized_team_records": 0,
+          "status_counts": {},
+          "raw_state_descriptions": {},
+          "completed_score_valid": 0,
           "finished_missing_score": 0,
-          "sample_records": [
-            {
-              "highlightly_match_id": "1325561785",
-              "date": "2027-03-13T15:00:00.000Z",
-              "home": "Crystal Palace",
-              "away": "Fulham",
-              "home_team_id": 45036,
-              "away_team_id": 31420,
-              "raw_state": {
-                "description": "Not started",
-                "score": {
-                  "current": null,
-                  "penalties": null
-                }
-              },
-              "normalized_status": "scheduled",
-              "normalized_score": [
-                null,
-                null
-              ],
-              "league": {
-                "id": 33973,
-                "name": "Premier League",
-                "season": 2026
-              },
-              "country": "England"
-            },
-            {
-              "highlightly_match_id": "1325552424",
-              "date": "2027-03-03T20:00:00.000Z",
-              "home": "Brighton",
-              "away": "Fulham",
-              "home_team_id": 44185,
-              "away_team_id": 31420,
-              "raw_state": {
-                "description": "Not started",
-                "score": {
-                  "current": null,
-                  "penalties": null
-                }
-              },
-              "normalized_status": "scheduled",
-              "normalized_score": [
-                null,
-                null
-              ],
-              "league": {
-                "id": 33973,
-                "name": "Premier League",
-                "season": 2026
-              },
-              "country": "England"
-            },
-            {
-              "highlightly_match_id": "1325544765",
-              "date": "2027-02-27T15:00:00.000Z",
-              "home": "Fulham",
-              "away": "Leeds",
-              "home_team_id": 31420,
-              "away_team_id": 54397,
-              "raw_state": {
-                "description": "Not started",
-                "score": {
-                  "current": null,
-                  "penalties": null
-                }
-              },
-              "normalized_status": "scheduled",
-              "normalized_score": [
-                null,
-                null
-              ],
-              "league": {
-                "id": 33973,
-                "name": "Premier League",
-                "season": 2026
-              },
-              "country": "England"
-            },
-            {
-              "highlightly_match_id": "1325532851",
-              "date": "2027-02-20T15:00:00.000Z",
-              "home": "Arsenal",
-              "away": "Fulham",
-              "home_team_id": 36526,
-              "away_team_id": 31420,
-              "raw_state": {
-                "description": "Not started",
-                "score": {
-                  "current": null,
-                  "penalties": null
-                }
-              },
-              "normalized_status": "scheduled",
-              "normalized_score": [
-                null,
-                null
-              ],
-              "league": {
-                "id": 33973,
-                "name": "Premier League",
-                "season": 2026
-              },
-              "country": "England"
-            },
-            {
-              "highlightly_match_id": "1325527745",
-              "date": "2027-02-10T20:00:00.000Z",
-              "home": "Fulham",
-              "away": "Nottingham Forest",
-              "home_team_id": 31420,
-              "away_team_id": 56099,
-              "raw_state": {
-                "description": "Not started",
-                "score": {
-                  "current": null,
-                  "penalties": null
-                }
-              },
-              "normalized_status": "scheduled",
-              "normalized_score": [
-                null,
-                null
-              ],
-              "league": {
-                "id": 33973,
-                "name": "Premier League",
-                "season": 2026
-              },
-              "country": "England"
-            },
-            {
-              "highlightly_match_id": "1325519235",
-              "date": "2027-02-06T15:00:00.000Z",
-              "home": "Fulham",
-              "away": "Manchester City",
-              "home_team_id": 31420,
-              "away_team_id": 43334,
-              "raw_state": {
-                "description": "Not started",
-                "score": {
-                  "current": null,
-                  "penalties": null
-                }
-              },
-              "normalized_status": "scheduled",
-              "normalized_score": [
-                null,
-                null
-              ],
-              "league": {
-                "id": 33973,
-                "name": "Premier League",
-                "season": 2026
-              },
-              "country": "England"
-            }
-          ]
+          "sample_records": []
         }
       }
     },
     "team_history_coverage": {
-      "Manchester City": {
-        "highlightly_completed_score_valid": 10,
-        "highlightly_exact_matches": 7,
-        "highlightly_unmatched_count": 3,
-        "sportmonks_completed_score_valid": 10,
-        "api_ninjas_completed_score_valid": 10,
-        "api_ninjas_exact_matches": 10,
-        "api_ninjas_unmatched_count": 0,
-        "api_ninjas_unmatched_candidates": [],
-        "exact_matches_across_sources": 7,
-        "highlightly_results_not_found_in_sportmonks": 3,
-        "latest_highlightly_completed_match": {
-          "kickoff_utc": "2026-11-07T17:30:00+00:00",
-          "home": "Nottingham Forest",
-          "away": "Manchester City",
-          "score": [
-            3,
-            1
-          ],
-          "highlightly_match_id": "1325403499"
-        },
-        "unmatched_completed_candidates": [
-          {
-            "kickoff_utc": "2026-10-17T14:00:00+00:00",
-            "home": "Manchester City",
-            "away": "Ipswich",
-            "score": [
-              3,
-              2
-            ],
-            "highlightly_match_id": "1325376267",
-            "review_status": "candidate_only_not_added_to_prediction_history"
-          },
-          {
-            "kickoff_utc": "2026-09-05T14:00:00+00:00",
-            "home": "Manchester City",
-            "away": "Coventry",
-            "score": [
-              1,
-              0
-            ],
-            "highlightly_match_id": "1325343078",
-            "review_status": "candidate_only_not_added_to_prediction_history"
-          },
-          {
-            "kickoff_utc": "2026-08-23T13:00:00+00:00",
-            "home": "Manchester City",
-            "away": "Bournemouth",
-            "score": [
-              2,
-              1
-            ],
-            "highlightly_match_id": "1325326058",
-            "review_status": "candidate_only_not_added_to_prediction_history"
-          }
-        ],
-        "interpretation": "Provider-specific unmatched results are review candidates, not accepted extra matches. Exact competition, season, home/away teams and kickoff must match before joining."
-      },
-      "Fulham": {
+      "Chelsea": {
         "highlightly_completed_score_valid": 10,
         "highlightly_exact_matches": 8,
         "highlightly_unmatched_count": 2,
@@ -1507,548 +1338,68 @@
         "exact_matches_across_sources": 8,
         "highlightly_results_not_found_in_sportmonks": 2,
         "latest_highlightly_completed_match": {
-          "kickoff_utc": "2026-11-07T15:00:00+00:00",
-          "home": "Fulham",
-          "away": "Newcastle United",
+          "kickoff_utc": "2026-11-08T14:00:00+00:00",
+          "home": "Sunderland",
+          "away": "Chelsea",
           "score": [
             1,
-            1
+            0
           ],
-          "highlightly_match_id": "1325400095"
+          "highlightly_match_id": "1325404350"
         },
         "unmatched_completed_candidates": [
           {
-            "kickoff_utc": "2026-10-24T14:00:00+00:00",
-            "home": "Coventry",
-            "away": "Fulham",
+            "kickoff_utc": "2026-10-24T16:30:00+00:00",
+            "home": "Chelsea",
+            "away": "Tottenham",
             "score": [
               0,
-              1
+              2
             ],
-            "highlightly_match_id": "1325382224",
+            "highlightly_match_id": "1325381373",
             "review_status": "candidate_only_not_added_to_prediction_history"
           },
           {
             "kickoff_utc": "2026-10-10T14:00:00+00:00",
-            "home": "Ipswich",
-            "away": "Fulham",
+            "home": "Chelsea",
+            "away": "Bournemouth",
             "score": [
-              2,
+              5,
               1
             ],
-            "highlightly_match_id": "1325367757",
+            "highlightly_match_id": "1325364353",
             "review_status": "candidate_only_not_added_to_prediction_history"
           }
         ],
+        "interpretation": "Provider-specific unmatched results are review candidates, not accepted extra matches. Exact competition, season, home/away teams and kickoff must match before joining."
+      },
+      "Leeds United": {
+        "highlightly_completed_score_valid": 0,
+        "highlightly_exact_matches": 0,
+        "highlightly_unmatched_count": 0,
+        "sportmonks_completed_score_valid": 10,
+        "api_ninjas_completed_score_valid": 10,
+        "api_ninjas_exact_matches": 10,
+        "api_ninjas_unmatched_count": 0,
+        "api_ninjas_unmatched_candidates": [],
+        "exact_matches_across_sources": 0,
+        "highlightly_results_not_found_in_sportmonks": 0,
+        "latest_highlightly_completed_match": null,
+        "unmatched_completed_candidates": [],
         "interpretation": "Provider-specific unmatched results are review candidates, not accepted extra matches. Exact competition, season, home/away teams and kickoff must match before joining."
       }
     },
     "candidate_verification": [
       {
         "highlightly_candidate": {
-          "kickoff_utc": "2026-10-17T14:00:00+00:00",
-          "home": "Manchester City",
-          "away": "Ipswich",
-          "score": [
-            3,
-            2
-          ],
-          "highlightly_match_id": "1325376267"
-        },
-        "sportmonks_date_query": "2026-10-17",
-        "sportmonks_fixtures_returned_for_date": 5,
-        "date_fixture_participant_catalog": [
-          {
-            "team_id": 8,
-            "provider_names": [
-              "Liverpool"
-            ],
-            "fixture_ids": [
-              19722142
-            ]
-          },
-          {
-            "team_id": 9,
-            "provider_names": [
-              "Manchester City"
-            ],
-            "fixture_ids": [
-              19722137
-            ]
-          },
-          {
-            "team_id": 11,
-            "provider_names": [
-              "Fulham"
-            ],
-            "fixture_ids": [
-              19722139
-            ]
-          },
-          {
-            "team_id": 13,
-            "provider_names": [
-              "Everton"
-            ],
-            "fixture_ids": [
-              19722140
-            ]
-          },
-          {
-            "team_id": 15,
-            "provider_names": [
-              "Aston Villa"
-            ],
-            "fixture_ids": [
-              19722136
-            ]
-          },
-          {
-            "team_id": 18,
-            "provider_names": [
-              "Chelsea"
-            ],
-            "fixture_ids": [
-              19722140
-            ]
-          },
-          {
-            "team_id": 20,
-            "provider_names": [
-              "Newcastle United"
-            ],
-            "fixture_ids": [
-              19722136
-            ]
-          },
-          {
-            "team_id": 22,
-            "provider_names": [
-              "Hull City"
-            ],
-            "fixture_ids": [
-              19722139
-            ]
-          },
-          {
-            "team_id": 116,
-            "provider_names": [
-              "Ipswich Town"
-            ],
-            "fixture_ids": [
-              19722137
-            ]
-          },
-          {
-            "team_id": 236,
-            "provider_names": [
-              "Brentford"
-            ],
-            "fixture_ids": [
-              19722142
-            ]
-          }
-        ],
-        "expected_identity": {
-          "season_id": 28083,
-          "league_id": 8,
-          "home_team_id": 9,
-          "away_team_id": 116
-        },
-        "team_mapping_status": "exact_team_ids_resolved",
-        "same_season_and_competition_fixtures": 5,
-        "exact_home_away_team_fixtures": 1,
-        "exact_kickoff_fixtures": 1,
-        "exact_completed_score_valid_fixtures": 1,
-        "candidate_score_agreement": true,
-        "sportmonks_candidates": [
-          {
-            "fixture_id": 19722137,
-            "season_id": 28083,
-            "league_id": 8,
-            "kickoff_utc": "2026-10-17 14:00:00",
-            "kickoff_exact_match": true,
-            "home": "Manchester City",
-            "away": "Ipswich Town",
-            "home_team_id": 9,
-            "away_team_id": 116,
-            "state_id": 5,
-            "state": "FT",
-            "completed": true,
-            "score": [
-              3,
-              2
-            ],
-            "score_valid": true
-          }
-        ],
-        "verification_status": "exact_fixture_and_score_agree",
-        "team_mapping_details": {
-          "Manchester City": {
-            "team_id": 9,
-            "status": "exact_name_resolved_from_selected_season_team_list",
-            "matched_provider_names": [
-              "Manchester City"
-            ]
-          },
-          "Ipswich": {
-            "team_id": 116,
-            "status": "explicit_alias_resolved_from_date_fixtures",
-            "matched_provider_names": [
-              "Ipswich Town"
-            ],
-            "candidate_matches": [
-              {
-                "team_id": 116,
-                "provider_names": [
-                  "Ipswich Town"
-                ]
-              }
-            ]
-          }
-        },
-        "verification_source": "selected_season_fixture_collection"
-      },
-      {
-        "highlightly_candidate": {
-          "kickoff_utc": "2026-09-05T14:00:00+00:00",
-          "home": "Manchester City",
-          "away": "Coventry",
-          "score": [
-            1,
-            0
-          ],
-          "highlightly_match_id": "1325343078"
-        },
-        "sportmonks_date_query": "2026-09-05",
-        "sportmonks_fixtures_returned_for_date": 7,
-        "date_fixture_participant_catalog": [
-          {
-            "team_id": 3,
-            "provider_names": [
-              "Sunderland"
-            ],
-            "fixture_ids": [
-              19722182
-            ]
-          },
-          {
-            "team_id": 6,
-            "provider_names": [
-              "Tottenham Hotspur"
-            ],
-            "fixture_ids": [
-              19722174
-            ]
-          },
-          {
-            "team_id": 9,
-            "provider_names": [
-              "Manchester City"
-            ],
-            "fixture_ids": [
-              19722176
-            ]
-          },
-          {
-            "team_id": 11,
-            "provider_names": [
-              "Fulham"
-            ],
-            "fixture_ids": [
-              19722179
-            ]
-          },
-          {
-            "team_id": 15,
-            "provider_names": [
-              "Aston Villa"
-            ],
-            "fixture_ids": [
-              19722178
-            ]
-          },
-          {
-            "team_id": 20,
-            "provider_names": [
-              "Newcastle United"
-            ],
-            "fixture_ids": [
-              19722175
-            ]
-          },
-          {
-            "team_id": 22,
-            "provider_names": [
-              "Hull City"
-            ],
-            "fixture_ids": [
-              19722178
-            ]
-          },
-          {
-            "team_id": 51,
-            "provider_names": [
-              "Crystal Palace"
-            ],
-            "fixture_ids": [
-              19722179
-            ]
-          },
-          {
-            "team_id": 52,
-            "provider_names": [
-              "AFC Bournemouth"
-            ],
-            "fixture_ids": [
-              19722175
-            ]
-          },
-          {
-            "team_id": 63,
-            "provider_names": [
-              "Nottingham Forest"
-            ],
-            "fixture_ids": [
-              19722174
-            ]
-          },
-          {
-            "team_id": 71,
-            "provider_names": [
-              "Leeds United"
-            ],
-            "fixture_ids": [
-              19722181
-            ]
-          },
-          {
-            "team_id": 78,
-            "provider_names": [
-              "Brighton & Hove Albion"
-            ],
-            "fixture_ids": [
-              19722181
-            ]
-          },
-          {
-            "team_id": 117,
-            "provider_names": [
-              "Coventry City"
-            ],
-            "fixture_ids": [
-              19722176
-            ]
-          },
-          {
-            "team_id": 236,
-            "provider_names": [
-              "Brentford"
-            ],
-            "fixture_ids": [
-              19722182
-            ]
-          }
-        ],
-        "expected_identity": {
-          "season_id": 28083,
-          "league_id": 8,
-          "home_team_id": 9,
-          "away_team_id": 117
-        },
-        "team_mapping_status": "exact_team_ids_resolved",
-        "same_season_and_competition_fixtures": 7,
-        "exact_home_away_team_fixtures": 1,
-        "exact_kickoff_fixtures": 1,
-        "exact_completed_score_valid_fixtures": 1,
-        "candidate_score_agreement": true,
-        "sportmonks_candidates": [
-          {
-            "fixture_id": 19722176,
-            "season_id": 28083,
-            "league_id": 8,
-            "kickoff_utc": "2026-09-05 14:00:00",
-            "kickoff_exact_match": true,
-            "home": "Manchester City",
-            "away": "Coventry City",
-            "home_team_id": 9,
-            "away_team_id": 117,
-            "state_id": 5,
-            "state": "FT",
-            "completed": true,
-            "score": [
-              1,
-              0
-            ],
-            "score_valid": true
-          }
-        ],
-        "verification_status": "exact_fixture_and_score_agree",
-        "team_mapping_details": {
-          "Manchester City": {
-            "team_id": 9,
-            "status": "exact_name_resolved_from_selected_season_team_list",
-            "matched_provider_names": [
-              "Manchester City"
-            ]
-          },
-          "Coventry": {
-            "team_id": 117,
-            "status": "explicit_alias_resolved_from_date_fixtures",
-            "matched_provider_names": [
-              "Coventry City"
-            ],
-            "candidate_matches": [
-              {
-                "team_id": 117,
-                "provider_names": [
-                  "Coventry City"
-                ]
-              }
-            ]
-          }
-        },
-        "verification_source": "selected_season_fixture_collection"
-      },
-      {
-        "highlightly_candidate": {
-          "kickoff_utc": "2026-08-23T13:00:00+00:00",
-          "home": "Manchester City",
-          "away": "Bournemouth",
-          "score": [
-            2,
-            1
-          ],
-          "highlightly_match_id": "1325326058"
-        },
-        "sportmonks_date_query": "2026-08-23",
-        "sportmonks_fixtures_returned_for_date": 3,
-        "date_fixture_participant_catalog": [
-          {
-            "team_id": 8,
-            "provider_names": [
-              "Liverpool"
-            ],
-            "fixture_ids": [
-              19722195
-            ]
-          },
-          {
-            "team_id": 9,
-            "provider_names": [
-              "Manchester City"
-            ],
-            "fixture_ids": [
-              19722196
-            ]
-          },
-          {
-            "team_id": 15,
-            "provider_names": [
-              "Aston Villa"
-            ],
-            "fixture_ids": [
-              19722197
-            ]
-          },
-          {
-            "team_id": 20,
-            "provider_names": [
-              "Newcastle United"
-            ],
-            "fixture_ids": [
-              19722195
-            ]
-          },
-          {
-            "team_id": 52,
-            "provider_names": [
-              "AFC Bournemouth"
-            ],
-            "fixture_ids": [
-              19722196
-            ]
-          },
-          {
-            "team_id": 78,
-            "provider_names": [
-              "Brighton & Hove Albion"
-            ],
-            "fixture_ids": [
-              19722197
-            ]
-          }
-        ],
-        "expected_identity": {
-          "season_id": 28083,
-          "league_id": 8,
-          "home_team_id": 9,
-          "away_team_id": 52
-        },
-        "team_mapping_status": "exact_team_ids_resolved",
-        "same_season_and_competition_fixtures": 3,
-        "exact_home_away_team_fixtures": 1,
-        "exact_kickoff_fixtures": 1,
-        "exact_completed_score_valid_fixtures": 1,
-        "candidate_score_agreement": true,
-        "sportmonks_candidates": [
-          {
-            "fixture_id": 19722196,
-            "season_id": 28083,
-            "league_id": 8,
-            "kickoff_utc": "2026-08-23 13:00:00",
-            "kickoff_exact_match": true,
-            "home": "Manchester City",
-            "away": "AFC Bournemouth",
-            "home_team_id": 9,
-            "away_team_id": 52,
-            "state_id": 5,
-            "state": "FT",
-            "completed": true,
-            "score": [
-              2,
-              1
-            ],
-            "score_valid": true
-          }
-        ],
-        "verification_status": "exact_fixture_and_score_agree",
-        "team_mapping_details": {
-          "Manchester City": {
-            "team_id": 9,
-            "status": "exact_name_resolved_from_selected_season_team_list",
-            "matched_provider_names": [
-              "Manchester City"
-            ]
-          },
-          "Bournemouth": {
-            "team_id": 52,
-            "status": "explicit_alias_resolved_from_date_fixtures",
-            "matched_provider_names": [
-              "AFC Bournemouth"
-            ],
-            "candidate_matches": [
-              {
-                "team_id": 52,
-                "provider_names": [
-                  "AFC Bournemouth"
-                ]
-              }
-            ]
-          }
-        },
-        "verification_source": "selected_season_fixture_collection"
-      },
-      {
-        "highlightly_candidate": {
-          "kickoff_utc": "2026-10-24T14:00:00+00:00",
-          "home": "Coventry",
-          "away": "Fulham",
+          "kickoff_utc": "2026-10-24T16:30:00+00:00",
+          "home": "Chelsea",
+          "away": "Tottenham",
           "score": [
             0,
-            1
+            2
           ],
-          "highlightly_match_id": "1325382224"
+          "highlightly_match_id": "1325381373"
         },
         "sportmonks_date_query": "2026-10-24",
         "sportmonks_fixtures_returned_for_date": 4,
@@ -2129,8 +1480,8 @@
         "expected_identity": {
           "season_id": 28083,
           "league_id": 8,
-          "home_team_id": 117,
-          "away_team_id": 11
+          "home_team_id": 18,
+          "away_team_id": 6
         },
         "team_mapping_status": "exact_team_ids_resolved",
         "same_season_and_competition_fixtures": 4,
@@ -2140,47 +1491,47 @@
         "candidate_score_agreement": true,
         "sportmonks_candidates": [
           {
-            "fixture_id": 19722130,
+            "fixture_id": 19722131,
             "season_id": 28083,
             "league_id": 8,
-            "kickoff_utc": "2026-10-24 14:00:00",
+            "kickoff_utc": "2026-10-24 16:30:00",
             "kickoff_exact_match": true,
-            "home": "Coventry City",
-            "away": "Fulham",
-            "home_team_id": 117,
-            "away_team_id": 11,
+            "home": "Chelsea",
+            "away": "Tottenham Hotspur",
+            "home_team_id": 18,
+            "away_team_id": 6,
             "state_id": 5,
             "state": "FT",
             "completed": true,
             "score": [
               0,
-              1
+              2
             ],
             "score_valid": true
           }
         ],
         "verification_status": "exact_fixture_and_score_agree",
         "team_mapping_details": {
-          "Coventry": {
-            "team_id": 117,
+          "Chelsea": {
+            "team_id": 18,
+            "status": "exact_name_resolved_from_selected_season_team_list",
+            "matched_provider_names": [
+              "Chelsea"
+            ]
+          },
+          "Tottenham": {
+            "team_id": 6,
             "status": "explicit_alias_resolved_from_date_fixtures",
             "matched_provider_names": [
-              "Coventry City"
+              "Tottenham Hotspur"
             ],
             "candidate_matches": [
               {
-                "team_id": 117,
+                "team_id": 6,
                 "provider_names": [
-                  "Coventry City"
+                  "Tottenham Hotspur"
                 ]
               }
-            ]
-          },
-          "Fulham": {
-            "team_id": 11,
-            "status": "exact_name_resolved_from_selected_season_team_list",
-            "matched_provider_names": [
-              "Fulham"
             ]
           }
         },
@@ -2189,13 +1540,13 @@
       {
         "highlightly_candidate": {
           "kickoff_utc": "2026-10-10T14:00:00+00:00",
-          "home": "Ipswich",
-          "away": "Fulham",
+          "home": "Chelsea",
+          "away": "Bournemouth",
           "score": [
-            2,
+            5,
             1
           ],
-          "highlightly_match_id": "1325367757"
+          "highlightly_match_id": "1325364353"
         },
         "sportmonks_date_query": "2026-10-10",
         "sportmonks_fixtures_returned_for_date": 6,
@@ -2312,8 +1663,8 @@
         "expected_identity": {
           "season_id": 28083,
           "league_id": 8,
-          "home_team_id": 116,
-          "away_team_id": 11
+          "home_team_id": 18,
+          "away_team_id": 52
         },
         "team_mapping_status": "exact_team_ids_resolved",
         "same_season_and_competition_fixtures": 6,
@@ -2323,20 +1674,20 @@
         "candidate_score_agreement": true,
         "sportmonks_candidates": [
           {
-            "fixture_id": 19722147,
+            "fixture_id": 19722151,
             "season_id": 28083,
             "league_id": 8,
             "kickoff_utc": "2026-10-10 14:00:00",
             "kickoff_exact_match": true,
-            "home": "Ipswich Town",
-            "away": "Fulham",
-            "home_team_id": 116,
-            "away_team_id": 11,
+            "home": "Chelsea",
+            "away": "AFC Bournemouth",
+            "home_team_id": 18,
+            "away_team_id": 52,
             "state_id": 5,
             "state": "FT",
             "completed": true,
             "score": [
-              2,
+              5,
               1
             ],
             "score_valid": true
@@ -2344,26 +1695,26 @@
         ],
         "verification_status": "exact_fixture_and_score_agree",
         "team_mapping_details": {
-          "Ipswich": {
-            "team_id": 116,
+          "Chelsea": {
+            "team_id": 18,
+            "status": "exact_name_resolved_from_selected_season_team_list",
+            "matched_provider_names": [
+              "Chelsea"
+            ]
+          },
+          "Bournemouth": {
+            "team_id": 52,
             "status": "explicit_alias_resolved_from_date_fixtures",
             "matched_provider_names": [
-              "Ipswich Town"
+              "AFC Bournemouth"
             ],
             "candidate_matches": [
               {
-                "team_id": 116,
+                "team_id": 52,
                 "provider_names": [
-                  "Ipswich Town"
+                  "AFC Bournemouth"
                 ]
               }
-            ]
-          },
-          "Fulham": {
-            "team_id": 11,
-            "status": "exact_name_resolved_from_selected_season_team_list",
-            "matched_provider_names": [
-              "Fulham"
             ]
           }
         },
@@ -2376,59 +1727,26 @@
       "sportmonks"
     ],
     "candidate_review_summary": {
-      "unmatched_candidates_seen": 5,
+      "unmatched_candidates_seen": 2,
       "verified_exact_fixture_and_score": [
         {
-          "highlightly_match_id": "1325376267",
-          "home": "Manchester City",
-          "away": "Ipswich",
-          "kickoff_utc": "2026-10-17T14:00:00+00:00",
+          "highlightly_match_id": "1325381373",
+          "home": "Chelsea",
+          "away": "Tottenham",
+          "kickoff_utc": "2026-10-24T16:30:00+00:00",
           "score": [
-            3,
+            0,
             2
           ],
           "verification_status": "exact_fixture_and_score_agree"
         },
         {
-          "highlightly_match_id": "1325343078",
-          "home": "Manchester City",
-          "away": "Coventry",
-          "kickoff_utc": "2026-09-05T14:00:00+00:00",
-          "score": [
-            1,
-            0
-          ],
-          "verification_status": "exact_fixture_and_score_agree"
-        },
-        {
-          "highlightly_match_id": "1325326058",
-          "home": "Manchester City",
+          "highlightly_match_id": "1325364353",
+          "home": "Chelsea",
           "away": "Bournemouth",
-          "kickoff_utc": "2026-08-23T13:00:00+00:00",
-          "score": [
-            2,
-            1
-          ],
-          "verification_status": "exact_fixture_and_score_agree"
-        },
-        {
-          "highlightly_match_id": "1325382224",
-          "home": "Coventry",
-          "away": "Fulham",
-          "kickoff_utc": "2026-10-24T14:00:00+00:00",
-          "score": [
-            0,
-            1
-          ],
-          "verification_status": "exact_fixture_and_score_agree"
-        },
-        {
-          "highlightly_match_id": "1325367757",
-          "home": "Ipswich",
-          "away": "Fulham",
           "kickoff_utc": "2026-10-10T14:00:00+00:00",
           "score": [
-            2,
+            5,
             1
           ],
           "verification_status": "exact_fixture_and_score_agree"
@@ -2454,18 +1772,18 @@
       "verified": true,
       "status": "verified",
       "reason": "Exact competition-season fixture identity and future kickoff verified.",
-      "fixture_id": 19722096,
-      "kickoff_utc": "2026-11-21T12:30:00+00:00",
+      "fixture_id": 19722100,
+      "kickoff_utc": "2026-11-21T15:00:00+00:00",
       "source_updated_at": null,
-      "source_fetched_at": "2026-11-10T07:07:16.297627+00:00",
-      "source_age_seconds": 485.4,
-      "source_age_minutes": 8.1,
+      "source_fetched_at": "2026-11-10T07:24:25.423546+00:00",
+      "source_age_seconds": 25.6,
+      "source_age_minutes": 0.4,
       "source_freshness": "fresh",
       "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
     },
     "teams": {
       "home": {
-        "team": "Manchester City",
+        "team": "Chelsea",
         "completed_matches_available": 10,
         "history_minimum": 5,
         "history_target": 10,
@@ -2473,6 +1791,49 @@
         "prediction_allowed_by_history": true,
         "matches_with_statistics": 10,
         "matches_with_opponent_strength": 10,
+        "history_collection_diagnostics": {
+          "fixtures_scanned": 380,
+          "same_season_fixtures": 380,
+          "team_fixtures": 38,
+          "completed_fixtures": 10,
+          "fixtures_with_valid_scores": 10,
+          "excluded_wrong_season": 0,
+          "excluded_missing_participants": 0,
+          "excluded_other_team": 342,
+          "excluded_not_completed": 28,
+          "excluded_missing_scores": 0,
+          "excluded_invalid_kickoff": 0,
+          "excluded_invalid_scores": 0,
+          "excluded_duplicate_fixture_id": 0,
+          "history_shortfall": 0,
+          "history_latest_match_at": "2026-11-08T14:00:00+00:00",
+          "history_oldest_match_at": "2026-08-24T19:00:00+00:00",
+          "history_collection_fetched_at": null,
+          "history_order": "newest_first_by_parsed_utc_kickoff",
+          "schedule_unique_fixture_count": 380,
+          "duplicate_fixture_id_count": 0,
+          "duplicate_fixture_ids": [],
+          "team_fixture_accounting_gap": 0,
+          "team_fixture_accounting_status": "balanced",
+          "statistics_core_metrics": [
+            "Ball Possession",
+            "Passes %",
+            "Total Shots",
+            "Shots on Goal",
+            "Corner Kicks"
+          ],
+          "statistics_coverage_by_metric": {
+            "Ball Possession": 10,
+            "Passes %": 10,
+            "Total Shots": 10,
+            "Shots on Goal": 0,
+            "Corner Kicks": 10
+          },
+          "matches_with_any_statistics": 10,
+          "matches_with_complete_core_statistics": 0,
+          "core_statistics_completeness_pct": 80.0,
+          "history_integrity_status": "ok"
+        },
         "tactical_components_available": {
           "playing_style": true,
           "defensive_structure": true,
@@ -2482,7 +1843,7 @@
         "confirmed_lineup_evidence": "unknown"
       },
       "away": {
-        "team": "Fulham",
+        "team": "Leeds United",
         "completed_matches_available": 10,
         "history_minimum": 5,
         "history_target": 10,
@@ -2490,6 +1851,49 @@
         "prediction_allowed_by_history": true,
         "matches_with_statistics": 10,
         "matches_with_opponent_strength": 10,
+        "history_collection_diagnostics": {
+          "fixtures_scanned": 380,
+          "same_season_fixtures": 380,
+          "team_fixtures": 38,
+          "completed_fixtures": 10,
+          "fixtures_with_valid_scores": 10,
+          "excluded_wrong_season": 0,
+          "excluded_missing_participants": 0,
+          "excluded_other_team": 342,
+          "excluded_not_completed": 28,
+          "excluded_missing_scores": 0,
+          "excluded_invalid_kickoff": 0,
+          "excluded_invalid_scores": 0,
+          "excluded_duplicate_fixture_id": 0,
+          "history_shortfall": 0,
+          "history_latest_match_at": "2026-11-07T12:30:00+00:00",
+          "history_oldest_match_at": "2026-08-22T14:00:00+00:00",
+          "history_collection_fetched_at": null,
+          "history_order": "newest_first_by_parsed_utc_kickoff",
+          "schedule_unique_fixture_count": 380,
+          "duplicate_fixture_id_count": 0,
+          "duplicate_fixture_ids": [],
+          "team_fixture_accounting_gap": 0,
+          "team_fixture_accounting_status": "balanced",
+          "statistics_core_metrics": [
+            "Ball Possession",
+            "Passes %",
+            "Total Shots",
+            "Shots on Goal",
+            "Corner Kicks"
+          ],
+          "statistics_coverage_by_metric": {
+            "Ball Possession": 10,
+            "Passes %": 10,
+            "Total Shots": 10,
+            "Shots on Goal": 0,
+            "Corner Kicks": 10
+          },
+          "matches_with_any_statistics": 10,
+          "matches_with_complete_core_statistics": 0,
+          "core_statistics_completeness_pct": 80.0,
+          "history_integrity_status": "ok"
+        },
         "tactical_components_available": {
           "playing_style": true,
           "defensive_structure": true,
@@ -2514,6 +1918,6 @@
     "weights_total": 1.0,
     "model_impact": "Diagnostics only; weights, recency weighting, prediction inputs and missing-data rules are not changed."
   },
-  "generated_at_utc": "2026-11-10T07:15:25.254451+00:00",
+  "generated_at_utc": "2026-11-10T07:24:54.266439+00:00",
   "report_name": "system_diagnostics"
 }
