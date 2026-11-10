@@ -9,6 +9,7 @@ from typing import Any
 
 from openscores import OpenScoresClient
 from openscores_normalizer import normalize_openscores_fixtures
+from provider_data_storage import save_discovered_competition_registry
 from openscores_observation_store import (
     reconcile_openscores_observations,
     upsert_openscores_observations,
@@ -66,6 +67,7 @@ def run_sync(
         "prediction_ledger_touched": False,
     }
     observations = []
+    competition_registry = []
     with client_factory() as client:
         league_result = client.list_leagues()
         leagues, _ = client._league_collection(league_result.get("data"))
@@ -98,6 +100,36 @@ def run_sync(
                 })
                 continue
             report["seasons_sampled"] += 1
+            country_value = league.get("country")
+            country_name = (
+                country_value.get("name") if isinstance(country_value, dict)
+                else country_value
+            ) or league.get("country_name") or "Unknown"
+            season_name = (
+                season.get("name") or season.get("season_name")
+                or season.get("year") or season.get("start_year")
+                or str(season_id)
+            )
+            competition_registry.append({
+                "identity_key": f"openscores|{league_id}|{season_id}",
+                "provider": "openscores",
+                "provider_competition_id": str(league_id),
+                "provider_season_id": str(season_id),
+                "competition_name": league_name,
+                "country": str(country_name),
+                "season_name": str(season_name),
+                "season_start": season.get("start_date") or season.get("start"),
+                "season_end": season.get("end_date") or season.get("end"),
+                "is_current": season.get("is_current"),
+                "discovery_status": "discovered",
+                "registration_status": "registered",
+                "crosswalk_status": "unmapped",
+                "canonical_competition_id": None,
+                "prediction_ready": False,
+                "readiness_reason": "OpenScores entity mapping review required; discovery never promotes readiness.",
+                "raw_competition": league,
+                "raw_season": season,
+            })
             fixture_result = client.list_fixtures(season_id=season_id)
             fixtures, collection_path = _records(
                 fixture_result.get("data"),
@@ -125,6 +157,10 @@ def run_sync(
                 "rejected_reasons": normalized["rejected"],
             })
 
+    registry_saved = save_discovered_competition_registry(
+        db_url, records=competition_registry
+    )
+    report["competition_registry_records_saved"] = registry_saved
     saved = upsert_openscores_observations(db_url, observations)
     report.update(saved)
     report["reconciliation"] = reconcile_openscores_observations(db_url)
@@ -147,6 +183,7 @@ def main() -> int:
                 "status", "leagues_discovered", "seasons_sampled",
                 "fixtures_received", "fixtures_normalized", "fixtures_rejected",
                 "observations_upserted", "canonical_fixtures_written",
+                "competition_registry_records_saved",
                 "prediction_ledger_touched",
             ):
                 summary.write(f"- {key}: {report.get(key)}\n")
