@@ -316,5 +316,42 @@ class SportmonksLayer2Tests(unittest.TestCase):
             extract_sportmonks_match_details(row, 20, 10, 2026)
 
 
+    def test_profile_history_is_sorted_by_parsed_utc_kickoff(self):
+        older = fixture(1, 10, 20, 1, 0)
+        older["starting_at"] = "2026-10-01T20:00:00+03:00"
+        newer = fixture(2, 10, 20, 2, 0)
+        newer["starting_at"] = "2026-10-01T18:30:00Z"
+        profile = collect_sportmonks_team_profile(
+            {"id": 10, "name": "Home FC"}, 2026, [older, newer], [],
+        )
+        self.assertEqual([row["fixture_id"] for row in profile["matches"]], [2, 1])
+
+    def test_duplicate_schedule_ids_are_exposed_in_history_integrity_diagnostics(self):
+        row = fixture(1, 10, 20, 1, 0)
+        row["_schedule_duplicate_fixture_ids"] = [101, 102]
+        row["_schedule_unique_fixture_count"] = 38
+        profile = collect_sportmonks_team_profile(
+            {"id": 10, "name": "Home FC"}, 2026, [row], [],
+        )
+        self.assertEqual(profile["data_quality"]["schedule_unique_fixture_count"], 38)
+        self.assertEqual(profile["data_quality"]["duplicate_fixture_id_count"], 2)
+        self.assertEqual(profile["data_quality"]["duplicate_fixture_ids"], ["101", "102"])
+        self.assertEqual(profile["data_quality"]["history_integrity_status"], "issues_detected")
+
+    def test_exact_upcoming_fixture_can_use_iso_kickoff_without_epoch_field(self):
+        from sportmonks_layer2 import find_upcoming_match_fixture
+
+        row = fixture(1, 10, 20, 1, 0, state="NS")
+        row["starting_at"] = "2026-11-08T18:00:00+03:00"
+        row.pop("starting_at_timestamp", None)
+        found = find_upcoming_match_fixture(
+            [row], 10, 20, 2026,
+            now_timestamp=int(__import__("datetime").datetime(
+                2026, 11, 7, 12, tzinfo=__import__("datetime").timezone.utc
+            ).timestamp()),
+        )
+        self.assertIs(found, row)
+
+
 if __name__ == "__main__":
     unittest.main()
