@@ -16,6 +16,7 @@ on:
           - tipmaster_refresh_verify
           - openscores_connection_check
           - openscores_fixture_observation_sync
+          - openscores_entity_mapping_audit
         default: health_check
       season:
         description: "Season start year (Sportmonks current-season path: 2025+)"
@@ -119,7 +120,7 @@ jobs:
               trigger = json.loads(Path(".agent/trigger.json").read_text(encoding="utf-8"))
               operation = trigger.get("operation", "")
 
-          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync", "tipmaster_refresh_verify", "openscores_connection_check", "openscores_fixture_observation_sync"}
+          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync", "tipmaster_refresh_verify", "openscores_connection_check", "openscores_fixture_observation_sync", "openscores_entity_mapping_audit"}
           if operation not in allowed:
               raise SystemExit("Rejected unsupported or missing operation")
           if operation == "prediction_run":
@@ -274,7 +275,7 @@ jobs:
           PY
 
       - name: Install health-check dependencies
-        if: steps.operation.outputs.operation == 'health_check' || steps.operation.outputs.operation == 'full_check' || steps.operation.outputs.operation == 'result_sync' || steps.operation.outputs.operation == 'tipmaster_refresh_verify' || steps.operation.outputs.operation == 'openscores_connection_check' || steps.operation.outputs.operation == 'openscores_fixture_observation_sync'
+        if: steps.operation.outputs.operation == 'health_check' || steps.operation.outputs.operation == 'full_check' || steps.operation.outputs.operation == 'result_sync' || steps.operation.outputs.operation == 'tipmaster_refresh_verify' || steps.operation.outputs.operation == 'openscores_connection_check' || steps.operation.outputs.operation == 'openscores_fixture_observation_sync' || steps.operation.outputs.operation == 'openscores_entity_mapping_audit'
         run: |
           exec > >(tee -a controller-report.txt) 2>&1
           python -m pip install --upgrade pip
@@ -411,6 +412,15 @@ jobs:
           set -euo pipefail
           python openscores_fixture_observation_sync.py
 
+      - name: Audit OpenScores entity mapping candidates (read-only)
+        if: steps.operation.outputs.operation == 'openscores_entity_mapping_audit'
+        env:
+          OPENSCORES_API_KEY: ${{ secrets.OPENSCORES_API_KEY }}
+          PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
+        run: |
+          set -euo pipefail
+          python openscores_entity_mapping_audit.py
+
       - name: Refresh TipMaster and verify Neon persistence
         if: steps.operation.outputs.operation == 'tipmaster_refresh_verify'
         env:
@@ -523,6 +533,7 @@ jobs:
               ("integration-smoke-report.json", "Live integration report"),
               ("openscores-connection-report.json", "OpenScores connection check"),
               ("openscores-fixture-observation-report.json", "OpenScores fixture observation sync"),
+              ("openscores-entity-mapping-audit.json", "OpenScores entity mapping candidate audit"),
               ("prediction-run-report.json", "Automated prediction run report"),
           )
           for filename, heading in report_files:
@@ -624,6 +635,7 @@ jobs:
             deployment-smoke-report.json
             integration-smoke-report.json
             openscores-connection-report.json
+            openscores-entity-mapping-audit.json
             prediction-run-report.json
             watchdog-report.json
             latest-controller-report.json
