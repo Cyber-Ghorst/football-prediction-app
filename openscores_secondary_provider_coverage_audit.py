@@ -35,7 +35,7 @@ def _season_start_year(value: Any) -> int | None:
         value = value.get("year") if value.get("year") is not None else value.get("start")
     if isinstance(value, bool) or value is None:
         return None
-    match = re.search(r"20\\d{2}", str(value))
+    match = re.search(r"20\d{2}", str(value))
     return int(match.group(0)) if match else None
 
 
