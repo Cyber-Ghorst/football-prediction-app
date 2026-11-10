@@ -72,6 +72,14 @@ class LearningExperimentTests(unittest.TestCase):
         self.assertEqual(report["results"]["validation"]["incumbent"]["matches"], 4)
         self.assertEqual(report["results"]["validation"]["candidate"]["matches"], 5)
 
+    def test_invalid_targets_do_not_count_toward_sample_gate(self):
+        dataset = self._dataset()
+        for row in dataset["rows"][:5]:
+            row["target"]["outcome"] = "unknown"
+        report = run_offline_experiments(dataset)
+        self.assertEqual(report["sample_gate"]["verified_fixtures"], 25)
+        self.assertFalse(report["sample_gate"]["passed"])
+
     def test_invalid_gate_and_dataset_shape_raise(self):
         with self.assertRaises(ValueError):
             run_offline_experiments(self._dataset(), minimum_fixtures=0)
