@@ -280,6 +280,7 @@ def build_prediction_record(
         "feature_snapshot_before_kickoff": bool(
             features and kickoff and created_dt and created_dt < kickoff
             and _parse_datetime(features.get("captured_at") or created) is not None
+            and _parse_datetime(features.get("captured_at") or created) <= created_dt
             and _parse_datetime(features.get("captured_at") or created) < kickoff
         ),
         "feature_snapshot_json": feature_snapshot_json,
