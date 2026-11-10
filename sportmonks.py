@@ -178,6 +178,14 @@ class SportmonksClient:
                         duplicate_ids.add(key)
         duplicate_list = sorted(duplicate_ids)
         for fixture in fixtures:
+            try:
+                fixture_id = int(fixture.get("id"))
+            except (TypeError, ValueError):
+                fixture_id = None
+            # A repeated schedule ID is ambiguous even after flattening to one row.
+            # Keep the diagnostic marker so downstream history/fixture selection
+            # can fail closed instead of silently trusting the first occurrence.
+            fixture["_schedule_duplicate"] = fixture_id in duplicate_ids
             fixture["_schedule_duplicate_fixture_ids"] = duplicate_list
             fixture["_schedule_unique_fixture_count"] = len(seen)
         return fixtures
@@ -285,6 +293,8 @@ class SportmonksClient:
                 team_id: [] for team_id in selected_ids
             }
             for fixture in fixtures:
+                if fixture.get("_schedule_duplicate") is True:
+                    continue
                 if not self._fixture_is_completed(fixture):
                     continue
                 for team_id in self._fixture_team_ids(fixture) & selected_ids:
@@ -313,6 +323,8 @@ class SportmonksClient:
             now = int(time.time())
             exact_rows = []
             for fixture in fixtures:
+                if fixture.get("_schedule_duplicate") is True:
+                    continue
                 try:
                     fixture_season = int(fixture.get("season_id"))
                     kickoff = self._fixture_kickoff_timestamp(fixture)
