@@ -170,6 +170,21 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         self.assertFalse(row["eligible_for_review"])
         self.assertEqual(row["exclusion_reason"], "kickoff_missing_timezone_or_precision")
 
+    def test_bzzoiro_does_not_fabricate_missing_competition_identity(self):
+        client = BzzoiroAdapter(token="secret")
+        client._get_json = Mock(return_value={"results": [{
+            "id": 100, "season_id": 2026,
+            "home_team": {"id": 1, "name": "Home FC"},
+            "away_team": {"id": 2, "name": "Away FC"},
+            "event_date": (NOW + timedelta(days=1)).isoformat(),
+            "status": "upcoming",
+        }]})
+        row = client.upcoming()[0]
+        self.assertFalse(row["eligible_for_review"])
+        self.assertIsNone(row["competition_key"])
+        self.assertEqual(row["exclusion_reason"], "missing_competition_or_season_identity")
+        client.close()
+
     def test_only_explicitly_eligible_observations_are_selected(self):
         rows = [
             {"eligible_for_review": True, "provider_fixture_id": "a"},
