@@ -114,9 +114,10 @@ def _observation(
     elif parsed <= fetched_at:
         reason = "kickoff_not_in_future"
     if fixture_id is None or not str(fixture_id).strip():
-        if parsed is not None and home_name and away_name and competition_key and season_key:
+        if home_name and away_name and competition_key and season_key:
+            source_kickoff = parsed.isoformat() if parsed is not None else str(kickoff or "date-unknown")
             fixture_id = _stable_dataset_id(
-                provider, competition_key, season_key, parsed.isoformat(), home_name, away_name
+                provider, competition_key, season_key, source_kickoff, home_name, away_name
             )
         else:
             fixture_id = f"{provider}:unidentified"
