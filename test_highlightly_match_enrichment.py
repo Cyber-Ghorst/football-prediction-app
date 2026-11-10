@@ -456,6 +456,42 @@ class HighlightlyMatchEnrichmentTests(unittest.TestCase):
         self.assertEqual(client.lineup_calls, [])
         self.assertIn("40 minutes before kickoff", report["lineup_not_requested_reason"])
 
+    def test_lineup_rejects_missing_and_duplicate_player_ids(self):
+        base = {
+            "homeTeam": {"id": 11, "name": "Arsenal",
+                         "initialLineup": [{"id": 1, "name": "Keeper"}],
+                         "substitutes": [{"id": 2, "name": "Sub"}]},
+            "awayTeam": {"id": 12, "name": "Chelsea",
+                         "initialLineup": [{"id": 3, "name": "Keeper 2"}],
+                         "substitutes": []},
+        }
+        normalize_highlightly_lineups(
+            base, expected_home="Arsenal", expected_away="Chelsea",
+            match_id=9, expected_home_id=11, expected_away_id=12,
+        )
+
+        duplicate = {
+            **base,
+            "homeTeam": {**base["homeTeam"],
+                         "substitutes": [{"id": 1, "name": "Duplicate"}]},
+        }
+        with self.assertRaisesRegex(ValueError, "duplicate player ID"):
+            normalize_highlightly_lineups(
+                duplicate, expected_home="Arsenal", expected_away="Chelsea",
+                match_id=9, expected_home_id=11, expected_away_id=12,
+            )
+
+        missing = {
+            **base,
+            "homeTeam": {**base["homeTeam"],
+                         "initialLineup": [{"name": "No stable ID"}]},
+        }
+        with self.assertRaisesRegex(ValueError, "without a valid stable ID"):
+            normalize_highlightly_lineups(
+                missing, expected_home="Arsenal", expected_away="Chelsea",
+                match_id=9, expected_home_id=11, expected_away_id=12,
+            )
+
     def test_lineup_wrong_team_identity_is_rejected(self):
         payload = {
             "homeTeam": {"name": "Different Club"},
