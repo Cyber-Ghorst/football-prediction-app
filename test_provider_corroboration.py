@@ -116,6 +116,37 @@ class ProviderCorroborationTests(unittest.TestCase):
         self.assertEqual(row["home_score"], 2)
         self.assertEqual(row["status"], "finished")
 
+    def test_unfinished_status_label_is_not_misclassified_as_finished(self):
+        fixture = sportmonks_fixture()
+        fixture["state_id"] = None
+        fixture["state"] = {"short_name": "unfinished", "name": "Unfinished"}
+        row = canonicalize_sportmonks_fixture(
+            fixture, competition="Premier League", country="England", season=2026,
+        )
+        self.assertEqual(row["status"], "unknown")
+
+    def test_malformed_participant_and_score_envelopes_fail_safely(self):
+        fixture = sportmonks_fixture()
+        fixture["participants"] = [
+            "bad-row",
+            {"id": 1, "name": "Arsenal", "meta": "home"},
+            {"id": 2, "name": "Chelsea", "meta": {"location": "away"}},
+        ]
+        row = canonicalize_sportmonks_fixture(
+            fixture, competition="Premier League", country="England", season=2026,
+        )
+        self.assertIsNone(row)
+
+        fixture = sportmonks_fixture()
+        fixture["scores"] = {"data": [
+            {"participant_id": 1, "description": "CURRENT", "score": {"goals": 2}},
+            {"participant_id": 2, "description": "CURRENT", "score": {"goals": 1}},
+        ]}
+        row = canonicalize_sportmonks_fixture(
+            fixture, competition="Premier League", country="England", season=2026,
+        )
+        self.assertEqual((row["home_score"], row["away_score"]), (2, 1))
+
     def test_sportmonks_score_parser_rejects_boolean_fractional_and_negative_values(self):
         for invalid in (True, 1.5, -1, "1.5", "unknown"):
             row = canonicalize_sportmonks_fixture(
