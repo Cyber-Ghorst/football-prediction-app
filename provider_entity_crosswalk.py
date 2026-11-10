@@ -40,6 +40,11 @@ def _value(row: Mapping[str, Any], *keys: str) -> Any:
             return value
     return None
 
+def _display_value(value: Any) -> str:
+    if isinstance(value, Mapping):
+        value = value.get("name") or value.get("displayName") or value.get("display_name")
+    return str(value or "").strip()
+
 
 def build_entity_crosswalk_candidates(
     provider: str,
@@ -108,7 +113,7 @@ def build_entity_crosswalk_candidates(
                 target_country = _value(target, "country", "country_name")
                 exact_context = (
                     bool(source_country) and bool(target_country)
-                    and normalize_entity_name(source_country) == normalize_entity_name(target_country)
+                    and normalize_entity_name(_display_value(source_country)) == normalize_entity_name(_display_value(target_country))
                 )
             elif entity_type == "team":
                 target_id = _value(target, "team_id", "canonical_entity_id")
