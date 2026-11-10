@@ -47,15 +47,18 @@ def _observations(match: Mapping[str, Any], field: str) -> dict[str, Any]:
     detail = (match.get("reconciliation") or {}).get(field) or {}
     rows = detail.get("observations") or []
     result: dict[str, Any] = {}
+    conflicted: set[str] = set()
     for row in rows:
         if not isinstance(row, Mapping):
             continue
         provider = str(row.get("provider") or "").strip()
-        if not provider or provider in result:
-            # A duplicate observation from one provider is ambiguous and is
-            # deliberately excluded instead of being counted as extra votes.
-            if provider:
-                result.pop(provider, None)
+        if not provider or provider in conflicted:
+            continue
+        if provider in result:
+            # A duplicate observation from one provider is ambiguous and all
+            # observations for that provider/field are excluded.
+            result.pop(provider, None)
+            conflicted.add(provider)
             continue
         result[provider] = row.get("value")
     return result
