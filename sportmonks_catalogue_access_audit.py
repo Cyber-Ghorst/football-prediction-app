@@ -57,10 +57,17 @@ def build_catalogue_report(client_factory=SportmonksClient) -> dict[str, Any]:
             season_counts[key] = season_counts.get(key, 0) + 1
         # Cross-check the account-scoped catalogue through Sportmonks' Core API
         # and the documented name-search route. These are reads only.
+        api_root = client.base_url.rsplit("/football", 1)[0]
         try:
-            my_leagues = client._rows(client._get("my/leagues"))
+            response = client.session.get(
+                f"{api_root}/my/leagues",
+                timeout=client.timeout,
+            )
+            response.raise_for_status()
+            my_leagues = client._rows(response.json())
             report["my_leagues"] = {
                 "status": "ok",
+                "http_status": response.status_code,
                 "count": len(my_leagues),
                 "league_ids": sorted(str(row.get("id")) for row in my_leagues if row.get("id") is not None),
             }
@@ -70,6 +77,42 @@ def build_catalogue_report(client_factory=SportmonksClient) -> dict[str, Any]:
                 "error_type": type(exc).__name__,
                 "error": str(exc),
             }
+
+        report["country_search_probes"] = {}
+        for country_name in ("Germany", "France"):
+            try:
+                response = client.session.get(
+                    f"{api_root}/core/countries/search/{country_name}",
+                    params={"include": "leagues"},
+                    timeout=client.timeout,
+                )
+                response.raise_for_status()
+                country_rows = client._rows(response.json())
+                report["country_search_probes"][country_name] = {
+                    "status": "ok",
+                    "http_status": response.status_code,
+                    "count": len(country_rows),
+                    "countries": [
+                        {
+                            "id": row.get("id"),
+                            "name": row.get("name"),
+                            "leagues": [
+                                {
+                                    "id": league.get("id"),
+                                    "name": league.get("name"),
+                                }
+                                for league in client._rows(row.get("leagues"))
+                            ],
+                        }
+                        for row in country_rows
+                    ],
+                }
+            except Exception as exc:
+                report["country_search_probes"][country_name] = {
+                    "status": "error",
+                    "error_type": type(exc).__name__,
+                    "error": str(exc),
+                }
 
         search_queries = {
             "Bundesliga": ("Bundesliga",),
