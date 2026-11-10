@@ -337,7 +337,7 @@ def import_sportmonks_season(
     # Prepare normalized rows before opening the transaction. This keeps Python
     # parsing and UUID generation out of the database write window.
     team_rows: list[tuple[Any, ...]] = []
-    link_rows: list[tuple[Any, ...]] = []
+    link_rows: dict[tuple[str, str], tuple[Any, ...]] = {}
 
     def add_link(entity_type: str, provider_id: Any, canonical_id: str) -> None:
         provider_entity_id = str(provider_id)
@@ -602,7 +602,7 @@ def import_sportmonks_season(
                     "link_id", "provider", "entity_type", "provider_entity_id",
                     "canonical_entity_id",
                 ),
-                rows=link_rows,
+                rows=list(link_rows.values()),
                 conflict_sql="""
                     ON CONFLICT (provider, entity_type, provider_entity_id)
                     DO UPDATE SET canonical_entity_id = excluded.canonical_entity_id,
