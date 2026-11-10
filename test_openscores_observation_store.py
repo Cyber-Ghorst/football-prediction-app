@@ -26,13 +26,15 @@ class FakeConnection:
 
 class ReconcileCursor:
     def __init__(self, *, links, fixtures, existing_fixture_link=None,
-                 observation_status="pending_entity_mapping"):
+                 observation_status="pending_entity_mapping",
+                 verified_links=True):
         self.calls = []
         self.fetchall_count = 0
         self.links = links
         self.fixtures = fixtures
         self.existing_fixture_link = existing_fixture_link
         self.observation_status = observation_status
+        self.verified_links = verified_links
         self.include_historical = False
     def __enter__(self): return self
     def __exit__(self, *args): return False
@@ -49,7 +51,7 @@ class ReconcileCursor:
                      "os-home-1", "os-away-1", "2026-11-12T18:30:00Z",
                      self.observation_status)]
         if self.fetchall_count == 2:
-            return self.links
+            return self.links if self.verified_links else []
         if self.fetchall_count == 3:
             return self.fixtures
         return []
@@ -120,11 +122,13 @@ class OpenScoresObservationStoreTests(unittest.TestCase):
         observation_status="pending_entity_mapping",
         include_outside_upcoming_window=False,
         preserve_outside_window_status=False,
+        verified_links=True,
     ):
         cursor = ReconcileCursor(
             links=links, fixtures=fixtures,
             existing_fixture_link=existing_fixture_link,
             observation_status=observation_status,
+            verified_links=verified_links,
         )
         with patch(
             "openscores_observation_store._connect",
@@ -157,6 +161,18 @@ class OpenScoresObservationStoreTests(unittest.TestCase):
             for _, params in cursor.calls
         ))
         self.assertNotIn("INSERT INTO football_fixtures", sql)
+
+    def test_reconciliation_requires_auditable_verified_entity_links(self):
+        report, cursor = self._run_reconciliation(
+            links=self._complete_links(),
+            fixtures=[("sportmonks-fixture-99",)],
+            verified_links=False,
+        )
+        self.assertEqual(report["pending_entity_mapping"], 1)
+        self.assertEqual(report["matched"], 0)
+        sql = "\\n".join(call[0] for call in cursor.calls)
+        self.assertIn("provider_entity_link_verifications", sql)
+        self.assertIn("verification_status = 'verified'", sql)
 
     def test_unique_sportmonks_fixture_fingerprint_is_linked(self):
         report, cursor = self._run_reconciliation(
