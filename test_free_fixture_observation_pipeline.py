@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import Mock, patch
 
 from free_fixture_observation_pipeline import (
-    collect_livescore_observations,
+    collect_bzzoiro_observations,\n    collect_livescore_observations,
     collect_openfootball_observations,
     collect_openligadb_observations,
     collect_openmatchday_observations,
