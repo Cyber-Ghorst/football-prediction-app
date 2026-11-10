@@ -76,9 +76,12 @@ def audit_highlightly() -> dict[str, Any]:
             "pagination_complete": len(all_rows) >= int(total or 0),
         }
     except Exception as exc:
-        status = getattr(getattr(exc, "response", None), "status_code", None)
+        response = getattr(exc, "response", None)
+        status = getattr(response, "status_code", None)
+        headers = getattr(response, "headers", {}) or {}
         return {"status": "error", "catalogue_count": None,
                 "http_status": status, "reason": str(exc)[:300],
+                "retry_after": headers.get("Retry-After"),
                 "rate_limit": rate_limit}
     finally:
         session.close()
@@ -125,9 +128,13 @@ def audit_livescore() -> dict[str, Any]:
             "competition_freshness": coverage,
         }
     except Exception as exc:
-        status = getattr(getattr(exc, "response", None), "status_code", None)
+        cause = exc.__cause__
+        response = getattr(cause, "response", None)
+        status = getattr(response, "status_code", None)
         return {"status": "error", "catalogue_count": None,
-                "http_status": status, "reason": str(exc)[:300]}
+                "http_status": status,
+                "error_kind": type(cause).__name__ if cause else type(exc).__name__,
+                "reason": str(exc)[:300]}
     finally:
         client.close()
 
