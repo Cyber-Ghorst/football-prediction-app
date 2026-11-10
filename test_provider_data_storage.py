@@ -45,9 +45,17 @@ class FakeConnection:
         self.fresh = None
         self.latest = None
         self.fail_run_insert = False
+        self.commit_calls = 0
+        self.rollback_calls = 0
 
     def cursor(self):
         return FakeCursor(self)
+
+    def commit(self):
+        self.commit_calls += 1
+
+    def rollback(self):
+        self.rollback_calls += 1
 
     def __enter__(self):
         return self
@@ -168,6 +176,7 @@ class ProviderStorageTests(unittest.TestCase):
         self.assertEqual(len(self.connection.snapshots), 1)
         self.assertEqual(len(self.connection.runs), 1)
         self.assertTrue(self.connection.runs[0][5])
+        self.assertEqual(self.connection.commit_calls, 2)
 
     def test_snapshot_is_preserved_when_success_audit_insert_fails(self):
         database_url = "postgresql://example"
@@ -186,6 +195,8 @@ class ProviderStorageTests(unittest.TestCase):
         self.assertEqual(result["run_error_type"], "RuntimeError")
         self.assertEqual(len(self.connection.snapshots), 1)
         self.assertEqual(self.connection.runs, [])
+        self.assertEqual(self.connection.commit_calls, 1)
+        self.assertEqual(self.connection.rollback_calls, 1)
 
     def test_failed_collection_diagnostic_does_not_write_snapshot(self):
         run_id = storage.record_provider_collection_run(
