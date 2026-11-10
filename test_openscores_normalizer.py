@@ -39,6 +39,12 @@ class OpenScoresNormalizerTests(unittest.TestCase):
         row = normalize_openscores_fixtures([item], league_id=7, season_id=2026)["fixtures"][0]
         self.assertEqual((row["home_goals"], row["away_goals"]), (2, 1))
 
+    def test_preserves_explicit_zero_score_values(self):
+        item = dict(self.fixture)
+        item["score"] = {"home_ft_score": {"value": 0}, "away_ft_score": {"value": 2}}
+        row = normalize_openscores_fixtures([item], league_id=7, season_id=2026)["fixtures"][0]
+        self.assertEqual((row["home_goals"], row["away_goals"]), (0, 2))
+
     def test_rejects_mismatched_season_context(self):
         item = dict(self.fixture, season_id=2025)
         result = normalize_openscores_fixtures([item], league_id=7, season_id=2026)
