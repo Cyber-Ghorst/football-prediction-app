@@ -507,5 +507,43 @@ class ProviderCorroborationTests(unittest.TestCase):
 
 
 
+    def test_api_ninjas_team_histories_use_two_independent_sessions_concurrently(self):
+        import threading
+        import time
+
+        state = {"active": 0, "maximum": 0, "teams": []}
+        lock = threading.Lock()
+
+        class TrackingNinjas(FakeNinjas):
+            def team_matches(self, **params):
+                with lock:
+                    state["active"] += 1
+                    state["maximum"] = max(state["maximum"], state["active"])
+                    state["teams"].append(params["team"])
+                try:
+                    time.sleep(0.03)
+                    return [ninjas_match()]
+                finally:
+                    with lock:
+                        state["active"] -= 1
+
+        first_client = TrackingNinjas([ninjas_match()])
+        report = collect_recent_result_corroboration(
+            sportmonks_fixtures=[sportmonks_fixture()],
+            competition="Premier League", country="England", season=2026,
+            home_team_name="Arsenal", away_team_name="Chelsea",
+            api_ninjas_client=first_client,
+            api_ninjas_client_factory=lambda: TrackingNinjas([ninjas_match()]),
+            now=NOW,
+        )
+
+        self.assertEqual(state["maximum"], 2)
+        self.assertCountEqual(state["teams"], ["Arsenal", "Chelsea"])
+        self.assertEqual(report["api_ninjas_diagnostics"]["team_requests"], 2)
+        self.assertEqual(report["api_ninjas_diagnostics"]["raw_rows_received"], 2)
+        self.assertEqual(report["provider_records_returned"]["api_ninjas"], 1)
+        self.assertNotIn("api_ninjas", report["errors"])
+
+
 if __name__ == "__main__":
     unittest.main()
