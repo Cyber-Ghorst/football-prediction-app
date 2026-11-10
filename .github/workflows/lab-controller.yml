@@ -274,7 +274,7 @@ jobs:
           PY
 
       - name: Install health-check dependencies
-        if: steps.operation.outputs.operation == 'health_check' || steps.operation.outputs.operation == 'full_check' || steps.operation.outputs.operation == 'result_sync' || steps.operation.outputs.operation == 'tipmaster_refresh_verify' || steps.operation.outputs.operation == 'openscores_connection_check'
+        if: steps.operation.outputs.operation == 'health_check' || steps.operation.outputs.operation == 'full_check' || steps.operation.outputs.operation == 'result_sync' || steps.operation.outputs.operation == 'tipmaster_refresh_verify' || steps.operation.outputs.operation == 'openscores_connection_check' || steps.operation.outputs.operation == 'openscores_fixture_observation_sync'
         run: |
           exec > >(tee -a controller-report.txt) 2>&1
           python -m pip install --upgrade pip
@@ -521,7 +521,8 @@ jobs:
               ("controller-report.txt", "Deployment probe / test output"),
               ("deployment-smoke-report.json", "Application smoke report"),
               ("integration-smoke-report.json", "Live integration report"),
-              ("openscores-connection-report.json", "OpenScores connection check"),\n    ("openscores-fixture-observation-report.json", "OpenScores fixture observation sync"),
+              ("openscores-connection-report.json", "OpenScores connection check"),
+              ("openscores-fixture-observation-report.json", "OpenScores fixture observation sync"),
               ("prediction-run-report.json", "Automated prediction run report"),
           )
           for filename, heading in report_files:
