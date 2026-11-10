@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Any, Mapping
 
-from canonical_data import MatchNormalizationError, _parse_datetime
+from canonical_data import MatchNormalizationError, _int_or_none, _parse_datetime
 from provider_core import normalize_team_name
 
 
@@ -42,16 +42,16 @@ def _score_by_participant(fixture: Mapping[str, Any]) -> dict[str, int]:
     rows = _rows(fixture.get("scores"))
     current = [row for row in rows if str(row.get("description") or "").casefold() == "current"]
     result: dict[str, int] = {}
-    for row in current or rows:
+    # Only explicit CURRENT scores represent the full-time score. Never infer
+    # a final score from period rows, and use the shared strict score parser.
+    for row in current:
         participant_id = row.get("participant_id")
         score = row.get("score")
         goals = score.get("goals") if isinstance(score, dict) else None
-        if participant_id is None or goals is None:
+        parsed_goals = _int_or_none(goals)
+        if participant_id is None or parsed_goals is None:
             continue
-        try:
-            result[str(participant_id)] = int(goals)
-        except (TypeError, ValueError):
-            continue
+        result[str(participant_id)] = parsed_goals
     return result
 
 
