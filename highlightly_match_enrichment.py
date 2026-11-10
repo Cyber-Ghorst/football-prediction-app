@@ -392,6 +392,7 @@ def collect_highlightly_match_enrichment(
         for team in report["teams"].values()
         for comparison in team["comparisons"].values()
     ]
+    collection_completed_at = datetime.now(timezone.utc)
     return {
         "competition": competition,
         "country": country,
@@ -405,6 +406,7 @@ def collect_highlightly_match_enrichment(
         "lineup_requests": lineup_requests,
         "lineup_not_requested_reason": lineup_not_requested_reason,
         "fetched_at": fetched.isoformat(),
+        "collection_completed_at": collection_completed_at.isoformat(),
         "statistics": stats_reports,
         "lineups": lineup_report,
         "errors": errors,
@@ -423,14 +425,14 @@ def apply_highlightly_statistics_fallback(
     leaves TVD tactical_evidence unchanged; that remains based on its existing
     primary-source evidence path.
     """
-    raw_fetched_at = enrichment_report.get("fetched_at")
+    raw_completed_at = enrichment_report.get("collection_completed_at")
     try:
-        fetched_at = datetime.fromisoformat(
-            str(raw_fetched_at).strip().replace("Z", "+00:00")
+        collection_completed_at = datetime.fromisoformat(
+            str(raw_completed_at).strip().replace("Z", "+00:00")
         )
-        if fetched_at.tzinfo is None:
-            raise ValueError("Highlightly collection timestamp has no timezone.")
-        fetched_at = fetched_at.astimezone(timezone.utc)
+        if collection_completed_at.tzinfo is None:
+            raise ValueError("Highlightly collection completion timestamp has no timezone.")
+        collection_completed_at = collection_completed_at.astimezone(timezone.utc)
     except (TypeError, ValueError):
         return {
             "status": "skipped",
@@ -464,7 +466,8 @@ def apply_highlightly_statistics_fallback(
         "primary_values_preserved": 0,
         "ambiguous_metrics_skipped": 0,
         "duplicate_fixture_reports_skipped": len(duplicate_fixture_ids),
-        "fetched_at": fetched_at.isoformat(),
+        "collection_started_at": enrichment_report.get("fetched_at"),
+        "collection_completed_at": collection_completed_at.isoformat(),
         "tactical_evidence_updated": False,
         "note": (
             "Only missing match-stat fields were filled after exact fixture/team "
@@ -560,7 +563,8 @@ def apply_highlightly_statistics_fallback(
                         "canonical_name": metric,
                         "raw_value": metric_observations[0].get("raw_value"),
                         "normalized_value": value,
-                        "fetched_at": fetched_at.isoformat(),
+                        "collection_started_at": enrichment_report.get("fetched_at"),
+                        "collection_completed_at": collection_completed_at.isoformat(),
                         "mapping_status": "mapped",
                         "fallback_used": True,
                     })
