@@ -122,7 +122,7 @@ class HighlightlyMatchEnrichmentTests(unittest.TestCase):
         result = apply_highlightly_statistics_fallback([home, away], report)
 
         self.assertEqual(result["status"], "completed")
-        self.assertEqual(result["fields_added"], 6)
+        self.assertEqual(result["fields_added"], 7)
         self.assertEqual(result["primary_values_preserved"], 1)
         self.assertEqual(home["matches"][0]["statistics"]["Total Shots"], 12.0)
         self.assertEqual(home["matches"][0]["statistics"]["Ball Possession"], 60.0)
