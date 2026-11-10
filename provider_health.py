@@ -81,10 +81,15 @@ def assess_livescore_competition_coverage(
     now: datetime | None = None,
     max_age_seconds: int = 24 * 60 * 60,
 ) -> dict[str, Any]:
-    """Require a fresh per-competition coverage.lastSyncedAt timestamp."""
+    """Require a fresh per-competition sync timestamp.
+
+    LiveScoreFootball exposes lastSyncedAt on the competition record itself;
+    older adapter fixtures may still place it under coverage.
+    """
     coverage = competition.get("coverage") if isinstance(competition.get("coverage"), Mapping) else {}
+    timestamp = competition.get("lastSyncedAt") or coverage.get("lastSyncedAt")
     freshness = assess_freshness(
-        coverage.get("lastSyncedAt"), "fixtures", now=now,
+        timestamp, "fixtures", now=now,
         max_age_seconds=max_age_seconds,
     )
     return {
