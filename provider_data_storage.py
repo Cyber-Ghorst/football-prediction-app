@@ -252,6 +252,38 @@ def load_provider_snapshot(
     return _snapshot_from_row(row) if row else None
 
 
+def load_provider_observation_snapshots(
+    database_url: str,
+    *,
+    provider: str | None = None,
+    limit: int = 100,
+) -> list[dict[str, Any]]:
+    """Load recent archived future-fixture observation batches for crosswalk review."""
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+    if isinstance(limit, bool) or not isinstance(limit, int) or not 1 <= limit <= 1000:
+        raise ValueError("limit must be an integer from 1 through 1000.")
+    provider_name = str(provider).strip().lower() if provider else None
+    if provider_name and provider_name not in {
+        "openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro"
+    }:
+        raise ValueError("Unsupported future-fixture provider.")
+    ensure_provider_storage(database_url)
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """SELECT snapshot_id, provider, resource_type, request_params,
+                          source_ids, payload, retrieved_at, expires_at, payload_sha256
+                   FROM provider_api_snapshots
+                   WHERE resource_type = %s AND (%s IS NULL OR provider = %s)
+                   ORDER BY retrieved_at DESC, snapshot_id DESC
+                   LIMIT %s""",
+                ("future_fixture_observations", provider_name, provider_name, limit),
+            )
+            rows = cursor.fetchall()
+    return [_snapshot_from_row(row) for row in rows]
+
+
 def save_provider_snapshot(
     database_url: str,
     *,
