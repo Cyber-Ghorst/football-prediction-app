@@ -382,17 +382,42 @@ def collect_sportmonks_team_profile(
     }
     seen_fixture_ids: set[int] = set()
 
+    def fixture_involves_team(fixture: dict[str, Any]) -> bool:
+        home, away = _participants(fixture)
+        try:
+            return int(home["id"]) == int(team_id) or int(away["id"]) == int(team_id)
+        except (KeyError, TypeError, ValueError):
+            return False
+
+    duplicate_input_ids = {
+        fixture_id for fixture_id in duplicate_input_ids
+        if any(
+            str(row.get("id") or "") == str(fixture_id) and fixture_involves_team(row)
+            for row in fixtures
+        )
+    }
+    schedule_duplicate_ids = {
+        int(row["id"])
+        for row in fixtures
+        if row.get("_schedule_duplicate") is True
+        and row.get("id") is not None
+        and fixture_involves_team(row)
+    }
+    duplicate_fixture_ids = sorted(set(duplicate_input_ids) | schedule_duplicate_ids)
+    duplicate_fixture_id_set = set(duplicate_fixture_ids)
+    counted_duplicate_ids: set[int] = set()
+
     for fixture in fixtures:
         try:
             raw_fixture_id = fixture.get("id")
-            if raw_fixture_id is not None:
-                fixture_id = int(raw_fixture_id)
-                if fixture_id in seen_fixture_ids:
-                    history_diagnostics["excluded_duplicate_fixture_id"] += 1
-                    continue
-                seen_fixture_ids.add(fixture_id)
+            fixture_id = int(raw_fixture_id) if raw_fixture_id is not None else None
         except (TypeError, ValueError):
-            pass
+            fixture_id = None
+        if fixture_id is not None and fixture_id in duplicate_fixture_id_set:
+            if fixture_id not in counted_duplicate_ids:
+                history_diagnostics["excluded_duplicate_fixture_id"] += 1
+                counted_duplicate_ids.add(fixture_id)
+            continue
         fixture_index = fixture_statistics_indexes.get(id(fixture), {})
         fixture_season_id = fixture.get("season_id")
         if fixture_season_id is not None:
@@ -609,6 +634,8 @@ def find_exact_match_fixture(
     current = int(now_timestamp if now_timestamp is not None else time.time())
     candidates: list[dict[str, Any]] = []
     for fixture in fixtures:
+        if fixture.get("_schedule_duplicate") is True:
+            continue
         try:
             if int(fixture.get("season_id")) != int(season_id):
                 continue
@@ -652,6 +679,8 @@ def diagnose_upcoming_match_fixture(
     candidates: list[tuple[int, dict[str, Any]]] = []
 
     for fixture in fixtures:
+        if fixture.get("_schedule_duplicate") is True:
+            continue
         try:
             if int(fixture.get("season_id")) != int(season_id):
                 continue
