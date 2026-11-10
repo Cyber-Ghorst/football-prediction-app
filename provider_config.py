@@ -12,7 +12,7 @@ PROVIDER_ROLES: dict[str, dict[str, Any]] = {
         "display_name": "Sportmonks Football API v3",
         "rank": 1,
         "role": "Primary current-season provider",
-        "domains": ("fixtures", "results", "standings", "statistics", "injuries", "lineups", "players", "squads"),
+        "domains": ("fixtures", "future_fixtures", "results", "standings", "statistics", "injuries", "lineups", "players", "squads"),
         "limitation": "Coverage is limited to competitions/seasons enabled by the account; each selected competition must pass data-quality gates.",
     },
     "highlightly": {
