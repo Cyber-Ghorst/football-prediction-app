@@ -294,6 +294,45 @@ def write_explicit_openscores_links(
     return {"inserted": inserted, "existing": existing, "conflicts": [], "status": "pass"}
 
 
+def _pending_mapping_diagnostics(database_url: str) -> dict[str, Any]:
+    """Expose safe names/IDs needed to resolve pending cross-provider mappings."""
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT provider_league_id, provider_season_id,
+                       COUNT(*) AS observations,
+                       COUNT(DISTINCT provider_home_team_id) AS home_ids,
+                       COUNT(DISTINCT provider_away_team_id) AS away_ids,
+                       ARRAY_AGG(DISTINCT home_team_name) AS home_names,
+                       ARRAY_AGG(DISTINCT away_team_name) AS away_names
+                FROM provider_fixture_observations
+                WHERE provider = 'openscores'
+                  AND canonical_fixture_id IS NULL
+                  AND reconciliation_status IN (
+                      'pending_entity_mapping', 'outside_upcoming_window'
+                  )
+                GROUP BY provider_league_id, provider_season_id
+                ORDER BY provider_league_id, provider_season_id
+                """
+            )
+            rows = cursor.fetchall()
+    return {
+        "pending_groups": [
+            {
+                "openscores_league_id": str(row[0]),
+                "openscores_season_id": str(row[1]),
+                "observations": int(row[2]),
+                "distinct_home_team_ids": int(row[3]),
+                "distinct_away_team_ids": int(row[4]),
+                "home_team_names": list(row[5] or []),
+                "away_team_names": list(row[6] or []),
+            }
+            for row in rows
+        ]
+    }
+
+
 def run_reconciliation(
     *,
     openscores_client_factory=OpenScoresClient,
@@ -343,11 +382,25 @@ def run_reconciliation(
             report["competitions_considered"] += 1
             league_match = find_unique_sportmonks_league(source_league, sm_leagues)
             if league_match["status"] != "unique_exact_name_country_match":
+                same_name_candidates = [
+                    {
+                        "sportmonks_league_id": str(candidate.get("id")),
+                        "name": candidate.get("name"),
+                        "country": _country_name(candidate),
+                        "country_payload": candidate.get("country"),
+                    }
+                    for candidate in sm_leagues
+                    if _norm(candidate.get("name")) == _norm(
+                        source_league.get("name") or source_league.get("league_name")
+                    )
+                ]
                 report["competition_results"].append({
                     "openscores_league_id": source_league_id,
                     "name": source_league.get("name"),
+                    "openscores_country_code": source_league.get("country_code"),
                     "status": league_match["status"],
                     "candidate_count": league_match.get("candidate_count", 0),
+                    "sportmonks_same_name_candidates": same_name_candidates,
                 })
                 continue
             sm_league = league_match["league"]
@@ -397,6 +450,13 @@ def run_reconciliation(
                 str(source_seasons[0].get("id") or source_seasons[0].get("season_id") or ""),
             )
             team_mappings = unique_team_crosswalks(observed_teams, teams)
+            mapped_provider_team_ids = {
+                mapping["provider_entity_id"] for mapping in team_mappings
+            }
+            unmapped_observed_teams = [
+                team for team in observed_teams
+                if team["provider_team_id"] not in mapped_provider_team_ids
+            ]
             mappings = [
                 {
                     "entity_type": "league",
@@ -435,6 +495,7 @@ def run_reconciliation(
                 "canonical_fixtures_available": fixture_count,
                 "openscores_teams_observed": len(observed_teams),
                 "unique_team_links": len(team_mappings),
+                "unmapped_observed_teams": unmapped_observed_teams,
                 "entity_links_inserted": written["inserted"],
                 "entity_links_existing": written["existing"],
             })
@@ -451,8 +512,14 @@ def run_reconciliation(
         include_outside_upcoming_window=True,
         preserve_outside_window_status=True,
     )
+    report["mapping_diagnostics"] = _pending_mapping_diagnostics(db_url)
     matched = int(report["reconciliation"].get("matched", 0))
-    report["status"] = "pass" if matched > 0 else "fail"
+    pending = int(report["reconciliation"].get("pending_entity_mapping", 0))
+    report["status"] = (
+        "pass" if matched > 0 and pending == 0
+        else "partial" if matched > 0
+        else "fail"
+    )
     return report
 
 
@@ -473,7 +540,7 @@ def main() -> int:
             summary.write(f"- Explicit OpenScores entity links inserted: {report['explicit_entity_links_inserted']}\n")
             summary.write(f"- Prediction model modified: no\n- Prediction ledger touched: no\n")
             summary.write(f"\n### Reconciliation\n\n`{json.dumps(report['reconciliation'], sort_keys=True)}`\n")
-    return 0 if report["status"] == "pass" else 1
+    return 0 if report["status"] in {"pass", "partial"} else 1
 
 
 if __name__ == "__main__":
