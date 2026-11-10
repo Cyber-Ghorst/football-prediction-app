@@ -25,21 +25,29 @@ class FakeConnection:
 
 
 class ReconcileCursor:
-    def __init__(self, *, links, fixtures, existing_fixture_link=None):
+    def __init__(self, *, links, fixtures, existing_fixture_link=None,
+                 observation_status="pending_entity_mapping"):
         self.calls = []
         self.fetchall_count = 0
         self.links = links
         self.fixtures = fixtures
         self.existing_fixture_link = existing_fixture_link
+        self.observation_status = observation_status
+        self.include_historical = False
     def __enter__(self): return self
     def __exit__(self, *args): return False
     def execute(self, sql, params=None):
         self.calls.append((sql, params))
+        if "SELECT observation_id, provider_fixture_id" in sql and params:
+            self.include_historical = bool(params[0])
     def fetchall(self):
         self.fetchall_count += 1
         if self.fetchall_count == 1:
+            if self.observation_status == "outside_upcoming_window" and not self.include_historical:
+                return []
             return [("obs-1", "os-fixture-1", "os-league-1", "os-season-1",
-                     "os-home-1", "os-away-1", "2026-11-12T18:30:00Z")]
+                     "os-home-1", "os-away-1", "2026-11-12T18:30:00Z",
+                     self.observation_status)]
         if self.fetchall_count == 2:
             return self.links
         if self.fetchall_count == 3:
@@ -107,16 +115,26 @@ class OpenScoresObservationStoreTests(unittest.TestCase):
             result = upsert_openscores_observations("postgresql://db", [])
         self.assertEqual(result["observations_upserted"], 0)
 
-    def _run_reconciliation(self, *, links, fixtures, existing_fixture_link=None):
+    def _run_reconciliation(
+        self, *, links, fixtures, existing_fixture_link=None,
+        observation_status="pending_entity_mapping",
+        include_outside_upcoming_window=False,
+        preserve_outside_window_status=False,
+    ):
         cursor = ReconcileCursor(
             links=links, fixtures=fixtures,
             existing_fixture_link=existing_fixture_link,
+            observation_status=observation_status,
         )
         with patch(
             "openscores_observation_store._connect",
             return_value=ReconcileConnection(cursor),
         ):
-            report = reconcile_openscores_observations("postgresql://db")
+            report = reconcile_openscores_observations(
+                "postgresql://db",
+                include_outside_upcoming_window=include_outside_upcoming_window,
+                preserve_outside_window_status=preserve_outside_window_status,
+            )
         return report, cursor
 
     @staticmethod
@@ -162,6 +180,41 @@ class OpenScoresObservationStoreTests(unittest.TestCase):
         )
         self.assertEqual(report["ambiguous_canonical_fixture_match"], 1)
         self.assertEqual(report["matched"], 0)
+
+    def test_historical_observations_are_skipped_by_default(self):
+        report, _ = self._run_reconciliation(
+            links=self._complete_links(),
+            fixtures=[("sportmonks-fixture-99",)],
+            observation_status="outside_upcoming_window",
+        )
+        self.assertEqual(report["observations_checked"], 0)
+        self.assertEqual(report["matched"], 0)
+
+    def test_historical_fixture_can_be_linked_without_becoming_upcoming(self):
+        report, cursor = self._run_reconciliation(
+            links=self._complete_links(),
+            fixtures=[("sportmonks-fixture-99",)],
+            observation_status="outside_upcoming_window",
+            include_outside_upcoming_window=True,
+            preserve_outside_window_status=True,
+        )
+        self.assertEqual(report["observations_checked"], 1)
+        self.assertEqual(report["matched"], 1)
+        updates = [
+            params for sql, params in cursor.calls
+            if "UPDATE provider_fixture_observations" in sql
+        ]
+        self.assertTrue(any(
+            params and params[0] == "outside_upcoming_window"
+            for params in updates
+        ))
+
+    def test_historical_status_preservation_requires_historical_inclusion(self):
+        with self.assertRaises(ValueError):
+            self._run_reconciliation(
+                links=[], fixtures=[],
+                preserve_outside_window_status=True,
+            )
 
     def test_conflicting_existing_fixture_crosswalk_is_preserved(self):
         report, cursor = self._run_reconciliation(
