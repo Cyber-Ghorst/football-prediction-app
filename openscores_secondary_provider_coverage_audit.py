@@ -44,6 +44,7 @@ def _identity_sample(row: Mapping[str, Any]) -> dict[str, Any]:
     country = league.get("country")
     country_name = country.get("name") if isinstance(country, Mapping) else country
     return {
+        "league_id": league.get("id") or row.get("leagueId") or row.get("league_id"),
         "league_name": league.get("name") or row.get("leagueName"),
         "league_country": country_name or league.get("countryName") or row.get("countryName"),
         "season": league.get("season") if league.get("season") is not None else row.get("season"),
