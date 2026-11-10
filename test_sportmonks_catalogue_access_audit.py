@@ -30,6 +30,13 @@ class FakeSportmonks:
         self.base_url = "https://api.sportmonks.com/v3/football"
         self.session = FakeSession(self)
         self.timeout = 20
+        self.last_metadata = {"http_status": 200}
+    @staticmethod
+    def _rows(payload):
+        rows = payload.get("data", []) if isinstance(payload, dict) else []
+        if isinstance(rows, dict):
+            return [rows]
+        return rows if isinstance(rows, list) else []
     def __enter__(self): return self
     def __exit__(self, *args):
         self.closed = True
