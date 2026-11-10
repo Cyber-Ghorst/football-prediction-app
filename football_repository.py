@@ -869,7 +869,8 @@ def search_upcoming_repository_fixtures(
         f"f.starting_at <= NOW() + INTERVAL '{window_days} days'",
         "LOWER(COALESCE(f.status, '')) IN "
         "('ns', 'not started', 'scheduled', 'to be played', "
-        "'fixture not started', 'not played', 'tbd', '1')",
+        "'fixture not started', 'not played', 'tbd', '1', "
+        "'postponed', 'postponed fixture', 'pst', 'ppd')",
     ]
     params: list[Any] = []
     if league_id:
