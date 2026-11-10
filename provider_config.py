@@ -41,7 +41,7 @@ PROVIDER_ROLES: dict[str, dict[str, Any]] = {
         "rank": 5,
         "role": "Conditional competition-specific corroboration for fixtures/results/standings",
         "domains": ("fixtures", "results", "standings"),
-        "limitation": "Database-backed snapshots can be delayed; require exact competition/season crosswalk and fresh sync metadata for every use.",
+        "limitation": "Database-backed snapshots can be delayed; require an exact competition/season crosswalk and fresh global, per-competition and individual fixture-event timestamps for every fallback use.",
     },
 }
 
@@ -69,7 +69,7 @@ def provider_readiness() -> list[dict[str, Any]]:
         "api_ninjas": "adapter and authenticated smoke test available; exact result candidates can trigger an opt-in Sportmonks-verified history fallback; no direct statistics, injury or lineup fields",
         "highlightly": "adapter and authenticated smoke test available; opt-in exact-match missing-stat, lineup and Sportmonks-verified result-history fallbacks are wired into Layer 2; no injury or availability inference",
         "sportmonks": "current-season Layer 2 path active; exact competition/season coverage and data-quality gates enforced",
-        "livescore_football": "read-only adapter and opt-in missing-score fallback wired into Streamlit; requires fresh global, competition and event timestamps plus exact competition-season and fixture identity checks",
+        "livescore_football": "read-only adapter and opt-in missing-score fallback wired into Streamlit (default off); requires fresh global, competition and event timestamps plus exact competition-season and fixture identity checks",
     }
     credential_names = {
         "api_football": "APISPORTS_API_KEY",
