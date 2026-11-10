@@ -161,12 +161,12 @@ class PredictionEvaluationTests(unittest.TestCase):
         self.assertEqual(merged["feature_snapshot_at"], "2026-11-07T10:00:00+00:00")
 
     def test_non_finite_feature_snapshot_values_are_rejected(self):
-        row = self._record(feature_snapshot={
-            "schema_version": "prediction-features-v1",
-            "captured_at": "2026-11-07T10:00:00+00:00",
-            "invalid": float("nan"),
-        })
-        self.assertEqual(row["feature_snapshot_json"], "")
+        with self.assertRaises(ValueError):
+            self._record(feature_snapshot={
+                "schema_version": "prediction-features-v1",
+                "captured_at": "2026-11-07T10:00:00+00:00",
+                "invalid": float("nan"),
+            })
 
     def test_prediction_and_player_snapshot_must_precede_kickoff(self):
         row = self._record()
