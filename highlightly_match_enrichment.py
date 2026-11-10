@@ -128,14 +128,16 @@ def _highlightly_stat_value(name: str, value: Any) -> float | None:
 
     if value is None:
         return None
+    raw_text = str(value).strip().replace(",", "")
+    explicit_percent = raw_text.endswith("%")
     try:
-        number = float(str(value).strip().replace("%", "").replace(",", ""))
+        number = float(raw_text[:-1].strip() if explicit_percent else raw_text)
     except (TypeError, ValueError):
         return None
     if not math.isfinite(number) or number < 0:
         return None
     if name in _PERCENTAGE_KEYS:
-        if number <= 1:
+        if not explicit_percent and number <= 1:
             number *= 100
         if number > 100:
             return None
