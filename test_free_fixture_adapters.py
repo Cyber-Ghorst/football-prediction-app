@@ -8,6 +8,7 @@ from free_fixture_adapters import (
     OpenLigaDBAdapter,
     OpenMatchdayAdapter,
     eligible_observations,
+    normalize_livescore_football_events,
 )
 
 
@@ -116,6 +117,48 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         self.assertEqual(client._get_json.call_args.args[0], BzzoiroAdapter.BASE_URL)
         self.assertEqual(client._get_json.call_args.kwargs["params"]["status"], "upcoming")
         client.close()
+
+
+    def test_livescore_event_requires_timezone_and_home_away_competitors(self):
+        event = {
+            "id": "event-1",
+            "date": (NOW + timedelta(days=1)).isoformat(),
+            "status": {"type": {"name": "STATUS_SCHEDULED"}},
+            "season": {"id": "season-26"},
+            "competitions": [{
+                "id": "league-1",
+                "competitors": [
+                    {"homeAway": "home", "team": {"id": "team-1", "displayName": "Home FC"}},
+                    {"homeAway": "away", "team": {"id": "team-2", "displayName": "Away FC"}},
+                ],
+            }],
+        }
+        rows = normalize_livescore_football_events(
+            [event], league_key="league-1",
+            source_url="https://worldcup26.ir/get/soccer/league-1/fixtures",
+            fetched_at=NOW,
+        )
+        self.assertTrue(rows[0]["eligible_for_review"])
+        self.assertEqual(rows[0]["provider_fixture_id"], "event-1")
+        self.assertEqual(rows[0]["home_team_key"], "team-1")
+        self.assertEqual(rows[0]["season_key"], "season-26")
+
+    def test_livescore_naive_event_date_is_excluded(self):
+        event = {
+            "id": "event-2", "date": "2026-11-15T19:00:00",
+            "status": {"type": {"name": "STATUS_SCHEDULED"}},
+            "season": {"id": "season-26"},
+            "competitions": [{"id": "league-1", "competitors": [
+                {"homeAway": "home", "team": {"id": "1", "displayName": "Home FC"}},
+                {"homeAway": "away", "team": {"id": "2", "displayName": "Away FC"}},
+            ]}],
+        }
+        row = normalize_livescore_football_events(
+            [event], league_key="league-1", source_url="https://example.test",
+            fetched_at=NOW,
+        )[0]
+        self.assertFalse(row["eligible_for_review"])
+        self.assertEqual(row["exclusion_reason"], "kickoff_missing_timezone_or_precision")
 
     def test_only_explicitly_eligible_observations_are_selected(self):
         rows = [
