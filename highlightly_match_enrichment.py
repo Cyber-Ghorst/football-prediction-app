@@ -14,6 +14,7 @@ from competition_crosswalk import normalize_competition_name, normalize_country
 from provider_core import normalize_team_name
 from provider_corroboration import canonicalize_sportmonks_fixture
 from sportmonks_layer2 import _team_statistics
+from tactical_indicators import analyze_tactics
 
 _STAT_NAMES = {
     "ball possession": "Ball Possession",
@@ -406,3 +407,182 @@ def collect_highlightly_match_enrichment(
         "errors": errors,
         "note": "Highlightly statistics and lineups are diagnostic corroboration only; Sportmonks prediction inputs are unchanged.",
     }
+
+
+def apply_highlightly_statistics_fallback(
+    profiles: list[dict[str, Any]],
+    enrichment_report: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Fill only missing Layer 2 match-stat fields after exact Highlightly matching.
+
+    Sportmonks remains authoritative wherever it supplied a usable value.
+    This updates tactical summaries from the enriched match rows but deliberately
+    leaves TVD tactical_evidence unchanged; that remains based on its existing
+    primary-source evidence path.
+    """
+    raw_fetched_at = enrichment_report.get("fetched_at")
+    try:
+        fetched_at = datetime.fromisoformat(
+            str(raw_fetched_at).strip().replace("Z", "+00:00")
+        )
+        if fetched_at.tzinfo is None:
+            raise ValueError("Highlightly collection timestamp has no timezone.")
+        fetched_at = fetched_at.astimezone(timezone.utc)
+    except (TypeError, ValueError):
+        return {
+            "status": "skipped",
+            "reason": "missing_or_invalid_highlightly_collection_timestamp",
+            "profiles_updated": 0,
+            "matches_enriched": 0,
+            "fields_added": 0,
+            "primary_values_preserved": 0,
+            "ambiguous_metrics_skipped": 0,
+        }
+
+    by_fixture: dict[str, dict[str, Any]] = {}
+    duplicate_fixture_ids: set[str] = set()
+    for report in enrichment_report.get("statistics") or []:
+        fixture_id = report.get("sportmonks_fixture_id")
+        if fixture_id is None:
+            continue
+        key = str(fixture_id)
+        if key in by_fixture:
+            duplicate_fixture_ids.add(key)
+        else:
+            by_fixture[key] = report
+    for key in duplicate_fixture_ids:
+        by_fixture.pop(key, None)
+
+    summary = {
+        "status": "completed",
+        "profiles_updated": 0,
+        "matches_enriched": 0,
+        "fields_added": 0,
+        "primary_values_preserved": 0,
+        "ambiguous_metrics_skipped": 0,
+        "duplicate_fixture_reports_skipped": len(duplicate_fixture_ids),
+        "fetched_at": fetched_at.isoformat(),
+        "tactical_evidence_updated": False,
+        "note": (
+            "Only missing match-stat fields were filled after exact fixture/team "
+            "identity checks. Existing Sportmonks values were retained. TVD "
+            "tactical_evidence remains on its existing primary-source path."
+        ),
+    }
+
+    for profile in profiles:
+        if not isinstance(profile, dict):
+            continue
+        profile_name = str(profile.get("name") or "")
+        matches = profile.get("matches")
+        if not profile_name or not isinstance(matches, list):
+            continue
+        profile_fields_added = 0
+        profile_fixtures_enriched: set[str] = set()
+
+        for match in matches:
+            if not isinstance(match, dict) or match.get("fixture_id") is None:
+                continue
+            fixture_key = str(match["fixture_id"])
+            fixture_report = by_fixture.get(fixture_key)
+            if fixture_report is None:
+                continue
+            venue = str(match.get("venue") or "").casefold()
+            if venue not in {"home", "away"}:
+                continue
+            own_side = venue
+            opponent_side = "away" if own_side == "home" else "home"
+            team_reports = fixture_report.get("teams") or {}
+            own_report = team_reports.get(own_side) or {}
+            opponent_report = team_reports.get(opponent_side) or {}
+            if normalize_team_name(own_report.get("team_name") or "") != normalize_team_name(profile_name):
+                continue
+            if normalize_team_name(opponent_report.get("team_name") or "") != normalize_team_name(
+                match.get("opponent_name") or ""
+            ):
+                continue
+
+            for side, target_key, provenance_key, diagnostics_key in (
+                (own_side, "statistics", "statistics_provenance", "statistics_raw_diagnostics"),
+                (opponent_side, "opponent_statistics", "opponent_statistics_provenance", "opponent_statistics_raw_diagnostics"),
+            ):
+                side_report = team_reports.get(side) or {}
+                observations = side_report.get("highlightly_observations") or []
+                grouped: dict[str, list[dict[str, Any]]] = {}
+                for observation in observations:
+                    metric = observation.get("canonical_name")
+                    value = observation.get("normalized_value")
+                    if metric not in set(_STAT_NAMES.values()) or value is None:
+                        continue
+                    try:
+                        numeric = float(value)
+                    except (TypeError, ValueError):
+                        continue
+                    import math
+                    if not math.isfinite(numeric) or numeric < 0:
+                        continue
+                    grouped.setdefault(metric, []).append(observation)
+
+                target_stats = match.setdefault(target_key, {})
+                if not isinstance(target_stats, dict):
+                    continue
+                provenance = match.setdefault(provenance_key, [])
+                diagnostics = match.setdefault(diagnostics_key, [])
+
+                for metric, metric_observations in grouped.items():
+                    values = {round(float(item["normalized_value"]), 6) for item in metric_observations}
+                    if len(values) != 1:
+                        summary["ambiguous_metrics_skipped"] += 1
+                        continue
+                    value = next(iter(values))
+                    existing = target_stats.get(metric)
+                    if existing is not None:
+                        summary["primary_values_preserved"] += 1
+                        continue
+
+                    target_stats[metric] = value
+                    profile_fields_added += 1
+                    summary["fields_added"] += 1
+                    diagnostics.append({
+                        "provider": "highlightly",
+                        "fixture_id": fixture_key,
+                        "match_id": str(fixture_report.get("highlightly_match_id") or ""),
+                        "canonical_name": metric,
+                        "raw_value": metric_observations[0].get("raw_value"),
+                        "normalized_value": value,
+                        "fetched_at": fetched_at.isoformat(),
+                        "mapping_status": "mapped",
+                        "fallback_used": True,
+                    })
+                    provenance.append({
+                        "provider": "highlightly",
+                        "fixture_id": fixture_key,
+                        "match_id": str(fixture_report.get("highlightly_match_id") or ""),
+                        "canonical_name": metric,
+                        "raw_value": metric_observations[0].get("raw_value"),
+                        "normalized_value": value,
+                        "fetched_at": fetched_at.isoformat(),
+                        "fallback_used": True,
+                    })
+                    profile_fixtures_enriched.add(fixture_key)
+
+        if profile_fields_added:
+            tactics = analyze_tactics(matches)
+            profile["tactical_summary"] = tactics
+            for field in ("playing_style", "defensive_structure", "attacking_approach"):
+                if field in tactics:
+                    profile[field] = tactics[field]
+            data_quality = profile.setdefault("data_quality", {})
+            data_quality["highlightly_statistics_fallback_fields_added"] = profile_fields_added
+            data_quality["highlightly_statistics_fallback_matches"] = len(profile_fixtures_enriched)
+            profile["highlightly_statistics_fallback"] = {
+                "status": "applied",
+                "fields_added": profile_fields_added,
+                "matches_enriched": len(profile_fixtures_enriched),
+                "fetched_at": fetched_at.isoformat(),
+                "tactical_evidence_updated": False,
+            }
+            summary["profiles_updated"] += 1
+            summary["matches_enriched"] += len(profile_fixtures_enriched)
+
+    return summary
