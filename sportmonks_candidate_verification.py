@@ -349,11 +349,14 @@ def apply_verified_result_candidates_to_profiles(
     home/away team IDs and kickoff. The result contributes to form/goals only;
     no match statistics or TVD evidence are fabricated.
     """
+    from copy import deepcopy
     from form_analyzer import analyze_form, venue_rating
     from provider_core import normalize_team_name
     from tactical_indicators import analyze_tactics
     from sportmonks_layer2 import _CORE_STATISTICS
 
+    original_profiles = profiles
+    profiles = deepcopy(profiles)
     safe_limit = max(1, min(int(history_limit), 10))
     summary = {
         "status": "completed",
@@ -561,4 +564,8 @@ def apply_verified_result_candidates_to_profiles(
         if not fixture_added_for_candidate:
             summary["candidates_rejected"] += 1
 
+    for original, updated in zip(original_profiles, profiles):
+        if isinstance(original, dict) and isinstance(updated, dict):
+            original.clear()
+            original.update(updated)
     return summary
