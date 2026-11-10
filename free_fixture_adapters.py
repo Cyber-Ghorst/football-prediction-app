@@ -242,9 +242,9 @@ class OpenFootballAdapter(_StaticDatasetAdapter):
     BASE_URL = "https://raw.githubusercontent.com/openfootball/football.json/master"
 
     def season(self, season_file: str, competition: str) -> list[dict[str, Any]]:
-        if "/" in season_file or "\\" in season_file or not season_file.endswith(".json"):
-            raise ValueError("season_file must be a JSON filename within the dataset.")
-        url = f"{self.BASE_URL}/{quote(season_file, safe='')}"
+        if not season_file.endswith(".json") or season_file.startswith("/") or ".." in season_file.split("/"):
+            raise ValueError("season_file must be a safe JSON path within the dataset.")
+        url = f"{self.BASE_URL}/{quote(season_file, safe='/')}"
         payload = self._get_json(url)
         rows = payload.get("matches") if isinstance(payload, dict) else None
         if not isinstance(rows, list):
@@ -306,51 +306,53 @@ class OpenMatchdayAdapter(_StaticDatasetAdapter):
 
 
 class BzzoiroAdapter(_HttpAdapter):
-    """Bzzoiro client with an explicit documented endpoint supplied by deployment.
-
-    The endpoint is intentionally not guessed. Configure BZZOIRO_FIXTURES_URL
-    from the account's current API documentation; the token is never logged.
-    """
+    """Bzzoiro v2 upcoming-events adapter using the documented events endpoint."""
     provider = "bzzoiro"
+    BASE_URL = "https://sports.bzzoiro.com/api/v2/events/"
 
     def __init__(self, *, token: str | None = None, endpoint: str | None = None,
                  session: requests.Session | None = None, timeout: int = 20):
         super().__init__(session=session, timeout=timeout)
         self.token = token or os.getenv("BZZOIRO_API_TOKEN")
-        self.endpoint = endpoint or os.getenv("BZZOIRO_FIXTURES_URL")
+        self.endpoint = endpoint or os.getenv("BZZOIRO_FIXTURES_URL") or self.BASE_URL
         if not self.token:
             raise FreeFixtureProviderError("Bzzoiro requires BZZOIRO_API_TOKEN.")
-        if not self.endpoint or not self.endpoint.startswith("https://"):
-            raise FreeFixtureProviderError(
-                "Configure BZZOIRO_FIXTURES_URL from the current Bzzoiro API documentation."
-            )
+        if not self.endpoint.startswith("https://sports.bzzoiro.com/"):
+            raise FreeFixtureProviderError("BZZOIRO_FIXTURES_URL must use the documented BSD API host.")
 
-    def upcoming(self, *, params: dict[str, Any] | None = None) -> list[dict[str, Any]]:
-        payload = self._get_json(
-            self.endpoint, params=params,
-            headers={"Authorization": f"Bearer {self.token}"},
-        )
-        rows = payload.get("data") if isinstance(payload, dict) else None
-        if not isinstance(rows, list):
-            raise FreeFixtureProviderError("Bzzoiro response has no data array.")
+    def upcoming(self, *, params: dict[str, Any] | None = None,
+                 max_pages: int = 20) -> list[dict[str, Any]]:
+        query = {"status": "upcoming", "limit": 200, "offset": 0, **(params or {})}
+        headers = {"Authorization": f"Token {self.token}"}
         fetched = _utc_now()
         output = []
-        for row in rows:
-            if not isinstance(row, dict):
-                continue
-            output.append(_observation(
-                self.provider, row, fetched_at=fetched, source_url=self.endpoint,
-                licence="Bzzoiro API licence; app display/derived outputs only, no raw-feed redistribution",
-                fixture_id=row.get("id") or row.get("fixture_id"),
-                competition=row.get("competition") or row.get("league"),
-                season=row.get("season") or row.get("season_id"),
-                home=row.get("home_team") or row.get("home"),
-                away=row.get("away_team") or row.get("away"),
-                home_id=(row.get("home_team") or {}).get("id") if isinstance(row.get("home_team"), dict) else None,
-                away_id=(row.get("away_team") or {}).get("id") if isinstance(row.get("away_team"), dict) else None,
-                kickoff=row.get("kickoff") or row.get("starting_at") or row.get("date"),
-                status=row.get("status") or row.get("state") or "unknown",
-            ).to_dict())
+        for _ in range(max(1, int(max_pages))):
+            payload = self._get_json(self.endpoint, params=query, headers=headers)
+            rows = payload.get("results") if isinstance(payload, dict) else None
+            if not isinstance(rows, list):
+                raise FreeFixtureProviderError("Bzzoiro response has no results array.")
+            for row in rows:
+                if not isinstance(row, dict):
+                    continue
+                league = row.get("league") if isinstance(row.get("league"), Mapping) else {}
+                season = row.get("season") if isinstance(row.get("season"), Mapping) else {}
+                home = row.get("home_team") or row.get("home") or row.get("home_team_name")
+                away = row.get("away_team") or row.get("away") or row.get("away_team_name")
+                output.append(_observation(
+                    self.provider, row, fetched_at=fetched, source_url=self.endpoint,
+                    licence="Bzzoiro API licence; app display/derived outputs only, no raw-feed redistribution",
+                    fixture_id=row.get("id") or row.get("event_id") or row.get("fixture_id"),
+                    competition=row.get("league_id") or row.get("competition") or league.get("name") or league.get("id"),
+                    season=row.get("season_id") or season.get("id") or row.get("season"),
+                    home=home, away=away,
+                    home_id=(home.get("id") if isinstance(home, Mapping) else row.get("home_team_id")),
+                    away_id=(away.get("id") if isinstance(away, Mapping) else row.get("away_team_id")),
+                    kickoff=row.get("event_date") or row.get("date") or row.get("kickoff"),
+                    status=row.get("status") or "unknown",
+                ).to_dict())
+            if not payload.get("next") or not rows:
+                break
+            query["offset"] = int(query.get("offset", 0)) + len(rows)
         return output
 
 
