@@ -173,11 +173,22 @@ def normalize_upcoming_fixtures(
         accepted.values(),
         key=lambda row: (row["starting_at_timestamp"], int(row["id"])),
     )
+    highlighted = select_highlighted_fixtures(rows)
+    highlighted_ids = {row["id"] for row in highlighted}
+    for row in rows:
+        row["is_highlighted"] = row["id"] in highlighted_ids
+        row["highlight_priority"] = _competition_priority(row)
     competition_keys = {
         (str(row["league_id"]), str(row["season_id"])) for row in rows
     }
     return {
         "fixtures": rows,
+        "highlighted_fixtures": highlighted,
+        "highlight_limit": MAX_HIGHLIGHTED_FIXTURES,
+        "highlighted_count": len(highlighted),
+        "major_competition_fixture_count": sum(
+            1 for row in rows if row["highlight_priority"] < 3
+        ),
         "fixtures_found": len(rows),
         "competitions_found": len(competition_keys),
         "window_start_utc": current.isoformat(),
