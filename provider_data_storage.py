@@ -66,6 +66,18 @@ CREATE TABLE IF NOT EXISTS provider_collection_runs (
 );
 CREATE INDEX IF NOT EXISTS provider_collection_runs_lookup
     ON provider_collection_runs (cache_key, attempted_at DESC);
+
+CREATE TABLE IF NOT EXISTS provider_reliability_history (
+    snapshot_id TEXT PRIMARY KEY,
+    competition TEXT NOT NULL,
+    season INTEGER NOT NULL,
+    primary_provider TEXT NOT NULL,
+    captured_at TIMESTAMPTZ NOT NULL,
+    matches JSONB NOT NULL,
+    matches_count INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS provider_reliability_history_scope
+    ON provider_reliability_history (competition, season, captured_at DESC);
 """
 
 
@@ -390,3 +402,91 @@ def save_provider_snapshot_and_record_run(
         "run_recorded": run_recorded,
         "run_error_type": run_error_type,
     }
+
+
+INSERT_PROVIDER_RELIABILITY_SQL = """
+INSERT INTO provider_reliability_history (
+    snapshot_id, competition, season, primary_provider, captured_at,
+    matches, matches_count
+) VALUES (%s, %s, %s, %s, %s, %s, %s)
+"""
+
+LOAD_PROVIDER_RELIABILITY_SQL = """
+SELECT snapshot_id, competition, season, primary_provider, captured_at,
+       matches, matches_count
+FROM provider_reliability_history
+WHERE competition = %s AND season = %s
+  AND captured_at >= NOW() - INTERVAL '90 days'
+ORDER BY captured_at DESC
+LIMIT %s
+"""
+
+
+def save_provider_reliability_snapshot(
+    database_url: str,
+    *,
+    competition: str,
+    season: int,
+    primary_provider: str,
+    matches: Any,
+    captured_at: datetime | None = None,
+) -> str:
+    """Append exact-fixture corroboration evidence for rolling reliability analysis."""
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+    competition_name = str(competition or "").strip()
+    provider_name = str(primary_provider or "").strip().lower()
+    if not competition_name or not provider_name:
+        raise ValueError("competition and primary_provider are required.")
+    if isinstance(season, bool) or not isinstance(season, int) or season < 1:
+        raise ValueError("season must be a positive integer.")
+    safe_matches = _json_safe(matches if matches is not None else [])
+    if not isinstance(safe_matches, list):
+        raise ValueError("matches must be a JSON array.")
+    if any(not isinstance(row, dict) for row in safe_matches):
+        raise ValueError("Every reliability match must be a JSON object.")
+    captured = captured_at or datetime.now(timezone.utc)
+    if captured.tzinfo is None:
+        captured = captured.replace(tzinfo=timezone.utc)
+    snapshot_id = str(uuid.uuid4())
+    with _connect(database_url) as connection:
+        _ensure_provider_storage_once(database_url, connection)
+        with connection.cursor() as cursor:
+            cursor.execute(
+                INSERT_PROVIDER_RELIABILITY_SQL,
+                (
+                    snapshot_id, competition_name, season, provider_name,
+                    captured, Jsonb(safe_matches), len(safe_matches),
+                ),
+            )
+    return snapshot_id
+
+
+def load_provider_reliability_history(
+    database_url: str,
+    *,
+    competition: str,
+    season: int,
+    limit: int = 500,
+) -> list[dict[str, Any]]:
+    """Load append-only reliability evidence from the last 90 days."""
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+    if not str(competition or "").strip():
+        raise ValueError("competition is required.")
+    if isinstance(season, bool) or not isinstance(season, int) or season < 1:
+        raise ValueError("season must be a positive integer.")
+    if isinstance(limit, bool) or not isinstance(limit, int) or not 1 <= limit <= 2000:
+        raise ValueError("limit must be an integer between 1 and 2000.")
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                LOAD_PROVIDER_RELIABILITY_SQL,
+                (str(competition).strip(), season, limit),
+            )
+            rows = cursor.fetchall()
+    names = (
+        "snapshot_id", "competition", "season", "primary_provider",
+        "captured_at", "matches", "matches_count",
+    )
+    return [dict(zip(names, row)) for row in rows]

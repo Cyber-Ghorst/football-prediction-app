@@ -1,6 +1,6 @@
 import unittest
 
-from source_reliability import build_source_reliability_report
+from source_reliability import build_source_reliability_report, build_rolling_source_reliability_report
 
 
 def _record(home_primary=2, away_primary=1, home_secondary=2, away_secondary=1,
@@ -97,6 +97,32 @@ class SourceReliabilityTests(unittest.TestCase):
         self.assertFalse(
             report["providers"]["highlightly"]["eligible_for_provider_priority_changes"]
         )
+
+
+    def test_rolling_history_deduplicates_same_fixture_across_collection_runs(self):
+        match = _record()
+        match.update({
+            "competition_key": "england|england",
+            "season": 2026,
+            "kickoff_utc": "2026-11-01T15:00:00Z",
+            "home": {"name": "Home FC"},
+            "away": {"name": "Away FC"},
+        })
+        report = build_rolling_source_reliability_report(
+            [{"matches": [match]}, {"matches": [match]}],
+            minimum_score_samples=1,
+        )
+        self.assertEqual(report["matches_received"], 1)
+        self.assertEqual(report["history"]["collection_runs_loaded"], 2)
+        self.assertEqual(report["history"]["unique_fixture_observations"], 1)
+        self.assertTrue(report["history"]["rolling_sample"])
+
+    def test_rolling_history_excludes_records_without_complete_fixture_identity(self):
+        report = build_rolling_source_reliability_report(
+            [{"matches": [_record()]}], minimum_score_samples=1
+        )
+        self.assertEqual(report["matches_received"], 0)
+        self.assertEqual(report["history"]["unique_fixture_observations"], 0)
 
     def test_invalid_minimum_sample_setting_is_rejected(self):
         for value in (0, -1, True, 1.5):

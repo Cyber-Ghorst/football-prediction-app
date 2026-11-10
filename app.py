@@ -102,7 +102,7 @@ try:
     from competition_crosswalk import build_competition_crosswalk
     from provider_health import assess_api_football_status, assess_livescore_metadata
     from provider_corroboration import collect_recent_result_corroboration
-    from source_reliability import build_source_reliability_report
+    from source_reliability import build_source_reliability_report, build_rolling_source_reliability_report
     from highlightly_match_enrichment import (
         apply_highlightly_lineups_fallback,
         apply_highlightly_statistics_fallback,
@@ -132,6 +132,8 @@ try:
         save_provider_snapshot,
         save_provider_snapshot_and_record_run,
         record_provider_collection_run,
+        save_provider_reliability_snapshot,
+        load_provider_reliability_history,
     )
     from football_repository import (
         ensure_football_repository, repository_table_counts, import_sportmonks_season,
@@ -2319,6 +2321,18 @@ try:
                                 "These diagnostics do not change provider priority or prediction inputs."
                             )
                             with st.expander("Provider reliability evidence", expanded=True):
+                                history_status = (source_reliability_report.get("history") or {}).get("persistence_status")
+                                if history_status == "available":
+                                    history = source_reliability_report["history"]
+                                    st.caption(
+                                        f"Rolling 90-day history: {history.get('unique_fixture_observations', 0)} unique exact fixtures "
+                                        f"across {history.get('collection_runs_loaded', 0)} saved collection runs. "
+                                        "Repeated fixtures are deduplicated before calculating agreement."
+                                    )
+                                elif history_status == "unavailable":
+                                    st.warning("Persistent reliability history is temporarily unavailable; the report below uses this collection run only.")
+                                else:
+                                    st.caption("Reliability history accumulates only when exact cross-provider fixture comparisons are available.")
                                 st.json(source_reliability_report)
 
                             st.subheader("Independent result corroboration")
@@ -2659,6 +2673,39 @@ try:
                 "provider_priority_modified": False,
             }
         )
+        if int(season) > 2024 and corroboration and corroboration.get("matches"):
+            try:
+                save_provider_reliability_snapshot(
+                    PROVIDER_DATABASE_URL,
+                    competition=str(selected_league),
+                    season=int(season),
+                    primary_provider="sportmonks",
+                    matches=corroboration.get("matches") or [],
+                )
+                reliability_history = load_provider_reliability_history(
+                    PROVIDER_DATABASE_URL,
+                    competition=str(selected_league),
+                    season=int(season),
+                    limit=500,
+                )
+                source_reliability_report = build_rolling_source_reliability_report(
+                    reliability_history,
+                    primary_provider="sportmonks",
+                    minimum_score_samples=30,
+                )
+            except Exception as reliability_storage_error:
+                source_reliability_report["history"] = {
+                    "persistence_status": "unavailable",
+                    "rolling_sample": False,
+                    "error_type": type(reliability_storage_error).__name__,
+                    "note": "Current-run reliability remains available; historical accumulation will resume when provider storage is reachable.",
+                }
+        elif int(season) > 2024:
+            source_reliability_report["history"] = {
+                "persistence_status": "no_comparable_matches",
+                "rolling_sample": False,
+                "note": "No exact cross-provider fixture comparisons were available to archive in this collection run.",
+            }
         for profile in (home, away):
             team_name = profile.get("name")
             if team_name in squad_fetch_diagnostics:
