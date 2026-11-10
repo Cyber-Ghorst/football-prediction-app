@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import patch
 
 from provider_entity_crosswalk import (
-    build_entity_crosswalk_candidates,
+    build_entity_crosswalk_candidates,\n    extract_provider_entities_from_observations,
     normalize_entity_name,
     save_explicit_provider_entity_links,
 )
@@ -97,6 +97,36 @@ class ProviderEntityCrosswalkTests(unittest.TestCase):
             canonical_parent_ids={"league-9": "sportmonks:league-1"},
         )
         self.assertEqual(mapped[0]["status"], "candidate_requires_manual_approval")
+
+
+    def test_extracts_unique_source_entities_from_archived_observations(self):
+        observations = [
+            {
+                "competition_key": "bl1", "competition_name": "Bundesliga",
+                "season_key": "2026", "season_name": "2026",
+                "home_team_key": "openligadb:team:1", "home_team_name": "Home FC",
+                "away_team_key": "openligadb:team:2", "away_team_name": "Away FC",
+                "raw_payload": {
+                    "leagueCountry": "Germany",
+                    "team1": {"teamName": "Home FC", "teamCountry": "Germany"},
+                    "team2": {"teamName": "Away FC", "teamCountry": "Germany"},
+                },
+            },
+            {
+                "competition_key": "bl1", "competition_name": "Bundesliga",
+                "season_key": "2026", "season_name": "2026",
+                "home_team_key": "openligadb:team:1", "home_team_name": "Home FC",
+                "away_team_key": "openligadb:team:3", "away_team_name": "Third FC",
+                "raw_payload": {"leagueCountry": "Germany"},
+            },
+        ]
+        entities = extract_provider_entities_from_observations("openligadb", observations)
+        self.assertEqual(len(entities["leagues"]), 1)
+        self.assertEqual(len(entities["seasons"]), 1)
+        self.assertEqual(len(entities["teams"]), 3)
+        home = next(row for row in entities["teams"] if row["id"] == "openligadb:team:1")
+        self.assertEqual(home["country"], "Germany")
+        self.assertEqual(home["observation_count"], 2)
 
     def test_explicit_link_requires_reason_and_existing_canonical_entity(self):
         with self.assertRaisesRegex(ValueError, "approval_reason"):
