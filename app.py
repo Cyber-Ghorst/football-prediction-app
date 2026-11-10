@@ -103,6 +103,7 @@ try:
     from provider_health import assess_api_football_status, assess_livescore_metadata
     from provider_corroboration import collect_recent_result_corroboration
     from source_reliability import build_source_reliability_report, build_rolling_source_reliability_report
+    from conflict_audit import build_conflict_resolution_audit
     from highlightly_match_enrichment import (
         apply_highlightly_lineups_fallback,
         apply_highlightly_statistics_fallback,
@@ -134,6 +135,8 @@ try:
         record_provider_collection_run,
         save_provider_reliability_snapshot,
         load_provider_reliability_history,
+        save_conflict_resolution_audit,
+        load_conflict_resolution_audit,
     )
     from football_repository import (
         ensure_football_repository, repository_table_counts, import_sportmonks_season,
@@ -2335,6 +2338,14 @@ try:
                                     st.caption("Reliability history accumulates only when exact cross-provider fixture comparisons are available.")
                                 st.json(source_reliability_report)
 
+                            with st.expander("Conflict triage and immutable audit history", expanded=True):
+                                st.caption(
+                                    "Each conflicted field is recorded with its fixture identity, all source observations, "
+                                    "selected value/provider, configured-priority reason and timestamp. A priority selection "
+                                    "is a policy resolution, not a human override. Unresolved fields remain unknown."
+                                )
+                                st.json(conflict_audit_report)
+
                             st.subheader("Independent result corroboration")
                             st.caption(
                                 "Only exact competition/season/team/kickoff matches are considered. "
@@ -2706,6 +2717,51 @@ try:
                 "rolling_sample": False,
                 "note": "No exact cross-provider fixture comparisons were available to archive in this collection run.",
             }
+        conflict_audit_report = {
+            "status": "not_available",
+            "events_saved": 0,
+            "events": [],
+            "note": "Conflict audit events are created only from exact reconciled fixtures.",
+        }
+        if corroboration and corroboration.get("matches"):
+            try:
+                conflict_events = build_conflict_resolution_audit(
+                    corroboration.get("matches") or [],
+                    competition=str(selected_league),
+                    season=int(season),
+                )
+                if conflict_events:
+                    saved_count = save_conflict_resolution_audit(
+                        PROVIDER_DATABASE_URL, events=conflict_events
+                    )
+                    persisted_events = load_conflict_resolution_audit(
+                        PROVIDER_DATABASE_URL,
+                        competition=str(selected_league),
+                        season=int(season),
+                        limit=200,
+                    )
+                    conflict_audit_report = {
+                        "status": "available",
+                        "events_saved": saved_count,
+                        "events_loaded": len(persisted_events),
+                        "events": persisted_events,
+                        "policy": "Configured provider priority only; no human override, averaging or model-input mutation.",
+                    }
+                else:
+                    conflict_audit_report = {
+                        "status": "no_conflicts",
+                        "events_saved": 0,
+                        "events": [],
+                        "note": "No field-level conflicts were found in the exact reconciled fixtures.",
+                    }
+            except Exception as conflict_audit_error:
+                conflict_audit_report = {
+                    "status": "unavailable",
+                    "events_saved": 0,
+                    "events": [],
+                    "error_type": type(conflict_audit_error).__name__,
+                    "note": "The current-run conflict diagnostics remain visible; persistent audit storage will resume when provider storage is reachable.",
+                }
         for profile in (home, away):
             team_name = profile.get("name")
             if team_name in squad_fetch_diagnostics:
