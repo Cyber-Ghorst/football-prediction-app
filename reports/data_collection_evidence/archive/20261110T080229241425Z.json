@@ -1,0 +1,6144 @@
+{
+  "season": 2026,
+  "competition": "Premier League — England",
+  "selected_fixture": {
+    "id": 19722100,
+    "sport_id": 1,
+    "league_id": 8,
+    "season_id": 28083,
+    "stage_id": 77482558,
+    "group_id": null,
+    "aggregate_id": null,
+    "round_id": 407864,
+    "state_id": 1,
+    "venue_id": 321614,
+    "name": "Chelsea vs Leeds United",
+    "starting_at": "2026-11-21 15:00:00",
+    "result_info": null,
+    "leg": "1/1",
+    "details": null,
+    "length": 90,
+    "placeholder": false,
+    "has_odds": true,
+    "has_premium_odds": true,
+    "starting_at_timestamp": 1795273200,
+    "participants": [
+      {
+        "id": 71,
+        "sport_id": 1,
+        "country_id": 462,
+        "venue_id": 488,
+        "gender": "male",
+        "name": "Leeds United",
+        "short_code": "LEE",
+        "image_path": "https://cdn.sportmonks.com/images/soccer/teams/7/71.png",
+        "founded": 1919,
+        "type": "domestic",
+        "placeholder": false,
+        "last_played_at": "2026-11-07 12:30:00",
+        "meta": {
+          "location": "away",
+          "winner": null,
+          "position": null
+        }
+      },
+      {
+        "id": 18,
+        "sport_id": 1,
+        "country_id": 462,
+        "venue_id": 321614,
+        "gender": "male",
+        "name": "Chelsea",
+        "short_code": "CHE",
+        "image_path": "https://cdn.sportmonks.com/images/soccer/teams/18/18.png",
+        "founded": 1905,
+        "type": "domestic",
+        "placeholder": false,
+        "last_played_at": "2026-11-08 14:00:00",
+        "meta": {
+          "location": "home",
+          "winner": null,
+          "position": null
+        }
+      }
+    ],
+    "scores": [],
+    "_schedule_duplicate_fixture_ids": [],
+    "_schedule_unique_fixture_count": 380,
+    "state": {
+      "id": 1,
+      "state": "NS",
+      "name": "Not Started",
+      "short_name": "NS",
+      "developer_name": "NS"
+    },
+    "league": {
+      "id": 8,
+      "sport_id": 1,
+      "country_id": 462,
+      "name": "Premier League",
+      "active": true,
+      "short_code": "UK PL",
+      "image_path": "https://cdn.sportmonks.com/images/soccer/leagues/8/8.png",
+      "type": "league",
+      "sub_type": "domestic",
+      "last_played_at": "2026-11-08 16:30:00",
+      "category": 1,
+      "has_jerseys": false
+    },
+    "season": {
+      "id": 28083,
+      "sport_id": 1,
+      "league_id": 8,
+      "tie_breaker_rule_id": 1526,
+      "name": "2026/2027",
+      "finished": false,
+      "pending": false,
+      "is_current": true,
+      "starting_at": "2026-08-21",
+      "ending_at": "2027-05-30",
+      "standings_recalculated_at": "2026-11-09 01:37:27",
+      "games_in_current_week": false
+    },
+    "statistics": [],
+    "fixture_details_fetched_at": "2026-11-10T08:02:10.673708+00:00",
+    "collection_fetched_at": "2026-11-10T08:02:10.673771+00:00"
+  },
+  "squad_fetch_diagnostics": {
+    "Chelsea": {
+      "status": "retrieved",
+      "rows_returned": 31,
+      "elapsed_seconds": 6.569,
+      "error": null,
+      "roster_complete": true,
+      "players_assessed": 28,
+      "current_squad_players": 28,
+      "matching_team_season_statistics_rows": 28,
+      "players_without_season_statistics": [],
+      "players_with_multiple_season_statistics_rows": [],
+      "players_with_minutes_detail": 24,
+      "players_with_zero_minutes_inferred": [
+        {
+          "player_id": 35659570,
+          "player_name": "Gabriel Slonina",
+          "minutes_evidence_method": "sportmonks_has_values_false_no_season_statistics",
+          "appearances_total": 0,
+          "bench_appearances_total": null
+        },
+        {
+          "player_id": 37316840,
+          "player_name": "Jamie Gittens",
+          "minutes_evidence_method": "bench_appearances_without_playing_appearances",
+          "appearances_total": null,
+          "bench_appearances_total": 5.0
+        },
+        {
+          "player_id": 37373590,
+          "player_name": "Teddy Sharman-Lowe",
+          "minutes_evidence_method": "bench_appearances_without_playing_appearances",
+          "appearances_total": null,
+          "bench_appearances_total": 3.0
+        },
+        {
+          "player_id": 37700784,
+          "player_name": "Aarón Anselmino",
+          "minutes_evidence_method": "bench_appearances_without_playing_appearances",
+          "appearances_total": null,
+          "bench_appearances_total": 1.0
+        }
+      ],
+      "minutes_type_ids_seen": [
+        41,
+        42,
+        52,
+        56,
+        58,
+        59,
+        78,
+        79,
+        80,
+        86,
+        88,
+        94,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        116,
+        117,
+        118,
+        119,
+        122,
+        123,
+        194,
+        214,
+        216,
+        321,
+        322,
+        1584,
+        9676,
+        27255,
+        51,
+        215,
+        323,
+        581,
+        57,
+        87,
+        104,
+        580,
+        64,
+        84,
+        40,
+        47,
+        85,
+        324,
+        571
+      ],
+      "players_missing_minutes_detail": [],
+      "player_statistic_values": [
+        {
+          "player_id": 323,
+          "type_id": 119,
+          "value": {
+            "total": 447
+          }
+        },
+        {
+          "player_id": 323,
+          "type_id": 321,
+          "value": {
+            "total": 5
+          }
+        },
+        {
+          "player_id": 323,
+          "type_id": 322,
+          "value": {
+            "total": 5
+          }
+        },
+        {
+          "player_id": 627,
+          "type_id": 119,
+          "value": {
+            "total": 156
+          }
+        },
+        {
+          "player_id": 627,
+          "type_id": 321,
+          "value": {
+            "total": 8
+          }
+        },
+        {
+          "player_id": 627,
+          "type_id": 322,
+          "value": {
+            "total": 1
+          }
+        },
+        {
+          "player_id": 627,
+          "type_id": 323,
+          "value": {
+            "total": 9
+          }
+        },
+        {
+          "player_id": 1343,
+          "type_id": 119,
+          "value": {
+            "total": 525
+          }
+        },
+        {
+          "player_id": 1343,
+          "type_id": 321,
+          "value": {
+            "total": 6
+          }
+        },
+        {
+          "player_id": 1343,
+          "type_id": 322,
+          "value": {
+            "total": 6
+          }
+        },
+        {
+          "player_id": 496775,
+          "type_id": 119,
+          "value": {
+            "total": 745
+          }
+        },
+        {
+          "player_id": 496775,
+          "type_id": 321,
+          "value": {
+            "total": 10
+          }
+        },
+        {
+          "player_id": 496775,
+          "type_id": 322,
+          "value": {
+            "total": 9
+          }
+        },
+        {
+          "player_id": 496775,
+          "type_id": 323,
+          "value": {
+            "total": 1
+          }
+        },
+        {
+          "player_id": 581220,
+          "type_id": 119,
+          "value": {
+            "total": 292
+          }
+        },
+        {
+          "player_id": 581220,
+          "type_id": 321,
+          "value": {
+            "total": 4
+          }
+        },
+        {
+          "player_id": 581220,
+          "type_id": 322,
+          "value": {
+            "total": 3
+          }
+        },
+        {
+          "player_id": 581220,
+          "type_id": 323,
+          "value": {
+            "total": 1
+          }
+        },
+        {
+          "player_id": 4592198,
+          "type_id": 119,
+          "value": {
+            "total": 883
+          }
+        },
+        {
+          "player_id": 4592198,
+          "type_id": 321,
+          "value": {
+            "total": 10
+          }
+        },
+        {
+          "player_id": 4592198,
+          "type_id": 322,
+          "value": {
+            "total": 10
+          }
+        },
+        {
+          "player_id": 5666458,
+          "type_id": 119,
+          "value": {
+            "total": 634
+          }
+        },
+        {
+          "player_id": 5666458,
+          "type_id": 321,
+          "value": {
+            "total": 8
+          }
+        },
+        {
+          "player_id": 5666458,
+          "type_id": 322,
+          "value": {
+            "total": 7
+          }
+        },
+        {
+          "player_id": 5666458,
+          "type_id": 323,
+          "value": {
+            "total": 1
+          }
+        },
+        {
+          "player_id": 11311795,
+          "type_id": 119,
+          "value": {
+            "total": 495
+          }
+        },
+        {
+          "player_id": 11311795,
+          "type_id": 321,
+          "value": {
+            "total": 6
+          }
+        },
+        {
+          "player_id": 11311795,
+          "type_id": 322,
+          "value": {
+            "total": 6
+          }
+        },
+        {
+          "player_id": 11311795,
+          "type_id": 323,
+          "value": {
+            "total": 3
+          }
+        },
+        {
+          "player_id": 21803152,
+          "type_id": 119,
+          "value": {
+            "total": 392
+          }
+        },
+        {
+          "player_id": 21803152,
+          "type_id": 321,
+          "value": {
+            "total": 8
+          }
+        },
+        {
+          "player_id": 21803152,
+          "type_id": 322,
+          "value": {
+            "total": 3
+          }
+        },
+        {
+          "player_id": 21803152,
+          "type_id": 323,
+          "value": {
+            "total": 5
+          }
+        },
+        {
+          "player_id": 28912747,
+          "type_id": 119,
+          "value": {
+            "total": 880
+          }
+        },
+        {
+          "player_id": 28912747,
+          "type_id": 321,
+          "value": {
+            "total": 10
+          }
+        },
+        {
+          "player_id": 28912747,
+          "type_id": 322,
+          "value": {
+            "total": 10
+          }
+        },
+        {
+          "player_id": 28931574,
+          "type_id": 119,
+          "value": {
+            "total": 521
+          }
+        },
+        {
+          "player_id": 28931574,
+          "type_id": 321,
+          "value": {
+            "total": 6
+          }
+        },
+        {
+          "player_id": 28931574,
+          "type_id": 322,
+          "value": {
+            "total": 6
+          }
+        },
+        {
+          "player_id": 37259180,
+          "type_id": 119,
+          "value": {
+            "total": 747
+          }
+        },
+        {
+          "player_id": 37259180,
+          "type_id": 321,
+          "value": {
+            "total": 9
+          }
+        },
+        {
+          "player_id": 37259180,
+          "type_id": 322,
+          "value": {
+            "total": 9
+          }
+        },
+        {
+          "player_id": 37259180,
+          "type_id": 323,
+          "value": {
+            "total": 1
+          }
+        },
+        {
+          "player_id": 37261500,
+          "type_id": 119,
+          "value": {
+            "total": 442
+          }
+        },
+        {
+          "player_id": 37261500,
+          "type_id": 321,
+          "value": {
+            "total": 6
+          }
+        },
+        {
+          "player_id": 37261500,
+          "type_id": 322,
+          "value": {
+            "total": 5
+          }
+        },
+        {
+          "player_id": 37261500,
+          "type_id": 323,
+          "value": {
+            "total": 1
+          }
+        },
+        {
+          "player_id": 37316840,
+          "type_id": 323,
+          "value": {
+            "total": 5
+          }
+        },
+        {
+          "player_id": 37317367,
+          "type_id": 119,
+          "value": {
+            "total": 317
+          }
+        },
+        {
+          "player_id": 37317367,
+          "type_id": 321,
+          "value": {
+            "total": 7
+          }
+        },
+        {
+          "player_id": 37317367,
+          "type_id": 322,
+          "value": {
+            "total": 3
+          }
+        },
+        {
+          "player_id": 37317367,
+          "type_id": 323,
+          "value": {
+            "total": 6
+          }
+        },
+        {
+          "player_id": 37373590,
+          "type_id": 323,
+          "value": {
+            "total": 3
+          }
+        },
+        {
+          "player_id": 37400423,
+          "type_id": 119,
+          "value": {
+            "total": 3
+          }
+        },
+        {
+          "player_id": 37400423,
+          "type_id": 321,
+          "value": {
+            "total": 1
+          }
+        },
+        {
+          "player_id": 37400423,
+          "type_id": 323,
+          "value": {
+            "total": 2
+          }
+        },
+        {
+          "player_id": 37536874,
+          "type_id": 119,
+          "value": {
+            "total": 473
+          }
+        },
+        {
+          "player_id": 37536874,
+          "type_id": 321,
+          "value": {
+            "total": 8
+          }
+        },
+        {
+          "player_id": 37536874,
+          "type_id": 322,
+          "value": {
+            "total": 6
+          }
+        },
+        {
+          "player_id": 37536874,
+          "type_id": 323,
+          "value": {
+            "total": 4
+          }
+        },
+        {
+          "player_id": 37577727,
+          "type_id": 119,
+          "value": {
+            "total": 128
+          }
+        },
+        {
+          "player_id": 37577727,
+          "type_id": 321,
+          "value": {
+            "total": 4
+          }
+        },
+        {
+          "player_id": 37577727,
+          "type_id": 322,
+          "value": {
+            "total": 1
+          }
+        },
+        {
+          "player_id": 37577727,
+          "type_id": 323,
+          "value": {
+            "total": 8
+          }
+        },
+        {
+          "player_id": 37590621,
+          "type_id": 119,
+          "value": {
+            "total": 285
+          }
+        },
+        {
+          "player_id": 37590621,
+          "type_id": 321,
+          "value": {
+            "total": 4
+          }
+        },
+        {
+          "player_id": 37590621,
+          "type_id": 322,
+          "value": {
+            "total": 3
+          }
+        },
+        {
+          "player_id": 37590621,
+          "type_id": 323,
+          "value": {
+            "total": 7
+          }
+        },
+        {
+          "player_id": 37600243,
+          "type_id": 119,
+          "value": {
+            "total": 415
+          }
+        },
+        {
+          "player_id": 37600243,
+          "type_id": 321,
+          "value": {
+            "total": 6
+          }
+        },
+        {
+          "player_id": 37600243,
+          "type_id": 322,
+          "value": {
+            "total": 6
+          }
+        },
+        {
+          "player_id": 37600243,
+          "type_id": 323,
+          "value": {
+            "total": 2
+          }
+        },
+        {
+          "player_id": 37631362,
+          "type_id": 119,
+          "value": {
+            "total": 581
+          }
+        },
+        {
+          "player_id": 37631362,
+          "type_id": 321,
+          "value": {
+            "total": 8
+          }
+        },
+        {
+          "player_id": 37631362,
+          "type_id": 322,
+          "value": {
+            "total": 6
+          }
+        },
+        {
+          "player_id": 37631362,
+          "type_id": 323,
+          "value": {
+            "total": 3
+          }
+        },
+        {
+          "player_id": 37653289,
+          "type_id": 119,
+          "value": {
+            "total": 191
+          }
+        },
+        {
+          "player_id": 37653289,
+          "type_id": 321,
+          "value": {
+            "total": 5
+          }
+        },
+        {
+          "player_id": 37653289,
+          "type_id": 322,
+          "value": {
+            "total": 2
+          }
+        },
+        {
+          "player_id": 37653289,
+          "type_id": 323,
+          "value": {
+            "total": 3
+          }
+        },
+        {
+          "player_id": 37656652,
+          "type_id": 119,
+          "value": {
+            "total": 112
+          }
+        },
+        {
+          "player_id": 37656652,
+          "type_id": 321,
+          "value": {
+            "total": 6
+          }
+        },
+        {
+          "player_id": 37656652,
+          "type_id": 322,
+          "value": {
+            "total": 1
+          }
+        },
+        {
+          "player_id": 37656652,
+          "type_id": 323,
+          "value": {
+            "total": 8
+          }
+        },
+        {
+          "player_id": 37700784,
+          "type_id": 323,
+          "value": {
+            "total": 1
+          }
+        },
+        {
+          "player_id": 37701999,
+          "type_id": 119,
+          "value": {
+            "total": 179
+          }
+        },
+        {
+          "player_id": 37701999,
+          "type_id": 321,
+          "value": {
+            "total": 8
+          }
+        },
+        {
+          "player_id": 37701999,
+          "type_id": 322,
+          "value": {
+            "total": 1
+          }
+        },
+        {
+          "player_id": 37701999,
+          "type_id": 323,
+          "value": {
+            "total": 9
+          }
+        },
+        {
+          "player_id": 37910032,
+          "type_id": 119,
+          "value": {
+            "total": 3
+          }
+        },
+        {
+          "player_id": 37910032,
+          "type_id": 321,
+          "value": {
+            "total": 1
+          }
+        },
+        {
+          "player_id": 37910032,
+          "type_id": 323,
+          "value": {
+            "total": 5
+          }
+        }
+      ],
+      "sample_detail_shapes": [
+        {
+          "keys": [
+            "id",
+            "player_statistic_id",
+            "type_id",
+            "value"
+          ],
+          "type_id": 41,
+          "value_type": "dict"
+        },
+        {
+          "keys": [
+            "id",
+            "player_statistic_id",
+            "type_id",
+            "value"
+          ],
+          "type_id": 42,
+          "value_type": "dict"
+        },
+        {
+          "keys": [
+            "id",
+            "player_statistic_id",
+            "type_id",
+            "value"
+          ],
+          "type_id": 52,
+          "value_type": "dict"
+        },
+        {
+          "keys": [
+            "id",
+            "player_statistic_id",
+            "type_id",
+            "value"
+          ],
+          "type_id": 56,
+          "value_type": "dict"
+        },
+        {
+          "keys": [
+            "id",
+            "player_statistic_id",
+            "type_id",
+            "value"
+          ],
+          "type_id": 58,
+          "value_type": "dict"
+        }
+      ],
+      "reason": "Current extended squad, matching team-season minutes and exact-fixture sidelined feed passed identity and date checks.",
+      "not_current_squad_rows_seen": 3,
+      "not_current_squad_players": [
+        {
+          "player_id": 581000,
+          "player_name": "Robert Sánchez"
+        },
+        {
+          "player_id": 29709995,
+          "player_name": "Enzo Fernández"
+        },
+        {
+          "player_id": 37740888,
+          "player_name": "Olutayo Subuloye"
+        }
+      ],
+      "importance_method": "current_squad_season_minutes_played_relative_to_squad_max",
+      "sidelined_feed_available": true,
+      "reported_sidelined_count": 0,
+      "availability_score": 100.0,
+      "availability_status": "scored"
+    },
+    "Leeds United": {
+      "status": "retrieved",
+      "rows_returned": 28,
+      "elapsed_seconds": 6.498,
+      "error": null,
+      "roster_complete": true,
+      "players_assessed": 24,
+      "current_squad_players": 24,
+      "matching_team_season_statistics_rows": 24,
+      "players_without_season_statistics": [],
+      "players_with_multiple_season_statistics_rows": [],
+      "players_with_minutes_detail": 21,
+      "players_with_zero_minutes_inferred": [
+        {
+          "player_id": 5569,
+          "player_name": "Alex Cairns",
+          "minutes_evidence_method": "bench_appearances_without_playing_appearances",
+          "appearances_total": null,
+          "bench_appearances_total": 1.0
+        },
+        {
+          "player_id": 32406,
+          "player_name": "Michael Zetterer",
+          "minutes_evidence_method": "bench_appearances_without_playing_appearances",
+          "appearances_total": null,
+          "bench_appearances_total": 8.0
+        },
+        {
+          "player_id": 37568967,
+          "player_name": "Mateo Joseph",
+          "minutes_evidence_method": "sportmonks_has_values_false_no_season_statistics",
+          "appearances_total": 0,
+          "bench_appearances_total": null
+        }
+      ],
+      "minutes_type_ids_seen": [
+        41,
+        42,
+        51,
+        52,
+        56,
+        58,
+        59,
+        78,
+        79,
+        80,
+        84,
+        86,
+        88,
+        94,
+        96,
+        98,
+        101,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        116,
+        117,
+        118,
+        119,
+        122,
+        123,
+        194,
+        214,
+        215,
+        216,
+        321,
+        322,
+        580,
+        581,
+        1584,
+        9676,
+        27255,
+        99,
+        323,
+        97,
+        100,
+        40,
+        124,
+        125,
+        87,
+        64,
+        57,
+        104,
+        571
+      ],
+      "players_missing_minutes_detail": [],
+      "player_statistic_values": [
+        {
+          "player_id": 5141,
+          "type_id": 119,
+          "value": {
+            "total": 866
+          }
+        },
+        {
+          "player_id": 5141,
+          "type_id": 321,
+          "value": {
+            "total": 10
+          }
+        },
+        {
+          "player_id": 5141,
+          "type_id": 322,
+          "value": {
+            "total": 10
+          }
+        },
+        {
+          "player_id": 5149,
+          "type_id": 119,
+          "value": {
+            "total": 117
+          }
+        },
+        {
+          "player_id": 5149,
+          "type_id": 321,
+          "value": {
+            "total": 4
+          }
+        },
+        {
+          "player_id": 5149,
+          "type_id": 322,
+          "value": {
+            "total": 1
+          }
+        },
+        {
+          "player_id": 5149,
+          "type_id": 323,
+          "value": {
+            "total": 6
+          }
+        },
+        {
+          "player_id": 5403,
+          "type_id": 119,
+          "value": {
+            "total": 327
+          }
+        },
+        {
+          "player_id": 5403,
+          "type_id": 321,
+          "value": {
+            "total": 8
+          }
+        },
+        {
+          "player_id": 5403,
+          "type_id": 322,
+          "value": {
+            "total": 3
+          }
+        },
+        {
+          "player_id": 5403,
+          "type_id": 323,
+          "value": {
+            "total": 6
+          }
+        },
+        {
+          "player_id": 5569,
+          "type_id": 323,
+          "value": {
+            "total": 1
+          }
+        },
+        {
+          "player_id": 12514,
+          "type_id": 119,
+          "value": {
+            "total": 883
+          }
+        },
+        {
+          "player_id": 12514,
+          "type_id": 321,
+          "value": {
+            "total": 10
+          }
+        },
+        {
+          "player_id": 12514,
+          "type_id": 322,
+          "value": {
+            "total": 10
+          }
+        },
+        {
+          "player_id": 12542,
+          "type_id": 119,
+          "value": {
+            "total": 900
+          }
+        },
+        {
+          "player_id": 12542,
+          "type_id": 321,
+          "value": {
+            "total": 10
+          }
+        },
+        {
+          "player_id": 12542,
+          "type_id": 322,
+          "value": {
+            "total": 10
+          }
+        },
+        {
+          "player_id": 32406,
+          "type_id": 323,
+          "value": {
+            "total": 8
+          }
+        },
+        {
+          "player_id": 32525,
+          "type_id": 119,
+          "value": {
+            "total": 682
+          }
+        },
+        {
+          "player_id": 32525,
+          "type_id": 321,
+          "value": {
+            "total": 8
+          }
+        },
+        {
+          "player_id": 32525,
+          "type_id": 322,
+          "value": {
+            "total": 7
+          }
+        },
+        {
+          "player_id": 32525,
+          "type_id": 323,
+          "value": {
+            "total": 2
+          }
+        },
+        {
+          "player_id": 173737,
+          "type_id": 119,
+          "value": {
+            "total": 135
+          }
+        },
+        {
+          "player_id": 173737,
+          "type_id": 321,
+          "value": {
+            "total": 6
+          }
+        },
+        {
+          "player_id": 173737,
+          "type_id": 322,
+          "value": {
+            "total": 1
+          }
+        },
+        {
+          "player_id": 173737,
+          "type_id": 323,
+          "value": {
+            "total": 9
+          }
+        },
+        {
+          "player_id": 193196,
+          "type_id": 119,
+          "value": {
+            "total": 632
+          }
+        },
+        {
+          "player_id": 193196,
+          "type_id": 321,
+          "value": {
+            "total": 8
+          }
+        },
+        {
+          "player_id": 193196,
+          "type_id": 322,
+          "value": {
+            "total": 8
+          }
+        },
+        {
+          "player_id": 193196,
+          "type_id": 323,
+          "value": {
+            "total": 1
+          }
+        },
+        {
+          "player_id": 339112,
+          "type_id": 119,
+          "value": {
+            "total": 125
+          }
+        },
+        {
+          "player_id": 339112,
+          "type_id": 321,
+          "value": {
+            "total": 3
+          }
+        },
+        {
+          "player_id": 339112,
+          "type_id": 322,
+          "value": {
+            "total": 2
+          }
+        },
+        {
+          "player_id": 339112,
+          "type_id": 323,
+          "value": {
+            "total": 1
+          }
+        },
+        {
+          "player_id": 461027,
+          "type_id": 119,
+          "value": {
+            "total": 639
+          }
+        },
+        {
+          "player_id": 461027,
+          "type_id": 321,
+          "value": {
+            "total": 9
+          }
+        },
+        {
+          "player_id": 461027,
+          "type_id": 322,
+          "value": {
+            "total": 8
+          }
+        },
+        {
+          "player_id": 461027,
+          "type_id": 323,
+          "value": {
+            "total": 2
+          }
+        },
+        {
+          "player_id": 537217,
+          "type_id": 119,
+          "value": {
+            "total": 204
+          }
+        },
+        {
+          "player_id": 537217,
+          "type_id": 321,
+          "value": {
+            "total": 9
+          }
+        },
+        {
+          "player_id": 537217,
+          "type_id": 322,
+          "value": {
+            "total": 1
+          }
+        },
+        {
+          "player_id": 537217,
+          "type_id": 323,
+          "value": {
+            "total": 9
+          }
+        },
+        {
+          "player_id": 581158,
+          "type_id": 119,
+          "value": {
+            "total": 815
+          }
+        },
+        {
+          "player_id": 581158,
+          "type_id": 321,
+          "value": {
+            "total": 10
+          }
+        },
+        {
+          "player_id": 581158,
+          "type_id": 322,
+          "value": {
+            "total": 10
+          }
+        },
+        {
+          "player_id": 1548632,
+          "type_id": 119,
+          "value": {
+            "total": 259
+          }
+        },
+        {
+          "player_id": 1548632,
+          "type_id": 321,
+          "value": {
+            "total": 5
+          }
+        },
+        {
+          "player_id": 1548632,
+          "type_id": 322,
+          "value": {
+            "total": 3
+          }
+        },
+        {
+          "player_id": 1548632,
+          "type_id": 323,
+          "value": {
+            "total": 7
+          }
+        },
+        {
+          "player_id": 2178735,
+          "type_id": 119,
+          "value": {
+            "total": 677
+          }
+        },
+        {
+          "player_id": 2178735,
+          "type_id": 321,
+          "value": {
+            "total": 9
+          }
+        },
+        {
+          "player_id": 2178735,
+          "type_id": 322,
+          "value": {
+            "total": 7
+          }
+        },
+        {
+          "player_id": 2178735,
+          "type_id": 323,
+          "value": {
+            "total": 2
+          }
+        },
+        {
+          "player_id": 2206980,
+          "type_id": 119,
+          "value": {
+            "total": 63
+          }
+        },
+        {
+          "player_id": 2206980,
+          "type_id": 321,
+          "value": {
+            "total": 2
+          }
+        },
+        {
+          "player_id": 2206980,
+          "type_id": 323,
+          "value": {
+            "total": 8
+          }
+        },
+        {
+          "player_id": 3861741,
+          "type_id": 119,
+          "value": {
+            "total": 1
+          }
+        },
+        {
+          "player_id": 3861741,
+          "type_id": 321,
+          "value": {
+            "total": 1
+          }
+        },
+        {
+          "player_id": 3861741,
+          "type_id": 323,
+          "value": {
+            "total": 6
+          }
+        },
+        {
+          "player_id": 4536529,
+          "type_id": 119,
+          "value": {
+            "total": 486
+          }
+        },
+        {
+          "player_id": 4536529,
+          "type_id": 321,
+          "value": {
+            "total": 9
+          }
+        },
+        {
+          "player_id": 4536529,
+          "type_id": 322,
+          "value": {
+            "total": 6
+          }
+        },
+        {
+          "player_id": 4536529,
+          "type_id": 323,
+          "value": {
+            "total": 3
+          }
+        },
+        {
+          "player_id": 4552689,
+          "type_id": 119,
+          "value": {
+            "total": 293
+          }
+        },
+        {
+          "player_id": 4552689,
+          "type_id": 321,
+          "value": {
+            "total": 8
+          }
+        },
+        {
+          "player_id": 4552689,
+          "type_id": 322,
+          "value": {
+            "total": 3
+          }
+        },
+        {
+          "player_id": 4552689,
+          "type_id": 323,
+          "value": {
+            "total": 7
+          }
+        },
+        {
+          "player_id": 28575686,
+          "type_id": 119,
+          "value": {
+            "total": 900
+          }
+        },
+        {
+          "player_id": 28575686,
+          "type_id": 321,
+          "value": {
+            "total": 10
+          }
+        },
+        {
+          "player_id": 28575686,
+          "type_id": 322,
+          "value": {
+            "total": 10
+          }
+        },
+        {
+          "player_id": 37529525,
+          "type_id": 119,
+          "value": {
+            "total": 900
+          }
+        },
+        {
+          "player_id": 37529525,
+          "type_id": 321,
+          "value": {
+            "total": 10
+          }
+        },
+        {
+          "player_id": 37529525,
+          "type_id": 322,
+          "value": {
+            "total": 10
+          }
+        },
+        {
+          "player_id": 37612045,
+          "type_id": 119,
+          "value": {
+            "total": 17
+          }
+        },
+        {
+          "player_id": 37612045,
+          "type_id": 321,
+          "value": {
+            "total": 3
+          }
+        },
+        {
+          "player_id": 37612045,
+          "type_id": 323,
+          "value": {
+            "total": 7
+          }
+        }
+      ],
+      "sample_detail_shapes": [
+        {
+          "keys": [
+            "id",
+            "player_statistic_id",
+            "type_id",
+            "value"
+          ],
+          "type_id": 41,
+          "value_type": "dict"
+        },
+        {
+          "keys": [
+            "id",
+            "player_statistic_id",
+            "type_id",
+            "value"
+          ],
+          "type_id": 42,
+          "value_type": "dict"
+        },
+        {
+          "keys": [
+            "id",
+            "player_statistic_id",
+            "type_id",
+            "value"
+          ],
+          "type_id": 51,
+          "value_type": "dict"
+        },
+        {
+          "keys": [
+            "id",
+            "player_statistic_id",
+            "type_id",
+            "value"
+          ],
+          "type_id": 52,
+          "value_type": "dict"
+        },
+        {
+          "keys": [
+            "id",
+            "player_statistic_id",
+            "type_id",
+            "value"
+          ],
+          "type_id": 56,
+          "value_type": "dict"
+        }
+      ],
+      "reason": "Current extended squad, matching team-season minutes and exact-fixture sidelined feed passed identity and date checks.",
+      "not_current_squad_rows_seen": 4,
+      "not_current_squad_players": [
+        {
+          "player_id": 460159,
+          "player_name": "Lucas Perri"
+        },
+        {
+          "player_id": 37316986,
+          "player_name": "Wilfried Gnonto"
+        },
+        {
+          "player_id": 37657052,
+          "player_name": "Alfie Cresswell"
+        },
+        {
+          "player_id": 37769337,
+          "player_name": "Jayden Lienou"
+        }
+      ],
+      "importance_method": "current_squad_season_minutes_played_relative_to_squad_max",
+      "sidelined_feed_available": true,
+      "reported_sidelined_count": 0,
+      "availability_score": 100.0,
+      "availability_status": "scored"
+    }
+  },
+  "teams": {
+    "Chelsea": {
+      "data_quality": {
+        "provider": "sportmonks",
+        "season_id": 28083,
+        "matches_returned": 10,
+        "goals_complete": true,
+        "opponent_strength_matches": 10,
+        "statistics_matches": 10,
+        "statistics_observations": 157,
+        "statistics_raw_observations": 421,
+        "statistics_unmapped_observations": 264,
+        "fixtures_scanned": 380,
+        "schedule_unique_fixture_count": 380,
+        "duplicate_fixture_id_count": 0,
+        "duplicate_fixture_ids": [],
+        "same_season_fixtures": 380,
+        "season_eligible_fixtures": 380,
+        "fixtures_missing_season_id": 0,
+        "team_fixtures": 38,
+        "completed_fixtures": 10,
+        "fixtures_with_valid_scores": 10,
+        "excluded_wrong_season": 0,
+        "excluded_missing_participants": 0,
+        "excluded_other_team": 342,
+        "excluded_not_completed": 28,
+        "excluded_missing_scores": 0,
+        "excluded_invalid_kickoff": 0,
+        "excluded_invalid_scores": 0,
+        "excluded_duplicate_fixture_id": 0,
+        "history_shortfall": 0,
+        "history_latest_match_at": "2026-11-08T14:00:00+00:00",
+        "history_oldest_match_at": "2026-08-24T19:00:00+00:00",
+        "history_collection_fetched_at": null,
+        "history_repository_collected_at": "2026-11-09T00:52:24+00:00",
+        "history_provider_updated_at": null,
+        "history_order": "newest_first_by_parsed_utc_kickoff",
+        "statistics_core_metrics": [
+          "Ball Possession",
+          "Passes %",
+          "Total Shots",
+          "Shots on Target / Goal",
+          "Tackles",
+          "Interceptions",
+          "Blocked Shots",
+          "Corner Kicks"
+        ],
+        "statistics_coverage_by_metric": {
+          "Ball Possession": 10,
+          "Passes %": 10,
+          "Total Shots": 10,
+          "Shots on Target / Goal": 10,
+          "Tackles": 10,
+          "Interceptions": 10,
+          "Blocked Shots": 10,
+          "Corner Kicks": 10
+        },
+        "matches_with_any_statistics": 10,
+        "matches_with_complete_core_statistics": 10,
+        "core_statistics_completeness_pct": 100.0,
+        "team_fixture_accounting_gap": 0,
+        "team_fixture_accounting_status": "balanced",
+        "history_integrity_status": "ok",
+        "history_source": "cockroachdb_central_repository",
+        "repository_fixture_rows": 380,
+        "repository_fixture_payloads": 380,
+        "normalized_statistics_rows": 8430,
+        "fixtures_with_normalized_statistics": 100
+      },
+      "history_collection_diagnostics": {
+        "fixtures_scanned": 380,
+        "schedule_unique_fixture_count": 380,
+        "duplicate_fixture_id_count": 0,
+        "duplicate_fixture_ids": [],
+        "same_season_fixtures": 380,
+        "season_eligible_fixtures": 380,
+        "fixtures_missing_season_id": 0,
+        "team_fixtures": 38,
+        "completed_fixtures": 10,
+        "fixtures_with_valid_scores": 10,
+        "excluded_wrong_season": 0,
+        "excluded_missing_participants": 0,
+        "excluded_other_team": 342,
+        "excluded_not_completed": 28,
+        "excluded_missing_scores": 0,
+        "excluded_invalid_kickoff": 0,
+        "excluded_invalid_scores": 0,
+        "excluded_duplicate_fixture_id": 0,
+        "history_shortfall": 0,
+        "history_latest_match_at": "2026-11-08T14:00:00+00:00",
+        "history_oldest_match_at": "2026-08-24T19:00:00+00:00",
+        "history_collection_fetched_at": null,
+        "history_repository_collected_at": "2026-11-09T00:52:24+00:00",
+        "history_provider_updated_at": null,
+        "history_order": "newest_first_by_parsed_utc_kickoff",
+        "statistics_core_metrics": [
+          "Ball Possession",
+          "Passes %",
+          "Total Shots",
+          "Shots on Target / Goal",
+          "Tackles",
+          "Interceptions",
+          "Blocked Shots",
+          "Corner Kicks"
+        ],
+        "statistics_coverage_by_metric": {
+          "Ball Possession": 10,
+          "Passes %": 10,
+          "Total Shots": 10,
+          "Shots on Target / Goal": 10,
+          "Tackles": 10,
+          "Interceptions": 10,
+          "Blocked Shots": 10,
+          "Corner Kicks": 10
+        },
+        "matches_with_any_statistics": 10,
+        "matches_with_complete_core_statistics": 10,
+        "core_statistics_completeness_pct": 100.0,
+        "team_fixture_accounting_gap": 0,
+        "team_fixture_accounting_status": "balanced",
+        "history_integrity_status": "ok"
+      },
+      "player_availability_assessment": {
+        "score": 100.0,
+        "status": "scored",
+        "reason": "Calculated from a complete roster, known player statuses and evidenced importance weights.",
+        "source": "sportmonks",
+        "fixture_id": 19722100,
+        "players_assessed": 28,
+        "importance_weight_total": 1115.07,
+        "formula": "100 × available-player importance / total squad importance"
+      },
+      "player_availability_evidence": {
+        "roster_complete": true,
+        "players_assessed": 28,
+        "current_squad_players": 28,
+        "matching_team_season_statistics_rows": 28,
+        "players_without_season_statistics": [],
+        "players_with_multiple_season_statistics_rows": [],
+        "players_with_minutes_detail": 24,
+        "players_with_zero_minutes_inferred": [
+          {
+            "player_id": 35659570,
+            "player_name": "Gabriel Slonina",
+            "minutes_evidence_method": "sportmonks_has_values_false_no_season_statistics",
+            "appearances_total": 0,
+            "bench_appearances_total": null
+          },
+          {
+            "player_id": 37316840,
+            "player_name": "Jamie Gittens",
+            "minutes_evidence_method": "bench_appearances_without_playing_appearances",
+            "appearances_total": null,
+            "bench_appearances_total": 5.0
+          },
+          {
+            "player_id": 37373590,
+            "player_name": "Teddy Sharman-Lowe",
+            "minutes_evidence_method": "bench_appearances_without_playing_appearances",
+            "appearances_total": null,
+            "bench_appearances_total": 3.0
+          },
+          {
+            "player_id": 37700784,
+            "player_name": "Aarón Anselmino",
+            "minutes_evidence_method": "bench_appearances_without_playing_appearances",
+            "appearances_total": null,
+            "bench_appearances_total": 1.0
+          }
+        ],
+        "minutes_type_ids_seen": [
+          41,
+          42,
+          52,
+          56,
+          58,
+          59,
+          78,
+          79,
+          80,
+          86,
+          88,
+          94,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          116,
+          117,
+          118,
+          119,
+          122,
+          123,
+          194,
+          214,
+          216,
+          321,
+          322,
+          1584,
+          9676,
+          27255,
+          51,
+          215,
+          323,
+          581,
+          57,
+          87,
+          104,
+          580,
+          64,
+          84,
+          40,
+          47,
+          85,
+          324,
+          571
+        ],
+        "players_missing_minutes_detail": [],
+        "player_statistic_values": [
+          {
+            "player_id": 323,
+            "type_id": 119,
+            "value": {
+              "total": 447
+            }
+          },
+          {
+            "player_id": 323,
+            "type_id": 321,
+            "value": {
+              "total": 5
+            }
+          },
+          {
+            "player_id": 323,
+            "type_id": 322,
+            "value": {
+              "total": 5
+            }
+          },
+          {
+            "player_id": 627,
+            "type_id": 119,
+            "value": {
+              "total": 156
+            }
+          },
+          {
+            "player_id": 627,
+            "type_id": 321,
+            "value": {
+              "total": 8
+            }
+          },
+          {
+            "player_id": 627,
+            "type_id": 322,
+            "value": {
+              "total": 1
+            }
+          },
+          {
+            "player_id": 627,
+            "type_id": 323,
+            "value": {
+              "total": 9
+            }
+          },
+          {
+            "player_id": 1343,
+            "type_id": 119,
+            "value": {
+              "total": 525
+            }
+          },
+          {
+            "player_id": 1343,
+            "type_id": 321,
+            "value": {
+              "total": 6
+            }
+          },
+          {
+            "player_id": 1343,
+            "type_id": 322,
+            "value": {
+              "total": 6
+            }
+          },
+          {
+            "player_id": 496775,
+            "type_id": 119,
+            "value": {
+              "total": 745
+            }
+          },
+          {
+            "player_id": 496775,
+            "type_id": 321,
+            "value": {
+              "total": 10
+            }
+          },
+          {
+            "player_id": 496775,
+            "type_id": 322,
+            "value": {
+              "total": 9
+            }
+          },
+          {
+            "player_id": 496775,
+            "type_id": 323,
+            "value": {
+              "total": 1
+            }
+          },
+          {
+            "player_id": 581220,
+            "type_id": 119,
+            "value": {
+              "total": 292
+            }
+          },
+          {
+            "player_id": 581220,
+            "type_id": 321,
+            "value": {
+              "total": 4
+            }
+          },
+          {
+            "player_id": 581220,
+            "type_id": 322,
+            "value": {
+              "total": 3
+            }
+          },
+          {
+            "player_id": 581220,
+            "type_id": 323,
+            "value": {
+              "total": 1
+            }
+          },
+          {
+            "player_id": 4592198,
+            "type_id": 119,
+            "value": {
+              "total": 883
+            }
+          },
+          {
+            "player_id": 4592198,
+            "type_id": 321,
+            "value": {
+              "total": 10
+            }
+          },
+          {
+            "player_id": 4592198,
+            "type_id": 322,
+            "value": {
+              "total": 10
+            }
+          },
+          {
+            "player_id": 5666458,
+            "type_id": 119,
+            "value": {
+              "total": 634
+            }
+          },
+          {
+            "player_id": 5666458,
+            "type_id": 321,
+            "value": {
+              "total": 8
+            }
+          },
+          {
+            "player_id": 5666458,
+            "type_id": 322,
+            "value": {
+              "total": 7
+            }
+          },
+          {
+            "player_id": 5666458,
+            "type_id": 323,
+            "value": {
+              "total": 1
+            }
+          },
+          {
+            "player_id": 11311795,
+            "type_id": 119,
+            "value": {
+              "total": 495
+            }
+          },
+          {
+            "player_id": 11311795,
+            "type_id": 321,
+            "value": {
+              "total": 6
+            }
+          },
+          {
+            "player_id": 11311795,
+            "type_id": 322,
+            "value": {
+              "total": 6
+            }
+          },
+          {
+            "player_id": 11311795,
+            "type_id": 323,
+            "value": {
+              "total": 3
+            }
+          },
+          {
+            "player_id": 21803152,
+            "type_id": 119,
+            "value": {
+              "total": 392
+            }
+          },
+          {
+            "player_id": 21803152,
+            "type_id": 321,
+            "value": {
+              "total": 8
+            }
+          },
+          {
+            "player_id": 21803152,
+            "type_id": 322,
+            "value": {
+              "total": 3
+            }
+          },
+          {
+            "player_id": 21803152,
+            "type_id": 323,
+            "value": {
+              "total": 5
+            }
+          },
+          {
+            "player_id": 28912747,
+            "type_id": 119,
+            "value": {
+              "total": 880
+            }
+          },
+          {
+            "player_id": 28912747,
+            "type_id": 321,
+            "value": {
+              "total": 10
+            }
+          },
+          {
+            "player_id": 28912747,
+            "type_id": 322,
+            "value": {
+              "total": 10
+            }
+          },
+          {
+            "player_id": 28931574,
+            "type_id": 119,
+            "value": {
+              "total": 521
+            }
+          },
+          {
+            "player_id": 28931574,
+            "type_id": 321,
+            "value": {
+              "total": 6
+            }
+          },
+          {
+            "player_id": 28931574,
+            "type_id": 322,
+            "value": {
+              "total": 6
+            }
+          },
+          {
+            "player_id": 37259180,
+            "type_id": 119,
+            "value": {
+              "total": 747
+            }
+          },
+          {
+            "player_id": 37259180,
+            "type_id": 321,
+            "value": {
+              "total": 9
+            }
+          },
+          {
+            "player_id": 37259180,
+            "type_id": 322,
+            "value": {
+              "total": 9
+            }
+          },
+          {
+            "player_id": 37259180,
+            "type_id": 323,
+            "value": {
+              "total": 1
+            }
+          },
+          {
+            "player_id": 37261500,
+            "type_id": 119,
+            "value": {
+              "total": 442
+            }
+          },
+          {
+            "player_id": 37261500,
+            "type_id": 321,
+            "value": {
+              "total": 6
+            }
+          },
+          {
+            "player_id": 37261500,
+            "type_id": 322,
+            "value": {
+              "total": 5
+            }
+          },
+          {
+            "player_id": 37261500,
+            "type_id": 323,
+            "value": {
+              "total": 1
+            }
+          },
+          {
+            "player_id": 37316840,
+            "type_id": 323,
+            "value": {
+              "total": 5
+            }
+          },
+          {
+            "player_id": 37317367,
+            "type_id": 119,
+            "value": {
+              "total": 317
+            }
+          },
+          {
+            "player_id": 37317367,
+            "type_id": 321,
+            "value": {
+              "total": 7
+            }
+          },
+          {
+            "player_id": 37317367,
+            "type_id": 322,
+            "value": {
+              "total": 3
+            }
+          },
+          {
+            "player_id": 37317367,
+            "type_id": 323,
+            "value": {
+              "total": 6
+            }
+          },
+          {
+            "player_id": 37373590,
+            "type_id": 323,
+            "value": {
+              "total": 3
+            }
+          },
+          {
+            "player_id": 37400423,
+            "type_id": 119,
+            "value": {
+              "total": 3
+            }
+          },
+          {
+            "player_id": 37400423,
+            "type_id": 321,
+            "value": {
+              "total": 1
+            }
+          },
+          {
+            "player_id": 37400423,
+            "type_id": 323,
+            "value": {
+              "total": 2
+            }
+          },
+          {
+            "player_id": 37536874,
+            "type_id": 119,
+            "value": {
+              "total": 473
+            }
+          },
+          {
+            "player_id": 37536874,
+            "type_id": 321,
+            "value": {
+              "total": 8
+            }
+          },
+          {
+            "player_id": 37536874,
+            "type_id": 322,
+            "value": {
+              "total": 6
+            }
+          },
+          {
+            "player_id": 37536874,
+            "type_id": 323,
+            "value": {
+              "total": 4
+            }
+          },
+          {
+            "player_id": 37577727,
+            "type_id": 119,
+            "value": {
+              "total": 128
+            }
+          },
+          {
+            "player_id": 37577727,
+            "type_id": 321,
+            "value": {
+              "total": 4
+            }
+          },
+          {
+            "player_id": 37577727,
+            "type_id": 322,
+            "value": {
+              "total": 1
+            }
+          },
+          {
+            "player_id": 37577727,
+            "type_id": 323,
+            "value": {
+              "total": 8
+            }
+          },
+          {
+            "player_id": 37590621,
+            "type_id": 119,
+            "value": {
+              "total": 285
+            }
+          },
+          {
+            "player_id": 37590621,
+            "type_id": 321,
+            "value": {
+              "total": 4
+            }
+          },
+          {
+            "player_id": 37590621,
+            "type_id": 322,
+            "value": {
+              "total": 3
+            }
+          },
+          {
+            "player_id": 37590621,
+            "type_id": 323,
+            "value": {
+              "total": 7
+            }
+          },
+          {
+            "player_id": 37600243,
+            "type_id": 119,
+            "value": {
+              "total": 415
+            }
+          },
+          {
+            "player_id": 37600243,
+            "type_id": 321,
+            "value": {
+              "total": 6
+            }
+          },
+          {
+            "player_id": 37600243,
+            "type_id": 322,
+            "value": {
+              "total": 6
+            }
+          },
+          {
+            "player_id": 37600243,
+            "type_id": 323,
+            "value": {
+              "total": 2
+            }
+          },
+          {
+            "player_id": 37631362,
+            "type_id": 119,
+            "value": {
+              "total": 581
+            }
+          },
+          {
+            "player_id": 37631362,
+            "type_id": 321,
+            "value": {
+              "total": 8
+            }
+          },
+          {
+            "player_id": 37631362,
+            "type_id": 322,
+            "value": {
+              "total": 6
+            }
+          },
+          {
+            "player_id": 37631362,
+            "type_id": 323,
+            "value": {
+              "total": 3
+            }
+          },
+          {
+            "player_id": 37653289,
+            "type_id": 119,
+            "value": {
+              "total": 191
+            }
+          },
+          {
+            "player_id": 37653289,
+            "type_id": 321,
+            "value": {
+              "total": 5
+            }
+          },
+          {
+            "player_id": 37653289,
+            "type_id": 322,
+            "value": {
+              "total": 2
+            }
+          },
+          {
+            "player_id": 37653289,
+            "type_id": 323,
+            "value": {
+              "total": 3
+            }
+          },
+          {
+            "player_id": 37656652,
+            "type_id": 119,
+            "value": {
+              "total": 112
+            }
+          },
+          {
+            "player_id": 37656652,
+            "type_id": 321,
+            "value": {
+              "total": 6
+            }
+          },
+          {
+            "player_id": 37656652,
+            "type_id": 322,
+            "value": {
+              "total": 1
+            }
+          },
+          {
+            "player_id": 37656652,
+            "type_id": 323,
+            "value": {
+              "total": 8
+            }
+          },
+          {
+            "player_id": 37700784,
+            "type_id": 323,
+            "value": {
+              "total": 1
+            }
+          },
+          {
+            "player_id": 37701999,
+            "type_id": 119,
+            "value": {
+              "total": 179
+            }
+          },
+          {
+            "player_id": 37701999,
+            "type_id": 321,
+            "value": {
+              "total": 8
+            }
+          },
+          {
+            "player_id": 37701999,
+            "type_id": 322,
+            "value": {
+              "total": 1
+            }
+          },
+          {
+            "player_id": 37701999,
+            "type_id": 323,
+            "value": {
+              "total": 9
+            }
+          },
+          {
+            "player_id": 37910032,
+            "type_id": 119,
+            "value": {
+              "total": 3
+            }
+          },
+          {
+            "player_id": 37910032,
+            "type_id": 321,
+            "value": {
+              "total": 1
+            }
+          },
+          {
+            "player_id": 37910032,
+            "type_id": 323,
+            "value": {
+              "total": 5
+            }
+          }
+        ],
+        "sample_detail_shapes": [
+          {
+            "keys": [
+              "id",
+              "player_statistic_id",
+              "type_id",
+              "value"
+            ],
+            "type_id": 41,
+            "value_type": "dict"
+          },
+          {
+            "keys": [
+              "id",
+              "player_statistic_id",
+              "type_id",
+              "value"
+            ],
+            "type_id": 42,
+            "value_type": "dict"
+          },
+          {
+            "keys": [
+              "id",
+              "player_statistic_id",
+              "type_id",
+              "value"
+            ],
+            "type_id": 52,
+            "value_type": "dict"
+          },
+          {
+            "keys": [
+              "id",
+              "player_statistic_id",
+              "type_id",
+              "value"
+            ],
+            "type_id": 56,
+            "value_type": "dict"
+          },
+          {
+            "keys": [
+              "id",
+              "player_statistic_id",
+              "type_id",
+              "value"
+            ],
+            "type_id": 58,
+            "value_type": "dict"
+          }
+        ],
+        "importance_method": "current_squad_season_minutes_played_relative_to_squad_max",
+        "sidelined_feed_available": true,
+        "reported_sidelined_count": 0,
+        "reason": "Current extended squad, matching team-season minutes and exact-fixture sidelined feed passed identity and date checks."
+      },
+      "tactical_evidence": {
+        "name": "Chelsea",
+        "weapons": {
+          "counterattack_threat": null,
+          "high_quality_chance_creation": {
+            "score": 56.2,
+            "confidence": 100.0,
+            "evidence": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "team output",
+              "components": [
+                {
+                  "statistic": "Big Chances Created",
+                  "score": 56.2,
+                  "coverage_pct": 100.0,
+                  "average_value": 2.44,
+                  "observations": 10,
+                  "reference_observations": 194,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            }
+          },
+          "aerial_threat": {
+            "score": 53.7,
+            "confidence": 70.0,
+            "evidence": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "team output",
+              "components": [
+                {
+                  "statistic": "Successful Headers",
+                  "score": 53.7,
+                  "coverage_pct": 70.0,
+                  "average_value": 14.333,
+                  "observations": 7,
+                  "reference_observations": 162,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            }
+          },
+          "wing_threat": {
+            "score": 45.2,
+            "confidence": 100.0,
+            "evidence": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "team output",
+              "components": [
+                {
+                  "statistic": "Accurate Crosses",
+                  "score": 42.5,
+                  "coverage_pct": 100.0,
+                  "average_value": 3.28,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                },
+                {
+                  "statistic": "Successful Dribbles",
+                  "score": 48.0,
+                  "coverage_pct": 100.0,
+                  "average_value": 6.36,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            }
+          },
+          "between_lines_threat": {
+            "score": 57.5,
+            "confidence": 100.0,
+            "evidence": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "team output",
+              "components": [
+                {
+                  "statistic": "Key Passes",
+                  "score": 63.5,
+                  "coverage_pct": 100.0,
+                  "average_value": 10.12,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                },
+                {
+                  "statistic": "Shots Insidebox",
+                  "score": 51.5,
+                  "coverage_pct": 100.0,
+                  "average_value": 8.8,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            }
+          }
+        },
+        "vulnerabilities": {
+          "transition_recovery": null,
+          "high_quality_chance_exposure": {
+            "score": 71.6,
+            "confidence": 100.0,
+            "evidence": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "opponent output conceded by this team",
+              "components": [
+                {
+                  "statistic": "Big Chances Created",
+                  "score": 71.6,
+                  "coverage_pct": 100.0,
+                  "average_value": 3.2,
+                  "observations": 10,
+                  "reference_observations": 194,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            }
+          },
+          "aerial_defence": {
+            "score": 43.2,
+            "confidence": 70.0,
+            "evidence": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "opponent output conceded by this team",
+              "components": [
+                {
+                  "statistic": "Successful Headers",
+                  "score": 43.2,
+                  "coverage_pct": 70.0,
+                  "average_value": 13.567,
+                  "observations": 7,
+                  "reference_observations": 162,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            }
+          },
+          "wide_defending": {
+            "score": 48.6,
+            "confidence": 100.0,
+            "evidence": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "opponent output conceded by this team",
+              "components": [
+                {
+                  "statistic": "Accurate Crosses",
+                  "score": 56.0,
+                  "coverage_pct": 100.0,
+                  "average_value": 4.32,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                },
+                {
+                  "statistic": "Successful Dribbles",
+                  "score": 41.2,
+                  "coverage_pct": 100.0,
+                  "average_value": 6.0,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            }
+          },
+          "central_penetration": {
+            "score": 44.2,
+            "confidence": 100.0,
+            "evidence": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "opponent output conceded by this team",
+              "components": [
+                {
+                  "statistic": "Key Passes",
+                  "score": 37.0,
+                  "coverage_pct": 100.0,
+                  "average_value": 8.04,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                },
+                {
+                  "statistic": "Shots Insidebox",
+                  "score": 51.5,
+                  "coverage_pct": 100.0,
+                  "average_value": 8.16,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            }
+          }
+        },
+        "evidence_metadata": {
+          "method": "league-season empirical percentile comparison",
+          "matches_used": 10,
+          "latest_five_weight": 0.6,
+          "previous_five_weight": 0.4,
+          "minimum_team_observations_per_metric": 5,
+          "minimum_league_reference_observations": 30,
+          "available_dimensions": 4,
+          "total_dimensions": 5,
+          "limitations": [
+            "These are statistical matchup indicators, not player-tracking or event-location tactical analysis.",
+            "Counter-attack compatibility remains unknown when the provider does not supply Counter Attacks.",
+            "Big Chances Created measures provider-recorded high-quality chances; it is a separate indicator from shots inside the box and key passes.",
+            "No absent statistic is treated as zero or estimated."
+          ]
+        }
+      },
+      "counter_attack_source_diagnostics": {
+        "provider": "sportmonks",
+        "source": "archived fixture statistic rows read from the central repository",
+        "fixtures_checked": 10,
+        "fixtures_with_counter_attack_rows": 0,
+        "counter_attack_rows_found": 0,
+        "counter_attack_rows": [],
+        "statistic_type_inventory": [
+          {
+            "statistic_type_id": 100,
+            "statistic_name_raw": "Interceptions",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 106,
+            "statistic_name_raw": "Duels Won",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 108,
+            "statistic_name_raw": "Dribble Attempts",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 109,
+            "statistic_name_raw": "Successful Dribbles",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 117,
+            "statistic_name_raw": "Key Passes",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 1605,
+            "statistic_name_raw": "Successful Dribbles Percentage",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 27264,
+            "statistic_name_raw": "Successful Long Passes",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 27265,
+            "statistic_name_raw": "Successful Long Passes Percentage",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 27267,
+            "statistic_name_raw": "Tackles Won",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 34,
+            "statistic_name_raw": "Corners",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 41,
+            "statistic_name_raw": "Shots Off Target",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 42,
+            "statistic_name_raw": "Shots Total",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 43,
+            "statistic_name_raw": "Attacks",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 44,
+            "statistic_name_raw": "Dangerous Attacks",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 45,
+            "statistic_name_raw": "Ball Possession %",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 46,
+            "statistic_name_raw": "Ball Safe",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 47,
+            "statistic_name_raw": "Penalties",
+            "observations": 2
+          },
+          {
+            "statistic_type_id": 49,
+            "statistic_name_raw": "Shots Insidebox",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 50,
+            "statistic_name_raw": "Shots Outsidebox",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 51,
+            "statistic_name_raw": "Offsides",
+            "observations": 9
+          },
+          {
+            "statistic_type_id": 52,
+            "statistic_name_raw": "Goals",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 53,
+            "statistic_name_raw": "Goal Kicks",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 54,
+            "statistic_name_raw": "Goal Attempts",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 55,
+            "statistic_name_raw": "Free Kicks",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 56,
+            "statistic_name_raw": "Fouls",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 57,
+            "statistic_name_raw": "Saves",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 58,
+            "statistic_name_raw": "Shots Blocked",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 580,
+            "statistic_name_raw": "Big Chances Created",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 581,
+            "statistic_name_raw": "Big Chances Missed",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 59,
+            "statistic_name_raw": "Substitutions",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 60,
+            "statistic_name_raw": "Throwins",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 62,
+            "statistic_name_raw": "Long Passes",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 64,
+            "statistic_name_raw": "Hit Woodwork",
+            "observations": 4
+          },
+          {
+            "statistic_type_id": 65,
+            "statistic_name_raw": "Successful Headers",
+            "observations": 7
+          },
+          {
+            "statistic_type_id": 78,
+            "statistic_name_raw": "Tackles",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 79,
+            "statistic_name_raw": "Assists",
+            "observations": 7
+          },
+          {
+            "statistic_type_id": 80,
+            "statistic_name_raw": "Passes",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 81,
+            "statistic_name_raw": "Successful Passes",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 82,
+            "statistic_name_raw": "Successful Passes Percentage",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 83,
+            "statistic_name_raw": "Redcards",
+            "observations": 2
+          },
+          {
+            "statistic_type_id": 84,
+            "statistic_name_raw": "Yellowcards",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 85,
+            "statistic_name_raw": "Yellowred Cards",
+            "observations": 2
+          },
+          {
+            "statistic_type_id": 86,
+            "statistic_name_raw": "Shots On Target",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 87,
+            "statistic_name_raw": "Injuries",
+            "observations": 8
+          },
+          {
+            "statistic_type_id": 98,
+            "statistic_name_raw": "Total Crosses",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 99,
+            "statistic_name_raw": "Accurate Crosses",
+            "observations": 10
+          }
+        ],
+        "status": "no_counter_attack_rows_found_in_archived_provider_statistics",
+        "note": "This audits the statistic rows archived by the collector. Zero matching rows means no Counter Attacks row was present in the archived sample; it does not establish whether the provider omitted it upstream or whether an earlier collection step failed to retain it."
+      }
+    },
+    "Leeds United": {
+      "data_quality": {
+        "provider": "sportmonks",
+        "season_id": 28083,
+        "matches_returned": 10,
+        "goals_complete": true,
+        "opponent_strength_matches": 10,
+        "statistics_matches": 10,
+        "statistics_observations": 158,
+        "statistics_raw_observations": 413,
+        "statistics_unmapped_observations": 255,
+        "fixtures_scanned": 380,
+        "schedule_unique_fixture_count": 380,
+        "duplicate_fixture_id_count": 0,
+        "duplicate_fixture_ids": [],
+        "same_season_fixtures": 380,
+        "season_eligible_fixtures": 380,
+        "fixtures_missing_season_id": 0,
+        "team_fixtures": 38,
+        "completed_fixtures": 10,
+        "fixtures_with_valid_scores": 10,
+        "excluded_wrong_season": 0,
+        "excluded_missing_participants": 0,
+        "excluded_other_team": 342,
+        "excluded_not_completed": 28,
+        "excluded_missing_scores": 0,
+        "excluded_invalid_kickoff": 0,
+        "excluded_invalid_scores": 0,
+        "excluded_duplicate_fixture_id": 0,
+        "history_shortfall": 0,
+        "history_latest_match_at": "2026-11-07T12:30:00+00:00",
+        "history_oldest_match_at": "2026-08-22T14:00:00+00:00",
+        "history_collection_fetched_at": null,
+        "history_repository_collected_at": "2026-11-09T00:52:24+00:00",
+        "history_provider_updated_at": null,
+        "history_order": "newest_first_by_parsed_utc_kickoff",
+        "statistics_core_metrics": [
+          "Ball Possession",
+          "Passes %",
+          "Total Shots",
+          "Shots on Target / Goal",
+          "Tackles",
+          "Interceptions",
+          "Blocked Shots",
+          "Corner Kicks"
+        ],
+        "statistics_coverage_by_metric": {
+          "Ball Possession": 10,
+          "Passes %": 10,
+          "Total Shots": 10,
+          "Shots on Target / Goal": 10,
+          "Tackles": 10,
+          "Interceptions": 10,
+          "Blocked Shots": 10,
+          "Corner Kicks": 10
+        },
+        "matches_with_any_statistics": 10,
+        "matches_with_complete_core_statistics": 10,
+        "core_statistics_completeness_pct": 100.0,
+        "team_fixture_accounting_gap": 0,
+        "team_fixture_accounting_status": "balanced",
+        "history_integrity_status": "ok",
+        "history_source": "cockroachdb_central_repository",
+        "repository_fixture_rows": 380,
+        "repository_fixture_payloads": 380,
+        "normalized_statistics_rows": 8430,
+        "fixtures_with_normalized_statistics": 100
+      },
+      "history_collection_diagnostics": {
+        "fixtures_scanned": 380,
+        "schedule_unique_fixture_count": 380,
+        "duplicate_fixture_id_count": 0,
+        "duplicate_fixture_ids": [],
+        "same_season_fixtures": 380,
+        "season_eligible_fixtures": 380,
+        "fixtures_missing_season_id": 0,
+        "team_fixtures": 38,
+        "completed_fixtures": 10,
+        "fixtures_with_valid_scores": 10,
+        "excluded_wrong_season": 0,
+        "excluded_missing_participants": 0,
+        "excluded_other_team": 342,
+        "excluded_not_completed": 28,
+        "excluded_missing_scores": 0,
+        "excluded_invalid_kickoff": 0,
+        "excluded_invalid_scores": 0,
+        "excluded_duplicate_fixture_id": 0,
+        "history_shortfall": 0,
+        "history_latest_match_at": "2026-11-07T12:30:00+00:00",
+        "history_oldest_match_at": "2026-08-22T14:00:00+00:00",
+        "history_collection_fetched_at": null,
+        "history_repository_collected_at": "2026-11-09T00:52:24+00:00",
+        "history_provider_updated_at": null,
+        "history_order": "newest_first_by_parsed_utc_kickoff",
+        "statistics_core_metrics": [
+          "Ball Possession",
+          "Passes %",
+          "Total Shots",
+          "Shots on Target / Goal",
+          "Tackles",
+          "Interceptions",
+          "Blocked Shots",
+          "Corner Kicks"
+        ],
+        "statistics_coverage_by_metric": {
+          "Ball Possession": 10,
+          "Passes %": 10,
+          "Total Shots": 10,
+          "Shots on Target / Goal": 10,
+          "Tackles": 10,
+          "Interceptions": 10,
+          "Blocked Shots": 10,
+          "Corner Kicks": 10
+        },
+        "matches_with_any_statistics": 10,
+        "matches_with_complete_core_statistics": 10,
+        "core_statistics_completeness_pct": 100.0,
+        "team_fixture_accounting_gap": 0,
+        "team_fixture_accounting_status": "balanced",
+        "history_integrity_status": "ok"
+      },
+      "player_availability_assessment": {
+        "score": 100.0,
+        "status": "scored",
+        "reason": "Calculated from a complete roster, known player statuses and evidenced importance weights.",
+        "source": "sportmonks",
+        "fixture_id": 19722100,
+        "players_assessed": 24,
+        "importance_weight_total": 1102.34,
+        "formula": "100 × available-player importance / total squad importance"
+      },
+      "player_availability_evidence": {
+        "roster_complete": true,
+        "players_assessed": 24,
+        "current_squad_players": 24,
+        "matching_team_season_statistics_rows": 24,
+        "players_without_season_statistics": [],
+        "players_with_multiple_season_statistics_rows": [],
+        "players_with_minutes_detail": 21,
+        "players_with_zero_minutes_inferred": [
+          {
+            "player_id": 5569,
+            "player_name": "Alex Cairns",
+            "minutes_evidence_method": "bench_appearances_without_playing_appearances",
+            "appearances_total": null,
+            "bench_appearances_total": 1.0
+          },
+          {
+            "player_id": 32406,
+            "player_name": "Michael Zetterer",
+            "minutes_evidence_method": "bench_appearances_without_playing_appearances",
+            "appearances_total": null,
+            "bench_appearances_total": 8.0
+          },
+          {
+            "player_id": 37568967,
+            "player_name": "Mateo Joseph",
+            "minutes_evidence_method": "sportmonks_has_values_false_no_season_statistics",
+            "appearances_total": 0,
+            "bench_appearances_total": null
+          }
+        ],
+        "minutes_type_ids_seen": [
+          41,
+          42,
+          51,
+          52,
+          56,
+          58,
+          59,
+          78,
+          79,
+          80,
+          84,
+          86,
+          88,
+          94,
+          96,
+          98,
+          101,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          116,
+          117,
+          118,
+          119,
+          122,
+          123,
+          194,
+          214,
+          215,
+          216,
+          321,
+          322,
+          580,
+          581,
+          1584,
+          9676,
+          27255,
+          99,
+          323,
+          97,
+          100,
+          40,
+          124,
+          125,
+          87,
+          64,
+          57,
+          104,
+          571
+        ],
+        "players_missing_minutes_detail": [],
+        "player_statistic_values": [
+          {
+            "player_id": 5141,
+            "type_id": 119,
+            "value": {
+              "total": 866
+            }
+          },
+          {
+            "player_id": 5141,
+            "type_id": 321,
+            "value": {
+              "total": 10
+            }
+          },
+          {
+            "player_id": 5141,
+            "type_id": 322,
+            "value": {
+              "total": 10
+            }
+          },
+          {
+            "player_id": 5149,
+            "type_id": 119,
+            "value": {
+              "total": 117
+            }
+          },
+          {
+            "player_id": 5149,
+            "type_id": 321,
+            "value": {
+              "total": 4
+            }
+          },
+          {
+            "player_id": 5149,
+            "type_id": 322,
+            "value": {
+              "total": 1
+            }
+          },
+          {
+            "player_id": 5149,
+            "type_id": 323,
+            "value": {
+              "total": 6
+            }
+          },
+          {
+            "player_id": 5403,
+            "type_id": 119,
+            "value": {
+              "total": 327
+            }
+          },
+          {
+            "player_id": 5403,
+            "type_id": 321,
+            "value": {
+              "total": 8
+            }
+          },
+          {
+            "player_id": 5403,
+            "type_id": 322,
+            "value": {
+              "total": 3
+            }
+          },
+          {
+            "player_id": 5403,
+            "type_id": 323,
+            "value": {
+              "total": 6
+            }
+          },
+          {
+            "player_id": 5569,
+            "type_id": 323,
+            "value": {
+              "total": 1
+            }
+          },
+          {
+            "player_id": 12514,
+            "type_id": 119,
+            "value": {
+              "total": 883
+            }
+          },
+          {
+            "player_id": 12514,
+            "type_id": 321,
+            "value": {
+              "total": 10
+            }
+          },
+          {
+            "player_id": 12514,
+            "type_id": 322,
+            "value": {
+              "total": 10
+            }
+          },
+          {
+            "player_id": 12542,
+            "type_id": 119,
+            "value": {
+              "total": 900
+            }
+          },
+          {
+            "player_id": 12542,
+            "type_id": 321,
+            "value": {
+              "total": 10
+            }
+          },
+          {
+            "player_id": 12542,
+            "type_id": 322,
+            "value": {
+              "total": 10
+            }
+          },
+          {
+            "player_id": 32406,
+            "type_id": 323,
+            "value": {
+              "total": 8
+            }
+          },
+          {
+            "player_id": 32525,
+            "type_id": 119,
+            "value": {
+              "total": 682
+            }
+          },
+          {
+            "player_id": 32525,
+            "type_id": 321,
+            "value": {
+              "total": 8
+            }
+          },
+          {
+            "player_id": 32525,
+            "type_id": 322,
+            "value": {
+              "total": 7
+            }
+          },
+          {
+            "player_id": 32525,
+            "type_id": 323,
+            "value": {
+              "total": 2
+            }
+          },
+          {
+            "player_id": 173737,
+            "type_id": 119,
+            "value": {
+              "total": 135
+            }
+          },
+          {
+            "player_id": 173737,
+            "type_id": 321,
+            "value": {
+              "total": 6
+            }
+          },
+          {
+            "player_id": 173737,
+            "type_id": 322,
+            "value": {
+              "total": 1
+            }
+          },
+          {
+            "player_id": 173737,
+            "type_id": 323,
+            "value": {
+              "total": 9
+            }
+          },
+          {
+            "player_id": 193196,
+            "type_id": 119,
+            "value": {
+              "total": 632
+            }
+          },
+          {
+            "player_id": 193196,
+            "type_id": 321,
+            "value": {
+              "total": 8
+            }
+          },
+          {
+            "player_id": 193196,
+            "type_id": 322,
+            "value": {
+              "total": 8
+            }
+          },
+          {
+            "player_id": 193196,
+            "type_id": 323,
+            "value": {
+              "total": 1
+            }
+          },
+          {
+            "player_id": 339112,
+            "type_id": 119,
+            "value": {
+              "total": 125
+            }
+          },
+          {
+            "player_id": 339112,
+            "type_id": 321,
+            "value": {
+              "total": 3
+            }
+          },
+          {
+            "player_id": 339112,
+            "type_id": 322,
+            "value": {
+              "total": 2
+            }
+          },
+          {
+            "player_id": 339112,
+            "type_id": 323,
+            "value": {
+              "total": 1
+            }
+          },
+          {
+            "player_id": 461027,
+            "type_id": 119,
+            "value": {
+              "total": 639
+            }
+          },
+          {
+            "player_id": 461027,
+            "type_id": 321,
+            "value": {
+              "total": 9
+            }
+          },
+          {
+            "player_id": 461027,
+            "type_id": 322,
+            "value": {
+              "total": 8
+            }
+          },
+          {
+            "player_id": 461027,
+            "type_id": 323,
+            "value": {
+              "total": 2
+            }
+          },
+          {
+            "player_id": 537217,
+            "type_id": 119,
+            "value": {
+              "total": 204
+            }
+          },
+          {
+            "player_id": 537217,
+            "type_id": 321,
+            "value": {
+              "total": 9
+            }
+          },
+          {
+            "player_id": 537217,
+            "type_id": 322,
+            "value": {
+              "total": 1
+            }
+          },
+          {
+            "player_id": 537217,
+            "type_id": 323,
+            "value": {
+              "total": 9
+            }
+          },
+          {
+            "player_id": 581158,
+            "type_id": 119,
+            "value": {
+              "total": 815
+            }
+          },
+          {
+            "player_id": 581158,
+            "type_id": 321,
+            "value": {
+              "total": 10
+            }
+          },
+          {
+            "player_id": 581158,
+            "type_id": 322,
+            "value": {
+              "total": 10
+            }
+          },
+          {
+            "player_id": 1548632,
+            "type_id": 119,
+            "value": {
+              "total": 259
+            }
+          },
+          {
+            "player_id": 1548632,
+            "type_id": 321,
+            "value": {
+              "total": 5
+            }
+          },
+          {
+            "player_id": 1548632,
+            "type_id": 322,
+            "value": {
+              "total": 3
+            }
+          },
+          {
+            "player_id": 1548632,
+            "type_id": 323,
+            "value": {
+              "total": 7
+            }
+          },
+          {
+            "player_id": 2178735,
+            "type_id": 119,
+            "value": {
+              "total": 677
+            }
+          },
+          {
+            "player_id": 2178735,
+            "type_id": 321,
+            "value": {
+              "total": 9
+            }
+          },
+          {
+            "player_id": 2178735,
+            "type_id": 322,
+            "value": {
+              "total": 7
+            }
+          },
+          {
+            "player_id": 2178735,
+            "type_id": 323,
+            "value": {
+              "total": 2
+            }
+          },
+          {
+            "player_id": 2206980,
+            "type_id": 119,
+            "value": {
+              "total": 63
+            }
+          },
+          {
+            "player_id": 2206980,
+            "type_id": 321,
+            "value": {
+              "total": 2
+            }
+          },
+          {
+            "player_id": 2206980,
+            "type_id": 323,
+            "value": {
+              "total": 8
+            }
+          },
+          {
+            "player_id": 3861741,
+            "type_id": 119,
+            "value": {
+              "total": 1
+            }
+          },
+          {
+            "player_id": 3861741,
+            "type_id": 321,
+            "value": {
+              "total": 1
+            }
+          },
+          {
+            "player_id": 3861741,
+            "type_id": 323,
+            "value": {
+              "total": 6
+            }
+          },
+          {
+            "player_id": 4536529,
+            "type_id": 119,
+            "value": {
+              "total": 486
+            }
+          },
+          {
+            "player_id": 4536529,
+            "type_id": 321,
+            "value": {
+              "total": 9
+            }
+          },
+          {
+            "player_id": 4536529,
+            "type_id": 322,
+            "value": {
+              "total": 6
+            }
+          },
+          {
+            "player_id": 4536529,
+            "type_id": 323,
+            "value": {
+              "total": 3
+            }
+          },
+          {
+            "player_id": 4552689,
+            "type_id": 119,
+            "value": {
+              "total": 293
+            }
+          },
+          {
+            "player_id": 4552689,
+            "type_id": 321,
+            "value": {
+              "total": 8
+            }
+          },
+          {
+            "player_id": 4552689,
+            "type_id": 322,
+            "value": {
+              "total": 3
+            }
+          },
+          {
+            "player_id": 4552689,
+            "type_id": 323,
+            "value": {
+              "total": 7
+            }
+          },
+          {
+            "player_id": 28575686,
+            "type_id": 119,
+            "value": {
+              "total": 900
+            }
+          },
+          {
+            "player_id": 28575686,
+            "type_id": 321,
+            "value": {
+              "total": 10
+            }
+          },
+          {
+            "player_id": 28575686,
+            "type_id": 322,
+            "value": {
+              "total": 10
+            }
+          },
+          {
+            "player_id": 37529525,
+            "type_id": 119,
+            "value": {
+              "total": 900
+            }
+          },
+          {
+            "player_id": 37529525,
+            "type_id": 321,
+            "value": {
+              "total": 10
+            }
+          },
+          {
+            "player_id": 37529525,
+            "type_id": 322,
+            "value": {
+              "total": 10
+            }
+          },
+          {
+            "player_id": 37612045,
+            "type_id": 119,
+            "value": {
+              "total": 17
+            }
+          },
+          {
+            "player_id": 37612045,
+            "type_id": 321,
+            "value": {
+              "total": 3
+            }
+          },
+          {
+            "player_id": 37612045,
+            "type_id": 323,
+            "value": {
+              "total": 7
+            }
+          }
+        ],
+        "sample_detail_shapes": [
+          {
+            "keys": [
+              "id",
+              "player_statistic_id",
+              "type_id",
+              "value"
+            ],
+            "type_id": 41,
+            "value_type": "dict"
+          },
+          {
+            "keys": [
+              "id",
+              "player_statistic_id",
+              "type_id",
+              "value"
+            ],
+            "type_id": 42,
+            "value_type": "dict"
+          },
+          {
+            "keys": [
+              "id",
+              "player_statistic_id",
+              "type_id",
+              "value"
+            ],
+            "type_id": 51,
+            "value_type": "dict"
+          },
+          {
+            "keys": [
+              "id",
+              "player_statistic_id",
+              "type_id",
+              "value"
+            ],
+            "type_id": 52,
+            "value_type": "dict"
+          },
+          {
+            "keys": [
+              "id",
+              "player_statistic_id",
+              "type_id",
+              "value"
+            ],
+            "type_id": 56,
+            "value_type": "dict"
+          }
+        ],
+        "importance_method": "current_squad_season_minutes_played_relative_to_squad_max",
+        "sidelined_feed_available": true,
+        "reported_sidelined_count": 0,
+        "reason": "Current extended squad, matching team-season minutes and exact-fixture sidelined feed passed identity and date checks."
+      },
+      "tactical_evidence": {
+        "name": "Leeds United",
+        "weapons": {
+          "counterattack_threat": null,
+          "high_quality_chance_creation": {
+            "score": 56.2,
+            "confidence": 90.0,
+            "evidence": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "team output",
+              "components": [
+                {
+                  "statistic": "Big Chances Created",
+                  "score": 56.2,
+                  "coverage_pct": 90.0,
+                  "average_value": 2.32,
+                  "observations": 9,
+                  "reference_observations": 194,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            }
+          },
+          "aerial_threat": {
+            "score": 79.0,
+            "confidence": 90.0,
+            "evidence": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "team output",
+              "components": [
+                {
+                  "statistic": "Successful Headers",
+                  "score": 79.0,
+                  "coverage_pct": 90.0,
+                  "average_value": 19.03,
+                  "observations": 9,
+                  "reference_observations": 162,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            }
+          },
+          "wing_threat": {
+            "score": 58.8,
+            "confidence": 100.0,
+            "evidence": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "team output",
+              "components": [
+                {
+                  "statistic": "Accurate Crosses",
+                  "score": 56.0,
+                  "coverage_pct": 100.0,
+                  "average_value": 4.48,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                },
+                {
+                  "statistic": "Successful Dribbles",
+                  "score": 61.5,
+                  "coverage_pct": 100.0,
+                  "average_value": 7.12,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            }
+          },
+          "between_lines_threat": {
+            "score": 34.2,
+            "confidence": 100.0,
+            "evidence": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "team output",
+              "components": [
+                {
+                  "statistic": "Key Passes",
+                  "score": 28.0,
+                  "coverage_pct": 100.0,
+                  "average_value": 7.4,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                },
+                {
+                  "statistic": "Shots Insidebox",
+                  "score": 40.5,
+                  "coverage_pct": 100.0,
+                  "average_value": 7.76,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            }
+          }
+        },
+        "vulnerabilities": {
+          "transition_recovery": null,
+          "high_quality_chance_exposure": {
+            "score": 56.2,
+            "confidence": 90.0,
+            "evidence": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "opponent output conceded by this team",
+              "components": [
+                {
+                  "statistic": "Big Chances Created",
+                  "score": 56.2,
+                  "coverage_pct": 90.0,
+                  "average_value": 2.2,
+                  "observations": 9,
+                  "reference_observations": 194,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            }
+          },
+          "aerial_defence": {
+            "score": 66.0,
+            "confidence": 90.0,
+            "evidence": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "opponent output conceded by this team",
+              "components": [
+                {
+                  "statistic": "Successful Headers",
+                  "score": 66.0,
+                  "coverage_pct": 90.0,
+                  "average_value": 16.37,
+                  "observations": 9,
+                  "reference_observations": 162,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            }
+          },
+          "wide_defending": {
+            "score": 52.0,
+            "confidence": 100.0,
+            "evidence": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "opponent output conceded by this team",
+              "components": [
+                {
+                  "statistic": "Accurate Crosses",
+                  "score": 56.0,
+                  "coverage_pct": 100.0,
+                  "average_value": 4.08,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                },
+                {
+                  "statistic": "Successful Dribbles",
+                  "score": 48.0,
+                  "coverage_pct": 100.0,
+                  "average_value": 6.44,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            }
+          },
+          "central_penetration": {
+            "score": 52.0,
+            "confidence": 100.0,
+            "evidence": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "opponent output conceded by this team",
+              "components": [
+                {
+                  "statistic": "Key Passes",
+                  "score": 63.5,
+                  "coverage_pct": 100.0,
+                  "average_value": 10.2,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                },
+                {
+                  "statistic": "Shots Insidebox",
+                  "score": 40.5,
+                  "coverage_pct": 100.0,
+                  "average_value": 7.2,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            }
+          }
+        },
+        "evidence_metadata": {
+          "method": "league-season empirical percentile comparison",
+          "matches_used": 10,
+          "latest_five_weight": 0.6,
+          "previous_five_weight": 0.4,
+          "minimum_team_observations_per_metric": 5,
+          "minimum_league_reference_observations": 30,
+          "available_dimensions": 4,
+          "total_dimensions": 5,
+          "limitations": [
+            "These are statistical matchup indicators, not player-tracking or event-location tactical analysis.",
+            "Counter-attack compatibility remains unknown when the provider does not supply Counter Attacks.",
+            "Big Chances Created measures provider-recorded high-quality chances; it is a separate indicator from shots inside the box and key passes.",
+            "No absent statistic is treated as zero or estimated."
+          ]
+        }
+      },
+      "counter_attack_source_diagnostics": {
+        "provider": "sportmonks",
+        "source": "archived fixture statistic rows read from the central repository",
+        "fixtures_checked": 10,
+        "fixtures_with_counter_attack_rows": 0,
+        "counter_attack_rows_found": 0,
+        "counter_attack_rows": [],
+        "statistic_type_inventory": [
+          {
+            "statistic_type_id": 100,
+            "statistic_name_raw": "Interceptions",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 106,
+            "statistic_name_raw": "Duels Won",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 108,
+            "statistic_name_raw": "Dribble Attempts",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 109,
+            "statistic_name_raw": "Successful Dribbles",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 117,
+            "statistic_name_raw": "Key Passes",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 1605,
+            "statistic_name_raw": "Successful Dribbles Percentage",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 27264,
+            "statistic_name_raw": "Successful Long Passes",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 27265,
+            "statistic_name_raw": "Successful Long Passes Percentage",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 27267,
+            "statistic_name_raw": "Tackles Won",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 34,
+            "statistic_name_raw": "Corners",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 41,
+            "statistic_name_raw": "Shots Off Target",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 42,
+            "statistic_name_raw": "Shots Total",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 43,
+            "statistic_name_raw": "Attacks",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 44,
+            "statistic_name_raw": "Dangerous Attacks",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 45,
+            "statistic_name_raw": "Ball Possession %",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 46,
+            "statistic_name_raw": "Ball Safe",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 49,
+            "statistic_name_raw": "Shots Insidebox",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 50,
+            "statistic_name_raw": "Shots Outsidebox",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 51,
+            "statistic_name_raw": "Offsides",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 52,
+            "statistic_name_raw": "Goals",
+            "observations": 8
+          },
+          {
+            "statistic_type_id": 53,
+            "statistic_name_raw": "Goal Kicks",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 54,
+            "statistic_name_raw": "Goal Attempts",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 55,
+            "statistic_name_raw": "Free Kicks",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 56,
+            "statistic_name_raw": "Fouls",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 57,
+            "statistic_name_raw": "Saves",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 58,
+            "statistic_name_raw": "Shots Blocked",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 580,
+            "statistic_name_raw": "Big Chances Created",
+            "observations": 9
+          },
+          {
+            "statistic_type_id": 581,
+            "statistic_name_raw": "Big Chances Missed",
+            "observations": 9
+          },
+          {
+            "statistic_type_id": 59,
+            "statistic_name_raw": "Substitutions",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 60,
+            "statistic_name_raw": "Throwins",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 62,
+            "statistic_name_raw": "Long Passes",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 64,
+            "statistic_name_raw": "Hit Woodwork",
+            "observations": 3
+          },
+          {
+            "statistic_type_id": 65,
+            "statistic_name_raw": "Successful Headers",
+            "observations": 9
+          },
+          {
+            "statistic_type_id": 78,
+            "statistic_name_raw": "Tackles",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 79,
+            "statistic_name_raw": "Assists",
+            "observations": 6
+          },
+          {
+            "statistic_type_id": 80,
+            "statistic_name_raw": "Passes",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 81,
+            "statistic_name_raw": "Successful Passes",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 82,
+            "statistic_name_raw": "Successful Passes Percentage",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 84,
+            "statistic_name_raw": "Yellowcards",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 86,
+            "statistic_name_raw": "Shots On Target",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 87,
+            "statistic_name_raw": "Injuries",
+            "observations": 9
+          },
+          {
+            "statistic_type_id": 98,
+            "statistic_name_raw": "Total Crosses",
+            "observations": 10
+          },
+          {
+            "statistic_type_id": 99,
+            "statistic_name_raw": "Accurate Crosses",
+            "observations": 10
+          }
+        ],
+        "status": "no_counter_attack_rows_found_in_archived_provider_statistics",
+        "note": "This audits the statistic rows archived by the collector. Zero matching rows means no Counter Attacks row was present in the archived sample; it does not establish whether the provider omitted it upstream or whether an earlier collection step failed to retain it."
+      }
+    }
+  },
+  "statistics_coverage": {
+    "Chelsea": {
+      "fixtures_checked": 10,
+      "core_metrics_with_any_data": 8,
+      "core_metrics_complete": 8,
+      "core_metrics_total": 8,
+      "raw_observations_seen": 421,
+      "unmapped_observations": 264,
+      "mapping_visibility": "available",
+      "metrics": [
+        {
+          "group": "Possession & distribution",
+          "statistic": "Ball Possession",
+          "fixtures_available": 10,
+          "fixtures_checked": 10,
+          "coverage_pct": 100.0,
+          "raw_observations": 10,
+          "status": "available"
+        },
+        {
+          "group": "Possession & distribution",
+          "statistic": "Passes %",
+          "fixtures_available": 10,
+          "fixtures_checked": 10,
+          "coverage_pct": 100.0,
+          "raw_observations": 10,
+          "status": "available"
+        },
+        {
+          "group": "Attacking",
+          "statistic": "Total Shots",
+          "fixtures_available": 10,
+          "fixtures_checked": 10,
+          "coverage_pct": 100.0,
+          "raw_observations": 20,
+          "status": "available"
+        },
+        {
+          "group": "Attacking",
+          "statistic": "Shots on Target / Goal",
+          "fixtures_available": 10,
+          "fixtures_checked": 10,
+          "coverage_pct": 100.0,
+          "raw_observations": 10,
+          "status": "available"
+        },
+        {
+          "group": "Defending",
+          "statistic": "Tackles",
+          "fixtures_available": 10,
+          "fixtures_checked": 10,
+          "coverage_pct": 100.0,
+          "raw_observations": 10,
+          "status": "available"
+        },
+        {
+          "group": "Defending",
+          "statistic": "Interceptions",
+          "fixtures_available": 10,
+          "fixtures_checked": 10,
+          "coverage_pct": 100.0,
+          "raw_observations": 10,
+          "status": "available"
+        },
+        {
+          "group": "Defending",
+          "statistic": "Blocked Shots",
+          "fixtures_available": 10,
+          "fixtures_checked": 10,
+          "coverage_pct": 100.0,
+          "raw_observations": 10,
+          "status": "available"
+        },
+        {
+          "group": "Attacking",
+          "statistic": "Corner Kicks",
+          "fixtures_available": 10,
+          "fixtures_checked": 10,
+          "coverage_pct": 100.0,
+          "raw_observations": 10,
+          "status": "available"
+        }
+      ],
+      "tactical_evidence_metrics": [
+        {
+          "statistic": "Counter Attacks",
+          "team_output_fixtures": 0,
+          "opponent_output_fixtures": 0,
+          "fixtures_checked": 10
+        },
+        {
+          "statistic": "Big Chances Created",
+          "team_output_fixtures": 10,
+          "opponent_output_fixtures": 10,
+          "fixtures_checked": 10
+        },
+        {
+          "statistic": "Successful Headers",
+          "team_output_fixtures": 7,
+          "opponent_output_fixtures": 7,
+          "fixtures_checked": 10
+        },
+        {
+          "statistic": "Accurate Crosses",
+          "team_output_fixtures": 10,
+          "opponent_output_fixtures": 10,
+          "fixtures_checked": 10
+        },
+        {
+          "statistic": "Successful Dribbles",
+          "team_output_fixtures": 10,
+          "opponent_output_fixtures": 10,
+          "fixtures_checked": 10
+        },
+        {
+          "statistic": "Key Passes",
+          "team_output_fixtures": 10,
+          "opponent_output_fixtures": 10,
+          "fixtures_checked": 10
+        },
+        {
+          "statistic": "Shots Insidebox",
+          "team_output_fixtures": 10,
+          "opponent_output_fixtures": 10,
+          "fixtures_checked": 10
+        }
+      ],
+      "unmapped_statistics": [
+        {
+          "provider_statistic": "Attacks",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Ball Safe",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Big Chances Missed",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Dangerous Attacks",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Dribble Attempts",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Duels Won",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Fouls",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Free Kicks",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Goal Kicks",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Goals",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Long Passes",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Passes",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Saves",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Shots Outsidebox",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Substitutions",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Successful Dribbles Percentage",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Successful Long Passes",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Successful Long Passes Percentage",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Successful Passes",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Tackles Won",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Throwins",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Total Crosses",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Yellowcards",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Offsides",
+          "observations": 9,
+          "fixtures_seen": 9
+        },
+        {
+          "provider_statistic": "Injuries",
+          "observations": 8,
+          "fixtures_seen": 8
+        },
+        {
+          "provider_statistic": "Assists",
+          "observations": 7,
+          "fixtures_seen": 7
+        },
+        {
+          "provider_statistic": "Hit Woodwork",
+          "observations": 4,
+          "fixtures_seen": 4
+        },
+        {
+          "provider_statistic": "Penalties",
+          "observations": 2,
+          "fixtures_seen": 2
+        },
+        {
+          "provider_statistic": "Redcards",
+          "observations": 2,
+          "fixtures_seen": 2
+        },
+        {
+          "provider_statistic": "Yellowred Cards",
+          "observations": 2,
+          "fixtures_seen": 2
+        }
+      ]
+    },
+    "Leeds United": {
+      "fixtures_checked": 10,
+      "core_metrics_with_any_data": 8,
+      "core_metrics_complete": 8,
+      "core_metrics_total": 8,
+      "raw_observations_seen": 413,
+      "unmapped_observations": 255,
+      "mapping_visibility": "available",
+      "metrics": [
+        {
+          "group": "Possession & distribution",
+          "statistic": "Ball Possession",
+          "fixtures_available": 10,
+          "fixtures_checked": 10,
+          "coverage_pct": 100.0,
+          "raw_observations": 10,
+          "status": "available"
+        },
+        {
+          "group": "Possession & distribution",
+          "statistic": "Passes %",
+          "fixtures_available": 10,
+          "fixtures_checked": 10,
+          "coverage_pct": 100.0,
+          "raw_observations": 10,
+          "status": "available"
+        },
+        {
+          "group": "Attacking",
+          "statistic": "Total Shots",
+          "fixtures_available": 10,
+          "fixtures_checked": 10,
+          "coverage_pct": 100.0,
+          "raw_observations": 20,
+          "status": "available"
+        },
+        {
+          "group": "Attacking",
+          "statistic": "Shots on Target / Goal",
+          "fixtures_available": 10,
+          "fixtures_checked": 10,
+          "coverage_pct": 100.0,
+          "raw_observations": 10,
+          "status": "available"
+        },
+        {
+          "group": "Defending",
+          "statistic": "Tackles",
+          "fixtures_available": 10,
+          "fixtures_checked": 10,
+          "coverage_pct": 100.0,
+          "raw_observations": 10,
+          "status": "available"
+        },
+        {
+          "group": "Defending",
+          "statistic": "Interceptions",
+          "fixtures_available": 10,
+          "fixtures_checked": 10,
+          "coverage_pct": 100.0,
+          "raw_observations": 10,
+          "status": "available"
+        },
+        {
+          "group": "Defending",
+          "statistic": "Blocked Shots",
+          "fixtures_available": 10,
+          "fixtures_checked": 10,
+          "coverage_pct": 100.0,
+          "raw_observations": 10,
+          "status": "available"
+        },
+        {
+          "group": "Attacking",
+          "statistic": "Corner Kicks",
+          "fixtures_available": 10,
+          "fixtures_checked": 10,
+          "coverage_pct": 100.0,
+          "raw_observations": 10,
+          "status": "available"
+        }
+      ],
+      "tactical_evidence_metrics": [
+        {
+          "statistic": "Counter Attacks",
+          "team_output_fixtures": 0,
+          "opponent_output_fixtures": 0,
+          "fixtures_checked": 10
+        },
+        {
+          "statistic": "Big Chances Created",
+          "team_output_fixtures": 9,
+          "opponent_output_fixtures": 9,
+          "fixtures_checked": 10
+        },
+        {
+          "statistic": "Successful Headers",
+          "team_output_fixtures": 9,
+          "opponent_output_fixtures": 9,
+          "fixtures_checked": 10
+        },
+        {
+          "statistic": "Accurate Crosses",
+          "team_output_fixtures": 10,
+          "opponent_output_fixtures": 10,
+          "fixtures_checked": 10
+        },
+        {
+          "statistic": "Successful Dribbles",
+          "team_output_fixtures": 10,
+          "opponent_output_fixtures": 10,
+          "fixtures_checked": 10
+        },
+        {
+          "statistic": "Key Passes",
+          "team_output_fixtures": 10,
+          "opponent_output_fixtures": 10,
+          "fixtures_checked": 10
+        },
+        {
+          "statistic": "Shots Insidebox",
+          "team_output_fixtures": 10,
+          "opponent_output_fixtures": 10,
+          "fixtures_checked": 10
+        }
+      ],
+      "unmapped_statistics": [
+        {
+          "provider_statistic": "Attacks",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Ball Safe",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Dangerous Attacks",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Dribble Attempts",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Duels Won",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Fouls",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Free Kicks",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Goal Kicks",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Long Passes",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Offsides",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Passes",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Saves",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Shots Outsidebox",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Substitutions",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Successful Dribbles Percentage",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Successful Long Passes",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Successful Long Passes Percentage",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Successful Passes",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Tackles Won",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Throwins",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Total Crosses",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Yellowcards",
+          "observations": 10,
+          "fixtures_seen": 10
+        },
+        {
+          "provider_statistic": "Big Chances Missed",
+          "observations": 9,
+          "fixtures_seen": 9
+        },
+        {
+          "provider_statistic": "Injuries",
+          "observations": 9,
+          "fixtures_seen": 9
+        },
+        {
+          "provider_statistic": "Goals",
+          "observations": 8,
+          "fixtures_seen": 8
+        },
+        {
+          "provider_statistic": "Assists",
+          "observations": 6,
+          "fixtures_seen": 6
+        },
+        {
+          "provider_statistic": "Hit Woodwork",
+          "observations": 3,
+          "fixtures_seen": 3
+        }
+      ]
+    }
+  },
+  "prediction_readiness": {
+    "overall_status": "ready",
+    "prediction_minimum_history_met": true,
+    "ten_match_history_target_met": true,
+    "history_policy": {
+      "minimum_matches_per_team": 5,
+      "preferred_target_per_team": 10,
+      "target_is_advisory": true,
+      "note": "Prediction history eligibility requires five completed, score-valid matches per team. Five to nine matches are allowed with a limited-sample label; ten remains the preferred target."
+    },
+    "prediction_allowed_by_history": true,
+    "fixture": {
+      "verified": true,
+      "status": "verified",
+      "reason": "Exact competition-season fixture identity and future kickoff verified.",
+      "fixture_id": 19722100,
+      "kickoff_utc": "2026-11-21T15:00:00+00:00",
+      "source_updated_at": null,
+      "source_fetched_at": "2026-11-10T08:02:10.673708+00:00",
+      "source_age_seconds": 18.6,
+      "source_age_minutes": 0.3,
+      "source_freshness": "fresh",
+      "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
+    },
+    "teams": {
+      "home": {
+        "team": "Chelsea",
+        "completed_matches_available": 10,
+        "history_minimum": 5,
+        "history_target": 10,
+        "history_status": "target_met",
+        "prediction_allowed_by_history": true,
+        "matches_with_statistics": 10,
+        "matches_with_opponent_strength": 10,
+        "history_collection_diagnostics": {
+          "fixtures_scanned": 380,
+          "same_season_fixtures": 380,
+          "team_fixtures": 38,
+          "completed_fixtures": 10,
+          "fixtures_with_valid_scores": 10,
+          "excluded_wrong_season": 0,
+          "excluded_missing_participants": 0,
+          "excluded_other_team": 342,
+          "excluded_not_completed": 28,
+          "excluded_missing_scores": 0,
+          "excluded_invalid_kickoff": 0,
+          "excluded_invalid_scores": 0,
+          "excluded_duplicate_fixture_id": 0,
+          "history_shortfall": 0,
+          "history_latest_match_at": "2026-11-08T14:00:00+00:00",
+          "history_oldest_match_at": "2026-08-24T19:00:00+00:00",
+          "history_collection_fetched_at": null,
+          "history_order": "newest_first_by_parsed_utc_kickoff",
+          "schedule_unique_fixture_count": 380,
+          "duplicate_fixture_id_count": 0,
+          "duplicate_fixture_ids": [],
+          "team_fixture_accounting_gap": 0,
+          "team_fixture_accounting_status": "balanced",
+          "statistics_core_metrics": [
+            "Ball Possession",
+            "Passes %",
+            "Total Shots",
+            "Shots on Target / Goal",
+            "Tackles",
+            "Interceptions",
+            "Blocked Shots",
+            "Corner Kicks"
+          ],
+          "statistics_coverage_by_metric": {
+            "Ball Possession": 10,
+            "Passes %": 10,
+            "Total Shots": 10,
+            "Shots on Target / Goal": 10,
+            "Tackles": 10,
+            "Interceptions": 10,
+            "Blocked Shots": 10,
+            "Corner Kicks": 10
+          },
+          "matches_with_any_statistics": 10,
+          "matches_with_complete_core_statistics": 10,
+          "core_statistics_completeness_pct": 100.0,
+          "history_integrity_status": "ok"
+        },
+        "tactical_components_available": {
+          "playing_style": true,
+          "defensive_structure": true,
+          "attacking_approach": true
+        },
+        "player_availability_evidence": "available",
+        "confirmed_lineup_evidence": "unknown"
+      },
+      "away": {
+        "team": "Leeds United",
+        "completed_matches_available": 10,
+        "history_minimum": 5,
+        "history_target": 10,
+        "history_status": "target_met",
+        "prediction_allowed_by_history": true,
+        "matches_with_statistics": 10,
+        "matches_with_opponent_strength": 10,
+        "history_collection_diagnostics": {
+          "fixtures_scanned": 380,
+          "same_season_fixtures": 380,
+          "team_fixtures": 38,
+          "completed_fixtures": 10,
+          "fixtures_with_valid_scores": 10,
+          "excluded_wrong_season": 0,
+          "excluded_missing_participants": 0,
+          "excluded_other_team": 342,
+          "excluded_not_completed": 28,
+          "excluded_missing_scores": 0,
+          "excluded_invalid_kickoff": 0,
+          "excluded_invalid_scores": 0,
+          "excluded_duplicate_fixture_id": 0,
+          "history_shortfall": 0,
+          "history_latest_match_at": "2026-11-07T12:30:00+00:00",
+          "history_oldest_match_at": "2026-08-22T14:00:00+00:00",
+          "history_collection_fetched_at": null,
+          "history_order": "newest_first_by_parsed_utc_kickoff",
+          "schedule_unique_fixture_count": 380,
+          "duplicate_fixture_id_count": 0,
+          "duplicate_fixture_ids": [],
+          "team_fixture_accounting_gap": 0,
+          "team_fixture_accounting_status": "balanced",
+          "statistics_core_metrics": [
+            "Ball Possession",
+            "Passes %",
+            "Total Shots",
+            "Shots on Target / Goal",
+            "Tackles",
+            "Interceptions",
+            "Blocked Shots",
+            "Corner Kicks"
+          ],
+          "statistics_coverage_by_metric": {
+            "Ball Possession": 10,
+            "Passes %": 10,
+            "Total Shots": 10,
+            "Shots on Target / Goal": 10,
+            "Tackles": 10,
+            "Interceptions": 10,
+            "Blocked Shots": 10,
+            "Corner Kicks": 10
+          },
+          "matches_with_any_statistics": 10,
+          "matches_with_complete_core_statistics": 10,
+          "core_statistics_completeness_pct": 100.0,
+          "history_integrity_status": "ok"
+        },
+        "tactical_components_available": {
+          "playing_style": true,
+          "defensive_structure": true,
+          "attacking_approach": true
+        },
+        "player_availability_evidence": "available",
+        "confirmed_lineup_evidence": "unknown"
+      }
+    },
+    "model_impact": "Diagnostic only. This report does not change prediction inputs, model weights, recency weighting or TVD rules."
+  },
+  "corroboration": null,
+  "player_enrichment": null,
+  "system_diagnostics": {
+    "diagnostic_version": 1,
+    "generated_at": "2026-11-10T08:02:29.238437+00:00",
+    "overall_status": "healthy",
+    "selected_context": {
+      "season_start_year": 2026,
+      "competition": "Premier League — England",
+      "primary_provider": "sportmonks"
+    },
+    "summary": {
+      "checks_total": 14,
+      "passed": 13,
+      "warnings": 0,
+      "failed": 0,
+      "informational": 1
+    },
+    "checks": [
+      {
+        "id": "primary_provider_configuration",
+        "status": "pass",
+        "summary": "The selected season uses sportmonks; its credential is configured. Connectivity is assessed separately.",
+        "recommendation": null
+      },
+      {
+        "id": "fixture_identity",
+        "status": "pass",
+        "summary": "The selected upcoming fixture passed exact season, home/away team and scheduled-kickoff checks.",
+        "recommendation": null
+      },
+      {
+        "id": "fixture_freshness",
+        "status": "pass",
+        "summary": "Detailed fixture retrieval is less than 24 hours old.",
+        "recommendation": null
+      },
+      {
+        "id": "home_history_depth",
+        "status": "pass",
+        "summary": "Chelsea: 10 completed score-valid matches available (minimum 5 met; preferred target 10 met).",
+        "recommendation": null
+      },
+      {
+        "id": "home_tactical_recency_weighting",
+        "status": "pass",
+        "summary": "Chelsea: tactical recency metadata reports latest-five 60% / previous-five 40% over 10 match(es).",
+        "recommendation": null
+      },
+      {
+        "id": "home_history_integrity",
+        "status": "pass",
+        "summary": "Chelsea: no duplicate fixture IDs or invalid/missing score fields were found in the collected sample.",
+        "recommendation": null
+      },
+      {
+        "id": "home_statistics_coverage",
+        "status": "pass",
+        "summary": "Chelsea: all 8 core tactical statistics have at least one usable observation.",
+        "recommendation": null
+      },
+      {
+        "id": "away_history_depth",
+        "status": "pass",
+        "summary": "Leeds United: 10 completed score-valid matches available (minimum 5 met; preferred target 10 met).",
+        "recommendation": null
+      },
+      {
+        "id": "away_tactical_recency_weighting",
+        "status": "pass",
+        "summary": "Leeds United: tactical recency metadata reports latest-five 60% / previous-five 40% over 10 match(es).",
+        "recommendation": null
+      },
+      {
+        "id": "away_history_integrity",
+        "status": "pass",
+        "summary": "Leeds United: no duplicate fixture IDs or invalid/missing score fields were found in the collected sample.",
+        "recommendation": null
+      },
+      {
+        "id": "away_statistics_coverage",
+        "status": "pass",
+        "summary": "Leeds United: all 8 core tactical statistics have at least one usable observation.",
+        "recommendation": null
+      },
+      {
+        "id": "independent_provider_corroboration",
+        "status": "info",
+        "summary": "Independent result corroboration was not run for this collection.",
+        "recommendation": "Enable the optional cross-check if independent result comparison is needed."
+      },
+      {
+        "id": "model_weight_configuration",
+        "status": "pass",
+        "summary": "The supplied top-level model weights are non-negative and sum to 1.0.",
+        "recommendation": null
+      },
+      {
+        "id": "prediction_readiness",
+        "status": "pass",
+        "summary": "Prediction readiness status: ready. Five completed, score-valid matches per team meet the history minimum; ten is preferred.",
+        "recommendation": null
+      }
+    ],
+    "recommended_actions": [],
+    "providers": {
+      "sportmonks": {
+        "provider": "Sportmonks Football API v3",
+        "role": "Primary current-season provider",
+        "credential_configured": true,
+        "credential_required": true,
+        "adapter": "implemented",
+        "app_integration": "current-season Layer 2 path active; exact competition/season coverage and data-quality gates enforced",
+        "limitation": "Coverage is limited to competitions/seasons enabled by the account; each selected competition must pass data-quality gates."
+      },
+      "highlightly": {
+        "provider": "Highlightly",
+        "role": "Independent current-season corroboration and secondary source",
+        "credential_configured": true,
+        "credential_required": true,
+        "adapter": "implemented",
+        "app_integration": "adapter and authenticated smoke test available; canonical normalizer exists; not yet active in Layer 2 reconciliation",
+        "limitation": "Coverage, fields, quotas and refresh intervals are plan-dependent; match data is not yet active in Layer 2 reconciliation."
+      },
+      "api_football": {
+        "provider": "API-Football v3",
+        "role": "Historical specialist source and secondary detail provider",
+        "credential_configured": true,
+        "credential_required": true,
+        "adapter": "implemented",
+        "app_integration": "historical Layer 2 path active for supported seasons; account status/quota diagnostic available",
+        "limitation": "The configured account is limited to seasons 2022–2024; do not request newer seasons from this account."
+      },
+      "api_ninjas": {
+        "provider": "API Ninjas",
+        "role": "Independent fixtures/results/standings and club/squad corroboration",
+        "credential_configured": true,
+        "credential_required": true,
+        "adapter": "implemented",
+        "app_integration": "adapter and authenticated smoke test available; canonical normalizer exists; not yet active in Layer 2 reconciliation",
+        "limitation": "The current adapter does not supply detailed fixture statistics, injuries or lineups; not yet active in Layer 2 reconciliation."
+      },
+      "livescore_football": {
+        "provider": "LiveScoreFootball",
+        "role": "Conditional competition-specific corroboration for fixtures/results/standings",
+        "credential_configured": false,
+        "credential_required": false,
+        "adapter": "implemented",
+        "app_integration": "read-only adapter, metadata freshness and exact competition crosswalk checks available; automatic fallback remains disabled",
+        "limitation": "Database-backed snapshots can be delayed; require exact competition/season crosswalk and fresh sync metadata for every use."
+      }
+    },
+    "fixture": {
+      "verified": true,
+      "status": "verified",
+      "reason": "Exact competition-season fixture identity and future kickoff verified.",
+      "fixture_id": 19722100,
+      "kickoff_utc": "2026-11-21T15:00:00+00:00",
+      "source_updated_at": null,
+      "source_fetched_at": "2026-11-10T08:02:10.673708+00:00",
+      "source_age_seconds": 18.6,
+      "source_age_minutes": 0.3,
+      "source_freshness": "fresh",
+      "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
+    },
+    "teams": {
+      "home": {
+        "team": "Chelsea",
+        "completed_matches_available": 10,
+        "history_minimum": 5,
+        "history_target": 10,
+        "history_collection_diagnostics": {
+          "fixtures_scanned": 380,
+          "schedule_unique_fixture_count": 380,
+          "duplicate_fixture_id_count": 0,
+          "duplicate_fixture_ids": [],
+          "same_season_fixtures": 380,
+          "season_eligible_fixtures": 380,
+          "fixtures_missing_season_id": 0,
+          "team_fixtures": 38,
+          "completed_fixtures": 10,
+          "fixtures_with_valid_scores": 10,
+          "excluded_wrong_season": 0,
+          "excluded_missing_participants": 0,
+          "excluded_other_team": 342,
+          "excluded_not_completed": 28,
+          "excluded_missing_scores": 0,
+          "excluded_invalid_kickoff": 0,
+          "excluded_invalid_scores": 0,
+          "excluded_duplicate_fixture_id": 0,
+          "history_shortfall": 0,
+          "history_latest_match_at": "2026-11-08T14:00:00+00:00",
+          "history_oldest_match_at": "2026-08-24T19:00:00+00:00",
+          "history_collection_fetched_at": null,
+          "history_repository_collected_at": "2026-11-09T00:52:24+00:00",
+          "history_provider_updated_at": null,
+          "history_order": "newest_first_by_parsed_utc_kickoff",
+          "statistics_core_metrics": [
+            "Ball Possession",
+            "Passes %",
+            "Total Shots",
+            "Shots on Target / Goal",
+            "Tackles",
+            "Interceptions",
+            "Blocked Shots",
+            "Corner Kicks"
+          ],
+          "statistics_coverage_by_metric": {
+            "Ball Possession": 10,
+            "Passes %": 10,
+            "Total Shots": 10,
+            "Shots on Target / Goal": 10,
+            "Tackles": 10,
+            "Interceptions": 10,
+            "Blocked Shots": 10,
+            "Corner Kicks": 10
+          },
+          "matches_with_any_statistics": 10,
+          "matches_with_complete_core_statistics": 10,
+          "core_statistics_completeness_pct": 100.0,
+          "team_fixture_accounting_gap": 0,
+          "team_fixture_accounting_status": "balanced",
+          "history_integrity_status": "ok"
+        },
+        "statistics_coverage": {
+          "fixtures_checked": 10,
+          "core_metrics_with_any_data": 8,
+          "core_metrics_complete": 8,
+          "core_metrics_total": 8,
+          "raw_observations_seen": 421,
+          "unmapped_observations": 264,
+          "mapping_visibility": "available",
+          "metrics": [
+            {
+              "group": "Possession & distribution",
+              "statistic": "Ball Possession",
+              "fixtures_available": 10,
+              "fixtures_checked": 10,
+              "coverage_pct": 100.0,
+              "raw_observations": 10,
+              "status": "available"
+            },
+            {
+              "group": "Possession & distribution",
+              "statistic": "Passes %",
+              "fixtures_available": 10,
+              "fixtures_checked": 10,
+              "coverage_pct": 100.0,
+              "raw_observations": 10,
+              "status": "available"
+            },
+            {
+              "group": "Attacking",
+              "statistic": "Total Shots",
+              "fixtures_available": 10,
+              "fixtures_checked": 10,
+              "coverage_pct": 100.0,
+              "raw_observations": 20,
+              "status": "available"
+            },
+            {
+              "group": "Attacking",
+              "statistic": "Shots on Target / Goal",
+              "fixtures_available": 10,
+              "fixtures_checked": 10,
+              "coverage_pct": 100.0,
+              "raw_observations": 10,
+              "status": "available"
+            },
+            {
+              "group": "Defending",
+              "statistic": "Tackles",
+              "fixtures_available": 10,
+              "fixtures_checked": 10,
+              "coverage_pct": 100.0,
+              "raw_observations": 10,
+              "status": "available"
+            },
+            {
+              "group": "Defending",
+              "statistic": "Interceptions",
+              "fixtures_available": 10,
+              "fixtures_checked": 10,
+              "coverage_pct": 100.0,
+              "raw_observations": 10,
+              "status": "available"
+            },
+            {
+              "group": "Defending",
+              "statistic": "Blocked Shots",
+              "fixtures_available": 10,
+              "fixtures_checked": 10,
+              "coverage_pct": 100.0,
+              "raw_observations": 10,
+              "status": "available"
+            },
+            {
+              "group": "Attacking",
+              "statistic": "Corner Kicks",
+              "fixtures_available": 10,
+              "fixtures_checked": 10,
+              "coverage_pct": 100.0,
+              "raw_observations": 10,
+              "status": "available"
+            }
+          ],
+          "tactical_evidence_metrics": [
+            {
+              "statistic": "Counter Attacks",
+              "team_output_fixtures": 0,
+              "opponent_output_fixtures": 0,
+              "fixtures_checked": 10
+            },
+            {
+              "statistic": "Big Chances Created",
+              "team_output_fixtures": 10,
+              "opponent_output_fixtures": 10,
+              "fixtures_checked": 10
+            },
+            {
+              "statistic": "Successful Headers",
+              "team_output_fixtures": 7,
+              "opponent_output_fixtures": 7,
+              "fixtures_checked": 10
+            },
+            {
+              "statistic": "Accurate Crosses",
+              "team_output_fixtures": 10,
+              "opponent_output_fixtures": 10,
+              "fixtures_checked": 10
+            },
+            {
+              "statistic": "Successful Dribbles",
+              "team_output_fixtures": 10,
+              "opponent_output_fixtures": 10,
+              "fixtures_checked": 10
+            },
+            {
+              "statistic": "Key Passes",
+              "team_output_fixtures": 10,
+              "opponent_output_fixtures": 10,
+              "fixtures_checked": 10
+            },
+            {
+              "statistic": "Shots Insidebox",
+              "team_output_fixtures": 10,
+              "opponent_output_fixtures": 10,
+              "fixtures_checked": 10
+            }
+          ],
+          "unmapped_statistics": [
+            {
+              "provider_statistic": "Attacks",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Ball Safe",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Big Chances Missed",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Dangerous Attacks",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Dribble Attempts",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Duels Won",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Fouls",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Free Kicks",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Goal Kicks",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Goals",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Long Passes",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Passes",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Saves",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Shots Outsidebox",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Substitutions",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Successful Dribbles Percentage",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Successful Long Passes",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Successful Long Passes Percentage",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Successful Passes",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Tackles Won",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Throwins",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Total Crosses",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Yellowcards",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Offsides",
+              "observations": 9,
+              "fixtures_seen": 9
+            },
+            {
+              "provider_statistic": "Injuries",
+              "observations": 8,
+              "fixtures_seen": 8
+            },
+            {
+              "provider_statistic": "Assists",
+              "observations": 7,
+              "fixtures_seen": 7
+            },
+            {
+              "provider_statistic": "Hit Woodwork",
+              "observations": 4,
+              "fixtures_seen": 4
+            },
+            {
+              "provider_statistic": "Penalties",
+              "observations": 2,
+              "fixtures_seen": 2
+            },
+            {
+              "provider_statistic": "Redcards",
+              "observations": 2,
+              "fixtures_seen": 2
+            },
+            {
+              "provider_statistic": "Yellowred Cards",
+              "observations": 2,
+              "fixtures_seen": 2
+            }
+          ]
+        },
+        "tactical_summary": {
+          "playing_style": 58.050000000000004,
+          "attacking_approach": 54.36666666666667,
+          "defensive_structure": 43.4,
+          "coverage_metrics": 8,
+          "available_metrics": {
+            "average_possession": 50.3,
+            "average_pass_accuracy": 82.9,
+            "average_shots": 13.4,
+            "average_shots_on_target": 5.8,
+            "average_tackles": 16.8,
+            "average_interceptions": 9.6,
+            "average_blocked_shots": 3.4,
+            "average_corners": 5.3
+          },
+          "recency_weighting": {
+            "matches_used": 10,
+            "recent_matches": 5,
+            "recent_weight": 0.6,
+            "previous_matches": 5,
+            "previous_weight": 0.4,
+            "note": "Latest five matches carry 60%; previous five carry 40%. If a metric is absent from one window, the available window is renormalized."
+          },
+          "note": "Tactical ratings are shown only when the underlying statistics are present; unavailable metrics remain unknown."
+        },
+        "tactical_recency_weighting": {
+          "matches_used": 10,
+          "recent_matches": 5,
+          "recent_weight": 0.6,
+          "previous_matches": 5,
+          "previous_weight": 0.4,
+          "note": "Latest five matches carry 60%; previous five carry 40%. If a metric is absent from one window, the available window is renormalized."
+        },
+        "integrity": {
+          "matches_checked": 10,
+          "duplicate_fixture_ids": [],
+          "invalid_or_missing_score_fields": []
+        }
+      },
+      "away": {
+        "team": "Leeds United",
+        "completed_matches_available": 10,
+        "history_minimum": 5,
+        "history_target": 10,
+        "history_collection_diagnostics": {
+          "fixtures_scanned": 380,
+          "schedule_unique_fixture_count": 380,
+          "duplicate_fixture_id_count": 0,
+          "duplicate_fixture_ids": [],
+          "same_season_fixtures": 380,
+          "season_eligible_fixtures": 380,
+          "fixtures_missing_season_id": 0,
+          "team_fixtures": 38,
+          "completed_fixtures": 10,
+          "fixtures_with_valid_scores": 10,
+          "excluded_wrong_season": 0,
+          "excluded_missing_participants": 0,
+          "excluded_other_team": 342,
+          "excluded_not_completed": 28,
+          "excluded_missing_scores": 0,
+          "excluded_invalid_kickoff": 0,
+          "excluded_invalid_scores": 0,
+          "excluded_duplicate_fixture_id": 0,
+          "history_shortfall": 0,
+          "history_latest_match_at": "2026-11-07T12:30:00+00:00",
+          "history_oldest_match_at": "2026-08-22T14:00:00+00:00",
+          "history_collection_fetched_at": null,
+          "history_repository_collected_at": "2026-11-09T00:52:24+00:00",
+          "history_provider_updated_at": null,
+          "history_order": "newest_first_by_parsed_utc_kickoff",
+          "statistics_core_metrics": [
+            "Ball Possession",
+            "Passes %",
+            "Total Shots",
+            "Shots on Target / Goal",
+            "Tackles",
+            "Interceptions",
+            "Blocked Shots",
+            "Corner Kicks"
+          ],
+          "statistics_coverage_by_metric": {
+            "Ball Possession": 10,
+            "Passes %": 10,
+            "Total Shots": 10,
+            "Shots on Target / Goal": 10,
+            "Tackles": 10,
+            "Interceptions": 10,
+            "Blocked Shots": 10,
+            "Corner Kicks": 10
+          },
+          "matches_with_any_statistics": 10,
+          "matches_with_complete_core_statistics": 10,
+          "core_statistics_completeness_pct": 100.0,
+          "team_fixture_accounting_gap": 0,
+          "team_fixture_accounting_status": "balanced",
+          "history_integrity_status": "ok"
+        },
+        "statistics_coverage": {
+          "fixtures_checked": 10,
+          "core_metrics_with_any_data": 8,
+          "core_metrics_complete": 8,
+          "core_metrics_total": 8,
+          "raw_observations_seen": 413,
+          "unmapped_observations": 255,
+          "mapping_visibility": "available",
+          "metrics": [
+            {
+              "group": "Possession & distribution",
+              "statistic": "Ball Possession",
+              "fixtures_available": 10,
+              "fixtures_checked": 10,
+              "coverage_pct": 100.0,
+              "raw_observations": 10,
+              "status": "available"
+            },
+            {
+              "group": "Possession & distribution",
+              "statistic": "Passes %",
+              "fixtures_available": 10,
+              "fixtures_checked": 10,
+              "coverage_pct": 100.0,
+              "raw_observations": 10,
+              "status": "available"
+            },
+            {
+              "group": "Attacking",
+              "statistic": "Total Shots",
+              "fixtures_available": 10,
+              "fixtures_checked": 10,
+              "coverage_pct": 100.0,
+              "raw_observations": 20,
+              "status": "available"
+            },
+            {
+              "group": "Attacking",
+              "statistic": "Shots on Target / Goal",
+              "fixtures_available": 10,
+              "fixtures_checked": 10,
+              "coverage_pct": 100.0,
+              "raw_observations": 10,
+              "status": "available"
+            },
+            {
+              "group": "Defending",
+              "statistic": "Tackles",
+              "fixtures_available": 10,
+              "fixtures_checked": 10,
+              "coverage_pct": 100.0,
+              "raw_observations": 10,
+              "status": "available"
+            },
+            {
+              "group": "Defending",
+              "statistic": "Interceptions",
+              "fixtures_available": 10,
+              "fixtures_checked": 10,
+              "coverage_pct": 100.0,
+              "raw_observations": 10,
+              "status": "available"
+            },
+            {
+              "group": "Defending",
+              "statistic": "Blocked Shots",
+              "fixtures_available": 10,
+              "fixtures_checked": 10,
+              "coverage_pct": 100.0,
+              "raw_observations": 10,
+              "status": "available"
+            },
+            {
+              "group": "Attacking",
+              "statistic": "Corner Kicks",
+              "fixtures_available": 10,
+              "fixtures_checked": 10,
+              "coverage_pct": 100.0,
+              "raw_observations": 10,
+              "status": "available"
+            }
+          ],
+          "tactical_evidence_metrics": [
+            {
+              "statistic": "Counter Attacks",
+              "team_output_fixtures": 0,
+              "opponent_output_fixtures": 0,
+              "fixtures_checked": 10
+            },
+            {
+              "statistic": "Big Chances Created",
+              "team_output_fixtures": 9,
+              "opponent_output_fixtures": 9,
+              "fixtures_checked": 10
+            },
+            {
+              "statistic": "Successful Headers",
+              "team_output_fixtures": 9,
+              "opponent_output_fixtures": 9,
+              "fixtures_checked": 10
+            },
+            {
+              "statistic": "Accurate Crosses",
+              "team_output_fixtures": 10,
+              "opponent_output_fixtures": 10,
+              "fixtures_checked": 10
+            },
+            {
+              "statistic": "Successful Dribbles",
+              "team_output_fixtures": 10,
+              "opponent_output_fixtures": 10,
+              "fixtures_checked": 10
+            },
+            {
+              "statistic": "Key Passes",
+              "team_output_fixtures": 10,
+              "opponent_output_fixtures": 10,
+              "fixtures_checked": 10
+            },
+            {
+              "statistic": "Shots Insidebox",
+              "team_output_fixtures": 10,
+              "opponent_output_fixtures": 10,
+              "fixtures_checked": 10
+            }
+          ],
+          "unmapped_statistics": [
+            {
+              "provider_statistic": "Attacks",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Ball Safe",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Dangerous Attacks",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Dribble Attempts",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Duels Won",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Fouls",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Free Kicks",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Goal Kicks",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Long Passes",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Offsides",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Passes",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Saves",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Shots Outsidebox",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Substitutions",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Successful Dribbles Percentage",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Successful Long Passes",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Successful Long Passes Percentage",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Successful Passes",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Tackles Won",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Throwins",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Total Crosses",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Yellowcards",
+              "observations": 10,
+              "fixtures_seen": 10
+            },
+            {
+              "provider_statistic": "Big Chances Missed",
+              "observations": 9,
+              "fixtures_seen": 9
+            },
+            {
+              "provider_statistic": "Injuries",
+              "observations": 9,
+              "fixtures_seen": 9
+            },
+            {
+              "provider_statistic": "Goals",
+              "observations": 8,
+              "fixtures_seen": 8
+            },
+            {
+              "provider_statistic": "Assists",
+              "observations": 6,
+              "fixtures_seen": 6
+            },
+            {
+              "provider_statistic": "Hit Woodwork",
+              "observations": 3,
+              "fixtures_seen": 3
+            }
+          ]
+        },
+        "tactical_summary": {
+          "playing_style": 47.55,
+          "attacking_approach": 38.733333333333334,
+          "defensive_structure": 41.166666666666664,
+          "coverage_metrics": 8,
+          "available_metrics": {
+            "average_possession": 47.6,
+            "average_pass_accuracy": 77.8,
+            "average_shots": 12.0,
+            "average_shots_on_target": 3.7,
+            "average_tackles": 16.2,
+            "average_interceptions": 9.0,
+            "average_blocked_shots": 3.4,
+            "average_corners": 4.3
+          },
+          "recency_weighting": {
+            "matches_used": 10,
+            "recent_matches": 5,
+            "recent_weight": 0.6,
+            "previous_matches": 5,
+            "previous_weight": 0.4,
+            "note": "Latest five matches carry 60%; previous five carry 40%. If a metric is absent from one window, the available window is renormalized."
+          },
+          "note": "Tactical ratings are shown only when the underlying statistics are present; unavailable metrics remain unknown."
+        },
+        "tactical_recency_weighting": {
+          "matches_used": 10,
+          "recent_matches": 5,
+          "recent_weight": 0.6,
+          "previous_matches": 5,
+          "previous_weight": 0.4,
+          "note": "Latest five matches carry 60%; previous five carry 40%. If a metric is absent from one window, the available window is renormalized."
+        },
+        "integrity": {
+          "matches_checked": 10,
+          "duplicate_fixture_ids": [],
+          "invalid_or_missing_score_fields": []
+        }
+      }
+    },
+    "corroboration": {},
+    "prediction_readiness": {
+      "overall_status": "ready",
+      "prediction_minimum_history_met": true,
+      "ten_match_history_target_met": true,
+      "history_policy": {
+        "minimum_matches_per_team": 5,
+        "preferred_target_per_team": 10,
+        "target_is_advisory": true,
+        "note": "Prediction history eligibility requires five completed, score-valid matches per team. Five to nine matches are allowed with a limited-sample label; ten remains the preferred target."
+      },
+      "prediction_allowed_by_history": true,
+      "fixture": {
+        "verified": true,
+        "status": "verified",
+        "reason": "Exact competition-season fixture identity and future kickoff verified.",
+        "fixture_id": 19722100,
+        "kickoff_utc": "2026-11-21T15:00:00+00:00",
+        "source_updated_at": null,
+        "source_fetched_at": "2026-11-10T08:02:10.673708+00:00",
+        "source_age_seconds": 18.6,
+        "source_age_minutes": 0.3,
+        "source_freshness": "fresh",
+        "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
+      },
+      "teams": {
+        "home": {
+          "team": "Chelsea",
+          "completed_matches_available": 10,
+          "history_minimum": 5,
+          "history_target": 10,
+          "history_status": "target_met",
+          "prediction_allowed_by_history": true,
+          "matches_with_statistics": 10,
+          "matches_with_opponent_strength": 10,
+          "history_collection_diagnostics": {
+            "fixtures_scanned": 380,
+            "same_season_fixtures": 380,
+            "team_fixtures": 38,
+            "completed_fixtures": 10,
+            "fixtures_with_valid_scores": 10,
+            "excluded_wrong_season": 0,
+            "excluded_missing_participants": 0,
+            "excluded_other_team": 342,
+            "excluded_not_completed": 28,
+            "excluded_missing_scores": 0,
+            "excluded_invalid_kickoff": 0,
+            "excluded_invalid_scores": 0,
+            "excluded_duplicate_fixture_id": 0,
+            "history_shortfall": 0,
+            "history_latest_match_at": "2026-11-08T14:00:00+00:00",
+            "history_oldest_match_at": "2026-08-24T19:00:00+00:00",
+            "history_collection_fetched_at": null,
+            "history_order": "newest_first_by_parsed_utc_kickoff",
+            "schedule_unique_fixture_count": 380,
+            "duplicate_fixture_id_count": 0,
+            "duplicate_fixture_ids": [],
+            "team_fixture_accounting_gap": 0,
+            "team_fixture_accounting_status": "balanced",
+            "statistics_core_metrics": [
+              "Ball Possession",
+              "Passes %",
+              "Total Shots",
+              "Shots on Target / Goal",
+              "Tackles",
+              "Interceptions",
+              "Blocked Shots",
+              "Corner Kicks"
+            ],
+            "statistics_coverage_by_metric": {
+              "Ball Possession": 10,
+              "Passes %": 10,
+              "Total Shots": 10,
+              "Shots on Target / Goal": 10,
+              "Tackles": 10,
+              "Interceptions": 10,
+              "Blocked Shots": 10,
+              "Corner Kicks": 10
+            },
+            "matches_with_any_statistics": 10,
+            "matches_with_complete_core_statistics": 10,
+            "core_statistics_completeness_pct": 100.0,
+            "history_integrity_status": "ok"
+          },
+          "tactical_components_available": {
+            "playing_style": true,
+            "defensive_structure": true,
+            "attacking_approach": true
+          },
+          "player_availability_evidence": "available",
+          "confirmed_lineup_evidence": "unknown"
+        },
+        "away": {
+          "team": "Leeds United",
+          "completed_matches_available": 10,
+          "history_minimum": 5,
+          "history_target": 10,
+          "history_status": "target_met",
+          "prediction_allowed_by_history": true,
+          "matches_with_statistics": 10,
+          "matches_with_opponent_strength": 10,
+          "history_collection_diagnostics": {
+            "fixtures_scanned": 380,
+            "same_season_fixtures": 380,
+            "team_fixtures": 38,
+            "completed_fixtures": 10,
+            "fixtures_with_valid_scores": 10,
+            "excluded_wrong_season": 0,
+            "excluded_missing_participants": 0,
+            "excluded_other_team": 342,
+            "excluded_not_completed": 28,
+            "excluded_missing_scores": 0,
+            "excluded_invalid_kickoff": 0,
+            "excluded_invalid_scores": 0,
+            "excluded_duplicate_fixture_id": 0,
+            "history_shortfall": 0,
+            "history_latest_match_at": "2026-11-07T12:30:00+00:00",
+            "history_oldest_match_at": "2026-08-22T14:00:00+00:00",
+            "history_collection_fetched_at": null,
+            "history_order": "newest_first_by_parsed_utc_kickoff",
+            "schedule_unique_fixture_count": 380,
+            "duplicate_fixture_id_count": 0,
+            "duplicate_fixture_ids": [],
+            "team_fixture_accounting_gap": 0,
+            "team_fixture_accounting_status": "balanced",
+            "statistics_core_metrics": [
+              "Ball Possession",
+              "Passes %",
+              "Total Shots",
+              "Shots on Target / Goal",
+              "Tackles",
+              "Interceptions",
+              "Blocked Shots",
+              "Corner Kicks"
+            ],
+            "statistics_coverage_by_metric": {
+              "Ball Possession": 10,
+              "Passes %": 10,
+              "Total Shots": 10,
+              "Shots on Target / Goal": 10,
+              "Tackles": 10,
+              "Interceptions": 10,
+              "Blocked Shots": 10,
+              "Corner Kicks": 10
+            },
+            "matches_with_any_statistics": 10,
+            "matches_with_complete_core_statistics": 10,
+            "core_statistics_completeness_pct": 100.0,
+            "history_integrity_status": "ok"
+          },
+          "tactical_components_available": {
+            "playing_style": true,
+            "defensive_structure": true,
+            "attacking_approach": true
+          },
+          "player_availability_evidence": "available",
+          "confirmed_lineup_evidence": "unknown"
+        }
+      },
+      "model_impact": "Diagnostic only. This report does not change prediction inputs, model weights, recency weighting or TVD rules."
+    },
+    "model_configuration": {
+      "weights": {
+        "recent_form": 0.2,
+        "goals_scored": 0.1,
+        "goals_conceded": 0.1,
+        "home_away": 0.1,
+        "strength_of_schedule": 0.15,
+        "player_availability": 0.05,
+        "tactical": 0.3
+      },
+      "weights_total": 1.0,
+      "model_impact": "Diagnostics only; weights, recency weighting, prediction inputs and missing-data rules are not changed."
+    }
+  },
+  "generated_at_utc": "2026-11-10T08:02:29.241425+00:00",
+  "report_name": "data_collection_evidence"
+}
