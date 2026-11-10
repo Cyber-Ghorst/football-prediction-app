@@ -72,6 +72,7 @@ class HighlightlyMatchEnrichmentTests(unittest.TestCase):
     def test_highlightly_statistics_reject_nonfinite_negative_and_out_of_range_values(self):
         self.assertEqual(_highlightly_stat_value("Ball Possession", 0.6), 60.0)
         self.assertEqual(_highlightly_stat_value("Ball Possession", "60%"), 60.0)
+        self.assertEqual(_highlightly_stat_value("Ball Possession", "1%"), 1.0)
         self.assertEqual(_highlightly_stat_value("Total Shots", 12), 12.0)
         for name, value in (
             ("Ball Possession", -1),
