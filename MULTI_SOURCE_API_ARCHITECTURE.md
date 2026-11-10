@@ -514,9 +514,17 @@ Layer 3 adds evidence-based checks around the canonical records delivered by Lay
 - Audit persistence failures are diagnostic only and do not block prediction. Current-run source observations remain visible.
 - This milestone does not change provider priorities, model inputs, prediction weights, TVD or tactical recency weighting.
 
+### Fourth implementation milestone: dynamic competition discovery and registration (completed 2026-11-10)
+
+- `competition_registry.py` pairs Sportmonks league and season records only through exact provider-native `league_id` relationships, rejects orphan and ambiguous IDs, and creates stable provider-namespaced identities.
+- `provider_data_storage.py` persists discovered competition-season records in CockroachDB's `provider_competition_registry` table. Repeated discovery refreshes descriptive provider metadata without changing registered identity.
+- The Streamlit collection flow displays the discovered catalogue and registration outcome. Discovery and registration are separate from cross-provider identity verification and prediction readiness.
+- Cross-provider matching produces candidates only when competition name, country and season label agree. Even then it remains explicitly unverified; matching numeric IDs or names never auto-links providers.
+- Every discovered row starts as `prediction_ready = false`. Existing selected-competition, season, team and fixture validation gates remain in place.
+- No provider priority, model input, prediction weight, TVD or tactical recency weighting changed.
+
 ### Remaining Layer 3 work
 
-1. Implement dynamic league discovery and registration with explicit competition/season crosswalks and identity checks.
-2. Add a league coverage dashboard distinguishing discovered, supported, incomplete and prediction-ready competitions.
-3. Validate the quality-control layer against archived reports and sufficient historical samples before considering any provider-priority changes.
+1. Add a league coverage dashboard distinguishing discovered, supported, incomplete and prediction-ready competitions.
+2. Validate the quality-control layer against archived reports and sufficient historical samples before considering any provider-priority changes.
 The reliability report is a descriptive baseline, not a source ranking or an automated model adjustment.

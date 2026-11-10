@@ -27,6 +27,10 @@ class FakeCursor:
             self.connection.reliability.append(params)
         elif normalized.startswith("INSERT INTO provider_conflict_resolution_audit"):
             self.connection.conflict_audits.append(params)
+        elif normalized.startswith("INSERT INTO provider_competition_registry"):
+            self.connection.competition_registry.append(params)
+        elif normalized.startswith("SELECT identity_key, provider, provider_competition_id"):
+            self.result = self.connection.competition_registry[:params[2]]
         elif normalized.startswith("SELECT audit_id, competition, season, fixture_identity"):
             self.result = self.connection.conflict_audits[:params[2]]
         elif normalized.startswith("SELECT snapshot_id, competition, season, primary_provider"):
@@ -59,6 +63,7 @@ class FakeConnection:
         self.reliability = []
         self.reliability_rows = []
         self.conflict_audits = []
+        self.competition_registry = []
         self.fresh = None
         self.latest = None
         self.fail_run_insert = False
@@ -322,6 +327,29 @@ class ProviderStorageTests(unittest.TestCase):
             storage.save_conflict_resolution_audit("postgresql://example", events=[{"competition": "", "season": 2026}])
         with self.assertRaises(ValueError):
             storage.load_conflict_resolution_audit("postgresql://example", competition="Premier League", season=True)
+
+    def test_competition_registry_persists_namespaced_ids_without_readiness_promotion(self):
+        record = {
+            "identity_key": "sportmonks|8|28083", "provider": "sportmonks",
+            "provider_competition_id": "8", "provider_season_id": "28083",
+            "competition_name": "Premier League", "country": "England",
+            "season_name": "2026/2027", "prediction_ready": False,
+            "raw_competition": {"id": 8}, "raw_season": {"id": 28083, "league_id": 8},
+        }
+        count = storage.save_discovered_competition_registry("postgresql://example", records=[record])
+        self.assertEqual(count, 1)
+        row = self.connection.competition_registry[0]
+        self.assertEqual(row[1:4], ("sportmonks", "8", "28083"))
+        self.assertFalse(row[14])
+        loaded = storage.load_competition_registry("postgresql://example", provider="sportmonks")
+        self.assertEqual(loaded[0]["identity_key"], "sportmonks|8|28083")
+        self.assertFalse(loaded[0]["prediction_ready"])
+
+    def test_competition_registry_rejects_invalid_identity_or_readiness(self):
+        with self.assertRaises(ValueError):
+            storage.save_discovered_competition_registry("postgresql://example", records=[{"provider": "sportmonks"}])
+        with self.assertRaises(ValueError):
+            storage.save_discovered_competition_registry("postgresql://example", records=[{"identity_key": "x", "provider": "sportmonks", "provider_competition_id": "8", "provider_season_id": "2", "competition_name": "League", "country": "Country", "season_name": "2026", "prediction_ready": True}])
 
     def test_invalid_payload_or_ttl_is_rejected(self):
         base = {
