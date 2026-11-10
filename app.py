@@ -2079,10 +2079,14 @@ try:
                                 "candidates_checked": len(candidate_rows),
                                 "selected_season_fixture_date_hits": 0,
                                 "targeted_date_endpoint_requests": 0,
+                                "targeted_date_endpoint_cache_hits": 0,
+                                "targeted_date_endpoint_limit_reached": 0,
+                                "max_targeted_date_endpoint_requests": 10,
                                 "verified_from_selected_season_fixtures": 0,
                                 "verified_from_targeted_date_endpoint": 0,
                             }
                             candidate_verification_started = time.perf_counter()
+                            targeted_date_fixtures_cache = {}
                             if candidate_rows:
                                 try:
                                     with SportmonksClient() as verifier_client:
@@ -2159,16 +2163,25 @@ try:
                                                 "verification_source": verification_source,
                                             }
 
-                                            # Fall back to one targeted date request only when the
-                                            # already-collected season fixtures cannot confirm the match.
+                                            # Reuse one targeted Sportmonks date response across providers
+                                            # and teams. Cap unique-date requests to protect latency and quota.
                                             if report.get("verification_status") != "exact_fixture_and_score_agree":
-                                                targeted_fixtures = get_sm_fixtures_between(
-                                                    candidate_date,
-                                                    candidate_date,
-                                                    "participants;state;scores",
-                                                    ttl_seconds=300,
-                                                )
-                                                candidate_verification_diagnostics["targeted_date_endpoint_requests"] += 1
+                                                if candidate_date in targeted_date_fixtures_cache:
+                                                    targeted_fixtures = targeted_date_fixtures_cache[candidate_date]
+                                                    candidate_verification_diagnostics["targeted_date_endpoint_cache_hits"] += 1
+                                                elif candidate_verification_diagnostics["targeted_date_endpoint_requests"] < candidate_verification_diagnostics["max_targeted_date_endpoint_requests"]:
+                                                    targeted_fixtures = get_sm_fixtures_between(
+                                                        candidate_date,
+                                                        candidate_date,
+                                                        "participants;state;scores",
+                                                        ttl_seconds=300,
+                                                    ) or []
+                                                    targeted_date_fixtures_cache[candidate_date] = targeted_fixtures
+                                                    candidate_verification_diagnostics["targeted_date_endpoint_requests"] += 1
+                                                else:
+                                                    targeted_fixtures = None
+                                                    candidate_verification_diagnostics["targeted_date_endpoint_limit_reached"] += 1
+
                                                 if targeted_fixtures:
                                                     targeted_report = verify_candidate(
                                                         targeted_fixtures,
@@ -2182,6 +2195,11 @@ try:
                                                         report = targeted_report
                                                     else:
                                                         report["targeted_date_endpoint_fallback"] = targeted_report
+                                                elif targeted_fixtures is None:
+                                                    report["targeted_date_endpoint_fallback"] = {
+                                                        "verification_status": "targeted_date_request_limit_reached",
+                                                        "verification_source": "targeted_date_endpoint_fallback",
+                                                    }
                                                 else:
                                                     report["targeted_date_endpoint_fallback"] = {
                                                         "verification_status": "no_fixtures_returned",
