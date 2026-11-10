@@ -387,5 +387,38 @@ class PredictionEvaluationTests(unittest.TestCase):
 
 
 
+    def test_evaluation_sample_is_not_validated_with_one_verified_fixture(self):
+        row = self._record()
+        self._verify_score(row, "2", "0")
+        report = evaluate_prediction_ledger([row])
+        assessment = report["evaluation_sample_assessment"]
+        self.assertEqual(assessment["status"], "insufficient_sample")
+        self.assertEqual(assessment["verified_unique_fixtures"], 1)
+        self.assertIn("highly provisional", assessment["message"])
+        self.assertIn("do not claim", assessment["message"])
+
+    def test_evaluation_sample_threshold_is_explicit_and_metrics_remain_descriptive(self):
+        records = []
+        for index in range(30):
+            row = self._record(
+                fixture_id=f"fixture-{index}",
+                home_team=f"Home {index}",
+                away_team=f"Away {index}",
+            )
+            row["kickoff_at"] = f"2026-11-{(index % 27) + 1:02d}T12:00:00+00:00"
+            row["predicted_at"] = f"2026-11-{(index % 27) + 1:02d}T10:00:00+00:00"
+            self._verify_score(row, "2", "0")
+            records.append(row)
+        assessment = evaluate_prediction_ledger(records)["evaluation_sample_assessment"]
+        self.assertEqual(assessment["status"], "descriptive_sample")
+        self.assertEqual(assessment["verified_unique_fixtures"], 30)
+        self.assertIn("does not establish calibration", assessment["message"])
+
+    def test_evaluation_sample_without_verified_scores_is_not_measurable(self):
+        report = evaluate_prediction_ledger([self._record()])
+        assessment = report["evaluation_sample_assessment"]
+        self.assertEqual(assessment["status"], "no_verified_results")
+        self.assertEqual(assessment["verified_unique_fixtures"], 0)
+
 if __name__ == "__main__":
     unittest.main()
