@@ -169,6 +169,11 @@ def search_temporary_upcoming_fixtures(
     params.append(safe_limit)
     with psycopg.connect(database_url, connect_timeout=10) as connection:
         with connection.cursor() as cursor:
+            # The app may be the first process to touch Neon after deployment,
+            # or the collector may not yet have completed its first refresh.
+            # Ensure the staging table exists before querying it so an empty
+            # catalogue is reported as empty rather than as UndefinedTable.
+            cursor.execute(CREATE_TABLE_SQL)
             cursor.execute(
                 f"""
                 SELECT fixture_id, season_id, league_id, home_team_id, away_team_id,
