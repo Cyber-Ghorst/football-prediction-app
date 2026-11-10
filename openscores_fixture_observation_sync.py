@@ -342,6 +342,7 @@ def run_sync(
             not identity_gaps
             and not report["pagination_truncated"]
             and report["fixtures_received"] > 0
+            and report["fixtures_accepted_for_window"] > 0
         ) else "partial"
     )
     return report
