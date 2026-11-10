@@ -69,7 +69,7 @@ def provider_readiness() -> list[dict[str, Any]]:
         "api_ninjas": "adapter and authenticated smoke test available; exact result candidates can trigger an opt-in Sportmonks-verified history fallback; no direct statistics, injury or lineup fields",
         "highlightly": "adapter and authenticated smoke test available; opt-in exact-match missing-stat, lineup and Sportmonks-verified result-history fallbacks are wired into Layer 2; no injury or availability inference",
         "sportmonks": "current-season Layer 2 path active; exact competition/season coverage and data-quality gates enforced",
-        "livescore_football": "read-only adapter, metadata freshness and exact competition crosswalk checks available; automatic fallback remains disabled",
+        "livescore_football": "read-only adapter and opt-in missing-score fallback wired into Streamlit; requires fresh global, competition and event timestamps plus exact competition-season and fixture identity checks",
     }
     credential_names = {
         "api_football": "APISPORTS_API_KEY",
