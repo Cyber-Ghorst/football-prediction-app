@@ -180,6 +180,12 @@ def unique_team_crosswalks(
                 "canonical_entity_id": f"sportmonks:{candidates[0]['id']}",
                 "name": str(team.get("name") or ""),
                 "basis": "exact_unique_name_within_matched_season_roster",
+                "verification_method": "exact_unique_name_within_matched_season_roster",
+                "evidence": {
+                    "openscores_team_name": str(team.get("name") or ""),
+                    "sportmonks_team_name": str(candidates[0].get("name") or ""),
+                    "sportmonks_team_id": str(candidates[0]["id"]),
+                },
             })
     return mappings
 
@@ -406,6 +412,7 @@ def run_reconciliation(
         "canonical_fixtures_imported": 0,
         "explicit_entity_links_inserted": 0,
         "explicit_entity_links_existing": 0,
+        "explicit_entity_links_verified": 0,
         "entity_link_conflicts": [],
         "competition_results": [],
         "reconciliation": None,
@@ -517,11 +524,26 @@ def run_reconciliation(
                     "entity_type": "league",
                     "provider_entity_id": source_league_id,
                     "canonical_entity_id": f"sportmonks:{sm_league['id']}",
+                    "verification_method": "exact_competition_name_and_country",
+                    "evidence": {
+                        "openscores_competition_name": source_league.get("name"),
+                        "openscores_country_code": source_league.get("country_code"),
+                        "sportmonks_competition_name": sm_league.get("name"),
+                        "sportmonks_country": _country_name(sm_league),
+                        "sportmonks_league_id": str(sm_league["id"]),
+                    },
                 },
                 {
                     "entity_type": "season",
                     "provider_entity_id": str(source_seasons[0].get("id") or source_seasons[0].get("season_id")),
                     "canonical_entity_id": canonical_season_id,
+                    "verification_method": "same_league_and_exact_season_year_pair",
+                    "evidence": {
+                        "openscores_season": source_seasons[0].get("name") or source_seasons[0].get("season_name"),
+                        "sportmonks_season": sm_season.get("name") or sm_season.get("starting_at"),
+                        "sportmonks_league_id": str(sm_league["id"]),
+                        "sportmonks_season_id": sm_season_id,
+                    },
                 },
                 *team_mappings,
             ]
@@ -538,6 +560,7 @@ def run_reconciliation(
 
             report["explicit_entity_links_inserted"] += written["inserted"]
             report["explicit_entity_links_existing"] += written["existing"]
+            report["explicit_entity_links_verified"] += written.get("verified", 0)
             report["competitions_imported"] += 1
             report["competition_results"].append({
                 "openscores_league_id": source_league_id,
