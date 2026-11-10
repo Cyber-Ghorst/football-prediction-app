@@ -58,7 +58,9 @@ class SportmonksLayer2Tests(unittest.TestCase):
 
         row = fixture(1, 10, 20, 2, 1)
         row["scores"][0]["participant_id"] = 10.9
-        row["statistics"][0]["participant_id"] = 10.9
+        for statistic in row["statistics"]:
+            if statistic.get("participant_id") == 10:
+                statistic["participant_id"] = 10.9
         row["statistics"][1]["participant_id"] = True
         self.assertEqual(_scores(row, 10, 20), (None, 1))
         indexed = _fixture_statistics_index(row)
