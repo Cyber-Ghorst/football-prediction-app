@@ -56,6 +56,18 @@ _STAT_TYPE_ID_NAMES = {1527: "counter attacks"}
 _PERCENTAGE_STATS = {"Ball Possession", "Passes %"}
 
 
+def _provider_id(value: Any) -> int | None:
+    """Parse positive provider IDs without accepting booleans or truncating floats."""
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return value if value > 0 else None
+    if isinstance(value, str) and value.strip().isdigit():
+        parsed = int(value.strip())
+        return parsed if parsed > 0 else None
+    return None
+
+
 def _rows(value: Any) -> list[dict[str, Any]]:
     if isinstance(value, list):
         return [x for x in value if isinstance(x, dict)]
@@ -166,9 +178,8 @@ def _invalid_score_evidence(
         if str(row.get("description") or "").casefold() == "current"
     ]
     for row in current or rows:
-        try:
-            participant_id = int(row.get("participant_id"))
-        except (TypeError, ValueError):
+        participant_id = _provider_id(row.get("participant_id"))
+        if participant_id is None:
             continue
         if participant_id not in {home_id, away_id}:
             continue
@@ -192,10 +203,9 @@ def _scores(fixture: dict[str, Any], home_id: int, away_id: int) -> tuple[int | 
         goals = score.get("goals") if isinstance(score, dict) else None
         parsed_goals = _score_integer(goals)
         if participant_id is not None and parsed_goals is not None:
-            try:
-                values[int(participant_id)] = parsed_goals
-            except (TypeError, ValueError):
-                continue
+            parsed_participant_id = _provider_id(participant_id)
+            if parsed_participant_id is not None:
+                values[parsed_participant_id] = parsed_goals
     return values.get(home_id), values.get(away_id)
 
 
@@ -244,9 +254,8 @@ def _fixture_statistics_index(fixture: dict[str, Any]) -> dict[int, dict[str, An
     updated_at = fixture.get("updated_at") or fixture.get("last_processed_at")
 
     for row in _rows(fixture.get("statistics")):
-        try:
-            team_id = int(row.get("participant_id"))
-        except (TypeError, ValueError):
+        team_id = _provider_id(row.get("participant_id"))
+        if team_id is None:
             continue
 
         team_data = indexed.setdefault(team_id, {
@@ -322,8 +331,11 @@ def standings_strength(rows: list[dict[str, Any]]) -> dict[int, float]:
         rank = row.get("position") or row.get("rank")
         if participant_id is None or rank is None:
             continue
+        parsed_team_id = _provider_id(participant_id)
+        if parsed_team_id is None:
+            continue
         try:
-            ranks[int(participant_id)] = float(rank)
+            ranks[parsed_team_id] = float(rank)
         except (TypeError, ValueError):
             continue
     if not ranks:
@@ -341,7 +353,9 @@ def collect_sportmonks_team_profile(
     fixture_statistics_indexes: dict[int, dict[int, dict[str, Any]]] | None = None,
 ) -> dict[str, Any]:
     """Build a profile from one validated Sportmonks season collection."""
-    team_id = int(team["id"])
+    team_id = _provider_id(team.get("id"))
+    if team_id is None:
+        raise ValueError("Sportmonks team is missing a valid positive provider ID.")
     strength_map = standings_strength(standings)
     if fixture_statistics_indexes is None:
         fixture_statistics_indexes = {
@@ -428,9 +442,9 @@ def collect_sportmonks_team_profile(
         if not home or not away:
             history_diagnostics["excluded_missing_participants"] += 1
             continue
-        try:
-            home_id, away_id = int(home["id"]), int(away["id"])
-        except (KeyError, TypeError, ValueError):
+        home_id = _provider_id(home.get("id"))
+        away_id = _provider_id(away.get("id"))
+        if home_id is None or away_id is None:
             history_diagnostics["excluded_missing_participants"] += 1
             continue
         if team_id not in {home_id, away_id}:
