@@ -7,6 +7,8 @@ from openscores_observation_store import upsert_openscores_observations
 class FakeCursor:
     def __init__(self):
         self.calls = []
+    def __enter__(self): return self
+    def __exit__(self, *args): return False
     def execute(self, sql, params=None):
         self.calls.append((sql, params))
 
