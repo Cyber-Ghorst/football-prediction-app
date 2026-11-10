@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import json
 import os
-from datetime import date, datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Any, Mapping
 
 from sportmonks import SportmonksClient
@@ -198,6 +198,8 @@ def collect_upcoming_fixtures(
     database_url: str | None = None,
 ) -> dict[str, Any]:
     """Fetch the rolling seven-day fixture window and optionally persist it."""
+    if isinstance(window_days, bool) or not isinstance(window_days, int) or not 1 <= window_days <= 7:
+        raise ValueError("window_days must be an integer from 1 through 7.")
     current = now or datetime.now(timezone.utc)
     if current.tzinfo is None:
         current = current.replace(tzinfo=timezone.utc)
