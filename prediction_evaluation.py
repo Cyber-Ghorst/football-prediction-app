@@ -94,6 +94,129 @@ def outcome_from_score(home_goals: Any, away_goals: Any) -> str | None:
     return "home" if home > away else "away" if home < away else "draw"
 
 
+def build_availability_snapshot(
+    *,
+    home_profile: Mapping[str, Any],
+    away_profile: Mapping[str, Any],
+    fixture_id: str | int | None,
+    season_id: int | str,
+    home_team_id: int | str,
+    away_team_id: int | str,
+    captured_at: str | None = None,
+) -> dict[str, Any] | None:
+    """Capture the exact Sportmonks availability evidence used for a fixture.
+
+    A team is complete only when its roster, team-season identity, fixture
+    identity, sidelined feed and scored player assessment all pass validation.
+    Partial evidence is retained for audit but cannot count as a complete
+    pre-kickoff snapshot.
+    """
+    if fixture_id in (None, ""):
+        return None
+    captured = captured_at or datetime.now(timezone.utc).isoformat()
+    teams: dict[str, dict[str, Any]] = {}
+    players: list[dict[str, Any]] = []
+    complete_teams = 0
+
+    for side, profile, expected_team_id in (
+        ("home", home_profile, home_team_id),
+        ("away", away_profile, away_team_id),
+    ):
+        profile = profile if isinstance(profile, Mapping) else {}
+        evidence = profile.get("availability")
+        assessment = profile.get("player_availability_assessment") if isinstance(profile, Mapping) else None
+        evidence = evidence if isinstance(evidence, Mapping) else {}
+        assessment = assessment if isinstance(assessment, Mapping) else {}
+        squad_players = evidence.get("squad_players")
+        valid_identity = (
+            str(evidence.get("fixture_id") or "") == str(fixture_id)
+            and str(evidence.get("team_id") or "") == str(expected_team_id)
+            and str(evidence.get("season_id") or "") == str(season_id)
+        )
+        try:
+            availability_score = float(assessment.get("score"))
+        except (TypeError, ValueError):
+            availability_score = None
+        valid_roster = (
+            evidence.get("roster_complete") is True
+            and evidence.get("sidelined_feed_available") is True
+            and isinstance(squad_players, list)
+            and bool(squad_players)
+            and assessment.get("status") == "scored"
+            and availability_score is not None
+            and isfinite(availability_score)
+            and 0 <= availability_score <= 100
+        )
+        seen_player_ids: set[str] = set()
+        normalized_players: list[dict[str, Any]] = []
+        if isinstance(squad_players, list):
+            for player in squad_players:
+                if not isinstance(player, Mapping):
+                    valid_roster = False
+                    break
+                player_id = str(player.get("player_id") or "").strip()
+                status = str(player.get("status") or "").casefold()
+                try:
+                    importance = float(player.get("importance"))
+                except (TypeError, ValueError):
+                    valid_roster = False
+                    break
+                if (
+                    not player_id or player_id in seen_player_ids
+                    or status not in {"available", "unavailable"}
+                    or not isfinite(importance) or not 0 <= importance <= 100
+                ):
+                    valid_roster = False
+                    break
+                seen_player_ids.add(player_id)
+                normalized_players.append({
+                    "player_id": player_id,
+                    "player_name": player.get("player_name"),
+                    "status": status,
+                    "importance": round(importance, 2),
+                    "minutes_played": player.get("minutes_played"),
+                    "minutes_evidence_method": player.get("minutes_evidence_method"),
+                })
+        complete = bool(valid_identity and valid_roster)
+        if complete:
+            complete_teams += 1
+            for player in normalized_players:
+                players.append({
+                    **player,
+                    "side": side,
+                    "team_id": str(expected_team_id),
+                    "team_name": str(profile.get("name") or profile.get("team_name") or side),
+                })
+        teams[side] = {
+            "team_id": str(expected_team_id),
+            "team_name": str(profile.get("name") or profile.get("team_name") or side),
+            "fixture_id": str(evidence.get("fixture_id") or ""),
+            "season_id": str(evidence.get("season_id") or ""),
+            "roster_complete": complete,
+            "sidelined_feed_available": evidence.get("sidelined_feed_available") is True,
+            "availability_score": assessment.get("score") if complete else None,
+            "players": normalized_players if complete else [],
+            "reported_sidelined_count": evidence.get("reported_sidelined_count"),
+            "reason": (
+                evidence.get("reason") if valid_identity and not valid_roster
+                else "Fixture, team or season identity did not match the selected prediction."
+                if not valid_identity else None
+            ),
+        }
+
+    status = "complete" if complete_teams == 2 else "partial" if complete_teams == 1 else "unknown"
+    return {
+        "source": "sportmonks",
+        "captured_at": captured,
+        "fixture_id": str(fixture_id),
+        "season_id": str(season_id),
+        "status": status,
+        "complete_teams": complete_teams,
+        "teams": teams,
+        "players": players,
+    }
+
+
 def build_prediction_record(
     *,
     competition: str,
@@ -110,6 +233,7 @@ def build_prediction_record(
     opta_source_url: str | None = None,
     opta_captured_at: str | None = None,
     player_snapshot: Mapping[str, Any] | None = None,
+    availability_snapshot: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Create a portable, auditable prediction row."""
     model = _valid_probabilities(probabilities)
@@ -121,6 +245,19 @@ def build_prediction_record(
     opta = _valid_probabilities(opta_probabilities or {}) if opta_probabilities else None
     snapshot = dict(player_snapshot or {})
     snapshot_at = _parse_datetime(snapshot.get("fetched_at"))
+    availability = dict(availability_snapshot or {})
+    availability_at = _parse_datetime(availability.get("captured_at"))
+    availability_teams = availability.get("teams")
+    availability_teams = availability_teams if isinstance(availability_teams, Mapping) else {}
+    availability_complete = (
+        availability.get("status") == "complete"
+        and availability.get("complete_teams") == 2
+        and all(
+            isinstance(availability_teams.get(side), Mapping)
+            and availability_teams[side].get("roster_complete") is True
+            for side in ("home", "away")
+        )
+    )
     return {
         "record_id": uuid.uuid4().hex,
         "predicted_at": created,
@@ -170,6 +307,13 @@ def build_prediction_record(
         "player_unknown_count": len(snapshot.get("unknown_players") or []),
         "player_snapshot_players_json": json.dumps(snapshot.get("players") or [], ensure_ascii=False, separators=(",", ":")),
         "player_snapshot_teams_json": json.dumps(snapshot.get("teams") or {}, ensure_ascii=False, separators=(",", ":")),
+        "availability_snapshot_at": availability.get("captured_at") or "",
+        "availability_snapshot_before_kickoff": bool(
+            kickoff and availability_at and availability_at < kickoff and availability_complete
+        ),
+        "availability_snapshot_status": availability.get("status", "unknown"),
+        "availability_snapshot_players_count": len(availability.get("players") or []),
+        "availability_snapshot_json": json.dumps(availability, ensure_ascii=False, separators=(",", ":")),
         "actual_home_goals": "",
         "actual_away_goals": "",
         "actual_result": "",
@@ -281,6 +425,25 @@ def _json_team_season_records(row: Mapping[str, Any]) -> bool:
     )
 
 
+def _json_complete_availability_snapshot(row: Mapping[str, Any]) -> bool:
+    try:
+        value = json.loads(row.get("availability_snapshot_json") or "{}")
+    except (TypeError, ValueError):
+        return False
+    teams = value.get("teams") if isinstance(value, dict) else None
+    return bool(
+        isinstance(value, dict)
+        and value.get("status") == "complete"
+        and value.get("complete_teams") == 2
+        and isinstance(teams, dict)
+        and all(
+            isinstance(teams.get(side), dict)
+            and teams[side].get("roster_complete") is True
+            and bool(teams[side].get("players"))
+            for side in ("home", "away")
+        )
+    )
+
 
 def _top_outcome_calibration(
     records: Iterable[Mapping[str, Any]],
@@ -345,6 +508,37 @@ def _top_outcome_calibration(
             "calibration; accumulate more independently verified completed fixtures "
             "before drawing calibration conclusions."
         ),
+    }
+
+
+MINIMUM_DESCRIPTIVE_EVALUATION_FIXTURES = 30
+
+
+def _evaluation_sample_assessment(verified_fixture_count: int) -> dict[str, Any]:
+    """Label evaluation evidence without implying that a small sample validates the model."""
+    count = max(0, int(verified_fixture_count))
+    if count == 0:
+        status = "no_verified_results"
+        message = "No independently verified completed pre-kickoff fixtures are available; model performance is not yet measurable."
+    elif count < MINIMUM_DESCRIPTIVE_EVALUATION_FIXTURES:
+        status = "insufficient_sample"
+        message = (
+            f"Only {count} unique verified fixture(s) are available. Treat accuracy, "
+            "Brier score and log loss as highly provisional; do not claim model "
+            "accuracy or calibration from this sample."
+        )
+    else:
+        status = "descriptive_sample"
+        message = (
+            f"{count} unique verified fixtures are available. Metrics are descriptive "
+            "monitoring evidence only; this threshold does not establish calibration, "
+            "generalization or predictive reliability."
+        )
+    return {
+        "status": status,
+        "verified_unique_fixtures": count,
+        "minimum_descriptive_fixtures": MINIMUM_DESCRIPTIVE_EVALUATION_FIXTURES,
+        "message": message,
     }
 
 
@@ -462,6 +656,11 @@ def evaluate_prediction_ledger(records: Iterable[Mapping[str, Any]]) -> dict[str
         row for row in eligible
         if _is_before_kickoff(row, "player_snapshot_at") and _json_team_season_records(row)
     ]
+    availability_snapshots = [
+        row for row in eligible
+        if _is_before_kickoff(row, "availability_snapshot_at")
+        and _json_complete_availability_snapshot(row)
+    ]
     eligibility_audit.update({
         "unidentifiable_pre_match_records": len(unidentifiable),
         "duplicate_records_excluded": len(timestamp_eligible) - len(eligible) - len(unidentifiable),
@@ -481,6 +680,16 @@ def evaluate_prediction_ledger(records: Iterable[Mapping[str, Any]]) -> dict[str
         "unverified_score_records": len(unverified_score_rows),
         "player_snapshots_pre_kickoff": len(player_snapshots),
         "team_snapshots_pre_kickoff": len(team_snapshots),
+        "availability_snapshots_pre_kickoff": len(availability_snapshots),
+        "availability_snapshot_coverage_by_competition": {
+            competition: sum(
+                1 for row in availability_snapshots
+                if str(row.get("competition") or "") == competition
+            )
+            for competition in sorted({
+                str(row.get("competition") or "") for row in availability_snapshots
+            })
+        },
         "team_snapshot_competitions": len({str(row.get("competition") or "") for row in team_snapshots}),
         "player_snapshot_competitions": len({
             str(row.get("competition") or "") for row in player_snapshots
@@ -498,6 +707,7 @@ def evaluate_prediction_ledger(records: Iterable[Mapping[str, Any]]) -> dict[str
             )
             for competition in sorted({str(row.get("competition") or "") for row in completed})
         },
+        "evaluation_sample_assessment": _evaluation_sample_assessment(len(completed)),
         "model": _score_records(completed, "model"),
         "market_metrics": {
             "over_1_5": _score_binary_market(
