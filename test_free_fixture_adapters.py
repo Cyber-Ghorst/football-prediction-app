@@ -91,7 +91,7 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         ))
         row = client.season_csv(
             "https://raw.githubusercontent.com/oladeeayo/open-matchday/main/data/ENG_1_premier-league/fixtures_2627.csv",
-            competition="League", season="2026",
+            competition="League", season="2627",
         )[0]
         self.assertFalse(row["eligible_for_review"])
         self.assertEqual(row["exclusion_reason"], "kickoff_missing_timezone_or_precision")
