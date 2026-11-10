@@ -523,8 +523,17 @@ Layer 3 adds evidence-based checks around the canonical records delivered by Lay
 - Every discovered row starts as `prediction_ready = false`. Existing selected-competition, season, team and fixture validation gates remain in place.
 - No provider priority, model input, prediction weight, TVD or tactical recency weighting changed.
 
+### Fifth implementation milestone: league coverage dashboard (completed 2026-11-10)
+
+- A read-only dashboard classifies every registered provider competition-season as discovered, supported, incomplete or explicitly prediction-ready.
+- "Supported" requires both an implemented provider adapter and configured credentials. A discovered row without confirmed credentials remains visible but is not counted as supported.
+- "Incomplete" means supported but not explicitly prediction-ready. Discovery, provider IDs, adapter presence and credentials never promote readiness.
+- The dashboard reports counts and per-competition/season reasons, with the selected-season view separated from the all-registry totals.
+- Duplicate provider identity keys are counted once. Unknown readiness remains unknown; no missing data is treated as zero or fabricated.
+- Tests cover all classifications, unconfigured credentials, duplicate identities and the no-auto-promotion rule.
+- No provider priority, prediction input, model weight, TVD rule or tactical recency weighting changed.
+
 ### Remaining Layer 3 work
 
-1. Add a league coverage dashboard distinguishing discovered, supported, incomplete and prediction-ready competitions.
-2. Validate the quality-control layer against archived reports and sufficient historical samples before considering any provider-priority changes.
+1. Validate the quality-control layer against archived reports and sufficient historical samples before considering any provider-priority changes.
 The reliability report is a descriptive baseline, not a source ranking or an automated model adjustment.
