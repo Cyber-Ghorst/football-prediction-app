@@ -125,6 +125,32 @@ class ProviderCorroborationTests(unittest.TestCase):
             self.assertIsNone(row["home_score"], msg=f"accepted invalid score {invalid!r}")
             self.assertEqual(row["away_score"], 2)
 
+    def test_sportmonks_period_scores_are_not_used_when_current_score_is_missing(self):
+        fixture = sportmonks_fixture()
+        fixture["scores"] = [
+            {"participant_id": 1, "description": "1ST_HALF", "score": {"goals": 1}},
+            {"participant_id": 1, "description": "2ND_HALF", "score": {"goals": 2}},
+            {"participant_id": 2, "description": "1ST_HALF", "score": {"goals": 0}},
+            {"participant_id": 2, "description": "2ND_HALF", "score": {"goals": 1}},
+        ]
+        row = canonicalize_sportmonks_fixture(
+            fixture, competition="Premier League", country="England", season=2026,
+        )
+        self.assertIsNone(row["home_score"])
+        self.assertIsNone(row["away_score"])
+
+    def test_sportmonks_current_score_takes_precedence_over_period_scores(self):
+        fixture = sportmonks_fixture()
+        fixture["scores"].extend([
+            {"participant_id": 1, "description": "1ST_HALF", "score": {"goals": 1}},
+            {"participant_id": 2, "description": "1ST_HALF", "score": {"goals": 0}},
+        ])
+        row = canonicalize_sportmonks_fixture(
+            fixture, competition="Premier League", country="England", season=2026,
+        )
+        self.assertEqual(row["home_score"], 2)
+        self.assertEqual(row["away_score"], 1)
+
     def test_sportmonks_score_parser_accepts_digit_strings_and_whole_numbers(self):
         row = canonicalize_sportmonks_fixture(
             sportmonks_fixture(home_score=" 3 ", away_score=0),
