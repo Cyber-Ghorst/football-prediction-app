@@ -418,6 +418,26 @@ class SportmonksLayer2Tests(unittest.TestCase):
         self.assertEqual(diagnostics["team_fixture_accounting_status"], "balanced")
         self.assertEqual(diagnostics["history_integrity_status"], "issues_detected")
 
+    def test_statistic_normalization_rejects_invalid_numeric_values(self):
+        from sportmonks_layer2 import _normalize_stat_value
+
+        self.assertEqual(_normalize_stat_value("Ball Possession", "0.60"), 60.0)
+        self.assertEqual(_normalize_stat_value("Passes %", "1%"), 1.0)
+        self.assertEqual(_normalize_stat_value("Total Shots", 12), 12.0)
+        self.assertEqual(_normalize_stat_value("Passes %", 1.5), 1.5)
+        for key, value in (
+            ("Ball Possession", -1),
+            ("Ball Possession", "101%"),
+            ("Ball Possession", "nan"),
+            ("Ball Possession", "inf"),
+            ("Passes %", 101.5),
+            ("Total Shots", -1),
+            ("Total Shots", "nan"),
+            ("Total Shots", "inf"),
+        ):
+            with self.subTest(key=key, value=value):
+                self.assertIsNone(_normalize_stat_value(key, value))
+
     def test_statistics_coverage_is_reported_without_dropping_valid_matches(self):
         row = fixture(1, 10, 20, 1, 0)
         row["statistics"] = [
