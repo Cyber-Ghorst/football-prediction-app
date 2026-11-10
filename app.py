@@ -2635,10 +2635,19 @@ try:
             corroboration=corroboration,
             model_weights=WEIGHTS,
         )
-        source_reliability_report = build_source_reliability_report(
-            corroboration,
-            primary_provider="sportmonks" if int(season) > 2024 else "api_football",
-            minimum_score_samples=30,
+        source_reliability_report = (
+            build_source_reliability_report(
+                corroboration,
+                primary_provider="sportmonks",
+                minimum_score_samples=30,
+            )
+            if int(season) > 2024
+            else {
+                "status": "not_applicable",
+                "reason": "The current corroboration collector is anchored to Sportmonks; historical API-Football seasons are not scored against that source.",
+                "prediction_inputs_modified": False,
+                "provider_priority_modified": False,
+            }
         )
         for profile in (home, away):
             team_name = profile.get("name")
