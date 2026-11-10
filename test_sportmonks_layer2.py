@@ -583,7 +583,7 @@ class SportmonksLayer2Tests(unittest.TestCase):
         expected_coverage["Passes %"] = 0
         self.assertEqual(diagnostics["statistics_coverage_by_metric"], expected_coverage)
         self.assertEqual(diagnostics["matches_with_complete_core_statistics"], 0)
-        self.assertEqual(diagnostics["core_statistics_completeness_pct"], 0.0)
+        self.assertEqual(diagnostics["core_statistics_completeness_pct"], 75.0)
 
 
     def test_duplicate_fixture_ids_are_reported_and_excluded_from_history(self):
