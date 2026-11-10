@@ -432,7 +432,7 @@ Unit tests cover exact-fixture matching, preservation of existing Sportmonks lin
 The app now has a separate opt-in control to fill missing recent result history using Highlightly or API Ninjas as discovery/corroboration sources and Sportmonks as the authoritative result source.
 
 - A candidate from either secondary provider is eligible only when one Sportmonks fixture matches the exact season, competition, home/away team IDs and kickoff, is explicitly completed, has valid non-negative full-time scores, and its score exactly agrees with that candidate provider.
-- Ambiguous duplicate exact fixtures, missing timestamps, score conflicts, incomplete matches, unresolved team IDs and non-exact kickoff matches are rejected.
+- Ambiguous duplicate exact fixtures, missing verification timestamps, score conflicts, incomplete matches, unresolved team IDs and non-exact kickoff matches are rejected. Targeted Sportmonks date responses are cached per UTC date and capped at ten unique-date requests per run.
 - The appended history row uses the verified Sportmonks score and namespaced provider identity. The candidate provider (Highlightly or API Ninjas) is retained only as the independent corroboration reference.
 - The fallback is disabled by default and runs only when explicitly enabled. It is bounded to the existing ten-match history window and does not invent statistics or opponent strength.
 - Recent form, goals for/against, venue ratings and the tactical summary are recomputed from the updated ten-match window. Match statistics remain empty for the inserted result unless separately sourced and validated. Existing TVD tactical_evidence is deliberately not rebuilt by this result-only fallback.
