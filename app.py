@@ -100,6 +100,7 @@ try:
         collect_livescore_verified_result_fallback,
     )
     from competition_crosswalk import build_competition_crosswalk
+    from competition_registry import build_discovered_competition_registry
     from provider_health import assess_api_football_status, assess_livescore_metadata
     from provider_corroboration import collect_recent_result_corroboration
     from source_reliability import build_source_reliability_report, build_rolling_source_reliability_report
@@ -137,6 +138,8 @@ try:
         load_provider_reliability_history,
         save_conflict_resolution_audit,
         load_conflict_resolution_audit,
+        save_discovered_competition_registry,
+        load_competition_registry,
     )
     from football_repository import (
         ensure_football_repository, repository_table_counts, import_sportmonks_season,
@@ -1475,6 +1478,62 @@ try:
             st.error(f"Sportmonks competition discovery failed: {exc}")
             st.stop()
 
+        discovered_registry = build_discovered_competition_registry(
+            sm_leagues, sm_seasons, provider="sportmonks"
+        )
+        registry_persistence = {
+            "status": "not_configured",
+            "records_discovered": len(discovered_registry),
+            "records_registered": 0,
+            "prediction_ready": 0,
+        }
+        if PROVIDER_DATABASE_URL and discovered_registry:
+            try:
+                registered_count = save_discovered_competition_registry(
+                    PROVIDER_DATABASE_URL, records=discovered_registry
+                )
+                registered_rows = load_competition_registry(
+                    PROVIDER_DATABASE_URL, provider="sportmonks", limit=5000
+                )
+                registry_persistence = {
+                    "status": "available",
+                    "records_discovered": len(discovered_registry),
+                    "records_registered": registered_count,
+                    "records_in_registry": len(registered_rows),
+                    "prediction_ready": sum(bool(row.get("prediction_ready")) for row in registered_rows),
+                    "identity_policy": "Provider IDs remain namespaced; no cross-provider ID equality or name-only linking.",
+                }
+            except Exception as registry_error:
+                registry_persistence = {
+                    "status": "unavailable",
+                    "records_discovered": len(discovered_registry),
+                    "records_registered": 0,
+                    "prediction_ready": 0,
+                    "error_type": type(registry_error).__name__,
+                    "note": "Live provider discovery remains available; persistent registration will retry on a later run.",
+                }
+        elif not PROVIDER_DATABASE_URL:
+            registry_persistence["note"] = "Configure PROVIDER_DATABASE_URL to persist discovered competition-season registrations."
+        with st.expander("Dynamic competition discovery and registration", expanded=False):
+            st.caption(
+                "The provider catalogue is paired only through its own exact league_id → season_id relationship. "
+                "Registration records discovery, not verified cross-provider identity or prediction readiness."
+            )
+            st.json(registry_persistence)
+            if discovered_registry:
+                st.dataframe([
+                    {
+                        "competition": row["competition_name"],
+                        "country": row["country"],
+                        "season": row["season_name"],
+                        "provider": row["provider"],
+                        "provider_competition_id": row["provider_competition_id"],
+                        "provider_season_id": row["provider_season_id"],
+                        "crosswalk": row["crosswalk_status"],
+                        "prediction_ready": row["prediction_ready"],
+                    }
+                    for row in discovered_registry
+                ], use_container_width=True, hide_index=True)
         league_by_id = {int(row["id"]): row for row in sm_leagues if row.get("id") is not None}
         eligible_seasons = [
             row for row in sm_seasons
