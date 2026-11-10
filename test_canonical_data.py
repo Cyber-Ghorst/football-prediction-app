@@ -62,6 +62,42 @@ class CanonicalMatchTests(unittest.TestCase):
             right["source_ids"]["api_football"],
         )
 
+    def test_invalid_scores_remain_unknown_in_canonical_records(self):
+        base = {
+            "game_id": "epl-invalid-score",
+            "season": 2026,
+            "start_time": "2026-11-07T15:00:00Z",
+            "status": "final",
+            "home_team": {"team_id": "home-1", "name": "Arsenal"},
+            "away_team": {"team_id": "away-1", "name": "Chelsea"},
+            "home_score": 2,
+            "away_score": 1,
+        }
+        for invalid in (-1, 1.5, True, "-1", "1.5", "not-a-score"):
+            with self.subTest(invalid=invalid):
+                row = {**base, "home_score": invalid}
+                result = canonicalize_api_ninjas_match(
+                    row, competition_key="eng-premier-league"
+                )
+                self.assertIsNone(result["home_score"])
+                self.assertEqual(result["away_score"], 1)
+
+    def test_whole_number_score_strings_remain_supported(self):
+        row = {
+            "game_id": "epl-string-score",
+            "season": 2026,
+            "start_time": "2026-11-07T15:00:00Z",
+            "status": "final",
+            "home_team": {"team_id": "home-1", "name": "Arsenal"},
+            "away_team": {"team_id": "away-1", "name": "Chelsea"},
+            "home_score": "2",
+            "away_score": "1",
+        }
+        result = canonicalize_api_ninjas_match(
+            row, competition_key="eng-premier-league"
+        )
+        self.assertEqual((result["home_score"], result["away_score"]), (2, 1))
+
     def test_api_ninjas_normalizes_documented_match_shape(self):
         row = {
             "game_id": "epl-20261107-ars-che",
