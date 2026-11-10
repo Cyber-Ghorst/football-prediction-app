@@ -2,7 +2,8 @@ import unittest
 from unittest.mock import patch
 
 from provider_entity_crosswalk import (
-    build_entity_crosswalk_candidates,\n    extract_provider_entities_from_observations,
+    build_entity_crosswalk_candidates,
+    extract_provider_entities_from_observations,
     normalize_entity_name,
     save_explicit_provider_entity_links,
 )
