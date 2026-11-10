@@ -81,6 +81,7 @@ def _current_scores(fixture: Mapping[str, Any], home_id: Any, away_id: Any) -> t
         and str(row.get("description") or "").casefold() == "current"
     ]
     values: dict[str, int] = {}
+    conflicted_participants: set[str] = set()
     for row in current:
         score = row.get("score") or {}
         goals = score.get("goals") if isinstance(score, Mapping) else None
@@ -88,8 +89,16 @@ def _current_scores(fixture: Mapping[str, Any], home_id: Any, away_id: Any) -> t
         if participant_id is None:
             continue
         parsed_goals = _int_or_none(goals)
-        if parsed_goals is not None:
-            values[str(participant_id)] = parsed_goals
+        if parsed_goals is None:
+            continue
+        key = str(participant_id)
+        if key in conflicted_participants:
+            continue
+        if key in values and values[key] != parsed_goals:
+            values.pop(key, None)
+            conflicted_participants.add(key)
+            continue
+        values[key] = parsed_goals
     return values.get(str(home_id)), values.get(str(away_id))
 
 
