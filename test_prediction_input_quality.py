@@ -101,7 +101,7 @@ class PredictionInputQualityTests(unittest.TestCase):
         self.assertEqual(result["status"], "attention")
 
     def test_naive_timestamp_is_treated_as_utc_and_timezone_order_is_checked(self):
-        self.home["matches"][0]["date"] = "2026-11-09T16:00:00+03:00"
+        self.home["matches"][0]["date"] = "2026-11-09T12:00:00+03:00"
         self.home["matches"][1]["date"] = "2026-11-09T12:30:00Z"
         result = self.report()
         self.assertFalse(result["prediction_allowed"])
