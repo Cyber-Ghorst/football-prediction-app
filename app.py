@@ -2045,8 +2045,9 @@ try:
                             corroboration["errors"].update(corroboration_errors)
 
                             # Target each unmatched Highlightly result by its UTC calendar date.
-                            # This deliberately bypasses the ten-match history sample and remains
-                            # diagnostic-only: no candidate is appended to either team profile.
+                            # The verifier remains fail-closed; a separate opt-in step below may
+                            # append only one exact completed Sportmonks result with an agreeing
+                            # Highlightly score. Unverified candidates remain diagnostic-only.
                             candidate_rows = []
                             seen_candidate_keys = set()
                             for team_report in (corroboration.get("team_history_coverage") or {}).values():
