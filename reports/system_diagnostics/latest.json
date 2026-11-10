@@ -1,6 +1,6 @@
 {
   "diagnostic_version": 1,
-  "generated_at": "2026-11-10T07:24:51.022399+00:00",
+  "generated_at": "2026-11-10T07:33:02.022560+00:00",
   "overall_status": "healthy",
   "selected_context": {
     "season_start_year": 2026,
@@ -174,8 +174,8 @@
     "kickoff_utc": "2026-11-21T15:00:00+00:00",
     "source_updated_at": null,
     "source_fetched_at": "2026-11-10T07:24:25.423546+00:00",
-    "source_age_seconds": 25.6,
-    "source_age_minutes": 0.4,
+    "source_age_seconds": 516.6,
+    "source_age_minutes": 8.6,
     "source_freshness": "fresh",
     "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
   },
@@ -208,24 +208,32 @@
         "history_latest_match_at": "2026-11-08T14:00:00+00:00",
         "history_oldest_match_at": "2026-08-24T19:00:00+00:00",
         "history_collection_fetched_at": null,
+        "history_repository_collected_at": "2026-11-09T00:52:24+00:00",
+        "history_provider_updated_at": null,
         "history_order": "newest_first_by_parsed_utc_kickoff",
         "statistics_core_metrics": [
           "Ball Possession",
           "Passes %",
           "Total Shots",
-          "Shots on Goal",
+          "Shots on Target / Goal",
+          "Tackles",
+          "Interceptions",
+          "Blocked Shots",
           "Corner Kicks"
         ],
         "statistics_coverage_by_metric": {
           "Ball Possession": 10,
           "Passes %": 10,
           "Total Shots": 10,
-          "Shots on Goal": 0,
+          "Shots on Target / Goal": 10,
+          "Tackles": 10,
+          "Interceptions": 10,
+          "Blocked Shots": 10,
           "Corner Kicks": 10
         },
         "matches_with_any_statistics": 10,
-        "matches_with_complete_core_statistics": 0,
-        "core_statistics_completeness_pct": 80.0,
+        "matches_with_complete_core_statistics": 10,
+        "core_statistics_completeness_pct": 100.0,
         "team_fixture_accounting_gap": 0,
         "team_fixture_accounting_status": "balanced",
         "history_integrity_status": "ok"
@@ -576,24 +584,32 @@
         "history_latest_match_at": "2026-11-07T12:30:00+00:00",
         "history_oldest_match_at": "2026-08-22T14:00:00+00:00",
         "history_collection_fetched_at": null,
+        "history_repository_collected_at": "2026-11-09T00:52:24+00:00",
+        "history_provider_updated_at": null,
         "history_order": "newest_first_by_parsed_utc_kickoff",
         "statistics_core_metrics": [
           "Ball Possession",
           "Passes %",
           "Total Shots",
-          "Shots on Goal",
+          "Shots on Target / Goal",
+          "Tackles",
+          "Interceptions",
+          "Blocked Shots",
           "Corner Kicks"
         ],
         "statistics_coverage_by_metric": {
           "Ball Possession": 10,
           "Passes %": 10,
           "Total Shots": 10,
-          "Shots on Goal": 0,
+          "Shots on Target / Goal": 10,
+          "Tackles": 10,
+          "Interceptions": 10,
+          "Blocked Shots": 10,
           "Corner Kicks": 10
         },
         "matches_with_any_statistics": 10,
-        "matches_with_complete_core_statistics": 0,
-        "core_statistics_completeness_pct": 80.0,
+        "matches_with_complete_core_statistics": 10,
+        "core_statistics_completeness_pct": 100.0,
         "team_fixture_accounting_gap": 0,
         "team_fixture_accounting_status": "balanced",
         "history_integrity_status": "ok"
@@ -937,7 +953,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "84",
+            "requests_remaining": "79",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -960,7 +976,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "83",
+            "requests_remaining": "78",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -983,7 +999,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "82",
+            "requests_remaining": "77",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -1776,8 +1792,8 @@
       "kickoff_utc": "2026-11-21T15:00:00+00:00",
       "source_updated_at": null,
       "source_fetched_at": "2026-11-10T07:24:25.423546+00:00",
-      "source_age_seconds": 25.6,
-      "source_age_minutes": 0.4,
+      "source_age_seconds": 516.6,
+      "source_age_minutes": 8.6,
       "source_freshness": "fresh",
       "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
     },
@@ -1819,19 +1835,25 @@
             "Ball Possession",
             "Passes %",
             "Total Shots",
-            "Shots on Goal",
+            "Shots on Target / Goal",
+            "Tackles",
+            "Interceptions",
+            "Blocked Shots",
             "Corner Kicks"
           ],
           "statistics_coverage_by_metric": {
             "Ball Possession": 10,
             "Passes %": 10,
             "Total Shots": 10,
-            "Shots on Goal": 0,
+            "Shots on Target / Goal": 10,
+            "Tackles": 10,
+            "Interceptions": 10,
+            "Blocked Shots": 10,
             "Corner Kicks": 10
           },
           "matches_with_any_statistics": 10,
-          "matches_with_complete_core_statistics": 0,
-          "core_statistics_completeness_pct": 80.0,
+          "matches_with_complete_core_statistics": 10,
+          "core_statistics_completeness_pct": 100.0,
           "history_integrity_status": "ok"
         },
         "tactical_components_available": {
@@ -1879,19 +1901,25 @@
             "Ball Possession",
             "Passes %",
             "Total Shots",
-            "Shots on Goal",
+            "Shots on Target / Goal",
+            "Tackles",
+            "Interceptions",
+            "Blocked Shots",
             "Corner Kicks"
           ],
           "statistics_coverage_by_metric": {
             "Ball Possession": 10,
             "Passes %": 10,
             "Total Shots": 10,
-            "Shots on Goal": 0,
+            "Shots on Target / Goal": 10,
+            "Tackles": 10,
+            "Interceptions": 10,
+            "Blocked Shots": 10,
             "Corner Kicks": 10
           },
           "matches_with_any_statistics": 10,
-          "matches_with_complete_core_statistics": 0,
-          "core_statistics_completeness_pct": 80.0,
+          "matches_with_complete_core_statistics": 10,
+          "core_statistics_completeness_pct": 100.0,
           "history_integrity_status": "ok"
         },
         "tactical_components_available": {
@@ -1918,6 +1946,6 @@
     "weights_total": 1.0,
     "model_impact": "Diagnostics only; weights, recency weighting, prediction inputs and missing-data rules are not changed."
   },
-  "generated_at_utc": "2026-11-10T07:24:54.266439+00:00",
+  "generated_at_utc": "2026-11-10T07:33:05.323556+00:00",
   "report_name": "system_diagnostics"
 }
