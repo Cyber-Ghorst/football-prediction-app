@@ -130,6 +130,9 @@ class HighlightlyMatchEnrichmentTests(unittest.TestCase):
         self.assertEqual(away["matches"][0]["statistics"]["Total Shots"], 8.0)
         self.assertEqual(away["matches"][0]["opponent_statistics"]["Ball Possession"], 60.0)
         self.assertEqual(home["matches"][0]["statistics_provenance"][-1]["provider"], "highlightly")
+        self.assertEqual(
+            home["tactical_summary"]["available_metrics"]["average_possession"], 60.0
+        )
         self.assertFalse(home["highlightly_statistics_fallback"]["tactical_evidence_updated"])
 
     def test_layer2_fallback_rejects_wrong_team_and_invalid_timestamp(self):
