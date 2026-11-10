@@ -2309,19 +2309,26 @@ try:
                                             history_check.get("highlightly_completed_score_valid", 0),
                                             help="Completed Highlightly results with a valid home-away score in the exact selected competition and season.",
                                         )
+                                        st.metric(
+                                            "API Ninjas completed matches",
+                                            history_check.get("api_ninjas_completed_score_valid", 0),
+                                            help="Completed API Ninjas results with a valid home-away score in the exact selected competition and season.",
+                                        )
                                         st.write(
                                             f"Sportmonks: {history_check.get('sportmonks_completed_score_valid', 0)}; "
-                                            f"exact cross-source matches: {history_check.get('exact_matches_across_sources', 0)}; "
-                                            f"unmatched candidates: {history_check.get('highlightly_results_not_found_in_sportmonks', 0)}."
+                                            f"Highlightly exact matches: {history_check.get('highlightly_exact_matches', 0)}; "
+                                            f"API Ninjas exact matches: {history_check.get('api_ninjas_exact_matches', 0)}; "
+                                            f"Highlightly unmatched: {history_check.get('highlightly_unmatched_count', 0)}; "
+                                            f"API Ninjas unmatched: {history_check.get('api_ninjas_unmatched_count', 0)}."
                                         )
-                                        if history_check.get("unmatched_completed_candidates"):
-                                            st.info("Highlightly returned result(s) that did not match the initial Sportmonks history join. The targeted checks below verify exact fixture identity and score; unverified records remain excluded from model history.")
+                                        if history_check.get("unmatched_completed_candidates") or history_check.get("api_ninjas_unmatched_candidates"):
+                                            st.info("Secondary-provider results that did not match the initial Sportmonks history are checked against exact-date Sportmonks fixtures. Only exact completed fixtures with agreeing full-time scores are eligible for the opt-in history fallback.")
                                         st.json(history_check)
                                     else:
                                         st.info("No independent Highlightly history report was available for this team.")
                             if corroboration.get("candidate_verification"):
-                                with st.expander("Targeted Sportmonks verification of unmatched Highlightly candidates", expanded=True):
-                                    st.caption("Each candidate is checked against Sportmonks fixtures returned for its UTC date, using exact season, competition, home/away team IDs and kickoff. This is diagnostic only; no candidate is imported.")
+                                with st.expander("Targeted Sportmonks verification of secondary-provider candidates", expanded=True):
+                                    st.caption("Each Highlightly/API Ninjas candidate is checked against Sportmonks fixtures returned for its UTC date, using exact season, competition, home/away team IDs, kickoff, completion and score. Only exact score-agreeing candidates can be imported when the opt-in fallback is enabled.")
                                     st.json(corroboration["candidate_verification"])
                         if corroboration is None:
                             st.warning("Cross-provider result corroboration did not complete; Sportmonks prediction data remains unchanged.")
