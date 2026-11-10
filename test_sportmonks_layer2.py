@@ -275,6 +275,20 @@ class SportmonksLayer2Tests(unittest.TestCase):
             "finished",
         )
 
+    def test_malformed_fixture_season_ids_are_excluded(self):
+        for season_id in (True, 2026.9, "2026.9", "not-a-season", 0, -1):
+            with self.subTest(season_id=season_id):
+                row = fixture(1, 10, 20, 2, 1)
+                row["season_id"] = season_id
+                profile = collect_sportmonks_team_profile(
+                    {"id": 10, "name": "Home FC"}, 2026, [row], []
+                )
+                self.assertEqual(profile["matches"], [])
+                self.assertEqual(
+                    profile["history_collection_diagnostics"]["excluded_wrong_season"],
+                    1,
+                )
+
     def test_all_documented_in_play_state_ids_are_not_treated_as_completed(self):
         from sportmonks_layer2 import _state
         for state_id in (2, 3, 4, 6, 9, 21, 22, 25):
