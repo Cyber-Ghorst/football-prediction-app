@@ -234,6 +234,10 @@ class CanonicalMatchTests(unittest.TestCase):
         right = canonicalize_api_football_fixture(
             self.api_fixture(), competition_key="eng-premier-league", season=2026
         )
+        self.assertTrue(match_identity(
+            left, right,
+            team_aliases={"Arsenal FC": "Arsenal", "Chelsea FC": "Chelsea"},
+        ))
         result = reconcile_match_pair(
             left, right,
             team_aliases={"Arsenal FC": "Arsenal", "Chelsea FC": "Chelsea"},
@@ -253,6 +257,10 @@ class CanonicalMatchTests(unittest.TestCase):
         right = canonicalize_api_football_fixture(
             self.api_fixture(), competition_key="eng-premier-league", season=2026
         )
+        self.assertTrue(match_identity(
+            left, right,
+            team_aliases={"Arsenal FC": "Arsenal", "Chelsea FC": "Chelsea"},
+        ))
         result = reconcile_match_pair(
             left, right,
             team_aliases={"Arsenal FC": "Arsenal", "Chelsea FC": "Chelsea"},
