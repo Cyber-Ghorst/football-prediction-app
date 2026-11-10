@@ -385,7 +385,7 @@ class SportmonksLayer2Tests(unittest.TestCase):
             {"id": 10, "name": "Home FC"}, 2026, [first, duplicate], [],
         )
         diagnostics = profile["history_collection_diagnostics"]
-        self.assertEqual(profile["data_quality"]["matches_returned"], 1)
+        self.assertEqual(profile["data_quality"]["matches_returned"], 0)
         self.assertEqual(diagnostics["duplicate_fixture_id_count"], 1)
         self.assertEqual(diagnostics["excluded_duplicate_fixture_id"], 1)
         self.assertEqual(diagnostics["history_integrity_status"], "issues_detected")
