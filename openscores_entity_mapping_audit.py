@@ -43,10 +43,16 @@ def _records(value: Any, preferred: tuple[str, ...], depth: int = 0):
     return None
 
 
+def _country(value: Any) -> str:
+    if isinstance(value, Mapping):
+        value = value.get("name") or value.get("displayName") or ""
+    return str(value or "")
+
+
 def _unique_name_candidates(source: Mapping[str, Any], canonical: list[Mapping[str, Any]],
                             *, require_country: bool = False) -> dict[str, Any]:
     source_name = _norm(source.get("name"))
-    source_country = _norm(source.get("country"))
+    source_country = _norm(_country(source.get("country")) )
     if not source_name:
         return {"status": "insufficient_source_identity", "candidates": []}
     matches = []
@@ -120,7 +126,7 @@ def build_entity_mapping_candidates(
         league_rows.append({
             "provider_entity_id": source_id,
             "name": league.get("name"),
-            "country": league.get("country"),
+            "country": _country(league.get("country")),
             **candidate,
             "automatic_mapping_created": False,
         })
@@ -263,16 +269,16 @@ def run_audit(*, client_factory=OpenScoresClient, database_url: str | None = Non
 def main() -> int:
     report = run_audit()
     serialized = json.dumps(report, indent=2, default=str)
-    Path("openscores-entity-mapping-audit.json").write_text(serialized + "\\n", encoding="utf-8")
+    Path("openscores-entity-mapping-audit.json").write_text(serialized + "\n", encoding="utf-8")
     print(serialized)
     summary_path = os.getenv("GITHUB_STEP_SUMMARY")
     if summary_path:
         with open(summary_path, "a", encoding="utf-8") as summary:
-            summary.write("## OpenScores entity mapping audit (read-only)\\n\\n")
-            summary.write(f"- Status: {report['status']}\\n")
-            summary.write(f"- Observations: {report['observations']['fixture_observations']}\\n")
-            summary.write(f"- Candidate counts: {json.dumps(report['summary'], sort_keys=True)}\\n")
-            summary.write("- Entity links written: 0\\n- Prediction ledger touched: no\\n")
+            summary.write("## OpenScores entity mapping audit (read-only)\n\n")
+            summary.write(f"- Status: {report['status']}\n")
+            summary.write(f"- Observations: {report['observations']['fixture_observations']}\n")
+            summary.write(f"- Candidate counts: {json.dumps(report['summary'], sort_keys=True)}\n")
+            summary.write("- Entity links written: 0\n- Prediction ledger touched: no\n")
     return 0 if report["status"] == "pass" else 1
 
 
