@@ -215,14 +215,24 @@ def verify_highlightly_candidate(
 ) -> dict[str, Any]:
     """Compare one Highlightly candidate with all Sportmonks fixtures returned for its UTC date."""
     kickoff = _utc_datetime(candidate.get("kickoff_utc"))
+    candidate_provider = str(candidate.get("candidate_provider") or "highlightly")
+    candidate_match_id = (
+        candidate.get("highlightly_match_id")
+        or candidate.get("api_ninjas_match_id")
+    )
+    external_candidate = {
+        "provider": candidate_provider,
+        "match_id": candidate_match_id,
+        "kickoff_utc": candidate.get("kickoff_utc"),
+        "home": candidate.get("home"),
+        "away": candidate.get("away"),
+        "score": candidate.get("score"),
+    }
     result: dict[str, Any] = {
-        "highlightly_candidate": {
-            "kickoff_utc": candidate.get("kickoff_utc"),
-            "home": candidate.get("home"),
-            "away": candidate.get("away"),
-            "score": candidate.get("score"),
-            "highlightly_match_id": candidate.get("highlightly_match_id"),
-        },
+        "candidate_provider": candidate_provider,
+        "candidate_match_id": str(candidate_match_id or ""),
+        "external_candidate": external_candidate,
+        "highlightly_candidate": external_candidate if candidate_provider == "highlightly" else None,
         "sportmonks_date_query": kickoff.date().isoformat() if kickoff else None,
         "sportmonks_fixtures_returned_for_date": len(fixtures),
         "date_fixture_participant_catalog": _date_fixture_participant_catalog(fixtures),
@@ -435,7 +445,21 @@ def apply_verified_result_candidates_to_profiles(
             summary["candidates_rejected"] += 1
             continue
 
-        highlightly_candidate = report.get("highlightly_candidate") or {}
+        external_candidate = (
+            report.get("external_candidate")
+            or report.get("highlightly_candidate")
+            or {}
+        )
+        candidate_provider = str(
+            report.get("candidate_provider")
+            or external_candidate.get("provider")
+            or "highlightly"
+        )
+        candidate_match_id = str(
+            report.get("candidate_match_id")
+            or external_candidate.get("match_id")
+            or ""
+        )
         fixture_added_for_candidate = False
         for profile in profiles:
             if not isinstance(profile, dict):
@@ -477,10 +501,11 @@ def apply_verified_result_candidates_to_profiles(
                 "history_source": "sportmonks_verified_result_candidate",
                 "result_verification": {
                     "source_provider": "sportmonks",
-                    "corroborated_by": "highlightly",
+                    "corroborated_by": candidate_provider,
                     "verification_status": "exact_fixture_and_score_agree",
                     "candidate_score_agreement": True,
-                    "highlightly_match_id": str(highlightly_candidate.get("highlightly_match_id") or ""),
+                    "external_match_id": candidate_match_id,
+                    "candidate_provider": candidate_provider,
                     "verification_source": report.get("verification_source"),
                     "verified_at": verified_at.isoformat(),
                 },
@@ -553,7 +578,8 @@ def apply_verified_result_candidates_to_profiles(
             profile["verified_result_history_fallback"] = {
                 "status": "applied",
                 "fixture_id": fixture_id,
-                "highlightly_match_id": str(highlightly_candidate.get("highlightly_match_id") or ""),
+                "external_match_id": candidate_match_id,
+                    "candidate_provider": candidate_provider,
                 "verified_at": verified_at.isoformat(),
                 "tactical_evidence_updated": False,
             }
