@@ -1,4 +1,4 @@
 {
-  "operation": "openscores_highlightly_fixture_identity_audit",
-  "audit_revision": "highlightly_crosswalk_validation_20261110"
+  "operation": "openscores_highlightly_cached_identity_audit",
+  "audit_revision": "cached_highlightly_crosswalk_validation_20261110"
 }
