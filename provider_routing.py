@@ -77,6 +77,17 @@ OPENSCORES_COMPETITIONS = (
     "2026 fifa world cup",
 )
 
+# The five free sources are registered as disabled fixture candidates. They
+# cannot become production sources until provider-specific live coverage,
+# timestamp, identity, licence and database round-trip gates pass.
+FREE_FIXTURE_CANDIDATES = (
+    "openligadb",
+    "openfootball",
+    "open_matchday",
+    "worldcup26",
+    "bzzoiro",
+)
+
 DEFAULT_PROVIDER_ASSIGNMENTS = (
     ProviderAssignment("sportmonks", "fixtures", "primary", 10),
     ProviderAssignment("sportmonks", "results", "primary", 10),
@@ -89,6 +100,11 @@ DEFAULT_PROVIDER_ASSIGNMENTS = (
                        competitions=OPENSCORES_COMPETITIONS, enabled=False),
     ProviderAssignment("openscores", "results", "co_primary", 20,
                        competitions=OPENSCORES_COMPETITIONS, enabled=False),
+    ProviderAssignment("openligadb", "fixtures", "co_primary", 30, enabled=False),
+    ProviderAssignment("openfootball", "fixtures", "co_primary", 31, enabled=False),
+    ProviderAssignment("open_matchday", "fixtures", "co_primary", 32, enabled=False),
+    ProviderAssignment("worldcup26", "fixtures", "co_primary", 33, enabled=False),
+    ProviderAssignment("bzzoiro", "fixtures", "co_primary", 34, enabled=False),
 )
 
 
