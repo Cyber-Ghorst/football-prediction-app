@@ -101,6 +101,7 @@ try:
     )
     from competition_crosswalk import build_competition_crosswalk
     from competition_registry import build_discovered_competition_registry
+    from league_coverage import build_league_coverage_dashboard
     from provider_health import assess_api_football_status, assess_livescore_metadata
     from provider_corroboration import collect_recent_result_corroboration
     from source_reliability import build_source_reliability_report, build_rolling_source_reliability_report
@@ -1541,6 +1542,57 @@ try:
                     }
                     for row in discovered_registry
                 ], use_container_width=True, hide_index=True)
+        coverage_report = build_league_coverage_dashboard(
+            discovered_registry, provider_readiness()
+        )
+        coverage_year_rows = [
+            row for row in coverage_report["competitions"]
+            if (
+                str(row.get("season_start") or "")[:4] == str(int(season))
+                or str(row.get("season_name") or "").startswith(str(int(season)))
+            )
+        ]
+        coverage_year_summary = {
+            "discovered": len(coverage_year_rows),
+            "supported": sum(bool(row.get("supported")) for row in coverage_year_rows),
+            "incomplete": sum(bool(row.get("incomplete")) for row in coverage_year_rows),
+            "prediction_ready": sum(bool(row.get("prediction_ready")) for row in coverage_year_rows),
+        }
+        with st.expander("League coverage dashboard", expanded=True):
+            st.caption(
+                "Coverage is scoped to the selected season. Supported means the discovered provider has an implemented adapter and configured credentials; incomplete means supported but not explicitly prediction-ready. No readiness is inferred from discovery alone."
+            )
+            coverage_columns = st.columns(4)
+            for column, label in zip(
+                coverage_columns, ("Discovered", "Supported", "Incomplete", "Prediction-ready")
+            ):
+                key = label.lower().replace("-", "_")
+                with column:
+                    st.metric(label, coverage_year_summary[key])
+            if coverage_year_rows:
+                st.dataframe([
+                    {
+                        "competition": row["competition_name"],
+                        "country": row["country"],
+                        "season": row["season_name"],
+                        "provider": row["provider"],
+                        "coverage_status": row["coverage_status"],
+                        "supported": row["supported"],
+                        "incomplete": row["incomplete"],
+                        "prediction_ready": row["prediction_ready"],
+                        "readiness_reason": row["readiness_reason"],
+                    }
+                    for row in coverage_year_rows
+                ], use_container_width=True, hide_index=True)
+            else:
+                st.info("No competition-season records were discovered for the selected year.")
+            st.caption(
+                f"All-provider registry total: {coverage_report['summary']['discovered']} discovered · "
+                f"{coverage_report['summary']['supported']} supported · "
+                f"{coverage_report['summary']['incomplete']} incomplete · "
+                f"{coverage_report['summary']['prediction_ready']} prediction-ready."
+            )
+
         league_by_id = {int(row["id"]): row for row in sm_leagues if row.get("id") is not None}
         eligible_seasons = [
             row for row in sm_seasons
