@@ -236,6 +236,7 @@ class CanonicalMatchTests(unittest.TestCase):
         )
         result = reconcile_match_pair(
             left, right,
+            team_aliases={"Arsenal FC": "Arsenal", "Chelsea FC": "Chelsea"},
             now=datetime(2026, 11, 7, 18, 0, tzinfo=timezone.utc),
             livescore_verified=True,
         )
@@ -254,6 +255,7 @@ class CanonicalMatchTests(unittest.TestCase):
         )
         result = reconcile_match_pair(
             left, right,
+            team_aliases={"Arsenal FC": "Arsenal", "Chelsea FC": "Chelsea"},
             fetched_at={
                 "livescore_football": datetime(2026, 11, 5, 10, 0, tzinfo=timezone.utc),
                 "api_football": datetime(2026, 11, 5, 10, 0, tzinfo=timezone.utc),
