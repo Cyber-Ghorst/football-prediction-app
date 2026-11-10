@@ -62,8 +62,6 @@ def _unique_name_candidates(source: Mapping[str, Any], canonical: list[Mapping[s
         target_country = _norm(row.get("country"))
         if source_country and target_country and source_country != target_country:
             continue
-        if require_country and (not source_country or not target_country):
-            continue
         matches.append({
             "canonical_id": str(row.get("id")),
             "name": row.get("name"),
