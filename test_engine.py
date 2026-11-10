@@ -8,6 +8,36 @@ class PredictionEngineTests(unittest.TestCase):
         with open("sample_teams.json", encoding="utf-8") as f:
             cls.teams = json.load(f)
 
+    def test_feature_snapshot_captures_inputs_and_model_calculations(self):
+        from engine import build_prediction_feature_snapshot
+
+        home = dict(self.teams["Arsenal"])
+        away = dict(self.teams["Chelsea"])
+        result = predict_match(home, away, tactical_compatibility={"home": 75})
+        snapshot = build_prediction_feature_snapshot(
+            home, away, result,
+            tactical_compatibility={"home": 75},
+            captured_at="2026-11-10T10:00:00+00:00",
+        )
+
+        self.assertEqual(snapshot["schema_version"], "prediction-features-v1")
+        self.assertEqual(snapshot["captured_at"], "2026-11-10T10:00:00+00:00")
+        self.assertEqual(len(snapshot["teams"]["home"]["recent_matches"]), 10)
+        self.assertEqual(snapshot["teams"]["home"]["tactical_compatibility"], 75.0)
+        self.assertEqual(snapshot["calculated"]["model_weights"], result["model_weights"])
+        self.assertEqual(snapshot["calculated"]["probabilities"], result["probabilities"])
+        self.assertEqual(snapshot["recency_policy"], "latest_5_60pct_previous_5_40pct")
+
+    def test_feature_snapshot_preserves_missing_values_as_unknown(self):
+        from engine import build_prediction_feature_snapshot
+
+        home = dict(self.teams["Arsenal"])
+        away = dict(self.teams["Chelsea"])
+        home["player_availability"] = None
+        result = predict_match(home, away)
+        snapshot = build_prediction_feature_snapshot(home, away, result)
+        self.assertIsNone(snapshot["teams"]["home"]["player_availability"])
+
     def test_probabilities_sum_to_approximately_100(self):
         r = predict_match(self.teams["Arsenal"], self.teams["Chelsea"])
         p = r["probabilities"]
