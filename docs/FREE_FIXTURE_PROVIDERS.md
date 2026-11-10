@@ -19,7 +19,7 @@ calculations, tactical recency policy, TVD or prediction ledger.
 | OpenLigaDB | Free public API; no key | Broad community catalogue, strongest in German football | 60 requests/minute per IP; community-maintained; no SLA. Confirm applicable data licence before commercial redistribution. | Candidate / validation |
 | OpenFootball (football.json) | Public JSON; no key | Major European leagues and additional competitions | CC0 dataset. Current-season JSON mirror refreshes daily, but upstream Football.TXT source updates are not automatically daily; kickoff timezone must be established before timestamp use. | Candidate / validation |
 | Open Matchday | Public CSV on GitHub; no key | Advertises 75 competitions and daily refresh | Explicitly non-commercial only; not a live feed; kickoff time uses a fixed CET-1 convention and can be one hour off in summer. **Do not use in a commercial deployment without written permission or a different licence.** | Research-only candidate |
-| WorldCup26 / LiveScoreFootball | Public JSON REST API; no key | Advertises 33 verified competitions on its site | Repository says verified coverage currently focuses on England and Spain; expansion is planned. Source code is ISC, but its OpenAPI description says no separate licence for third-party football data is asserted. **Do not promote to production until data rights and actual coverage are confirmed.** | Candidate / validation only |
+| LiveScoreFootball (public host: worldcup26.ir) | Public JSON REST API; no key | Competition catalogue currently documents verified coverage focused on England and Spain | Existing adapter exposes a paginated fixtures endpoint with scheduled status and date filters. Data is stored by an external listener, so freshness and per-event kickoff precision must be measured. This is one provider, not a separate WorldCup26 source. | Candidate / validation only |
 | Bzzoiro Sports Data | Free football API; account token required | Advertises 60+ competitions and 7,500 requests/day on free access | Free tier is stated to be permanent and no-card. Terms allow display in apps and use of derived prediction outputs, but prohibit redistributing raw data as a standalone feed/database/API. | Candidate / validation |
 
 ## Live-fixture acceptance gates
@@ -55,8 +55,10 @@ provider and canonical competition:
 - OpenFootball: broad open-data cross-check and competition discovery.
 - Open Matchday: broad daily fixture discovery for non-commercial research
   only, subject to its terms and upstream provider rights.
-- WorldCup26: England/Spain supplementary coverage only until its catalogue
-  expands and third-party data rights are clarified.
+- LiveScoreFootball: England/Spain supplementary coverage through its
+  existing scheduled-fixtures endpoint, subject to event freshness and exact
+  team/season crosswalk validation. Do not count worldcup26.ir as a separate
+  provider.
 - Bzzoiro: broad current fixture source where the free account returns
   scheduled fixtures and its API terms permit the app's exact use.
 
@@ -78,6 +80,6 @@ are documented as no-key public endpoints/datasets.
 - OpenLigaDB API: https://api.openligadb.de/index.html
 - OpenFootball data and CC0 licence: https://github.com/openfootball/football.json
 - Open Matchday README and terms: https://github.com/oladeeayo/open-matchday
-- WorldCup26 API and source repository: https://worldcup26.ir/football-api and https://github.com/rezarahiminia/livescoreFootball
+- LiveScoreFootball API and source repository: https://worldcup26.ir/football-api and https://github.com/rezarahiminia/livescoreFootball
 - Bzzoiro free plan: https://sports.bzzoiro.com/pricing/
 - Bzzoiro data licence: https://sports.bzzoiro.com/docs/api-license/
