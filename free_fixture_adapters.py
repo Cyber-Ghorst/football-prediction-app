@@ -294,7 +294,7 @@ class OpenFootballAdapter(_StaticDatasetAdapter):
 
     def discover_season_files(self, season: str) -> list[dict[str, str]]:
         season_value = str(season or "").strip()
-        if not re.fullmatch(r"20\\d{2}-\\d{2}", season_value):
+        if not re.fullmatch(r"20\d{2}-\d{2}", season_value):
             raise ValueError("season must use the YYYY-YY football.json directory format.")
         url = f"https://api.github.com/repos/openfootball/football.json/contents/{quote(season_value, safe='')}"
         payload = self._get_json(url, headers={"Accept": "application/vnd.github+json"})
