@@ -84,7 +84,12 @@ try:
     from sportmonks import SportmonksClient, SportmonksError
     from data_layer2 import collect_team_profile
     from sportmonks_layer2 import collect_sportmonks_team_profile, collect_repository_team_profiles, load_repository_season_snapshot, diagnose_upcoming_match_fixture, find_exact_match_fixture, extract_sportmonks_match_details
-    from sportmonks_candidate_verification import verify_highlightly_candidate, resolve_candidate_team_id, fixtures_for_utc_date
+    from sportmonks_candidate_verification import (
+        apply_verified_result_candidates_to_profiles,
+        verify_highlightly_candidate,
+        resolve_candidate_team_id,
+        fixtures_for_utc_date,
+    )
     from provider_core import normalize_team_name
     from engine import predict_match, WEIGHTS, most_likely_outcome
     from tvd import run_tvd
@@ -842,6 +847,11 @@ with st.sidebar:
         "Cross-check recent results with Highlightly and API Ninjas",
         value=False,
         help="Optional independent audit. It makes additional provider requests and adds latency, but does not change prediction inputs.",
+    )
+    use_verified_result_history_fallback = st.checkbox(
+        "Use exact verified results to fill missing recent history",
+        value=False,
+        help="Opt-in Layer 2 fallback. A result is added only when Highlightly and a completed Sportmonks fixture agree on exact competition, season, home/away teams, kickoff and score. It updates recent form/goals only; missing match statistics and TVD evidence remain unchanged.",
     )
     cross_check_highlightly_details = st.checkbox(
         "Cross-check match statistics and lineups with Highlightly",
@@ -1993,7 +2003,7 @@ try:
                 )
                 prediction_stage_started = time.perf_counter()
 
-                if cross_check_recent_results or cross_check_highlightly_details or cross_check_highlightly_players or use_highlightly_statistics_fallback or use_highlightly_lineups_fallback:
+                if cross_check_recent_results or use_verified_result_history_fallback or cross_check_highlightly_details or cross_check_highlightly_players or use_highlightly_statistics_fallback or use_highlightly_lineups_fallback:
                     selected_league_row = league_by_id.get(league_id, {})
                     selected_country = selected_league_row.get("country") or {}
                     selected_country_name = selected_country.get("name") if isinstance(selected_country, dict) else str(selected_country or "")
@@ -2018,7 +2028,7 @@ try:
                     corroboration = None
                     highlightly_enrichment = None
                     try:
-                        if cross_check_recent_results:
+                        if cross_check_recent_results or use_verified_result_history_fallback:
                             corroboration = collect_recent_result_corroboration(
                                 sportmonks_fixtures=fixtures,
                                 competition=str(selected_league_row.get("name") or selected_league),
@@ -2124,6 +2134,7 @@ try:
                                                 )
                                                 result["team_mapping_details"] = candidate_team_mapping
                                                 result["verification_source"] = source
+                                                result["verification_completed_at"] = datetime.now(timezone.utc).isoformat()
                                                 return result
 
                                             report = verify_candidate(
@@ -2179,6 +2190,14 @@ try:
                             )
                             corroboration["candidate_verification"] = candidate_verification
                             corroboration["candidate_verification_diagnostics"] = candidate_verification_diagnostics
+                            if use_verified_result_history_fallback:
+                                corroboration["layer2_history_fallback"] = (
+                                    apply_verified_result_candidates_to_profiles(
+                                        [home, away],
+                                        candidate_verification,
+                                        expected_season_id=int(selected_season_id),
+                                    )
+                                )
 
                         if cross_check_highlightly_details or cross_check_highlightly_players or use_highlightly_statistics_fallback or use_highlightly_lineups_fallback:
                             if hl_client is None:
@@ -2233,16 +2252,30 @@ try:
                         if ninjas_client is not None:
                             ninjas_client.close()
 
-                    if cross_check_recent_results:
+                    if cross_check_recent_results or use_verified_result_history_fallback:
                         if corroboration is not None:
                             st.subheader("Independent result corroboration")
-                            st.caption("This report compares matching fixtures only. It does not replace Sportmonks data or alter prediction calculations.")
+                            st.caption(
+                                "Only exact competition/season/team/kickoff matches are considered. "
+                                + (
+                                    "When enabled, only exact completed Sportmonks results with an agreeing Highlightly score are added to recent form/goals; match statistics and TVD evidence are unchanged."
+                                    if use_verified_result_history_fallback
+                                    else "This diagnostic does not change prediction inputs."
+                                )
+                            )
                             st.json({
                                 key: value for key, value in corroboration.items()
                                 if key not in {"matches", "team_history_coverage"}
                             })
                             st.markdown("**Independent team-history check (Highlightly)**")
-                            st.caption("Compares completed, score-valid results by exact competition, season, team orientation and kickoff. Any unmatched Highlightly result is a review candidate only; it is not added to the model history.")
+                            st.caption(
+                                "Compares completed, score-valid results by exact competition, season, team orientation and kickoff. "
+                                + (
+                                    "Only candidates with a single exact Sportmonks fixture and agreeing full-time score are eligible for the opt-in history fallback; all others remain diagnostic."
+                                    if use_verified_result_history_fallback
+                                    else "Unmatched Highlightly results remain review candidates and are not added to model history."
+                                )
+                            )
                             history_checks = corroboration.get("team_history_coverage") or {}
                             history_columns = st.columns(2)
                             for history_column, team_label in zip(history_columns, (home_name, away_name)):
