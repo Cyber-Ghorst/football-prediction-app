@@ -2,13 +2,41 @@ import unittest
 from datetime import datetime, timezone
 
 from canonical_data import (
-    MatchNormalizationError, canonicalize_api_football_fixture,
+    MatchNormalizationError, _season_year, canonicalize_api_football_fixture,
     canonicalize_api_ninjas_match, canonicalize_highlightly_match,
     canonicalize_livescore_event, match_identity, merge_source_ids,
 )
 
 
 class CanonicalMatchTests(unittest.TestCase):
+    def test_season_year_rejects_boolean_fractional_and_malformed_values(self):
+        self.assertEqual(_season_year(2026), 2026)
+        self.assertEqual(_season_year("2026"), 2026)
+        self.assertEqual(_season_year({"year": None, "start": "2026"}), 2026)
+        for invalid in (True, False, 2026.5, "2026.0", "2026/27", "", 0, -1, None):
+            with self.subTest(value=invalid):
+                self.assertIsNone(_season_year(invalid))
+
+    def test_api_ninjas_missing_or_malformed_season_remains_unknown(self):
+        row = {
+            "game_id": "seasonless-fixture",
+            "start_time": "2026-11-07T15:00:00Z",
+            "status": "final",
+            "home_team": {"team_id": "home-1", "name": "Arsenal"},
+            "away_team": {"team_id": "away-1", "name": "Chelsea"},
+            "home_score": 2,
+            "away_score": 1,
+        }
+        for season in (None, True, 2026.9, "2026/27"):
+            with self.subTest(season=season):
+                candidate = dict(row)
+                if season is not None:
+                    candidate["season"] = season
+                result = canonicalize_api_ninjas_match(
+                    candidate, competition_key="eng-premier-league"
+                )
+                self.assertIsNone(result["season"])
+
     def livescore(self):
         return {
             "id": "ls-900",
