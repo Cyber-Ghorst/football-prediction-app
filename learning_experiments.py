@@ -99,7 +99,7 @@ def run_offline_experiments(
         split: sum(1 for row in usable if row.get("split") == split and _target(row) is not None)
         for split in ("train", "validation", "test")
     }
-    total = len(usable)
+    total = sum(counts.values())
     gate_passed = total >= minimum_fixtures and counts["train"] > 0
     base = {
         "experiment_schema_version": "offline-experiments-v1",
