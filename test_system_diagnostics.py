@@ -85,6 +85,17 @@ class SystemDiagnosticsTests(unittest.TestCase):
         self.assertEqual(report["summary"]["failed"], 0)
         self.assertEqual(report["selected_context"]["primary_provider"], "sportmonks")
 
+    def test_boolean_and_fractional_scores_fail_history_integrity(self):
+        home = profile("Home FC")
+        home["matches"][0]["goals_for"] = True
+        away = profile("Away FC")
+        away["matches"][0]["goals_against"] = 1.5
+        report = self.build(home_profile=home, away_profile=away)
+        for side in ("home", "away"):
+            check = next(row for row in report["checks"] if row["id"] == f"{side}_history_integrity")
+            self.assertEqual(check["status"], "fail")
+        self.assertEqual(report["overall_status"], "blocked")
+
     def test_tactical_recency_metadata_is_exposed_and_audited(self):
         report = self.build()
         home = report["teams"]["home"]
