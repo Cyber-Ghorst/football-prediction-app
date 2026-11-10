@@ -1,1 +1,4 @@
-{"operation":"openscores_entity_mapping_audit","audit_revision":"country_code_normalization"}
+{
+  "operation": "openscores_sportmonks_reconciliation",
+  "audit_revision": "reviewed_mapping_reconciliation_20261110"
+}
