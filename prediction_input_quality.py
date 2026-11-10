@@ -233,6 +233,7 @@ def build_prediction_input_quality_report(
         "away": _team_quality(
             away_profile, expected_team_id=away_team_id,
             minimum_matches=minimum_matches, now=current,
+            max_history_age_hours=float(max_history_age_hours),
         ),
     }
     fixture_checks: list[dict[str, str]] = []
