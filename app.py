@@ -84,7 +84,12 @@ try:
     from sportmonks import SportmonksClient, SportmonksError
     from data_layer2 import collect_team_profile
     from sportmonks_layer2 import collect_sportmonks_team_profile, collect_repository_team_profiles, load_repository_season_snapshot, diagnose_upcoming_match_fixture, find_exact_match_fixture, extract_sportmonks_match_details
-    from sportmonks_candidate_verification import verify_highlightly_candidate, resolve_candidate_team_id, fixtures_for_utc_date
+    from sportmonks_candidate_verification import (
+        apply_verified_result_candidates_to_profiles,
+        verify_highlightly_candidate,
+        resolve_candidate_team_id,
+        fixtures_for_utc_date,
+    )
     from provider_core import normalize_team_name
     from engine import predict_match, WEIGHTS, most_likely_outcome
     from tvd import run_tvd
@@ -842,6 +847,11 @@ with st.sidebar:
         "Cross-check recent results with Highlightly and API Ninjas",
         value=False,
         help="Optional independent audit. It makes additional provider requests and adds latency, but does not change prediction inputs.",
+    )
+    use_verified_result_history_fallback = st.checkbox(
+        "Use exact verified results to fill missing recent history",
+        value=False,
+        help="Opt-in Layer 2 fallback. Uses extra Highlightly/API Ninjas and targeted Sportmonks requests (capped at ten unique dates). A result is added only when an independent provider and a completed Sportmonks fixture agree on exact competition, season, home/away teams, kickoff and score. It updates recent form/goals only; missing match statistics and TVD evidence remain unchanged.",
     )
     cross_check_highlightly_details = st.checkbox(
         "Cross-check match statistics and lineups with Highlightly",
@@ -1993,7 +2003,7 @@ try:
                 )
                 prediction_stage_started = time.perf_counter()
 
-                if cross_check_recent_results or cross_check_highlightly_details or cross_check_highlightly_players or use_highlightly_statistics_fallback or use_highlightly_lineups_fallback:
+                if cross_check_recent_results or use_verified_result_history_fallback or cross_check_highlightly_details or cross_check_highlightly_players or use_highlightly_statistics_fallback or use_highlightly_lineups_fallback:
                     selected_league_row = league_by_id.get(league_id, {})
                     selected_country = selected_league_row.get("country") or {}
                     selected_country_name = selected_country.get("name") if isinstance(selected_country, dict) else str(selected_country or "")
@@ -2003,7 +2013,7 @@ try:
                         hl_client = _new_cached_highlightly_client()
                     except HighlightlyError as exc:
                         corroboration_errors["highlightly"] = str(exc)
-                    if cross_check_recent_results:
+                    if cross_check_recent_results or use_verified_result_history_fallback:
                         try:
                             ninjas_client = APINinjasClient()
                         except APINinjasError as exc:
@@ -2018,7 +2028,7 @@ try:
                     corroboration = None
                     highlightly_enrichment = None
                     try:
-                        if cross_check_recent_results:
+                        if cross_check_recent_results or use_verified_result_history_fallback:
                             corroboration = collect_recent_result_corroboration(
                                 sportmonks_fixtures=fixtures,
                                 competition=str(selected_league_row.get("name") or selected_league),
@@ -2034,31 +2044,49 @@ try:
                             )
                             corroboration["errors"].update(corroboration_errors)
 
-                            # Target each unmatched Highlightly result by its UTC calendar date.
-                            # This deliberately bypasses the ten-match history sample and remains
-                            # diagnostic-only: no candidate is appended to either team profile.
+                            # Target each unmatched secondary-provider result by its UTC calendar date.
+                            # The verifier remains fail-closed; a separate opt-in step below may
+                            # append only one exact completed Sportmonks result with an agreeing
+                            # Highlightly or API Ninjas score. Unverified candidates remain diagnostic-only.
                             candidate_rows = []
                             seen_candidate_keys = set()
                             for team_report in (corroboration.get("team_history_coverage") or {}).values():
-                                for candidate in team_report.get("unmatched_completed_candidates") or []:
-                                    candidate_key = str(candidate.get("highlightly_match_id") or "|".join((
-                                        str(candidate.get("kickoff_utc") or ""),
-                                        str(candidate.get("home") or ""),
-                                        str(candidate.get("away") or ""),
-                                    )))
-                                    if candidate_key not in seen_candidate_keys:
-                                        seen_candidate_keys.add(candidate_key)
-                                        candidate_rows.append(candidate)
+                                candidate_sources = (
+                                    ("highlightly", team_report.get("unmatched_completed_candidates") or [], "highlightly_match_id"),
+                                    ("api_ninjas", team_report.get("api_ninjas_unmatched_candidates") or [], "api_ninjas_match_id"),
+                                )
+                                for candidate_provider, provider_candidates, id_field in candidate_sources:
+                                    for raw_candidate in provider_candidates:
+                                        candidate = dict(raw_candidate)
+                                        candidate["candidate_provider"] = candidate_provider
+                                        source_id = str(candidate.get(id_field) or "")
+                                        candidate_key = (
+                                            f"{candidate_provider}:{source_id}"
+                                            if source_id
+                                            else "|".join((
+                                                candidate_provider,
+                                                str(candidate.get("kickoff_utc") or ""),
+                                                str(candidate.get("home") or ""),
+                                                str(candidate.get("away") or ""),
+                                            ))
+                                        )
+                                        if candidate_key not in seen_candidate_keys:
+                                            seen_candidate_keys.add(candidate_key)
+                                            candidate_rows.append(candidate)
 
                             candidate_verification = []
                             candidate_verification_diagnostics = {
                                 "candidates_checked": len(candidate_rows),
                                 "selected_season_fixture_date_hits": 0,
                                 "targeted_date_endpoint_requests": 0,
+                                "targeted_date_endpoint_cache_hits": 0,
+                                "targeted_date_endpoint_limit_reached": 0,
+                                "max_targeted_date_endpoint_requests": 10,
                                 "verified_from_selected_season_fixtures": 0,
                                 "verified_from_targeted_date_endpoint": 0,
                             }
                             candidate_verification_started = time.perf_counter()
+                            targeted_date_fixtures_cache = {}
                             if candidate_rows:
                                 try:
                                     with SportmonksClient() as verifier_client:
@@ -2124,6 +2152,7 @@ try:
                                                 )
                                                 result["team_mapping_details"] = candidate_team_mapping
                                                 result["verification_source"] = source
+                                                result["verification_completed_at"] = datetime.now(timezone.utc).isoformat()
                                                 return result
 
                                             report = verify_candidate(
@@ -2134,16 +2163,25 @@ try:
                                                 "verification_source": verification_source,
                                             }
 
-                                            # Fall back to one targeted date request only when the
-                                            # already-collected season fixtures cannot confirm the match.
+                                            # Reuse one targeted Sportmonks date response across providers
+                                            # and teams. Cap unique-date requests to protect latency and quota.
                                             if report.get("verification_status") != "exact_fixture_and_score_agree":
-                                                targeted_fixtures = get_sm_fixtures_between(
-                                                    candidate_date,
-                                                    candidate_date,
-                                                    "participants;state;scores",
-                                                    ttl_seconds=300,
-                                                )
-                                                candidate_verification_diagnostics["targeted_date_endpoint_requests"] += 1
+                                                if candidate_date in targeted_date_fixtures_cache:
+                                                    targeted_fixtures = targeted_date_fixtures_cache[candidate_date]
+                                                    candidate_verification_diagnostics["targeted_date_endpoint_cache_hits"] += 1
+                                                elif candidate_verification_diagnostics["targeted_date_endpoint_requests"] < candidate_verification_diagnostics["max_targeted_date_endpoint_requests"]:
+                                                    targeted_fixtures = get_sm_fixtures_between(
+                                                        candidate_date,
+                                                        candidate_date,
+                                                        "participants;state;scores",
+                                                        ttl_seconds=300,
+                                                    ) or []
+                                                    targeted_date_fixtures_cache[candidate_date] = targeted_fixtures
+                                                    candidate_verification_diagnostics["targeted_date_endpoint_requests"] += 1
+                                                else:
+                                                    targeted_fixtures = None
+                                                    candidate_verification_diagnostics["targeted_date_endpoint_limit_reached"] += 1
+
                                                 if targeted_fixtures:
                                                     targeted_report = verify_candidate(
                                                         targeted_fixtures,
@@ -2157,6 +2195,11 @@ try:
                                                         report = targeted_report
                                                     else:
                                                         report["targeted_date_endpoint_fallback"] = targeted_report
+                                                elif targeted_fixtures is None:
+                                                    report["targeted_date_endpoint_fallback"] = {
+                                                        "verification_status": "targeted_date_request_limit_reached",
+                                                        "verification_source": "targeted_date_endpoint_fallback",
+                                                    }
                                                 else:
                                                     report["targeted_date_endpoint_fallback"] = {
                                                         "verification_status": "no_fixtures_returned",
@@ -2179,6 +2222,21 @@ try:
                             )
                             corroboration["candidate_verification"] = candidate_verification
                             corroboration["candidate_verification_diagnostics"] = candidate_verification_diagnostics
+                            if use_verified_result_history_fallback:
+                                try:
+                                    corroboration["layer2_history_fallback"] = (
+                                        apply_verified_result_candidates_to_profiles(
+                                            [home, away],
+                                            candidate_verification,
+                                            expected_season_id=int(selected_season_id),
+                                        )
+                                    )
+                                except Exception as fallback_error:
+                                    corroboration["layer2_history_fallback"] = {
+                                        "status": "error",
+                                        "error_type": type(fallback_error).__name__,
+                                        "profiles_changed": False,
+                                    }
 
                         if cross_check_highlightly_details or cross_check_highlightly_players or use_highlightly_statistics_fallback or use_highlightly_lineups_fallback:
                             if hl_client is None:
@@ -2233,16 +2291,30 @@ try:
                         if ninjas_client is not None:
                             ninjas_client.close()
 
-                    if cross_check_recent_results:
+                    if cross_check_recent_results or use_verified_result_history_fallback:
                         if corroboration is not None:
                             st.subheader("Independent result corroboration")
-                            st.caption("This report compares matching fixtures only. It does not replace Sportmonks data or alter prediction calculations.")
+                            st.caption(
+                                "Only exact competition/season/team/kickoff matches are considered. "
+                                + (
+                                    "When enabled, only exact completed Sportmonks results with an agreeing Highlightly or API Ninjas score are added to recent form/goals; match statistics and TVD evidence are unchanged."
+                                    if use_verified_result_history_fallback
+                                    else "This diagnostic does not change prediction inputs."
+                                )
+                            )
                             st.json({
                                 key: value for key, value in corroboration.items()
                                 if key not in {"matches", "team_history_coverage"}
                             })
-                            st.markdown("**Independent team-history check (Highlightly)**")
-                            st.caption("Compares completed, score-valid results by exact competition, season, team orientation and kickoff. Any unmatched Highlightly result is a review candidate only; it is not added to the model history.")
+                            st.markdown("**Independent team-history check (Highlightly and API Ninjas)**")
+                            st.caption(
+                                "Compares completed, score-valid results by exact competition, season, team orientation and kickoff. "
+                                + (
+                                    "Only candidates with a single exact Sportmonks fixture and agreeing full-time score are eligible for the opt-in history fallback; all others remain diagnostic."
+                                    if use_verified_result_history_fallback
+                                    else "Unmatched Highlightly/API Ninjas results remain review candidates and are not added to model history."
+                                )
+                            )
                             history_checks = corroboration.get("team_history_coverage") or {}
                             history_columns = st.columns(2)
                             for history_column, team_label in zip(history_columns, (home_name, away_name)):
@@ -2255,19 +2327,26 @@ try:
                                             history_check.get("highlightly_completed_score_valid", 0),
                                             help="Completed Highlightly results with a valid home-away score in the exact selected competition and season.",
                                         )
+                                        st.metric(
+                                            "API Ninjas completed matches",
+                                            history_check.get("api_ninjas_completed_score_valid", 0),
+                                            help="Completed API Ninjas results with a valid home-away score in the exact selected competition and season.",
+                                        )
                                         st.write(
                                             f"Sportmonks: {history_check.get('sportmonks_completed_score_valid', 0)}; "
-                                            f"exact cross-source matches: {history_check.get('exact_matches_across_sources', 0)}; "
-                                            f"unmatched candidates: {history_check.get('highlightly_results_not_found_in_sportmonks', 0)}."
+                                            f"Highlightly exact matches: {history_check.get('highlightly_exact_matches', 0)}; "
+                                            f"API Ninjas exact matches: {history_check.get('api_ninjas_exact_matches', 0)}; "
+                                            f"Highlightly unmatched: {history_check.get('highlightly_unmatched_count', 0)}; "
+                                            f"API Ninjas unmatched: {history_check.get('api_ninjas_unmatched_count', 0)}."
                                         )
-                                        if history_check.get("unmatched_completed_candidates"):
-                                            st.info("Highlightly returned result(s) that did not match the initial Sportmonks history join. The targeted checks below verify exact fixture identity and score; unverified records remain excluded from model history.")
+                                        if history_check.get("unmatched_completed_candidates") or history_check.get("api_ninjas_unmatched_candidates"):
+                                            st.info("Secondary-provider results that did not match the initial Sportmonks history are checked against exact-date Sportmonks fixtures. Only exact completed fixtures with agreeing full-time scores are eligible for the opt-in history fallback.")
                                         st.json(history_check)
                                     else:
                                         st.info("No independent Highlightly history report was available for this team.")
                             if corroboration.get("candidate_verification"):
-                                with st.expander("Targeted Sportmonks verification of unmatched Highlightly candidates", expanded=True):
-                                    st.caption("Each candidate is checked against Sportmonks fixtures returned for its UTC date, using exact season, competition, home/away team IDs and kickoff. This is diagnostic only; no candidate is imported.")
+                                with st.expander("Targeted Sportmonks verification of secondary-provider candidates", expanded=True):
+                                    st.caption("Each Highlightly/API Ninjas candidate is checked against Sportmonks fixtures returned for its UTC date, using exact season, competition, home/away team IDs, kickoff, completion and score. Only exact score-agreeing candidates can be imported when the opt-in fallback is enabled.")
                                     st.json(corroboration["candidate_verification"])
                         if corroboration is None:
                             st.warning("Cross-provider result corroboration did not complete; Sportmonks prediction data remains unchanged.")

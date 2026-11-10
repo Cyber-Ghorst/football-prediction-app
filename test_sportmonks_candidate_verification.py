@@ -1,6 +1,9 @@
 import unittest
 
-from sportmonks_candidate_verification import verify_highlightly_candidate
+from sportmonks_candidate_verification import (
+    apply_verified_result_candidates_to_profiles,
+    verify_highlightly_candidate,
+)
 
 
 def sm_fixture(fid=1, season_id=2026, league_id=8, home_id=10, away_id=20,
@@ -58,6 +61,141 @@ class HighlightlyCandidateVerificationTests(unittest.TestCase):
         ):
             with self.subTest(label=label):
                 self.assertEqual(_finished({"state_id": None, "state": {"name": label}}), expected)
+
+    def test_exact_highlightly_corroborated_sportmonks_result_updates_recent_history(self):
+        verified = verify_highlightly_candidate(self.candidate, [sm_fixture()], **self.identity)
+        verified["verification_completed_at"] = "2026-10-24T14:05:00Z"
+        verified["verification_source"] = "targeted_date_endpoint"
+        home = {
+            "id": 10, "name": "Coventry", "matches": [],
+            "tactical_evidence": {"source": "existing_primary_only"},
+        }
+        away = {
+            "id": 20, "name": "Fulham", "matches": [],
+            "tactical_evidence": {"source": "existing_primary_only"},
+        }
+
+        result = apply_verified_result_candidates_to_profiles(
+            [home, away], [verified], expected_season_id=2026
+        )
+
+        self.assertEqual(result["matches_added"], 2)
+        self.assertEqual(home["matches"][0]["goals_for"], 0)
+        self.assertEqual(home["matches"][0]["goals_against"], 1)
+        self.assertEqual(home["matches"][0]["venue"], "home")
+        self.assertEqual(away["matches"][0]["goals_for"], 1)
+        self.assertEqual(away["matches"][0]["goals_against"], 0)
+        self.assertEqual(away["matches"][0]["venue"], "away")
+        self.assertEqual(home["matches"][0]["statistics"], {})
+        self.assertEqual(
+            home["matches"][0]["result_verification"]["corroborated_by"],
+            "highlightly",
+        )
+        self.assertEqual(home["tactical_evidence"], {"source": "existing_primary_only"})
+        self.assertEqual(
+            home["data_quality"]["history_source"],
+            "cockroachdb_central_repository_plus_verified_sportmonks_candidates",
+        )
+        self.assertEqual(
+            home["history_collection_diagnostics"]["statistics_coverage_by_metric"]["Total Shots"],
+            0,
+        )
+        self.assertFalse(home["verified_result_history_fallback"]["tactical_evidence_updated"])
+
+    def test_api_ninjas_candidate_can_be_verified_and_used_as_corroboration(self):
+        candidate = {
+            "candidate_provider": "api_ninjas",
+            "kickoff_utc": self.candidate["kickoff_utc"],
+            "home": "Coventry",
+            "away": "Fulham",
+            "score": [0, 1],
+            "api_ninjas_match_id": "ninja-555",
+        }
+        verified = verify_highlightly_candidate(candidate, [sm_fixture()], **self.identity)
+        verified["verification_completed_at"] = "2026-10-24T14:05:00Z"
+        profile = {"id": 10, "name": "Coventry", "matches": []}
+
+        result = apply_verified_result_candidates_to_profiles(
+            [profile], [verified], expected_season_id=2026
+        )
+
+        self.assertEqual(result["matches_added"], 1)
+        self.assertEqual(
+            profile["matches"][0]["result_verification"]["corroborated_by"],
+            "api_ninjas",
+        )
+        self.assertEqual(
+            profile["matches"][0]["result_verification"]["external_match_id"],
+            "ninja-555",
+        )
+        self.assertEqual(profile["matches"][0]["result_verification"]["candidate_provider"], "api_ninjas")
+
+
+    def test_verified_result_fallback_rejects_mismatch_and_invalid_timestamp(self):
+        verified = verify_highlightly_candidate(
+            self.candidate, [sm_fixture(home_goals=1, away_goals=1)], **self.identity
+        )
+        verified["verification_completed_at"] = "2026-10-24T14:05:00Z"
+        profiles = [{"id": 10, "name": "Coventry", "matches": []}]
+        result = apply_verified_result_candidates_to_profiles(
+            profiles, [verified], expected_season_id=2026
+        )
+        self.assertEqual(result["matches_added"], 0)
+        self.assertEqual(profiles[0]["matches"], [])
+
+        verified = verify_highlightly_candidate(self.candidate, [sm_fixture()], **self.identity)
+        verified["verification_completed_at"] = "invalid"
+        result = apply_verified_result_candidates_to_profiles(
+            profiles, [verified], expected_season_id=2026
+        )
+        self.assertEqual(result["matches_added"], 0)
+        self.assertEqual(profiles[0]["matches"], [])
+
+    def test_verified_result_fallback_skips_duplicate_and_limits_recent_history(self):
+        verified = verify_highlightly_candidate(self.candidate, [sm_fixture()], **self.identity)
+        verified["verification_completed_at"] = "2026-10-24T14:05:00Z"
+        existing = [
+            {"fixture_id": index + 100, "date": f"2026-10-{23-index:02d}T14:00:00+00:00",
+             "venue": "home", "goals_for": 1, "goals_against": 0,
+             "statistics": {}, "opponent_statistics": {}}
+            for index in range(10)
+        ]
+        profile = {"id": 10, "name": "Coventry", "matches": existing}
+        duplicate = dict(verified)
+        duplicate["sportmonks_candidates"] = [
+            dict(verified["sportmonks_candidates"][0], fixture_id=100)
+        ]
+        result = apply_verified_result_candidates_to_profiles(
+            [profile], [duplicate], expected_season_id=2026
+        )
+        self.assertEqual(result["matches_added"], 0)
+        self.assertEqual(result["duplicates_skipped"], 1)
+        self.assertEqual(len(profile["matches"]), 10)
+
+        verified = verify_highlightly_candidate(self.candidate, [sm_fixture()], **self.identity)
+        verified["verification_completed_at"] = "2026-10-24T14:05:00Z"
+        profile = {"id": 10, "name": "Coventry", "matches": existing}
+        result = apply_verified_result_candidates_to_profiles(
+            [profile], [verified], expected_season_id=2026
+        )
+        self.assertEqual(result["matches_added"], 1)
+        self.assertEqual(len(profile["matches"]), 10)
+        self.assertEqual(profile["matches"][0]["fixture_id"], 1)
+        self.assertNotIn(109, [match["fixture_id"] for match in profile["matches"]])
+
+
+    def test_multiple_exact_sportmonks_fixtures_are_not_imported(self):
+        fixtures = [sm_fixture(fid=1), sm_fixture(fid=2)]
+        verified = verify_highlightly_candidate(self.candidate, fixtures, **self.identity)
+        verified["verification_completed_at"] = "2026-10-24T14:05:00Z"
+        profile = {"id": 10, "name": "Coventry", "matches": []}
+        result = apply_verified_result_candidates_to_profiles(
+            [profile], [verified], expected_season_id=2026
+        )
+        self.assertEqual(result["matches_added"], 0)
+        self.assertEqual(result["ambiguous_candidates_skipped"], 1)
+        self.assertEqual(profile["matches"], [])
+
 
     def test_exact_completed_fixture_and_score_agree(self):
         result = verify_highlightly_candidate(self.candidate, [sm_fixture()], **self.identity)

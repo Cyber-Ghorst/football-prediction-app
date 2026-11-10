@@ -78,8 +78,8 @@ These priorities are selection order, not automatic permission to substitute. A 
 ### Activation status (2026-11-07)
 
 - **Active prediction paths:** Sportmonks for current seasons after 2024; API-Football for historical seasons supported by the account (2022–2024).
-- **Opt-in field-level fallback:** Highlightly can fill missing supported match-statistic fields and missing exact-fixture lineups after strict identity and freshness checks. Sportmonks remains authoritative; Highlightly is not promoted globally and does not supply injury/availability inferences.
-- **Diagnostic/canonicalization only:** API Ninjas. Its fixtures/results/standings are corroborated but are not yet imported into Layer 2 histories.
+- **Opt-in field-level fallback:** Highlightly can fill missing supported match-statistic fields and exact-fixture lineups, and can discover recent results that are imported only after an exact completed Sportmonks fixture and full-time score agree. Sportmonks remains authoritative; Highlightly is not promoted globally and does not supply injury/availability inferences.
+- **Conditional result discovery:** API Ninjas can supply independent result candidates, but its score is never imported directly. An opt-in history fallback may append only the corresponding exact completed Sportmonks result after full-time score agreement. Its other fields remain diagnostic/canonicalization-only.
 - **Conditional corroboration only:** LiveScoreFootball. It remains outside automatic Layer 2 fallback until exact competition, season, team identity and source freshness checks pass.
 - **Reconciliation foundation:** canonical normalizers and field-level conflict/provenance logic exist. The next integration milestone is to fetch records from each provider, apply validated crosswalks and timestamps, reconcile them, and surface provenance/conflicts in Streamlit.
 - **No model changes:** no provider issue authorizes changes to prediction weights, TVD rules, or 60/40 recency weighting. Missing data remains unknown; disagreements remain visible and are never averaged.
@@ -370,7 +370,7 @@ An opt-in diagnostic path now uses the exact selected-fixture Highlightly lineup
 ### Evaluation boundary and remaining work
 - The current performance report evaluates prospective saved forecasts as their results are verified. It is not a retrospective historical walk-forward backtest.
 - Only one unique completed fixture has a verified result against the current minimum descriptive sample of 30. Accuracy, Brier score and log loss remain provisional; no model calibration or weight changes are justified.
-- As of 2026-11-10, Highlightly match statistics and exact-fixture lineups have opt-in, field-level Layer 2 fallbacks for missing values only; Sportmonks values remain authoritative. Player statistics and team-season aggregates remain diagnostic-only. Highlightly is not used to infer injuries or player availability. A future player-impact feature must be a separate experimental signal and pass chronological, out-of-sample evaluation before any production use.
+- As of 2026-11-10, Highlightly match statistics and exact-fixture lineups have opt-in, field-level Layer 2 fallbacks for missing values only; recent result candidates can enter history only after exact Sportmonks verification and score agreement. Sportmonks values remain authoritative. Player statistics and team-season aggregates remain diagnostic-only. Highlightly is not used to infer injuries or player availability. A future player-impact feature must be a separate experimental signal and pass chronological, out-of-sample evaluation before any production use.
 - Further provider integration must remain field-level and fail-closed: exact competition, season, fixture, team orientation, freshness, canonical metric, provenance and conflict handling are required. Missing or conflicting values must not be averaged or silently imputed.
 
 Validation at this milestone: 28/28 application smoke checks, 5/5 live provider checks and 344 unit tests passed. The deployment probe reached Streamlit and received its authentication redirect; this confirms protected reachability, not an authenticated health response. The CI probe reports `protected_reachable`; application code smoke and live provider checks run separately.
@@ -425,3 +425,15 @@ The fallback is covered by unit tests for missing-field fill, primary-value pres
 - The option is disabled by default. A lineup report outside the provider time window, with a mismatched fixture/team, without starters, or without a valid collection completion timestamp is not used.
 
 Unit tests cover exact-fixture matching, preservation of existing Sportmonks lineups, missing/invalid timestamps, and the rule that player availability is not changed.
+
+
+## Opt-in verified result-history fallback (2026-11-10)
+
+The app now has a separate opt-in control to fill missing recent result history using Highlightly or API Ninjas as discovery/corroboration sources and Sportmonks as the authoritative result source.
+
+- A candidate from either secondary provider is eligible only when one Sportmonks fixture matches the exact season, competition, home/away team IDs and kickoff, is explicitly completed, has valid non-negative full-time scores, and its score exactly agrees with that candidate provider.
+- Ambiguous duplicate exact fixtures, missing verification timestamps, score conflicts, incomplete matches, unresolved team IDs and non-exact kickoff matches are rejected. Targeted Sportmonks date responses are cached per UTC date and capped at ten unique-date requests per run.
+- The appended history row uses the verified Sportmonks score and namespaced provider identity. The candidate provider (Highlightly or API Ninjas) is retained only as the independent corroboration reference.
+- The fallback is disabled by default and runs only when explicitly enabled. It is bounded to the existing ten-match history window and does not invent statistics or opponent strength.
+- Recent form, goals for/against, venue ratings and the tactical summary are recomputed from the updated ten-match window. Match statistics remain empty for the inserted result unless separately sourced and validated. Existing TVD tactical_evidence is deliberately not rebuilt by this result-only fallback.
+- API Ninjas remains a separate optional corroboration path; it is not required for this fallback and does not supply missing match statistics.

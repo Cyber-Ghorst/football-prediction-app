@@ -20,7 +20,7 @@ PROVIDER_ROLES: dict[str, dict[str, Any]] = {
         "rank": 2,
         "role": "Independent current-season corroboration and secondary source",
         "domains": ("fixtures", "results", "standings", "statistics", "injuries", "lineups", "players", "squads"),
-        "limitation": "Coverage, fields, quotas and refresh intervals are plan-dependent; only opt-in missing-stat and exact-fixture lineup fallbacks are active, with Sportmonks precedence.",
+        "limitation": "Coverage, fields, quotas and refresh intervals are plan-dependent; opt-in missing-stat, exact-fixture lineup and exact-verified result-history fallbacks are active, with Sportmonks precedence and no injury/availability inference.",
     },
     "api_football": {
         "display_name": "API-Football v3",
@@ -34,7 +34,7 @@ PROVIDER_ROLES: dict[str, dict[str, Any]] = {
         "rank": 4,
         "role": "Independent fixtures/results/standings and club/squad corroboration",
         "domains": ("fixtures", "results", "standings", "players", "squads"),
-        "limitation": "The current adapter does not supply detailed fixture statistics, injuries or lineups; not yet active in Layer 2 reconciliation.",
+        "limitation": "The adapter supplies fixtures/results/standings and club/squad data, but no detailed fixture statistics, injuries or lineups. Result candidates enter history only after exact Sportmonks fixture and score verification.",
     },
     "livescore_football": {
         "display_name": "LiveScoreFootball",
@@ -66,8 +66,8 @@ def provider_readiness() -> list[dict[str, Any]]:
     }
     integration = {
         "api_football": "historical Layer 2 path active for supported seasons; account status/quota diagnostic available",
-        "api_ninjas": "adapter and authenticated smoke test available; canonical normalizer exists; not yet active in Layer 2 reconciliation",
-        "highlightly": "adapter and authenticated smoke test available; opt-in exact-match missing-stat and lineup fallbacks are wired into Layer 2; no injury or availability inference",
+        "api_ninjas": "adapter and authenticated smoke test available; exact result candidates can trigger an opt-in Sportmonks-verified history fallback; no direct statistics, injury or lineup fields",
+        "highlightly": "adapter and authenticated smoke test available; opt-in exact-match missing-stat, lineup and Sportmonks-verified result-history fallbacks are wired into Layer 2; no injury or availability inference",
         "sportmonks": "current-season Layer 2 path active; exact competition/season coverage and data-quality gates enforced",
         "livescore_football": "read-only adapter, metadata freshness and exact competition crosswalk checks available; automatic fallback remains disabled",
     }
