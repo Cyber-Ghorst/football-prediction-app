@@ -84,10 +84,13 @@ def _finished(fixture: Mapping[str, Any]) -> bool:
         return True
     state = fixture.get("state") or {}
     label = str(state.get("short_name") or state.get("name") or "").strip().casefold()
-    return (
-        label in {"finished", "ft", "aet", "penalties", "after extra time", "after penalties"}
-        or any(term in label for term in ("finished", "full time", "after extra", "after penalties"))
-    )
+    # Only recognized complete labels count as finished. Avoid substring
+    # matches such as "unfinished" or "not finished".
+    return label in {
+        "finished", "ft", "aet", "penalties", "after extra time",
+        "after penalties", "full time", "full-time",
+        "finished after extra time", "finished after penalties",
+    }
 
 
 def _scores(fixture: Mapping[str, Any], home_id: int, away_id: int) -> tuple[int | None, int | None]:
