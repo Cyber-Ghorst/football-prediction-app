@@ -98,14 +98,23 @@ def _scores(fixture: Mapping[str, Any], home_id: int, away_id: int) -> tuple[int
     rows = _rows(fixture.get("scores"))
     current = [row for row in rows if str(row.get("description") or "").casefold() == "current"]
     values: dict[int, int] = {}
+    conflicted_participants: set[int] = set()
     # Period-specific scores cannot stand in for a missing full-time score.
+    # Conflicting duplicate CURRENT rows are ambiguous and remain unknown.
     for row in current:
         participant_id = _as_int(row.get("participant_id"))
         score = row.get("score") or {}
         goals = score.get("goals") if isinstance(score, Mapping) else None
         parsed_goals = _as_int(goals)
-        if participant_id is not None and parsed_goals is not None and parsed_goals >= 0:
-            values[participant_id] = parsed_goals
+        if participant_id is None or parsed_goals is None or parsed_goals < 0:
+            continue
+        if participant_id in conflicted_participants:
+            continue
+        if participant_id in values and values[participant_id] != parsed_goals:
+            values.pop(participant_id, None)
+            conflicted_participants.add(participant_id)
+            continue
+        values[participant_id] = parsed_goals
     return values.get(home_id), values.get(away_id)
 
 
