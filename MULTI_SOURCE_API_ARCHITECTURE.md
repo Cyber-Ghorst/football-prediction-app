@@ -352,6 +352,7 @@ An opt-in diagnostic path now uses the exact selected-fixture Highlightly lineup
 - Layer 2 history diagnostics now consume the same shared eight-metric definitions as the system-wide statistics coverage report. Shots on Target and Shots on Goal are treated as aliases for one canonical input; the app does not double-count them.
 - Repository fixture rows carry separate `history_repository_collected_at` and `history_provider_updated_at` timestamps. Direct live-fetch time remains `history_collection_fetched_at`; repository ingestion time is never mislabeled as a direct API fetch. Provider update time remains unknown when the source does not supply it.
 - Sportmonks and Highlightly statistic parsers reject non-finite and negative observations and percentage values above 100; supported fractional percentages are normalized, and explicit percent units are preserved.
+- Sportmonks provider IDs and fixture season IDs must be positive integers or digit strings; booleans and fractional values are rejected rather than truncated or attributed to the wrong team.
 - The latest verified Chelsea–Leeds run reported 10 completed matches per team, 8/8 core match-statistic metrics with 100% coverage for both teams, zero duplicate fixture IDs, and healthy readiness diagnostics.
 
 ### Prediction result automation
@@ -371,15 +372,15 @@ An opt-in diagnostic path now uses the exact selected-fixture Highlightly lineup
 - Highlightly match statistics, lineups, player statistics and team-season aggregates remain diagnostic-only. They are not merged into Layer 2 or the prediction model. A future player-impact feature must be a separate experimental signal and pass chronological, out-of-sample evaluation before any production use.
 - Further provider integration must remain field-level and fail-closed: exact competition, season, fixture, team orientation, freshness, canonical metric, provenance and conflict handling are required. Missing or conflicting values must not be averaged or silently imputed.
 
-Validation at this milestone: 28/28 application smoke checks, 5/5 live provider checks and 341 unit tests passed. The deployment probe reached Streamlit and received its authentication redirect; this confirms protected reachability, not an authenticated health response. The CI probe reports `protected_reachable`; application code smoke and live provider checks run separately.
+Validation at this milestone: 28/28 application smoke checks, 5/5 live provider checks and 344 unit tests passed. The deployment probe reached Streamlit and received its authentication redirect; this confirms protected reachability, not an authenticated health response. The CI probe reports `protected_reachable`; application code smoke and live provider checks run separately.
 
 ## Layer completion status (2026-11-10)
 
 | Layer | Scope | Status and evidence |
 |---|---|---|
 | 1 | Provider/API setup | Complete: authenticated provider adapters, request diagnostics, credential isolation and provider readiness checks. |
-| 2 | Data collection, normalization and storage | Complete: Sportmonks current-season collection, API-Football historical path, canonical fixture/state normalization, shared eight-metric definitions, strict season/score/stat parsing, timestamp provenance and Neon prediction ledger. |
-| 3 | Prediction validation | Complete for the current evidence threshold: exact fixture/team/competition/season/state checks; 10 completed history matches per team; 8/8 core statistics at 100% coverage; 4/5 tactical pairings available (72% coverage, above the 70% integration threshold). Missing counter-attack evidence remains unknown, never imputed. |
+| 2 | Data collection, normalization and storage | Complete: Sportmonks current-season collection, API-Football historical path, canonical fixture/state normalization, shared eight-metric definitions, strict provider-ID/season/score/stat parsing, timestamp provenance and Neon prediction ledger. |
+| 3 | Prediction validation | Complete for the current evidence threshold: exact provider-ID, fixture/team/competition/season/state checks; 10 completed history matches per team; 8/8 core statistics at 100% coverage; 4/5 tactical pairings available (72% coverage, above the 70% integration threshold). Missing counter-attack evidence remains unknown, never imputed. |
 | 4 | Probability validation | Complete: 1X2 probabilities must be finite, within 0–100 and sum to 100; model weights remain unchanged and sum to 100%. Proper scoring and calibration diagnostics are calculated by the evaluation layer, but empirical calibration is not established yet. |
 | 5 | Prediction evaluation | Operational: timestamped prediction ledger, verified-result synchronizer, accuracy/Brier/log-loss and calibration reporting. The latest ledger has 74 saved predictions and one unique completed fixture with a verified result, below the 30-fixture minimum; the six-hour sync will continue accumulating evidence. |
 | 6 | Authenticated deployment and reliability | Operational: authentication-protected Streamlit deployment, 28/28 code smoke checks, 5/5 live integrations, 341 unit tests and scheduled controller checks. CI confirms protected reachability; it cannot verify an authenticated user session without a deployment login. |
