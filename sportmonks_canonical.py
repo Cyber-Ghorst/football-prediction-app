@@ -37,9 +37,18 @@ def _status(fixture: Mapping[str, Any]) -> str:
         "aet",
     }:
         return "finished"
-    if any(word in label for word in ("live", "in play", "half time", "1st half", "2nd half", "extra time", "penalty")):
+    if label in {
+        "live", "in play", "inplay", "ht", "half time", "half-time", "halftime",
+        "1h", "1st half", "first half", "2h", "2nd half", "second half",
+        "et", "extra time", "extra-time", "1st extra time", "2nd extra time",
+        "pen", "penalties", "penalty shootout", "break", "bt", "break time",
+        "1st period", "2nd period",
+    }:
         return "live"
-    if any(word in label for word in ("not started", "scheduled", "to be played")):
+    if label in {
+        "ns", "not started", "scheduled", "to be played", "fixture not started",
+        "not played",
+    }:
         return "scheduled"
     return "unknown"
 
