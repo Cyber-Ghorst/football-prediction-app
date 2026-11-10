@@ -13,6 +13,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 APP_MODULES = (
+    "deployment_health_probe",
     "api_football",
     "api_ninjas",
     "highlightly",

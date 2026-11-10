@@ -370,7 +370,7 @@ An opt-in diagnostic path now uses the exact selected-fixture Highlightly lineup
 - Highlightly match statistics, lineups, player statistics and team-season aggregates remain diagnostic-only. They are not merged into Layer 2 or the prediction model. A future player-impact feature must be a separate experimental signal and pass chronological, out-of-sample evaluation before any production use.
 - Further provider integration must remain field-level and fail-closed: exact competition, season, fixture, team orientation, freshness, canonical metric, provenance and conflict handling are required. Missing or conflicting values must not be averaged or silently imputed.
 
-Validation at this milestone: 27/27 application smoke checks, 5/5 live provider checks and 312 unit tests passed; the deployment health endpoint returned HTTP 200.
+Validation at this milestone: 27/27 application smoke checks, 5/5 live provider checks and 324 unit tests passed. The deployment probe reached Streamlit and received its authentication redirect; this confirms protected reachability, not an authenticated health response. The CI probe now reports this as `protected_reachable` rather than implying the app is fully health-verified.
 
 ### Snapshot validation coverage correction (2026-11-07)
 - Player-level and team-season statistics are now counted separately in the prediction ledger.
