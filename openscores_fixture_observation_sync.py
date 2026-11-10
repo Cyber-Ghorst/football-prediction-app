@@ -111,6 +111,7 @@ def run_sync(
         "fixtures_conflicting_provider_id": 0,
         "fixtures_ambiguous_season_id": 0,
         "fixtures_season_league_mismatch": 0,
+        "fixtures_season_id_mismatch": 0,
         "season_mappings_discovered": 0,
         "fixtures_outside_window": 0,
         "fixtures_non_scheduled": 0,
@@ -135,6 +136,8 @@ def run_sync(
     grouped_retrieval: dict[tuple[str, str], str | None] = {}
     league_names: dict[str, str] = {}
 
+    seasons_by_league: dict[str, list[str]] = defaultdict(list)
+
     with client_factory() as client:
         league_result = client.list_leagues()
         leagues, _ = client._league_collection(league_result.get("data"))
@@ -142,15 +145,17 @@ def run_sync(
             raise RuntimeError("OpenScores league collection could not be normalized")
         report["leagues_discovered"] = len(leagues)
         selected_leagues = leagues if max_leagues is None else leagues[:max_leagues]
+
+        # Build verified season → league relationships before requesting fixtures.
         for league in selected_leagues:
-            league_id = league.get("id") or league.get("league_id")
-            if league_id is None:
+            raw_league_id = league.get("id") or league.get("league_id")
+            if raw_league_id is None:
                 continue
-            league_id = str(league_id)
+            league_id = str(raw_league_id)
             league_names[league_id] = str(
                 league.get("name") or league.get("league_name") or "Unknown"
             )
-            season_result = client.list_seasons(league_id)
+            season_result = client.list_seasons(raw_league_id)
             seasons, _ = _records(
                 season_result.get("data"),
                 ("seasons", "items", "results", "data", "records"),
@@ -160,7 +165,9 @@ def run_sync(
                 if not season_id:
                     continue
                 season_league_id = _identity(season, ("league_id",), "league")
-                if season_league_id and season_league_id != league_id:
+                if not season_league_id:
+                    continue
+                if season_league_id != league_id:
                     ambiguous_season_ids.add(season_id)
                     season_to_league.pop(season_id, None)
                     continue
@@ -171,66 +178,80 @@ def run_sync(
                     continue
                 if season_id not in ambiguous_season_ids:
                     season_to_league[season_id] = league_id
+                    seasons_by_league[league_id].append(season_id)
+
         report["season_mappings_discovered"] = len(season_to_league)
+        report["seasons_sampled"] = sum(
+            len(set(season_ids)) for season_ids in seasons_by_league.values()
+        )
 
-        # OpenScores documents status/date filters, but not a league filter.
-        # Fetch once globally; never reuse the current loop's league ID as context.
-        for page in range(1, max_pages + 1):
-            fixture_result = client.list_fixtures(
-                status="scheduled", date_from=date_from, date_to=date_to,
-                page=page, page_size=page_size,
-            )
-            fixtures, _ = _records(
-                fixture_result.get("data"),
-                ("fixtures", "items", "results", "data", "records"),
-            )
-            fixtures = fixtures or []
-            report["pages_fetched"] += 1
-            report["fixtures_received"] += len(fixtures)
-            retrieved_at = fixture_result.get("retrieved_at_utc")
+        # The live API returns useful fixture collections when season_id is supplied.
+        # Keep each request scoped to its verified season and league relationship.
+        for league_id, season_ids in seasons_by_league.items():
+            for season_id in sorted(set(season_ids)):
+                for page in range(1, max_pages + 1):
+                    fixture_result = client.list_fixtures(
+                        season_id=season_id,
+                        status="scheduled",
+                        date_from=date_from,
+                        date_to=date_to,
+                        page=page,
+                        page_size=page_size,
+                    )
+                    fixtures, _ = _records(
+                        fixture_result.get("data"),
+                        ("fixtures", "items", "results", "data", "records"),
+                    )
+                    fixtures = fixtures or []
+                    report["pages_fetched"] += 1
+                    report["fixtures_received"] += len(fixtures)
+                    retrieved_at = fixture_result.get("retrieved_at_utc")
 
-            for record in fixtures:
-                explicit_league_id = _identity(
-                    record, ("league_id", "competition_id"), "league"
-                )
-                if not explicit_league_id:
-                    explicit_league_id = _identity(record, ("competition_id",), "competition")
-                season_id = _identity(record, ("season_id",), "season")
-                if not season_id:
-                    report["fixtures_missing_season_id"] += 1
-                    continue
-                if season_id in ambiguous_season_ids and not explicit_league_id:
-                    report["fixtures_ambiguous_season_id"] += 1
-                    continue
-                mapped_league_id = (
-                    None if season_id in ambiguous_season_ids
-                    else season_to_league.get(season_id)
-                )
-                if explicit_league_id and mapped_league_id and explicit_league_id != mapped_league_id:
-                    report["fixtures_season_league_mismatch"] += 1
-                    continue
-                league_id = explicit_league_id or mapped_league_id
-                if not league_id:
-                    report["fixtures_missing_league_id"] += 1
-                    continue
-                if league_id not in league_names:
-                    report["fixtures_unknown_league_id"] += 1
-                    continue
-                key = (league_id, season_id)
-                grouped_records[key].append(record)
-                grouped_retrieval[key] = retrieved_at
+                    for record in fixtures:
+                        record_season_id = _identity(record, ("season_id",), "season")
+                        if not record_season_id:
+                            report["fixtures_missing_season_id"] += 1
+                            continue
+                        if record_season_id != season_id:
+                            report["fixtures_season_id_mismatch"] += 1
+                            continue
 
-            pagination = _pagination(fixture_result.get("data"))
-            total_pages = pagination.get("total_pages")
-            if isinstance(total_pages, int):
-                if page >= total_pages:
-                    break
-                if page == max_pages:
-                    report["pagination_truncated"] = True
-            elif len(fixtures) < page_size:
-                break
-            elif page == max_pages:
-                report["pagination_truncated"] = True
+                        explicit_league_id = _identity(
+                            record, ("league_id", "competition_id"), "league"
+                        )
+                        if not explicit_league_id:
+                            explicit_league_id = _identity(
+                                record, ("competition_id",), "competition"
+                            )
+                        if season_id in ambiguous_season_ids and not explicit_league_id:
+                            report["fixtures_ambiguous_season_id"] += 1
+                            continue
+                        if explicit_league_id and explicit_league_id != league_id:
+                            report["fixtures_season_league_mismatch"] += 1
+                            continue
+                        resolved_league_id = explicit_league_id or season_to_league.get(season_id)
+                        if not resolved_league_id:
+                            report["fixtures_missing_league_id"] += 1
+                            continue
+                        if resolved_league_id not in league_names:
+                            report["fixtures_unknown_league_id"] += 1
+                            continue
+
+                        key = (resolved_league_id, season_id)
+                        grouped_records[key].append(record)
+                        grouped_retrieval[key] = retrieved_at
+
+                    pagination = _pagination(fixture_result.get("data"))
+                    total_pages = pagination.get("total_pages")
+                    if isinstance(total_pages, int):
+                        if page >= total_pages:
+                            break
+                        if page == max_pages:
+                            report["pagination_truncated"] = True
+                    elif len(fixtures) < page_size:
+                        break
+                    elif page == max_pages:
+                        report["pagination_truncated"] = True
 
     report["seasons_sampled"] = len({season for _, season in grouped_records})
     per_competition: dict[str, dict[str, Any]] = {}
@@ -311,10 +332,14 @@ def run_sync(
         + report["fixtures_conflicting_provider_id"]
         + report["fixtures_ambiguous_season_id"]
         + report["fixtures_season_league_mismatch"]
+        + report["fixtures_season_id_mismatch"]
     )
     report["status"] = (
-        "pass" if not identity_gaps and not report["pagination_truncated"]
-        else "partial"
+        "pass" if (
+            not identity_gaps
+            and not report["pagination_truncated"]
+            and report["fixtures_received"] > 0
+        ) else "partial"
     )
     return report
 
@@ -337,6 +362,7 @@ def main() -> int:
                 "fixtures_missing_season_id", "fixtures_unknown_league_id",
                 "fixtures_duplicate_provider_id", "fixtures_conflicting_provider_id",
                 "fixtures_ambiguous_season_id", "fixtures_season_league_mismatch",
+                "fixtures_season_id_mismatch",
                 "season_mappings_discovered",
                 "fixtures_outside_window", "fixtures_non_scheduled",
                 "fixtures_accepted_for_window", "pages_fetched",
