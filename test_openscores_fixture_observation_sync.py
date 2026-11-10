@@ -60,11 +60,12 @@ class OpenScoresObservationSyncTests(unittest.TestCase):
         report, save, retire, reconcile = self._run(client)
         filters = next(call[1] for call in client.calls if call[0] == "fixtures")
         self.assertEqual(filters, {
-            "season_id": 2026, "status": "scheduled",
+            "status": "scheduled",
             "date_from": "2026-11-10T18:00:00Z", "date_to": "2026-11-17T18:00:00Z",
             "page": 1, "page_size": 200,
         })
         self.assertEqual(report["fixtures_accepted_for_window"], 1)
+        self.assertEqual(report["seasons_sampled"], 1)
         self.assertEqual(report["observations_upserted"], 1)
         self.assertEqual(report["historical_observations_marked_out_of_window"], 300)
         self.assertEqual(report["canonical_fixtures_written"], 0)
@@ -73,6 +74,28 @@ class OpenScoresObservationSyncTests(unittest.TestCase):
         save.assert_called_once()
         retire.assert_called_once()
         reconcile.assert_called_once_with("postgresql://db")
+
+    def test_fixture_query_spans_all_seasons_without_a_season_filter(self):
+        client = FakeClient(fixtures=[
+            {
+                "id": 81, "season_id": 2025,
+                "scheduled_kickoff_at": "2026-11-12T19:00:00Z",
+                "home_team": {"id": 10, "name": "Home"},
+                "away_team": {"id": 20, "name": "Away"},
+                "status": "scheduled",
+            },
+            {
+                "id": 82, "season_id": 2026,
+                "scheduled_kickoff_at": "2026-11-13T19:00:00Z",
+                "home_team": {"id": 11, "name": "Home 2"},
+                "away_team": {"id": 21, "name": "Away 2"},
+                "status": "scheduled",
+            },
+        ])
+        report, _, _, _ = self._run(client)
+        self.assertEqual(report["seasons_sampled"], 2)
+        self.assertEqual(report["fixtures_accepted_for_window"], 2)
+        self.assertEqual(report["competitions"][0]["season_ids_in_fixture_results"], ["2025", "2026"])
 
     def test_outside_window_fixture_is_never_staged(self):
         client = FakeClient(fixtures=[{
