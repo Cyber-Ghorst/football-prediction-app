@@ -54,12 +54,17 @@ def _rows(value: Any) -> list[dict[str, Any]]:
 
 
 def _season_value(value: Any) -> int | None:
+    """Parse an explicitly supplied whole-number season without coercion."""
     if isinstance(value, dict):
-        value = value.get("year") or value.get("start")
-    try:
-        return int(value) if value is not None else None
-    except (TypeError, ValueError):
+        value = value.get("year") if value.get("year") is not None else value.get("start")
+    if isinstance(value, bool):
         return None
+    if isinstance(value, int):
+        return value if value > 0 else None
+    if isinstance(value, str):
+        value = value.strip()
+        return int(value) if value.isdigit() else None
+    return None
 
 
 def _highlightly_rows(
@@ -96,8 +101,11 @@ def _highlightly_rows(
         )
         if country and (not row_country or normalize_country(row_country) != normalize_country(country)):
             continue
-        supplied_season = _season_value(league.get("season") or row.get("season"))
-        if supplied_season is not None and supplied_season != int(season):
+        raw_season = league.get("season") if league.get("season") is not None else row.get("season")
+        supplied_season = _season_value(raw_season)
+        # Do not stamp the requested season onto a provider row that omitted
+        # its own season. Missing or malformed identity metadata must fail closed.
+        if supplied_season is None or supplied_season != int(season):
             continue
         try:
             canonical = canonicalize_highlightly_match(
