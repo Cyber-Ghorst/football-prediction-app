@@ -65,15 +65,12 @@ class OpenScoresObservationSyncTests(unittest.TestCase):
             )
         return report, save, retire, reconcile
 
-    def test_live_flow_uses_global_scheduled_status_and_exact_seven_day_filters(self):
+    def test_live_flow_uses_season_scope_and_local_seven_day_filters(self):
         client = FakeClient()
         report, save, retire, reconcile = self._run(client)
         filters = next(call[1] for call in client.calls if call[0] == "fixtures")
         self.assertEqual(filters, {
             "season_id": 2026,
-            "status": "scheduled",
-            "date_from": "2026-11-10T18:00:00Z",
-            "date_to": "2026-11-17T18:00:00Z",
             "page": 1,
             "page_size": 200,
         })
