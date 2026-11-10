@@ -2851,7 +2851,7 @@ except APIFootballError as exc:
 except Exception as exc:
     st.error(f"Unexpected data-collection error: {exc}")
 
-with st.expander("Prediction tracking, Opta comparison and backtesting", expanded=True):
+with st.expander("Prediction tracking, Opta comparison and performance evaluation", expanded=True):
     db_status = st.session_state.get("_ledger_db_status", "not_configured")
     if db_status == "connected":
         st.success(st.session_state.get("_ledger_db_message", "Neon database connected."))
@@ -2936,7 +2936,11 @@ with st.expander("Prediction tracking, Opta comparison and backtesting", expande
                 st.session_state["_latest_performance_report_github_archive_url"] = github_performance_report.get("archive_url")
         except Exception as upload_error:
             st.warning(f"Prediction performance report could not be archived to GitHub ({type(upload_error).__name__}). Check GITHUB_REPORT_TOKEN and GitHub permissions.")
-        st.subheader("Backtest summary")
+        st.subheader("Prediction performance summary")
+        st.caption(
+            "This evaluates saved pre-kickoff forecasts as verified results arrive; "
+            "it is not a retrospective historical walk-forward backtest."
+        )
         if st.session_state.get("_latest_performance_report_github_url"):
             st.caption("Prediction performance report is archived in GitHub automatically.")
             st.markdown(
