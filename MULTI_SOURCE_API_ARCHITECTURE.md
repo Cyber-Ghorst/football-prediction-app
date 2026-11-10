@@ -351,6 +351,7 @@ An opt-in diagnostic path now uses the exact selected-fixture Highlightly lineup
 ### Data quality and provenance
 - Layer 2 history diagnostics now consume the same shared eight-metric definitions as the system-wide statistics coverage report. Shots on Target and Shots on Goal are treated as aliases for one canonical input; the app does not double-count them.
 - Repository fixture rows carry separate `history_repository_collected_at` and `history_provider_updated_at` timestamps. Direct live-fetch time remains `history_collection_fetched_at`; repository ingestion time is never mislabeled as a direct API fetch. Provider update time remains unknown when the source does not supply it.
+- Highlightly statistic parsing rejects non-finite values, negative counts and percentages above 100, while preserving explicit percentage units and normalizing supported fractional percentages. These statistics remain diagnostic-only.
 - The latest verified Chelsea–Leeds run reported 10 completed matches per team, 8/8 core match-statistic metrics with 100% coverage for both teams, zero duplicate fixture IDs, and healthy readiness diagnostics.
 
 ### Prediction result automation
@@ -370,7 +371,7 @@ An opt-in diagnostic path now uses the exact selected-fixture Highlightly lineup
 - Highlightly match statistics, lineups, player statistics and team-season aggregates remain diagnostic-only. They are not merged into Layer 2 or the prediction model. A future player-impact feature must be a separate experimental signal and pass chronological, out-of-sample evaluation before any production use.
 - Further provider integration must remain field-level and fail-closed: exact competition, season, fixture, team orientation, freshness, canonical metric, provenance and conflict handling are required. Missing or conflicting values must not be averaged or silently imputed.
 
-Validation at this milestone: 28/28 application smoke checks, 5/5 live provider checks and 333 unit tests passed. The deployment probe reached Streamlit and received its authentication redirect; this confirms protected reachability, not an authenticated health response. The CI probe reports `protected_reachable`; application code smoke and live provider checks run separately.
+Validation at this milestone: 28/28 application smoke checks, 5/5 live provider checks and 338 unit tests passed. The deployment probe reached Streamlit and received its authentication redirect; this confirms protected reachability, not an authenticated health response. The CI probe reports `protected_reachable`; application code smoke and live provider checks run separately.
 
 ## Layer completion status (2026-11-10)
 
