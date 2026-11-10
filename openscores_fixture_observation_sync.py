@@ -75,7 +75,16 @@ def run_sync(
     *, client_factory=OpenScoresClient, database_url: str | None = None,
     max_leagues: int | None = None, now: datetime | None = None,
 ) -> dict[str, Any]:
-    """Fetch season-scoped fixture collections and apply the strict window locally."""
+    """Deprecated legacy sync; OpenScores is not a future-fixture provider.
+
+    Keep existing observations for audit, but refuse to fetch or stage any new
+    scheduled fixtures from OpenScores. Use the read-only entity-mapping audit
+    and existing result-observation reconciliation reports instead.
+    """
+    raise RuntimeError(
+        "OpenScores is not a future-fixture provider. Its scheduled-fixture "
+        "observation sync is disabled; use the read-only entity-mapping audit."
+    )
     db_url = (database_url or os.getenv("PROVIDER_DATABASE_URL", "")).strip()
     if not db_url:
         raise ValueError("PROVIDER_DATABASE_URL is required")
