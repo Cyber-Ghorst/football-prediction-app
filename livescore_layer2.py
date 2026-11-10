@@ -190,7 +190,10 @@ def collect_livescore_verified_result_fallback(
         and row.get("verified") is True
     )
     coverage = crosswalk_row.get("coverage") or {}
-    competition_last_synced_at = coverage.get("lastSyncedAt")
+    competition_last_synced_at = (
+        crosswalk_row.get("competition_last_synced_at")
+        or coverage.get("lastSyncedAt")
+    )
     report["fallback_eligible"] = True
     report["livescore_slug"] = slug
     report["competition_last_synced_at"] = competition_last_synced_at
