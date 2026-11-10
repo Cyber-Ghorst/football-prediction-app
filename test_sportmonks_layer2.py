@@ -127,6 +127,53 @@ class SportmonksLayer2Tests(unittest.TestCase):
         self.assertEqual(profile["matches"][0]["statistics_provenance"][0]["fixture_id"], 6)
         self.assertIsNone(profile["player_availability"])
 
+    def test_conflicting_duplicate_supported_statistics_are_excluded(self):
+        row = fixture(1, 10, 20, 2, 1)
+        row["statistics"].append({
+            "participant_id": 10,
+            "type": {"id": 3, "name": "Total Shots"},
+            "data": {"value": 99},
+        })
+        profile = collect_sportmonks_team_profile(
+            {"id": 10, "name": "Home FC"}, 2026, [row], []
+        )
+        match = profile["matches"][0]
+        self.assertNotIn("Total Shots", match["statistics"])
+        self.assertTrue(any(
+            item["canonical_name"] == "Total Shots"
+            and item["reason"] == "conflicting_duplicate_observations"
+            for item in match["statistics_conflicts"]
+        ))
+        self.assertFalse(any(
+            item["canonical_name"] == "Total Shots"
+            for item in match["statistics_provenance"]
+        ))
+
+    def test_invalid_duplicate_supported_statistic_is_excluded_regardless_of_row_order(self):
+        for reverse in (False, True):
+            with self.subTest(invalid_first=reverse):
+                row = fixture(1, 10, 20, 2, 1)
+                valid = next(
+                    item for item in row["statistics"]
+                    if item["participant_id"] == 10
+                    and item["type"].get("name") == "Total Shots"
+                )
+                invalid = {
+                    "participant_id": 10,
+                    "type": {"id": 3, "name": "Total Shots"},
+                    "data": {"value": "not-a-number"},
+                }
+                row["statistics"].append(invalid)
+                if reverse:
+                    row["statistics"].remove(valid)
+                    row["statistics"].append(valid)
+                profile = collect_sportmonks_team_profile(
+                    {"id": 10, "name": "Home FC"}, 2026, [row], []
+                )
+                match = profile["matches"][0]
+                self.assertNotIn("Total Shots", match["statistics"])
+                self.assertTrue(match["statistics_conflicts"])
+
     def test_repository_season_snapshot_loads_season_data_once_as_reusable_bundle(self):
         teams = [{"team_id": "sportmonks:10", "name": "Home FC"}]
         fixtures = [{"fixture_id": "sportmonks:1", "raw_payload": {"id": 1}}]
