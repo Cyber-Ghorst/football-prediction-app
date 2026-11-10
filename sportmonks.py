@@ -426,13 +426,13 @@ class SportmonksClient:
 
             # Merge only after all batches succeed; a failed batch must fail the
             # collection rather than silently accepting a partial history.
-            details_fetched_at = _datetime.datetime.now(_datetime._datetime.timezone.utc).isoformat()
+            details_fetched_at = _datetime.datetime.now(_datetime.timezone.utc).isoformat()
             for fixture_id, detail in details_by_id.items():
                 base = detail_targets.get(fixture_id)
                 if base is not None:
                     base.update(detail)
                     base["fixture_details_fetched_at"] = details_fetched_at
-        collection_fetched_at = _datetime.datetime.now(_datetime._datetime.timezone.utc).isoformat()
+        collection_fetched_at = _datetime.datetime.now(_datetime.timezone.utc).isoformat()
         for fixture in fixtures:
             fixture["collection_fetched_at"] = collection_fetched_at
         return fixtures
