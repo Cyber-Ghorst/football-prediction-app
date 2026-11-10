@@ -1,44 +1,46 @@
 {
   "report_name": "automated_prediction_run",
   "status": "prediction_record_created",
-  "started_at_utc": "2026-11-09T20:36:58.526616+00:00",
-  "completed_at_utc": "2026-11-09T20:38:07.918141+00:00",
-  "elapsed_seconds": 69.39,
+  "started_at_utc": "2026-11-10T06:57:21.386332+00:00",
+  "completed_at_utc": "2026-11-10T06:58:37.818106+00:00",
+  "elapsed_seconds": 76.43,
   "execution_method": "streamlit_app_test_harness",
   "same_app_prediction_flow": true,
   "selection": {
     "season": 2026,
     "competition": "Premier League — England",
-    "home_team": "Brentford",
-    "away_team": "Everton"
+    "home_team": "Newcastle United",
+    "away_team": "Arsenal"
   },
   "prediction": {
-    "predicted_at": "2026-11-09T20:38:00.238998+00:00",
-    "kickoff_at": "2026-11-23 20:00:00",
+    "predicted_at": "2026-11-10T06:58:29.547612+00:00",
+    "kickoff_at": "2026-11-21 17:30:00",
     "prediction_before_kickoff": true,
-    "fixture_id": "19722101",
+    "fixture_id": "19722095",
     "fixture_provider": "sportmonks",
-    "model_home_win_pct": 45.1,
-    "model_draw_pct": 26.7,
-    "model_away_win_pct": 28.2,
-    "model_over_1_5_pct": 70.7,
-    "model_over_2_5_pct": 44.9,
-    "model_btts_yes_pct": 49.4,
+    "model_home_win_pct": 21.5,
+    "model_draw_pct": 27.0,
+    "model_away_win_pct": 51.5,
+    "model_over_1_5_pct": 65.7,
+    "model_over_2_5_pct": 39.1,
+    "model_btts_yes_pct": 42.5,
     "model_version": "weighted-football-model-v1",
     "model_recency_policy": "latest_5_60pct_previous_5_40pct"
   },
   "app_errors": [],
-  "app_warnings": [],
+  "app_warnings": [
+    "Only 1 unique verified fixture(s) are available. Treat accuracy, Brier score and log loss as highly provisional; do not claim model accuracy or calibration from this sample."
+  ],
   "ledger_persistence": {
     "status": "connected",
-    "message": "Neon connected • 67 saved prediction(s).",
+    "message": "Neon connected • 68 saved prediction(s).",
     "saved_signature_present": true
   },
   "archived_app_reports": {
     "data_collection_evidence_latest_url": "https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/data_collection_evidence/latest.json",
-    "data_collection_evidence_archive_url": "https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/data_collection_evidence/archive/20261109T203751699387Z.json",
+    "data_collection_evidence_archive_url": "https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/data_collection_evidence/archive/20261110T065820315548Z.json",
     "system_diagnostics_latest_url": "https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/system_diagnostics/latest.json",
-    "system_diagnostics_archive_url": "https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/system_diagnostics/archive/20261109T203754956415Z.json"
+    "system_diagnostics_archive_url": "https://github.com/Cyber-Ghorst/football-prediction-app/blob/main/reports/system_diagnostics/archive/20261110T065823928927Z.json"
   },
   "notes": [
     "The existing app.py workflow was executed through Streamlit AppTest; no parallel prediction implementation was used.",
