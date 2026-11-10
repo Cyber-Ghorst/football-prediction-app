@@ -47,6 +47,10 @@ def _archive(
     )
     return {
         **stored, "archived": True,
+        "observation_count": len(observations),
+        "eligible_for_review_count": sum(
+            row.get("eligible_for_review") is True for row in observations
+        ),
         "successful_scopes": successful_scopes,
         "errors": errors,
     }
@@ -204,18 +208,21 @@ def collect_bzzoiro_observations(
 ) -> dict[str, Any]:
     """Collect authenticated Bzzoiro v2 upcoming events."""
     owned = client is None
-    api = client or BzzoiroAdapter()
+    api = client
     errors: list[dict[str, str]] = []
     rows: list[dict[str, Any]] = []
     successful = 0
+    query = {**dict(params or {}), "status": "upcoming"}
     try:
-        rows = api.upcoming(params=dict(params or {}))
+        if api is None:
+            api = BzzoiroAdapter()
+        rows = api.upcoming(params=query)
         successful = 1
     except Exception as exc:
         errors.append({"scope": "upcoming", "error": str(exc)[:300]})
     finally:
         _close_owned(api, owned)
     return _archive(
-        database_url, "bzzoiro", {"status": "upcoming", **dict(params or {})},
+        database_url, "bzzoiro", query,
         rows, errors, successful,
     )
