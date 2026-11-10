@@ -30,10 +30,13 @@ def _profile_integrity(profile: Mapping[str, Any]) -> dict[str, Any]:
             continue
         for key in ("goals_for", "goals_against"):
             value = row.get(key)
-            try:
-                valid = value is not None and isfinite(float(value)) and float(value) >= 0
-            except (TypeError, ValueError):
-                valid = False
+            valid = (
+                not isinstance(value, bool)
+                and (
+                    isinstance(value, int) and value >= 0
+                    or isinstance(value, str) and value.strip().isdigit()
+                )
+            )
             if not valid:
                 invalid_scores.append({
                     "fixture_id": row.get("fixture_id"),
