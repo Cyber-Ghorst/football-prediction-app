@@ -125,6 +125,16 @@ class ProviderCorroborationTests(unittest.TestCase):
         )
         self.assertEqual(row["status"], "unknown")
 
+    def test_boolean_state_id_and_near_match_labels_do_not_mark_finished(self):
+        for state_id, label in ((True, "unfinished"), (None, "not finished"), (None, "finished soon")):
+            fixture = sportmonks_fixture()
+            fixture["state_id"] = state_id
+            fixture["state"] = {"short_name": label}
+            row = canonicalize_sportmonks_fixture(
+                fixture, competition="Premier League", country="England", season=2026,
+            )
+            self.assertEqual(row["status"], "unknown", msg=f"accepted state {state_id!r}/{label!r}")
+
     def test_malformed_participant_and_score_envelopes_fail_safely(self):
         fixture = sportmonks_fixture()
         fixture["participants"] = [
