@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-10T07:24:56.864321+00:00",
+  "generated_at": "2026-11-10T07:33:07.997006+00:00",
   "competition": "Premier League — England",
   "season": 2026,
   "home_team": "Chelsea",
@@ -547,6 +547,6 @@
     "player_availability": 0.05,
     "tactical": 0.3
   },
-  "generated_at_utc": "2026-11-10T07:24:56.864671+00:00",
+  "generated_at_utc": "2026-11-10T07:33:07.997287+00:00",
   "report_name": "tactical_matchup_evidence"
 }
