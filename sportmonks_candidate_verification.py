@@ -505,7 +505,7 @@ def apply_verified_result_candidates_to_profiles(
                     "verification_status": "exact_fixture_and_score_agree",
                     "candidate_score_agreement": True,
                     "external_match_id": candidate_match_id,
-                    "candidate_provider": candidate_provider,
+                "candidate_provider": candidate_provider,
                     "verification_source": report.get("verification_source"),
                     "verified_at": verified_at.isoformat(),
                 },
