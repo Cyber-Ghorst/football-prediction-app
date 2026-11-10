@@ -2338,14 +2338,6 @@ try:
                                     st.caption("Reliability history accumulates only when exact cross-provider fixture comparisons are available.")
                                 st.json(source_reliability_report)
 
-                            with st.expander("Conflict triage and immutable audit history", expanded=True):
-                                st.caption(
-                                    "Each conflicted field is recorded with its fixture identity, all source observations, "
-                                    "selected value/provider, configured-priority reason and timestamp. A priority selection "
-                                    "is a policy resolution, not a human override. Unresolved fields remain unknown."
-                                )
-                                st.json(conflict_audit_report)
-
                             st.subheader("Independent result corroboration")
                             st.caption(
                                 "Only exact competition/season/team/kickoff matches are considered. "
@@ -2762,6 +2754,14 @@ try:
                     "error_type": type(conflict_audit_error).__name__,
                     "note": "The current-run conflict diagnostics remain visible; persistent audit storage will resume when provider storage is reachable.",
                 }
+        with st.expander("Conflict triage and immutable audit history", expanded=True):
+            st.caption(
+                "Each conflicted field is recorded with its fixture identity, all source observations, "
+                "selected value/provider, configured-priority reason and timestamp. A priority selection "
+                "is a policy resolution, not a human override. Unresolved fields remain unknown."
+            )
+            st.json(conflict_audit_report)
+
         for profile in (home, away):
             team_name = profile.get("name")
             if team_name in squad_fetch_diagnostics:
