@@ -1,16 +1,16 @@
 {
-  "generated_at": "2026-11-09T20:57:15.446905+00:00",
-  "season_id": 27965,
-  "home_team": "Villarreal",
-  "away_team": "Real Madrid",
+  "generated_at": "2026-11-10T06:57:51.750605+00:00",
+  "season_id": 28083,
+  "home_team": "Newcastle United",
+  "away_team": "Arsenal",
   "profiles": {
-    "Villarreal": {
+    "Newcastle United": {
       "source": "cockroachdb_central_repository",
       "completed_matches": 10,
       "repository_fixture_rows": 380,
       "fallback_used": false
     },
-    "Real Madrid": {
+    "Arsenal": {
       "source": "cockroachdb_central_repository",
       "completed_matches": 10,
       "repository_fixture_rows": 380,
@@ -19,6 +19,6 @@
   },
   "prediction_engine_modified": false,
   "neon_prediction_ledger_modified": false,
-  "generated_at_utc": "2026-11-09T20:57:20.952440+00:00",
+  "generated_at_utc": "2026-11-10T06:57:57.899538+00:00",
   "report_name": "central_repository_prediction_inputs"
 }
