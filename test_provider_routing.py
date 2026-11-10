@@ -1,6 +1,11 @@
 import unittest
 
-from provider_routing import ProviderAssignment, ProviderRegistry, default_provider_registry
+from provider_routing import (
+    FREE_FIXTURE_CANDIDATES,
+    ProviderAssignment,
+    ProviderRegistry,
+    default_provider_registry,
+)
 
 
 class ProviderRoutingTests(unittest.TestCase):
@@ -41,6 +46,15 @@ class ProviderRoutingTests(unittest.TestCase):
         registry = default_provider_registry()
         self.assertEqual(registry.primary_sources("fixtures", "premier league"), ["sportmonks"])
         self.assertEqual(registry.primary_sources("fixtures", "bundesliga"), ["sportmonks"])
+
+    def test_free_fixture_candidates_are_registered_but_not_routed(self):
+        registry = default_provider_registry()
+        self.assertEqual(
+            set(FREE_FIXTURE_CANDIDATES),
+            {"openligadb", "openfootball", "open_matchday", "worldcup26", "bzzoiro"},
+        )
+        self.assertEqual(registry.primary_sources("fixtures"), ["sportmonks"])
+        self.assertEqual(registry.primary_sources("fixtures", "premier league"), ["sportmonks"])
 
     def test_api_football_route_is_historical_category_specific(self):
         registry = default_provider_registry()
