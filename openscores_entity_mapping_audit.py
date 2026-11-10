@@ -89,6 +89,17 @@ def _source_id_keys(payloads: list[Any]) -> list[str]:
     return sorted(keys)
 
 
+def _season_metadata(season: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        "id": str(season.get("id") or season.get("season_id") or ""),
+        "name": season.get("name") or season.get("season_name"),
+        "start": season.get("start_date") or season.get("starting_at"),
+        "end": season.get("end_date") or season.get("ending_at"),
+        "is_current": season.get("is_current"),
+        "fields": sorted(str(key) for key in season),
+    }
+
+
 def _unique_name_candidates(source: Mapping[str, Any], canonical: list[Mapping[str, Any]],
                             *, require_country: bool = False) -> dict[str, Any]:
     source_name = _norm(source.get("name"))
@@ -288,6 +299,33 @@ def run_audit(*, client_factory=OpenScoresClient, database_url: str | None = Non
                 LIMIT 100
             """)
             canonical_fixture_payloads = [row[0] or {} for row in cursor.fetchall()]
+            cursor.execute("""
+                SELECT provider_league_id, provider_season_id, COUNT(*),
+                       MIN(kickoff_utc)::text, MAX(kickoff_utc)::text,
+                       COUNT(*) FILTER (WHERE kickoff_utc >= NOW()),
+                       COUNT(*) FILTER (
+                           WHERE kickoff_utc >= NOW()
+                             AND kickoff_utc < NOW() + INTERVAL '7 days'
+                       )
+                FROM provider_fixture_observations
+                WHERE provider = 'openscores'
+                GROUP BY provider_league_id, provider_season_id
+                ORDER BY provider_league_id, provider_season_id
+            """)
+            observation_time_coverage = [
+                {
+                    "provider_league_id": row[0],
+                    "provider_season_id": row[1],
+                    "fixture_count": int(row[2] or 0),
+                    "earliest_kickoff_utc": row[3],
+                    "latest_kickoff_utc": row[4],
+                    "future_fixtures": int(row[5] or 0),
+                    "fixtures_next_7_days": int(row[6] or 0),
+                }
+                for row in cursor.fetchall()
+            ]
+            cursor.execute("SELECT NOW()::text")
+            database_now_utc = cursor.fetchone()[0]
 
     candidates = build_entity_mapping_candidates(
         leagues=leagues,
@@ -323,9 +361,38 @@ def run_audit(*, client_factory=OpenScoresClient, database_url: str | None = Non
                 for row in canonical_seasons
             ],
         },
+        "season_source_metadata": [
+            {
+                "provider_league_id": str(league.get("id") or league.get("league_id") or ""),
+                "league_name": league.get("name"),
+                "seasons": [
+                    _season_metadata(season)
+                    for season in seasons_by_league.get(
+                        str(league.get("id") or league.get("league_id") or ""), []
+                    )
+                ],
+            }
+            for league in leagues
+        ],
+        "observation_time_coverage": {
+            "database_now_utc": database_now_utc,
+            "by_competition_season": observation_time_coverage,
+            "total_future_fixtures": sum(row["future_fixtures"] for row in observation_time_coverage),
+            "total_fixtures_next_7_days": sum(row["fixtures_next_7_days"] for row in observation_time_coverage),
+        },
         "source_identity_evidence": {
             "openscores_league_fields": {
                 str(league.get("id") or league.get("league_id") or ""): sorted(str(key) for key in league)
+                for league in leagues
+            },
+            "openscores_league_country_codes": {
+                str(league.get("id") or league.get("league_id") or ""): league.get("country_code")
+                for league in leagues
+            },
+            "openscores_league_source_id_keys": {
+                str(league.get("id") or league.get("league_id") or ""): sorted(
+                    str(key) for key in league.get("source_ids", {})
+                ) if isinstance(league.get("source_ids"), Mapping) else []
                 for league in leagues
             },
             "openscores_fixture_payload_field_paths": _key_inventory(
