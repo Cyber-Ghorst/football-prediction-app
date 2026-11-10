@@ -92,13 +92,27 @@ def find_unique_sportmonks_league(
     for league in sportmonks_leagues:
         if _norm(league.get("name")) != source_name:
             continue
-        if expected_country and _norm(_country_name(league)) != _norm(expected_country):
+        if expected_country:
+            country_value = _country_name(league)
+            country_code = ""
+            country_payload = league.get("country")
+            if isinstance(country_payload, Mapping):
+                country_code = str(
+                    country_payload.get("iso3")
+                    or country_payload.get("iso_3")
+                    or country_payload.get("code")
+                    or ""
+                ).upper()
+            aliases = {
+                "ENG": {"england", "united kingdom", "great britain"},
+            }.get(source_code, {_norm(expected_country)})
+            accepted_codes = {source_code, "GBR"} if source_code == "ENG" else {source_code}
+            if _norm(country_value) not in aliases and country_code not in accepted_codes:
+                continue
+        elif _country_name(league):
             continue
-        if not expected_country and not _country_name(league):
-            # An international competition may be mapped only by a unique exact name.
-            pass
-        elif not expected_country:
-            continue
+        # With no country code, only a unique exact-name international entry
+        # without a country may be considered.
         matches.append(league)
     if len(matches) == 1:
         return {"status": "unique_exact_name_country_match", "league": matches[0]}
@@ -115,10 +129,10 @@ def find_unique_sportmonks_season(
     sportmonks_league_id: Any,
 ) -> dict[str, Any]:
     """Match the same league and season-year pair; do not cross-map seasons."""
-    source_years = _season_years(
-        openscores_season.get("name")
-        or openscores_season.get("season_name")
-        or openscores_season.get("start_date")
+    source_years = (
+        _season_years(openscores_season.get("name"))
+        or _season_years(openscores_season.get("season_name"))
+        or _season_years(openscores_season.get("start_date"))
     )
     if source_years is None:
         return {"status": "insufficient_season_identity", "season": None, "candidate_count": 0}
@@ -126,10 +140,10 @@ def find_unique_sportmonks_season(
     for season in sportmonks_seasons:
         if str(season.get("league_id")) != str(sportmonks_league_id):
             continue
-        target_years = _season_years(
-            season.get("name")
-            or season.get("starting_at")
-            or season.get("start_date")
+        target_years = (
+            _season_years(season.get("name"))
+            or _season_years(season.get("starting_at"))
+            or _season_years(season.get("start_date"))
         )
         if target_years == source_years:
             matches.append(season)
