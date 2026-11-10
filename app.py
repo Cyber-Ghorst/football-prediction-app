@@ -3854,13 +3854,38 @@ with st.expander("Prediction tracking, Opta comparison and performance evaluatio
             "Sportmonks results; they never enter prediction generation or TVD."
         )
         st.markdown("[TipMaster source and methodology](https://tipmaster.de/agents/)")
+        stored_tipmaster_records = st.session_state.get("tipmaster_benchmark_records", [])
         fetch_status = st.session_state.get("_tipmaster_fetch_status", "not_fetched")
         storage_status = st.session_state.get("_tipmaster_storage_status", "not_configured")
+        last_attempt = st.session_state.get("_tipmaster_last_attempt", "not attempted")
         last_success = st.session_state.get("_tipmaster_last_success", "not yet refreshed")
-        st.caption(
-            f"Feed status: {fetch_status} · Storage: {storage_status} · "
-            f"Last successful fetch: {last_success}"
+        refresh_counts = st.session_state.get("_tipmaster_refresh_counts", {})
+        d1, d2, d3 = st.columns(3)
+        d1.metric("Stored benchmark records", len(stored_tipmaster_records))
+        d2.metric(
+            "Neon persistence",
+            "Connected" if storage_status == "connected" else storage_status.replace("_", " ").title(),
         )
+        d3.metric("Feed refresh", fetch_status.replace("_", " ").title())
+        st.caption(
+            f"Last refresh attempt: {last_attempt} · Last successful fetch: {last_success}"
+        )
+        if refresh_counts:
+            st.caption(f"Latest feed counts: {refresh_counts}")
+        if storage_status == "not_configured":
+            st.warning(
+                "Neon persistence is not configured in this deployment. Add DATABASE_URL "
+                "to the app's Streamlit secrets before expecting benchmark records to survive restarts."
+            )
+        elif str(storage_status).startswith("storage_error:"):
+            st.error(
+                f"Neon storage check failed ({storage_status}). The benchmark may only be available "
+                "in this browser session until the database connection is fixed."
+            )
+        if str(fetch_status).startswith("error:"):
+            st.error(
+                f"TipMaster feed refresh failed ({fetch_status}). Check the app logs for the underlying error."
+            )
         st.write(
             f"Verified fixtures matched to TipMaster: "
             f"{tipmaster_report['matched_verified_fixtures']} / "
