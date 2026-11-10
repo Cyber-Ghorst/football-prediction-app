@@ -22,7 +22,7 @@ def _status(fixture: Mapping[str, Any]) -> str:
             return "finished"
         if state_id == 1:
             return "scheduled"
-        # Keep every documented in-play phase out of the completed-result set.
+        # Keep all documented in-play phases out of the completed-result set.
         if state_id in {2, 3, 4, 6, 9, 21, 22, 25}:
             return "live"
     except (TypeError, ValueError):
