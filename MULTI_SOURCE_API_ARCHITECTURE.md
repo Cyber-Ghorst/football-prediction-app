@@ -488,9 +488,18 @@ Layer 3 adds evidence-based checks around the canonical records delivered by Lay
 - Regression tests cover conflicting/invalid statistic duplicates, resulting coverage, lineup player identity/duplicates and malformed player/injury/team/season identifiers.
 - GitHub Actions validation passed: compile step and all 409 Python unit tests.
 
+### Third implementation milestone: prediction-input quality gates
+
+- The existing fail-closed history gate now also checks the age and validity of the collection timestamp for each team's match-history evidence. Evidence older than 24 hours or timestamped in the future blocks prediction; a missing/invalid timestamp downgrades readiness because freshness cannot be established.
+- When an exact upcoming fixture is verified, stale fixture retrieval evidence blocks fixture-specific prediction. Unknown fixture freshness is surfaced as an attention warning; an unverified upcoming fixture does not prevent non-fixture-specific matchup analysis.
+- Missing core fields (fixture ID, score pair, kickoff, selected team identity and minimum history depth), duplicate fixtures and invalid chronology continue to block prediction. Optional statistics, lineups and injury/availability gaps remain unknown and do not become fabricated zeros.
+- Conflicting or invalid optional statistic observations remain excluded from the usable data and downgrade readiness with explicit warnings; they are never averaged or silently selected. Core match-history conflicts remain blocking.
+- The report now exposes the fixture-quality checks and freshness threshold, and the Streamlit prediction flow passes the exact fixture readiness evidence into the input gate.
+- The gate does not modify collected inputs, provider priority, model weights, TVD rules or the 60/40 tactical recency weighting.
+
 ### Remaining Layer 3 work
 
-1. Extend prediction-input quality gates to stale evidence, missing required fields and unresolved conflicts, while preserving the existing fail-closed core-history gate.
+1. Add persistent provider-quality history so reliability can be assessed over a rolling sample rather than a single optional diagnostic run.
 2. Add persistent provider-quality history so reliability can be assessed over a rolling sample rather than a single optional diagnostic run.
 3. Add conflict triage and auditable resolution records, retaining raw observations and the selected authoritative value.
 4. Implement dynamic league discovery and registration with explicit competition/season crosswalks and identity checks.
