@@ -137,28 +137,29 @@ def run_audit() -> dict[str, Any]:
         "prediction_ledger_touched": False,
         "targets": [],
     }
-    with HighlightlyClient() as highlightly, APINinjasClient() as api_ninjas:
-        for target in TARGETS:
-            row = {
-                "competition": target["name"],
-                "country": target["country"],
-                "season": target["season"],
-                "providers": {},
-            }
-            for provider, client, fn in (
-                ("highlightly", highlightly, _highlightly_audit),
-                ("api_ninjas", api_ninjas, _api_ninjas_audit),
-            ):
-                try:
+    for target in TARGETS:
+        row = {
+            "competition": target["name"],
+            "country": target["country"],
+            "season": target["season"],
+            "providers": {},
+        }
+        for provider, client_type, fn in (
+            ("highlightly", HighlightlyClient, _highlightly_audit),
+            ("api_ninjas", APINinjasClient, _api_ninjas_audit),
+        ):
+            client = None
+            try:
+                with client_type() as client:
                     row["providers"][provider] = fn(client, target)
-                except Exception as exc:
-                    row["providers"][provider] = {
-                        "status": "unavailable_or_error",
-                        "error_type": type(exc).__name__,
-                        "error": str(exc)[:240],
-                        "request_metadata": dict(getattr(client, "last_metadata", {}) or {}),
-                    }
-            report["targets"].append(row)
+            except Exception as exc:
+                row["providers"][provider] = {
+                    "status": "unavailable_or_error",
+                    "error_type": type(exc).__name__,
+                    "error": str(exc)[:240],
+                    "request_metadata": dict(getattr(client, "last_metadata", {}) or {}),
+                }
+        report["targets"].append(row)
 
     coverage_count = sum(
         1
