@@ -157,7 +157,7 @@ def build_catalogue_report(client_factory=SportmonksClient) -> dict[str, Any]:
                     }
 
         report["direct_league_id_probes"] = {}
-        for target_name, provider_id in (("Bundesliga", 82), ("Ligue 1", 301)):
+        for target_name, provider_id in (("Bundesliga", 82), ("Ligue 1", 301), ("World Cup", 732)):
             try:
                 payload = client._get(
                     f"leagues/{provider_id}",
