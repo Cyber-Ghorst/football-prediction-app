@@ -154,7 +154,7 @@ class OpenScoresClient:
                             return found
             return None
 
-        return walk(data) or (None, None)
+        return walk(data, "") or (None, None)
 
     @staticmethod
     def _payload_shape(data: Any) -> dict[str, Any]:
