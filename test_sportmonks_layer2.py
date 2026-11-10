@@ -357,7 +357,7 @@ class SportmonksLayer2Tests(unittest.TestCase):
         row["statistics"] = [
             item for item in row["statistics"]
             if isinstance(item.get("type"), dict)
-            and item["type"].get("name") in {"Ball Possession", "Total Shots"}
+            and item["type"].get("name") in {"Ball Possession", "Ball Possession %", "Total Shots"}
         ]
         profile = collect_sportmonks_team_profile(
             {"id": 10, "name": "Home FC"}, 2026, [row], [],
