@@ -78,7 +78,8 @@ These priorities are selection order, not automatic permission to substitute. A 
 ### Activation status (2026-11-07)
 
 - **Active prediction paths:** Sportmonks for current seasons after 2024; API-Football for historical seasons supported by the account (2022–2024).
-- **Diagnostic/canonicalization only:** Highlightly and API Ninjas. They are not yet wired into live Layer 2 field-level reconciliation.
+- **Opt-in field-level fallback:** Highlightly can fill missing supported match-statistic fields and missing exact-fixture lineups after strict identity and freshness checks. Sportmonks remains authoritative; Highlightly is not promoted globally and does not supply injury/availability inferences.
+- **Diagnostic/canonicalization only:** API Ninjas. Its fixtures/results/standings are corroborated but are not yet imported into Layer 2 histories.
 - **Conditional corroboration only:** LiveScoreFootball. It remains outside automatic Layer 2 fallback until exact competition, season, team identity and source freshness checks pass.
 - **Reconciliation foundation:** canonical normalizers and field-level conflict/provenance logic exist. The next integration milestone is to fetch records from each provider, apply validated crosswalks and timestamps, reconcile them, and surface provenance/conflicts in Streamlit.
 - **No model changes:** no provider issue authorizes changes to prediction weights, TVD rules, or 60/40 recency weighting. Missing data remains unknown; disagreements remain visible and are never averaged.
@@ -369,7 +370,7 @@ An opt-in diagnostic path now uses the exact selected-fixture Highlightly lineup
 ### Evaluation boundary and remaining work
 - The current performance report evaluates prospective saved forecasts as their results are verified. It is not a retrospective historical walk-forward backtest.
 - Only one unique completed fixture has a verified result against the current minimum descriptive sample of 30. Accuracy, Brier score and log loss remain provisional; no model calibration or weight changes are justified.
-- Highlightly match statistics, lineups, player statistics and team-season aggregates remain diagnostic-only. They are not merged into Layer 2 or the prediction model. A future player-impact feature must be a separate experimental signal and pass chronological, out-of-sample evaluation before any production use.
+- As of 2026-11-10, Highlightly match statistics and exact-fixture lineups have opt-in, field-level Layer 2 fallbacks for missing values only; Sportmonks values remain authoritative. Player statistics and team-season aggregates remain diagnostic-only. Highlightly is not used to infer injuries or player availability. A future player-impact feature must be a separate experimental signal and pass chronological, out-of-sample evaluation before any production use.
 - Further provider integration must remain field-level and fail-closed: exact competition, season, fixture, team orientation, freshness, canonical metric, provenance and conflict handling are required. Missing or conflicting values must not be averaged or silently imputed.
 
 Validation at this milestone: 28/28 application smoke checks, 5/5 live provider checks and 344 unit tests passed. The deployment probe reached Streamlit and received its authentication redirect; this confirms protected reachability, not an authenticated health response. The CI probe reports `protected_reachable`; application code smoke and live provider checks run separately.
@@ -412,3 +413,15 @@ The current Layer 2 flow now supports a controlled field-level fallback from Hig
 - The opt-in fallback is not a blanket promotion of Highlightly to primary provider status. It fills only missing fields after exact identity checks and preserves Sportmonks precedence.
 
 The fallback is covered by unit tests for missing-field fill, primary-value preservation, opponent-stat attribution, invalid timestamps, team-identity mismatch and conflicting duplicate observations. Live account coverage and authenticated runtime behavior still require deployment-level verification.
+
+
+## Opt-in Highlightly lineup fallback (2026-11-10)
+
+- A separate sidebar option can use Highlightly lineups only when the exact selected Sportmonks fixture is scheduled and inside the provider's documented lineup request window (40 minutes before kickoff through 120 minutes after kickoff).
+- The existing Highlightly match normalizer requires exact home/away team names against the selected Sportmonks fixture. The fallback additionally requires the returned Sportmonks fixture ID to equal the selected fixture ID and each profile's team identity to match its home/away side.
+- Provider-reported starters/substitutes are used only when the corresponding Sportmonks lineup is unavailable. Existing Sportmonks lineups are never overwritten.
+- The source, Highlightly match ID, Sportmonks fixture ID, collection start/completion timestamps and provider-reported confirmation status are retained.
+- This fallback updates only the profile's lineup display/readiness evidence. It does not populate injury status, availability scores, squad membership, or any player-availability assessment. Missing availability remains unknown.
+- The option is disabled by default. A lineup report outside the provider time window, with a mismatched fixture/team, without starters, or without a valid collection completion timestamp is not used.
+
+Unit tests cover exact-fixture matching, preservation of existing Sportmonks lineups, missing/invalid timestamps, and the rule that player availability is not changed.

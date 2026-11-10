@@ -94,6 +94,7 @@ try:
     from provider_health import assess_api_football_status, assess_livescore_metadata
     from provider_corroboration import collect_recent_result_corroboration
     from highlightly_match_enrichment import (
+        apply_highlightly_lineups_fallback,
         apply_highlightly_statistics_fallback,
         collect_highlightly_match_enrichment,
     )
@@ -851,6 +852,11 @@ with st.sidebar:
         "Use Highlightly to fill missing match statistics",
         value=False,
         help="Opt-in Layer 2 fallback. Only fills missing supported metrics after exact competition, country, season, fixture, team orientation and kickoff checks. Existing Sportmonks values remain authoritative; TVD evidence is not replaced.",
+    )
+    use_highlightly_lineups_fallback = st.checkbox(
+        "Use Highlightly lineups when Sportmonks lineups are missing",
+        value=False,
+        help="Opt-in exact-selected-fixture fallback. Uses provider-reported starters/substitutes only inside Highlightly's lineup window. It does not infer injuries or player availability.",
     )
     cross_check_highlightly_players = st.checkbox(
         "Fetch player and team-season performance statistics",
@@ -1987,7 +1993,7 @@ try:
                 )
                 prediction_stage_started = time.perf_counter()
 
-                if cross_check_recent_results or cross_check_highlightly_details or cross_check_highlightly_players or use_highlightly_statistics_fallback:
+                if cross_check_recent_results or cross_check_highlightly_details or cross_check_highlightly_players or use_highlightly_statistics_fallback or use_highlightly_lineups_fallback:
                     selected_league_row = league_by_id.get(league_id, {})
                     selected_country = selected_league_row.get("country") or {}
                     selected_country_name = selected_country.get("name") if isinstance(selected_country, dict) else str(selected_country or "")
@@ -2174,7 +2180,7 @@ try:
                             corroboration["candidate_verification"] = candidate_verification
                             corroboration["candidate_verification_diagnostics"] = candidate_verification_diagnostics
 
-                        if cross_check_highlightly_details or cross_check_highlightly_players or use_highlightly_statistics_fallback:
+                        if cross_check_highlightly_details or cross_check_highlightly_players or use_highlightly_statistics_fallback or use_highlightly_lineups_fallback:
                             if hl_client is None:
                                 corroboration_errors["highlightly_details"] = corroboration_errors.get(
                                     "highlightly", "Highlightly client unavailable."
@@ -2190,7 +2196,7 @@ try:
                                     away_team_name=away_name,
                                     selected_upcoming_fixture=(
                                         selected_match_fixture
-                                        if cross_check_highlightly_details or cross_check_highlightly_players
+                                        if cross_check_highlightly_details or cross_check_highlightly_players or use_highlightly_lineups_fallback
                                         else None
                                     ),
                                     history_per_team=(
@@ -2209,6 +2215,16 @@ try:
                                         "statistics may be filled from Highlightly; Sportmonks values remain "
                                         "authoritative, and TVD tactical_evidence is unchanged."
                                     )
+                                if use_highlightly_lineups_fallback:
+                                    lineup_fallback_report = apply_highlightly_lineups_fallback(
+                                        [home, away],
+                                        highlightly_enrichment,
+                                        expected_fixture_id=(
+                                            selected_match_fixture.get("id")
+                                            if selected_match_fixture else None
+                                        ),
+                                    )
+                                    highlightly_enrichment["layer2_lineup_fallback"] = lineup_fallback_report
                     except Exception as exc:
                         st.warning(f"Optional Highlightly enrichment could not be completed: {exc}. Sportmonks prediction inputs remain unchanged.")
                     finally:
@@ -2283,8 +2299,8 @@ try:
                         st.caption(
                             "Only exact competition, country, season, home/away and kickoff matches are accepted. "
                             + (
-                                "The opt-in Layer 2 fallback fills missing supported metrics only; existing Sportmonks values remain authoritative."
-                                if use_highlightly_statistics_fallback
+                                "The opt-in Layer 2 fallback fills missing supported metrics or lineups only; existing Sportmonks values remain authoritative and availability is not inferred."
+                                if use_highlightly_statistics_fallback or use_highlightly_lineups_fallback
                                 else "Highlightly values remain diagnostic and do not change prediction inputs."
                             )
                         )
@@ -2314,6 +2330,16 @@ try:
                             }))
                         else:
                             st.warning("Highlightly fallback did not complete. Sportmonks values remain unchanged.")
+
+                    if use_highlightly_lineups_fallback and not cross_check_highlightly_details:
+                        st.subheader("Highlightly Layer 2 lineup fallback")
+                        if highlightly_enrichment is not None:
+                            st.json(highlightly_enrichment.get("layer2_lineup_fallback", {
+                                "status": "not_applied",
+                                "reason": "No lineup fallback report was produced.",
+                            }))
+                        else:
+                            st.warning("Highlightly lineup fallback did not complete. Existing lineup and availability values remain unchanged.")
 
                     if cross_check_highlightly_players:
                         st.subheader("Highlightly player and team-season performance")

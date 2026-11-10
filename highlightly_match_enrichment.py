@@ -602,3 +602,114 @@ def apply_highlightly_statistics_fallback(
             summary["matches_enriched"] += len(profile_fixtures_enriched)
 
     return summary
+
+
+def apply_highlightly_lineups_fallback(
+    profiles: list[dict[str, Any]],
+    enrichment_report: Mapping[str, Any],
+    *,
+    expected_fixture_id: Any,
+) -> dict[str, Any]:
+    """Use exact-fixture Highlightly lineups only when Sportmonks lineups are missing."""
+    if expected_fixture_id is None:
+        return {
+            "status": "skipped",
+            "reason": "missing_expected_sportmonks_fixture_id",
+            "profiles_updated": 0,
+        }
+    lineup_report = enrichment_report.get("lineups")
+    if not isinstance(lineup_report, Mapping):
+        return {
+            "status": "skipped",
+            "reason": "no_exact_highlightly_lineup_report",
+            "profiles_updated": 0,
+        }
+    if str(lineup_report.get("sportmonks_fixture_id")) != str(expected_fixture_id):
+        return {
+            "status": "skipped",
+            "reason": "highlightly_lineup_fixture_id_mismatch",
+            "profiles_updated": 0,
+        }
+
+    raw_completed_at = enrichment_report.get("collection_completed_at")
+    try:
+        completed_at = datetime.fromisoformat(
+            str(raw_completed_at).strip().replace("Z", "+00:00")
+        )
+        if completed_at.tzinfo is None:
+            raise ValueError("Highlightly collection completion timestamp has no timezone.")
+        completed_at = completed_at.astimezone(timezone.utc)
+    except (TypeError, ValueError):
+        return {
+            "status": "skipped",
+            "reason": "missing_or_invalid_highlightly_collection_timestamp",
+            "profiles_updated": 0,
+        }
+
+    summary = {
+        "status": "completed",
+        "profiles_updated": 0,
+        "lineups_added": 0,
+        "fixture_id": str(expected_fixture_id),
+        "collection_started_at": enrichment_report.get("fetched_at"),
+        "collection_completed_at": completed_at.isoformat(),
+        "availability_changed": False,
+        "note": (
+            "Provider-reported starters/substitutes were added only where the "
+            "exact selected fixture had no usable Sportmonks lineup. Injury and "
+            "player-availability fields were not inferred or changed."
+        ),
+    }
+    for profile in profiles:
+        if not isinstance(profile, dict):
+            continue
+        profile_name = normalize_team_name(profile.get("name") or "")
+        if not profile_name:
+            continue
+        matched_side = next(
+            (
+                side for side in ("home", "away")
+                if normalize_team_name(
+                    (lineup_report.get(side) or {}).get("team_name") or ""
+                ) == profile_name
+            ),
+            None,
+        )
+        if matched_side is None:
+            continue
+
+        existing = profile.get("lineups") or {}
+        if isinstance(existing, Mapping) and existing.get("lineups_available") is True:
+            continue
+
+        provider_lineup = lineup_report.get(matched_side) or {}
+        starters = provider_lineup.get("starting_players") or []
+        if provider_lineup.get("lineups_available") is not True or not starters:
+            continue
+
+        profile["lineups"] = {
+            "lineups_available": True,
+            "team_name": provider_lineup.get("team_name"),
+            "team_id": provider_lineup.get("team_id"),
+            "formation": provider_lineup.get("formation"),
+            "starting_players": starters,
+            "substitutes": provider_lineup.get("substitutes") or [],
+            "source": "highlightly",
+            "match_id": str(lineup_report.get("highlightly_match_id") or provider_lineup.get("match_id") or ""),
+            "fixture_id": str(expected_fixture_id),
+            "confirmation_status": "provider_reported",
+            "collection_started_at": enrichment_report.get("fetched_at"),
+            "collection_completed_at": completed_at.isoformat(),
+        }
+        profile["highlightly_lineup_fallback"] = {
+            "status": "applied",
+            "source": "highlightly",
+            "fixture_id": str(expected_fixture_id),
+            "match_id": profile["lineups"]["match_id"],
+            "collection_completed_at": completed_at.isoformat(),
+            "availability_changed": False,
+        }
+        summary["profiles_updated"] += 1
+        summary["lineups_added"] += 1
+
+    return summary

@@ -5,6 +5,7 @@ from highlightly_match_enrichment import (
     _highlightly_rows,
     _highlightly_stat_value,
     _season_value,
+    apply_highlightly_lineups_fallback,
     apply_highlightly_statistics_fallback,
     collect_highlightly_match_enrichment,
     normalize_highlightly_lineups,
@@ -70,6 +71,86 @@ class FakeHighlightly:
 
 
 class HighlightlyMatchEnrichmentTests(unittest.TestCase):
+    def test_highlightly_lineup_fallback_fills_only_missing_exact_fixture_lineups(self):
+        starters = [{"player_id": 101, "name": "Player One"}]
+        home = {
+            "name": "Arsenal",
+            "lineups": {"lineups_available": False, "starting_players": []},
+            "availability": {"injury_data_available": False, "player_availability": None},
+        }
+        away = {
+            "name": "Chelsea",
+            "lineups": {"lineups_available": True, "starting_players": [{"name": "Existing"}]},
+            "availability": {"injury_data_available": False, "player_availability": None},
+        }
+        report = {
+            "fetched_at": "2026-11-08T11:59:00Z",
+            "collection_completed_at": "2026-11-08T12:00:00Z",
+            "lineups": {
+                "sportmonks_fixture_id": "700",
+                "highlightly_match_id": "9001",
+                "home": {
+                    "team_name": "Arsenal",
+                    "team_id": 11,
+                    "formation": "4-3-3",
+                    "starting_players": starters,
+                    "substitutes": [],
+                    "lineups_available": True,
+                },
+                "away": {
+                    "team_name": "Chelsea",
+                    "team_id": 12,
+                    "formation": "4-4-2",
+                    "starting_players": [{"name": "Other Player"}],
+                    "substitutes": [],
+                    "lineups_available": True,
+                },
+            },
+        }
+
+        result = apply_highlightly_lineups_fallback(
+            [home, away], report, expected_fixture_id=700
+        )
+
+        self.assertEqual(result["lineups_added"], 1)
+        self.assertEqual(home["lineups"]["source"], "highlightly")
+        self.assertEqual(home["lineups"]["starting_players"], starters)
+        self.assertTrue(away["lineups"]["lineups_available"])
+        self.assertEqual(away["lineups"]["starting_players"], [{"name": "Existing"}])
+        self.assertIsNone(home["availability"]["player_availability"])
+        self.assertFalse(result["availability_changed"])
+
+    def test_highlightly_lineup_fallback_rejects_wrong_fixture_and_invalid_timestamp(self):
+        profile = {
+            "name": "Arsenal",
+            "lineups": {"lineups_available": False},
+            "availability": {"player_availability": None},
+        }
+        report = {
+            "collection_completed_at": "invalid",
+            "lineups": {
+                "sportmonks_fixture_id": "999",
+                "home": {"team_name": "Arsenal", "lineups_available": True,
+                         "starting_players": [{"name": "Player"}]},
+                "away": {"team_name": "Chelsea", "lineups_available": True,
+                         "starting_players": [{"name": "Player"}]},
+            },
+        }
+
+        wrong_fixture = apply_highlightly_lineups_fallback(
+            [profile], report, expected_fixture_id=700
+        )
+        self.assertEqual(wrong_fixture["reason"], "highlightly_lineup_fixture_id_mismatch")
+        self.assertFalse(profile["lineups"].get("lineups_available"))
+
+        report["lineups"]["sportmonks_fixture_id"] = "700"
+        invalid_timestamp = apply_highlightly_lineups_fallback(
+            [profile], report, expected_fixture_id=700
+        )
+        self.assertEqual(invalid_timestamp["reason"], "missing_or_invalid_highlightly_collection_timestamp")
+        self.assertFalse(profile["lineups"].get("lineups_available"))
+
+
     def test_layer2_fallback_fills_only_missing_fields_after_exact_identity(self):
         home = {
             "name": "Arsenal",
