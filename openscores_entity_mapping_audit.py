@@ -71,7 +71,11 @@ def _unique_name_candidates(source: Mapping[str, Any], canonical: list[Mapping[s
             "source_provider": row.get("source_provider"),
         })
     if len(matches) == 1:
-        status = "unique_name_candidate_requires_review"
+        country_missing = require_country and (not source_country or not _norm(matches[0].get("country")))
+        status = (
+            "unique_name_candidate_requires_country_review"
+            if country_missing else "unique_name_candidate_requires_review"
+        )
     elif len(matches) > 1:
         status = "ambiguous_name_candidates"
     else:
@@ -257,6 +261,7 @@ def run_audit(*, client_factory=OpenScoresClient, database_url: str | None = Non
         "candidates": candidates,
         "summary": {
             "league_unique_candidates": sum(x["status"] == "unique_name_candidate_requires_review" for x in candidates["leagues"]),
+            "league_country_review_candidates": sum(x["status"] == "unique_name_candidate_requires_country_review" for x in candidates["leagues"]),
             "season_unique_candidates": sum(x["status"] == "unique_candidate_requires_review" for x in candidates["seasons"]),
             "team_unique_candidates": sum(x["status"] == "unique_name_candidate_requires_review" for x in candidates["teams"]),
             "league_ambiguous": sum(x["status"] == "ambiguous_name_candidates" for x in candidates["leagues"]),
