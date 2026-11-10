@@ -78,7 +78,8 @@ These priorities are selection order, not automatic permission to substitute. A 
 ### Activation status (2026-11-07)
 
 - **Active prediction paths:** Sportmonks for current seasons after 2024; API-Football for historical seasons supported by the account (2022–2024).
-- **Diagnostic/canonicalization only:** Highlightly and API Ninjas. They are not yet wired into live Layer 2 field-level reconciliation.
+- **Opt-in field-level fallback:** Highlightly can fill missing supported match-statistic fields and missing exact-fixture lineups after strict identity and freshness checks. Sportmonks remains authoritative; Highlightly is not promoted globally and does not supply injury/availability inferences.
+- **Diagnostic/canonicalization only:** API Ninjas. Its fixtures/results/standings are corroborated but are not yet imported into Layer 2 histories.
 - **Conditional corroboration only:** LiveScoreFootball. It remains outside automatic Layer 2 fallback until exact competition, season, team identity and source freshness checks pass.
 - **Reconciliation foundation:** canonical normalizers and field-level conflict/provenance logic exist. The next integration milestone is to fetch records from each provider, apply validated crosswalks and timestamps, reconcile them, and surface provenance/conflicts in Streamlit.
 - **No model changes:** no provider issue authorizes changes to prediction weights, TVD rules, or 60/40 recency weighting. Missing data remains unknown; disagreements remain visible and are never averaged.
