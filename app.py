@@ -3659,12 +3659,12 @@ with st.expander("Prediction tracking, Opta comparison and performance evaluatio
         st.session_state["prediction_ledger"] = merge_prediction_records(ledger, edited_records)
         _persist_database_ledger()
         report = evaluate_prediction_ledger(st.session_state["prediction_ledger"])
-    if st.button("Refresh TipMaster benchmark now", key="refresh_tipmaster_benchmark"):
-        _refresh_tipmaster_benchmark(force=True)
-    tipmaster_report = evaluate_tipmaster_benchmark(
-        st.session_state["prediction_ledger"],
-        st.session_state.get("tipmaster_benchmark_records", []),
-    )
+        if st.button("Refresh TipMaster benchmark now", key="refresh_tipmaster_benchmark"):
+            _refresh_tipmaster_benchmark(force=True)
+        tipmaster_report = evaluate_tipmaster_benchmark(
+            st.session_state["prediction_ledger"],
+            st.session_state.get("tipmaster_benchmark_records", []),
+        )
         try:
             github_performance_report = _upload_report_once("prediction_performance", report)
             if github_performance_report:
