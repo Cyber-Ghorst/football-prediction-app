@@ -1,4 +1,5 @@
 import unittest
+from datetime import datetime, timezone
 
 from canonical_data import (
     MatchNormalizationError, canonicalize_api_football_fixture,
@@ -213,14 +214,56 @@ class CanonicalMatchTests(unittest.TestCase):
             self.api_fixture(), competition_key="eng-premier-league", season=2026
         )
         right["home_score"] = 3
+        collected_at = datetime(2026, 11, 7, 18, 0, tzinfo=timezone.utc)
         result = reconcile_match_pair(
             left, right, team_aliases={"Arsenal FC": "Arsenal", "Chelsea FC": "Chelsea"},
+            fetched_at={"livescore_football": collected_at, "api_football": collected_at},
+            now=datetime(2026, 11, 7, 18, 1, tzinfo=timezone.utc),
             livescore_verified=True,
         )
         self.assertEqual(result["home_score"], 2)
         self.assertEqual(result["reconciliation"]["home_score"]["provider"], "livescore_football")
         self.assertEqual(result["reconciliation"]["home_score"]["status"], "conflict")
         self.assertEqual(result["source_ids"]["api_football"], "771")
+
+    def test_reconcile_excludes_records_without_collection_timestamps(self):
+        from canonical_data import reconcile_match_pair
+        left = canonicalize_livescore_event(
+            self.livescore(), competition_key="eng-premier-league", season=2026
+        )
+        right = canonicalize_api_football_fixture(
+            self.api_fixture(), competition_key="eng-premier-league", season=2026
+        )
+        result = reconcile_match_pair(
+            left, right,
+            now=datetime(2026, 11, 7, 18, 0, tzinfo=timezone.utc),
+            livescore_verified=True,
+        )
+        self.assertIsNone(result["home_score"])
+        self.assertIsNone(result["away_score"])
+        self.assertEqual(result["reconciliation"]["home_score"]["status"], "unknown")
+        self.assertIsNone(result["reconciliation"]["home_score"]["provider"])
+
+    def test_reconcile_excludes_stale_observations(self):
+        from canonical_data import reconcile_match_pair
+        left = canonicalize_livescore_event(
+            self.livescore(), competition_key="eng-premier-league", season=2026
+        )
+        right = canonicalize_api_football_fixture(
+            self.api_fixture(), competition_key="eng-premier-league", season=2026
+        )
+        result = reconcile_match_pair(
+            left, right,
+            fetched_at={
+                "livescore_football": datetime(2026, 11, 5, 10, 0, tzinfo=timezone.utc),
+                "api_football": datetime(2026, 11, 5, 10, 0, tzinfo=timezone.utc),
+            },
+            now=datetime(2026, 11, 7, 18, 0, tzinfo=timezone.utc),
+            max_age_seconds=86400,
+            livescore_verified=True,
+        )
+        self.assertIsNone(result["home_score"])
+        self.assertEqual(result["reconciliation"]["home_score"]["status"], "unknown")
 
     def test_reconcile_refuses_ambiguous_or_unmatched_records(self):
         from canonical_data import reconcile_match_pair
