@@ -95,6 +95,10 @@ try:
     from tvd import run_tvd
     from provider_config import provider_readiness
     from livescore_football import LiveScoreFootballClient, LiveScoreFootballError
+    from livescore_layer2 import (
+        apply_livescore_verified_result_fallback_to_profiles,
+        collect_livescore_verified_result_fallback,
+    )
     from competition_crosswalk import build_competition_crosswalk
     from provider_health import assess_api_football_status, assess_livescore_metadata
     from provider_corroboration import collect_recent_result_corroboration
@@ -867,6 +871,11 @@ with st.sidebar:
         "Use Highlightly lineups when Sportmonks lineups are missing",
         value=False,
         help="Opt-in exact-selected-fixture fallback. Uses provider-reported starters/substitutes only inside Highlightly's lineup window. It does not infer injuries or player availability.",
+    )
+    use_livescore_missing_result_fallback = st.checkbox(
+        "Use fresh LiveScoreFootball to fill missing Sportmonks results",
+        value=False,
+        help="Opt-in fallback. Requires fresh global and per-competition sync metadata plus an exact competition/season crosswalk. It fills only completed Sportmonks fixtures with no explicit CURRENT score rows, after exact team/kickoff matching. Valid Sportmonks scores are never overwritten; requests are capped at ten unique dates.",
     )
     cross_check_highlightly_players = st.checkbox(
         "Fetch player and team-season performance statistics",
@@ -2002,6 +2011,7 @@ try:
                     squad_enrichment_seconds, 3
                 )
                 prediction_stage_started = time.perf_counter()
+                livescore_fallback_report = None
 
                 if cross_check_recent_results or use_verified_result_history_fallback or cross_check_highlightly_details or cross_check_highlightly_players or use_highlightly_statistics_fallback or use_highlightly_lineups_fallback:
                     selected_league_row = league_by_id.get(league_id, {})
@@ -2419,6 +2429,77 @@ try:
                             }))
                         else:
                             st.warning("Highlightly lineup fallback did not complete. Existing lineup and availability values remain unchanged.")
+
+                    if use_livescore_missing_result_fallback:
+                        st.subheader("LiveScoreFootball verified missing-score fallback")
+                        livescore_fallback_report = None
+                        source_competition = league_by_id.get(league_id, {})
+                        selected_team_ids = {
+                            int(profile.get("id"))
+                            for profile in (home, away)
+                            if isinstance(profile.get("id"), int)
+                            and not isinstance(profile.get("id"), bool)
+                            and profile.get("id") > 0
+                        }
+                        try:
+                            with LiveScoreFootballClient() as livescore_client:
+                                livescore_fallback_report = collect_livescore_verified_result_fallback(
+                                    livescore_client,
+                                    source_competition=source_competition,
+                                    sportmonks_fixtures=fixtures,
+                                    selected_team_ids=selected_team_ids,
+                                    competition_key=str(source_competition.get("name") or selected_league),
+                                    season=int(season),
+                                    season_id=int(selected_season_id),
+                                )
+                                if livescore_fallback_report.get("verified_matches"):
+                                    livescore_fallback_report["layer2_fallback"] = (
+                                        apply_livescore_verified_result_fallback_to_profiles(
+                                            [home, away],
+                                            livescore_fallback_report["verified_matches"],
+                                            history_limit=10,
+                                        )
+                                    )
+                                else:
+                                    livescore_fallback_report["layer2_fallback"] = {
+                                        "status": "not_applied",
+                                        "reason": "No verified missing-score matches were returned.",
+                                        "profiles_updated": 0,
+                                    }
+                        except LiveScoreFootballError as livescore_error:
+                            livescore_fallback_report = {
+                                "status": "error",
+                                "error_type": type(livescore_error).__name__,
+                                "profiles_changed": False,
+                            }
+                        except Exception as livescore_error:
+                            livescore_fallback_report = {
+                                "status": "error",
+                                "error_type": type(livescore_error).__name__,
+                                "profiles_changed": False,
+                            }
+                        if livescore_fallback_report is not None:
+                            st.json(livescore_fallback_report)
+                            try:
+                                livescore_archive = _upload_report_once(
+                                    "livescore_layer2_fallback", livescore_fallback_report
+                                )
+                                if livescore_archive:
+                                    st.caption(
+                                        "LiveScore Layer 2 fallback report archived in GitHub: "
+                                        + str(livescore_archive.get("latest_url", ""))
+                                    )
+                            except Exception as livescore_archive_error:
+                                st.warning(
+                                    "LiveScore fallback report could not be archived ("
+                                    + type(livescore_archive_error).__name__
+                                    + ")."
+                                )
+                        st.caption(
+                            "LiveScoreFootball is used only when its global sync and exact competition-season crosswalk are fresh. "
+                            "Only missing full-time results on already-known completed Sportmonks fixtures can be filled; "
+                            "Sportmonks scores, statistics, TVD evidence and player availability are not overwritten."
+                        )
 
                     if cross_check_highlightly_players:
                         st.subheader("Highlightly player and team-season performance")
