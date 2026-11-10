@@ -2,7 +2,8 @@ import unittest
 from unittest.mock import Mock, patch
 
 from free_fixture_observation_pipeline import (
-    collect_bzzoiro_observations,\n    collect_livescore_observations,
+    collect_bzzoiro_observations,
+    collect_livescore_observations,
     collect_openfootball_observations,
     collect_openligadb_observations,
     collect_openmatchday_observations,
@@ -92,6 +93,30 @@ class FreeFixtureObservationPipelineTests(unittest.TestCase):
         )
         self.assertEqual(result["eligible_for_review_count"], 1)
         self.assertEqual(archive.call_args.kwargs["observations"][0]["provider_fixture_id"], "event-9")
+
+    @patch("free_fixture_observation_pipeline.archive_future_fixture_observations")
+    def test_bzzoiro_requires_credentials_but_fails_closed_without_them(self, archive):
+        result = collect_bzzoiro_observations("provider-db")
+        self.assertFalse(result["archived"])
+        self.assertEqual(result["observation_count"], 0)
+        self.assertIn("BZZOIRO_API_TOKEN", result["errors"][0]["error"])
+        archive.assert_not_called()
+
+    @patch("free_fixture_observation_pipeline.archive_future_fixture_observations")
+    def test_bzzoiro_forces_upcoming_status_and_archives(self, archive):
+        archive.return_value = {"snapshot_id": "snapshot-bzz"}
+        client = Mock()
+        client.upcoming.return_value = [{
+            "provider": "bzzoiro", "provider_fixture_id": "event-10",
+            "eligible_for_review": True,
+        }]
+        result = collect_bzzoiro_observations(
+            "provider-db", params={"league_id": 10, "status": "finished"},
+            client=client,
+        )
+        self.assertEqual(client.upcoming.call_args.kwargs["params"]["status"], "upcoming")
+        self.assertEqual(archive.call_args.kwargs["request_params"]["status"], "upcoming")
+        self.assertEqual(result["eligible_for_review_count"], 1)
 
     @patch("free_fixture_observation_pipeline.archive_future_fixture_observations")
     def test_failed_provider_scope_does_not_archive_empty_success(self, archive):
