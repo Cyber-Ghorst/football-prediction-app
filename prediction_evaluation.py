@@ -511,6 +511,37 @@ def _top_outcome_calibration(
     }
 
 
+MINIMUM_DESCRIPTIVE_EVALUATION_FIXTURES = 30
+
+
+def _evaluation_sample_assessment(verified_fixture_count: int) -> dict[str, Any]:
+    """Label evaluation evidence without implying that a small sample validates the model."""
+    count = max(0, int(verified_fixture_count))
+    if count == 0:
+        status = "no_verified_results"
+        message = "No independently verified completed pre-kickoff fixtures are available; model performance is not yet measurable."
+    elif count < MINIMUM_DESCRIPTIVE_EVALUATION_FIXTURES:
+        status = "insufficient_sample"
+        message = (
+            f"Only {count} unique verified fixture(s) are available. Treat accuracy, "
+            "Brier score and log loss as highly provisional; do not claim model "
+            "accuracy or calibration from this sample."
+        )
+    else:
+        status = "descriptive_sample"
+        message = (
+            f"{count} unique verified fixtures are available. Metrics are descriptive "
+            "monitoring evidence only; this threshold does not establish calibration, "
+            "generalization or predictive reliability."
+        )
+    return {
+        "status": status,
+        "verified_unique_fixtures": count,
+        "minimum_descriptive_fixtures": MINIMUM_DESCRIPTIVE_EVALUATION_FIXTURES,
+        "message": message,
+    }
+
+
 def evaluate_prediction_ledger(records: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
     """Evaluate one latest valid pre-kickoff forecast per identifiable fixture.
 
@@ -676,6 +707,7 @@ def evaluate_prediction_ledger(records: Iterable[Mapping[str, Any]]) -> dict[str
             )
             for competition in sorted({str(row.get("competition") or "") for row in completed})
         },
+        "evaluation_sample_assessment": _evaluation_sample_assessment(len(completed)),
         "model": _score_records(completed, "model"),
         "market_metrics": {
             "over_1_5": _score_binary_market(
