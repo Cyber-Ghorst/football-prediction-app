@@ -47,6 +47,53 @@ class SportmonksLayer2Tests(unittest.TestCase):
         ])
         self.assertEqual(result, {10: 100.0, 20: 25.0})
 
+    def test_malformed_provider_ids_are_not_coerced_or_attributed(self):
+        from sportmonks_layer2 import _fixture_statistics_index, _provider_id, _scores
+
+        self.assertEqual(_provider_id(10), 10)
+        self.assertEqual(_provider_id("10"), 10)
+        for invalid in (True, False, 10.9, "10.9", 0, -1, None):
+            with self.subTest(value=invalid):
+                self.assertIsNone(_provider_id(invalid))
+
+        row = fixture(1, 10, 20, 2, 1)
+        row["scores"][0]["participant_id"] = 10.9
+        for statistic in row["statistics"]:
+            if statistic.get("participant_id") == 10:
+                statistic["participant_id"] = 10.9
+        row["statistics"][1]["participant_id"] = True
+        self.assertEqual(_scores(row, 10, 20), (None, 1))
+        indexed = _fixture_statistics_index(row)
+        self.assertNotIn(10, indexed)
+        self.assertNotIn(1, indexed)
+
+    def test_fractional_participant_ids_do_not_enter_team_history(self):
+        row = fixture(1, 10, 20, 2, 1)
+        row["participants"][0]["id"] = 10.9
+        row["scores"][0]["participant_id"] = 10.9
+        profile = collect_sportmonks_team_profile(
+            {"id": 10, "name": "Home FC"}, 2026, [row], []
+        )
+        self.assertEqual(profile["matches"], [])
+        self.assertEqual(
+            profile["history_collection_diagnostics"]["excluded_missing_participants"],
+            1,
+        )
+
+    def test_malformed_fixture_season_ids_are_excluded(self):
+        for season_id in (True, 2026.9, "2026.9", "not-a-season", 0, -1):
+            with self.subTest(season_id=season_id):
+                row = fixture(1, 10, 20, 2, 1)
+                row["season_id"] = season_id
+                profile = collect_sportmonks_team_profile(
+                    {"id": 10, "name": "Home FC"}, 2026, [row], []
+                )
+                self.assertEqual(profile["matches"], [])
+                self.assertEqual(
+                    profile["history_collection_diagnostics"]["excluded_wrong_season"],
+                    1,
+                )
+
     def test_profile_uses_completed_fixtures_and_team_identity(self):
         fixtures = [fixture(i, 10, 20, 2, 1) for i in range(1, 7)]
         fixtures.append(fixture(7, 10, 20, 1, 0, state="NS"))
