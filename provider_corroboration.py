@@ -64,9 +64,11 @@ def _participants(fixture: Mapping[str, Any]) -> tuple[Mapping[str, Any] | None,
 
 def _current_scores(fixture: Mapping[str, Any], home_id: Any, away_id: Any) -> tuple[int | None, int | None]:
     rows = fixture.get("scores") or []
+    # Only the provider's explicit CURRENT entry represents the full-time
+    # score. Period-specific rows are not a safe substitute when it is absent.
     current = [row for row in rows if str(row.get("description") or "").casefold() == "current"]
     values: dict[str, int] = {}
-    for row in current or rows:
+    for row in current:
         score = row.get("score") or {}
         goals = score.get("goals") if isinstance(score, Mapping) else None
         participant_id = row.get("participant_id")
