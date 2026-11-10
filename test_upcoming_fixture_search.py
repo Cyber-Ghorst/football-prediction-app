@@ -1,8 +1,8 @@
 """Tests for searchable, bounded upcoming fixture catalogue queries."""
 from contextlib import contextmanager
 from types import SimpleNamespace
-
-import pytest
+import unittest
+from unittest.mock import patch
 
 import football_repository
 
@@ -50,71 +50,76 @@ class FakeConnection:
         return self._cursor
 
 
-def test_search_upcoming_fixtures_uses_seven_day_window_and_exact_competition(monkeypatch):
-    expected = (
-        "sportmonks:900", "sportmonks:2026", "%Arsenal%",
-        "%Arsenal%", "%Arsenal%", "%Arsenal%", 300,
-    )
-    cursor = FakeCursor([
-        (
-            "sportmonks:900", "sportmonks:2026", "sportmonks:10",
-            "sportmonks:1", "sportmonks:2", "Arsenal", "Chelsea",
-            "Premier League", "England", None, "Not Started", None,
-            "sportmonks", None,
-        )
-    ])
-    connection = FakeConnection(cursor)
+class UpcomingFixtureSearchTests(unittest.TestCase):
+    def test_search_uses_seven_day_window_and_exact_competition(self):
+        cursor = FakeCursor([
+            (
+                "sportmonks:900", "sportmonks:2026", "sportmonks:10",
+                "sportmonks:1", "sportmonks:2", "Arsenal", "Chelsea",
+                "Premier League", "England", None, "Not Started", None,
+                "sportmonks", None,
+            )
+        ])
+        connection = FakeConnection(cursor)
 
-    @contextmanager
-    def fake_connect(_database_url):
-        yield connection
+        @contextmanager
+        def fake_connect(_database_url):
+            yield connection
 
-    monkeypatch.setattr(football_repository, "_connect", fake_connect)
-    rows = football_repository.search_upcoming_repository_fixtures(
-        "postgresql://example",
-        search_term="Arsenal",
-        league_id="sportmonks:900",
-        season_id="sportmonks:2026",
-        window_days=7,
-        limit=300,
-    )
+        with patch.object(football_repository, "_connect", fake_connect):
+            rows = football_repository.search_upcoming_repository_fixtures(
+                "postgresql://example",
+                search_term="Arsenal",
+                league_id="sportmonks:900",
+                season_id="sportmonks:2026",
+                window_days=7,
+                limit=300,
+            )
 
-    assert len(rows) == 1
-    assert rows[0]["home_team"] == "Arsenal"
-    assert "INTERVAL '7 days'" in cursor.query
-    assert "f.source_provider = 'sportmonks'" in cursor.query
-    assert "f.starting_at > NOW()" in cursor.query
-    assert "ht.name ILIKE %s" in cursor.query
-    assert "JOIN football_teams AS ht" in cursor.query
-    assert "JOIN football_teams AS at" in cursor.query
-    assert "JOIN football_leagues AS l" in cursor.query
-    assert cursor.params == expected
-
-
-@pytest.mark.parametrize("window_days", [0, 8, -1, True, 7.0])
-def test_search_upcoming_fixtures_rejects_invalid_window_before_database_access(
-    monkeypatch, window_days
-):
-    def unexpected_connect(_database_url):
-        raise AssertionError("Database must not be accessed for an invalid window.")
-
-    monkeypatch.setattr(football_repository, "_connect", unexpected_connect)
-    with pytest.raises(ValueError, match="1 through 7"):
-        football_repository.search_upcoming_repository_fixtures(
-            "postgresql://example", window_days=window_days
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["home_team"], "Arsenal")
+        self.assertIn("INTERVAL '7 days'", cursor.query)
+        self.assertIn("f.source_provider = 'sportmonks'", cursor.query)
+        self.assertIn("f.starting_at > NOW()", cursor.query)
+        self.assertIn("ht.name ILIKE %s", cursor.query)
+        self.assertIn("JOIN football_teams AS ht", cursor.query)
+        self.assertIn("JOIN football_teams AS at", cursor.query)
+        self.assertIn("JOIN football_leagues AS l", cursor.query)
+        self.assertEqual(
+            cursor.params,
+            (
+                "sportmonks:900", "sportmonks:2026", "%Arsenal%",
+                "%Arsenal%", "%Arsenal%", "%Arsenal%", 300,
+            ),
         )
 
+    def test_invalid_windows_are_rejected_before_database_access(self):
+        def unexpected_connect(_database_url):
+            raise AssertionError("Database must not be accessed for an invalid window.")
 
-def test_search_upcoming_fixtures_caps_requested_limit(monkeypatch):
-    cursor = FakeCursor([])
-    connection = FakeConnection(cursor)
+        invalid_windows = (0, 8, -1, True, 7.0)
+        with patch.object(football_repository, "_connect", unexpected_connect):
+            for window_days in invalid_windows:
+                with self.subTest(window_days=window_days):
+                    with self.assertRaisesRegex(ValueError, "1 through 7"):
+                        football_repository.search_upcoming_repository_fixtures(
+                            "postgresql://example", window_days=window_days
+                        )
 
-    @contextmanager
-    def fake_connect(_database_url):
-        yield connection
+    def test_requested_limit_is_capped(self):
+        cursor = FakeCursor([])
+        connection = FakeConnection(cursor)
 
-    monkeypatch.setattr(football_repository, "_connect", fake_connect)
-    football_repository.search_upcoming_repository_fixtures(
-        "postgresql://example", limit=5000
-    )
-    assert cursor.params == (500,)
+        @contextmanager
+        def fake_connect(_database_url):
+            yield connection
+
+        with patch.object(football_repository, "_connect", fake_connect):
+            football_repository.search_upcoming_repository_fixtures(
+                "postgresql://example", limit=5000
+            )
+        self.assertEqual(cursor.params, (500,))
+
+
+if __name__ == "__main__":
+    unittest.main()
