@@ -131,6 +131,13 @@ class ProviderAdapterTests(unittest.TestCase):
         self.assertFalse(SportmonksClient._fixture_is_completed({
             "state": {"short_name": "NS", "name": "Not Started"}
         }))
+        self.assertTrue(SportmonksClient._fixture_is_completed({
+            "state": {"short_name": "FT_PEN", "name": "Full-Time After Penalties"}
+        }))
+        self.assertFalse(SportmonksClient._fixture_is_completed({
+            "state": {"short_name": "PEN", "name": "Penalty Shootout"}
+        }))
+        self.assertFalse(SportmonksClient._fixture_is_completed({"status": "Penalties"}))
 
     def test_sportmonks_kickoff_sorting_parses_utc_offsets_and_milliseconds(self):
         older = SportmonksClient._fixture_kickoff_timestamp({
