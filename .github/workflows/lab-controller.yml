@@ -329,6 +329,17 @@ jobs:
           exec > >(tee -a controller-report.txt) 2>&1
           python integration_smoke_check.py | tee integration-smoke-report.json
 
+      - name: Sync verified completed prediction results
+        if: github.event_name == 'schedule'
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SPORTMONKS_API_TOKEN: ${{ secrets.SPORTMONKS_API_TOKEN }}
+          SPORTMONKS_API_KEY: ${{ secrets.SPORTMONKS_API_KEY }}
+        run: |
+          set -o pipefail
+          exec > >(tee -a controller-report.txt) 2>&1
+          python sync_prediction_results.py --limit 10 | tee prediction-result-sync-report.json
+
       - name: Install test dependencies
         if: always() && (steps.operation.outputs.operation == 'test_suite' || steps.operation.outputs.operation == 'full_check')
         run: |
