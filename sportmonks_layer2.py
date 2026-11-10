@@ -444,7 +444,9 @@ def collect_sportmonks_team_profile(
         opponent_id = away_id if is_home else home_id
         matches.append({
             "fixture_id": fixture.get("id"),
-            "date": fixture.get("starting_at"),
+            "date": fixture.get("starting_at") or datetime.fromtimestamp(
+                kickoff_timestamp, tz=timezone.utc
+            ).isoformat(),
             "_kickoff_timestamp": kickoff_timestamp,
             "collection_fetched_at": fixture.get("collection_fetched_at"),
             "venue": "home" if is_home else "away",
