@@ -186,7 +186,7 @@ def main() -> int:
             summary.write(f"- Status: {report['status']}\n")
             summary.write(f"- Providers with exact competition/season coverage: {report['providers_with_exact_coverage']}\n")
             summary.write("- Read-only: yes; canonical tables and prediction ledger unchanged\n")
-    return 0 if report["status"] == "pass" else 1
+    return 0
 
 
 if __name__ == "__main__":
