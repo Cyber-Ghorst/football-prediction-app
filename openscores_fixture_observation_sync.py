@@ -171,6 +171,7 @@ def run_sync(
                     ambiguous_season_ids.add(season_id)
                     season_to_league.pop(season_id, None)
                     continue
+                seasons_by_league[league_id].append(season_id)
                 previous_league_id = season_to_league.get(season_id)
                 if previous_league_id and previous_league_id != league_id:
                     ambiguous_season_ids.add(season_id)
@@ -178,7 +179,6 @@ def run_sync(
                     continue
                 if season_id not in ambiguous_season_ids:
                     season_to_league[season_id] = league_id
-                    seasons_by_league[league_id].append(season_id)
 
         report["season_mappings_discovered"] = len(season_to_league)
         report["seasons_sampled"] = sum(
@@ -253,7 +253,6 @@ def run_sync(
                     elif page == max_pages:
                         report["pagination_truncated"] = True
 
-    report["seasons_sampled"] = len({season for _, season in grouped_records})
     per_competition: dict[str, dict[str, Any]] = {}
     for (league_id, season_id), records in grouped_records.items():
         normalized = normalize_openscores_fixtures(
