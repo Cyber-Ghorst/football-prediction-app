@@ -95,6 +95,8 @@ def collect_livescore_verified_result_fallback(
     for fixture in sportmonks_fixtures:
         if not isinstance(fixture, Mapping):
             continue
+        if _provider_id(fixture.get("id")) is None:
+            continue
         if _provider_id(fixture.get("season_id")) != expected_season_id:
             continue
         if _provider_id(fixture.get("league_id")) != expected_competition_id:
@@ -278,6 +280,7 @@ def apply_livescore_verified_result_fallback_to_profiles(
     from form_analyzer import analyze_form, venue_rating
     from provider_core import normalize_team_name
     from tactical_indicators import analyze_tactics
+    from sportmonks_layer2 import _CORE_STATISTICS
 
     original_profiles = profiles
     profiles = deepcopy(profiles)
@@ -363,6 +366,7 @@ def apply_livescore_verified_result_fallback_to_profiles(
                     "collection_completed_at": completed_at.isoformat(),
                     "crosswalk_verified": True,
                     "match_identity_verified": True,
+                    "tactical_evidence_updated": False,
                 },
             })
             matches.sort(
@@ -402,6 +406,39 @@ def apply_livescore_verified_result_fallback_to_profiles(
                 diagnostics["history_latest_match_at"] = max(valid_dates).isoformat()
                 diagnostics["history_oldest_match_at"] = min(valid_dates).isoformat()
             diagnostics["history_order"] = "newest_first_by_parsed_utc_kickoff"
+            statistics_coverage = {
+                label: sum(
+                    any(name in (match.get("statistics") or {}) for name in aliases)
+                    for match in recent
+                )
+                for label, _group, aliases in _CORE_STATISTICS
+            }
+            matches_with_any_statistics = sum(
+                bool(match.get("statistics")) for match in recent
+            )
+            matches_with_complete_core_statistics = sum(
+                all(
+                    any(name in (match.get("statistics") or {}) for name in aliases)
+                    for _label, _group, aliases in _CORE_STATISTICS
+                )
+                for match in recent
+            )
+            core_observations = sum(statistics_coverage.values())
+            core_target = len(recent) * len(_CORE_STATISTICS)
+            diagnostics["statistics_coverage_by_metric"] = statistics_coverage
+            diagnostics["matches_with_any_statistics"] = matches_with_any_statistics
+            diagnostics["matches_with_complete_core_statistics"] = matches_with_complete_core_statistics
+            diagnostics["core_statistics_completeness_pct"] = (
+                round(core_observations / core_target * 100, 1) if core_target else 0.0
+            )
+            profile["livescore_result_fallback"] = {
+                "status": "applied",
+                "fixture_id": fixture_id,
+                "livescore_event_id": str(item.get("livescore_event_id") or ""),
+                "livescore_slug": str(item.get("livescore_slug") or ""),
+                "collection_completed_at": completed_at.isoformat(),
+                "tactical_evidence_updated": False,
+            }
             summary["profiles_updated"] += 1
             summary["matches_added"] += 1
 
