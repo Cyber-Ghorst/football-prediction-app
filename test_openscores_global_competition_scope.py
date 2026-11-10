@@ -158,6 +158,7 @@ class GlobalCompetitionScopeTests(unittest.TestCase):
         self.assertEqual(report["fixtures_duplicate_provider_id"], 1)
         self.assertEqual(report["fixtures_conflicting_provider_id"], 1)
         self.assertEqual(report["fixtures_accepted_for_window"], 0)
+        self.assertEqual(report["status"], "partial")
         self.assertEqual(save.call_args.args[1], [])
 
     def test_pagination_cap_is_reported_as_partial(self):
