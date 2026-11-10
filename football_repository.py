@@ -1703,7 +1703,7 @@ def upsert_discovered_fixtures(
     season_rows: dict[str, tuple[Any, ...]] = {}
     team_rows: dict[str, tuple[Any, ...]] = {}
     fixture_rows: dict[str, tuple[Any, ...]] = {}
-    link_rows: dict[tuple[str, str], tuple[Any, ...]] = []
+    link_rows: dict[tuple[str, str], tuple[Any, ...]] = {}
 
     def add_link(entity_type: str, provider_id: Any, canonical_id: str) -> None:
         import uuid
@@ -1712,9 +1712,9 @@ def upsert_discovered_fixtures(
             uuid.NAMESPACE_URL,
             f"sportmonks:{entity_type}:{provider_entity_id}",
         ))
-        link_rows.append((
+        link_rows[(entity_type, provider_entity_id)] = (
             link_id, "sportmonks", entity_type, provider_entity_id, canonical_id,
-        ))
+        )
 
     for fixture in fixtures:
         if not isinstance(fixture, dict):
@@ -1859,7 +1859,7 @@ def upsert_discovered_fixtures(
                     "link_id", "provider", "entity_type", "provider_entity_id",
                     "canonical_entity_id",
                 ),
-                rows=link_rows,
+                rows=list(link_rows.values()),
                 conflict_sql="""ON CONFLICT (provider, entity_type, provider_entity_id)
                     DO UPDATE SET canonical_entity_id = excluded.canonical_entity_id,
                                   last_seen_at = NOW()""",
