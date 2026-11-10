@@ -83,7 +83,7 @@ try:
     from highlightly import HighlightlyClient, HighlightlyError
     from sportmonks import SportmonksClient, SportmonksError
     from data_layer2 import collect_team_profile
-    from sportmonks_layer2 import collect_sportmonks_team_profile, collect_repository_team_profiles, load_repository_season_snapshot, find_upcoming_match_fixture, find_exact_match_fixture, extract_sportmonks_match_details
+    from sportmonks_layer2 import collect_sportmonks_team_profile, collect_repository_team_profiles, load_repository_season_snapshot, diagnose_upcoming_match_fixture, find_exact_match_fixture, extract_sportmonks_match_details
     from sportmonks_candidate_verification import verify_highlightly_candidate, resolve_candidate_team_id, fixtures_for_utc_date
     from provider_core import normalize_team_name
     from engine import predict_match, WEIGHTS, most_likely_outcome
@@ -1703,12 +1703,22 @@ try:
                 # Fixture details are independent of repository history/profile construction.
                 # Start the provider request now so it runs while the season snapshot and
                 # both team profiles are being assembled.
-                selected_match_fixture = find_upcoming_match_fixture(
+                selected_match_diagnostic = diagnose_upcoming_match_fixture(
                     fixtures,
                     home_team_id=int(team_map[home_name]["id"]),
                     away_team_id=int(team_map[away_name]["id"]),
                     season_id=int(selected_season_id),
                 )
+                selected_match_fixture = selected_match_diagnostic["fixture"]
+                with st.expander(
+                    "Exact fixture verification diagnostics",
+                    expanded=not selected_match_diagnostic["verified"],
+                ):
+                    st.json({
+                        key: value
+                        for key, value in selected_match_diagnostic.items()
+                        if key != "fixture"
+                    })
                 fixture_detail_executor = None
                 fixture_detail_future = None
                 squad_future_by_side = {}
