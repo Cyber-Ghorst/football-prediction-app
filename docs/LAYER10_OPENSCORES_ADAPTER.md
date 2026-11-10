@@ -43,6 +43,8 @@ The live connection test requires a valid key. Unit tests use mocked HTTP respon
 
 ## Autonomous response-shape diagnostic
 
+This diagnostic is intentionally metadata-only and does not expose provider records.
+
 The autonomous `openscores_connection_check` operation makes exactly one authenticated, read-only `list_leagues` request. It searches known wrapper paths (including nested `leagues`, `items`, `results` and `competitions` collections) for league records containing an identifier and a name. It reports the count only when such a record collection is found.
 
 When no collection is recognised, the report includes schema-only diagnostics: root type, safe field names, nested value types and list/text lengths. It never includes league names, IDs, arbitrary provider values, raw payloads, credentials or exception messages. This allows the returned shape to be diagnosed without exposing provider data unnecessarily.
