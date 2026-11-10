@@ -180,6 +180,9 @@ def build_entity_mapping_candidates(
             "provider_entity_id": source_id,
             "name": league.get("name"),
             "country": _league_country(league),
+            "country_code": league.get("country_code"),
+            "competition_type": league.get("type"),
+            "tier": league.get("tier"),
             **candidate,
             "automatic_mapping_created": False,
         })
@@ -190,6 +193,11 @@ def build_entity_mapping_candidates(
                 "provider_entity_id": season_id,
                 "provider_league_id": source_id,
                 "name": season.get("name") or season.get("starting_at"),
+                "starting_at": season.get("starting_at") or season.get("start_date"),
+                "ending_at": season.get("ending_at") or season.get("end_date"),
+                "is_current": season.get("is_current"),
+                "start_year": season.get("start_year") or season.get("year"),
+                "end_year": season.get("end_year"),
                 **season_candidate,
                 "automatic_mapping_created": False,
             })
