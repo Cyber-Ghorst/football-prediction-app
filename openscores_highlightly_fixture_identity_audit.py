@@ -251,8 +251,23 @@ def _audit_competition(
 ) -> dict[str, Any]:
     league_id = str(target["highlightly_league_id"])
     league_result = {"status": "verified_from_unique_exact_name_country_catalogue"}
-    fixtures = _fetch_highlightly_matches(client, target, league_id)
     observations = _load_observations(database_url, target)
+    try:
+        fixtures = _fetch_highlightly_matches(client, target, league_id)
+    except Exception as exc:
+        return {
+            "competition": target["name"],
+            "country": target["country"],
+            "season": target["season"],
+            "openscores_league_id": target["openscores_league_id"],
+            "openscores_season_id": target["openscores_season_id"],
+            "highlightly_league_id": league_id,
+            "openscores_observations": len(observations),
+            "provider_blocked_observations": len(observations),
+            "status": "provider_error",
+            "error_type": type(exc).__name__,
+            "error": str(exc)[:240],
+        }
 
     team_index: dict[str, dict[str, str]] = {}
     team_ids_by_name: dict[str, set[str]] = defaultdict(set)
@@ -419,10 +434,16 @@ def run_audit() -> dict[str, Any]:
         int(row.get("observations_blocked_by_team_mapping") or 0)
         for row in report["competitions"]
     )
+    report["provider_blocked_observations"] = sum(
+        int(row.get("provider_blocked_observations") or 0)
+        for row in report["competitions"]
+    )
     report["status"] = (
-        "pass" if report["observations_checked"] == report["fixture_matches"]
+        "pass" if all(row.get("status") == "pass" for row in report["competitions"])
+        and report["observations_checked"] == report["fixture_matches"]
         and report["ambiguous_fixture_matches"] == 0
         and report["pending_team_mapping_observations"] == 0
+        and report["provider_blocked_observations"] == 0
         else "partial"
     )
     return report
