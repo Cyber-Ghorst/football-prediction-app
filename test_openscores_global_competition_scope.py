@@ -1,0 +1,152 @@
+import unittest
+from datetime import datetime, timezone
+from unittest.mock import patch
+
+from openscores_fixture_observation_sync import run_sync
+
+
+class FakeOpenScores:
+    def __init__(self, pages):
+        self.pages = pages
+        self.calls = []
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        return False
+
+    def list_leagues(self):
+        return {"data": {"leagues": [
+            {"id": 1, "name": "League One"},
+            {"id": 2, "name": "League Two"},
+        ]}}
+
+    @staticmethod
+    def _league_collection(data):
+        return data["leagues"], "$"
+
+    def list_fixtures(self, **filters):
+        self.calls.append(filters)
+        page = filters["page"]
+        return self.pages[page - 1]
+
+
+def fixture(fid, league_id, season_id, kickoff="2026-11-12T19:00:00Z"):
+    return {
+        "id": fid,
+        "league_id": league_id,
+        "season_id": season_id,
+        "scheduled_kickoff_at": kickoff,
+        "home_team": {"id": f"h{fid}", "name": f"Home {fid}"},
+        "away_team": {"id": f"a{fid}", "name": f"Away {fid}"},
+        "status": "scheduled",
+    }
+
+
+def page(items, total_pages=1):
+    return {
+        "retrieved_at_utc": "2026-11-10T17:00:00Z",
+        "data": {"items": items, "pagination": {"page": 1, "total_pages": total_pages}},
+    }
+
+
+class GlobalCompetitionScopeTests(unittest.TestCase):
+    def _run(self, client):
+        with patch(
+            "openscores_fixture_observation_sync.upsert_openscores_observations",
+            side_effect=lambda _db, rows: {
+                "observations_upserted": len(rows),
+                "canonical_fixtures_written": 0,
+            },
+        ) as save, patch(
+            "openscores_fixture_observation_sync.mark_outside_upcoming_window_observations",
+            return_value=0,
+        ), patch(
+            "openscores_fixture_observation_sync.reconcile_openscores_observations",
+            return_value={"observations_checked": 0, "matched": 0, "pending_entity_mapping": 0},
+        ):
+            report = run_sync(
+                client_factory=lambda: client,
+                database_url="postgresql://db",
+                now=datetime(2026, 11, 10, 18, 0, tzinfo=timezone.utc),
+            )
+        return report, save
+
+    def test_global_query_groups_each_fixture_by_its_own_league_and_season(self):
+        client = FakeOpenScores([page([
+            fixture(77, 1, 2025),
+            fixture(78, 2, 2026),
+            fixture(79, 1, 2026),
+        ])])
+        report, save = self._run(client)
+
+        self.assertEqual(len(client.calls), 1)
+        self.assertEqual(client.calls[0], {
+            "status": "scheduled",
+            "date_from": "2026-11-10T18:00:00Z",
+            "date_to": "2026-11-17T18:00:00Z",
+            "page": 1,
+            "page_size": 200,
+        })
+        rows = save.call_args.args[1]
+        self.assertEqual(
+            {(row["provider_fixture_id"], row["provider_league_id"], row["provider_season_id"])
+             for row in rows},
+            {("77", "1", "2025"), ("78", "2", "2026"), ("79", "1", "2026")},
+        )
+        self.assertEqual(report["fixtures_accepted_for_window"], 3)
+        self.assertEqual(report["seasons_sampled"], 2)
+        self.assertEqual(report["status"], "pass")
+
+    def test_missing_or_unknown_competition_identity_is_never_guessed(self):
+        client = FakeOpenScores([page([
+            fixture(80, 1, 2026),
+            {"id": 81, "season_id": 2026, "status": "scheduled"},
+            fixture(82, 999, 2026),
+            {
+                "id": 83, "league_id": 2, "status": "scheduled",
+                "scheduled_kickoff_at": "2026-11-12T19:00:00Z",
+                "home_team": {"id": "h83", "name": "Home"},
+                "away_team": {"id": "a83", "name": "Away"},
+            },
+        ])])
+        report, save = self._run(client)
+
+        self.assertEqual(report["fixtures_missing_league_id"], 1)
+        self.assertEqual(report["fixtures_unknown_league_id"], 1)
+        self.assertEqual(report["fixtures_missing_season_id"], 1)
+        self.assertEqual(report["fixtures_accepted_for_window"], 1)
+        self.assertEqual(report["status"], "partial")
+        self.assertEqual(
+            [row["provider_fixture_id"] for row in save.call_args.args[1]],
+            ["80"],
+        )
+
+    def test_pagination_fetches_all_reported_pages(self):
+        client = FakeOpenScores([
+            page([fixture(90, 1, 2026)], total_pages=2),
+            page([fixture(91, 2, 2026)], total_pages=2),
+        ])
+        report, save = self._run(client)
+
+        self.assertEqual(len(client.calls), 2)
+        self.assertEqual(report["pages_fetched"], 2)
+        self.assertEqual(report["fixtures_accepted_for_window"], 2)
+        self.assertEqual(report["status"], "pass")
+        self.assertEqual(len(save.call_args.args[1]), 2)
+
+    def test_pagination_cap_is_reported_as_partial(self):
+        full_page = [fixture(i, 1, 2026) for i in range(200)]
+        client = FakeOpenScores([
+            page(full_page, total_pages=12) for _ in range(10)
+        ])
+        report, _ = self._run(client)
+
+        self.assertEqual(len(client.calls), 10)
+        self.assertTrue(report["pagination_truncated"])
+        self.assertEqual(report["status"], "partial")
+
+
+if __name__ == "__main__":
+    unittest.main()
