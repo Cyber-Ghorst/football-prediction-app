@@ -85,6 +85,7 @@ FREE_FIXTURE_CANDIDATES = (
     "openligadb",
     "openfootball",
     "open_matchday",
+    "livescore_football",
     "bzzoiro",
 )
 
