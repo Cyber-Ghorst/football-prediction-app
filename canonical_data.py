@@ -40,7 +40,9 @@ def _status_from_livescore(event: Mapping[str, Any]) -> str:
     status = event.get("status") or {}
     kind = status.get("type") or {}
     state = str(kind.get("state") or "").casefold()
-    completed = bool(kind.get("completed"))
+    # The feed documents this as a boolean. Do not use truthiness:
+    # strings such as "false" are non-empty and would otherwise mark an event finished.
+    completed = kind.get("completed") is True
     if completed or state in {"post", "finished", "final"}:
         return "finished"
     if state in {"in", "live"}:
