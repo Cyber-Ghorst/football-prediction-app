@@ -217,7 +217,7 @@ class OpenLigaDBAdapter(_HttpAdapter):
                 home_id=team1.get("teamId") if isinstance(team1, dict) else None,
                 away_id=team2.get("teamId") if isinstance(team2, dict) else None,
                 kickoff=match_date,
-                status=row.get("matchStatus") or row.get("MatchStatus") or "scheduled",
+                status=("finished" if row.get("matchIsFinished") is True else (row.get("matchStatus") or row.get("MatchStatus") or "scheduled")),
             ).to_dict())
         return output
 
