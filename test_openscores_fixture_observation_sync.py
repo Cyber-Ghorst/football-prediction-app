@@ -124,7 +124,7 @@ class OpenScoresObservationSyncTests(unittest.TestCase):
         save.assert_called_once_with("postgresql://db", [])
 
     def test_reports_truncated_provider_pagination(self):
-        client = FakeClient(total_pages=2)
+        client = FakeClient(total_pages=12)
         report, _, _, _ = self._run(client)
         self.assertTrue(report["pagination_truncated"])
 
