@@ -1807,7 +1807,8 @@ try:
             fixture_label = (
                 f"{fixture_row.get('home_team', 'Unknown home')} vs "
                 f"{fixture_row.get('away_team', 'Unknown away')} · "
-                f"{kickoff_text} · {fixture_row.get('competition', 'Unknown competition')}"
+                f"{kickoff_text} · {fixture_row.get('competition', 'Unknown competition')} "
+                f"· {fixture_row.get('fixture_id', 'unknown ID')}"
             )
             fixture_options[fixture_label] = fixture_row
 
@@ -1987,11 +1988,20 @@ try:
                         ),
                         None,
                     )
-                    if selected_match_fixture is None:
+                    if (
+                        selected_match_fixture is None
+                        or find_exact_match_fixture(
+                            [selected_match_fixture],
+                            home_team_id=int(team_map[home_name]["id"]),
+                            away_team_id=int(team_map[away_name]["id"]),
+                            season_id=int(selected_season_id),
+                        ) is None
+                    ):
                         st.error(
-                            "The selected fixture is not present in the live Sportmonks "
-                            "season response. Refresh automatic collection before predicting; "
-                            "the app will not silently substitute another match."
+                            "The selected fixture is not present with the same exact "
+                            "home/away teams and season in the live Sportmonks response. "
+                            "Refresh automatic collection before predicting; the app will "
+                            "not silently substitute another match."
                         )
                         st.stop()
                     selected_match_diagnostic["selected_fixture_id"] = selected_discovered_fixture_id
@@ -2174,24 +2184,15 @@ try:
 
                 # Ledger identity uses the closest exact pairing in this season,
                 # including live/completed fixtures. Lineup enrichment stays upcoming-only.
-                prediction_fixture = find_exact_match_fixture(
-                    fixtures,
-                    home_team_id=int(team_map[home_name]["id"]),
-                    away_team_id=int(team_map[away_name]["id"]),
-                    season_id=int(selected_season_id),
-                )
                 if selected_discovered_fixture_id:
-                    expected_fixture_id = selected_discovered_fixture_id.rsplit(":", 1)[-1]
-                    if (
-                        not isinstance(prediction_fixture, dict)
-                        or str(prediction_fixture.get("id")) != expected_fixture_id
-                    ):
-                        st.error(
-                            "The prediction fixture does not match the fixture selected "
-                            "from the automatic catalogue. Prediction stopped to prevent "
-                            "a different fixture from being analysed."
-                        )
-                        st.stop()
+                    prediction_fixture = selected_match_fixture
+                else:
+                    prediction_fixture = find_exact_match_fixture(
+                        fixtures,
+                        home_team_id=int(team_map[home_name]["id"]),
+                        away_team_id=int(team_map[away_name]["id"]),
+                        season_id=int(selected_season_id),
+                    )
                 fixture_detail_processing_started = time.perf_counter()
                 fixture_detail_fetch_seconds = 0.0
                 squad_enrichment_seconds = 0.0
