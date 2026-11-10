@@ -345,9 +345,12 @@ def import_sportmonks_season(
             uuid.NAMESPACE_URL,
             f"sportmonks:{entity_type}:{provider_entity_id}",
         ))
-        link_rows.append((
+        # Keep one deterministic crosswalk row per provider entity. A dict is
+        # used so repeated references to the same entity cannot create duplicate
+        # rows in the batch passed to the unique provider/entity constraint.
+        link_rows[(entity_type, provider_entity_id)] = (
             link_id, "sportmonks", entity_type, provider_entity_id, canonical_id,
-        ))
+        )
 
     add_link("league", league.get("id"), league_id)
     add_link("season", season.get("id"), season_id)
