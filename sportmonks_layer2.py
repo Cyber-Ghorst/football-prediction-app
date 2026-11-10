@@ -220,7 +220,9 @@ def _stat_value(row: dict[str, Any]) -> Any:
 
 
 def _normalize_stat_value(key: str, value: Any) -> float | None:
-    """Normalize numeric statistics; percentage fractions become 0-100 values."""
+    """Normalize supported statistics and reject impossible numeric values."""
+    import math
+
     if value is None:
         return None
     text = str(value).strip().replace(",", "")
@@ -231,8 +233,13 @@ def _normalize_stat_value(key: str, value: Any) -> float | None:
         number = float(text)
     except (TypeError, ValueError):
         return None
-    if key in _PERCENTAGE_STATS and not had_percent_sign and 0 < number <= 1:
-        number *= 100
+    if not math.isfinite(number) or number < 0:
+        return None
+    if key in _PERCENTAGE_STATS:
+        if not had_percent_sign and 0 < number <= 1:
+            number *= 100
+        if number > 100:
+            return None
     return round(number, 3)
 
 
