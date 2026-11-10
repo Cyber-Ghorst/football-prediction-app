@@ -1,6 +1,6 @@
 {
   "diagnostic_version": 1,
-  "generated_at": "2026-11-10T07:42:19.943934+00:00",
+  "generated_at": "2026-11-10T08:02:29.238437+00:00",
   "overall_status": "healthy",
   "selected_context": {
     "season_start_year": 2026,
@@ -155,9 +155,9 @@
     "fixture_id": 19722100,
     "kickoff_utc": "2026-11-21T15:00:00+00:00",
     "source_updated_at": null,
-    "source_fetched_at": "2026-11-10T07:24:25.423546+00:00",
-    "source_age_seconds": 1074.5,
-    "source_age_minutes": 17.9,
+    "source_fetched_at": "2026-11-10T08:02:10.673708+00:00",
+    "source_age_seconds": 18.6,
+    "source_age_minutes": 0.3,
     "source_freshness": "fresh",
     "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
   },
@@ -919,9 +919,9 @@
       "fixture_id": 19722100,
       "kickoff_utc": "2026-11-21T15:00:00+00:00",
       "source_updated_at": null,
-      "source_fetched_at": "2026-11-10T07:24:25.423546+00:00",
-      "source_age_seconds": 1074.5,
-      "source_age_minutes": 17.9,
+      "source_fetched_at": "2026-11-10T08:02:10.673708+00:00",
+      "source_age_seconds": 18.6,
+      "source_age_minutes": 0.3,
       "source_freshness": "fresh",
       "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
     },
@@ -1074,6 +1074,6 @@
     "weights_total": 1.0,
     "model_impact": "Diagnostics only; weights, recency weighting, prediction inputs and missing-data rules are not changed."
   },
-  "generated_at_utc": "2026-11-10T07:42:22.956760+00:00",
+  "generated_at_utc": "2026-11-10T08:02:31.495912+00:00",
   "report_name": "system_diagnostics"
 }
