@@ -127,6 +127,8 @@ class ProviderEntityCrosswalkTests(unittest.TestCase):
             )
         self.assertEqual(saved, 1)
         self.assertTrue(any("INSERT INTO provider_entity_links" in sql for sql, _ in cursor.executed))
+        audit = next(params for sql, params in cursor.executed if "INSERT INTO provider_entity_link_approval_audit" in sql)
+        self.assertEqual(audit[-1], "Reviewed against the official club identity.")
 
     def test_conflicting_existing_link_is_not_overwritten(self):
         cursor = FakeCursor(canonical_exists=True, existing_link=("sportmonks:other",))
