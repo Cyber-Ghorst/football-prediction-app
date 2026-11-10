@@ -16,16 +16,16 @@ class ProviderRoutingTests(unittest.TestCase):
             ProviderAssignment("api_ninjas", "fixtures", "co_primary", 30),
         ])
         self.assertEqual(registry.primary_sources("fixtures"),
-                         ["sportmonks", "api_football", "openscores"])
+                         ["sportmonks", "api_football", "api_ninjas"])
 
     def test_competition_scoping_prevents_global_provider_override(self):
         registry = ProviderRegistry([
             ProviderAssignment("sportmonks", "fixtures", "primary"),
-            ProviderAssignment("openscores", "fixtures", "co_primary",
+            ProviderAssignment("api_ninjas", "fixtures", "co_primary",
                                competitions=("premier league", "la liga")),
         ])
         self.assertEqual(registry.primary_sources("fixtures", "premier league"),
-                         ["sportmonks", "openscores"])
+                         ["sportmonks", "api_ninjas"])
         self.assertEqual(registry.primary_sources("fixtures", "bundesliga"),
                          ["sportmonks"])
 
