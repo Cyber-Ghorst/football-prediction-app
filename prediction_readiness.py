@@ -8,6 +8,8 @@ from __future__ import annotations
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
+from sportmonks_layer2 import _state as sportmonks_fixture_state
+
 FIXTURE_FRESHNESS_THRESHOLD = timedelta(hours=24)
 
 
@@ -115,11 +117,7 @@ def _fixture_identity_status(
     except (TypeError, ValueError):
         exact_teams = False
 
-    state = fixture.get("state") or {}
-    state_label = str(state.get("short_name") or state.get("name") or "").strip().casefold()
-    scheduled = state_label in {"ns", "not started", "scheduled", "tbd"} or any(
-        marker in state_label for marker in ("not started", "scheduled", "to be played")
-    )
+    scheduled = sportmonks_fixture_state(fixture) == "scheduled"
     kickoff = _utc_datetime(fixture.get("starting_at_timestamp"))
     if kickoff is None:
         kickoff = _utc_datetime(fixture.get("starting_at"))
