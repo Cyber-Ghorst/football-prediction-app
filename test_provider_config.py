@@ -15,8 +15,11 @@ class ProviderRoleConfigTests(unittest.TestCase):
             ],
         )
 
-    def test_livescore_is_limited_to_fixtures_results_and_standings(self):
-        self.assertEqual(set(PROVIDER_ROLES['livescore_football']['domains']), {'fixtures', 'results', 'standings'})
+    def test_livescore_has_scheduled_fixture_and_result_enrichment_domains(self):
+        self.assertEqual(
+            set(PROVIDER_ROLES['livescore_football']['domains']),
+            {'future_fixtures', 'fixtures', 'results', 'standings'},
+        )
 
     def test_only_the_five_selected_sources_are_future_fixture_candidates(self):
         future = {
