@@ -1023,6 +1023,125 @@ with st.sidebar:
         if not PROVIDER_DATABASE_URL:
             st.caption("CockroachDB is not configured yet. Add PROVIDER_DATABASE_URL in Streamlit Secrets.")
 
+        st.divider()
+        st.markdown("**Free-fixture provider entity crosswalk review**")
+        st.caption(
+            "Review archived source IDs against existing canonical leagues, seasons and teams. "
+            "Exact matches are suggestions only; every saved link requires an explicit selection and reason."
+        )
+        crosswalk_provider = st.selectbox(
+            "Provider observations to review",
+            ["openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro"],
+            key="free_fixture_crosswalk_provider",
+        )
+        build_crosswalk_review = st.button(
+            "Build crosswalk review",
+            use_container_width=True,
+            disabled=not bool(PROVIDER_DATABASE_URL),
+        )
+        if build_crosswalk_review:
+            try:
+                with st.spinner("Loading archived provider observations and canonical entities..."):
+                    ensure_football_repository(PROVIDER_DATABASE_URL)
+                    st.session_state["free_fixture_crosswalk_review_report"] = (
+                        build_provider_crosswalk_review_report(
+                            PROVIDER_DATABASE_URL, provider=crosswalk_provider, snapshot_limit=100
+                        )
+                    )
+                st.success("Crosswalk review report is ready.")
+            except Exception as exc:
+                st.error(f"Crosswalk review could not be built ({type(exc).__name__}).")
+                st.caption("Check CockroachDB connectivity and the archived observation batches.")
+
+        crosswalk_report = st.session_state.get("free_fixture_crosswalk_review_report")
+        if crosswalk_report and crosswalk_report.get("provider") == crosswalk_provider:
+            st.write(
+                f"Snapshots: {crosswalk_report['snapshot_count']} · "
+                f"Observations: {crosswalk_report['observation_count']} · "
+                f"Source entities: {crosswalk_report['source_entity_counts']}"
+            )
+            st.warning(
+                "Do not approve a suggestion unless the provider entity and canonical entity "
+                "are the same real-world competition, season or team. Manual selections are also allowed."
+            )
+            for entity_type, label in (
+                ("leagues", "Leagues"),
+                ("seasons", "Seasons"),
+                ("teams", "Teams"),
+            ):
+                candidates = crosswalk_report["candidates"].get(entity_type, [])
+                st.markdown(f"**{label}**")
+                if not candidates:
+                    st.caption("No source entities are available for this category yet.")
+                    continue
+                editor_rows = []
+                for candidate in candidates:
+                    editor_rows.append({
+                        "provider_entity_id": candidate.get("provider_entity_id") or "",
+                        "provider_name": candidate.get("provider_name") or "",
+                        "suggested_canonical_id": candidate.get("canonical_entity_id") or "",
+                        "canonical_entity_id": candidate.get("canonical_entity_id") or "",
+                        "status": candidate.get("status") or "",
+                        "reason": candidate.get("reason") or "",
+                        "approve": False,
+                    })
+                canonical_options = [""] + crosswalk_report["canonical_options"].get(entity_type, [])
+                edited = st.data_editor(
+                    pd.DataFrame(editor_rows),
+                    key=f"free_fixture_crosswalk_editor_{crosswalk_provider}_{entity_type}",
+                    use_container_width=True,
+                    hide_index=True,
+                    num_rows="fixed",
+                    disabled=[
+                        "provider_entity_id", "provider_name", "suggested_canonical_id",
+                        "status", "reason",
+                    ],
+                    column_config={
+                        "canonical_entity_id": st.column_config.SelectboxColumn(
+                            "Canonical entity ID", options=canonical_options, required=False
+                        ),
+                        "approve": st.column_config.CheckboxColumn(
+                            "Approve this mapping", default=False
+                        ),
+                    },
+                )
+                approval_reason = st.text_input(
+                    f"Approval reason for {label.lower()}",
+                    key=f"free_fixture_crosswalk_reason_{crosswalk_provider}_{entity_type}",
+                    placeholder="Explain how the identities were verified",
+                )
+                if st.button(
+                    f"Save approved {label.lower()} mappings",
+                    key=f"free_fixture_crosswalk_save_{crosswalk_provider}_{entity_type}",
+                    use_container_width=True,
+                ):
+                    selected_links = [
+                        {
+                            "provider": crosswalk_provider,
+                            "entity_type": entity_type[:-1] if entity_type != "leagues" else "league",
+                            "provider_entity_id": str(row.get("provider_entity_id") or "").strip(),
+                            "canonical_entity_id": str(row.get("canonical_entity_id") or "").strip(),
+                        }
+                        for row in edited.to_dict(orient="records")
+                        if row.get("approve") is True
+                        and str(row.get("provider_entity_id") or "").strip()
+                        and str(row.get("canonical_entity_id") or "").strip()
+                    ]
+                    if not selected_links:
+                        st.info("Select at least one mapping and tick its approval checkbox.")
+                    else:
+                        try:
+                            saved_count = save_explicit_provider_entity_links(
+                                PROVIDER_DATABASE_URL,
+                                links=selected_links,
+                                approval_reason=approval_reason,
+                            )
+                            st.success(f"Saved {saved_count} explicitly approved {label.lower()} mappings.")
+                            st.session_state.pop("free_fixture_crosswalk_review_report", None)
+                        except Exception as exc:
+                            st.error(f"Mappings were not saved ({type(exc).__name__}).")
+                            st.caption(str(exc))
+
 if test_provider_database:
     if not PROVIDER_DATABASE_URL:
         st.warning("Add PROVIDER_DATABASE_URL in Streamlit Secrets before testing CockroachDB.")
