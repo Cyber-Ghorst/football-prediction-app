@@ -10,6 +10,7 @@ class FakeCursor:
     def __init__(self):
         self.query = None
         self.params = None
+        self.connection_calls = []
 
     def __enter__(self):
         return self
@@ -17,7 +18,8 @@ class FakeCursor:
     def __exit__(self, *_args):
         return False
 
-    def execute(self, query, params):
+    def execute(self, query, params=None):
+        self.connection_calls.append((query, params))
         self.query = query
         self.params = params
 
@@ -65,6 +67,10 @@ class TemporaryFixtureSearchTests(unittest.TestCase):
 
         self.assertEqual(len(rows), 1)
         self.assertEqual(rows[0]["home_team"], "Arsenal")
+        self.assertIn(
+            "CREATE TABLE IF NOT EXISTS upcoming_fixture_staging",
+            cursor.connection_calls[0][0],
+        )
         self.assertIn("FROM upcoming_fixture_staging", cursor.query)
         self.assertIn("INTERVAL '7 days'", cursor.query)
         self.assertIn("home_team ILIKE %s", cursor.query)
