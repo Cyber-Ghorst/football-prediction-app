@@ -109,6 +109,49 @@ class ProviderAdapterTests(unittest.TestCase):
         self.assertEqual(fixtures[0]["stage_id"], 10)
         self.assertEqual(fixtures[0]["round_id"], 20)
 
+    def test_sportmonks_schedule_duplicate_ids_are_reported(self):
+        payload = {"data": [{
+            "id": 10,
+            "rounds": [{"id": 20, "fixtures": [
+                {"id": 100, "starting_at": "2026-08-01 12:00:00"},
+                {"id": 100, "starting_at": "2026-08-01 12:00:00"},
+                {"id": 101, "starting_at": "2026-08-02 12:00:00"},
+            ]}],
+        }]}
+        fixtures = SportmonksClient._flatten_schedule_fixtures(payload)
+        self.assertEqual([row["id"] for row in fixtures], [100, 101])
+        self.assertEqual(fixtures[0]["_schedule_duplicate_fixture_ids"], [100])
+        self.assertEqual(fixtures[1]["_schedule_unique_fixture_count"], 2)
+
+    def test_sportmonks_completed_state_accepts_label_without_state_id(self):
+        self.assertTrue(SportmonksClient._fixture_is_completed({
+            "state": {"short_name": "FT", "name": "Finished"}
+        }))
+        self.assertTrue(SportmonksClient._fixture_is_completed({"status": "After Extra Time"}))
+        self.assertFalse(SportmonksClient._fixture_is_completed({
+            "state": {"short_name": "NS", "name": "Not Started"}
+        }))
+        self.assertTrue(SportmonksClient._fixture_is_completed({
+            "state": {"short_name": "FT_PEN", "name": "Full-Time After Penalties"}
+        }))
+        self.assertFalse(SportmonksClient._fixture_is_completed({
+            "state": {"short_name": "PEN", "name": "Penalty Shootout"}
+        }))
+        self.assertFalse(SportmonksClient._fixture_is_completed({"status": "Penalties"}))
+
+    def test_sportmonks_kickoff_sorting_parses_utc_offsets_and_milliseconds(self):
+        older = SportmonksClient._fixture_kickoff_timestamp({
+            "starting_at": "2026-10-01T20:00:00+03:00"
+        })
+        newer = SportmonksClient._fixture_kickoff_timestamp({
+            "starting_at": "2026-10-01T18:30:00Z"
+        })
+        milliseconds = SportmonksClient._fixture_kickoff_timestamp({
+            "starting_at_timestamp": 1795282200000
+        })
+        self.assertLess(older, newer)
+        self.assertEqual(milliseconds, 1795282200)
+
     def test_sportmonks_schedule_endpoint_and_targeted_statistics_enrichment(self):
         client = SportmonksClient(api_token="test-only")
         schedule = {
@@ -131,6 +174,8 @@ class ProviderAdapterTests(unittest.TestCase):
             {"data": [{"id": 100, "statistics": [{"type": {"name": "Shots"}, "data": {"value": 8}}]}]},
         ])
         fixtures = client.fixtures_by_season(123, team_ids=[1, 2])
+        self.assertEqual(fixtures[0]["season_id"], 123)
+        self.assertTrue(fixtures[0]["collection_fetched_at"])
         self.assertEqual(fixtures[0]["statistics"][0]["data"]["value"], 8)
         self.assertEqual(client._get.call_args_list[0].args[0], "schedules/seasons/123")
         self.assertEqual(client._get.call_args_list[0].args, ("schedules/seasons/123",))
@@ -139,6 +184,30 @@ class ProviderAdapterTests(unittest.TestCase):
             client._get.call_args_list[1].args[1]["include"],
             "participants;scores;state;league;season;statistics.type",
         )
+        client.close()
+
+    def test_sportmonks_schedule_enriches_labelled_finished_fixtures_without_state_id(self):
+        client = SportmonksClient(api_token="test-only")
+        schedule = {"data": [{
+            "id": 10,
+            "rounds": [{"id": 20, "fixtures": [{
+                "id": 101,
+                "state": {"short_name": "FT", "name": "Finished"},
+                "starting_at": "2026-08-01 12:00:00",
+                "participants": [{"id": 1}, {"id": 2}],
+                "scores": [],
+            }]}],
+        }]}
+        client._get = Mock(side_effect=[
+            schedule,
+            {"data": [{"id": 101, "scores": [
+                {"participant_id": 1, "score": {"goals": 1}}
+            ]}]},
+        ])
+        fixtures = client.fixtures_by_season(123, team_ids=[1, 2])
+        self.assertEqual(client._get.call_count, 2)
+        self.assertEqual(fixtures[0]["season_id"], 123)
+        self.assertEqual(fixtures[0]["scores"][0]["score"]["goals"], 1)
         client.close()
 
     def test_sportmonks_schedule_skips_statistics_when_disabled(self):
