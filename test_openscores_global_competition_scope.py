@@ -178,6 +178,22 @@ class GlobalCompetitionScopeTests(unittest.TestCase):
         self.assertEqual(report["status"], "partial")
         self.assertEqual(save.call_args.args[1], [])
 
+
+    def test_explicit_fixture_league_resolves_reused_season_id(self):
+        client = FakeOpenScores(
+            [page([fixture(114, 2, 2026)])],
+            seasons={
+                "1": [{"id": 2026, "league_id": 1}],
+                "2": [{"id": 2026, "league_id": 2}],
+            },
+        )
+        report, save = self._run(client)
+
+        self.assertEqual(report["fixtures_ambiguous_season_id"], 0)
+        self.assertEqual(report["fixtures_season_league_mismatch"], 0)
+        self.assertEqual(report["fixtures_accepted_for_window"], 1)
+        self.assertEqual(save.call_args.args[1][0]["provider_league_id"], "2")
+
     def test_conflicting_provider_fixture_identity_is_excluded(self):
         client = FakeOpenScores([page([
             fixture(111, 1, 2026),
