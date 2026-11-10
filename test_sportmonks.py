@@ -157,6 +157,96 @@ class UpcomingFixtureEnrichmentTests(unittest.TestCase):
             },
         )
 
+    def test_real_client_fetches_detail_batches_with_two_independent_sessions(self):
+        import threading
+        import time
+        from unittest.mock import patch
+
+        schedule_rows = []
+        fixture_id = 9000
+        # Ten completed fixtures for each selected team produce twenty unique
+        # historical detail rows, plus one exact upcoming fixture.
+        for team_id, opponent_start in ((11, 100), (22, 200)):
+            for index in range(10):
+                fixture_id += 1
+                schedule_rows.append({
+                    "id": fixture_id,
+                    "season_id": 2026,
+                    "state_id": 5,
+                    "starting_at": f"2026-10-{10 + index:02d} 15:00:00",
+                    "starting_at_timestamp": 100 - index,
+                    "participants": [
+                        {"id": team_id, "meta": {"location": "home"}},
+                        {"id": opponent_start + index, "meta": {"location": "away"}},
+                    ],
+                })
+        upcoming_id = fixture_id + 1
+        schedule_rows.append({
+            "id": upcoming_id,
+            "season_id": 2026,
+            "state_id": 1,
+            "starting_at": "2026-12-26 15:00:00",
+            "starting_at_timestamp": 2000,
+            "participants": [
+                {"id": 11, "meta": {"location": "home"}},
+                {"id": 22, "meta": {"location": "away"}},
+            ],
+        })
+
+        state = {"active": 0, "maximum": 0, "detail_calls": 0}
+        lock = threading.Lock()
+
+        class FakeResponse:
+            status_code = 200
+            headers = {"X-RateLimit-Remaining": "1990"}
+
+            def __init__(self, payload):
+                self.payload = payload
+
+            def raise_for_status(self):
+                return None
+
+            def json(self):
+                return self.payload
+
+        class FakeSession:
+            def __init__(self):
+                self.headers = {}
+
+            def get(self, url, params=None, timeout=None):
+                if "/fixtures/multi/" in url:
+                    with lock:
+                        state["active"] += 1
+                        state["detail_calls"] += 1
+                        state["maximum"] = max(state["maximum"], state["active"])
+                    try:
+                        time.sleep(0.04)
+                        ids = [int(value) for value in url.rsplit("/", 1)[1].split(",")]
+                        return FakeResponse({"data": [{"id": value} for value in ids]})
+                    finally:
+                        with lock:
+                            state["active"] -= 1
+                if "/schedules/seasons/" in url:
+                    return FakeResponse({"data": [{
+                        "id": 1,
+                        "rounds": [{"id": 2, "fixtures": schedule_rows}],
+                    }]})
+                raise AssertionError(f"Unexpected request URL: {url}")
+
+            def close(self):
+                return None
+
+        with patch("sportmonks.requests.Session", side_effect=FakeSession):
+            with SportmonksClient(api_token="test-only") as client:
+                fixtures = client.fixtures_by_season(
+                    2026, include_statistics=True, team_ids=[11, 22]
+                )
+
+        self.assertEqual(state["detail_calls"], 3)
+        self.assertEqual(state["maximum"], 2)
+        self.assertTrue(all(row.get("state") is None for row in fixtures))
+        self.assertEqual(len(fixtures), 21)
+
     def test_unrelated_wrong_season_and_wrong_pair_are_not_hydrated(self):
         now_dt = datetime(2026, 11, 7, tzinfo=timezone.utc)
         now = int(now_dt.timestamp())

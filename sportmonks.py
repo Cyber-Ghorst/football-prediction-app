@@ -289,32 +289,50 @@ class SportmonksClient:
             # exactly which batch is running and how long each provider call takes.
             batch_size = 10
             batch_total = (len(fixture_ids) + batch_size - 1) // batch_size
-            details_by_id: dict[int, dict[str, Any]] = {}
+            batch_specs = []
             for offset in range(0, len(fixture_ids), batch_size):
                 fixture_batch = fixture_ids[offset:offset + batch_size]
                 batch_number = (offset // batch_size) + 1
-                batch_path = f"fixtures/multi/{','.join(str(value) for value in fixture_batch)}"
+                batch_specs.append((
+                    batch_number,
+                    fixture_batch,
+                    f"fixtures/multi/{','.join(str(value) for value in fixture_batch)}",
+                ))
+
+            # Respect instance-level transport overrides used by adapters and
+            # tests; only the unmodified concrete HTTP client is parallelized.
+            use_parallel_sessions = (
+                type(self) is SportmonksClient and "_get" not in self.__dict__
+            )
+
+            def fetch_detail_batch(batch_spec):
+                batch_number, fixture_batch, batch_path = batch_spec
                 print(
                     f"[Sportmonks] Season {season_id}: starting detail batch "
                     f"{batch_number}/{batch_total} ({len(fixture_batch)} fixtures).",
                     flush=True,
                 )
-                try:
+                if use_parallel_sessions:
+                    # requests.Session is not shared across worker threads. Each
+                    # concurrent batch gets its own short-lived authenticated
+                    # session while retaining the same endpoint and include set.
+                    with SportmonksClient(
+                        api_token=self.api_token,
+                        base_url=self.base_url,
+                        timeout=self.timeout,
+                    ) as batch_client:
+                        details_payload = batch_client._get(
+                            batch_path, {"include": ";".join(include_parts)}
+                        )
+                        metadata = dict(batch_client.last_metadata)
+                else:
+                    # Keep subclass/test doubles and custom clients on their
+                    # established transport path.
                     details_payload = self._get(
-                        batch_path,
-                        {"include": ";".join(include_parts)},
+                        batch_path, {"include": ";".join(include_parts)}
                     )
-                except SportmonksError as exc:
-                    metadata = dict(self.last_metadata)
-                    print(
-                        f"[Sportmonks] Season {season_id}: batch {batch_number}/{batch_total} "
-                        f"FAILED after {metadata.get('request_seconds', 'unknown')}s; "
-                        f"HTTP {metadata.get('http_status')}; {type(exc).__name__}: {exc}",
-                        flush=True,
-                    )
-                    raise
+                    metadata = dict(getattr(self, "last_metadata", {}) or {})
                 detail_rows = self._rows(details_payload)
-                metadata = dict(getattr(self, "last_metadata", {}) or {})
                 print(
                     f"[Sportmonks] Season {season_id}: completed detail batch "
                     f"{batch_number}/{batch_total}; HTTP {metadata.get('http_status')}; "
@@ -323,6 +341,19 @@ class SportmonksClient:
                     f"rate remaining={metadata.get('rate_remaining')}.",
                     flush=True,
                 )
+                return detail_rows, metadata, batch_number
+
+            if use_parallel_sessions and len(batch_specs) > 1:
+                from concurrent.futures import ThreadPoolExecutor
+                with ThreadPoolExecutor(
+                    max_workers=min(2, len(batch_specs))
+                ) as detail_pool:
+                    batch_results = list(detail_pool.map(fetch_detail_batch, batch_specs))
+            else:
+                batch_results = [fetch_detail_batch(spec) for spec in batch_specs]
+
+            details_by_id: dict[int, dict[str, Any]] = {}
+            for detail_rows, metadata, batch_number in batch_results:
                 for row in detail_rows:
                     if row.get("id") is None:
                         continue
