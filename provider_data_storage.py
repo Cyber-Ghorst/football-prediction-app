@@ -349,7 +349,6 @@ def save_provider_snapshot_and_record_run(
     attempted = datetime.now(timezone.utc)
 
     _ensure_provider_storage_once(database_url)
-    _ensure_provider_storage_once(database_url)
     run_recorded = True
     run_error_type = None
     with _connect(database_url) as connection:
