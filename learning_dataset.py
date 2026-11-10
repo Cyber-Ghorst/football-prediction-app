@@ -182,10 +182,15 @@ def build_learning_dataset(
             audit["conflicting_verified_fixtures_excluded"] += 1
             continue
         # Deterministic tie-break: latest forecast, then lexicographically smallest ID.
-        candidates.sort(key=lambda item: (
-            item["predicted_at"], item["feature_snapshot_at"], item["record_id"]
-        ))
-        selected.append(candidates[-1])
+        latest_timestamps = max(
+            (item["predicted_at"], item["feature_snapshot_at"])
+            for item in candidates
+        )
+        latest_candidates = [
+            item for item in candidates
+            if (item["predicted_at"], item["feature_snapshot_at"]) == latest_timestamps
+        ]
+        selected.append(min(latest_candidates, key=lambda item: item["record_id"]))
         audit["duplicate_fixture_records_excluded"] += len(candidates) - 1
 
     selected.sort(key=lambda item: (item["kickoff_at"], item["fixture_identity"]))
