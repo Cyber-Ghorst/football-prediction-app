@@ -150,7 +150,8 @@ try:
     from football_repository import (
         ensure_football_repository, repository_table_counts, import_sportmonks_season,
         get_repository_leagues, get_repository_seasons, get_repository_teams,
-        get_repository_fixtures, get_repository_team_history, diagnose_repository_fixture_history,
+        get_repository_fixtures, search_upcoming_repository_fixtures,
+        get_repository_team_history, diagnose_repository_fixture_history,
         audit_all_repository_team_histories, audit_repository_fixture_statistics,
         diagnose_fixture_statistics_coverage,
     )
@@ -1753,10 +1754,109 @@ try:
     if len(team_map) < 2:
         st.warning("The selected provider returned fewer than two teams for this competition and season.")
         st.stop()
-    c1,c2 = st.columns(2)
-    with c1: home_name = st.selectbox("Home team", list(team_map))
-    with c2:
-        away_name = st.selectbox("Away team", [x for x in team_map if x != home_name])
+    selected_discovered_fixture_id = None
+    if sportmonks_mode:
+        st.subheader("Search upcoming fixtures")
+        st.caption(
+            "Choose a fixture already collected automatically from Sportmonks. "
+            "Search covers the selected competition and season, and never extends beyond the next seven days."
+        )
+        if not PROVIDER_DATABASE_URL:
+            st.error(
+                "Upcoming fixture search requires PROVIDER_DATABASE_URL. "
+                "Configure the CockroachDB connection used by automatic fixture collection."
+            )
+            st.stop()
+        fixture_search_term = st.text_input(
+            "Search by home team, away team, competition or country",
+            key="layer11_upcoming_fixture_search",
+            placeholder="e.g. Arsenal, Barcelona, Premier League",
+        )
+        try:
+            upcoming_fixture_rows = search_upcoming_repository_fixtures(
+                PROVIDER_DATABASE_URL,
+                search_term=fixture_search_term,
+                league_id=f"sportmonks:{league_id}",
+                season_id=f"sportmonks:{selected_season_id}",
+                window_days=7,
+                limit=300,
+            )
+        except Exception as fixture_search_error:
+            st.error(
+                "Could not search the automatically collected fixture catalogue: "
+                f"{type(fixture_search_error).__name__}. Check CockroachDB connectivity."
+            )
+            st.stop()
+        if not upcoming_fixture_rows:
+            st.info(
+                "No matching upcoming fixtures are currently stored for this competition "
+                "within the next seven days. Automatic collection runs every six hours; "
+                "check the fixture-collection workflow and its provider/database secrets."
+            )
+            st.stop()
+
+        fixture_options = {}
+        for fixture_row in upcoming_fixture_rows:
+            kickoff_label = pd.to_datetime(
+                fixture_row.get("starting_at"), utc=True, errors="coerce"
+            )
+            kickoff_text = (
+                kickoff_label.strftime("%a %d %b %H:%M UTC")
+                if not pd.isna(kickoff_label) else "Kickoff time unavailable"
+            )
+            fixture_label = (
+                f"{fixture_row.get('home_team', 'Unknown home')} vs "
+                f"{fixture_row.get('away_team', 'Unknown away')} · "
+                f"{kickoff_text} · {fixture_row.get('competition', 'Unknown competition')} "
+                f"· {fixture_row.get('fixture_id', 'unknown ID')}"
+            )
+            fixture_options[fixture_label] = fixture_row
+
+        selected_fixture_label = st.selectbox(
+            "Upcoming fixture",
+            list(fixture_options),
+            key="layer11_selected_upcoming_fixture",
+        )
+        selected_fixture_row = fixture_options[selected_fixture_label]
+        selected_discovered_fixture_id = str(selected_fixture_row["fixture_id"])
+        selected_home_provider_id = str(selected_fixture_row["home_team_id"]).rsplit(":", 1)[-1]
+        selected_away_provider_id = str(selected_fixture_row["away_team_id"]).rsplit(":", 1)[-1]
+        home_name = next(
+            (
+                name for name, team in team_map.items()
+                if str(team.get("id")) == selected_home_provider_id
+            ),
+            None,
+        )
+        away_name = next(
+            (
+                name for name, team in team_map.items()
+                if str(team.get("id")) == selected_away_provider_id
+            ),
+            None,
+        )
+        if not home_name or not away_name or home_name == away_name:
+            st.error(
+                "The selected fixture's team IDs do not match the selected Sportmonks "
+                "season roster. Refresh the fixture collection before predicting."
+            )
+            st.stop()
+        st.caption(
+            f"Selected provider fixture: {selected_discovered_fixture_id}. "
+            "Team selection is locked to the provider-confirmed home/away pairing."
+        )
+    else:
+        st.caption(
+            "Historical API-Football seasons use the legacy team selectors; "
+            "automatic upcoming-fixture search is for current Sportmonks seasons."
+        )
+        c1, c2 = st.columns(2)
+        with c1:
+            home_name = st.selectbox("Home team", list(team_map))
+        with c2:
+            away_name = st.selectbox(
+                "Away team", [x for x in team_map if x != home_name]
+            )
     with st.expander("Opta Supercomputer benchmark (optional)"):
         st.caption("Enter published Opta Analyst match probabilities as a separate benchmark. Do not treat Opta as ground truth or copy market odds into these fields.")
         record_opta_benchmark = st.checkbox("Record Opta probabilities for this fixture", value=False)
@@ -1879,6 +1979,33 @@ try:
                     season_id=int(selected_season_id),
                 )
                 selected_match_fixture = selected_match_diagnostic["fixture"]
+                if selected_discovered_fixture_id:
+                    expected_fixture_id = selected_discovered_fixture_id.rsplit(":", 1)[-1]
+                    selected_match_fixture = next(
+                        (
+                            row for row in fixtures
+                            if str(row.get("id")) == expected_fixture_id
+                        ),
+                        None,
+                    )
+                    if (
+                        selected_match_fixture is None
+                        or find_exact_match_fixture(
+                            [selected_match_fixture],
+                            home_team_id=int(team_map[home_name]["id"]),
+                            away_team_id=int(team_map[away_name]["id"]),
+                            season_id=int(selected_season_id),
+                        ) is None
+                    ):
+                        st.error(
+                            "The selected fixture is not present with the same exact "
+                            "home/away teams and season in the live Sportmonks response. "
+                            "Refresh automatic collection before predicting; the app will "
+                            "not silently substitute another match."
+                        )
+                        st.stop()
+                    selected_match_diagnostic["selected_fixture_id"] = selected_discovered_fixture_id
+                    selected_match_diagnostic["selected_fixture_exact_match"] = True
                 with st.expander(
                     "Exact fixture verification diagnostics",
                     expanded=not selected_match_diagnostic["verified"],
@@ -2057,12 +2184,15 @@ try:
 
                 # Ledger identity uses the closest exact pairing in this season,
                 # including live/completed fixtures. Lineup enrichment stays upcoming-only.
-                prediction_fixture = find_exact_match_fixture(
-                    fixtures,
-                    home_team_id=int(team_map[home_name]["id"]),
-                    away_team_id=int(team_map[away_name]["id"]),
-                    season_id=int(selected_season_id),
-                )
+                if selected_discovered_fixture_id:
+                    prediction_fixture = selected_match_fixture
+                else:
+                    prediction_fixture = find_exact_match_fixture(
+                        fixtures,
+                        home_team_id=int(team_map[home_name]["id"]),
+                        away_team_id=int(team_map[away_name]["id"]),
+                        season_id=int(selected_season_id),
+                    )
                 fixture_detail_processing_started = time.perf_counter()
                 fixture_detail_fetch_seconds = 0.0
                 squad_enrichment_seconds = 0.0
