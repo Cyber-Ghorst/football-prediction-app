@@ -1,0 +1,370 @@
+"""Read-only adapters for the five selected free future-fixture sources.
+
+These adapters produce source observations only. They do not write canonical
+fixtures or activate provider routing. Every result must pass the application's
+canonical crosswalk, freshness, licensing and persistence gates first.
+"""
+from __future__ import annotations
+
+import csv
+import hashlib
+import io
+import json
+import os
+from dataclasses import asdict, dataclass
+from datetime import datetime, timezone
+from typing import Any, Iterable, Mapping
+from urllib.parse import quote
+
+import requests
+
+
+class FreeFixtureProviderError(RuntimeError):
+    """Safe provider error; never includes credentials or request headers."""
+
+
+@dataclass(frozen=True)
+class FixtureObservation:
+    provider: str
+    provider_fixture_id: str
+    competition_key: str | None
+    season_key: str | None
+    home_team_key: str | None
+    away_team_key: str | None
+    home_team_name: str
+    away_team_name: str
+    kickoff_utc: str | None
+    status: str
+    fetched_at: str
+    source_url: str
+    licence: str
+    raw_payload: dict[str, Any]
+    eligible_for_review: bool
+    exclusion_reason: str | None = None
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+def _utc_now() -> datetime:
+    return datetime.now(timezone.utc)
+
+
+def _parse_aware_datetime(value: Any) -> datetime | None:
+    """Accept only precise timestamps carrying an explicit UTC offset."""
+    if not isinstance(value, str) or not value.strip():
+        return None
+    raw = value.strip()
+    try:
+        parsed = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None or parsed.utcoffset() is None:
+        return None
+    return parsed.astimezone(timezone.utc)
+
+
+def _text(value: Any) -> str:
+    if isinstance(value, Mapping):
+        value = value.get("name") or value.get("displayName") or value.get("title")
+    return str(value).strip() if value is not None else ""
+
+
+def _stable_dataset_id(provider: str, competition: str, season: str,
+                       kickoff: str, home: str, away: str) -> str:
+    material = "|".join((provider, competition, season, kickoff, home.casefold(), away.casefold()))
+    digest = hashlib.sha256(material.encode("utf-8")).hexdigest()[:24]
+    return f"{provider}:dataset:{digest}"
+
+
+def _observation(
+    provider: str,
+    row: Mapping[str, Any],
+    *,
+    fetched_at: datetime,
+    source_url: str,
+    licence: str,
+    fixture_id: Any = None,
+    competition: Any = None,
+    season: Any = None,
+    home: Any = None,
+    away: Any = None,
+    home_id: Any = None,
+    away_id: Any = None,
+    kickoff: Any = None,
+    status: Any = "scheduled",
+    allow_date_only: bool = False,
+) -> FixtureObservation:
+    home_name, away_name = _text(home), _text(away)
+    competition_key, season_key = _text(competition), _text(season)
+    parsed = _parse_aware_datetime(kickoff)
+    status_text = _text(status).casefold().replace("_", " ")
+    scheduled = status_text in {
+        "scheduled", "not started", "not-started", "ns", "upcoming", "fixture"
+    }
+    reason = None
+    if not home_name or not away_name or home_name.casefold() == away_name.casefold():
+        reason = "missing_or_invalid_team_identity"
+    elif not competition_key or not season_key:
+        reason = "missing_competition_or_season_identity"
+    elif not scheduled:
+        reason = "not_scheduled"
+    elif parsed is None:
+        reason = "kickoff_missing_timezone_or_precision"
+    elif parsed <= fetched_at:
+        reason = "kickoff_not_in_future"
+    if fixture_id is None or not str(fixture_id).strip():
+        if parsed is not None and home_name and away_name and competition_key and season_key:
+            fixture_id = _stable_dataset_id(
+                provider, competition_key, season_key, parsed.isoformat(), home_name, away_name
+            )
+        else:
+            fixture_id = f"{provider}:unidentified"
+            reason = reason or "missing_stable_fixture_identity"
+    return FixtureObservation(
+        provider=provider,
+        provider_fixture_id=str(fixture_id),
+        competition_key=competition_key or None,
+        season_key=season_key or None,
+        home_team_key=str(home_id) if home_id is not None else None,
+        away_team_key=str(away_id) if away_id is not None else None,
+        home_team_name=home_name,
+        away_team_name=away_name,
+        kickoff_utc=parsed.isoformat().replace("+00:00", "Z") if parsed else None,
+        status=status_text or "unknown",
+        fetched_at=fetched_at.isoformat().replace("+00:00", "Z"),
+        source_url=source_url,
+        licence=licence,
+        raw_payload=dict(row),
+        eligible_for_review=reason is None,
+        exclusion_reason=reason,
+    )
+
+
+class _HttpAdapter:
+    provider = "unknown"
+    default_timeout = 20
+
+    def __init__(self, *, session: requests.Session | None = None, timeout: int = 20):
+        self.session = session or requests.Session()
+        self.timeout = timeout
+        self.session.headers.setdefault("User-Agent", "football-prediction-app/1.0")
+        self.session.headers.setdefault("Accept", "application/json")
+
+    def _get_json(self, url: str, *, params: dict[str, Any] | None = None,
+                  headers: dict[str, str] | None = None) -> Any:
+        try:
+            response = self.session.get(
+                url, params=params or {}, headers=headers or {}, timeout=self.timeout
+            )
+            response.raise_for_status()
+            return response.json()
+        except requests.Timeout as exc:
+            raise FreeFixtureProviderError(f"{self.provider} request timed out.") from exc
+        except requests.RequestException as exc:
+            status = getattr(getattr(exc, "response", None), "status_code", None)
+            suffix = f" (HTTP {status})" if status else ""
+            raise FreeFixtureProviderError(
+                f"{self.provider} request failed{suffix}."
+            ) from exc
+        except ValueError as exc:
+            raise FreeFixtureProviderError(f"{self.provider} returned invalid JSON.") from exc
+
+    def close(self) -> None:
+        self.session.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_: Any) -> None:
+        self.close()
+
+
+class OpenLigaDBAdapter(_HttpAdapter):
+    """OpenLigaDB season endpoint; competition shortcut and season are explicit."""
+    provider = "openligadb"
+    BASE_URL = "https://api.openligadb.de"
+
+    def matches(self, league_shortcut: str, season: int) -> list[dict[str, Any]]:
+        if not league_shortcut.strip() or int(season) < 1900:
+            raise ValueError("A league shortcut and valid season are required.")
+        url = f"{self.BASE_URL}/getmatchdata/{quote(league_shortcut, safe='')}/{int(season)}"
+        payload = self._get_json(url)
+        if not isinstance(payload, list):
+            raise FreeFixtureProviderError("OpenLigaDB match response is not an array.")
+        fetched = _utc_now()
+        output = []
+        for row in payload:
+            if not isinstance(row, dict):
+                continue
+            match_date = row.get("matchDateTimeUTC") or row.get("MatchDateTimeUTC")
+            # OpenLigaDB's field is explicitly UTC; append Z only to its documented
+            # UTC timestamp when it is supplied without an offset.
+            if isinstance(match_date, str) and "T" in match_date and not (
+                match_date.endswith("Z") or "+" in match_date[10:] or "-" in match_date[10:]
+            ):
+                match_date += "Z"
+            team1 = row.get("team1") or row.get("Team1") or {}
+            team2 = row.get("team2") or row.get("Team2") or {}
+            group = row.get("group") or row.get("Group") or {}
+            output.append(_observation(
+                self.provider, row, fetched_at=fetched, source_url=url,
+                licence="OpenLigaDB public API; reuse terms require separate review",
+                fixture_id=row.get("matchID") or row.get("MatchID"),
+                competition=(row.get("leagueName") or row.get("LeagueName") or league_shortcut),
+                season=(row.get("leagueSeason") or row.get("LeagueSeason") or season),
+                home=team1, away=team2,
+                home_id=team1.get("teamId") if isinstance(team1, dict) else None,
+                away_id=team2.get("teamId") if isinstance(team2, dict) else None,
+                kickoff=match_date,
+                status=row.get("matchStatus") or row.get("MatchStatus") or "scheduled",
+            ).to_dict())
+        return output
+
+
+class _StaticDatasetAdapter(_HttpAdapter):
+    def _get_text(self, url: str) -> str:
+        try:
+            response = self.session.get(url, timeout=self.timeout)
+            response.raise_for_status()
+            return response.text
+        except requests.Timeout as exc:
+            raise FreeFixtureProviderError(f"{self.provider} download timed out.") from exc
+        except requests.RequestException as exc:
+            status = getattr(getattr(exc, "response", None), "status_code", None)
+            suffix = f" (HTTP {status})" if status else ""
+            raise FreeFixtureProviderError(f"{self.provider} download failed{suffix}.") from exc
+
+
+class OpenFootballAdapter(_StaticDatasetAdapter):
+    """Parse football.json schedules; date-only and timezone-less rows stay excluded."""
+    provider = "openfootball"
+    BASE_URL = "https://raw.githubusercontent.com/openfootball/football.json/master"
+
+    def season(self, season_file: str, competition: str) -> list[dict[str, Any]]:
+        if "/" in season_file or "\\" in season_file or not season_file.endswith(".json"):
+            raise ValueError("season_file must be a JSON filename within the dataset.")
+        url = f"{self.BASE_URL}/{quote(season_file, safe='')}"
+        payload = self._get_json(url)
+        rows = payload.get("matches") if isinstance(payload, dict) else None
+        if not isinstance(rows, list):
+            raise FreeFixtureProviderError("OpenFootball dataset has no matches array.")
+        fetched = _utc_now()
+        output = []
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+            date_value = str(row.get("date") or "")
+            time_value = str(row.get("time") or "")
+            kickoff = f"{date_value}T{time_value}" if time_value else date_value
+            output.append(_observation(
+                self.provider, row, fetched_at=fetched, source_url=url,
+                licence="CC0-1.0 (football.json dataset; verify upstream source provenance)",
+                competition=competition, season=season_file.removesuffix(".json"),
+                home=row.get("team1") or row.get("home"), away=row.get("team2") or row.get("away"),
+                kickoff=kickoff,
+                status=row.get("status") or "scheduled",
+            ).to_dict())
+        return output
+
+
+class OpenMatchdayAdapter(_StaticDatasetAdapter):
+    """Parse an explicitly supplied Open Matchday season CSV without guessing timezone."""
+    provider = "open_matchday"
+    DEFAULT_BASE_URL = "https://raw.githubusercontent.com/oladeeayo/open-matchday/main"
+
+    def season_csv(self, csv_url: str, *, competition: str, season: str) -> list[dict[str, Any]]:
+        if not csv_url.startswith("https://raw.githubusercontent.com/oladeeayo/open-matchday/"):
+            raise ValueError("Only the documented Open Matchday raw GitHub dataset URL is accepted.")
+        raw = self._get_text(csv_url)
+        reader = csv.DictReader(io.StringIO(raw))
+        if not reader.fieldnames:
+            raise FreeFixtureProviderError("Open Matchday CSV has no header.")
+        fetched = _utc_now()
+        output = []
+        for row in reader:
+            if not row:
+                continue
+            lowered = {str(k).strip().casefold(): v for k, v in row.items() if k}
+            date_value = lowered.get("date") or lowered.get("match_date") or ""
+            time_value = lowered.get("time") or lowered.get("kickoff") or ""
+            # Dataset documentation uses a fixed CET-1 convention. It is not a
+            # timezone database and is unsafe around DST; never silently convert.
+            kickoff = f"{date_value}T{time_value}" if time_value else date_value
+            output.append(_observation(
+                self.provider, row, fetched_at=fetched, source_url=csv_url,
+                licence="Open Matchday non-commercial-only; upstream rights must be reviewed",
+                fixture_id=lowered.get("match_id") or lowered.get("fixture_id"),
+                competition=lowered.get("competition") or lowered.get("league") or competition,
+                season=lowered.get("season") or season,
+                home=lowered.get("home_team") or lowered.get("home") or lowered.get("team1"),
+                away=lowered.get("away_team") or lowered.get("away") or lowered.get("team2"),
+                kickoff=kickoff,
+                status=lowered.get("status") or "scheduled",
+            ).to_dict())
+        return output
+
+
+class BzzoiroAdapter(_HttpAdapter):
+    """Bzzoiro client with an explicit documented endpoint supplied by deployment.
+
+    The endpoint is intentionally not guessed. Configure BZZOIRO_FIXTURES_URL
+    from the account's current API documentation; the token is never logged.
+    """
+    provider = "bzzoiro"
+
+    def __init__(self, *, token: str | None = None, endpoint: str | None = None,
+                 session: requests.Session | None = None, timeout: int = 20):
+        super().__init__(session=session, timeout=timeout)
+        self.token = token or os.getenv("BZZOIRO_API_TOKEN")
+        self.endpoint = endpoint or os.getenv("BZZOIRO_FIXTURES_URL")
+        if not self.token:
+            raise FreeFixtureProviderError("Bzzoiro requires BZZOIRO_API_TOKEN.")
+        if not self.endpoint or not self.endpoint.startswith("https://"):
+            raise FreeFixtureProviderError(
+                "Configure BZZOIRO_FIXTURES_URL from the current Bzzoiro API documentation."
+            )
+
+    def upcoming(self, *, params: dict[str, Any] | None = None) -> list[dict[str, Any]]:
+        payload = self._get_json(
+            self.endpoint, params=params,
+            headers={"Authorization": f"Bearer {self.token}"},
+        )
+        rows = payload.get("data") if isinstance(payload, dict) else None
+        if not isinstance(rows, list):
+            raise FreeFixtureProviderError("Bzzoiro response has no data array.")
+        fetched = _utc_now()
+        output = []
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+            output.append(_observation(
+                self.provider, row, fetched_at=fetched, source_url=self.endpoint,
+                licence="Bzzoiro API licence; app display/derived outputs only, no raw-feed redistribution",
+                fixture_id=row.get("id") or row.get("fixture_id"),
+                competition=row.get("competition") or row.get("league"),
+                season=row.get("season") or row.get("season_id"),
+                home=row.get("home_team") or row.get("home"),
+                away=row.get("away_team") or row.get("away"),
+                home_id=(row.get("home_team") or {}).get("id") if isinstance(row.get("home_team"), dict) else None,
+                away_id=(row.get("away_team") or {}).get("id") if isinstance(row.get("away_team"), dict) else None,
+                kickoff=row.get("kickoff") or row.get("starting_at") or row.get("date"),
+                status=row.get("status") or row.get("state") or "unknown",
+            ).to_dict())
+        return output
+
+
+def eligible_observations(rows: Iterable[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    """Return only timestamped scheduled observations for later canonical review."""
+    return [dict(row) for row in rows if row.get("eligible_for_review") is True]
+
+
+def adapter_capabilities() -> dict[str, dict[str, Any]]:
+    """Machine-readable implementation status; none of these routes is activated."""
+    return {
+        "openligadb": {"implemented": True, "live_verified": False, "route_enabled": False},
+        "openfootball": {"implemented": True, "live_verified": False, "route_enabled": False},
+        "open_matchday": {"implemented": True, "live_verified": False, "route_enabled": False},
+        "livescore_football": {"implemented": True, "live_verified": False, "route_enabled": False},
+        "bzzoiro": {"implemented": True, "live_verified": False, "route_enabled": False},
+    }
