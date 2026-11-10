@@ -2299,8 +2299,8 @@ try:
                         st.caption(
                             "Only exact competition, country, season, home/away and kickoff matches are accepted. "
                             + (
-                                "The opt-in Layer 2 fallback fills missing supported metrics only; existing Sportmonks values remain authoritative."
-                                if use_highlightly_statistics_fallback
+                                "The opt-in Layer 2 fallback fills missing supported metrics or lineups only; existing Sportmonks values remain authoritative and availability is not inferred."
+                                if use_highlightly_statistics_fallback or use_highlightly_lineups_fallback
                                 else "Highlightly values remain diagnostic and do not change prediction inputs."
                             )
                         )
