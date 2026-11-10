@@ -66,6 +66,29 @@ class OpenScoresClientTests(unittest.TestCase):
         client.close()
         self.assertTrue(session.closed)
 
+    def test_lists_tool_schemas_without_invoking_a_data_tool(self):
+        response = FakeResponse({
+            "jsonrpc": "2.0",
+            "id": 1,
+            "result": {"tools": [{
+                "name": "list_fixtures",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "season_id": {"type": "integer"},
+                        "date_from": {"type": "string"},
+                        "date_to": {"type": "string"},
+                    },
+                },
+            }]},
+        })
+        session = FakeSession(response)
+        client = OpenScoresClient(api_key="test", session=session)
+        result = client.list_tools()
+        self.assertEqual(session.last_request[1]["json"]["method"], "tools/list")
+        self.assertEqual(result["tools"][0]["name"], "list_fixtures")
+        self.assertIn("date_from", result["tools"][0]["inputSchema"]["properties"])
+
     def test_passes_exact_fixture_id_to_tool(self):
         response = FakeResponse(
             {"jsonrpc": "2.0", "id": 1, "result": {"structuredContent": {"id": 1872}}}
