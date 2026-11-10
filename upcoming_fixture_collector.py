@@ -136,6 +136,18 @@ def _scheduled(fixture: Mapping[str, Any]) -> bool:
     }
 
 
+def _postponed(fixture: Mapping[str, Any]) -> bool:
+    """Accept postponed fixtures only when the provider supplies a new kickoff."""
+    state = fixture.get("state") or fixture.get("status") or {}
+    if isinstance(state, dict):
+        label = state.get("short_name") or state.get("name") or state.get("short") or ""
+    else:
+        label = state
+    return str(label).strip().casefold() in {
+        "postponed", "postponed fixture", "pst", "ppd",
+    }
+
+
 def _participants(fixture: Mapping[str, Any]) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
     home = away = None
     for participant in _rows(fixture.get("participants")):
@@ -190,7 +202,7 @@ def normalize_upcoming_fixtures(
         if not start_ts < kickoff <= end_ts:
             excluded["outside_window"] += 1
             continue
-        if not _scheduled(fixture):
+        if not _scheduled(fixture) and not _postponed(fixture):
             excluded["not_scheduled"] += 1
             continue
 
@@ -265,8 +277,9 @@ def collect_upcoming_fixtures(
     now: datetime | None = None,
     window_days: int = WINDOW_DAYS,
     database_url: str | None = None,
+    temporary_database_url: str | None = None,
 ) -> dict[str, Any]:
-    """Fetch the rolling seven-day fixture window and optionally persist it."""
+    """Fetch the rolling seven-day window and persist canonical plus temporary rows."""
     if isinstance(window_days, bool) or not isinstance(window_days, int) or not 1 <= window_days <= 7:
         raise ValueError("window_days must be an integer from 1 through 7.")
     current = now or datetime.now(timezone.utc)
@@ -306,15 +319,37 @@ def collect_upcoming_fixtures(
         result["fixtures_upserted"] = saved.get("fixtures_upserted", 0)
         result["competitions_upserted"] = saved.get("competitions_upserted", 0)
         result["teams_upserted"] = saved.get("teams_upserted", 0)
+
+    result["temporary_persisted"] = False
+    result["temporary_fixtures_active"] = 0
+    if temporary_database_url:
+        from temporary_fixture_store import sync_temporary_upcoming_fixtures
+
+        staged = sync_temporary_upcoming_fixtures(
+            temporary_database_url, result["fixtures"]
+        )
+        result["temporary_persisted"] = True
+        result["temporary_fixtures_active"] = staged["active_fixtures"]
+        result["temporary_fixtures_removed"] = staged["fixtures_removed"]
+        result["prediction_ledger_modified"] = False
     return result
 
 
 def main() -> int:
     database_url = os.getenv("PROVIDER_DATABASE_URL", "").strip()
+    temporary_database_url = os.getenv("DATABASE_URL", "").strip()
     if not database_url:
         raise SystemExit("PROVIDER_DATABASE_URL is not configured.")
-    result = collect_upcoming_fixtures(database_url=database_url)
-    safe_report = {key: value for key, value in result.items() if key != "fixtures"}
+    if not temporary_database_url:
+        raise SystemExit("DATABASE_URL is required for temporary Neon fixture staging.")
+    result = collect_upcoming_fixtures(
+        database_url=database_url,
+        temporary_database_url=temporary_database_url,
+    )
+    safe_report = {
+        key: value for key, value in result.items()
+        if key not in {"fixtures", "highlighted_fixtures"}
+    }
     print(json.dumps(safe_report, default=str, sort_keys=True))
     if not result["target_met"]:
         print(

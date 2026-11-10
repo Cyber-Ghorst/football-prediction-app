@@ -94,6 +94,7 @@ try:
     from provider_core import normalize_team_name
     from engine import predict_match, build_prediction_feature_snapshot, WEIGHTS, most_likely_outcome
     from tvd import run_tvd
+    from temporary_fixture_store import search_temporary_upcoming_fixtures
     from provider_config import provider_readiness
     from livescore_football import LiveScoreFootballClient, LiveScoreFootballError
     from livescore_layer2 import (
@@ -150,7 +151,7 @@ try:
     from football_repository import (
         ensure_football_repository, repository_table_counts, import_sportmonks_season,
         get_repository_leagues, get_repository_seasons, get_repository_teams,
-        get_repository_fixtures, search_upcoming_repository_fixtures,
+        get_repository_fixtures,
         get_repository_team_history, diagnose_repository_fixture_history,
         audit_all_repository_team_histories, audit_repository_fixture_statistics,
         diagnose_fixture_statistics_coverage,
@@ -1761,10 +1762,10 @@ try:
             "Choose a fixture already collected automatically from Sportmonks. "
             "Search covers the selected competition and season, and never extends beyond the next seven days."
         )
-        if not PROVIDER_DATABASE_URL:
+        if not DATABASE_URL:
             st.error(
-                "Upcoming fixture search requires PROVIDER_DATABASE_URL. "
-                "Configure the CockroachDB connection used by automatic fixture collection."
+                "Upcoming fixture search requires DATABASE_URL. "
+                "Configure the Neon connection used for temporary fixture staging."
             )
             st.stop()
         fixture_search_term = st.text_input(
@@ -1773,8 +1774,8 @@ try:
             placeholder="e.g. Arsenal, Barcelona, Premier League",
         )
         try:
-            upcoming_fixture_rows = search_upcoming_repository_fixtures(
-                PROVIDER_DATABASE_URL,
+            upcoming_fixture_rows = search_temporary_upcoming_fixtures(
+                DATABASE_URL,
                 search_term=fixture_search_term,
                 league_id=f"sportmonks:{league_id}",
                 season_id=f"sportmonks:{selected_season_id}",
@@ -1784,14 +1785,14 @@ try:
         except Exception as fixture_search_error:
             st.error(
                 "Could not search the automatically collected fixture catalogue: "
-                f"{type(fixture_search_error).__name__}. Check CockroachDB connectivity."
+                f"{type(fixture_search_error).__name__}. Check Neon DATABASE_URL connectivity."
             )
             st.stop()
         if not upcoming_fixture_rows:
             st.info(
                 "No matching upcoming fixtures are currently stored for this competition "
                 "within the next seven days. Automatic collection runs every six hours; "
-                "check the fixture-collection workflow and its provider/database secrets."
+                "check the fixture-collection workflow and its Sportmonks, CockroachDB and Neon secrets."
             )
             st.stop()
 
