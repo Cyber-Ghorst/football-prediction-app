@@ -76,8 +76,9 @@ class LearningDatasetTests(unittest.TestCase):
         )
 
     def test_latest_valid_forecast_is_selected_once_per_fixture(self):
-        older = self._record(predicted="2026-11-07T09:00:00+00:00", record_id="older")
-        newer = self._record(predicted="2026-11-07T10:00:00+00:00", record_id="newer")
+        kickoff = "2026-11-07T12:00:00+00:00"
+        older = self._record(kickoff=kickoff, predicted="2026-11-07T09:00:00+00:00", record_id="older")
+        newer = self._record(kickoff=kickoff, predicted="2026-11-07T10:00:00+00:00", record_id="newer")
         dataset = build_learning_dataset([newer, older])
         self.assertEqual(dataset["audit"]["eligible_records_before_deduplication"], 2)
         self.assertEqual(dataset["audit"]["duplicate_fixture_records_excluded"], 1)
