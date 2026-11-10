@@ -138,6 +138,7 @@ try:
     )
     from statistics_coverage import build_statistics_coverage, build_counter_attack_source_diagnostics
     from system_diagnostics import build_system_diagnostics
+    from openscores import OpenScoresClient, OpenScoresError
     from provider_data_storage import (
         check_provider_storage_connection,
         verify_provider_storage_round_trip,
@@ -965,6 +966,26 @@ with st.sidebar:
             credential = ("not required" if provider.get("credential_required") is False else ("configured" if provider["credential_configured"] else "not configured"))
             st.write(f"**#{provider['rank']} {provider['provider']} — {provider['role']}**; credential {credential}.")
             st.caption(f"Domains: {', '.join(provider['domains'])}. {provider['app_integration']}. Limitation: {provider['limitation']}")
+        test_openscores_connection = st.button(
+            "Test OpenScores connection",
+            use_container_width=True,
+            help="Makes one read-only authenticated request to list leagues. The API key is never displayed or written to app data.",
+        )
+        if test_openscores_connection:
+            try:
+                with OpenScoresClient() as openscores_client:
+                    openscores_status = openscores_client.test_connection()
+                st.success("OpenScores authentication and API connection succeeded.")
+                league_count = openscores_status.get("league_count_returned")
+                if league_count is not None:
+                    st.metric("Leagues returned by OpenScores", league_count)
+                st.caption(f"Checked at {openscores_status['retrieved_at_utc']} (UTC). This check does not import fixtures or alter predictions.")
+            except OpenScoresError as exc:
+                st.error("OpenScores connection failed. Check that OPENSCORES_API_KEY is valid and saved in this app's Streamlit secrets.")
+                st.caption(f"Diagnostic category: {type(exc).__name__}. No credential values are displayed.")
+            except Exception as exc:
+                st.error("OpenScores connection could not be completed. Check the app logs and secret configuration.")
+                st.caption(f"Diagnostic category: {type(exc).__name__}. No credential values are displayed.")
         run_provider_diagnostics = st.button("Run provider health & coverage check", use_container_width=True)
         test_provider_database = st.button("Test CockroachDB connection", use_container_width=True)
         test_provider_storage = st.button("Verify CockroachDB write/read", use_container_width=True)
