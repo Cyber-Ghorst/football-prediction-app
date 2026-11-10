@@ -424,7 +424,6 @@ class SportmonksClient:
 
             # Merge only after all batches succeed; a failed batch must fail the
             # collection rather than silently accepting a partial history.
-            from datetime import datetime, timezone
             details_fetched_at = datetime.now(timezone.utc).isoformat()
             for fixture_id, detail in details_by_id.items():
                 base = detail_targets.get(fixture_id)
