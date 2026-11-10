@@ -12,6 +12,7 @@ import time
 from typing import Any, Mapping
 
 from canonical_data import (
+    _int_or_none,
     canonicalize_api_ninjas_match,
     canonicalize_highlightly_match,
     match_identity,
@@ -69,12 +70,11 @@ def _current_scores(fixture: Mapping[str, Any], home_id: Any, away_id: Any) -> t
         score = row.get("score") or {}
         goals = score.get("goals") if isinstance(score, Mapping) else None
         participant_id = row.get("participant_id")
-        if participant_id is None or goals is None:
+        if participant_id is None:
             continue
-        try:
-            values[str(participant_id)] = int(goals)
-        except (TypeError, ValueError):
-            continue
+        parsed_goals = _int_or_none(goals)
+        if parsed_goals is not None:
+            values[str(participant_id)] = parsed_goals
     return values.get(str(home_id)), values.get(str(away_id))
 
 
