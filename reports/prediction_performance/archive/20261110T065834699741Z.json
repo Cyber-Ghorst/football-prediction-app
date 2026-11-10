@@ -1,0 +1,228 @@
+{
+  "records_total": 68,
+  "eligibility_audit": {
+    "records_total": 68,
+    "invalid_probabilities": 0,
+    "missing_prediction_timestamp": 0,
+    "missing_kickoff_timestamp": 4,
+    "at_or_after_kickoff": 4,
+    "valid_pre_kickoff_records": 60,
+    "unidentifiable_pre_match_records": 0,
+    "duplicate_records_excluded": 39,
+    "unique_pre_match_fixtures": 21,
+    "completed_with_verified_scores": 1,
+    "scores_present_but_unverified": 0,
+    "awaiting_valid_score": 20
+  },
+  "pre_match_prediction_records": 60,
+  "pre_match_predictions": 21,
+  "duplicate_records_excluded": 39,
+  "unidentifiable_pre_match_records": 0,
+  "completed_pre_match_predictions": 1,
+  "unverified_score_records": 0,
+  "player_snapshots_pre_kickoff": 0,
+  "team_snapshots_pre_kickoff": 0,
+  "availability_snapshots_pre_kickoff": 1,
+  "availability_snapshot_coverage_by_competition": {
+    "Premier League": 1
+  },
+  "team_snapshot_competitions": 0,
+  "player_snapshot_competitions": 0,
+  "player_snapshot_coverage_by_competition": {},
+  "model_metrics_by_competition": {
+    "Premier League": {
+      "matches": 1,
+      "accuracy_pct": 0.0,
+      "multiclass_brier": 0.81259,
+      "log_loss": 1.33181,
+      "mean_top_outcome_confidence_pct": 37.3,
+      "top_outcome_hit_rate_pct": 0.0
+    }
+  },
+  "evaluation_sample_assessment": {
+    "status": "insufficient_sample",
+    "verified_unique_fixtures": 1,
+    "minimum_descriptive_fixtures": 30,
+    "message": "Only 1 unique verified fixture(s) are available. Treat accuracy, Brier score and log loss as highly provisional; do not claim model accuracy or calibration from this sample."
+  },
+  "model": {
+    "matches": 1,
+    "accuracy_pct": 0.0,
+    "multiclass_brier": 0.81259,
+    "log_loss": 1.33181,
+    "mean_top_outcome_confidence_pct": 37.3,
+    "top_outcome_hit_rate_pct": 0.0
+  },
+  "market_metrics": {
+    "over_1_5": {
+      "matches": 0,
+      "accuracy_pct": null,
+      "brier": null,
+      "log_loss": null,
+      "mean_binary_confidence_pct": null
+    },
+    "over_2_5": {
+      "matches": 0,
+      "accuracy_pct": null,
+      "brier": null,
+      "log_loss": null,
+      "mean_binary_confidence_pct": null
+    },
+    "btts_yes": {
+      "matches": 0,
+      "accuracy_pct": null,
+      "brier": null,
+      "log_loss": null,
+      "mean_binary_confidence_pct": null
+    }
+  },
+  "top_outcome_calibration": {
+    "method": "top predicted outcome confidence compared with observed hit rate",
+    "matches": 1,
+    "bins": [
+      {
+        "confidence_bucket": "0–40%",
+        "matches": 1,
+        "mean_confidence_pct": 37.3,
+        "observed_hit_rate_pct": 0.0,
+        "absolute_calibration_gap_pct": 37.3,
+        "sample_status": "sparse"
+      },
+      {
+        "confidence_bucket": "40–50%",
+        "matches": 0,
+        "mean_confidence_pct": null,
+        "observed_hit_rate_pct": null,
+        "absolute_calibration_gap_pct": null,
+        "sample_status": "empty"
+      },
+      {
+        "confidence_bucket": "50–60%",
+        "matches": 0,
+        "mean_confidence_pct": null,
+        "observed_hit_rate_pct": null,
+        "absolute_calibration_gap_pct": null,
+        "sample_status": "empty"
+      },
+      {
+        "confidence_bucket": "60–70%",
+        "matches": 0,
+        "mean_confidence_pct": null,
+        "observed_hit_rate_pct": null,
+        "absolute_calibration_gap_pct": null,
+        "sample_status": "empty"
+      },
+      {
+        "confidence_bucket": "70–80%",
+        "matches": 0,
+        "mean_confidence_pct": null,
+        "observed_hit_rate_pct": null,
+        "absolute_calibration_gap_pct": null,
+        "sample_status": "empty"
+      },
+      {
+        "confidence_bucket": "80–90%",
+        "matches": 0,
+        "mean_confidence_pct": null,
+        "observed_hit_rate_pct": null,
+        "absolute_calibration_gap_pct": null,
+        "sample_status": "empty"
+      },
+      {
+        "confidence_bucket": "90–100%",
+        "matches": 0,
+        "mean_confidence_pct": null,
+        "observed_hit_rate_pct": null,
+        "absolute_calibration_gap_pct": null,
+        "sample_status": "empty"
+      }
+    ],
+    "note": "Descriptive reliability view only. Empty or sparse bins do not establish calibration; accumulate more independently verified completed fixtures before drawing calibration conclusions."
+  },
+  "confidence_bucket_hit_rate": [
+    {
+      "confidence_bucket": "0–40%",
+      "matches": 1,
+      "mean_confidence_pct": 37.3,
+      "observed_hit_rate_pct": 0.0,
+      "absolute_calibration_gap_pct": 37.3,
+      "sample_status": "sparse"
+    },
+    {
+      "confidence_bucket": "40–50%",
+      "matches": 0,
+      "mean_confidence_pct": null,
+      "observed_hit_rate_pct": null,
+      "absolute_calibration_gap_pct": null,
+      "sample_status": "empty"
+    },
+    {
+      "confidence_bucket": "50–60%",
+      "matches": 0,
+      "mean_confidence_pct": null,
+      "observed_hit_rate_pct": null,
+      "absolute_calibration_gap_pct": null,
+      "sample_status": "empty"
+    },
+    {
+      "confidence_bucket": "60–70%",
+      "matches": 0,
+      "mean_confidence_pct": null,
+      "observed_hit_rate_pct": null,
+      "absolute_calibration_gap_pct": null,
+      "sample_status": "empty"
+    },
+    {
+      "confidence_bucket": "70–80%",
+      "matches": 0,
+      "mean_confidence_pct": null,
+      "observed_hit_rate_pct": null,
+      "absolute_calibration_gap_pct": null,
+      "sample_status": "empty"
+    },
+    {
+      "confidence_bucket": "80–90%",
+      "matches": 0,
+      "mean_confidence_pct": null,
+      "observed_hit_rate_pct": null,
+      "absolute_calibration_gap_pct": null,
+      "sample_status": "empty"
+    },
+    {
+      "confidence_bucket": "90–100%",
+      "matches": 0,
+      "mean_confidence_pct": null,
+      "observed_hit_rate_pct": null,
+      "absolute_calibration_gap_pct": null,
+      "sample_status": "empty"
+    }
+  ],
+  "performance_history": [
+    {
+      "kickoff_at": "2026-11-08 16:30:00",
+      "predicted_at": "2026-11-08T16:20:58.469521+00:00",
+      "competition": "Premier League",
+      "home_team": "Manchester United",
+      "away_team": "Aston Villa",
+      "score": "4-4",
+      "actual_outcome": "draw",
+      "predicted_outcome": "away",
+      "correct": false,
+      "top_confidence_pct": 37.3,
+      "brier": 0.81259,
+      "log_loss": 1.33181
+    }
+  ],
+  "opta_same_fixtures": {
+    "matches": 0,
+    "accuracy_pct": null,
+    "multiclass_brier": null,
+    "log_loss": null,
+    "mean_top_outcome_confidence_pct": null,
+    "top_outcome_hit_rate_pct": null
+  },
+  "opta_comparable_fixtures": 0,
+  "opta_comparison_note": "Opta is scored only on the same deduplicated completed fixtures as the model.",
+  "generated_at_utc": "2026-11-10T06:58:34.699741+00:00",
+  "report_name": "prediction_performance"
+}
