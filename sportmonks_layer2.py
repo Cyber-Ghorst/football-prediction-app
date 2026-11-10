@@ -85,7 +85,7 @@ def _state(fixture: dict[str, Any]) -> str:
             return "finished"
         if state_id == 1:
             return "scheduled"
-        if state_id in {2, 3, 4, 6}:
+        if state_id in {2, 3, 4, 6, 9, 21, 22, 25}:
             return "live"
     except (TypeError, ValueError):
         pass
