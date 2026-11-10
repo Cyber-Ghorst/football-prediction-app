@@ -60,10 +60,14 @@ CockroachDB server clock. This prevents a historical season sample from being
 mistaken for a current upcoming-fixture feed.
 
 
-## Strict upcoming-fixture collection
+## Future-fixture exclusion
 
-The sync requests only `scheduled` fixtures using the provider's live
-`date_from` / `date_to` filters, bounded from the UTC collection time through
-exactly seven days later. It requests up to 200 records per competition and
-checks the kickoff window again locally. Historical observations are retained
-for audit but marked `outside_upcoming_window` and excluded from reconciliation.
+OpenScores is not an approved future-fixture source. The former scheduled-fixture
+observation sync has been disabled in both the controller workflow and its
+Python entry point. No new OpenScores scheduled fixtures may be fetched or
+staged. Existing provider observations are retained unchanged for audit; this
+change does not delete or rewrite historical observation rows.
+
+OpenScores remains limited to read-only connection diagnostics, entity-mapping
+review and reconciliation of already-staged observations. It is not routed to
+the upcoming-fixture catalogue or the prediction workflow.
