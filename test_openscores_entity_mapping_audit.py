@@ -1,6 +1,6 @@
 import unittest
 
-from openscores_entity_mapping_audit import build_entity_mapping_candidates
+from openscores_entity_mapping_audit import (\n    _external_id_evidence,\n    build_entity_mapping_candidates,\n)
 
 
 class OpenScoresEntityMappingAuditTests(unittest.TestCase):
@@ -10,6 +10,27 @@ class OpenScoresEntityMappingAuditTests(unittest.TestCase):
         self.assertEqual(_key_inventory(payloads), ["home_team", "home_team.id", "source_ids", "source_ids.flashscore"])
         self.assertEqual(_source_id_keys(payloads), ["flashscore"])
         self.assertNotIn("secret-id", str(_key_inventory(payloads)))
+
+
+    def test_external_id_evidence_reports_namespaces_without_linking(self):
+        evidence = _external_id_evidence(
+            [
+                (
+                    {"flashscore": "fx-1", "sportmonks": "fixture-1"},
+                    {
+                        "home_team": {"source_ids": {"sportmonks": "team-1"}},
+                        "away_team": {"source_ids": {"other": "team-2"}},
+                    },
+                )
+            ],
+            [{"id": "l1", "source_ids": {"sportmonks": "league-1"}}],
+            {"l1": [{"id": "s1", "source_ids": {"sportmonks": "season-1"}}]},
+        )
+        self.assertEqual(evidence["fixture_external_ids"]["namespace_counts"]["sportmonks"], 1)
+        self.assertEqual(evidence["team_external_ids"]["namespace_counts"]["sportmonks"], 1)
+        self.assertEqual(evidence["league_external_ids"]["namespace_counts"]["sportmonks"], 1)
+        self.assertEqual(evidence["season_external_ids"]["namespace_counts"]["sportmonks"], 1)
+        self.assertIn("Evidence only", evidence["matching_policy"])
 
     def test_unique_name_candidates_are_review_only(self):
         result = build_entity_mapping_candidates(
