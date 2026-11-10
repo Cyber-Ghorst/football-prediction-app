@@ -36,7 +36,7 @@ The five free candidates are not considered active sources merely because they a
 ## Routing invariants
 
 - `future_fixtures` is the only category used to populate the upcoming-fixture search catalogue.
-- OpenScores has no `fixtures` or `future_fixtures` assignment. Its disabled result-validation assignment is audit-only.
+- OpenScores has no `fixtures` or `future_fixtures` assignment. Its disabled result-validation assignment is audit-only. The legacy scheduled-fixture observation sync is disabled in both the controller workflow and Python entry point; existing observations are retained without deletion.
 - Highlightly, API Ninjas, API-Football and LiveScoreFootball may supply their supported enrichment or historical/result domains, but do not become future-fixture discovery sources by implication.
 - The existing collector currently calls Sportmonks only. The five selected free candidates remain disabled until their adapters and live audits are complete.
 - No provider may silently overwrite a canonical fixture, kickoff, team identity or score. Conflicts remain visible with provenance.
