@@ -162,6 +162,70 @@ class PlayerAvailabilityTests(unittest.TestCase):
         )
         self.assertIsNone(assess_player_availability(evidence)["score"])
 
+    def test_malformed_requested_team_and_season_ids_keep_availability_unknown(self):
+        from player_availability import build_sportmonks_availability_evidence
+
+        for team_id, season_id in ((True, 2026), (10.5, 2026), (10, False), (10, 2026.5)):
+            with self.subTest(team_id=team_id, season_id=season_id):
+                evidence = build_sportmonks_availability_evidence(
+                    squad_rows=[], sidelined_rows=[], sidelined_feed_available=True,
+                    team_id=team_id, season_id=season_id, fixture_id=123,
+                    kickoff="2026-11-23",
+                )
+                self.assertFalse(evidence["roster_complete"])
+                self.assertIn("ID is invalid", evidence["reason"])
+
+    def test_fractional_player_and_team_season_stat_ids_are_not_coerced(self):
+        from player_availability import build_sportmonks_availability_evidence
+
+        base_stat = {"player_id": 1, "team_id": 10, "season_id": 2026,
+                     "details": [{"type_id": 119, "value": {"total": 900}}]}
+        bad_cases = [
+            ({"id": 1.5, "in_squad": True, "statistics": [base_stat]}, "player ID"),
+            ({"id": 1, "in_squad": True, "statistics": [
+                {**base_stat, "team_id": 10.5}
+            ]}, "team-season statistic row"),
+            ({"id": 1, "in_squad": True, "statistics": [
+                {**base_stat, "season_id": True}
+            ]}, "team-season statistic row"),
+            ({"id": 1, "in_squad": True, "statistics": [
+                {**base_stat, "player_id": 1.5}
+            ]}, "player ID"),
+        ]
+        for squad_row, expected in bad_cases:
+            with self.subTest(squad_row=squad_row):
+                evidence = build_sportmonks_availability_evidence(
+                    squad_rows=[squad_row], sidelined_rows=[],
+                    sidelined_feed_available=True, team_id=10, season_id=2026,
+                    fixture_id=123, kickoff="2026-11-23",
+                )
+                self.assertFalse(evidence["roster_complete"])
+                self.assertIn(expected, evidence["reason"])
+
+    def test_malformed_sidelined_player_and_scope_ids_are_rejected(self):
+        from player_availability import build_sportmonks_availability_evidence
+
+        squad = [{
+            "id": 1, "in_squad": True,
+            "statistics": [{"player_id": 1, "team_id": 10, "season_id": 2026,
+                "details": [{"type_id": 119, "value": {"total": 900}}]}],
+        }]
+        for sidelined in (
+            {"player_id": 1.5, "team_id": 10, "season_id": 2026,
+             "start_date": "2026-11-01", "completed": False},
+            {"player_id": 1, "team_id": 10.5, "season_id": 2026,
+             "start_date": "2026-11-01", "completed": False},
+            {"player_id": 1, "team_id": 10, "season_id": True,
+             "start_date": "2026-11-01", "completed": False},
+        ):
+            with self.subTest(sidelined=sidelined):
+                evidence = build_sportmonks_availability_evidence(
+                    squad_rows=squad, sidelined_rows=[sidelined],
+                    sidelined_feed_available=True, team_id=10, season_id=2026,
+                    fixture_id=123, kickoff="2026-11-23",
+                )
+                self.assertFalse(evidence["roster_complete"])
+
     def test_completed_absence_before_kickoff_is_available(self):
         from player_availability import build_sportmonks_availability_evidence
 
