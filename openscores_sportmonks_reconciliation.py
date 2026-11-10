@@ -28,6 +28,27 @@ from provider_data_storage import _connect
 from sportmonks import SportmonksClient
 
 
+TEAM_NAME_ALIASES = {
+    "alaves": ("deportivo alaves",),
+    "ath bilbao": ("athletic club", "athletic bilbao"),
+    "atl madrid": ("atletico madrid", "atletico de madrid"),
+    "barcelona": ("fc barcelona",),
+    "betis": ("real betis",),
+    "celta vigo": ("celta de vigo", "rc celta de vigo"),
+    "oviedo": ("real oviedo",),
+    "bournemouth": ("afc bournemouth",),
+    "brighton": ("brighton and hove albion",),
+    "leeds": ("leeds united",),
+    "manchester utd": ("manchester united", "man utd"),
+    "newcastle": ("newcastle united",),
+    "nottingham": ("nottingham forest",),
+    "tottenham": ("tottenham hotspur",),
+    "west ham": ("west ham united",),
+    "wolves": ("wolverhampton wanderers",),
+    "as roma": ("roma",),
+    "verona": ("hellas verona",),
+}
+
 COUNTRY_CODES = {
     "DEU": "Germany",
     "ESP": "Spain",
@@ -171,20 +192,39 @@ def unique_team_crosswalks(
             by_name[key].append(team)
     mappings = []
     for team in observed_teams:
-        key = _norm(team.get("name"))
-        candidates = by_name.get(key, [])
+        source_name = str(team.get("name") or "")
+        key = _norm(source_name)
+        exact_candidates = by_name.get(key, [])
+        match_method = "exact_unique_name_within_matched_season_roster"
+        candidates = exact_candidates
+        if not candidates:
+            alias_names = TEAM_NAME_ALIASES.get(key, ())
+            alias_candidates = [
+                candidate
+                for alias in alias_names
+                for candidate in by_name.get(_norm(alias), [])
+            ]
+            # Deduplicate by provider team ID; aliases are accepted only when
+            # they resolve to exactly one team in this specific season roster.
+            candidates_by_id = {
+                str(candidate["id"]): candidate for candidate in alias_candidates
+            }
+            candidates = list(candidates_by_id.values())
+            match_method = "curated_name_alias_unique_within_matched_season_roster"
         if key and len(candidates) == 1:
+            target = candidates[0]
             mappings.append({
                 "entity_type": "team",
                 "provider_entity_id": str(team.get("provider_team_id")),
-                "canonical_entity_id": f"sportmonks:{candidates[0]['id']}",
-                "name": str(team.get("name") or ""),
-                "basis": "exact_unique_name_within_matched_season_roster",
-                "verification_method": "exact_unique_name_within_matched_season_roster",
+                "canonical_entity_id": f"sportmonks:{target['id']}",
+                "name": source_name,
+                "basis": match_method,
+                "verification_method": match_method,
                 "evidence": {
-                    "openscores_team_name": str(team.get("name") or ""),
-                    "sportmonks_team_name": str(candidates[0].get("name") or ""),
-                    "sportmonks_team_id": str(candidates[0]["id"]),
+                    "openscores_team_name": source_name,
+                    "sportmonks_team_name": str(target.get("name") or ""),
+                    "sportmonks_team_id": str(target["id"]),
+                    "season_roster_unique": True,
                 },
             })
     return mappings
@@ -456,6 +496,29 @@ def run_reconciliation(
                         source_league.get("name") or source_league.get("league_name")
                     )
                 ]
+                expected_country = COUNTRY_CODES.get(
+                    str(source_league.get("country_code") or "").upper()
+                )
+                country_candidates = [
+                    {
+                        "sportmonks_league_id": str(candidate.get("id")),
+                        "name": candidate.get("name"),
+                        "country": _country_name(candidate),
+                    }
+                    for candidate in sm_leagues
+                    if expected_country
+                    and _norm(_country_name(candidate)) == _norm(expected_country)
+                ][:30]
+                international_candidates = [
+                    {
+                        "sportmonks_league_id": str(candidate.get("id")),
+                        "name": candidate.get("name"),
+                        "country": _country_name(candidate),
+                    }
+                    for candidate in sm_leagues
+                    if not expected_country
+                    and _norm(_country_name(candidate)) in {"", "world", "international", "global"}
+                ][:30]
                 report["competition_results"].append({
                     "openscores_league_id": source_league_id,
                     "name": source_league.get("name"),
@@ -463,6 +526,8 @@ def run_reconciliation(
                     "status": league_match["status"],
                     "candidate_count": league_match.get("candidate_count", 0),
                     "sportmonks_same_name_candidates": same_name_candidates,
+                    "sportmonks_country_candidates": country_candidates,
+                    "sportmonks_international_candidates": international_candidates,
                 })
                 continue
             sm_league = league_match["league"]
@@ -570,6 +635,10 @@ def run_reconciliation(
                 "sportmonks_season_id": sm_season_id,
                 "sportmonks_teams_received": len(teams),
                 "sportmonks_fixtures_received": len(fixtures),
+                "sportmonks_team_roster": [
+                    {"id": str(team.get("id")), "name": team.get("name")}
+                    for team in teams
+                ],
                 "canonical_fixtures_available": fixture_count,
                 "openscores_teams_observed": len(observed_teams),
                 "unique_team_links": len(team_mappings),

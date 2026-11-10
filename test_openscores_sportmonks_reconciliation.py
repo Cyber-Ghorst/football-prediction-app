@@ -59,6 +59,43 @@ class OpenScoresSportmonksReconciliationTests(unittest.TestCase):
         )
         self.assertEqual(result["status"], "no_matching_league_year")
 
+    def test_curated_team_alias_requires_unique_roster_target(self):
+        mappings = unique_team_crosswalks(
+            [
+                {"provider_team_id": "os-mu", "name": "Manchester Utd"},
+                {"provider_team_id": "os-ath", "name": "Ath Bilbao"},
+                {"provider_team_id": "os-wolves", "name": "Wolves"},
+            ],
+            [
+                {"id": 14, "name": "Manchester United"},
+                {"id": 15, "name": "Athletic Club"},
+                {"id": 16, "name": "Wolverhampton Wanderers"},
+            ],
+        )
+        self.assertEqual(len(mappings), 3)
+        self.assertEqual(
+            {item["provider_entity_id"]: item["canonical_entity_id"] for item in mappings},
+            {
+                "os-mu": "sportmonks:14",
+                "os-ath": "sportmonks:15",
+                "os-wolves": "sportmonks:16",
+            },
+        )
+        self.assertTrue(all(
+            item["verification_method"] == "curated_name_alias_unique_within_matched_season_roster"
+            for item in mappings
+        ))
+
+    def test_curated_team_alias_does_not_resolve_ambiguous_roster(self):
+        mappings = unique_team_crosswalks(
+            [{"provider_team_id": "os-mu", "name": "Manchester Utd"}],
+            [
+                {"id": 14, "name": "Manchester United"},
+                {"id": 15, "name": "Manchester United"},
+            ],
+        )
+        self.assertEqual(mappings, [])
+
     def test_team_mapping_requires_one_exact_name_in_matched_roster(self):
         mappings = unique_team_crosswalks(
             [
