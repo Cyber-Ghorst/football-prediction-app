@@ -112,11 +112,12 @@ def sync_temporary_upcoming_fixtures(
                 )
             else:
                 cursor.execute("DELETE FROM upcoming_fixture_staging")
+            removed_count = max(0, int(cursor.rowcount or 0))
             cursor.execute("SELECT COUNT(*) FROM upcoming_fixture_staging")
             active_count = int(cursor.fetchone()[0])
     return {
         "fixtures_upserted": len(prepared),
-        "fixtures_removed": max(0, len(prepared) - active_count) if False else 0,
+        "fixtures_removed": removed_count,
         "active_fixtures": active_count,
         "prediction_ledger_modified": 0,
     }
