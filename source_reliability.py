@@ -213,3 +213,52 @@ def build_source_reliability_report(
             "The configured provider hierarchy remains authoritative."
         ),
     }
+
+
+
+def build_rolling_source_reliability_report(
+    history_snapshots: list[Mapping[str, Any]],
+    *,
+    primary_provider: str = "sportmonks",
+    minimum_score_samples: int = 30,
+) -> dict[str, Any]:
+    """Build a rolling report from persisted runs, counting each exact fixture once.
+
+    Snapshots must be ordered newest first. Fixture identity is based on the
+    canonical competition/season, UTC kickoff and home/away team names; records
+    without the full identity are excluded rather than guessed.
+    """
+    unique: dict[tuple[str, str, str, str, str], Mapping[str, Any]] = {}
+    for snapshot in history_snapshots:
+        matches = snapshot.get("matches") or []
+        if not isinstance(matches, list):
+            continue
+        for match in matches:
+            if not isinstance(match, Mapping):
+                continue
+            home = match.get("home") if isinstance(match.get("home"), Mapping) else {}
+            away = match.get("away") if isinstance(match.get("away"), Mapping) else {}
+            competition_key = str(match.get("competition_key") or "").strip()
+            season = str(match.get("season") or "").strip()
+            kickoff = str(match.get("kickoff_utc") or "").strip()
+            home_name = str(home.get("normalized_name") or home.get("name") or "").strip().casefold()
+            away_name = str(away.get("normalized_name") or away.get("name") or "").strip().casefold()
+            if not all((competition_key, season, kickoff, home_name, away_name)):
+                continue
+            identity = (competition_key, season, kickoff, home_name, away_name)
+            unique.setdefault(identity, match)
+
+    report = build_source_reliability_report(
+        {"matches": list(unique.values())},
+        primary_provider=primary_provider,
+        minimum_score_samples=minimum_score_samples,
+    )
+    report["history"] = {
+        "persistence_status": "available",
+        "window_days": 90,
+        "collection_runs_loaded": len(history_snapshots),
+        "unique_fixture_observations": len(unique),
+        "deduplication": "competition, season, kickoff, home team and away team",
+        "rolling_sample": True,
+    }
+    return report
