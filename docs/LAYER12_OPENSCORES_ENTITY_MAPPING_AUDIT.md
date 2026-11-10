@@ -55,3 +55,12 @@ their start/end/current fields, and the stored observation kickoff range. It
 counts fixtures in the future and inside the next seven days using the
 CockroachDB server clock. This prevents a historical season sample from being
 mistaken for a current upcoming-fixture feed.
+
+
+## Strict upcoming-fixture collection
+
+The sync requests only `scheduled` fixtures using the provider's live
+`date_from` / `date_to` filters, bounded from the UTC collection time through
+exactly seven days later. It requests up to 200 records per competition and
+checks the kickoff window again locally. Historical observations are retained
+for audit but marked `outside_upcoming_window` and excluded from reconciliation.
