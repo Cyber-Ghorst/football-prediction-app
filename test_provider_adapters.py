@@ -250,6 +250,25 @@ class ProviderAdapterTests(unittest.TestCase):
                          {"fromDate": "2026-01-01"})
         client.close()
 
+    def test_highlightly_matches_exposes_pagination_metadata(self):
+        client = HighlightlyClient(api_key="test-only")
+        response = Mock()
+        response.status_code = 200
+        response.json.return_value = {
+            "data": [{"id": 123}],
+            "pagination": {"totalCount": 251, "offset": 100, "limit": 100},
+            "plan": {"tier": "BASIC", "message": "test"},
+        }
+        response.headers = {}
+        response.raise_for_status.return_value = None
+        client.session.get = Mock(return_value=response)
+        self.assertEqual(client.matches(leagueName="Premier League", offset=100), [{"id": 123}])
+        self.assertEqual(
+            client.last_metadata["pagination"],
+            {"total_count": 251, "offset": 100, "limit": 100},
+        )
+        client.close()
+
 
 if __name__ == "__main__":
     unittest.main()

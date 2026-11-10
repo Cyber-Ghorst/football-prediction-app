@@ -127,13 +127,14 @@ def _api_ninjas_league_slug(client: Any, competition: str) -> str | None:
 def _collect_api_ninjas_records(
     *,
     client: Any,
+    team_clients: list[Any] | None = None,
     competition: str,
     season: int,
     home_team_name: str,
     away_team_name: str,
     competition_key_value: str,
 ) -> dict[str, Any]:
-    """Fetch and normalize API Ninjas team histories independently."""
+    """Fetch and normalize API Ninjas team histories with isolated sessions."""
     started = time.perf_counter()
     result: dict[str, Any] = {
         "records": [],
@@ -143,6 +144,8 @@ def _collect_api_ninjas_records(
         "error": None,
         "metadata": {},
     }
+    clients = list(team_clients or [client])
+    team_names = (home_team_name, away_team_name)
     try:
         league_slug = _api_ninjas_league_slug(client, competition)
         if league_slug is None:
@@ -150,13 +153,35 @@ def _collect_api_ninjas_records(
                 "No unique exact competition-name mapping exists in the API Ninjas league catalogue."
             )
         else:
-            rows = []
-            for team_name in (home_team_name, away_team_name):
-                result["team_requests"] += 1
-                rows.extend(client.team_matches(
+            requests_to_make = [
+                (team_names[index], clients[index] if index < len(clients) else client)
+                for index in range(len(team_names))
+            ]
+
+            def fetch_team(item):
+                team_name, team_client = item
+                team_rows = team_client.team_matches(
                     team=team_name, league=league_slug, season=int(season)
-                ))
+                )
+                metadata = dict(getattr(team_client, "last_metadata", {}) or {})
+                return team_name, team_rows, metadata
+
+            if len(clients) > 1:
+                # Each client owns its own requests.Session; never share one
+                # mutable session between worker threads.
+                with ThreadPoolExecutor(max_workers=min(2, len(requests_to_make))) as executor:
+                    team_results = list(executor.map(fetch_team, requests_to_make))
+            else:
+                team_results = [fetch_team(item) for item in requests_to_make]
+
+            rows = []
+            team_metadata = {}
+            for team_name, team_rows, metadata in team_results:
+                result["team_requests"] += 1
+                rows.extend(team_rows)
+                team_metadata[team_name] = metadata
             result["raw_rows_received"] = len(rows)
+            result["metadata"] = team_metadata
             seen: set[str] = set()
             normalized = []
             for row in rows:
@@ -182,7 +207,13 @@ def _collect_api_ninjas_records(
         result["error"] = str(exc)
     finally:
         result["elapsed_seconds"] = round(time.perf_counter() - started, 3)
-        result["metadata"] = dict(getattr(client, "last_metadata", {}) or {})
+        if not result["metadata"]:
+            result["metadata"] = dict(getattr(client, "last_metadata", {}) or {})
+        # The factory-created client is short-lived and is safe to close here.
+        for extra_client in clients[1:]:
+            close = getattr(extra_client, "close", None)
+            if callable(close):
+                close()
     return result
 
 
@@ -196,7 +227,9 @@ def collect_recent_result_corroboration(
     home_team_name: str,
     away_team_name: str,
     highlightly_client: Any | None = None,
+    highlightly_client_factory: Any | None = None,
     api_ninjas_client: Any | None = None,
+    api_ninjas_client_factory: Any | None = None,
     now: datetime | None = None,
 ) -> dict[str, Any]:
     """Fetch independent match records and reconcile against Sportmonks fixtures.
@@ -245,10 +278,19 @@ def collect_recent_result_corroboration(
     api_ninjas_executor = None
     api_ninjas_future = None
     if api_ninjas_client is not None:
+        # Build the second authenticated session on the caller thread so
+        # Streamlit secrets access never occurs inside a worker thread.
+        team_clients = [api_ninjas_client]
+        if api_ninjas_client_factory is not None:
+            try:
+                team_clients.append(api_ninjas_client_factory())
+            except Exception as exc:
+                errors["api_ninjas_client_factory"] = str(exc)
         api_ninjas_executor = ThreadPoolExecutor(max_workers=1)
         api_ninjas_future = api_ninjas_executor.submit(
             _collect_api_ninjas_records,
             client=api_ninjas_client,
+            team_clients=team_clients,
             competition=competition,
             season=int(season),
             home_team_name=home_team_name,
@@ -260,24 +302,116 @@ def collect_recent_result_corroboration(
     if highlightly_client is not None:
         try:
             rows: list[dict[str, Any]] = []
-            offset, limit, max_pages = 0, 100, 10
-            for _ in range(max_pages):
-                page = highlightly_client.matches(
+            limit, max_pages = 100, 10
+
+            def fetch_highlightly_page(client: Any, offset: int) -> tuple[int, list[dict[str, Any]], dict[str, Any]]:
+                page = client.matches(
                     leagueName=competition, season=int(season),
                     countryName=country, limit=limit, offset=offset,
                 )
+                metadata = dict(getattr(client, "last_metadata", {}) or {})
+                return offset, page, metadata
+
+            first_offset, first_page, first_metadata = fetch_highlightly_page(
+                highlightly_client, 0
+            )
+            page_results = [(first_offset, first_page, first_metadata)]
+            pagination = first_metadata.get("pagination")
+            total_count = pagination.get("total_count") if isinstance(pagination, Mapping) else None
+            reported_limit = pagination.get("limit") if isinstance(pagination, Mapping) else None
+            try:
+                total_count = int(total_count)
+                reported_limit = int(reported_limit)
+                if total_count < 0 or reported_limit <= 0:
+                    raise ValueError
+                page_count = (total_count + reported_limit - 1) // reported_limit
+            except (TypeError, ValueError):
+                total_count = None
+                reported_limit = limit
+                page_count = 0
+
+            if total_count is not None:
+                if page_count > max_pages:
+                    raise RuntimeError("Highlightly pagination exceeded the safe page limit.")
+                offsets = [
+                    page_number * reported_limit
+                    for page_number in range(1, page_count)
+                ]
+                if offsets and highlightly_client_factory is not None:
+                    # Construct clients on the Streamlit script thread so
+                    # credential/secrets access never occurs in worker threads.
+                    page_clients = [
+                        (offset, highlightly_client_factory())
+                        for offset in offsets
+                    ]
+
+                    def fetch_with_independent_client(item):
+                        offset, client = item
+                        try:
+                            return fetch_highlightly_page(client, offset)
+                        finally:
+                            close = getattr(client, "close", None)
+                            if callable(close):
+                                close()
+
+                    with ThreadPoolExecutor(max_workers=min(2, len(offsets))) as executor:
+                        page_results.extend(executor.map(fetch_with_independent_client, page_clients))
+                else:
+                    for offset in offsets:
+                        page_results.append(fetch_highlightly_page(highlightly_client, offset))
+            else:
+                # Compatibility fallback for clients/providers that omit the
+                # documented pagination envelope: retain safe sequential paging.
+                offset = limit
+                while len(first_page) == limit and len(page_results) < max_pages:
+                    page_results.append(fetch_highlightly_page(highlightly_client, offset))
+                    if len(page_results[-1][1]) < limit:
+                        break
+                    offset += limit
+                if len(page_results) == max_pages and len(page_results[-1][1]) == limit:
+                    raise RuntimeError("Highlightly pagination exceeded the safe page limit.")
+
+            # Verify that the provider honoured every requested page. A fast
+            # response is not useful if offsets drift and silently duplicate or
+            # omit fixtures. Older responses without pagination metadata retain
+            # the compatibility path above.
+            if total_count is not None:
+                for offset, page, metadata in page_results:
+                    page_pagination = metadata.get("pagination")
+                    if not isinstance(page_pagination, Mapping):
+                        raise RuntimeError(
+                            f"Highlightly pagination metadata missing at offset {offset}."
+                        )
+                    returned_offset = page_pagination.get("offset")
+                    returned_limit = page_pagination.get("limit")
+                    returned_total = page_pagination.get("total_count")
+                    if returned_offset is not None and int(returned_offset) != offset:
+                        raise RuntimeError(
+                            f"Highlightly returned offset {returned_offset} for requested offset {offset}."
+                        )
+                    if returned_limit is not None and int(returned_limit) != reported_limit:
+                        raise RuntimeError(
+                            f"Highlightly page limit changed at offset {offset}."
+                        )
+                    if returned_total is not None and int(returned_total) != total_count:
+                        raise RuntimeError(
+                            f"Highlightly total count changed while paging at offset {offset}."
+                        )
+                    expected_rows = min(reported_limit, max(0, total_count - offset))
+                    if len(page) != expected_rows:
+                        raise RuntimeError(
+                            f"Highlightly page at offset {offset} returned {len(page)} rows; "
+                            f"expected {expected_rows}."
+                        )
+
+            for offset, page, metadata in sorted(page_results, key=lambda item: item[0]):
                 highlightly_diagnostics["pages_requested"] += 1
                 highlightly_diagnostics["page_metadata"].append({
                     "offset": offset,
                     "rows_returned": len(page),
-                    "response": dict(getattr(highlightly_client, "last_metadata", {}) or {}),
+                    "response": metadata,
                 })
                 rows.extend(page)
-                if len(page) < limit:
-                    break
-                offset += limit
-            else:
-                raise RuntimeError("Highlightly pagination exceeded the safe page limit.")
 
             highlightly_diagnostics["raw_rows_received"] = len(rows)
             normalized = []

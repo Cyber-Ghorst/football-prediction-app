@@ -545,6 +545,25 @@ def _install_optional_provider_cache(client, provider, request_method, ttl_secon
     setattr(client, "_provider_cache_installed", True)
     return True
 
+
+def _new_cached_highlightly_client():
+    """Create an independent Highlightly session with the same persistent cache."""
+    client = HighlightlyClient()
+    _install_optional_provider_cache(
+        client, "highlightly", "_get", ttl_seconds=300
+    )
+    return client
+
+
+def _new_cached_api_ninjas_client():
+    """Create an independent API Ninjas session with the same persistent cache."""
+    client = APINinjasClient()
+    _install_optional_provider_cache(
+        client, "api_ninjas", "_request", ttl_seconds=300
+    )
+    return client
+
+
 def _collect_sportmonks_with_archive(resource_type, request_params, fetcher, ttl_seconds):
     """Read a fresh CockroachDB snapshot or fetch and archive a Sportmonks response."""
     if not PROVIDER_DATABASE_URL:
@@ -1950,7 +1969,7 @@ try:
                     hl_client = ninjas_client = None
                     corroboration_errors = {}
                     try:
-                        hl_client = HighlightlyClient()
+                        hl_client = _new_cached_highlightly_client()
                     except HighlightlyError as exc:
                         corroboration_errors["highlightly"] = str(exc)
                     if cross_check_recent_results:
@@ -1978,7 +1997,9 @@ try:
                                 home_team_name=home_name,
                                 away_team_name=away_name,
                                 highlightly_client=hl_client,
+                                highlightly_client_factory=_new_cached_highlightly_client,
                                 api_ninjas_client=ninjas_client,
+                                api_ninjas_client_factory=_new_cached_api_ninjas_client,
                             )
                             corroboration["errors"].update(corroboration_errors)
 
