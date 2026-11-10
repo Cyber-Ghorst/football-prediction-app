@@ -98,7 +98,7 @@ def _observation(
     home_name, away_name = _text(home), _text(away)
     competition_key, season_key = _text(competition), _text(season)
     parsed = _parse_aware_datetime(kickoff)
-    status_text = _text(status).casefold().replace("_", " ")
+    status_text = _text(status).casefold().replace("_", " ")\n    if status_text.startswith("status "):\n        status_text = status_text.removeprefix("status ").strip()
     scheduled = status_text in {
         "scheduled", "not started", "not-started", "ns", "upcoming", "fixture"
     }
