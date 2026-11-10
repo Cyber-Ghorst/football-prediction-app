@@ -97,6 +97,32 @@ CREATE TABLE IF NOT EXISTS provider_conflict_resolution_audit (
 );
 CREATE INDEX IF NOT EXISTS provider_conflict_audit_scope
     ON provider_conflict_resolution_audit (competition, season, recorded_at DESC);
+
+CREATE TABLE IF NOT EXISTS provider_competition_registry (
+    identity_key TEXT PRIMARY KEY,
+    provider TEXT NOT NULL,
+    provider_competition_id TEXT NOT NULL,
+    provider_season_id TEXT NOT NULL,
+    competition_name TEXT NOT NULL,
+    country TEXT NOT NULL,
+    season_name TEXT NOT NULL,
+    season_start TEXT,
+    season_end TEXT,
+    is_current BOOLEAN,
+    discovery_status TEXT NOT NULL,
+    registration_status TEXT NOT NULL,
+    crosswalk_status TEXT NOT NULL,
+    canonical_competition_id TEXT,
+    prediction_ready BOOLEAN NOT NULL DEFAULT FALSE,
+    readiness_reason TEXT NOT NULL,
+    raw_competition JSONB NOT NULL,
+    raw_season JSONB NOT NULL,
+    discovered_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (provider, provider_competition_id, provider_season_id)
+);
+CREATE INDEX IF NOT EXISTS provider_competition_registry_scope
+    ON provider_competition_registry (provider, country, competition_name, season_name);
 """
 
 
@@ -610,5 +636,105 @@ def load_conflict_resolution_audit(
         "triage_status", "selected_provider", "selected_value", "observations",
         "corroborating_providers", "conflicting_providers", "resolution_reason",
         "recorded_at", "manual_override",
+    )
+    return [dict(zip(names, row)) for row in rows]
+
+
+UPSERT_COMPETITION_REGISTRY_SQL = """
+INSERT INTO provider_competition_registry (
+    identity_key, provider, provider_competition_id, provider_season_id,
+    competition_name, country, season_name, season_start, season_end,
+    is_current, discovery_status, registration_status, crosswalk_status,
+    canonical_competition_id, prediction_ready, readiness_reason,
+    raw_competition, raw_season, discovered_at, updated_at
+) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NOW(), NOW())
+ON CONFLICT (identity_key) DO UPDATE SET
+    competition_name = excluded.competition_name,
+    country = excluded.country,
+    season_name = excluded.season_name,
+    season_start = excluded.season_start,
+    season_end = excluded.season_end,
+    is_current = excluded.is_current,
+    discovery_status = excluded.discovery_status,
+    registration_status = excluded.registration_status,
+    raw_competition = excluded.raw_competition,
+    raw_season = excluded.raw_season,
+    updated_at = NOW()
+"""
+
+def save_discovered_competition_registry(
+    database_url: str, *, records: list[Mapping[str, Any]]
+) -> int:
+    """Upsert provider-scoped discovered competitions without promoting readiness."""
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+    if not isinstance(records, list):
+        raise ValueError("records must be a list.")
+    prepared = []
+    for row in records:
+        if not isinstance(row, Mapping):
+            raise ValueError("Each registry record must be an object.")
+        required = (
+            "identity_key", "provider", "provider_competition_id",
+            "provider_season_id", "competition_name", "country", "season_name",
+        )
+        if any(not str(row.get(key) or "").strip() for key in required):
+            raise ValueError("Registry records require provider, competition/season IDs, name, country and season.")
+        if row.get("prediction_ready") is not False:
+            raise ValueError("Discovery cannot promote a competition to prediction-ready.")
+        prepared.append((
+            str(row["identity_key"]), str(row["provider"]),
+            str(row["provider_competition_id"]), str(row["provider_season_id"]),
+            str(row["competition_name"]), str(row["country"]),
+            str(row["season_name"]), str(row.get("season_start") or ""),
+            str(row.get("season_end") or ""), row.get("is_current"),
+            str(row.get("discovery_status") or "discovered"),
+            str(row.get("registration_status") or "registered"),
+            str(row.get("crosswalk_status") or "unmapped"),
+            row.get("canonical_competition_id"), False,
+            str(row.get("readiness_reason") or "Independent identity and quality validation required."),
+            Jsonb(_json_safe(row.get("raw_competition") or {})),
+            Jsonb(_json_safe(row.get("raw_season") or {})),
+        ))
+    if not prepared:
+        return 0
+    with _connect(database_url) as connection:
+        _ensure_provider_storage_once(database_url, connection)
+        with connection.cursor() as cursor:
+            for row in prepared:
+                cursor.execute(UPSERT_COMPETITION_REGISTRY_SQL, row)
+    return len(prepared)
+
+
+def load_competition_registry(
+    database_url: str, *, provider: str | None = None, limit: int = 1000
+) -> list[dict[str, Any]]:
+    """Read registered competition-season rows; newest discovery first."""
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+    if isinstance(limit, bool) or not isinstance(limit, int) or not 1 <= limit <= 5000:
+        raise ValueError("limit must be between 1 and 5000.")
+    query = """
+    SELECT identity_key, provider, provider_competition_id, provider_season_id,
+           competition_name, country, season_name, season_start, season_end,
+           is_current, discovery_status, registration_status, crosswalk_status,
+           canonical_competition_id, prediction_ready, readiness_reason,
+           discovered_at, updated_at
+    FROM provider_competition_registry
+    WHERE (%s IS NULL OR provider = %s)
+    ORDER BY country, competition_name, season_name, provider
+    LIMIT %s
+    """
+    with _connect(database_url) as connection:
+        _ensure_provider_storage_once(database_url, connection)
+        with connection.cursor() as cursor:
+            cursor.execute(query, (provider, provider, limit))
+            rows = cursor.fetchall()
+    names = (
+        "identity_key", "provider", "provider_competition_id", "provider_season_id",
+        "competition_name", "country", "season_name", "season_start", "season_end",
+        "is_current", "discovery_status", "registration_status", "crosswalk_status",
+        "canonical_competition_id", "prediction_ready", "readiness_reason",
+        "discovered_at", "updated_at",
     )
     return [dict(zip(names, row)) for row in rows]
