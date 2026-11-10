@@ -84,7 +84,7 @@ class OpenScoresClientTests(unittest.TestCase):
         with self.assertRaisesRegex(OpenScoresError, "authentication/access failed"):
             client.list_leagues()
         self.assertNotIn("secret-key", str(client.last_metadata))
-    
+
     def test_rate_limit_is_reported_without_automatic_retry(self):
         session = FakeSession(FakeResponse(status_code=429, headers={
             "Content-Type": "application/json", "Retry-After": "30"
@@ -103,21 +103,53 @@ class OpenScoresClientTests(unittest.TestCase):
         with self.assertRaisesRegex(OpenScoresError, "invalid arguments"):
             client.list_leagues()
 
-    def test_connection_reports_returned_league_count(self):
+    def test_connection_counts_nested_competition_collection(self):
         response = FakeResponse({
             "jsonrpc": "2.0",
             "id": 1,
-            "result": {"content": [{
-                "type": "text",
-                "text": '[{"id": 1, "name": "Premier League"}, {"id": 2, "name": "La Liga"}]'
-            }]}
+            "result": {"structuredContent": {
+                "response": {"competitions": [
+                    {"id": 1, "name": "Premier League"},
+                    {"id": 2, "name": "La Liga"},
+                    {"id": 3, "name": "Serie A"},
+                ]}
+            }},
         })
         client = OpenScoresClient(api_key="test", session=FakeSession(response))
         status = client.test_connection()
         self.assertEqual(status["status"], "connected")
-        self.assertEqual(status["league_count_returned"], 2)
+        self.assertEqual(status["league_count_returned"], 3)
+        self.assertTrue(status["league_collection_found"])
+        self.assertEqual(status["league_collection_path"], "response.competitions")
+        self.assertEqual(status["response_shape"]["root_type"], "dict")
         self.assertEqual(status["provider"], "openscores")
         self.assertIn("retrieved_at_utc", status)
+
+    def test_connection_counts_paginated_items_collection(self):
+        response = FakeResponse({
+            "jsonrpc": "2.0",
+            "id": 1,
+            "result": {"structuredContent": {
+                "items": [{"league_id": 11, "league_name": "Example League"}],
+                "pagination": {"page": 1, "total_pages": 4, "total": 41},
+            }},
+        })
+        client = OpenScoresClient(api_key="test", session=FakeSession(response))
+        status = client.test_connection()
+        self.assertEqual(status["league_count_returned"], 1)
+        self.assertEqual(status["league_collection_path"], "items")
+
+    def test_reports_unknown_shape_without_inventing_count(self):
+        response = FakeResponse({
+            "jsonrpc": "2.0",
+            "id": 1,
+            "result": {"structuredContent": {"competitions": {"total": 6}}},
+        })
+        client = OpenScoresClient(api_key="test", session=FakeSession(response))
+        status = client.test_connection()
+        self.assertIsNone(status["league_count_returned"])
+        self.assertFalse(status["league_collection_found"])
+        self.assertEqual(status["response_shape"]["root_keys"], ["competitions"])
 
     def test_parses_streamable_http_event_stream(self):
         response = FakeResponse(
