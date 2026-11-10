@@ -120,8 +120,9 @@ def build_competition_crosswalk(
         season_ok = requested_season is None or (
             live_season is not None and str(live_season) == str(requested_season)
         )
+        competition_last_synced_at = live.get("lastSyncedAt") or coverage.get("lastSyncedAt")
         freshness = assess_freshness(
-            coverage.get("lastSyncedAt"), "fixtures", now=now,
+            competition_last_synced_at, "fixtures", now=now,
             max_age_seconds=max_age_seconds,
         )
         verified = active and has_data and season_ok and freshness["fresh"]
@@ -141,6 +142,7 @@ def build_competition_crosswalk(
             "livescore_name": live.get("name"),
             "livescore_season": live_season,
             "coverage": dict(coverage),
+            "competition_last_synced_at": competition_last_synced_at,
             "coverage_freshness": freshness,
             "verified": verified,
             "reason": reason,
