@@ -154,8 +154,10 @@ class OpenScoresObservationStoreTests(unittest.TestCase):
         )
         self.assertEqual(report["fixture_crosswalk_conflict"], 1)
         self.assertEqual(report["matched"], 0)
-        sql = "\n".join(call[0] for call in cursor.calls)
-        self.assertIn("fixture_crosswalk_conflict", sql)
+        self.assertTrue(any(
+            params and "fixture_crosswalk_conflict" in params
+            for _, params in cursor.calls
+        ))
 
 
 if __name__ == "__main__":
