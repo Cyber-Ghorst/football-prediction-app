@@ -109,6 +109,25 @@ class SystemDiagnosticsTests(unittest.TestCase):
         self.assertEqual(check["status"], "info")
         self.assertIsNone(report["teams"]["home"]["tactical_recency_weighting"])
 
+    def test_failed_prediction_input_quality_gate_blocks_system_diagnostics(self):
+        report = self.build(input_quality_report={
+            "status": "blocked",
+            "prediction_allowed": False,
+            "failures": ["duplicate fixture IDs"],
+            "warnings": [],
+        })
+        check = next(row for row in report["checks"] if row["id"] == "prediction_input_quality")
+        self.assertEqual(check["status"], "fail")
+        self.assertEqual(report["overall_status"], "blocked")
+
+    def test_passed_input_quality_gate_is_reported_without_changing_weights(self):
+        report = self.build(input_quality_report={
+            "status": "passed", "prediction_allowed": True, "failures": [], "warnings": [],
+        })
+        check = next(row for row in report["checks"] if row["id"] == "prediction_input_quality")
+        self.assertEqual(check["status"], "pass")
+        self.assertEqual(report["model_configuration"]["weights"]["recent_form"], 0.20)
+
     def test_unverified_fixture_requires_attention_not_fake_verification(self):
         report = self.build(
             readiness=readiness("fixture_unverified", verified=False, freshness="unknown")
