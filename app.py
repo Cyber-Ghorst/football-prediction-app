@@ -851,7 +851,7 @@ with st.sidebar:
     use_verified_result_history_fallback = st.checkbox(
         "Use exact verified results to fill missing recent history",
         value=False,
-        help="Opt-in Layer 2 fallback. A result is added only when Highlightly or API Ninjas and a completed Sportmonks fixture agree on exact competition, season, home/away teams, kickoff and score. It updates recent form/goals only; missing match statistics and TVD evidence remain unchanged.",
+        help="Opt-in Layer 2 fallback. Uses extra Highlightly/API Ninjas and targeted Sportmonks requests (capped at ten unique dates). A result is added only when an independent provider and a completed Sportmonks fixture agree on exact competition, season, home/away teams, kickoff and score. It updates recent form/goals only; missing match statistics and TVD evidence remain unchanged.",
     )
     cross_check_highlightly_details = st.checkbox(
         "Cross-check match statistics and lineups with Highlightly",
