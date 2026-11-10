@@ -103,6 +103,22 @@ class OpenScoresClientTests(unittest.TestCase):
         with self.assertRaisesRegex(OpenScoresError, "invalid arguments"):
             client.list_leagues()
 
+    def test_connection_reports_returned_league_count(self):
+        response = FakeResponse({
+            "jsonrpc": "2.0",
+            "id": 1,
+            "result": {"content": [{
+                "type": "text",
+                "text": '[{"id": 1, "name": "Premier League"}, {"id": 2, "name": "La Liga"}]'
+            }]}
+        })
+        client = OpenScoresClient(api_key="test", session=FakeSession(response))
+        status = client.test_connection()
+        self.assertEqual(status["status"], "connected")
+        self.assertEqual(status["league_count_returned"], 2)
+        self.assertEqual(status["provider"], "openscores")
+        self.assertIn("retrieved_at_utc", status)
+
     def test_parses_streamable_http_event_stream(self):
         response = FakeResponse(
             headers={"Content-Type": "text/event-stream"},
