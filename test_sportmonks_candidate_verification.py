@@ -143,6 +143,30 @@ class HighlightlyCandidateVerificationTests(unittest.TestCase):
         self.assertEqual(result["duplicates_skipped"], 1)
         self.assertEqual(len(profile["matches"]), 10)
 
+        verified = verify_highlightly_candidate(self.candidate, [sm_fixture()], **self.identity)
+        verified["verification_completed_at"] = "2026-10-24T14:05:00Z"
+        profile = {"id": 10, "name": "Coventry", "matches": existing}
+        result = apply_verified_result_candidates_to_profiles(
+            [profile], [verified], expected_season_id=2026
+        )
+        self.assertEqual(result["matches_added"], 1)
+        self.assertEqual(len(profile["matches"]), 10)
+        self.assertEqual(profile["matches"][0]["fixture_id"], 1)
+        self.assertNotIn(109, [match["fixture_id"] for match in profile["matches"]])
+
+
+    def test_multiple_exact_sportmonks_fixtures_are_not_imported(self):
+        fixtures = [sm_fixture(fid=1), sm_fixture(fid=2)]
+        verified = verify_highlightly_candidate(self.candidate, fixtures, **self.identity)
+        verified["verification_completed_at"] = "2026-10-24T14:05:00Z"
+        profile = {"id": 10, "name": "Coventry", "matches": []}
+        result = apply_verified_result_candidates_to_profiles(
+            [profile], [verified], expected_season_id=2026
+        )
+        self.assertEqual(result["matches_added"], 0)
+        self.assertEqual(result["ambiguous_candidates_skipped"], 1)
+        self.assertEqual(profile["matches"], [])
+
 
     def test_exact_completed_fixture_and_score_agree(self):
         result = verify_highlightly_candidate(self.candidate, [sm_fixture()], **self.identity)
