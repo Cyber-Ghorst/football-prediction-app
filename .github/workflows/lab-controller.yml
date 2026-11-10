@@ -18,6 +18,7 @@ on:
           - openscores_fixture_observation_sync
           - openscores_entity_mapping_audit
           - openscores_sportmonks_reconciliation
+          - openscores_secondary_provider_coverage_audit
         default: health_check
       season:
         description: "Season start year (Sportmonks current-season path: 2025+)"
@@ -121,7 +122,7 @@ jobs:
               trigger = json.loads(Path(".agent/trigger.json").read_text(encoding="utf-8"))
               operation = trigger.get("operation", "")
 
-          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync", "tipmaster_refresh_verify", "openscores_connection_check", "openscores_fixture_observation_sync", "openscores_entity_mapping_audit", "openscores_sportmonks_reconciliation"}
+          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync", "tipmaster_refresh_verify", "openscores_connection_check", "openscores_fixture_observation_sync", "openscores_entity_mapping_audit", "openscores_sportmonks_reconciliation", "openscores_secondary_provider_coverage_audit"}
           if operation not in allowed:
               raise SystemExit("Rejected unsupported or missing operation")
           if operation == "prediction_run":
@@ -276,7 +277,7 @@ jobs:
           PY
 
       - name: Install health-check dependencies
-        if: steps.operation.outputs.operation == 'health_check' || steps.operation.outputs.operation == 'full_check' || steps.operation.outputs.operation == 'result_sync' || steps.operation.outputs.operation == 'tipmaster_refresh_verify' || steps.operation.outputs.operation == 'openscores_connection_check' || steps.operation.outputs.operation == 'openscores_fixture_observation_sync' || steps.operation.outputs.operation == 'openscores_entity_mapping_audit' || steps.operation.outputs.operation == 'openscores_sportmonks_reconciliation'
+        if: steps.operation.outputs.operation == 'health_check' || steps.operation.outputs.operation == 'full_check' || steps.operation.outputs.operation == 'result_sync' || steps.operation.outputs.operation == 'tipmaster_refresh_verify' || steps.operation.outputs.operation == 'openscores_connection_check' || steps.operation.outputs.operation == 'openscores_fixture_observation_sync' || steps.operation.outputs.operation == 'openscores_entity_mapping_audit' || steps.operation.outputs.operation == 'openscores_sportmonks_reconciliation' || steps.operation.outputs.operation == 'openscores_secondary_provider_coverage_audit'
         run: |
           exec > >(tee -a controller-report.txt) 2>&1
           python -m pip install --upgrade pip
@@ -423,6 +424,16 @@ jobs:
         run: |
           set -euo pipefail
           python openscores_sportmonks_reconciliation.py
+
+      - name: Audit OpenScores secondary-provider competition coverage (read-only)
+        if: steps.operation.outputs.operation == 'openscores_secondary_provider_coverage_audit'
+        env:
+          HIGHLIGHTLY_API_KEY: ${{ secrets.HIGHLIGHTLY_API_KEY }}
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+          API_NINJAS_API_KEY: ${{ secrets.API_NINJAS_API_KEY }}
+        run: |
+          set -euo pipefail
+          python openscores_secondary_provider_coverage_audit.py
 
       - name: Audit OpenScores entity mapping candidates (read-only)
         if: steps.operation.outputs.operation == 'openscores_entity_mapping_audit'
@@ -650,6 +661,7 @@ jobs:
             openscores-connection-report.json
             openscores-entity-mapping-audit.json
             openscores-sportmonks-reconciliation-report.json
+            openscores-secondary-provider-coverage-report.json
             prediction-run-report.json
             watchdog-report.json
             latest-controller-report.json
