@@ -55,6 +55,27 @@ class HighlightlyCandidateVerificationTests(unittest.TestCase):
         self.assertEqual(result["verification_status"], "exact_fixture_found_score_disagrees")
         self.assertFalse(result["candidate_score_agreement"])
 
+    def test_period_scores_are_not_used_when_current_score_is_missing(self):
+        fixture = sm_fixture()
+        fixture["scores"] = [
+            {"participant_id": 10, "description": "1ST_HALF", "score": {"goals": 0}},
+            {"participant_id": 10, "description": "2ND_HALF", "score": {"goals": 0}},
+            {"participant_id": 20, "description": "1ST_HALF", "score": {"goals": 1}},
+            {"participant_id": 20, "description": "2ND_HALF", "score": {"goals": 0}},
+        ]
+        result = verify_highlightly_candidate(self.candidate, [fixture], **self.identity)
+        self.assertEqual(result["verification_status"], "exact_fixture_found_but_not_completed_with_valid_scores")
+        self.assertEqual(result["exact_completed_score_valid_fixtures"], 0)
+        self.assertIsNone(result["sportmonks_candidates"][0]["score"][0])
+
+    def test_candidate_verification_rejects_boolean_fractional_and_negative_scores(self):
+        for invalid in (True, 1.5, -1, "1.5", "-1"):
+            with self.subTest(invalid=invalid):
+                fixture = sm_fixture(home_goals=invalid)
+                result = verify_highlightly_candidate(self.candidate, [fixture], **self.identity)
+                self.assertEqual(result["verification_status"], "exact_fixture_found_but_not_completed_with_valid_scores")
+                self.assertFalse(result["sportmonks_candidates"][0]["score_valid"])
+
     def test_wrong_season_is_not_accepted(self):
         result = verify_highlightly_candidate(
             self.candidate, [sm_fixture(season_id=2025)], **self.identity
