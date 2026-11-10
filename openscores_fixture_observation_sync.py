@@ -175,6 +175,8 @@ def run_sync(
                 if isinstance(total_pages, int):
                     if page >= total_pages:
                         break
+                    if page == max_pages:
+                        comp_truncated = True
                 elif len(fixtures) < page_size:
                     break
                 elif page == max_pages:
