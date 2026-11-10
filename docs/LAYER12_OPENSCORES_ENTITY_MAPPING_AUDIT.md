@@ -64,3 +64,9 @@ The sync requests only `scheduled` fixtures using the provider's live
 exactly seven days later. It requests up to 200 records per competition and
 checks the kickoff window again locally. Historical observations are retained
 for audit but marked `outside_upcoming_window` and excluded from reconciliation.
+
+
+The seven-day sync does not pin fixture retrieval to the first season returned
+by the provider. It queries the date window across all seasons, then uses each
+fixture's own season ID for normalization. This avoids missing a current season
+when the provider's season catalogue is incomplete or stale.
