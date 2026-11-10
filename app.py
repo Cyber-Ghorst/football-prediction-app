@@ -1032,6 +1032,142 @@ with st.sidebar:
             st.caption("CockroachDB is not configured yet. Add PROVIDER_DATABASE_URL in Streamlit Secrets.")
 
         st.divider()
+        st.markdown("**Stage free-fixture provider observations**")
+        st.caption(
+            "Fetch source schedules into the immutable CockroachDB observation archive. "
+            "This does not publish fixtures to the prediction catalogue or alter predictions."
+        )
+        with st.form("free_fixture_observation_stage_form"):
+            stage_provider = st.selectbox(
+                "Free fixture source",
+                ["openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro"],
+                key="free_fixture_stage_provider",
+            )
+            if stage_provider == "openligadb":
+                stage_league_shortcut = st.text_input(
+                    "OpenLigaDB league shortcut", value="bl1", key="stage_openligadb_shortcut"
+                )
+                stage_season = st.number_input(
+                    "OpenLigaDB season", min_value=2000, max_value=2100,
+                    value=2026, step=1, key="stage_openligadb_season"
+                )
+            elif stage_provider == "openfootball":
+                stage_season_file = st.text_input(
+                    "football.json season file",
+                    value="2026-27/en.1.json",
+                    key="stage_openfootball_file",
+                )
+                stage_competition = st.text_input(
+                    "Competition display name", value="Premier League",
+                    key="stage_openfootball_competition"
+                )
+            elif stage_provider == "open_matchday":
+                stage_csv_url = st.text_input(
+                    "Open Matchday fixtures CSV URL",
+                    value="https://raw.githubusercontent.com/oladeeayo/open-matchday/master/data/ENG_1_premier-league/fixtures_2627.csv",
+                    key="stage_openmatchday_url",
+                )
+                stage_competition = st.text_input(
+                    "Competition display name", value="Premier League",
+                    key="stage_openmatchday_competition"
+                )
+                stage_season = st.text_input(
+                    "Dataset season label", value="2627",
+                    key="stage_openmatchday_season"
+                )
+                stage_openmatchday_noncommercial = st.checkbox(
+                    "I confirm this use complies with Open Matchday's non-commercial-only licence.",
+                    value=False,
+                    key="stage_openmatchday_noncommercial",
+                )
+            elif stage_provider == "livescore_football":
+                stage_league_slug = st.text_input(
+                    "LiveScoreFootball league slug", value="eng.1",
+                    key="stage_livescore_slug"
+                )
+                stage_date_from = st.date_input(
+                    "Start date (UTC)", value=datetime.now(timezone.utc).date(),
+                    key="stage_livescore_date_from"
+                )
+                stage_date_to = st.date_input(
+                    "End date (UTC)", value=datetime.now(timezone.utc).date() + timedelta(days=7),
+                    key="stage_livescore_date_to"
+                )
+            else:
+                bzzoiro_configured = bool(st.secrets.get("BZZOIRO_API_TOKEN", ""))
+                st.caption(
+                    "Bzzoiro API token: " + ("configured" if bzzoiro_configured else "not configured")
+                )
+            submit_fixture_stage = st.form_submit_button(
+                "Fetch and archive observations",
+                use_container_width=True,
+                disabled=not bool(PROVIDER_DATABASE_URL),
+            )
+
+        if submit_fixture_stage:
+            try:
+                with st.spinner(f"Collecting {stage_provider} fixture observations..."):
+                    if stage_provider == "openligadb":
+                        stage_result = collect_openligadb_observations(
+                            PROVIDER_DATABASE_URL,
+                            [{"league_shortcut": stage_league_shortcut, "season": int(stage_season)}],
+                        )
+                    elif stage_provider == "openfootball":
+                        stage_result = collect_openfootball_observations(
+                            PROVIDER_DATABASE_URL,
+                            [{"season_file": stage_season_file, "competition": stage_competition}],
+                        )
+                    elif stage_provider == "open_matchday":
+                        if not stage_openmatchday_noncommercial:
+                            raise ValueError(
+                                "Open Matchday staging requires confirmation of non-commercial licence compliance."
+                            )
+                        stage_result = collect_openmatchday_observations(
+                            PROVIDER_DATABASE_URL,
+                            [{"url": stage_csv_url, "competition": stage_competition,
+                              "season": stage_season}],
+                        )
+                    elif stage_provider == "livescore_football":
+                        if stage_date_to < stage_date_from:
+                            raise ValueError("End date must not be earlier than start date.")
+                        stage_result = collect_livescore_observations(
+                            PROVIDER_DATABASE_URL, [stage_league_slug],
+                            date_from=stage_date_from.isoformat(),
+                            date_to=stage_date_to.isoformat(),
+                        )
+                    else:
+                        bzz_token = st.secrets.get("BZZOIRO_API_TOKEN", "")
+                        if bzz_token:
+                            with BzzoiroAdapter(token=bzz_token) as bzz_client:
+                                stage_result = collect_bzzoiro_observations(
+                                    PROVIDER_DATABASE_URL, client=bzz_client
+                                )
+                        else:
+                            stage_result = collect_bzzoiro_observations(PROVIDER_DATABASE_URL)
+                st.session_state["free_fixture_stage_result"] = stage_result
+            except Exception as exc:
+                st.error(f"Fixture observation staging failed ({type(exc).__name__}).")
+                st.caption(str(exc))
+
+        stage_result = st.session_state.get("free_fixture_stage_result")
+        if stage_result:
+            st.write(
+                f"Provider: {stage_result.get('provider')} · "
+                f"Archived: {stage_result.get('archived', False)} · "
+                f"Observations: {stage_result.get('observation_count', 0)} · "
+                f"Eligible for crosswalk review: {stage_result.get('eligible_for_review_count', 0)}"
+            )
+            if stage_result.get("snapshot_id"):
+                st.caption(f"Snapshot ID: {stage_result['snapshot_id']}")
+            if stage_result.get("errors"):
+                st.warning(f"{len(stage_result['errors'])} provider scope(s) reported errors.")
+                st.dataframe(stage_result["errors"], use_container_width=True, hide_index=True)
+            st.caption(
+                "This operation writes provider observation snapshots only: "
+                "0 canonical fixture writes and 0 prediction-ledger writes."
+            )
+
+        st.divider()
         st.markdown("**Free-fixture provider entity crosswalk review**")
         st.caption(
             "Review archived source IDs against existing canonical leagues, seasons and teams. "
