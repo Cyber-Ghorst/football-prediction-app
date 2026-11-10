@@ -114,7 +114,7 @@ class GlobalCompetitionScopeTests(unittest.TestCase):
 
         self.assertEqual(len(client.calls), 3)
         self.assertEqual(
-            {call["season_id"] for call in client.calls},
+            {str(call["season_id"]) for call in client.calls},
             {"2025", "2026", "2027"},
         )
         for filters in client.calls:
