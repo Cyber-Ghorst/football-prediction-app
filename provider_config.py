@@ -113,7 +113,7 @@ def provider_readiness() -> list[dict[str, Any]]:
         "openligadb": "read-only season adapter implemented; live coverage, freshness, canonical crosswalk and route activation remain pending",
         "openfootball": "read-only football.json adapter implemented; timezone-bearing future rows, upstream freshness, canonical crosswalk and route activation remain pending",
         "open_matchday": "read-only CSV adapter implemented; fixed CET-1 timestamps are rejected without a verified timezone; non-commercial rights and route activation remain pending",
-        "bzzoiro": "read-only API adapter implemented; requires BZZOIRO_API_TOKEN and documented BZZOIRO_FIXTURES_URL; live coverage, licence and canonical crosswalk remain pending",
+        "bzzoiro": "read-only API adapter implemented; requires BZZOIRO_API_TOKEN and uses documented v2 events endpoint; live coverage, licence and canonical crosswalk remain pending",
         "openscores": "read-only historical/result observations for mapping and audit; not a future-fixture source; not enabled for production prediction inputs",
     }
     credential_names = {
