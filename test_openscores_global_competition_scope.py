@@ -127,10 +127,10 @@ class GlobalCompetitionScopeTests(unittest.TestCase):
         self.assertEqual(
             {(row["provider_fixture_id"], row["provider_league_id"], row["provider_season_id"])
              for row in rows},
-            {("77", "1", "2025"), ("78", "2", "2026"), ("79", "1", "2026")},
+            {("77", "1", "2025"), ("78", "2", "2027"), ("79", "1", "2026")},
         )
         self.assertEqual(report["fixtures_accepted_for_window"], 3)
-        self.assertEqual(report["seasons_sampled"], 2)
+        self.assertEqual(report["seasons_sampled"], 3)
         self.assertEqual(report["status"], "pass")
 
     def test_missing_or_unknown_competition_identity_is_never_guessed(self):
@@ -232,7 +232,7 @@ class GlobalCompetitionScopeTests(unittest.TestCase):
     def test_conflicting_provider_fixture_identity_is_excluded(self):
         client = FakeOpenScores([page([
             fixture(111, 1, 2026),
-            fixture(111, 2, 2026),
+            fixture(111, 2, 2027),
         ])])
         report, save = self._run(client)
 
