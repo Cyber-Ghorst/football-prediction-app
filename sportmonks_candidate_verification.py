@@ -332,3 +332,194 @@ def verify_highlightly_candidate(
     else:
         result["verification_status"] = "no_same_season_competition_fixture_returned_for_date"
     return result
+
+
+def apply_verified_result_candidates_to_profiles(
+    profiles: list[dict[str, Any]],
+    candidate_reports: list[Mapping[str, Any]],
+    *,
+    expected_season_id: int,
+    history_limit: int = 10,
+) -> dict[str, Any]:
+    """Append only exact, completed Sportmonks results corroborated by Highlightly.
+
+    The candidate is admitted only when the independent Highlightly score agrees
+    with a completed Sportmonks fixture having exact competition, season,
+    home/away team IDs and kickoff. The result contributes to form/goals only;
+    no match statistics or TVD evidence are fabricated.
+    """
+    from form_analyzer import analyze_form, venue_rating
+    from provider_core import normalize_team_name
+    from tactical_indicators import analyze_tactics
+
+    safe_limit = max(1, min(int(history_limit), 10))
+    summary = {
+        "status": "completed",
+        "profiles_updated": 0,
+        "matches_added": 0,
+        "candidates_rejected": 0,
+        "duplicates_skipped": 0,
+        "ambiguous_candidates_skipped": 0,
+        "tactical_evidence_updated": False,
+    }
+
+    for report in candidate_reports:
+        if not isinstance(report, Mapping):
+            summary["candidates_rejected"] += 1
+            continue
+        if (
+            report.get("verification_status") != "exact_fixture_and_score_agree"
+            or report.get("candidate_score_agreement") is not True
+        ):
+            summary["candidates_rejected"] += 1
+            continue
+        identity = report.get("expected_identity") or {}
+        if (
+            _as_int(identity.get("season_id")) != _as_int(expected_season_id)
+            or _as_int(identity.get("league_id")) is None
+            or _as_int(identity.get("home_team_id")) is None
+            or _as_int(identity.get("away_team_id")) is None
+        ):
+            summary["candidates_rejected"] += 1
+            continue
+        raw_verified_at = report.get("verification_completed_at")
+        try:
+            verified_at = datetime.fromisoformat(
+                str(raw_verified_at).strip().replace("Z", "+00:00")
+            )
+            if verified_at.tzinfo is None:
+                raise ValueError("Verification timestamp has no timezone.")
+            verified_at = verified_at.astimezone(timezone.utc)
+        except (TypeError, ValueError):
+            summary["candidates_rejected"] += 1
+            continue
+
+        exact_candidates = [
+            item for item in report.get("sportmonks_candidates") or []
+            if isinstance(item, Mapping)
+            and item.get("kickoff_exact_match") is True
+            and item.get("completed") is True
+            and item.get("score_valid") is True
+            and _as_int(item.get("season_id")) == _as_int(expected_season_id)
+            and _as_int(item.get("league_id")) == _as_int(identity.get("league_id"))
+            and _as_int(item.get("home_team_id")) == _as_int(identity.get("home_team_id"))
+            and _as_int(item.get("away_team_id")) == _as_int(identity.get("away_team_id"))
+            and _as_int(item.get("fixture_id")) is not None
+            and _utc_datetime(item.get("kickoff_utc")) is not None
+            and isinstance(item.get("score"), list)
+            and len(item.get("score")) == 2
+            and all(_as_int(value) is not None and _as_int(value) >= 0 for value in item["score"])
+        ]
+        if len(exact_candidates) != 1:
+            summary["ambiguous_candidates_skipped"] += 1
+            continue
+        verified_fixture = exact_candidates[0]
+        fixture_id = _as_int(verified_fixture.get("fixture_id"))
+        home_id = _as_int(verified_fixture.get("home_team_id"))
+        away_id = _as_int(verified_fixture.get("away_team_id"))
+        home_name = str(verified_fixture.get("home") or "")
+        away_name = str(verified_fixture.get("away") or "")
+        kickoff = _utc_datetime(verified_fixture.get("kickoff_utc"))
+        score = [_as_int(value) for value in verified_fixture["score"]]
+        if (
+            fixture_id is None or fixture_id <= 0
+            or home_id is None or home_id <= 0
+            or away_id is None or away_id <= 0
+            or not home_name or not away_name or kickoff is None
+        ):
+            summary["candidates_rejected"] += 1
+            continue
+
+        highlightly_candidate = report.get("highlightly_candidate") or {}
+        fixture_added_for_candidate = False
+        for profile in profiles:
+            if not isinstance(profile, dict):
+                continue
+            profile_id = _as_int(profile.get("id"))
+            profile_name = normalize_team_name(profile.get("name") or "")
+            if profile_id == home_id and profile_name == normalize_team_name(home_name):
+                venue, opponent_id, opponent_name = "home", away_id, away_name
+                goals_for, goals_against = score[0], score[1]
+            elif profile_id == away_id and profile_name == normalize_team_name(away_name):
+                venue, opponent_id, opponent_name = "away", home_id, home_name
+                goals_for, goals_against = score[1], score[0]
+            else:
+                continue
+
+            matches = profile.get("matches")
+            if not isinstance(matches, list):
+                matches = []
+            if any(str(match.get("fixture_id")) == str(fixture_id) for match in matches if isinstance(match, Mapping)):
+                summary["duplicates_skipped"] += 1
+                continue
+
+            new_match = {
+                "fixture_id": fixture_id,
+                "date": kickoff.isoformat(),
+                "venue": venue,
+                "opponent_id": opponent_id,
+                "opponent_name": opponent_name,
+                "goals_for": goals_for,
+                "goals_against": goals_against,
+                "opponent_strength": None,
+                "statistics": {},
+                "opponent_statistics": {},
+                "statistics_provenance": [],
+                "statistics_raw_diagnostics": [],
+                "collection_fetched_at": None,
+                "repository_collected_at": None,
+                "provider_updated_at": None,
+                "history_source": "sportmonks_verified_result_candidate",
+                "result_verification": {
+                    "source_provider": "sportmonks",
+                    "corroborated_by": "highlightly",
+                    "verification_status": "exact_fixture_and_score_agree",
+                    "candidate_score_agreement": True,
+                    "highlightly_match_id": str(highlightly_candidate.get("highlightly_match_id") or ""),
+                    "verification_source": report.get("verification_source"),
+                    "verified_at": verified_at.isoformat(),
+                },
+            }
+            matches.append(new_match)
+            matches.sort(
+                key=lambda match: (
+                    _utc_datetime(match.get("date")).timestamp()
+                    if isinstance(match, Mapping) and _utc_datetime(match.get("date"))
+                    else -1
+                ),
+                reverse=True,
+            )
+            recent = matches[:safe_limit]
+            profile["matches"] = recent
+            profile["form_summary"] = analyze_form(recent)
+            profile["home_rating"] = venue_rating(recent, "home")
+            profile["away_rating"] = venue_rating(recent, "away")
+            tactics = analyze_tactics(recent)
+            profile["tactical_summary"] = tactics
+            for field in ("playing_style", "defensive_structure", "attacking_approach"):
+                if field in tactics:
+                    profile[field] = tactics[field]
+            data_quality = profile.setdefault("data_quality", {})
+            data_quality["verified_result_history_fallback_added"] = (
+                int(data_quality.get("verified_result_history_fallback_added") or 0) + 1
+            )
+            diagnostics = profile.setdefault("history_collection_diagnostics", {})
+            diagnostics["verified_result_candidates_added"] = (
+                int(diagnostics.get("verified_result_candidates_added") or 0) + 1
+            )
+            diagnostics["history_shortfall"] = max(0, safe_limit - len(recent))
+            profile["verified_result_history_fallback"] = {
+                "status": "applied",
+                "fixture_id": fixture_id,
+                "highlightly_match_id": str(highlightly_candidate.get("highlightly_match_id") or ""),
+                "verified_at": verified_at.isoformat(),
+                "tactical_evidence_updated": False,
+            }
+            summary["profiles_updated"] += 1
+            summary["matches_added"] += 1
+            fixture_added_for_candidate = True
+
+        if not fixture_added_for_candidate:
+            summary["candidates_rejected"] += 1
+
+    return summary
