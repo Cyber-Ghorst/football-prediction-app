@@ -36,7 +36,7 @@ The CI app-startup smoke test is deterministic and deliberately runs without pro
 ## Automated validation
 
 - Compile check (python -m compileall -q .) — passed.
-- Full unittest discovery — **374 tests passed** on the Streamlit smoke-test PR.
+- Full unittest discovery — **375 tests passed** on the final release-review PR (PR #123); the preceding Streamlit smoke-test PR passed 374.
 - Streamlit AppTest — app imports and starts without an uncaught exception when the primary provider is deliberately unavailable; the app surfaces the controlled provider-configuration message.
 - Default-off checks — result-history, LiveScore score, Highlightly statistics and Highlightly lineup fallbacks all start unchecked.
 - GitHub PR checks passed before merges: #120, #121 and #122.
