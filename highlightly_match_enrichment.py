@@ -13,7 +13,7 @@ from canonical_data import canonicalize_highlightly_match, match_identity
 from competition_crosswalk import normalize_competition_name, normalize_country
 from provider_core import normalize_team_name
 from provider_corroboration import canonicalize_sportmonks_fixture
-from sportmonks_layer2 import _team_statistics
+from sportmonks_layer2 import _provider_id, _team_statistics
 from tactical_indicators import analyze_tactics
 
 _STAT_NAMES = {
@@ -321,10 +321,13 @@ def collect_highlightly_match_enrichment(
                 team_name = sportmonks_match[side]["name"]
                 team_norm = normalize_team_name(team_name)
                 hl_observations = by_team.get(team_norm, [])
-                team_id = int(next(
-                    participant["id"] for participant in (fixture.get("participants") or [])
+                raw_team_id = next(
+                    participant.get("id") for participant in (fixture.get("participants") or [])
                     if str((participant.get("meta") or {}).get("location", "")).casefold() == side
-                ))
+                )
+                team_id = _provider_id(raw_team_id)
+                if team_id is None:
+                    raise ValueError(f"Sportmonks {side} participant has an invalid provider ID.")
                 sm_values = _team_statistics(fixture, team_id)
                 team_reports[side] = {
                     "team_name": team_name,
