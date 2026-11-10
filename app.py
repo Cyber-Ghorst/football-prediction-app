@@ -2188,7 +2188,11 @@ try:
                                     season=int(season),
                                     home_team_name=home_name,
                                     away_team_name=away_name,
-                                    selected_upcoming_fixture=selected_match_fixture,
+                                    selected_upcoming_fixture=(
+                                        selected_match_fixture
+                                        if cross_check_highlightly_details or cross_check_highlightly_players
+                                        else None
+                                    ),
                                     history_per_team=(
                                         10
                                         if cross_check_highlightly_details or use_highlightly_statistics_fallback
