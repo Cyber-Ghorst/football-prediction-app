@@ -425,3 +425,15 @@ The fallback is covered by unit tests for missing-field fill, primary-value pres
 - The option is disabled by default. A lineup report outside the provider time window, with a mismatched fixture/team, without starters, or without a valid collection completion timestamp is not used.
 
 Unit tests cover exact-fixture matching, preservation of existing Sportmonks lineups, missing/invalid timestamps, and the rule that player availability is not changed.
+
+
+## Opt-in verified result-history fallback (2026-11-10)
+
+The app now has a separate opt-in control to fill missing recent result history using Highlightly only as a discovery/corroboration source and Sportmonks as the authoritative result source.
+
+- A candidate is eligible only when one Sportmonks fixture matches the exact season, competition, home/away team IDs and kickoff, is explicitly completed, has valid non-negative full-time scores, and its score exactly agrees with Highlightly.
+- Ambiguous duplicate exact fixtures, missing timestamps, score conflicts, incomplete matches, unresolved team IDs and non-exact kickoff matches are rejected.
+- The appended history row uses the verified Sportmonks score and namespaced provider identity. Highlightly is retained only as the independent corroboration reference.
+- The fallback is disabled by default and runs only when explicitly enabled. It is bounded to the existing ten-match history window and does not invent statistics or opponent strength.
+- Recent form, goals for/against, venue ratings and the tactical summary are recomputed from the updated ten-match window. Match statistics remain empty for the inserted result unless separately sourced and validated. Existing TVD tactical_evidence is deliberately not rebuilt by this result-only fallback.
+- API Ninjas remains a separate optional corroboration path; it is not required for this fallback and does not supply missing match statistics.
