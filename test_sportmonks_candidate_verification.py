@@ -62,6 +62,16 @@ class HighlightlyCandidateVerificationTests(unittest.TestCase):
             with self.subTest(label=label):
                 self.assertEqual(_finished({"state_id": None, "state": {"name": label}}), expected)
 
+    def test_conflicting_duplicate_current_scores_cannot_verify_candidate(self):
+        fixture = sm_fixture()
+        fixture["scores"].append({
+            "participant_id": 10, "description": "CURRENT",
+            "score": {"goals": 2},
+        })
+        result = verify_highlightly_candidate(self.candidate, [fixture], **self.identity)
+        self.assertNotEqual(result["verification_status"], "exact_fixture_and_score_agree")
+        self.assertIsNot(result["candidate_score_agreement"], True)
+
     def test_exact_highlightly_corroborated_sportmonks_result_updates_recent_history(self):
         verified = verify_highlightly_candidate(self.candidate, [sm_fixture()], **self.identity)
         verified["verification_completed_at"] = "2026-10-24T14:05:00Z"

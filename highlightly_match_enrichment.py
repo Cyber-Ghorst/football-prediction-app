@@ -223,7 +223,7 @@ def _flatten_lineup_players(value: Any) -> list[dict[str, Any]]:
 
 def normalize_highlightly_lineups(
     payload: Mapping[str, Any], *, expected_home: str, expected_away: str,
-    match_id: Any,
+    match_id: Any, expected_home_id: Any = None, expected_away_id: Any = None,
 ) -> dict[str, Any]:
     """Normalize documented homeTeam/awayTeam lineup payload after identity checks."""
     result = {}
@@ -232,6 +232,10 @@ def normalize_highlightly_lineups(
         actual_name = team.get("name")
         if not actual_name or normalize_team_name(actual_name) != normalize_team_name(expected):
             raise ValueError(f"Highlightly {side} lineup team does not match the selected fixture.")
+        expected_id = expected_home_id if side == "home" else expected_away_id
+        actual_id = team.get("id")
+        if expected_id is None or actual_id is None or str(actual_id) != str(expected_id):
+            raise ValueError(f"Highlightly {side} lineup provider team ID does not match the exact fixture.")
         starters = _flatten_lineup_players(team.get("initialLineup"))
         substitutes = _flatten_lineup_players(team.get("substitutes"))
         result[side] = {
@@ -321,6 +325,21 @@ def collect_highlightly_match_enrichment(
                 team_name = sportmonks_match[side]["name"]
                 team_norm = normalize_team_name(team_name)
                 hl_observations = by_team.get(team_norm, [])
+                expected_highlightly_team_id = (
+                    (match_row["canonical"].get(side, {}).get("source_ids") or {}).get("highlightly")
+                )
+                observed_highlightly_team_ids = {
+                    str(observation.get("team_id"))
+                    for observation in hl_observations
+                    if observation.get("team_id") is not None
+                }
+                if hl_observations and (
+                    expected_highlightly_team_id is None
+                    or observed_highlightly_team_ids != {str(expected_highlightly_team_id)}
+                ):
+                    raise ValueError(
+                        f"Highlightly {side} statistics team ID does not match the exact fixture."
+                    )
                 raw_team_id = next(
                     participant.get("id") for participant in (fixture.get("participants") or [])
                     if str((participant.get("meta") or {}).get("location", "")).casefold() == side
@@ -377,6 +396,12 @@ def collect_highlightly_match_enrichment(
                                 expected_home=home_team_name,
                                 expected_away=away_team_name,
                                 match_id=highlightly_id,
+                                expected_home_id=(
+                                    (matched["canonical"].get("home", {}).get("source_ids") or {}).get("highlightly")
+                                ),
+                                expected_away_id=(
+                                    (matched["canonical"].get("away", {}).get("source_ids") or {}).get("highlightly")
+                                ),
                             )
                             lineup_report["sportmonks_fixture_id"] = str(selected_upcoming_fixture.get("id"))
                             lineup_report["highlightly_match_id"] = str(highlightly_id)

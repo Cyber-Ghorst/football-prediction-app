@@ -361,6 +361,25 @@ class HighlightlyMatchEnrichmentTests(unittest.TestCase):
         self.assertEqual(home["comparisons"]["Total Shots"]["highlightly"], 14.0)
         self.assertEqual(client.stats_calls, ["9001"])
 
+    def test_statistics_payload_team_ids_must_match_exact_highlightly_fixture(self):
+        stats = [
+            {"team": {"id": 999, "name": "Arsenal"}, "statistics": [
+                {"displayName": "Total shots", "value": 14},
+            ]},
+            {"team": {"id": 12, "name": "Chelsea"}, "statistics": [
+                {"displayName": "Total shots", "value": 8},
+            ]},
+        ]
+        client = FakeHighlightly([hl_match()], {"9001": stats})
+        report = collect_highlightly_match_enrichment(
+            client=client, sportmonks_fixtures=[sm_fixture()],
+            competition="Premier League", country="England", season=2026,
+            home_team_name="Arsenal", away_team_name="Chelsea",
+            now=datetime(2026, 11, 8, tzinfo=timezone.utc),
+        )
+        self.assertEqual(report["statistics_matches_compared"], 0)
+        self.assertTrue(any("team ID does not match" in value for value in report["errors"].values()))
+
     def test_wrong_competition_country_season_or_team_is_not_joined(self):
         bad = hl_match()
         bad["league"]["country"]["name"] = "Spain"
@@ -403,6 +422,24 @@ class HighlightlyMatchEnrichmentTests(unittest.TestCase):
         self.assertEqual(len(report["lineups"]["home"]["starting_players"]), 2)
         self.assertEqual(len(report["lineups"]["home"]["substitutes"]), 1)
         self.assertEqual(client.lineup_calls, ["9002"])
+
+    def test_lineup_payload_team_ids_must_match_exact_highlightly_fixture(self):
+        sm = sm_fixture(fid=701, date="2026-11-09T18:00:00Z", state="NS")
+        hl = hl_match(mid=9002, date="2026-11-09T18:02:00Z", state="Not Started")
+        lineups = {
+            "homeTeam": {"id": 999, "name": "Arsenal", "initialLineup": [{"id": 1, "name": "Keeper"}]},
+            "awayTeam": {"id": 12, "name": "Chelsea", "initialLineup": [{"id": 2, "name": "Keeper 2"}]},
+        }
+        client = FakeHighlightly([hl], lineups=lineups)
+        report = collect_highlightly_match_enrichment(
+            client=client, sportmonks_fixtures=[sm],
+            competition="Premier League", country="England", season=2026,
+            home_team_name="Arsenal", away_team_name="Chelsea",
+            selected_upcoming_fixture=sm,
+            now=datetime(2026, 11, 9, 17, 30, tzinfo=timezone.utc),
+        )
+        self.assertIsNone(report["lineups"])
+        self.assertTrue(any("team ID does not match" in value for value in report["errors"].values()))
 
     def test_lineup_request_is_skipped_outside_documented_availability_window(self):
         sm = sm_fixture(fid=702, date="2026-11-09T18:00:00Z", state="NS")

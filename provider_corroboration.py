@@ -52,9 +52,15 @@ def competition_key(name: str, country: str | None = None) -> str:
 
 def _participants(fixture: Mapping[str, Any]) -> tuple[Mapping[str, Any] | None, Mapping[str, Any] | None]:
     home = away = None
-    rows = fixture.get("participants") or []
+    raw_rows = fixture.get("participants")
+    rows = raw_rows if isinstance(raw_rows, list) else (
+        raw_rows.get("data", []) if isinstance(raw_rows, Mapping) else []
+    )
     for row in rows:
-        location = str((row.get("meta") or {}).get("location") or "").casefold()
+        if not isinstance(row, Mapping):
+            continue
+        meta = row.get("meta") if isinstance(row.get("meta"), Mapping) else {}
+        location = str(meta.get("location") or "").casefold()
         if location == "home":
             home = row
         elif location == "away":
@@ -63,11 +69,19 @@ def _participants(fixture: Mapping[str, Any]) -> tuple[Mapping[str, Any] | None,
 
 
 def _current_scores(fixture: Mapping[str, Any], home_id: Any, away_id: Any) -> tuple[int | None, int | None]:
-    rows = fixture.get("scores") or []
+    raw_rows = fixture.get("scores")
+    rows = raw_rows if isinstance(raw_rows, list) else (
+        raw_rows.get("data", []) if isinstance(raw_rows, Mapping) else []
+    )
     # Only the provider's explicit CURRENT entry represents the full-time
     # score. Period-specific rows are not a safe substitute when it is absent.
-    current = [row for row in rows if str(row.get("description") or "").casefold() == "current"]
+    current = [
+        row for row in rows
+        if isinstance(row, Mapping)
+        and str(row.get("description") or "").casefold() == "current"
+    ]
     values: dict[str, int] = {}
+    conflicted_participants: set[str] = set()
     for row in current:
         score = row.get("score") or {}
         goals = score.get("goals") if isinstance(score, Mapping) else None
@@ -75,8 +89,16 @@ def _current_scores(fixture: Mapping[str, Any], home_id: Any, away_id: Any) -> t
         if participant_id is None:
             continue
         parsed_goals = _int_or_none(goals)
-        if parsed_goals is not None:
-            values[str(participant_id)] = parsed_goals
+        if parsed_goals is None:
+            continue
+        key = str(participant_id)
+        if key in conflicted_participants:
+            continue
+        if key in values and values[key] != parsed_goals:
+            values.pop(key, None)
+            conflicted_participants.add(key)
+            continue
+        values[key] = parsed_goals
     return values.get(str(home_id)), values.get(str(away_id))
 
 
@@ -91,14 +113,31 @@ def canonicalize_sportmonks_fixture(
     if not kickoff:
         return None
     home_score, away_score = _current_scores(fixture, home.get("id"), away.get("id"))
-    state = fixture.get("state") or {}
-    label = str(state.get("short_name") or state.get("name") or "").casefold()
-    state_id = fixture.get("state_id")
-    if str(state_id) in {"5", "7", "8"} or any(x in label for x in ("finished", "full time", "after extra", "after penalties")):
+    state = fixture.get("state") if isinstance(fixture.get("state"), Mapping) else {}
+    label = str(state.get("short_name") or state.get("name") or "").strip().casefold()
+    raw_state_id = fixture.get("state_id")
+    state_id = None
+    if isinstance(raw_state_id, int) and not isinstance(raw_state_id, bool):
+        state_id = raw_state_id
+    elif isinstance(raw_state_id, str) and raw_state_id.strip().isdigit():
+        state_id = int(raw_state_id.strip())
+    if state_id in {5, 7, 8} or label in {
+        "finished", "ft", "full time", "full-time", "after extra time",
+        "after penalties", "finished after extra time", "finished after penalties", "aet",
+    }:
         status = "finished"
-    elif any(x in label for x in ("live", "in play", "half time", "1st half", "2nd half", "extra time", "penalty")):
+    elif state_id in {2, 3, 4, 6, 9, 21, 22, 25} or label in {
+        "live", "in play", "inplay", "ht", "half time", "half-time", "halftime",
+        "1h", "1st half", "first half", "2h", "2nd half", "second half",
+        "et", "extra time", "extra-time", "1st extra time", "2nd extra time",
+        "pen", "penalties", "penalty shootout", "break", "bt", "break time",
+        "1st period", "2nd period",
+    }:
         status = "live"
-    elif label in {"ns", "tbd", "not started", "scheduled"} or any(x in label for x in ("not started", "scheduled", "to be played")):
+    elif state_id == 1 or label in {
+        "ns", "tbd", "not started", "scheduled", "to be played",
+        "fixture not started", "not played",
+    }:
         status = "scheduled"
     else:
         status = "unknown"

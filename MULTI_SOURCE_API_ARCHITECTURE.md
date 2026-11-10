@@ -449,3 +449,13 @@ The app now has a separate opt-in control to fill missing recent result history 
 - The inserted history row retains the Sportmonks fixture ID as its identity anchor and LiveScore event ID/slug, per-competition sync timestamp, global sync timestamp, raw source update time and collection completion timestamp as score provenance.
 - Existing Sportmonks scores are never overwritten. LiveScore does not supply statistics, standings, lineups, injuries or player availability through this fallback. The TVD tactical_evidence object and all model weights remain unchanged.
 - The fallback is covered by mocked-client tests for global/per-competition freshness, exact crosswalk, exact identity, invalid scores, ambiguity, request caching, existing-score preservation and profile provenance.
+
+
+## Cross-provider provenance audit (2026-11-10)
+
+- Sportmonks fixture states used by corroboration now require exact documented finished/live/scheduled labels or state IDs. Substring matches such as "unfinished" and "not finished" remain unknown.
+- Malformed participant and score envelopes are ignored safely by the corroboration normalizer.
+- Conflicting duplicate Sportmonks CURRENT score rows no longer use last-row-wins behavior. The affected participant score remains unknown in canonical history, corroboration and secondary-result verification.
+- Provider IDs remain namespaced. Cross-provider joins still require competition, season, home/away orientation and kickoff agreement; candidate result imports still require exact Sportmonks fixture and score agreement.
+- Highlightly statistics, lineups and player/team-season enrichment remain opt-in and retain provider provenance. Missing statistics, injury evidence and player availability are not inferred.
+- No prediction weights, tactical evidence rules or 60/40 recent-match weighting were changed by this audit.

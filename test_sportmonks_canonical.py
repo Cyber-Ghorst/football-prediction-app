@@ -51,6 +51,18 @@ class SportmonksCanonicalTests(unittest.TestCase):
                 self.assertIsNone(result["home_score"])
                 self.assertEqual(result["away_score"], 1)
 
+    def test_conflicting_duplicate_current_scores_are_unknown(self):
+        row = self.fixture()
+        row["scores"].append({
+            "participant_id": 100, "description": "CURRENT",
+            "score": {"goals": 3},
+        })
+        result = canonicalize_sportmonks_fixture(
+            row, competition_key="eng-premier-league", season=2026
+        )
+        self.assertIsNone(result["home_score"])
+        self.assertEqual(result["away_score"], 1)
+
     def test_identity_matches_other_provider_without_comparing_ids(self):
         sm = canonicalize_sportmonks_fixture(
             self.fixture(), competition_key="eng-premier-league", season=2026
