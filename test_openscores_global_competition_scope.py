@@ -6,8 +6,9 @@ from openscores_fixture_observation_sync import run_sync
 
 
 class FakeOpenScores:
-    def __init__(self, pages, leagues=None):
+    def __init__(self, pages, leagues=None, seasons=None):
         self.pages = pages
+        self.seasons = seasons if seasons is not None else {}
         self.leagues = leagues if leagues is not None else [
             {"id": 1, "name": "League One"},
             {"id": 2, "name": "League Two"},
@@ -22,6 +23,9 @@ class FakeOpenScores:
 
     def list_leagues(self):
         return {"data": {"leagues": self.leagues}}
+
+    def list_seasons(self, league_id):
+        return {"data": {"seasons": self.seasons.get(str(league_id), [])}}
 
     @staticmethod
     def _league_collection(data):
@@ -147,6 +151,32 @@ class GlobalCompetitionScopeTests(unittest.TestCase):
         self.assertEqual(report["fixtures_unknown_league_id"], 0)
         self.assertEqual(report["fixtures_accepted_for_window"], 1)
         self.assertEqual(save.call_args.args[1][0]["provider_league_id"], "8")
+
+
+    def test_fixture_without_league_id_uses_explicit_season_parent_mapping(self):
+        client = FakeOpenScores(
+            [page([fixture(112, None, 2026)])],
+            seasons={"1": [{"id": 2026, "league_id": 1}]},
+        )
+        report, save = self._run(client)
+
+        self.assertEqual(report["season_mappings_discovered"], 1)
+        self.assertEqual(report["fixtures_missing_league_id"], 0)
+        self.assertEqual(report["fixtures_accepted_for_window"], 1)
+        self.assertEqual(save.call_args.args[1][0]["provider_league_id"], "1")
+        self.assertEqual(report["status"], "pass")
+
+    def test_explicit_league_conflicting_with_season_parent_is_rejected(self):
+        client = FakeOpenScores(
+            [page([fixture(113, 2, 2026)])],
+            seasons={"1": [{"id": 2026, "league_id": 1}]},
+        )
+        report, save = self._run(client)
+
+        self.assertEqual(report["fixtures_season_league_mismatch"], 1)
+        self.assertEqual(report["fixtures_accepted_for_window"], 0)
+        self.assertEqual(report["status"], "partial")
+        self.assertEqual(save.call_args.args[1], [])
 
     def test_conflicting_provider_fixture_identity_is_excluded(self):
         client = FakeOpenScores([page([
