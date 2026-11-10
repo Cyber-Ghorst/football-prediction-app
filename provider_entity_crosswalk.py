@@ -234,3 +234,89 @@ def save_explicit_provider_entity_links(
                 )
                 saved += 1
     return saved
+
+
+def _country_from_payload(raw: Mapping[str, Any], team_key: str | None = None) -> str | None:
+    country = _display_value(_value(raw, "country", "leagueCountry", "league_country"))
+    if country:
+        return country
+    league = raw.get("league") if isinstance(raw.get("league"), Mapping) else {}
+    country = _display_value(_value(league, "country", "country_name"))
+    if country:
+        return country
+    if team_key:
+        side = "team1" if team_key == "home" else "team2"
+        team = raw.get(side) or raw.get(side.title()) or raw.get(f"{team_key}_team") or {}
+        if isinstance(team, Mapping):
+            return _display_value(_value(team, "country", "teamCountry", "country_name")) or None
+        competitions = raw.get("competitions") or []
+        if competitions and isinstance(competitions[0], Mapping):
+            for competitor in competitions[0].get("competitors") or []:
+                if not isinstance(competitor, Mapping):
+                    continue
+                if str(competitor.get("homeAway") or "").casefold() == team_key:
+                    nested = competitor.get("team") if isinstance(competitor.get("team"), Mapping) else competitor
+                    return _display_value(_value(nested, "country", "country_name")) or None
+    return None
+
+
+def extract_provider_entities_from_observations(
+    provider: str,
+    observations: Iterable[Mapping[str, Any]],
+) -> dict[str, list[dict[str, Any]]]:
+    """Extract unique source leagues, seasons and teams from archived observations."""
+    provider_name = str(provider or "").strip().casefold()
+    if provider_name not in SUPPORTED_PROVIDERS:
+        raise ValueError("Unsupported provider.")
+    entities: dict[str, dict[str, dict[str, Any]]] = {
+        "leagues": {}, "seasons": {}, "teams": {},
+    }
+
+    def add(collection: str, source_id: Any, name: Any, **metadata: Any) -> None:
+        if source_id is None or not str(source_id).strip() or not _display_value(name):
+            return
+        key = str(source_id)
+        current = entities[collection].get(key)
+        if current is None:
+            entities[collection][key] = {
+                "id": key, "name": _display_value(name), "provider": provider_name,
+                "observation_count": 1, **metadata,
+            }
+            return
+        current["observation_count"] += 1
+        for field, value in metadata.items():
+            if value and not current.get(field):
+                current[field] = value
+        if _display_value(name) != current["name"]:
+            variants = set(current.get("name_variants", []))
+            variants.add(_display_value(name))
+            current["name_variants"] = sorted(variants)
+
+    for observation in observations:
+        if not isinstance(observation, Mapping):
+            continue
+        raw = observation.get("raw_payload")
+        raw = raw if isinstance(raw, Mapping) else {}
+        competition_id = observation.get("competition_key")
+        competition_name = observation.get("competition_name") or competition_id
+        country = _country_from_payload(raw)
+        add("leagues", competition_id, competition_name, country=country)
+        season_id = observation.get("season_key")
+        season_name = observation.get("season_name") or season_id
+        add(
+            "seasons", season_id, season_name,
+            provider_competition_id=str(competition_id) if competition_id is not None else None,
+        )
+        add(
+            "teams", observation.get("home_team_key"), observation.get("home_team_name"),
+            country=_country_from_payload(raw, "home") or country,
+        )
+        add(
+            "teams", observation.get("away_team_key"), observation.get("away_team_name"),
+            country=_country_from_payload(raw, "away") or country,
+        )
+
+    return {
+        name: sorted(rows.values(), key=lambda row: (row["name"].casefold(), row["id"]))
+        for name, rows in entities.items()
+    }
