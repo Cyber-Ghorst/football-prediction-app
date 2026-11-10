@@ -378,9 +378,21 @@ def collect_sportmonks_team_profile(
         "excluded_missing_scores": 0,
         "excluded_invalid_kickoff": 0,
         "excluded_invalid_scores": 0,
+        "excluded_duplicate_fixture_id": 0,
     }
+    seen_fixture_ids: set[int] = set()
 
     for fixture in fixtures:
+        try:
+            raw_fixture_id = fixture.get("id")
+            if raw_fixture_id is not None:
+                fixture_id = int(raw_fixture_id)
+                if fixture_id in seen_fixture_ids:
+                    history_diagnostics["excluded_duplicate_fixture_id"] += 1
+                    continue
+                seen_fixture_ids.add(fixture_id)
+        except (TypeError, ValueError):
+            pass
         fixture_index = fixture_statistics_indexes.get(id(fixture), {})
         fixture_season_id = fixture.get("season_id")
         if fixture_season_id is not None:
@@ -529,6 +541,7 @@ def collect_sportmonks_team_profile(
         "history_integrity_status": (
             "issues_detected"
             if duplicate_fixture_ids
+            or history_diagnostics["excluded_duplicate_fixture_id"]
             or history_diagnostics["excluded_invalid_kickoff"]
             or history_diagnostics["excluded_invalid_scores"]
             or team_fixture_accounting_gap
