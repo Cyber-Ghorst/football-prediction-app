@@ -18,6 +18,22 @@ class ProviderRoleConfigTests(unittest.TestCase):
     def test_livescore_is_limited_to_fixtures_results_and_standings(self):
         self.assertEqual(set(PROVIDER_ROLES['livescore_football']['domains']), {'fixtures', 'results', 'standings'})
 
+    def test_only_the_five_selected_sources_are_future_fixture_candidates(self):
+        future = {
+            key for key, role in PROVIDER_ROLES.items()
+            if "future_fixtures" in role["domains"]
+        }
+        self.assertEqual(
+            future,
+            {"openligadb", "openfootball", "open_matchday", "worldcup26", "bzzoiro"},
+        )
+        self.assertNotIn("future_fixtures", PROVIDER_ROLES["openscores"]["domains"])
+        self.assertNotIn("fixtures", PROVIDER_ROLES["openscores"]["domains"])
+        self.assertNotIn("future_fixtures", PROVIDER_ROLES["highlightly"]["domains"])
+        self.assertNotIn("future_fixtures", PROVIDER_ROLES["api_ninjas"]["domains"])
+        self.assertNotIn("future_fixtures", PROVIDER_ROLES["api_football"]["domains"])
+        self.assertNotIn("future_fixtures", PROVIDER_ROLES["livescore_football"]["domains"])
+
     def test_readiness_reports_current_opt_in_layer2_integrations(self):
         rows = {row["provider_id"]: row for row in provider_readiness()}
         self.assertIn("opt-in missing-score fallback", rows["livescore_football"]["app_integration"])
