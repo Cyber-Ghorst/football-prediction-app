@@ -6,6 +6,7 @@ scores, opponent mappings, or availability ratings are created.
 from __future__ import annotations
 
 from typing import Any
+from datetime import datetime, timezone
 
 from form_analyzer import analyze_form, venue_rating
 from tactical_indicators import analyze_tactics
@@ -48,6 +49,9 @@ _STAT_ALIASES = {
 }
 _STAT_TYPE_ID_NAMES = {1527: "counter attacks"}
 _PERCENTAGE_STATS = {"Ball Possession", "Passes %"}
+_CORE_STATISTICS = (
+    "Ball Possession", "Passes %", "Total Shots", "Shots on Goal", "Corner Kicks",
+)
 
 
 def _rows(value: Any) -> list[dict[str, Any]]:
@@ -101,6 +105,66 @@ def _state(fixture: dict[str, Any]) -> str:
     return "unknown"
 
 
+def _score_integer(value: Any) -> int | None:
+    """Accept only non-negative whole-number goal values."""
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return value if value >= 0 else None
+    if isinstance(value, str):
+        text = value.strip()
+        if text.isdigit():
+            return int(text)
+    return None
+
+
+def _kickoff_timestamp(fixture: dict[str, Any]) -> int | None:
+    """Parse fixture kickoff into UTC epoch seconds, including ISO offsets."""
+    raw_timestamp = fixture.get("starting_at_timestamp")
+    if raw_timestamp is not None:
+        try:
+            value = float(raw_timestamp)
+            if value > 100_000_000_000:
+                value /= 1000
+            return int(value)
+        except (TypeError, ValueError, OverflowError):
+            pass
+    raw_date = fixture.get("starting_at")
+    if not raw_date:
+        return None
+    try:
+        parsed = datetime.fromisoformat(
+            str(raw_date).strip().replace("Z", "+00:00")
+        )
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=timezone.utc)
+        return int(parsed.astimezone(timezone.utc).timestamp())
+    except (TypeError, ValueError, OverflowError):
+        return None
+
+
+def _invalid_score_evidence(
+    fixture: dict[str, Any], home_id: int, away_id: int
+) -> bool:
+    rows = _rows(fixture.get("scores"))
+    current = [
+        row for row in rows
+        if str(row.get("description") or "").casefold() == "current"
+    ]
+    for row in current or rows:
+        try:
+            participant_id = int(row.get("participant_id"))
+        except (TypeError, ValueError):
+            continue
+        if participant_id not in {home_id, away_id}:
+            continue
+        score = row.get("score")
+        raw_goals = score.get("goals") if isinstance(score, dict) else None
+        if raw_goals is not None and _score_integer(raw_goals) is None:
+            return True
+    return False
+
+
 def _scores(fixture: dict[str, Any], home_id: int, away_id: int) -> tuple[int | None, int | None]:
     rows = _rows(fixture.get("scores"))
     current = [r for r in rows if str(r.get("description") or "").casefold() == "current"]
@@ -112,9 +176,10 @@ def _scores(fixture: dict[str, Any], home_id: int, away_id: int) -> tuple[int | 
         participant_id = row.get("participant_id")
         score = row.get("score")
         goals = score.get("goals") if isinstance(score, dict) else None
-        if participant_id is not None and goals is not None:
+        parsed_goals = _score_integer(goals)
+        if participant_id is not None and parsed_goals is not None:
             try:
-                values[int(participant_id)] = int(goals)
+                values[int(participant_id)] = parsed_goals
             except (TypeError, ValueError):
                 continue
     return values.get(home_id), values.get(away_id)
@@ -269,8 +334,37 @@ def collect_sportmonks_team_profile(
             id(fixture): _fixture_statistics_index(fixture) for fixture in fixtures
         }
     matches: list[dict[str, Any]] = []
+    fixture_ids = []
+    for fixture in fixtures:
+        try:
+            if fixture.get("id") is not None:
+                fixture_ids.append(int(fixture["id"]))
+        except (TypeError, ValueError):
+            continue
+    duplicate_input_ids = sorted({
+        fixture_id for fixture_id in set(fixture_ids)
+        if fixture_ids.count(fixture_id) > 1
+    })
+    schedule_duplicate_ids = sorted({
+        int(value)
+        for fixture in fixtures
+        for value in (fixture.get("_schedule_duplicate_fixture_ids") or [])
+        if str(value).isdigit()
+    })
+    duplicate_fixture_ids = sorted(set(duplicate_input_ids) | set(schedule_duplicate_ids))
+    schedule_unique_count = next(
+        (
+            row.get("_schedule_unique_fixture_count")
+            for row in fixtures
+            if row.get("_schedule_unique_fixture_count") is not None
+        ),
+        len(set(fixture_ids)),
+    )
     history_diagnostics = {
         "fixtures_scanned": len(fixtures),
+        "schedule_unique_fixture_count": schedule_unique_count,
+        "duplicate_fixture_id_count": len(duplicate_fixture_ids),
+        "duplicate_fixture_ids": duplicate_fixture_ids,
         "same_season_fixtures": 0,
         "season_eligible_fixtures": 0,
         "fixtures_missing_season_id": 0,
@@ -282,6 +376,8 @@ def collect_sportmonks_team_profile(
         "excluded_other_team": 0,
         "excluded_not_completed": 0,
         "excluded_missing_scores": 0,
+        "excluded_invalid_kickoff": 0,
+        "excluded_invalid_scores": 0,
     }
 
     for fixture in fixtures:
@@ -319,9 +415,16 @@ def collect_sportmonks_team_profile(
             history_diagnostics["excluded_not_completed"] += 1
             continue
         history_diagnostics["completed_fixtures"] += 1
+        kickoff_timestamp = _kickoff_timestamp(fixture)
+        if kickoff_timestamp is None:
+            history_diagnostics["excluded_invalid_kickoff"] += 1
+            continue
         home_goals, away_goals = _scores(fixture, home_id, away_id)
         if home_goals is None or away_goals is None:
-            history_diagnostics["excluded_missing_scores"] += 1
+            if _invalid_score_evidence(fixture, home_id, away_id):
+                history_diagnostics["excluded_invalid_scores"] += 1
+            else:
+                history_diagnostics["excluded_missing_scores"] += 1
             continue
         history_diagnostics["fixtures_with_valid_scores"] += 1
         is_home = team_id == home_id
@@ -330,6 +433,8 @@ def collect_sportmonks_team_profile(
         matches.append({
             "fixture_id": fixture.get("id"),
             "date": fixture.get("starting_at"),
+            "_kickoff_timestamp": kickoff_timestamp,
+            "collection_fetched_at": fixture.get("collection_fetched_at"),
             "venue": "home" if is_home else "away",
             "opponent_id": opponent_id,
             "opponent_name": opponent.get("name"),
@@ -342,8 +447,13 @@ def collect_sportmonks_team_profile(
             "statistics_raw_diagnostics": fixture_index.get(team_id, {}).get("raw_diagnostics", []),
         })
 
-    matches.sort(key=lambda row: str(row.get("date") or ""), reverse=True)
+    matches.sort(
+        key=lambda row: row.get("_kickoff_timestamp") or -1,
+        reverse=True,
+    )
     recent = matches[:10]
+    for match in recent:
+        match.pop("_kickoff_timestamp", None)
     form = analyze_form(recent)
     tactics = analyze_tactics(recent)
     if league_reference_statistics is None:
@@ -368,6 +478,63 @@ def collect_sportmonks_team_profile(
     tactical_evidence = build_tactical_evidence_profile(
         recent, league_reference, team.get("name") or f"Team {team_id}"
     )
+    statistics_coverage = {
+        metric: sum(metric in (match.get("statistics") or {}) for match in recent)
+        for metric in _CORE_STATISTICS
+    }
+    matches_with_any_statistics = sum(
+        bool(match.get("statistics")) for match in recent
+    )
+    matches_with_complete_core_statistics = sum(
+        all(metric in (match.get("statistics") or {}) for metric in _CORE_STATISTICS)
+        for match in recent
+    )
+    total_core_observations = sum(statistics_coverage.values())
+    core_observation_target = len(recent) * len(_CORE_STATISTICS)
+    core_statistics_completeness_pct = (
+        round(total_core_observations / core_observation_target * 100, 1)
+        if core_observation_target else 0.0
+    )
+    recent_dates = [
+        datetime.fromtimestamp(
+            _kickoff_timestamp({"starting_at": match.get("date")}),
+            tz=timezone.utc,
+        ).isoformat()
+        for match in recent
+        if _kickoff_timestamp({"starting_at": match.get("date")}) is not None
+    ]
+    collection_timestamps = [
+        str(match.get("collection_fetched_at"))
+        for match in recent
+        if match.get("collection_fetched_at")
+    ]
+    team_fixture_accounting_gap = (
+        history_diagnostics["team_fixtures"]
+        - history_diagnostics["completed_fixtures"]
+        - history_diagnostics["excluded_not_completed"]
+    )
+    history_diagnostics.update({
+        "history_shortfall": max(0, 10 - len(recent)),
+        "history_latest_match_at": recent_dates[0] if recent_dates else None,
+        "history_oldest_match_at": recent_dates[-1] if recent_dates else None,
+        "history_collection_fetched_at": max(collection_timestamps) if collection_timestamps else None,
+        "history_order": "newest_first_by_parsed_utc_kickoff",
+        "statistics_core_metrics": list(_CORE_STATISTICS),
+        "statistics_coverage_by_metric": statistics_coverage,
+        "matches_with_any_statistics": matches_with_any_statistics,
+        "matches_with_complete_core_statistics": matches_with_complete_core_statistics,
+        "core_statistics_completeness_pct": core_statistics_completeness_pct,
+        "team_fixture_accounting_gap": team_fixture_accounting_gap,
+        "team_fixture_accounting_status": "balanced" if team_fixture_accounting_gap == 0 else "unbalanced",
+        "history_integrity_status": (
+            "issues_detected"
+            if duplicate_fixture_ids
+            or history_diagnostics["excluded_invalid_kickoff"]
+            or history_diagnostics["excluded_invalid_scores"]
+            or team_fixture_accounting_gap
+            else "ok"
+        ),
+    })
     return {
         "id": team_id,
         "name": team.get("name") or f"Team {team_id}",
@@ -409,6 +576,7 @@ def collect_sportmonks_team_profile(
                 for m in recent
             ),
             "fixtures_scanned": len(fixtures),
+            **history_diagnostics,
         },
     }
 
