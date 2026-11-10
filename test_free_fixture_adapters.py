@@ -70,6 +70,7 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         self.assertEqual(rows[0]["competition_key"], "eng.1")
         self.assertEqual(rows[0]["competition_name"], "Premier League")
         self.assertEqual(rows[0]["season_key"], "2026-27")
+        self.assertTrue(rows[0]["home_team_key"].startswith("openfootball:team:"))
         client.close()
 
     def test_openfootball_date_only_is_never_prediction_ready(self):
@@ -97,6 +98,7 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         self.assertEqual(row["exclusion_reason"], "kickoff_missing_timezone_or_precision")
         self.assertEqual(row["competition_key"], "ENG_1_premier-league")
         self.assertEqual(row["season_key"], "2627")
+        self.assertTrue(row["home_team_key"].startswith("open_matchday:team:"))
         self.assertIn("non-commercial-only", row["licence"])
         client.close()
 
