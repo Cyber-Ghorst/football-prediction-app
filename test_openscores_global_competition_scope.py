@@ -8,7 +8,14 @@ from openscores_fixture_observation_sync import run_sync
 class FakeOpenScores:
     def __init__(self, pages, leagues=None, seasons=None):
         self.pages = pages
-        self.seasons = seasons if seasons is not None else {}
+        self.seasons = seasons if seasons is not None else {
+            "1": [
+                {"id": 2025, "league_id": 1},
+                {"id": 2026, "league_id": 1},
+            ],
+            "2": [{"id": 2027, "league_id": 2}],
+        }
+        self.missing_season_returned = False
         self.leagues = leagues if leagues is not None else [
             {"id": 1, "name": "League One"},
             {"id": 2, "name": "League Two"},
@@ -33,8 +40,27 @@ class FakeOpenScores:
 
     def list_fixtures(self, **filters):
         self.calls.append(filters)
-        page = filters["page"]
-        return self.pages[page - 1]
+        payload = self.pages[filters["page"] - 1]
+        items = payload["data"]["items"]
+        selected = [
+            row for row in items
+            if row.get("season_id") is not None
+            and str(row.get("season_id")) == str(filters["season_id"])
+        ]
+        for row in items:
+            if row.get("season_id") is None and not self.missing_season_returned:
+                selected.append(row)
+                self.missing_season_returned = True
+        return {
+            "retrieved_at_utc": payload["retrieved_at_utc"],
+            "data": {
+                "items": selected,
+                "pagination": {
+                    "page": filters["page"],
+                    "total_pages": payload["data"]["pagination"]["total_pages"],
+                },
+            },
+        }
 
 
 def fixture(fid, league_id, season_id, kickoff="2026-11-12T19:00:00Z"):
@@ -81,19 +107,22 @@ class GlobalCompetitionScopeTests(unittest.TestCase):
     def test_global_query_groups_each_fixture_by_its_own_league_and_season(self):
         client = FakeOpenScores([page([
             fixture(77, 1, 2025),
-            fixture(78, 2, 2026),
+            fixture(78, 2, 2027),
             fixture(79, 1, 2026),
         ])])
         report, save = self._run(client)
 
-        self.assertEqual(len(client.calls), 1)
-        self.assertEqual(client.calls[0], {
-            "status": "scheduled",
-            "date_from": "2026-11-10T18:00:00Z",
-            "date_to": "2026-11-17T18:00:00Z",
-            "page": 1,
-            "page_size": 200,
-        })
+        self.assertEqual(len(client.calls), 3)
+        self.assertEqual(
+            {call["season_id"] for call in client.calls},
+            {"2025", "2026", "2027"},
+        )
+        for filters in client.calls:
+            self.assertEqual(filters["status"], "scheduled")
+            self.assertEqual(filters["date_from"], "2026-11-10T18:00:00Z")
+            self.assertEqual(filters["date_to"], "2026-11-17T18:00:00Z")
+            self.assertEqual(filters["page"], 1)
+            self.assertEqual(filters["page_size"], 200)
         rows = save.call_args.args[1]
         self.assertEqual(
             {(row["provider_fixture_id"], row["provider_league_id"], row["provider_season_id"])
@@ -107,7 +136,9 @@ class GlobalCompetitionScopeTests(unittest.TestCase):
     def test_missing_or_unknown_competition_identity_is_never_guessed(self):
         client = FakeOpenScores([page([
             fixture(80, 1, 2026),
-            {"id": 81, "season_id": 2026, "status": "scheduled"},
+            {"id": 81, "season_id": 2026, "status": "scheduled",
+             "home_team": {"id": "h81", "name": "Home"},
+             "away_team": {"id": "a81", "name": "Away"}},
             fixture(82, 999, 2026),
             {
                 "id": 83, "league_id": 2, "status": "scheduled",
@@ -118,25 +149,25 @@ class GlobalCompetitionScopeTests(unittest.TestCase):
         ])])
         report, save = self._run(client)
 
-        self.assertEqual(report["fixtures_missing_league_id"], 1)
+        self.assertEqual(report["fixtures_missing_league_id"], 0)
         self.assertEqual(report["fixtures_unknown_league_id"], 1)
         self.assertEqual(report["fixtures_missing_season_id"], 1)
-        self.assertEqual(report["fixtures_accepted_for_window"], 1)
+        self.assertEqual(report["fixtures_accepted_for_window"], 2)
         self.assertEqual(report["status"], "partial")
         self.assertEqual(
-            [row["provider_fixture_id"] for row in save.call_args.args[1]],
-            ["80"],
+            {row["provider_fixture_id"] for row in save.call_args.args[1]},
+            {"80", "81"},
         )
 
     def test_pagination_fetches_all_reported_pages(self):
         client = FakeOpenScores([
             page([fixture(90, 1, 2026)], total_pages=2),
-            page([fixture(91, 2, 2026)], total_pages=2),
+            page([fixture(91, 2, 2027)], total_pages=2),
         ])
         report, save = self._run(client)
 
-        self.assertEqual(len(client.calls), 2)
-        self.assertEqual(report["pages_fetched"], 2)
+        self.assertEqual(len(client.calls), 6)
+        self.assertEqual(report["pages_fetched"], 6)
         self.assertEqual(report["fixtures_accepted_for_window"], 2)
         self.assertEqual(report["status"], "pass")
         self.assertEqual(len(save.call_args.args[1]), 2)
@@ -144,7 +175,11 @@ class GlobalCompetitionScopeTests(unittest.TestCase):
 
     def test_global_query_recognizes_all_discovered_leagues_by_default(self):
         leagues = [{"id": index, "name": f"League {index}"} for index in range(1, 9)]
-        client = FakeOpenScores([page([fixture(101, 8, 2026)])], leagues=leagues)
+        client = FakeOpenScores(
+            [page([fixture(101, 8, 8008)])],
+            leagues=leagues,
+            seasons={"8": [{"id": 8008, "league_id": 8}]},
+        )
         report, save = self._run(client)
 
         self.assertEqual(report["leagues_discovered"], 8)
@@ -208,10 +243,11 @@ class GlobalCompetitionScopeTests(unittest.TestCase):
         self.assertEqual(save.call_args.args[1], [])
 
     def test_pagination_cap_is_reported_as_partial(self):
-        full_page = [fixture(i, 1, 2026) for i in range(200)]
-        client = FakeOpenScores([
-            page(full_page, total_pages=12) for _ in range(10)
-        ])
+        full_page = [fixture(i + 1, 1, 2026) for i in range(200)]
+        client = FakeOpenScores(
+            [page(full_page, total_pages=12) for _ in range(10)],
+            seasons={"1": [{"id": 2026, "league_id": 1}]},
+        )
         report, _ = self._run(client)
 
         self.assertEqual(len(client.calls), 10)
