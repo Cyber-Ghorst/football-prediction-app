@@ -94,25 +94,27 @@ class FreeFixtureAdapterTests(unittest.TestCase):
     def test_bzzoiro_requires_token_and_explicit_endpoint(self):
         with self.assertRaisesRegex(Exception, "BZZOIRO_API_TOKEN"):
             BzzoiroAdapter(token=None, endpoint="https://example.test/fixtures")
-        with self.assertRaisesRegex(Exception, "BZZOIRO_FIXTURES_URL"):
-            BzzoiroAdapter(token="test-token", endpoint=None)
+        with self.assertRaisesRegex(Exception, "documented BSD API host"):
+            BzzoiroAdapter(token="test-token", endpoint="https://example.test/events/")
 
     def test_bzzoiro_parses_utc_upcoming_payload_without_exposing_token(self):
-        client = BzzoiroAdapter(token="secret", endpoint="https://example.test/fixtures")
-        client._get_json = Mock(return_value={"data": [{
+        client = BzzoiroAdapter(token="secret")
+        client._get_json = Mock(return_value={"results": [{
             "id": 99,
-            "competition": "League",
-            "season": "2026",
+            "league_id": 10,
+            "season_id": 2026,
             "home_team": {"id": 1, "name": "Home FC"},
             "away_team": {"id": 2, "name": "Away FC"},
-            "kickoff": (NOW + timedelta(days=1)).isoformat(),
+            "event_date": (NOW + timedelta(days=1)).isoformat(),
             "status": "upcoming",
         }]})
         row = client.upcoming()[0]
         self.assertTrue(row["eligible_for_review"])
         self.assertEqual(row["provider_fixture_id"], "99")
         self.assertNotIn("secret", str(row))
-        self.assertEqual(client._get_json.call_args.kwargs["headers"]["Authorization"], "Bearer secret")
+        self.assertEqual(client._get_json.call_args.kwargs["headers"]["Authorization"], "Token secret")
+        self.assertEqual(client._get_json.call_args.args[0], BzzoiroAdapter.BASE_URL)
+        self.assertEqual(client._get_json.call_args.kwargs["params"]["status"], "upcoming")
         client.close()
 
     def test_only_explicitly_eligible_observations_are_selected(self):
