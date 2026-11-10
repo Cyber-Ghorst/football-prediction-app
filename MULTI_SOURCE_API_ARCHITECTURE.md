@@ -477,12 +477,24 @@ Layer 3 adds evidence-based checks around the canonical records delivered by Lay
 - The Streamlit data-collection report archives the reliability evidence and exposes it in the provider corroboration panel.
 - Historical API-Football seasons are not compared against Sportmonks by this report because the current corroboration collector is anchored to Sportmonks.
 
+### Second implementation milestone: field-level data quality controls
+
+- Sportmonks match statistics now detect duplicate canonical observations per fixture/team. Conflicting values are excluded rather than using last-row-wins or averaging; valid-plus-invalid duplicates are excluded regardless of row order. Invalid supported values are reported separately and do not count as usable coverage.
+- Statistics conflicts and invalid observations are carried into team profiles, prediction-input quality warnings and the archived Streamlit collection evidence. Optional statistic gaps remain unknown; the gate does not block a prediction solely because an optional statistic is absent.
+- Highlightly lineup normalization requires exact home/away team names and provider team IDs, valid stable IDs for every starter and substitute, and no duplicate player ID within either team's combined starting/substitute list. Existing exact-fixture, kickoff and collection-timestamp checks remain in force. Existing primary lineups are not overwritten.
+- Sportmonks player/season enrichment now rejects boolean and fractional team, season and player IDs rather than coercing them. Each current-squad player must have exactly one matching team-season statistics row with matching player identity and valid minutes evidence.
+- Fixture-specific sidelined/injury records are checked against the current squad and, when supplied, exact fixture, team and season identity. Invalid dates, malformed status values, unknown players and mismatched scope keep availability unknown.
+- Missing, conflicting or malformed evidence is not repaired or imputed. These controls are quality diagnostics and do not change provider priority or prediction weights.
+- Regression tests cover conflicting/invalid statistic duplicates, resulting coverage, lineup player identity/duplicates and malformed player/injury/team/season identifiers.
+- GitHub Actions validation passed: compile step and all 409 Python unit tests.
+
 ### Remaining Layer 3 work
 
-1. Extend field-level quality checks to statistics, lineups, injuries and player/season records, with exact fixture/team/season identity and freshness evidence.
-2. Add explicit prediction-input quality gates for duplicates, invalid values, stale evidence, missing required fields and unresolved conflicts. A quality failure must block or downgrade readiness without inventing replacements.
-3. Add persistent provider-quality history so reliability can be assessed over a rolling sample rather than a single optional diagnostic run.
-4. Add conflict triage and auditable resolution records, retaining the raw observations and selected authoritative value.
-5. Validate the quality-control layer against archived reports and a sufficient historical sample before considering any provider-priority changes.
+1. Extend prediction-input quality gates to stale evidence, missing required fields and unresolved conflicts, while preserving the existing fail-closed core-history gate.
+2. Add persistent provider-quality history so reliability can be assessed over a rolling sample rather than a single optional diagnostic run.
+3. Add conflict triage and auditable resolution records, retaining raw observations and the selected authoritative value.
+4. Implement dynamic league discovery and registration with explicit competition/season crosswalks and identity checks.
+5. Add a league coverage dashboard distinguishing discovered, supported, incomplete and prediction-ready competitions.
+6. Validate the quality-control layer against archived reports and sufficient historical samples before considering any provider-priority changes.
 
 The reliability report is a descriptive baseline, not a source ranking or an automated model adjustment.
