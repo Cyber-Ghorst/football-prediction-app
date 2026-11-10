@@ -1520,7 +1520,14 @@ try:
                 "Registration records discovery, not verified cross-provider identity or prediction readiness."
             )
             st.json(registry_persistence)
-            if discovered_registry:
+            display_registry = [
+                row for row in discovered_registry
+                if (
+                    str(row.get("season_start") or "")[:4] == str(int(season))
+                    or str(row.get("season_name") or "").startswith(str(int(season)))
+                )
+            ]
+            if display_registry:
                 st.dataframe([
                     {
                         "competition": row["competition_name"],
