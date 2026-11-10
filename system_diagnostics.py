@@ -57,6 +57,7 @@ def build_system_diagnostics(
     statistics_coverage: Mapping[str, Mapping[str, Any]],
     provider_configuration: list[Mapping[str, Any]],
     corroboration: Mapping[str, Any] | None = None,
+    input_quality_report: Mapping[str, Any] | None = None,
     model_weights: Mapping[str, float] | None = None,
     generated_at: datetime | None = None,
 ) -> dict[str, Any]:
@@ -358,6 +359,23 @@ def build_system_diagnostics(
             "independent_provider_corroboration", "info",
             "Independent result corroboration was not run for this collection.",
             "Enable the optional cross-check if independent result comparison is needed.",
+        ))
+
+    if input_quality_report is not None:
+        quality_allowed = input_quality_report.get("prediction_allowed") is True
+        quality_status = str(input_quality_report.get("status") or "unknown")
+        checks.append(_check(
+            "prediction_input_quality",
+            "pass" if quality_allowed and quality_status == "passed"
+            else "warning" if quality_allowed else "fail",
+            (
+                "Core prediction histories passed strict team, fixture, score and chronology checks."
+                if quality_allowed and quality_status == "passed"
+                else "Core histories passed, but upstream data-quality warnings remain."
+                if quality_allowed
+                else "Prediction input quality gate rejected one or more core match-history records."
+            ),
+            None if quality_allowed else "Review the failed input-quality checks and correct the source/collection issue; do not impute or reorder data.",
         ))
 
     weights = dict(model_weights or {})
