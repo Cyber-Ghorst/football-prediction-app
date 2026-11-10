@@ -195,8 +195,29 @@ def _team_readiness(profile: dict[str, Any]) -> dict[str, Any]:
         "history_target": 10,
         "history_status": "target_met" if count >= 10 else "minimum_met" if count >= 5 else "insufficient",
         "prediction_allowed_by_history": count >= 5,
-        "matches_with_statistics": stats_count,
+        "matches_with_statistics": quality.get("matches_with_any_statistics", stats_count),
         "matches_with_opponent_strength": strength_count,
+        "history_collection_diagnostics": {
+            key: quality.get(key)
+            for key in (
+                "fixtures_scanned", "same_season_fixtures", "team_fixtures",
+                "completed_fixtures", "fixtures_with_valid_scores",
+                "excluded_wrong_season", "excluded_missing_participants",
+                "excluded_other_team", "excluded_not_completed",
+                "excluded_missing_scores", "excluded_invalid_kickoff",
+                "excluded_invalid_scores", "excluded_duplicate_fixture_id",
+                "history_shortfall",
+                "history_latest_match_at", "history_oldest_match_at",
+                "history_collection_fetched_at", "history_order",
+                "schedule_unique_fixture_count", "duplicate_fixture_id_count",
+                "duplicate_fixture_ids", "team_fixture_accounting_gap",
+                "team_fixture_accounting_status", "statistics_core_metrics",
+                "statistics_coverage_by_metric", "matches_with_any_statistics",
+                "matches_with_complete_core_statistics",
+                "core_statistics_completeness_pct", "history_integrity_status",
+            )
+            if key in quality
+        },
         "tactical_components_available": tactical_components,
         "player_availability_evidence": "available" if availability_known else "unknown",
         "confirmed_lineup_evidence": "available" if lineup_known else "unknown",
