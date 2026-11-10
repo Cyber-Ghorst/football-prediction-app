@@ -20,6 +20,7 @@ jobs:
     env:
       SPORTMONKS_API_TOKEN: ${{ secrets.SPORTMONKS_API_TOKEN }}
       PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -38,6 +39,7 @@ jobs:
         run: |
           test -n "$SPORTMONKS_API_TOKEN" || { echo "::error::SPORTMONKS_API_TOKEN secret is missing."; exit 1; }
           test -n "$PROVIDER_DATABASE_URL" || { echo "::error::PROVIDER_DATABASE_URL secret is missing."; exit 1; }
+          test -n "$DATABASE_URL" || { echo "::error::DATABASE_URL (Neon) secret is missing."; exit 1; }
           test -f root.crt || { echo "::error::CockroachDB root.crt is missing."; exit 1; }
 
       - name: Collect and upsert rolling seven-day fixture window
