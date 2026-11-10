@@ -15,7 +15,9 @@ season-file competition stem and season directory. Open Matchday uses the
 competition directory and fixture season label. LiveScoreFootball uses event
 competition/season IDs. Bzzoiro uses league/season IDs.
 
-Missing IDs are not fabricated. Dataset-derived fixture IDs remain namespaced
-observation keys and are not canonical fixture IDs. Display names are not
-substituted for missing provider IDs. The strict kickoff and scheduled-status
-eligibility gates remain unchanged.
+Missing upstream fixture IDs in static datasets receive deterministic provider- and
+competition-scoped observation keys; missing static team IDs receive deterministic
+provider- and competition-scoped team keys. These keys are not upstream IDs or
+canonical IDs, but they make later explicit crosswalk review possible. Display
+names are not substituted for missing dynamic-provider IDs. The strict kickoff
+and scheduled-status eligibility gates remain unchanged.
