@@ -94,6 +94,15 @@ class PredictionInputQualityTests(unittest.TestCase):
         self.assertEqual(result["status"], "attention")
         self.assertTrue(result["warnings"])
 
+    def test_conflicting_statistics_are_excluded_and_reported_as_warning(self):
+        self.home["matches"][0]["statistics_conflicts"] = [
+            {"canonical_name": "Total Shots", "reason": "conflicting_duplicate_observations"}
+        ]
+        result = self.report()
+        self.assertTrue(result["prediction_allowed"])
+        self.assertEqual(result["status"], "attention")
+        self.assertTrue(any("conflicting" in warning for warning in result["warnings"]))
+
     def test_missing_season_metadata_is_warning_not_silent_assumption(self):
         self.home["data_quality"].pop("season_id")
         result = self.report()
