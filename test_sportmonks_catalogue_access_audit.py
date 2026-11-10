@@ -42,7 +42,7 @@ class FakeSportmonks:
     def _get(self, path, params=None):
         if path == "my/leagues":
             return {"data": self.available_leagues()}
-        if path in {"leagues/82", "leagues/301"}:
+        if path in {"leagues/82", "leagues/301", "leagues/732"}:
             return {"data": []}
         raise AssertionError("Unexpected endpoint: " + path)
     def _all_pages(self, path, **params):
