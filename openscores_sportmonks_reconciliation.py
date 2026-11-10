@@ -496,6 +496,29 @@ def run_reconciliation(
                         source_league.get("name") or source_league.get("league_name")
                     )
                 ]
+                expected_country = COUNTRY_CODES.get(
+                    str(source_league.get("country_code") or "").upper()
+                )
+                country_candidates = [
+                    {
+                        "sportmonks_league_id": str(candidate.get("id")),
+                        "name": candidate.get("name"),
+                        "country": _country_name(candidate),
+                    }
+                    for candidate in sm_leagues
+                    if expected_country
+                    and _norm(_country_name(candidate)) == _norm(expected_country)
+                ][:30]
+                international_candidates = [
+                    {
+                        "sportmonks_league_id": str(candidate.get("id")),
+                        "name": candidate.get("name"),
+                        "country": _country_name(candidate),
+                    }
+                    for candidate in sm_leagues
+                    if not expected_country
+                    and _norm(_country_name(candidate)) in {"", "world", "international", "global"}
+                ][:30]
                 report["competition_results"].append({
                     "openscores_league_id": source_league_id,
                     "name": source_league.get("name"),
@@ -503,6 +526,8 @@ def run_reconciliation(
                     "status": league_match["status"],
                     "candidate_count": league_match.get("candidate_count", 0),
                     "sportmonks_same_name_candidates": same_name_candidates,
+                    "sportmonks_country_candidates": country_candidates,
+                    "sportmonks_international_candidates": international_candidates,
                 })
                 continue
             sm_league = league_match["league"]
@@ -610,6 +635,10 @@ def run_reconciliation(
                 "sportmonks_season_id": sm_season_id,
                 "sportmonks_teams_received": len(teams),
                 "sportmonks_fixtures_received": len(fixtures),
+                "sportmonks_team_roster": [
+                    {"id": str(team.get("id")), "name": team.get("name")}
+                    for team in teams
+                ],
                 "canonical_fixtures_available": fixture_count,
                 "openscores_teams_observed": len(observed_teams),
                 "unique_team_links": len(team_mappings),
