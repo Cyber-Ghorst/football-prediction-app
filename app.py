@@ -115,6 +115,7 @@ try:
         build_provider_cache_key,
         load_provider_snapshot,
         save_provider_snapshot,
+        save_provider_snapshot_and_record_run,
         record_provider_collection_run,
     )
     from football_repository import (
@@ -649,10 +650,12 @@ def _collect_sportmonks_with_archive(resource_type, request_params, fetcher, ttl
     else:
         source_ids = []
     try:
-        save_provider_snapshot(PROVIDER_DATABASE_URL, provider="sportmonks",
+        save_provider_snapshot_and_record_run(
+            PROVIDER_DATABASE_URL, provider="sportmonks",
             resource_type=resource_type, cache_key=cache_key,
             request_params=request_params, payload=payload,
-            source_ids=source_ids, ttl_seconds=ttl_seconds)
+            source_ids=source_ids, ttl_seconds=ttl_seconds,
+        )
     except Exception as exc:
         _record_provider_cache_telemetry(resource_type, "archive_write_failed",
             lookup_duration_ms=lookup_ms, live_fetch_duration_ms=fetch_ms,
@@ -672,11 +675,6 @@ def _collect_sportmonks_with_archive(resource_type, request_params, fetcher, ttl
             lookup_duration_ms=lookup_ms, live_fetch_duration_ms=fetch_ms,
             row_count=row_count, archive_status="saved")
         print(f"[Sportmonks] {resource_type}: CockroachDB snapshot archived successfully.", flush=True)
-        try:
-            record_provider_collection_run(PROVIDER_DATABASE_URL, provider="sportmonks",
-                resource_type=resource_type, cache_key=cache_key, succeeded=True)
-        except Exception:
-            pass
     return payload
 
 

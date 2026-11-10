@@ -20,6 +20,8 @@ class FakeCursor:
         elif normalized.startswith("INSERT INTO provider_api_snapshots"):
             self.connection.snapshots.append(params)
         elif normalized.startswith("INSERT INTO provider_collection_runs"):
+            if self.connection.fail_run_insert:
+                raise RuntimeError("audit insert failed")
             self.connection.runs.append(params)
         elif normalized.startswith("SELECT snapshot_id"):
             self.result = self.connection.fresh if "expires_at > NOW()" in normalized else self.connection.latest
@@ -42,9 +44,18 @@ class FakeConnection:
         self.runs = []
         self.fresh = None
         self.latest = None
+        self.fail_run_insert = False
+        self.commit_calls = 0
+        self.rollback_calls = 0
 
     def cursor(self):
         return FakeCursor(self)
+
+    def commit(self):
+        self.commit_calls += 1
+
+    def rollback(self):
+        self.rollback_calls += 1
 
     def __enter__(self):
         return self
@@ -56,8 +67,13 @@ class FakeConnection:
 class ProviderStorageTests(unittest.TestCase):
     def setUp(self):
         self.connection = FakeConnection()
+        self.connect_calls = 0
+        storage._INITIALIZED_DATABASES.clear()
         fake_psycopg = types.ModuleType("psycopg")
-        fake_psycopg.connect = lambda *args, **kwargs: self.connection
+        def fake_connect(*args, **kwargs):
+            self.connect_calls += 1
+            return self.connection
+        fake_psycopg.connect = fake_connect
         fake_json = types.ModuleType("psycopg.types.json")
 
         class FakeJsonb:
@@ -126,6 +142,61 @@ class ProviderStorageTests(unittest.TestCase):
         self.assertEqual(row[7], captured)
         self.assertEqual(row[8], captured + timedelta(seconds=600))
         self.assertEqual(len(row[9]), 64)
+
+    def test_schema_initialization_is_reused_after_first_write(self):
+        kwargs = {
+            "provider": "sportmonks",
+            "resource_type": "fixtures",
+            "cache_key": "sportmonks:fixtures:abc",
+            "request_params": {"season_id": 2026},
+            "payload": [{"id": 1}],
+        }
+        storage.save_provider_snapshot("postgresql://example", **kwargs)
+        first_write_connections = self.connect_calls
+        storage.save_provider_snapshot("postgresql://example", **kwargs)
+        self.assertEqual(first_write_connections, 1)  # schema setup and insert share a connection
+        self.assertEqual(self.connect_calls, 2)  # second insert skips repeated DDL setup
+
+    def test_snapshot_and_success_audit_share_one_connection(self):
+        database_url = "postgresql://example"
+        storage._INITIALIZED_DATABASES.add(storage._database_fingerprint(database_url))
+        result = storage.save_provider_snapshot_and_record_run(
+            database_url,
+            provider="sportmonks",
+            resource_type="fixtures",
+            cache_key="sportmonks:fixtures:combined",
+            request_params={"season_id": 2026},
+            payload=[{"id": 123}],
+            source_ids=[123],
+            ttl_seconds=300,
+        )
+        self.assertEqual(self.connect_calls, 1)
+        self.assertTrue(result["snapshot_id"])
+        self.assertTrue(result["run_recorded"])
+        self.assertEqual(len(self.connection.snapshots), 1)
+        self.assertEqual(len(self.connection.runs), 1)
+        self.assertTrue(self.connection.runs[0][5])
+        self.assertEqual(self.connection.commit_calls, 2)
+
+    def test_snapshot_is_preserved_when_success_audit_insert_fails(self):
+        database_url = "postgresql://example"
+        storage._INITIALIZED_DATABASES.add(storage._database_fingerprint(database_url))
+        self.connection.fail_run_insert = True
+        result = storage.save_provider_snapshot_and_record_run(
+            database_url,
+            provider="sportmonks",
+            resource_type="fixtures",
+            cache_key="sportmonks:fixtures:audit-failure",
+            request_params={"season_id": 2026},
+            payload=[{"id": 123}],
+        )
+        self.assertTrue(result["snapshot_id"])
+        self.assertFalse(result["run_recorded"])
+        self.assertEqual(result["run_error_type"], "RuntimeError")
+        self.assertEqual(len(self.connection.snapshots), 1)
+        self.assertEqual(self.connection.runs, [])
+        self.assertEqual(self.connection.commit_calls, 1)
+        self.assertEqual(self.connection.rollback_calls, 1)
 
     def test_failed_collection_diagnostic_does_not_write_snapshot(self):
         run_id = storage.record_provider_collection_run(
