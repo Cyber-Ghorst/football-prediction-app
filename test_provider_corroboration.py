@@ -157,6 +157,18 @@ class ProviderCorroborationTests(unittest.TestCase):
         )
         self.assertEqual((row["home_score"], row["away_score"]), (2, 1))
 
+    def test_conflicting_duplicate_current_scores_are_unknown(self):
+        fixture = sportmonks_fixture()
+        fixture["scores"].append({
+            "participant_id": 1, "description": "CURRENT",
+            "score": {"goals": 3},
+        })
+        row = canonicalize_sportmonks_fixture(
+            fixture, competition="Premier League", country="England", season=2026,
+        )
+        self.assertIsNone(row["home_score"])
+        self.assertEqual(row["away_score"], 1)
+
     def test_sportmonks_score_parser_rejects_boolean_fractional_and_negative_values(self):
         for invalid in (True, 1.5, -1, "1.5", "unknown"):
             row = canonicalize_sportmonks_fixture(
