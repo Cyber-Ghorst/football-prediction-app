@@ -1,0 +1,44 @@
+name: Automatic upcoming fixture collection
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 */6 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: upcoming-fixture-collection
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    name: Discover and persist upcoming fixtures
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SPORTMONKS_API_TOKEN: ${{ secrets.SPORTMONKS_API_TOKEN }}
+      PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install collector dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Validate required secrets
+        run: |
+          test -n "$SPORTMONKS_API_TOKEN" || { echo "::error::SPORTMONKS_API_TOKEN secret is missing."; exit 1; }
+          test -n "$PROVIDER_DATABASE_URL" || { echo "::error::PROVIDER_DATABASE_URL secret is missing."; exit 1; }
+          test -f root.crt || { echo "::error::CockroachDB root.crt is missing."; exit 1; }
+
+      - name: Collect and upsert rolling seven-day fixture window
+        run: python upcoming_fixture_collector.py

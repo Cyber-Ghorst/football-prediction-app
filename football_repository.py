@@ -337,7 +337,7 @@ def import_sportmonks_season(
     # Prepare normalized rows before opening the transaction. This keeps Python
     # parsing and UUID generation out of the database write window.
     team_rows: list[tuple[Any, ...]] = []
-    link_rows: list[tuple[Any, ...]] = []
+    link_rows: dict[tuple[str, str], tuple[Any, ...]] = {}
 
     def add_link(entity_type: str, provider_id: Any, canonical_id: str) -> None:
         provider_entity_id = str(provider_id)
@@ -602,7 +602,7 @@ def import_sportmonks_season(
                     "link_id", "provider", "entity_type", "provider_entity_id",
                     "canonical_entity_id",
                 ),
-                rows=link_rows,
+                rows=list(link_rows.values()),
                 conflict_sql="""
                     ON CONFLICT (provider, entity_type, provider_entity_id)
                     DO UPDATE SET canonical_entity_id = excluded.canonical_entity_id,
@@ -1682,4 +1682,194 @@ def diagnose_repository_fixture_history(database_url: str) -> dict[str, Any]:
         "status_summary": status_summary,
         "recent_past_fixture_samples": recent_past_samples,
         "history_filter_requires_recognized_status_and_both_scores": True,
+    }
+
+
+def upsert_discovered_fixtures(
+    database_url: str,
+    fixtures: list[dict[str, Any]],
+) -> dict[str, int]:
+    """Idempotently store validated upcoming Sportmonks fixtures and their entities.
+
+    This is a narrow ingestion path: it does not import season histories or
+    statistics and never touches the Neon prediction ledger.
+    """
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+    if not isinstance(fixtures, list):
+        raise ValueError("fixtures must be a list.")
+
+    league_rows: dict[str, tuple[Any, ...]] = {}
+    season_rows: dict[str, tuple[Any, ...]] = {}
+    team_rows: dict[str, tuple[Any, ...]] = {}
+    fixture_rows: dict[str, tuple[Any, ...]] = {}
+    link_rows: dict[tuple[str, str], tuple[Any, ...]] = {}
+
+    def add_link(entity_type: str, provider_id: Any, canonical_id: str) -> None:
+        import uuid
+        provider_entity_id = str(provider_id)
+        link_id = str(uuid.uuid5(
+            uuid.NAMESPACE_URL,
+            f"sportmonks:{entity_type}:{provider_entity_id}",
+        ))
+        link_rows[(entity_type, provider_entity_id)] = (
+            link_id, "sportmonks", entity_type, provider_entity_id, canonical_id,
+        )
+
+    for fixture in fixtures:
+        if not isinstance(fixture, dict):
+            continue
+        fixture_id_raw = fixture.get("id")
+        league = fixture.get("league") if isinstance(fixture.get("league"), dict) else {}
+        season = fixture.get("season") if isinstance(fixture.get("season"), dict) else {}
+        league_id_raw = fixture.get("league_id") or league.get("id")
+        season_id_raw = fixture.get("season_id") or season.get("id")
+        if not all((fixture_id_raw, league_id_raw, season_id_raw)):
+            continue
+        fixture_id = _provider_id(fixture_id_raw)
+        league_id = _provider_id(league_id_raw)
+        season_id = _provider_id(season_id_raw)
+
+        participants = fixture.get("participants")
+        if not isinstance(participants, list):
+            continue
+        home = away = None
+        for participant in participants:
+            if not isinstance(participant, dict):
+                continue
+            meta = participant.get("meta") if isinstance(participant.get("meta"), dict) else {}
+            location = str(meta.get("location") or participant.get("location") or "").casefold()
+            if location == "home":
+                home = participant
+            elif location == "away":
+                away = participant
+        if not home or not away or not home.get("id") or not away.get("id"):
+            continue
+
+        country = _nested_name(league.get("country"))
+        league_rows[league_id] = (
+            league_id, str(league.get("name") or "Unknown competition"),
+            country, _nested_name(league.get("type") or league.get("competition_type")),
+            league.get("image_path") or league.get("logo"), "sportmonks",
+            _provider_updated_at(league), Jsonb(league),
+        )
+        season_rows[season_id] = (
+            season_id, league_id, str(season.get("name") or ""),
+            season.get("starting_at") or None, season.get("ending_at") or None,
+            season.get("is_current"), "sportmonks",
+            _provider_updated_at(season), Jsonb(season),
+        )
+
+        for participant in (home, away):
+            team_id = _provider_id(participant["id"])
+            team_rows[team_id] = (
+                team_id, str(participant.get("name") or f"Team {participant['id']}"),
+                participant.get("short_code") or participant.get("short_name"),
+                _nested_name(participant.get("country")) or country,
+                participant.get("image_path") or participant.get("logo"),
+                "sportmonks", _provider_updated_at(participant), Jsonb(participant),
+            )
+            add_link("team", participant["id"], team_id)
+
+        state = fixture.get("state") or fixture.get("status")
+        status = _nested_name(state) or (
+            str(fixture.get("state_id")) if fixture.get("state_id") is not None else "scheduled"
+        )
+        kickoff = fixture.get("_collector_kickoff_utc") or fixture.get("starting_at")
+        fixture_rows[fixture_id] = (
+            fixture_id, season_id, league_id,
+            _provider_id(home["id"]), _provider_id(away["id"]),
+            kickoff, status, None, None, _nested_name(fixture.get("venue")),
+            "sportmonks", _provider_updated_at(fixture), Jsonb(fixture),
+        )
+        add_link("league", league_id_raw, league_id)
+        add_link("season", season_id_raw, season_id)
+        add_link("fixture", fixture_id_raw, fixture_id)
+
+    ensure_football_repository(database_url)
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            _execute_batched_upsert(
+                cursor,
+                table="football_leagues",
+                columns=(
+                    "league_id", "name", "country", "competition_type", "logo_url",
+                    "source_provider", "provider_updated_at", "raw_payload",
+                ),
+                rows=list(league_rows.values()),
+                conflict_sql="""ON CONFLICT (league_id) DO UPDATE SET
+                    name = excluded.name, country = excluded.country,
+                    competition_type = excluded.competition_type,
+                    logo_url = excluded.logo_url, source_provider = excluded.source_provider,
+                    provider_updated_at = excluded.provider_updated_at,
+                    collected_at = NOW(), raw_payload = excluded.raw_payload""",
+            )
+            _execute_batched_upsert(
+                cursor,
+                table="football_seasons",
+                columns=(
+                    "season_id", "league_id", "name", "start_date", "end_date",
+                    "is_current", "source_provider", "provider_updated_at", "raw_payload",
+                ),
+                rows=list(season_rows.values()),
+                conflict_sql="""ON CONFLICT (season_id) DO UPDATE SET
+                    league_id = excluded.league_id, name = excluded.name,
+                    start_date = excluded.start_date, end_date = excluded.end_date,
+                    is_current = excluded.is_current, source_provider = excluded.source_provider,
+                    provider_updated_at = excluded.provider_updated_at,
+                    collected_at = NOW(), raw_payload = excluded.raw_payload""",
+            )
+            _execute_batched_upsert(
+                cursor,
+                table="football_teams",
+                columns=(
+                    "team_id", "name", "short_name", "country", "logo_url",
+                    "source_provider", "provider_updated_at", "raw_payload",
+                ),
+                rows=list(team_rows.values()),
+                conflict_sql="""ON CONFLICT (team_id) DO UPDATE SET
+                    name = excluded.name, short_name = excluded.short_name,
+                    country = excluded.country, logo_url = excluded.logo_url,
+                    source_provider = excluded.source_provider,
+                    provider_updated_at = excluded.provider_updated_at,
+                    collected_at = NOW(), raw_payload = excluded.raw_payload""",
+            )
+            _execute_batched_upsert(
+                cursor,
+                table="football_fixtures",
+                columns=(
+                    "fixture_id", "season_id", "league_id", "home_team_id", "away_team_id",
+                    "starting_at", "status", "home_goals", "away_goals", "venue",
+                    "source_provider", "provider_updated_at", "raw_payload",
+                ),
+                rows=list(fixture_rows.values()),
+                conflict_sql="""ON CONFLICT (fixture_id) DO UPDATE SET
+                    season_id = excluded.season_id, league_id = excluded.league_id,
+                    home_team_id = excluded.home_team_id, away_team_id = excluded.away_team_id,
+                    starting_at = excluded.starting_at, status = excluded.status,
+                    venue = excluded.venue, source_provider = excluded.source_provider,
+                    provider_updated_at = excluded.provider_updated_at,
+                    collected_at = NOW(), raw_payload = excluded.raw_payload""",
+                batch_size=40,
+            )
+            _execute_batched_upsert(
+                cursor,
+                table="provider_entity_links",
+                columns=(
+                    "link_id", "provider", "entity_type", "provider_entity_id",
+                    "canonical_entity_id",
+                ),
+                rows=list(link_rows.values()),
+                conflict_sql="""ON CONFLICT (provider, entity_type, provider_entity_id)
+                    DO UPDATE SET canonical_entity_id = excluded.canonical_entity_id,
+                                  last_seen_at = NOW()""",
+            )
+            _sync_result(
+                cursor, "upcoming_fixtures", len(fixtures), len(fixture_rows)
+            )
+
+    return {
+        "fixtures_upserted": len(fixture_rows),
+        "competitions_upserted": len(league_rows),
+        "teams_upserted": len(team_rows),
     }

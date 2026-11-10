@@ -462,6 +462,17 @@ class SportmonksClient:
         """Fetch a date range; Sportmonks documents a maximum 100-day range."""
         return self._rows(self._get(f"fixtures/between/{start_date}/{end_date}", params))
 
+    def fixtures_between_all_pages(
+        self, start_date: str, end_date: str, **params: Any
+    ) -> list[dict[str, Any]]:
+        """Fetch every page of a date-range fixture response or fail closed."""
+        per_page = params.pop("per_page", 50)
+        return self._all_pages(
+            f"fixtures/between/{start_date}/{end_date}",
+            per_page=per_page,
+            **params,
+        )
+
     def fixture(self, fixture_id: int | str, **params: Any) -> dict[str, Any] | None:
         rows = self._rows(self._get(f"fixtures/{fixture_id}", params))
         return rows[0] if rows else None
