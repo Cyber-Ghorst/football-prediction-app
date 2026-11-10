@@ -70,7 +70,7 @@ class OpenScoresObservationSyncTests(unittest.TestCase):
         report, save, retire, reconcile = self._run(client)
         filters = next(call[1] for call in client.calls if call[0] == "fixtures")
         self.assertEqual(filters, {
-            "season_id": "2026",
+            "season_id": 2026,
             "status": "scheduled",
             "date_from": "2026-11-10T18:00:00Z",
             "date_to": "2026-11-17T18:00:00Z",
