@@ -46,3 +46,12 @@ zero-write safety indicators.
 OpenScores remains a staged co-primary candidate, not enabled for production
 prediction routing. This audit does not activate it or change Sportmonks'
 current primary status.
+
+
+## Season and fixture freshness diagnostics
+
+The read-only audit also reports all seasons returned per OpenScores league,
+their start/end/current fields, and the stored observation kickoff range. It
+counts fixtures in the future and inside the next seven days using the
+CockroachDB server clock. This prevents a historical season sample from being
+mistaken for a current upcoming-fixture feed.
