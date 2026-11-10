@@ -41,7 +41,7 @@ PROVIDER_ROLES: dict[str, dict[str, Any]] = {
         "rank": 5,
         "role": "Conditional competition-specific corroboration for fixtures/results/standings",
         "domains": ("fixtures", "results", "standings"),
-        "limitation": "Fresh audit found 35 active competitions across 17 countries (3,161 stored matches; 0 international competitions). Database-backed snapshots can be delayed; current catalogue records omit per-competition sync timestamps, so exact crosswalk fallback remains blocked until freshness is independently verified.",
+        "limitation": "Fresh audit found 35 active competitions across 17 countries (3,161 stored matches; 0 international competitions); global and all 35 per-competition sync timestamps passed freshness checks. Database-backed snapshots can still be delayed, so exact season crosswalk and per-event freshness checks remain mandatory.",
     },
 }
 
@@ -69,7 +69,7 @@ def provider_readiness() -> list[dict[str, Any]]:
         "api_ninjas": "adapter and authenticated smoke test available; exact result candidates can trigger an opt-in Sportmonks-verified history fallback; no direct statistics, injury or lineup fields",
         "highlightly": "adapter and authenticated smoke test available; opt-in exact-match missing-stat, lineup and Sportmonks-verified result-history fallbacks are wired into Layer 2; no injury or availability inference",
         "sportmonks": "current-season Layer 2 path active; exact competition/season coverage and data-quality gates enforced",
-        "livescore_football": "read-only adapter, 35-competition catalogue audit and opt-in missing-score fallback wired into Streamlit (default off); per-competition sync timestamps are currently absent, so fallback remains fail-closed despite fresh global metadata",
+        "livescore_football": "read-only adapter, 35-competition catalogue audit and opt-in missing-score fallback wired into Streamlit (default off); global and 35/35 per-competition sync checks pass, while exact season crosswalk and individual event freshness remain required",
     }
     credential_names = {
         "api_football": "APISPORTS_API_KEY",
