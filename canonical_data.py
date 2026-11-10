@@ -28,12 +28,17 @@ def _parse_datetime(value: Any) -> datetime:
 
 
 def _season_year(value: Any) -> int | None:
+    """Parse a provider season as a positive whole year without coercion."""
     if isinstance(value, Mapping):
-        value = value.get("year") or value.get("start")
-    try:
-        return int(value) if value is not None else None
-    except (TypeError, ValueError):
+        value = value.get("year") if value.get("year") is not None else value.get("start")
+    if isinstance(value, bool):
         return None
+    if isinstance(value, int):
+        return value if value > 0 else None
+    if isinstance(value, str):
+        value = value.strip()
+        return int(value) if value.isdigit() else None
+    return None
 
 
 def _status_from_livescore(event: Mapping[str, Any]) -> str:
