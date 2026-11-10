@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 
 from highlightly_match_enrichment import (
     _highlightly_rows,
+    _highlightly_stat_value,
     _season_value,
     collect_highlightly_match_enrichment,
     normalize_highlightly_lineups,
@@ -68,6 +69,24 @@ class FakeHighlightly:
 
 
 class HighlightlyMatchEnrichmentTests(unittest.TestCase):
+    def test_highlightly_statistics_reject_nonfinite_negative_and_out_of_range_values(self):
+        self.assertEqual(_highlightly_stat_value("Ball Possession", 0.6), 60.0)
+        self.assertEqual(_highlightly_stat_value("Ball Possession", "60%"), 60.0)
+        self.assertEqual(_highlightly_stat_value("Total Shots", 12), 12.0)
+        for name, value in (
+            ("Ball Possession", -1),
+            ("Ball Possession", 101),
+            ("Ball Possession", "101%"),
+            ("Ball Possession", "nan"),
+            ("Ball Possession", "inf"),
+            ("Total Shots", -1),
+            ("Total Shots", "nan"),
+            ("Total Shots", "inf"),
+        ):
+            with self.subTest(name=name, value=value):
+                self.assertIsNone(_highlightly_stat_value(name, value))
+
+
     def test_season_parser_rejects_boolean_fractional_and_malformed_values(self):
         self.assertEqual(_season_value(2026), 2026)
         self.assertEqual(_season_value("2026"), 2026)
