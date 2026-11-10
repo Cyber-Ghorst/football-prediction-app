@@ -201,7 +201,7 @@ The prediction engine, Layer 1 behavior, `tvd.py`, all existing component weight
 - API Ninjas date handling was corrected for both Python `date` inputs and its connection test.
 - Canonical reconciliation now requires an explicit `livescore_verified=True` signal before LiveScoreFootball can take priority. The default resolver excludes LiveScoreFootball, so catalogue presence alone cannot activate it.
 - Unit tests were added for the two new match normalizers, unknown scores, strict identity matching, provider connection diagnostics, and the LiveScore verification gate.
-- API Ninjas and Highlightly remain diagnostic/canonicalization sources only at this milestone. They are not yet wired to replace Layer 2's API-Football histories. The next integration step is runtime competition/team matching and field-level corroboration with provenance, followed by end-to-end tests. Prediction weights, recency weighting, and TVD remain unchanged.
+- API Ninjas and Highlightly remain diagnostic/canonicalization sources. Runtime, identity-matched result corroboration is implemented and tested, but neither provider is wired to replace Layer 2 histories or supply prediction statistics, injuries, lineups or squads. Further field-level fallback requires endpoint-specific validation and provenance; no such fallback is enabled. Prediction weights, recency weighting and TVD remain unchanged.
 
 ## Current-season provider-role adjustment and Sportmonks integration (2026-11-07)
 
@@ -265,7 +265,7 @@ The repository now includes `provider_corroboration.py`, which connects the High
 - Provider fetch timestamps, namespaced fixture/team IDs, selected values, corroborating sources and conflicting sources are retained.
 - Missing country identity in Highlightly records is not accepted when a country filter was requested. Mismatched season, league, team or kickoff records do not join.
 - API Ninjas does not contribute statistics, injuries or lineups. This integration is specifically for result/fixture corroboration.
-- Streamlit exposes a checkbox to run the independent result cross-check during a current-season Sportmonks prediction. It is enabled by default but can be disabled to conserve API quota.
+- Streamlit exposes a checkbox to run the independent result cross-check during a current-season Sportmonks prediction. It is disabled by default because it is diagnostic-only and adds provider latency; users can enable it when they want an independent audit.
 - The report is diagnostic only. It does not overwrite Sportmonks Layer 2 histories, team profiles, prediction inputs, TVD or model weights. Conflicting scores are displayed and never averaged.
 - Historical API-Football seasons remain outside this current-season Sportmonks corroboration path.
 
@@ -345,6 +345,32 @@ An opt-in diagnostic path now uses the exact selected-fixture Highlightly lineup
 - Licensed Opta data feeds/APIs remain a later commercial integration option, subject to coverage, demo access, pricing, redistribution rights and written licensing terms.
 - Benchmark scores are reported only on the same fixture set as our own forecasts.
 
+
+## Operational hardening and runtime validation (2026-11-10)
+
+### Data quality and provenance
+- Layer 2 history diagnostics now consume the same shared eight-metric definitions as the system-wide statistics coverage report. Shots on Target and Shots on Goal are treated as aliases for one canonical input; the app does not double-count them.
+- Repository fixture rows carry separate `history_repository_collected_at` and `history_provider_updated_at` timestamps. Direct live-fetch time remains `history_collection_fetched_at`; repository ingestion time is never mislabeled as a direct API fetch. Provider update time remains unknown when the source does not supply it.
+- The latest verified Chelsea–Leeds run reported 10 completed matches per team, 8/8 core match-statistic metrics with 100% coverage for both teams, zero duplicate fixture IDs, and healthy readiness diagnostics.
+
+### Prediction result automation
+- `sync_prediction_results.py` runs from the six-hour scheduled controller and is also available as the manual `result_sync` operation.
+- It reads the Neon ledger, groups duplicate forecasts by exact Sportmonks fixture ID, and updates only blank result fields after verifying exact fixture ID, home/away identity, competition, season, completed state and final 90-minute score.
+- Existing manual scores and model probabilities are preserved. AET/penalty totals are not substituted for the 90-minute score.
+- The first live manual sync read 72 ledger rows and found no eligible unfinished results; it correctly made no changes. The evaluation report showed 21 unique pre-match fixtures and one completed verified fixture.
+
+### Runtime optimization
+- Independent Highlightly/API Ninjas result corroboration remains available, but is now opt-in by default because it is diagnostic-only and does not change prediction inputs.
+- Same-fixture benchmark: Chelsea vs Leeds United, 2026-11-10. Before the change, elapsed time was 60.99 seconds and optional corroboration consumed 11.157 seconds. After the change, elapsed time was 46.19 seconds and corroboration consumed 0 seconds. The 1X2 probabilities remained identical at 45.9% / 26.9% / 27.2%.
+- Timings vary with cache and provider response latency; the measured reduction is a real run comparison, not a guaranteed runtime.
+
+### Evaluation boundary and remaining work
+- The current performance report evaluates prospective saved forecasts as their results are verified. It is not a retrospective historical walk-forward backtest.
+- Only one unique completed fixture has a verified result against the current minimum descriptive sample of 30. Accuracy, Brier score and log loss remain provisional; no model calibration or weight changes are justified.
+- Highlightly match statistics, lineups, player statistics and team-season aggregates remain diagnostic-only. They are not merged into Layer 2 or the prediction model. A future player-impact feature must be a separate experimental signal and pass chronological, out-of-sample evaluation before any production use.
+- Further provider integration must remain field-level and fail-closed: exact competition, season, fixture, team orientation, freshness, canonical metric, provenance and conflict handling are required. Missing or conflicting values must not be averaged or silently imputed.
+
+Validation at this milestone: 27/27 application smoke checks, 5/5 live provider checks and 312 unit tests passed; the deployment health endpoint returned HTTP 200.
 
 ### Snapshot validation coverage correction (2026-11-07)
 - Player-level and team-season statistics are now counted separately in the prediction ledger.
