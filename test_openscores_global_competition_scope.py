@@ -137,6 +137,7 @@ class GlobalCompetitionScopeTests(unittest.TestCase):
         client = FakeOpenScores([page([
             fixture(80, 1, 2026),
             {"id": 81, "season_id": 2026, "status": "scheduled",
+             "scheduled_kickoff_at": "2026-11-12T19:00:00Z",
              "home_team": {"id": "h81", "name": "Home"},
              "away_team": {"id": "a81", "name": "Away"}},
             fixture(82, 999, 2026),
