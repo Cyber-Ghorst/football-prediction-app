@@ -40,7 +40,7 @@ class FakeClient:
         self.rows = rows
         self.calls = []
 
-    def fixtures_between(self, start_date, end_date, **params):
+    def fixtures_between_all_pages(self, start_date, end_date, **params):
         self.calls.append((start_date, end_date, params))
         return self.rows
 
