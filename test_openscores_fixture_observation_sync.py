@@ -23,6 +23,9 @@ class FakeClient:
     def list_leagues(self):
         return {"data": [{"id": 1, "name": "Test League"}]}
 
+    def list_seasons(self, league_id):
+        return {"data": {"seasons": []}}
+
     @staticmethod
     def _league_collection(data):
         return data, "$"
