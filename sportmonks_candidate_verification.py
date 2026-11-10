@@ -23,10 +23,22 @@ def _rows(value: Any) -> list[dict[str, Any]]:
 
 
 def _as_int(value: Any) -> int | None:
-    try:
-        return int(value)
-    except (TypeError, ValueError):
+    """Accept integer IDs/scores only; reject booleans and fractional values."""
+    import math
+    import re
+
+    if isinstance(value, bool) or value is None:
         return None
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float):
+        return int(value) if math.isfinite(value) and value.is_integer() else None
+    if isinstance(value, str) and re.fullmatch(r"\\s*-?\\d+\\s*", value):
+        try:
+            return int(value.strip())
+        except ValueError:
+            return None
+    return None
 
 
 def _utc_datetime(value: Any) -> datetime | None:
@@ -82,12 +94,13 @@ def _scores(fixture: Mapping[str, Any], home_id: int, away_id: int) -> tuple[int
     rows = _rows(fixture.get("scores"))
     current = [row for row in rows if str(row.get("description") or "").casefold() == "current"]
     values: dict[int, int] = {}
-    for row in current or rows:
+    # Period-specific scores cannot stand in for a missing full-time score.
+    for row in current:
         participant_id = _as_int(row.get("participant_id"))
         score = row.get("score") or {}
         goals = score.get("goals") if isinstance(score, Mapping) else None
         parsed_goals = _as_int(goals)
-        if participant_id is not None and parsed_goals is not None:
+        if participant_id is not None and parsed_goals is not None and parsed_goals >= 0:
             values[participant_id] = parsed_goals
     return values.get(home_id), values.get(away_id)
 
