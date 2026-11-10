@@ -2,6 +2,8 @@ import unittest
 from datetime import datetime, timezone
 
 from highlightly_match_enrichment import (
+    _highlightly_rows,
+    _season_value,
     collect_highlightly_match_enrichment,
     normalize_highlightly_lineups,
 )
@@ -66,6 +68,35 @@ class FakeHighlightly:
 
 
 class HighlightlyMatchEnrichmentTests(unittest.TestCase):
+    def test_season_parser_rejects_boolean_fractional_and_malformed_values(self):
+        self.assertEqual(_season_value(2026), 2026)
+        self.assertEqual(_season_value("2026"), 2026)
+        self.assertEqual(_season_value({"year": 2026}), 2026)
+        self.assertEqual(_season_value({"year": None, "start": "2026"}), 2026)
+        for invalid in (True, False, 2026.9, "2026.0", "2026/27", "", 0, -1):
+            with self.subTest(value=invalid):
+                self.assertIsNone(_season_value(invalid))
+
+    def test_missing_or_malformed_provider_season_is_not_assumed(self):
+        rows = []
+        missing = hl_match(mid=9101)
+        missing["league"].pop("season")
+        malformed = hl_match(mid=9102)
+        malformed["league"]["season"] = 2026.9
+        boolean = hl_match(mid=9103)
+        boolean["league"]["season"] = True
+        wrong = hl_match(mid=9104, season=2025)
+        valid = hl_match(mid=9105, season="2026")
+        rows.extend((missing, malformed, boolean, wrong, valid))
+        client = FakeHighlightly(rows)
+
+        accepted = _highlightly_rows(
+            client, "Premier League", "England", 2026
+        )
+
+        self.assertEqual([item["raw"]["id"] for item in accepted], [9105])
+
+
     def test_statistics_normalize_units_and_expose_conflicts_without_averaging(self):
         sm = sm_fixture()
         hl_stats = [
