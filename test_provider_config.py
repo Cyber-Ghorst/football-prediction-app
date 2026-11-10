@@ -25,7 +25,7 @@ class ProviderRoleConfigTests(unittest.TestCase):
         }
         self.assertEqual(
             future,
-            {"openligadb", "openfootball", "open_matchday", "worldcup26", "bzzoiro"},
+            {"sportmonks", "openligadb", "openfootball", "open_matchday", "worldcup26", "bzzoiro"},
         )
         self.assertNotIn("future_fixtures", PROVIDER_ROLES["openscores"]["domains"])
         self.assertNotIn("fixtures", PROVIDER_ROLES["openscores"]["domains"])
