@@ -14,7 +14,11 @@ from tactical_evidence import build_league_reference_statistics, build_tactical_
 from statistics_coverage import CORE_STATISTICS as _CORE_STATISTICS
 
 
-_COMPLETED = {"finished", "ft", "aet", "penalties", "after extra time", "after penalties"}
+_COMPLETED = {
+    "finished", "ft", "aet", "after extra time", "after penalties",
+    "full time", "full-time", "finished after extra time",
+    "finished after penalties",
+}
 _STAT_ALIASES = {
     # Core tactical metrics consumed by tactical_indicators.py.
     "ball possession": "Ball Possession",
@@ -76,17 +80,20 @@ def _participants(fixture: dict[str, Any]) -> tuple[dict[str, Any] | None, dict[
 
 
 def _state(fixture: dict[str, Any]) -> str:
-    """Normalize Sportmonks state IDs and expanded/string status labels."""
-    try:
-        state_id = int(fixture.get("state_id"))
-        if state_id in {5, 7, 8}:
-            return "finished"
-        if state_id == 1:
-            return "scheduled"
-        if state_id in {2, 3, 4, 6, 9, 21, 22, 25}:
-            return "live"
-    except (TypeError, ValueError):
-        pass
+    """Normalize exact Sportmonks states; unknown labels fail closed."""
+    raw_state_id = fixture.get("state_id")
+    state_id = None
+    if isinstance(raw_state_id, int) and not isinstance(raw_state_id, bool):
+        state_id = raw_state_id
+    elif isinstance(raw_state_id, str) and raw_state_id.strip().isdigit():
+        state_id = int(raw_state_id.strip())
+
+    if state_id in {5, 7, 8}:
+        return "finished"
+    if state_id == 1:
+        return "scheduled"
+    if state_id in {2, 3, 4, 6, 9, 21, 22, 25}:
+        return "live"
 
     state = fixture.get("state") or fixture.get("status") or {}
     if isinstance(state, dict):
@@ -94,14 +101,23 @@ def _state(fixture: dict[str, Any]) -> str:
     else:
         label_value = state
     label = str(label_value).strip().casefold()
-    if label in _COMPLETED or any(x in label for x in ("finished", "full time", "after extra", "after penalties")):
+
+    if label in _COMPLETED:
         return "finished"
-    if any(x in label for x in ("live", "in play", "half time", "1st half", "2nd half", "extra time", "penalty")):
+    if label in {
+        "live", "in play", "inplay", "ht", "half time", "half-time",
+        "halftime", "1h", "1st half", "first half", "2h", "2nd half",
+        "second half", "et", "extra time", "extra-time", "1st extra time",
+        "2nd extra time", "pen", "penalties", "penalty shootout", "break",
+        "bt", "break time", "1st period", "2nd period",
+    }:
         return "live"
-    if label in {"ns", "not started", "scheduled", "tbd"} or any(x in label for x in ("not started", "scheduled", "to be played")):
+    if label in {
+        "ns", "not started", "scheduled", "to be played",
+        "fixture not started", "not played", "tbd",
+    }:
         return "scheduled"
     return "unknown"
-
 
 def _score_integer(value: Any) -> int | None:
     """Accept only non-negative whole-number goal values."""
