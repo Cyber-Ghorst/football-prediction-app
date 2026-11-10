@@ -109,6 +109,9 @@ def run_sync(
         "fixtures_unknown_league_id": 0,
         "fixtures_duplicate_provider_id": 0,
         "fixtures_conflicting_provider_id": 0,
+        "fixtures_ambiguous_season_id": 0,
+        "fixtures_season_league_mismatch": 0,
+        "season_mappings_discovered": 0,
         "fixtures_outside_window": 0,
         "fixtures_non_scheduled": 0,
         "fixtures_accepted_for_window": 0,
@@ -126,6 +129,8 @@ def run_sync(
     observations_by_id: dict[str, dict[str, Any]] = {}
     candidate_by_id: dict[str, tuple[dict[str, Any], str, str]] = {}
     conflicting_provider_ids: set[str] = set()
+    season_to_league: dict[str, str] = {}
+    ambiguous_season_ids: set[str] = set()
     grouped_records: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
     grouped_retrieval: dict[tuple[str, str], str | None] = {}
     league_names: dict[str, str] = {}
@@ -139,10 +144,34 @@ def run_sync(
         selected_leagues = leagues if max_leagues is None else leagues[:max_leagues]
         for league in selected_leagues:
             league_id = league.get("id") or league.get("league_id")
-            if league_id is not None:
-                league_names[str(league_id)] = str(
-                    league.get("name") or league.get("league_name") or "Unknown"
-                )
+            if league_id is None:
+                continue
+            league_id = str(league_id)
+            league_names[league_id] = str(
+                league.get("name") or league.get("league_name") or "Unknown"
+            )
+            season_result = client.list_seasons(league_id)
+            seasons, _ = _records(
+                season_result.get("data"),
+                ("seasons", "items", "results", "data", "records"),
+            )
+            for season in seasons or []:
+                season_id = _identity(season, ("id", "season_id"), "season")
+                if not season_id:
+                    continue
+                season_league_id = _identity(season, ("league_id",), "league")
+                if season_league_id and season_league_id != league_id:
+                    ambiguous_season_ids.add(season_id)
+                    season_to_league.pop(season_id, None)
+                    continue
+                previous_league_id = season_to_league.get(season_id)
+                if previous_league_id and previous_league_id != league_id:
+                    ambiguous_season_ids.add(season_id)
+                    season_to_league.pop(season_id, None)
+                    continue
+                if season_id not in ambiguous_season_ids:
+                    season_to_league[season_id] = league_id
+        report["season_mappings_discovered"] = len(season_to_league)
 
         # OpenScores documents status/date filters, but not a league filter.
         # Fetch once globally; never reuse the current loop's league ID as context.
@@ -161,18 +190,28 @@ def run_sync(
             retrieved_at = fixture_result.get("retrieved_at_utc")
 
             for record in fixtures:
-                league_id = _identity(
+                explicit_league_id = _identity(
                     record, ("league_id", "competition_id"), "league"
                 )
+                if not explicit_league_id:
+                    explicit_league_id = _identity(record, ("competition_id",), "competition")
                 season_id = _identity(record, ("season_id",), "season")
+                if not season_id:
+                    report["fixtures_missing_season_id"] += 1
+                    continue
+                if season_id in ambiguous_season_ids:
+                    report["fixtures_ambiguous_season_id"] += 1
+                    continue
+                mapped_league_id = season_to_league.get(season_id)
+                if explicit_league_id and mapped_league_id and explicit_league_id != mapped_league_id:
+                    report["fixtures_season_league_mismatch"] += 1
+                    continue
+                league_id = explicit_league_id or mapped_league_id
                 if not league_id:
                     report["fixtures_missing_league_id"] += 1
                     continue
                 if league_id not in league_names:
                     report["fixtures_unknown_league_id"] += 1
-                    continue
-                if not season_id:
-                    report["fixtures_missing_season_id"] += 1
                     continue
                 key = (league_id, season_id)
                 grouped_records[key].append(record)
@@ -267,6 +306,8 @@ def run_sync(
         + report["fixtures_missing_season_id"]
         + report["fixtures_unknown_league_id"]
         + report["fixtures_conflicting_provider_id"]
+        + report["fixtures_ambiguous_season_id"]
+        + report["fixtures_season_league_mismatch"]
     )
     report["status"] = (
         "pass" if not identity_gaps and not report["pagination_truncated"]
@@ -292,6 +333,8 @@ def main() -> int:
                 "fixtures_rejected", "fixtures_missing_league_id",
                 "fixtures_missing_season_id", "fixtures_unknown_league_id",
                 "fixtures_duplicate_provider_id", "fixtures_conflicting_provider_id",
+                "fixtures_ambiguous_season_id", "fixtures_season_league_mismatch",
+                "season_mappings_discovered",
                 "fixtures_outside_window", "fixtures_non_scheduled",
                 "fixtures_accepted_for_window", "pages_fetched",
                 "pagination_truncated", "observations_upserted",
