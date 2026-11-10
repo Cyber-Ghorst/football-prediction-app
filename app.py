@@ -1105,6 +1105,7 @@ with st.sidebar:
             )
 
         if submit_fixture_stage:
+            st.session_state.pop("free_fixture_stage_result", None)
             try:
                 with st.spinner(f"Collecting {stage_provider} fixture observations..."):
                     if stage_provider == "openligadb":
@@ -1185,6 +1186,10 @@ with st.sidebar:
         )
         if build_crosswalk_review:
             try:
+                for entity_type in ("leagues", "seasons", "teams"):
+                    st.session_state.pop(
+                        f"free_fixture_crosswalk_editor_{crosswalk_provider}_{entity_type}", None
+                    )
                 with st.spinner("Loading archived provider observations and canonical entities..."):
                     ensure_football_repository(PROVIDER_DATABASE_URL)
                     st.session_state["free_fixture_crosswalk_review_report"] = (
@@ -1282,6 +1287,10 @@ with st.sidebar:
                             )
                             st.success(f"Saved {saved_count} explicitly approved {label.lower()} mappings.")
                             st.session_state.pop("free_fixture_crosswalk_review_report", None)
+                            for entity_type in ("leagues", "seasons", "teams"):
+                                st.session_state.pop(
+                                    f"free_fixture_crosswalk_editor_{crosswalk_provider}_{entity_type}", None
+                                )
                         except Exception as exc:
                             st.error(f"Mappings were not saved ({type(exc).__name__}).")
                             st.caption(str(exc))
