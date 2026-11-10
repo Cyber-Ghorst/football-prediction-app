@@ -92,7 +92,7 @@ try:
         fixtures_for_utc_date,
     )
     from provider_core import normalize_team_name
-    from engine import predict_match, WEIGHTS, most_likely_outcome
+    from engine import predict_match, build_prediction_feature_snapshot, WEIGHTS, most_likely_outcome
     from tvd import run_tvd
     from provider_config import provider_readiness
     from livescore_football import LiveScoreFootballClient, LiveScoreFootballError
@@ -3186,6 +3186,11 @@ try:
                 away_team_id=int(team_map[away_name]["id"]),
                 captured_at=datetime.now(timezone.utc).isoformat(),
             )
+        prediction_captured_at = datetime.now(timezone.utc).isoformat()
+        feature_snapshot = build_prediction_feature_snapshot(
+            home, away, result, tactical_compatibility=overrides,
+            captured_at=prediction_captured_at,
+        )
         prediction_row = build_prediction_record(
             competition=str(selected_league_row.get("name") or selected_league.split(" — ")[0]),
             country=selected_country_name,
@@ -3193,7 +3198,7 @@ try:
             home_team=home_name,
             away_team=away_name,
             probabilities=result["probabilities"],
-            predicted_at=datetime.now(timezone.utc).isoformat(),
+            predicted_at=prediction_captured_at,
             kickoff_at=(prediction_fixture or {}).get("starting_at") or (prediction_fixture or {}).get("starting_at_at") or (datetime.fromtimestamp(int(prediction_fixture["starting_at_timestamp"]), timezone.utc).isoformat() if prediction_fixture and prediction_fixture.get("starting_at_timestamp") else None),
             fixture_id=(prediction_fixture or {}).get("id"),
             fixture_provider="sportmonks" if prediction_fixture else "",
@@ -3202,6 +3207,7 @@ try:
             opta_captured_at=datetime.now(timezone.utc).isoformat() if opta_values else "",
             player_snapshot=player_snapshot,
             availability_snapshot=availability_snapshot,
+            feature_snapshot=feature_snapshot,
         )
         st.session_state["prediction_ledger"] = merge_prediction_records(
             st.session_state["prediction_ledger"], [prediction_row]
