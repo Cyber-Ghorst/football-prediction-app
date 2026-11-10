@@ -7,6 +7,7 @@ import time
 import re
 import traceback
 import logging
+from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 import requests
@@ -102,6 +103,10 @@ try:
     from competition_crosswalk import build_competition_crosswalk
     from competition_registry import build_discovered_competition_registry
     from league_coverage import build_league_coverage_dashboard
+    from historical_coverage import (
+        build_historical_coverage_validation,
+        load_archived_performance_reports,
+    )
     from provider_health import assess_api_football_status, assess_livescore_metadata
     from provider_corroboration import collect_recent_result_corroboration
     from source_reliability import build_source_reliability_report, build_rolling_source_reliability_report
@@ -3491,6 +3496,55 @@ with st.expander("Prediction tracking, Opta comparison and performance evaluatio
             st.warning(f"{report['unidentifiable_pre_match_records']} pre-kickoff record(s) lack enough fixture identity to be scored safely.")
         st.subheader("Historical performance dashboard")
         history = report.get("performance_history", [])
+        with st.expander("Archived historical coverage validation", expanded=True):
+            archive_dir = Path(__file__).resolve().parent / "reports" / "prediction_performance" / "archive"
+            latest_report_path = archive_dir.parent / "latest.json"
+            archived_reports, archive_load_audit = load_archived_performance_reports(
+                archive_dir, latest_report_path=latest_report_path
+            )
+            historical_validation = build_historical_coverage_validation(
+                archived_reports,
+                archive_load_audit=archive_load_audit,
+                minimum_verified_fixtures=30,
+            )
+            validation = historical_validation["summary"]
+            st.caption(
+                "Archived reports are repeated snapshots, not independent matches. "
+                "Fixtures are deduplicated by competition, kickoff and home/away teams; "
+                "only forecasts recorded before kickoff with a score-consistent verified outcome count."
+            )
+            validation_columns = st.columns(4)
+            for column, label, key in zip(
+                validation_columns,
+                ("Reports scanned", "Unique verified fixtures", "Repeated snapshots", "Invalid rows"),
+                ("reports_scanned", "unique_verified_fixtures", "duplicate_snapshot_rows", "invalid_history_rows"),
+            ):
+                with column:
+                    column.metric(label, validation[key])
+            if validation["sample_status"] == "sample_sufficient_descriptive_only":
+                st.success(
+                    f"{validation['unique_verified_fixtures']} unique verified fixtures meet the "
+                    "minimum descriptive sample. This is not permission to alter provider priorities or model weights."
+                )
+            else:
+                st.warning(
+                    f"Only {validation['unique_verified_fixtures']} unique verified fixtures are available; "
+                    f"{max(0, 30 - validation['unique_verified_fixtures'])} more are needed to reach the "
+                    "30-fixture descriptive minimum. No historical reliability claim is made."
+                )
+            st.caption(
+                f"Ambiguous fixtures excluded: {validation['ambiguous_fixtures_excluded']} · "
+                f"Report load errors: {validation['archive_load_errors']} · "
+                f"Reported-vs-observed count mismatches: {validation['report_count_mismatches']}"
+            )
+            st.json({
+                "sample_status": validation["sample_status"],
+                "accuracy_pct": historical_validation["metrics"]["accuracy_pct"],
+                "accuracy_95pct_wilson_interval": historical_validation["metrics"]["accuracy_95pct_wilson_interval"],
+                "historical_validation_passed": historical_validation["historical_validation_passed"],
+                "provider_priority_modified": historical_validation["provider_priority_modified"],
+                "prediction_weights_modified": historical_validation["prediction_weights_modified"],
+            })
         if history:
             history_frame = pd.DataFrame(history)
             history_frame["kickoff_date"] = pd.to_datetime(
