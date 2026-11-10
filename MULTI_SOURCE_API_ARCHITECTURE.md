@@ -80,7 +80,7 @@ These priorities are selection order, not automatic permission to substitute. A 
 - **Active prediction paths:** Sportmonks for current seasons after 2024; API-Football for historical seasons supported by the account (2022–2024).
 - **Opt-in field-level fallback:** Highlightly can fill missing supported match-statistic fields and exact-fixture lineups, and can discover recent results that are imported only after an exact completed Sportmonks fixture and full-time score agree. Sportmonks remains authoritative; Highlightly is not promoted globally and does not supply injury/availability inferences.
 - **Conditional result discovery:** API Ninjas can supply independent result candidates, but its score is never imported directly. An opt-in history fallback may append only the corresponding exact completed Sportmonks result after full-time score agreement. Its other fields remain diagnostic/canonicalization-only.
-- **Conditional corroboration only:** LiveScoreFootball. It remains outside automatic Layer 2 fallback until exact competition, season, team identity and source freshness checks pass.
+- **Opt-in missing-score fallback:** LiveScoreFootball can fill a missing full-time score only on an already-known completed Sportmonks fixture after fresh global/per-competition sync metadata, exact competition-season crosswalk, exact home/away identity and kickoff checks. Existing Sportmonks scores remain authoritative; LiveScore does not supply statistics, lineups or injuries.
 - **Reconciliation foundation:** canonical normalizers and field-level conflict/provenance logic exist. The next integration milestone is to fetch records from each provider, apply validated crosswalks and timestamps, reconcile them, and surface provenance/conflicts in Streamlit.
 - **No model changes:** no provider issue authorizes changes to prediction weights, TVD rules, or 60/40 recency weighting. Missing data remains unknown; disagreements remain visible and are never averaged.
 
@@ -437,3 +437,15 @@ The app now has a separate opt-in control to fill missing recent result history 
 - The fallback is disabled by default and runs only when explicitly enabled. It is bounded to the existing ten-match history window and does not invent statistics or opponent strength.
 - Recent form, goals for/against, venue ratings and the tactical summary are recomputed from the updated ten-match window. Match statistics remain empty for the inserted result unless separately sourced and validated. Existing TVD tactical_evidence is deliberately not rebuilt by this result-only fallback.
 - API Ninjas remains a separate optional corroboration path; it is not required for this fallback and does not supply missing match statistics.
+
+
+## Opt-in LiveScoreFootball missing-result fallback (2026-11-10)
+
+- The fallback is disabled by default and is independent of the Highlightly/API Ninjas result-history option.
+- It first filters the already-collected Sportmonks season fixtures for explicitly completed matches involving the selected teams that have no explicit CURRENT score rows. Fixtures with any CURRENT score row are left untouched, including malformed or partial current rows; period-only scores are not treated as full-time results.
+- Before requesting LiveScore data, it requires fresh global LiveScore metadata and a unique exact Sportmonks-to-LiveScore competition crosswalk for the requested season, including active status, hasData and fresh per-competition fixture sync time.
+- It requests only the UTC dates needed for eligible missing-score fixtures, caches repeated dates and caps requests at ten unique dates per run.
+- A LiveScore event is accepted only when exactly one completed, score-valid event matches the Sportmonks anchor fixture's exact competition key, home/away team names and kickoff within five minutes.
+- The inserted history row retains the Sportmonks fixture ID as its identity anchor and LiveScore event ID/slug, per-competition sync timestamp, global sync timestamp, raw source update time and collection completion timestamp as score provenance.
+- Existing Sportmonks scores are never overwritten. LiveScore does not supply statistics, standings, lineups, injuries or player availability through this fallback. The TVD tactical_evidence object and all model weights remain unchanged.
+- The fallback is covered by mocked-client tests for global/per-competition freshness, exact crosswalk, exact identity, invalid scores, ambiguity, request caching, existing-score preservation and profile provenance.
