@@ -1,0 +1,552 @@
+{
+  "generated_at": "2026-11-10T06:58:26.887523+00:00",
+  "competition": "Premier League — England",
+  "season": 2026,
+  "home_team": "Newcastle United",
+  "away_team": "Arsenal",
+  "analysis_mode": "automatic_statistical_evidence",
+  "tvd_result": {
+    "team_a_attacks_b": {
+      "attacking_team": "Newcastle United",
+      "defending_team": "Arsenal",
+      "compatibility_score": 19.8,
+      "risk_level": "LOW",
+      "data_coverage": 78.0,
+      "findings": [
+        {
+          "id": "auto_aerial",
+          "vulnerability": "Aerial threat against aerial defence",
+          "attacking_weapon": "Successful headers",
+          "vulnerability_score": 59.3,
+          "weapon_score": 72.2,
+          "matchup_score": 42.8,
+          "confidence": 90.0,
+          "weight": 20,
+          "risk": "LOW",
+          "evidence": {
+            "vulnerability": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "opponent output conceded by this team",
+              "components": [
+                {
+                  "statistic": "Successful Headers",
+                  "score": 59.3,
+                  "coverage_pct": 90.0,
+                  "average_value": 15.52,
+                  "observations": 9,
+                  "reference_observations": 162,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            },
+            "weapon": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "team output",
+              "components": [
+                {
+                  "statistic": "Successful Headers",
+                  "score": 72.2,
+                  "coverage_pct": 90.0,
+                  "average_value": 17.02,
+                  "observations": 9,
+                  "reference_observations": 162,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            }
+          }
+        },
+        {
+          "id": "auto_wide",
+          "vulnerability": "Wide threat against wide defending",
+          "attacking_weapon": "Accurate crosses and successful dribbles",
+          "vulnerability_score": 33.0,
+          "weapon_score": 45.2,
+          "matchup_score": 14.9,
+          "confidence": 100.0,
+          "weight": 20,
+          "risk": "LOW",
+          "evidence": {
+            "vulnerability": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "opponent output conceded by this team",
+              "components": [
+                {
+                  "statistic": "Accurate Crosses",
+                  "score": 42.5,
+                  "coverage_pct": 100.0,
+                  "average_value": 3.52,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                },
+                {
+                  "statistic": "Successful Dribbles",
+                  "score": 23.5,
+                  "coverage_pct": 100.0,
+                  "average_value": 4.24,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            },
+            "weapon": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "team output",
+              "components": [
+                {
+                  "statistic": "Accurate Crosses",
+                  "score": 42.5,
+                  "coverage_pct": 100.0,
+                  "average_value": 3.56,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                },
+                {
+                  "statistic": "Successful Dribbles",
+                  "score": 48.0,
+                  "coverage_pct": 100.0,
+                  "average_value": 6.08,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            }
+          }
+        },
+        {
+          "id": "auto_central",
+          "vulnerability": "Central chance creation against central defence",
+          "attacking_weapon": "Key passes and shots inside the box",
+          "vulnerability_score": 28.8,
+          "weapon_score": 45.8,
+          "matchup_score": 13.2,
+          "confidence": 100.0,
+          "weight": 20,
+          "risk": "LOW",
+          "evidence": {
+            "vulnerability": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "opponent output conceded by this team",
+              "components": [
+                {
+                  "statistic": "Key Passes",
+                  "score": 28.0,
+                  "coverage_pct": 100.0,
+                  "average_value": 7.92,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                },
+                {
+                  "statistic": "Shots Insidebox",
+                  "score": 29.5,
+                  "coverage_pct": 100.0,
+                  "average_value": 7.0,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            },
+            "weapon": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "team output",
+              "components": [
+                {
+                  "statistic": "Key Passes",
+                  "score": 51.0,
+                  "coverage_pct": 100.0,
+                  "average_value": 9.96,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                },
+                {
+                  "statistic": "Shots Insidebox",
+                  "score": 40.5,
+                  "coverage_pct": 100.0,
+                  "average_value": 7.52,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            }
+          }
+        },
+        {
+          "id": "auto_high_quality_chances",
+          "vulnerability": "High-quality chance creation against high-quality chances conceded",
+          "attacking_weapon": "Big chances created",
+          "vulnerability_score": 32.5,
+          "weapon_score": 32.5,
+          "matchup_score": 10.6,
+          "confidence": 100.0,
+          "weight": 20,
+          "risk": "LOW",
+          "evidence": {
+            "vulnerability": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "opponent output conceded by this team",
+              "components": [
+                {
+                  "statistic": "Big Chances Created",
+                  "score": 32.5,
+                  "coverage_pct": 100.0,
+                  "average_value": 1.24,
+                  "observations": 10,
+                  "reference_observations": 194,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            },
+            "weapon": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "team output",
+              "components": [
+                {
+                  "statistic": "Big Chances Created",
+                  "score": 32.5,
+                  "coverage_pct": 100.0,
+                  "average_value": 1.92,
+                  "observations": 10,
+                  "reference_observations": 194,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            }
+          }
+        }
+      ],
+      "missing_pairings": 1
+    },
+    "team_b_attacks_a": {
+      "attacking_team": "Arsenal",
+      "defending_team": "Newcastle United",
+      "compatibility_score": 30.1,
+      "risk_level": "LOW",
+      "data_coverage": 78.0,
+      "findings": [
+        {
+          "id": "auto_central",
+          "vulnerability": "Central chance creation against central defence",
+          "attacking_weapon": "Key passes and shots inside the box",
+          "vulnerability_score": 55.8,
+          "weapon_score": 65.0,
+          "matchup_score": 36.3,
+          "confidence": 100.0,
+          "weight": 20,
+          "risk": "LOW",
+          "evidence": {
+            "vulnerability": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "opponent output conceded by this team",
+              "components": [
+                {
+                  "statistic": "Key Passes",
+                  "score": 51.0,
+                  "coverage_pct": 100.0,
+                  "average_value": 9.76,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                },
+                {
+                  "statistic": "Shots Insidebox",
+                  "score": 60.5,
+                  "coverage_pct": 100.0,
+                  "average_value": 9.76,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            },
+            "weapon": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "team output",
+              "components": [
+                {
+                  "statistic": "Key Passes",
+                  "score": 69.5,
+                  "coverage_pct": 100.0,
+                  "average_value": 11.88,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                },
+                {
+                  "statistic": "Shots Insidebox",
+                  "score": 60.5,
+                  "coverage_pct": 100.0,
+                  "average_value": 9.32,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            }
+          }
+        },
+        {
+          "id": "auto_high_quality_chances",
+          "vulnerability": "High-quality chance creation against high-quality chances conceded",
+          "attacking_weapon": "Big chances created",
+          "vulnerability_score": 56.2,
+          "weapon_score": 56.2,
+          "matchup_score": 31.6,
+          "confidence": 100.0,
+          "weight": 20,
+          "risk": "LOW",
+          "evidence": {
+            "vulnerability": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "opponent output conceded by this team",
+              "components": [
+                {
+                  "statistic": "Big Chances Created",
+                  "score": 56.2,
+                  "coverage_pct": 100.0,
+                  "average_value": 2.2,
+                  "observations": 10,
+                  "reference_observations": 194,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            },
+            "weapon": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "team output",
+              "components": [
+                {
+                  "statistic": "Big Chances Created",
+                  "score": 56.2,
+                  "coverage_pct": 100.0,
+                  "average_value": 2.4,
+                  "observations": 10,
+                  "reference_observations": 194,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            }
+          }
+        },
+        {
+          "id": "auto_wide",
+          "vulnerability": "Wide threat against wide defending",
+          "attacking_weapon": "Accurate crosses and successful dribbles",
+          "vulnerability_score": 58.8,
+          "weapon_score": 45.2,
+          "matchup_score": 26.6,
+          "confidence": 100.0,
+          "weight": 20,
+          "risk": "LOW",
+          "evidence": {
+            "vulnerability": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "opponent output conceded by this team",
+              "components": [
+                {
+                  "statistic": "Accurate Crosses",
+                  "score": 56.0,
+                  "coverage_pct": 100.0,
+                  "average_value": 4.12,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                },
+                {
+                  "statistic": "Successful Dribbles",
+                  "score": 61.5,
+                  "coverage_pct": 100.0,
+                  "average_value": 7.48,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            },
+            "weapon": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "team output",
+              "components": [
+                {
+                  "statistic": "Accurate Crosses",
+                  "score": 56.0,
+                  "coverage_pct": 100.0,
+                  "average_value": 4.72,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                },
+                {
+                  "statistic": "Successful Dribbles",
+                  "score": 34.5,
+                  "coverage_pct": 100.0,
+                  "average_value": 5.92,
+                  "observations": 10,
+                  "reference_observations": 200,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            }
+          }
+        },
+        {
+          "id": "auto_aerial",
+          "vulnerability": "Aerial threat against aerial defence",
+          "attacking_weapon": "Successful headers",
+          "vulnerability_score": 43.2,
+          "weapon_score": 59.3,
+          "matchup_score": 25.6,
+          "confidence": 90.0,
+          "weight": 20,
+          "risk": "LOW",
+          "evidence": {
+            "vulnerability": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "opponent output conceded by this team",
+              "components": [
+                {
+                  "statistic": "Successful Headers",
+                  "score": 43.2,
+                  "coverage_pct": 90.0,
+                  "average_value": 13.7,
+                  "observations": 9,
+                  "reference_observations": 162,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            },
+            "weapon": {
+              "source": "Sportmonks fixture team statistics",
+              "direction": "team output",
+              "components": [
+                {
+                  "statistic": "Successful Headers",
+                  "score": 59.3,
+                  "coverage_pct": 90.0,
+                  "average_value": 15.62,
+                  "observations": 9,
+                  "reference_observations": 162,
+                  "reference_method": "empirical mid-rank percentile across team-match observations in the selected league season"
+                }
+              ],
+              "recency_weighting": {
+                "latest_five_weight": 0.6,
+                "previous_five_weight": 0.4
+              },
+              "interpretation": "Higher percentile means a higher observed rate/count relative to team-match observations in this league season; it is not a match-win probability."
+            }
+          }
+        }
+      ],
+      "missing_pairings": 1
+    },
+    "tactical_compatibility": {
+      "Newcastle United": 19.8,
+      "Arsenal": 30.1
+    },
+    "stronger_tactical_matchup": "Arsenal",
+    "analysis_mode": "automatic_statistical_evidence",
+    "matchups_total": 5,
+    "matchups_available_min_direction": 4
+  },
+  "model_compatibility_overrides": {
+    "home": 19.8,
+    "away": 30.1
+  },
+  "automatic_model_integration_minimum_coverage_pct": 70.0,
+  "prediction_engine_modified": false,
+  "neon_prediction_ledger_modified": false,
+  "model_weights": {
+    "recent_form": 0.2,
+    "goals_scored": 0.1,
+    "goals_conceded": 0.1,
+    "home_away": 0.1,
+    "strength_of_schedule": 0.15,
+    "player_availability": 0.05,
+    "tactical": 0.3
+  },
+  "generated_at_utc": "2026-11-10T06:58:26.887844+00:00",
+  "report_name": "tactical_matchup_evidence"
+}
