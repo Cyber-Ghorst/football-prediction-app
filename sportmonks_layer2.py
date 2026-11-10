@@ -380,7 +380,6 @@ def collect_sportmonks_team_profile(
         "excluded_invalid_scores": 0,
         "excluded_duplicate_fixture_id": 0,
     }
-    seen_fixture_ids: set[int] = set()
 
     def fixture_involves_team(fixture: dict[str, Any]) -> bool:
         home, away = _participants(fixture)
@@ -404,6 +403,8 @@ def collect_sportmonks_team_profile(
         and fixture_involves_team(row)
     }
     duplicate_fixture_ids = sorted(set(duplicate_input_ids) | schedule_duplicate_ids)
+    history_diagnostics["duplicate_fixture_ids"] = duplicate_fixture_ids
+    history_diagnostics["duplicate_fixture_id_count"] = len(duplicate_fixture_ids)
     duplicate_fixture_id_set = set(duplicate_fixture_ids)
     counted_duplicate_ids: set[int] = set()
 
