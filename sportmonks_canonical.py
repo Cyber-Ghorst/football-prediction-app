@@ -17,8 +17,14 @@ def _rows(value: Any) -> list[dict[str, Any]]:
 
 def _status(fixture: Mapping[str, Any]) -> str:
     try:
-        if int(fixture.get("state_id")) in {5, 7, 8}:
+        state_id = int(fixture.get("state_id"))
+        if state_id in {5, 7, 8}:
             return "finished"
+        if state_id == 1:
+            return "scheduled"
+        # Keep all documented in-play phases out of the completed-result set.
+        if state_id in {2, 3, 4, 6, 9, 21, 22, 25}:
+            return "live"
     except (TypeError, ValueError):
         pass
     state = fixture.get("state") or {}
