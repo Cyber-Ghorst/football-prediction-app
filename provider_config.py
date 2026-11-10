@@ -20,7 +20,7 @@ PROVIDER_ROLES: dict[str, dict[str, Any]] = {
         "rank": 2,
         "role": "Independent current-season corroboration and secondary source",
         "domains": ("fixtures", "results", "standings", "statistics", "injuries", "lineups", "players", "squads"),
-        "limitation": "Coverage, fields, quotas and refresh intervals are plan-dependent; opt-in missing-stat, exact-fixture lineup and exact-verified result-history fallbacks are active, with Sportmonks precedence and no injury/availability inference.",
+        "limitation": "Official catalogue advertises 950+ leagues, but account-specific catalogue access currently returns HTTP 429; plan coverage, fields, quotas and refresh intervals must be revalidated before broad fixture discovery. Existing opt-in missing-stat, exact-fixture lineup and exact-verified result-history paths remain available with Sportmonks precedence and no injury/availability inference.",
     },
     "api_football": {
         "display_name": "API-Football v3",
@@ -41,7 +41,7 @@ PROVIDER_ROLES: dict[str, dict[str, Any]] = {
         "rank": 5,
         "role": "Conditional competition-specific corroboration for fixtures/results/standings",
         "domains": ("fixtures", "results", "standings"),
-        "limitation": "Database-backed snapshots can be delayed; require an exact competition/season crosswalk and fresh global, per-competition and individual fixture-event timestamps for every fallback use.",
+        "limitation": "Fresh audit found 35 active competitions across 17 countries (3,161 stored matches; 0 international competitions); global and all 35 per-competition sync timestamps passed freshness checks. Database-backed snapshots can still be delayed, so exact season crosswalk and per-event freshness checks remain mandatory.",
     },
 }
 
@@ -69,7 +69,7 @@ def provider_readiness() -> list[dict[str, Any]]:
         "api_ninjas": "adapter and authenticated smoke test available; exact result candidates can trigger an opt-in Sportmonks-verified history fallback; no direct statistics, injury or lineup fields",
         "highlightly": "adapter and authenticated smoke test available; opt-in exact-match missing-stat, lineup and Sportmonks-verified result-history fallbacks are wired into Layer 2; no injury or availability inference",
         "sportmonks": "current-season Layer 2 path active; exact competition/season coverage and data-quality gates enforced",
-        "livescore_football": "read-only adapter and opt-in missing-score fallback wired into Streamlit (default off); requires fresh global, competition and event timestamps plus exact competition-season and fixture identity checks",
+        "livescore_football": "read-only adapter, 35-competition catalogue audit and opt-in missing-score fallback wired into Streamlit (default off); global and 35/35 per-competition sync checks pass, while exact season crosswalk and individual event freshness remain required",
     }
     credential_names = {
         "api_football": "APISPORTS_API_KEY",

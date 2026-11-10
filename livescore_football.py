@@ -23,9 +23,8 @@ class LiveScoreFootballClient:
 
     def __init__(self, base_url: str | None = None, timeout: int = 15,
                  session: requests.Session | None = None):
-        self.base_url = (base_url or os.getenv(
-            "LIVESCORE_FOOTBALL_BASE_URL", self.DEFAULT_BASE_URL
-        )).rstrip("/")
+        configured_base_url = base_url or os.getenv("LIVESCORE_FOOTBALL_BASE_URL")
+        self.base_url = (configured_base_url or self.DEFAULT_BASE_URL).rstrip("/")
         self.timeout = timeout
         self.session = session or requests.Session()
         self.session.headers.update({

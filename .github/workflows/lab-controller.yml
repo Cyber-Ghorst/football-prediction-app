@@ -19,6 +19,7 @@ on:
           - openscores_entity_mapping_audit
           - openscores_sportmonks_reconciliation
           - sportmonks_catalogue_access_audit
+          - provider_league_catalogue_audit
         default: health_check
       season:
         description: "Season start year (Sportmonks current-season path: 2025+)"
@@ -122,7 +123,7 @@ jobs:
               trigger = json.loads(Path(".agent/trigger.json").read_text(encoding="utf-8"))
               operation = trigger.get("operation", "")
 
-          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync", "tipmaster_refresh_verify", "openscores_connection_check", "openscores_fixture_observation_sync", "openscores_entity_mapping_audit", "openscores_sportmonks_reconciliation", "sportmonks_catalogue_access_audit"}
+          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync", "tipmaster_refresh_verify", "openscores_connection_check", "openscores_fixture_observation_sync", "openscores_entity_mapping_audit", "openscores_sportmonks_reconciliation", "sportmonks_catalogue_access_audit", "provider_league_catalogue_audit"}
           if operation not in allowed:
               raise SystemExit("Rejected unsupported or missing operation")
           if operation == "prediction_run":
@@ -429,6 +430,22 @@ jobs:
           set -euo pipefail
           python sportmonks_catalogue_access_audit.py
 
+      - name: Install provider catalogue audit dependency
+        if: steps.operation.outputs.operation == 'provider_league_catalogue_audit'
+        run: |
+          set -euo pipefail
+          python -m pip install requests
+
+      - name: Audit Highlightly and LiveScoreFootball league catalogues (read-only)
+        if: steps.operation.outputs.operation == 'provider_league_catalogue_audit'
+        env:
+          HIGHLIGHTLY_API_KEY: ${{ secrets.HIGHLIGHTLY_API_KEY }}
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+          LIVESCORE_FOOTBALL_BASE_URL: ${{ secrets.LIVESCORE_FOOTBALL_BASE_URL }}
+        run: |
+          set -euo pipefail
+          python provider_league_catalogue_audit.py
+
       - name: Reconcile OpenScores against canonical Sportmonks history
         if: steps.operation.outputs.operation == 'openscores_sportmonks_reconciliation'
         env:
@@ -564,6 +581,7 @@ jobs:
               ("openscores-entity-mapping-audit.json", "OpenScores entity mapping candidate audit"),
               ("openscores-sportmonks-reconciliation-report.json", "OpenScores to Sportmonks reconciliation"),
               ("sportmonks-catalogue-access-report.json", "Sportmonks account catalogue access audit"),
+              ("provider-league-catalogue-audit.json", "Highlightly and LiveScoreFootball league catalogue audit"),
               ("prediction-run-report.json", "Automated prediction run report"),
           )
           for filename, heading in report_files:
@@ -668,6 +686,7 @@ jobs:
             openscores-entity-mapping-audit.json
             openscores-sportmonks-reconciliation-report.json
             sportmonks-catalogue-access-report.json
+            provider-league-catalogue-audit.json
             prediction-run-report.json
             watchdog-report.json
             latest-controller-report.json

@@ -1,4 +1,6 @@
+import os
 import unittest
+from unittest.mock import patch
 from unittest.mock import Mock
 
 from livescore_football import LiveScoreFootballClient, LiveScoreFootballError
@@ -15,6 +17,12 @@ class LiveScoreFootballAdapterTests(unittest.TestCase):
         return LiveScoreFootballClient(
             base_url="https://example.test", session=session
         ), session
+
+    def test_empty_base_url_environment_uses_public_default(self):
+        with patch.dict(os.environ, {"LIVESCORE_FOOTBALL_BASE_URL": ""}):
+            client = LiveScoreFootballClient()
+        self.assertEqual(client.base_url, "https://worldcup26.ir")
+        client.close()
 
     def test_leagues_reads_documented_leagues_envelope(self):
         client, session = self.make_client({"leagues": [{"slug": "eng.1"}]})

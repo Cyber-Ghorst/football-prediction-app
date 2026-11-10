@@ -21,6 +21,19 @@ class CompetitionCrosswalkTests(unittest.TestCase):
         self.assertTrue(rows[0]["verified"])
         self.assertEqual(verified_livescore_slug(rows, 39), "eng.1")
 
+    def test_crosswalk_accepts_top_level_competition_sync_timestamp(self):
+        live = [{
+            "slug": "eng.1", "name": "Premier League", "country": "England",
+            "active": True, "season": {"year": 2026},
+            "lastSyncedAt": "2026-11-07T11:30:00Z",
+            "coverage": {"hasData": True, "matches": 380},
+        }]
+        rows = build_competition_crosswalk(
+            self.api, live, requested_season=2026, now=self.now
+        )
+        self.assertTrue(rows[0]["verified"])
+        self.assertEqual(rows[0]["competition_last_synced_at"], "2026-11-07T11:30:00Z")
+
     def test_name_only_or_country_mismatch_does_not_map(self):
         live = [dict(self.live[0], country="Scotland")]
         rows = build_competition_crosswalk(self.api, live, requested_season=2026, now=self.now)
