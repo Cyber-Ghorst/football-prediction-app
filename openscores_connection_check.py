@@ -43,19 +43,19 @@ def main() -> int:
     report = run_check()
     serialized = json.dumps(report, indent=2)
     Path("openscores-connection-report.json").write_text(
-        serialized + "\\n", encoding="utf-8"
+        serialized + "\n", encoding="utf-8"
     )
     print(serialized)
     try:
         with open(__import__("os").environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as summary:
-            summary.write("## OpenScores autonomous connection check\\n\\n")
-            summary.write(f"- Status: **{report['status']}**\\n")
-            summary.write(f"- Authenticated: {report['authenticated']}\\n")
-            summary.write(f"- Leagues returned: {report['league_count_returned']}\\n")
-            summary.write(f"- Checked (UTC): {report['checked_at_utc']}\\n")
-            summary.write("- Read-only: yes; fixtures imported: no; prediction ledger touched: no\\n")
+            summary.write("## OpenScores autonomous connection check\n\n")
+            summary.write(f"- Status: **{report['status']}**\n")
+            summary.write(f"- Authenticated: {report['authenticated']}\n")
+            summary.write(f"- Leagues returned: {report['league_count_returned']}\n")
+            summary.write(f"- Checked (UTC): {report['checked_at_utc']}\n")
+            summary.write("- Read-only: yes; fixtures imported: no; prediction ledger touched: no\n")
             if report.get("error_type"):
-                summary.write(f"- Diagnostic category: {report['error_type']}\\n")
+                summary.write(f"- Diagnostic category: {report['error_type']}\n")
     except KeyError:
         pass
     return 0 if report["status"] == "pass" else 1
