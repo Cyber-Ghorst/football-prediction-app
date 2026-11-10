@@ -92,6 +92,14 @@ class HighlightlyCandidateVerificationTests(unittest.TestCase):
             "highlightly",
         )
         self.assertEqual(home["tactical_evidence"], {"source": "existing_primary_only"})
+        self.assertEqual(
+            home["data_quality"]["history_source"],
+            "cockroachdb_central_repository_plus_verified_sportmonks_candidates",
+        )
+        self.assertEqual(
+            home["history_collection_diagnostics"]["statistics_coverage_by_metric"]["Total Shots"],
+            0,
+        )
         self.assertFalse(home["verified_result_history_fallback"]["tactical_evidence_updated"])
 
     def test_verified_result_fallback_rejects_mismatch_and_invalid_timestamp(self):
