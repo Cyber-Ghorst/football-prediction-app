@@ -1,8 +1,9 @@
-"""Targeted, read-only verification of unmatched Highlightly results.
+"""Targeted verification of unmatched Highlightly results against Sportmonks.
 
-This diagnostic fetches a candidate's calendar date from Sportmonks and checks
-exact season, competition, home/away team IDs, kickoff, completion and score.
-It never adds records to Layer 2 history.
+The verifier reports exact season, competition, home/away team IDs, kickoff,
+completion and score. A separate opt-in helper may append only a single exact,
+completed Sportmonks result whose full-time score agrees with Highlightly.
+Unverified candidates remain diagnostic-only.
 """
 from __future__ import annotations
 
