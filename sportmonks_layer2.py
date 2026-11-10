@@ -74,14 +74,24 @@ def _participants(fixture: dict[str, Any]) -> tuple[dict[str, Any] | None, dict[
 
 
 def _state(fixture: dict[str, Any]) -> str:
-    state = fixture.get("state") or {}
-    # Sportmonks documents finished fixture state IDs 5, 7 and 8.
+    """Normalize Sportmonks state IDs and expanded/string status labels."""
     try:
-        if int(fixture.get("state_id")) in {5, 7, 8}:
+        state_id = int(fixture.get("state_id"))
+        if state_id in {5, 7, 8}:
             return "finished"
+        if state_id == 1:
+            return "scheduled"
+        if state_id in {2, 3, 4, 6}:
+            return "live"
     except (TypeError, ValueError):
         pass
-    label = str(state.get("short_name") or state.get("name") or "").strip().casefold()
+
+    state = fixture.get("state") or fixture.get("status") or {}
+    if isinstance(state, dict):
+        label_value = state.get("short_name") or state.get("name") or ""
+    else:
+        label_value = state
+    label = str(label_value).strip().casefold()
     if label in _COMPLETED or any(x in label for x in ("finished", "full time", "after extra", "after penalties")):
         return "finished"
     if any(x in label for x in ("live", "in play", "half time", "1st half", "2nd half", "extra time", "penalty")):

@@ -58,6 +58,30 @@ class PredictionReadinessTests(unittest.TestCase):
         self.assertTrue(report["fixture"]["verified"])
         self.assertTrue(report["ten_match_history_target_met"])
 
+    def test_sportmonks_state_id_one_verifies_future_fixture_without_state_object(self):
+        row = fixture()
+        row.pop("state")
+        row["state_id"] = 1
+        report = self.report(selected_fixture=row)
+        self.assertTrue(report["fixture"]["verified"])
+        self.assertEqual(report["overall_status"], "ready")
+
+    def test_string_status_fallback_verifies_future_fixture(self):
+        row = fixture()
+        row.pop("state")
+        row["status"] = "NS"
+        report = self.report(selected_fixture=row)
+        self.assertTrue(report["fixture"]["verified"])
+
+    def test_live_sportmonks_state_id_does_not_verify_upcoming_fixture(self):
+        row = fixture()
+        row.pop("state")
+        row["state_id"] = 2
+        report = self.report(selected_fixture=row)
+        self.assertFalse(report["fixture"]["verified"])
+        self.assertEqual(report["overall_status"], "fixture_unverified")
+        self.assertIn("fixture state is not confirmed as scheduled", report["fixture"]["reason"])
+
     def test_fixture_fetch_age_is_reported_without_freshness_threshold(self):
         row = fixture()
         row["fixture_details_fetched_at"] = "2026-11-07T11:30:00+00:00"
