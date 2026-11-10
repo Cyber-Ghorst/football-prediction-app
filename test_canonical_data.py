@@ -41,6 +41,22 @@ class CanonicalMatchTests(unittest.TestCase):
         self.assertEqual(result["home_score"], 2)
         self.assertEqual(result["home"]["source_ids"]["livescore_football"], "ls-team-1")
 
+    def test_livescore_string_false_completion_flag_is_not_truthy_finished(self):
+        event = self.livescore()
+        event["status"]["type"] = {"state": "unknown", "completed": "false"}
+        result = canonicalize_livescore_event(
+            event, competition_key="eng-premier-league", season=2026
+        )
+        self.assertEqual(result["status"], "unknown")
+
+    def test_livescore_true_boolean_completion_flag_marks_finished(self):
+        event = self.livescore()
+        event["status"]["type"] = {"state": "unknown", "completed": True}
+        result = canonicalize_livescore_event(
+            event, competition_key="eng-premier-league", season=2026
+        )
+        self.assertEqual(result["status"], "finished")
+
     def test_api_football_normalizes_fixture_shape(self):
         result = canonicalize_api_football_fixture(
             self.api_fixture(), competition_key="eng-premier-league", season=2026
