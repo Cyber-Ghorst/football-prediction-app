@@ -29,7 +29,13 @@ def _status(fixture: Mapping[str, Any]) -> str:
         pass
     state = fixture.get("state") or {}
     label = str(state.get("short_name") or state.get("name") or "").casefold()
-    if any(word in label for word in ("finished", "full time", "after extra time", "after penalties")):
+    # State labels are provider-controlled text. Match complete labels only:
+    # substring checks would incorrectly classify values such as "unfinished".
+    if label in {
+        "finished", "ft", "full time", "full-time", "after extra time",
+        "after penalties", "finished after extra time", "finished after penalties",
+        "aet",
+    }:
         return "finished"
     if any(word in label for word in ("live", "in play", "half time", "1st half", "2nd half", "extra time", "penalty")):
         return "live"
