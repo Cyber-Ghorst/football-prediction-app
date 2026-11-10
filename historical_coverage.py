@@ -15,7 +15,7 @@ from typing import Any, Iterable, Mapping
 
 
 _OUTCOMES = {"home", "draw", "away"}
-_SCORE = re.compile(r"^(\\d+)\\s*[-:]\\s*(\\d+)$")
+_SCORE = re.compile(r"^(\d+)\s*[-:]\s*(\d+)$")
 
 
 def _timestamp(value: Any) -> datetime | None:
