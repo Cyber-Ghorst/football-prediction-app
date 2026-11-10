@@ -140,6 +140,7 @@ def collect_livescore_verified_result_fallback(
         "date_request_limit_reached": 0,
         "date_request_errors": [],
         "ambiguous_event_matches": 0,
+        "stale_or_unverifiable_event_matches": 0,
         "no_exact_event_matches": 0,
         "max_unique_date_requests": max(1, min(int(max_unique_date_requests), 10)),
         "collection_started_at": started_at,
