@@ -157,13 +157,21 @@ def mark_outside_upcoming_window_observations(
 
 def reconcile_openscores_observations(
     database_url: str, *, kickoff_tolerance_seconds: int = 300,
-    limit: int = 1000,
+    limit: int = 1000, include_outside_upcoming_window: bool = False,
+    preserve_outside_window_status: bool = False,
 ) -> dict[str, int]:
-    """Match observations only via verified entity crosswalks and exact fixture fingerprint."""
+    """Match observations via explicit entity crosswalks and exact fixture fingerprint.
+
+    Historical observations can be included for reconciliation audits while
+    retaining their outside_upcoming_window status so they never become
+    upcoming-feed candidates.
+    """
     if not database_url:
         raise ValueError("PROVIDER_DATABASE_URL is required")
     if isinstance(kickoff_tolerance_seconds, bool) or not isinstance(kickoff_tolerance_seconds, int) or kickoff_tolerance_seconds < 0:
         raise ValueError("kickoff_tolerance_seconds must be a non-negative integer")
+    if preserve_outside_window_status and not include_outside_upcoming_window:
+        raise ValueError("Preserving historical status requires include_outside_upcoming_window=True")
     safe_limit = max(1, min(int(limit), 5000))
     counts = {
         "observations_checked": 0,
@@ -179,20 +187,25 @@ def reconcile_openscores_observations(
                 """
                 SELECT observation_id, provider_fixture_id, provider_league_id,
                        provider_season_id, provider_home_team_id, provider_away_team_id,
-                       kickoff_utc
+                       kickoff_utc, reconciliation_status
                 FROM provider_fixture_observations
                 WHERE provider = 'openscores'
-                  AND reconciliation_status NOT IN ('matched', 'outside_upcoming_window')
+                  AND reconciliation_status NOT IN ('matched')
+                  AND (%s OR reconciliation_status <> 'outside_upcoming_window')
                 ORDER BY kickoff_utc
                 LIMIT %s
                 """,
-                (safe_limit,),
+                (bool(include_outside_upcoming_window), safe_limit),
             )
             observations = cursor.fetchall()
 
             for row in observations:
                 (observation_id, provider_fixture_id, league_pid, season_pid,
-                 home_pid, away_pid, kickoff) = row
+                 home_pid, away_pid, kickoff, original_status) = row
+                preserve_historical = (
+                    preserve_outside_window_status
+                    and str(original_status) == "outside_upcoming_window"
+                )
                 counts["observations_checked"] += 1
                 cursor.execute(
                     """
@@ -211,15 +224,25 @@ def reconcile_openscores_observations(
                 home_id = links.get(("team", str(home_pid)))
                 away_id = links.get(("team", str(away_pid)))
                 if not all((league_id, season_id, home_id, away_id)):
+                    pending_status = (
+                        "outside_upcoming_window" if preserve_historical
+                        else "pending_entity_mapping"
+                    )
                     cursor.execute(
                         """
                         UPDATE provider_fixture_observations
-                        SET reconciliation_status = 'pending_entity_mapping',
+                        SET reconciliation_status = %s,
                             canonical_fixture_id = NULL,
-                            reconciliation_note = 'One or more verified entity crosswalks are missing'
+                            reconciliation_note = %s
                         WHERE observation_id = %s
                         """,
-                        (observation_id,),
+                        (
+                            pending_status,
+                            "Historical record retained outside upcoming window; entity crosswalk missing"
+                            if preserve_historical
+                            else "One or more explicit entity crosswalks are missing",
+                            observation_id,
+                        ),
                     )
                     counts["pending_entity_mapping"] += 1
                     continue
@@ -288,6 +311,9 @@ def reconcile_openscores_observations(
                         )
                         continue
 
+                final_status = (
+                    "outside_upcoming_window" if preserve_historical else status
+                )
                 cursor.execute(
                     """
                     UPDATE provider_fixture_observations
@@ -295,6 +321,6 @@ def reconcile_openscores_observations(
                         reconciliation_note = %s
                     WHERE observation_id = %s
                     """,
-                    (status, note, observation_id),
+                    (final_status, note, observation_id),
                 )
     return counts
