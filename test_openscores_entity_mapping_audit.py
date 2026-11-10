@@ -4,6 +4,13 @@ from openscores_entity_mapping_audit import build_entity_mapping_candidates
 
 
 class OpenScoresEntityMappingAuditTests(unittest.TestCase):
+    def test_payload_inventory_reports_paths_without_values(self):
+        from openscores_entity_mapping_audit import _key_inventory, _source_id_keys
+        payloads = [{"source_ids": {"flashscore": "secret-id"}, "home_team": {"id": 12}}]
+        self.assertEqual(_key_inventory(payloads), ["home_team", "home_team.id", "source_ids", "source_ids.flashscore"])
+        self.assertEqual(_source_id_keys(payloads), ["flashscore"])
+        self.assertNotIn("secret-id", str(_key_inventory(payloads)))
+
     def test_unique_name_candidates_are_review_only(self):
         result = build_entity_mapping_candidates(
             leagues=[{"id": "os-league", "name": "Premier League", "country": "England"}],

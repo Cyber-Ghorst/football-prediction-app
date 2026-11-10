@@ -45,8 +45,48 @@ def _records(value: Any, preferred: tuple[str, ...], depth: int = 0):
 
 def _country(value: Any) -> str:
     if isinstance(value, Mapping):
-        value = value.get("name") or value.get("displayName") or ""
+        value = value.get("name") or value.get("displayName") or value.get("country_name") or ""
     return str(value or "")
+
+
+def _league_country(league: Mapping[str, Any]) -> str:
+    for key in ("country", "country_name", "countryName", "area", "region"):
+        value = _country(league.get(key))
+        if value:
+            return value
+    return ""
+
+
+def _key_inventory(payloads: list[Any], *, max_depth: int = 3) -> list[str]:
+    """Return JSON field paths only; never expose raw provider payload values."""
+    paths: set[str] = set()
+
+    def visit(value: Any, prefix: str = "", depth: int = 0) -> None:
+        if depth >= max_depth:
+            return
+        if isinstance(value, dict):
+            for key, child in value.items():
+                path = f"{prefix}.{key}" if prefix else str(key)
+                paths.add(path)
+                visit(child, path, depth + 1)
+        elif isinstance(value, list):
+            for child in value[:5]:
+                visit(child, prefix, depth + 1)
+
+    for payload in payloads:
+        visit(payload)
+    return sorted(paths)
+
+
+def _source_id_keys(payloads: list[Any]) -> list[str]:
+    keys: set[str] = set()
+    for payload in payloads:
+        if not isinstance(payload, Mapping):
+            continue
+        source_ids = payload.get("source_ids")
+        if isinstance(source_ids, Mapping):
+            keys.update(str(key) for key in source_ids)
+    return sorted(keys)
 
 
 def _unique_name_candidates(source: Mapping[str, Any], canonical: list[Mapping[str, Any]],
@@ -128,7 +168,7 @@ def build_entity_mapping_candidates(
         league_rows.append({
             "provider_entity_id": source_id,
             "name": league.get("name"),
-            "country": _country(league.get("country")),
+            "country": _league_country(league),
             **candidate,
             "automatic_mapping_created": False,
         })
@@ -192,19 +232,21 @@ def run_audit(*, client_factory=OpenScoresClient, database_url: str | None = Non
 
     with _connect(db_url) as connection:
         with connection.cursor() as cursor:
-            cursor.execute("SELECT league_id, name, country, source_provider FROM football_leagues")
+            cursor.execute("SELECT league_id, name, country, source_provider, raw_payload FROM football_leagues ORDER BY name, league_id")
             canonical_leagues = [
-                {"id": row[0], "name": row[1], "country": row[2], "source_provider": row[3]}
+                {"id": row[0], "name": row[1], "country": row[2] or _league_country(row[4] or {}),
+                 "source_provider": row[3], "raw_payload": row[4] or {}}
                 for row in cursor.fetchall()
             ]
-            cursor.execute("SELECT season_id, league_id, name, start_date::text, end_date::text FROM football_seasons")
+            cursor.execute("SELECT season_id, league_id, name, start_date::text, end_date::text FROM football_seasons ORDER BY league_id, season_id")
             canonical_seasons = [
                 {"id": row[0], "league_id": row[1], "name": row[2], "start_date": row[3], "end_date": row[4]}
                 for row in cursor.fetchall()
             ]
-            cursor.execute("SELECT team_id, name, country, source_provider FROM football_teams")
+            cursor.execute("SELECT team_id, name, country, source_provider, raw_payload FROM football_teams ORDER BY name, team_id")
             canonical_teams = [
-                {"id": row[0], "name": row[1], "country": row[2], "source_provider": row[3]}
+                {"id": row[0], "name": row[1], "country": row[2], "source_provider": row[3],
+                 "raw_payload": row[4] or {}}
                 for row in cursor.fetchall()
             ]
             cursor.execute("""
@@ -231,6 +273,21 @@ def run_audit(*, client_factory=OpenScoresClient, database_url: str | None = Non
                 FROM provider_fixture_observations WHERE provider = 'openscores'
             """)
             observation_summary = cursor.fetchone()
+            cursor.execute("""
+                SELECT raw_payload, source_ids
+                FROM provider_fixture_observations
+                WHERE provider = 'openscores'
+                ORDER BY kickoff_utc
+                LIMIT 100
+            """)
+            openscores_payload_rows = cursor.fetchall()
+            cursor.execute("""
+                SELECT raw_payload
+                FROM football_fixtures
+                ORDER BY starting_at DESC
+                LIMIT 100
+            """)
+            canonical_fixture_payloads = [row[0] or {} for row in cursor.fetchall()]
 
     candidates = build_entity_mapping_candidates(
         leagues=leagues,
@@ -255,6 +312,33 @@ def run_audit(*, client_factory=OpenScoresClient, database_url: str | None = Non
             "leagues": len(canonical_leagues),
             "seasons": len(canonical_seasons),
             "teams": len(canonical_teams),
+        },
+        "canonical_catalogue": {
+            "leagues": [
+                {key: row.get(key) for key in ("id", "name", "country", "source_provider")}
+                for row in canonical_leagues
+            ],
+            "seasons": [
+                {key: row.get(key) for key in ("id", "league_id", "name", "start_date", "end_date")}
+                for row in canonical_seasons
+            ],
+        },
+        "source_identity_evidence": {
+            "openscores_league_fields": {
+                str(league.get("id") or league.get("league_id") or ""): sorted(str(key) for key in league)
+                for league in leagues
+            },
+            "openscores_fixture_payload_field_paths": _key_inventory(
+                [row[0] or {} for row in openscores_payload_rows]
+            ),
+            "openscores_source_id_keys": sorted({
+                str(key) for row in openscores_payload_rows
+                if isinstance(row[1], Mapping) for key in row[1]
+            }),
+            "canonical_fixture_payload_field_paths": _key_inventory(canonical_fixture_payloads),
+            "canonical_team_payload_field_paths": _key_inventory(
+                [row.get("raw_payload") or {} for row in canonical_teams]
+            ),
         },
         "candidates": candidates,
         "summary": {
