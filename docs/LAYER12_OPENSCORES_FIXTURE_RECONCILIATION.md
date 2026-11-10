@@ -20,11 +20,19 @@ does not use team names as an identity key.
 Initial ingestion writes only to this table; it does not write or update
 `football_fixtures`, model inputs, statistics, or the prediction ledger.
 
-The existing `provider_entity_links` table is the explicit crosswalk. A
-reconciliation attempt requires verified OpenScores-to-canonical mappings for
-league, season, home team and away team. It then checks the canonical fixture
-fingerprint: competition, season, ordered home/away canonical IDs and kickoff
-within a configurable five-minute default tolerance.
+The existing `provider_entity_links` table is the explicit crosswalk.
+Each crosswalk must also have a matching row in
+`provider_entity_link_verifications`, recording its verification status,
+method, evidence and timestamp. Reconciliation reads only links whose
+verification status is `verified`; a bare provider link is not sufficient.
+The reconciliation operation records evidence for exact competition/country,
+same-league season-year, and unique exact team-name matches. Conflicting or
+previously rejected mappings are not overwritten.
+
+A reconciliation attempt requires verified OpenScores-to-canonical mappings
+for league, season, home team and away team. It then checks the canonical
+fixture fingerprint: competition, season, ordered home/away canonical IDs and
+kickoff within a configurable five-minute default tolerance.
 
 Exactly one match creates an OpenScores fixture crosswalk. Zero matches remain
 unmatched; multiple matches are flagged ambiguous; a conflicting existing
