@@ -2047,7 +2047,7 @@ try:
                             # Target each unmatched secondary-provider result by its UTC calendar date.
                             # The verifier remains fail-closed; a separate opt-in step below may
                             # append only one exact completed Sportmonks result with an agreeing
-                            # Highlightly score. Unverified candidates remain diagnostic-only.
+                            # Highlightly or API Ninjas score. Unverified candidates remain diagnostic-only.
                             candidate_rows = []
                             seen_candidate_keys = set()
                             for team_report in (corroboration.get("team_history_coverage") or {}).values():
@@ -2279,7 +2279,7 @@ try:
                             st.caption(
                                 "Only exact competition/season/team/kickoff matches are considered. "
                                 + (
-                                    "When enabled, only exact completed Sportmonks results with an agreeing Highlightly score are added to recent form/goals; match statistics and TVD evidence are unchanged."
+                                    "When enabled, only exact completed Sportmonks results with an agreeing Highlightly or API Ninjas score are added to recent form/goals; match statistics and TVD evidence are unchanged."
                                     if use_verified_result_history_fallback
                                     else "This diagnostic does not change prediction inputs."
                                 )
@@ -2288,13 +2288,13 @@ try:
                                 key: value for key, value in corroboration.items()
                                 if key not in {"matches", "team_history_coverage"}
                             })
-                            st.markdown("**Independent team-history check (Highlightly)**")
+                            st.markdown("**Independent team-history check (Highlightly and API Ninjas)**")
                             st.caption(
                                 "Compares completed, score-valid results by exact competition, season, team orientation and kickoff. "
                                 + (
                                     "Only candidates with a single exact Sportmonks fixture and agreeing full-time score are eligible for the opt-in history fallback; all others remain diagnostic."
                                     if use_verified_result_history_fallback
-                                    else "Unmatched Highlightly results remain review candidates and are not added to model history."
+                                    else "Unmatched Highlightly/API Ninjas results remain review candidates and are not added to model history."
                                 )
                             )
                             history_checks = corroboration.get("team_history_coverage") or {}
