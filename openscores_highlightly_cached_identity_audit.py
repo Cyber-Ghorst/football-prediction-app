@@ -119,14 +119,15 @@ def _load_cached_matches(database_url: str) -> tuple[list[dict[str, Any]], list[
                 kwargs = params.get("kwargs") or {}
                 if not args or str(args[0]).strip("/") != "matches":
                     continue
-                if not isinstance(kwargs, Mapping):
+                query = args[1] if len(args) > 1 and isinstance(args[1], Mapping) else kwargs
+                if not isinstance(query, Mapping):
                     continue
                 for row in _rows(payload):
                     matches.append(row)
                 metadata.append({
-                    "leagueName": kwargs.get("leagueName"),
-                    "season": kwargs.get("season"),
-                    "leagueId": kwargs.get("leagueId"),
+                    "leagueName": query.get("leagueName"),
+                    "season": query.get("season"),
+                    "leagueId": query.get("leagueId"),
                     "retrieved_at": retrieved_at,
                     "expires_at": expires_at,
                     "row_count": len(_rows(payload)),
