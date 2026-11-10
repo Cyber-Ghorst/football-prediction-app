@@ -6,8 +6,12 @@ from openscores_fixture_observation_sync import run_sync
 
 
 class FakeOpenScores:
-    def __init__(self, pages):
+    def __init__(self, pages, leagues=None):
         self.pages = pages
+        self.leagues = leagues if leagues is not None else [
+            {"id": 1, "name": "League One"},
+            {"id": 2, "name": "League Two"},
+        ]
         self.calls = []
 
     def __enter__(self):
@@ -17,10 +21,7 @@ class FakeOpenScores:
         return False
 
     def list_leagues(self):
-        return {"data": {"leagues": [
-            {"id": 1, "name": "League One"},
-            {"id": 2, "name": "League Two"},
-        ]}}
+        return {"data": {"leagues": self.leagues}}
 
     @staticmethod
     def _league_collection(data):
@@ -135,6 +136,29 @@ class GlobalCompetitionScopeTests(unittest.TestCase):
         self.assertEqual(report["fixtures_accepted_for_window"], 2)
         self.assertEqual(report["status"], "pass")
         self.assertEqual(len(save.call_args.args[1]), 2)
+
+
+    def test_global_query_recognizes_all_discovered_leagues_by_default(self):
+        leagues = [{"id": index, "name": f"League {index}"} for index in range(1, 9)]
+        client = FakeOpenScores([page([fixture(101, 8, 2026)])], leagues=leagues)
+        report, save = self._run(client)
+
+        self.assertEqual(report["leagues_discovered"], 8)
+        self.assertEqual(report["fixtures_unknown_league_id"], 0)
+        self.assertEqual(report["fixtures_accepted_for_window"], 1)
+        self.assertEqual(save.call_args.args[1][0]["provider_league_id"], "8")
+
+    def test_conflicting_provider_fixture_identity_is_excluded(self):
+        client = FakeOpenScores([page([
+            fixture(111, 1, 2026),
+            fixture(111, 2, 2026),
+        ])])
+        report, save = self._run(client)
+
+        self.assertEqual(report["fixtures_duplicate_provider_id"], 1)
+        self.assertEqual(report["fixtures_conflicting_provider_id"], 1)
+        self.assertEqual(report["fixtures_accepted_for_window"], 0)
+        self.assertEqual(save.call_args.args[1], [])
 
     def test_pagination_cap_is_reported_as_partial(self):
         full_page = [fixture(i, 1, 2026) for i in range(200)]
