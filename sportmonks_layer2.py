@@ -615,6 +615,89 @@ def find_exact_match_fixture(
     return max(candidates, key=lambda row: int(row["starting_at_timestamp"])) if candidates else None
 
 
+def diagnose_upcoming_match_fixture(
+    fixtures: list[dict[str, Any]],
+    home_team_id: int,
+    away_team_id: int,
+    season_id: int,
+    now_timestamp: int | None = None,
+) -> dict[str, Any]:
+    """Return an exact fixture and auditable rejection counts; never guess identity."""
+    import time
+
+    current = int(now_timestamp if now_timestamp is not None else time.time())
+    counts = {
+        "fixtures_scanned": len(fixtures),
+        "same_season": 0,
+        "scheduled": 0,
+        "exact_home_away": 0,
+        "future_kickoff": 0,
+        "missing_kickoff": 0,
+    }
+    candidates: list[tuple[int, dict[str, Any]]] = []
+
+    for fixture in fixtures:
+        try:
+            if int(fixture.get("season_id")) != int(season_id):
+                continue
+        except (TypeError, ValueError):
+            continue
+        counts["same_season"] += 1
+        if _state(fixture) != "scheduled":
+            continue
+        counts["scheduled"] += 1
+        home, away = _participants(fixture)
+        if not home or not away:
+            continue
+        try:
+            exact_pair = (
+                int(home.get("id")) == int(home_team_id)
+                and int(away.get("id")) == int(away_team_id)
+            )
+        except (TypeError, ValueError):
+            exact_pair = False
+        if not exact_pair:
+            continue
+        counts["exact_home_away"] += 1
+        kickoff = _kickoff_timestamp(fixture)
+        if kickoff is None:
+            counts["missing_kickoff"] += 1
+            continue
+        if kickoff <= current:
+            continue
+        counts["future_kickoff"] += 1
+        candidates.append((kickoff, fixture))
+
+    if candidates:
+        kickoff, selected = min(candidates, key=lambda item: item[0])
+        return {
+            "verified": True,
+            "status": "verified",
+            "reason": "Exact home/away teams, season, scheduled state and future kickoff matched.",
+            "fixture": selected,
+            "kickoff_timestamp": kickoff,
+            **counts,
+        }
+
+    if counts["same_season"] == 0:
+        reason = "No fixtures in the returned schedule matched the selected Sportmonks season ID."
+    elif counts["scheduled"] == 0:
+        reason = "No not-started/scheduled fixtures were present in the selected season schedule."
+    elif counts["exact_home_away"] == 0:
+        reason = "Scheduled fixtures were returned, but none matched the exact selected home/away team IDs and orientation."
+    elif counts["future_kickoff"] == 0 and counts["missing_kickoff"] > 0:
+        reason = "The exact scheduled team pairing was found, but its kickoff timestamp could not be parsed."
+    else:
+        reason = "The exact scheduled team pairing was found, but its kickoff is not in the future."
+    return {
+        "verified": False,
+        "status": "not_found",
+        "reason": reason,
+        "fixture": None,
+        **counts,
+    }
+
+
 def find_upcoming_match_fixture(
     fixtures: list[dict[str, Any]],
     home_team_id: int,
@@ -622,32 +705,10 @@ def find_upcoming_match_fixture(
     season_id: int,
     now_timestamp: int | None = None,
 ) -> dict[str, Any] | None:
-    """Find the exact scheduled home-v-away fixture; never substitute a team's other match."""
-    import time
-
-    current = int(now_timestamp if now_timestamp is not None else time.time())
-    candidates: list[dict[str, Any]] = []
-    for fixture in fixtures:
-        try:
-            if int(fixture.get("season_id")) != int(season_id):
-                continue
-        except (TypeError, ValueError):
-            continue
-        if _state(fixture) != "scheduled":
-            continue
-        home, away = _participants(fixture)
-        if not home or not away:
-            continue
-        try:
-            if int(home.get("id")) != int(home_team_id) or int(away.get("id")) != int(away_team_id):
-                continue
-            kickoff = int(fixture.get("starting_at_timestamp"))
-        except (TypeError, ValueError):
-            continue
-        if kickoff <= current:
-            continue
-        candidates.append(fixture)
-    return min(candidates, key=lambda row: int(row["starting_at_timestamp"])) if candidates else None
+    """Find the exact scheduled home-v-away fixture; never substitute another match."""
+    return diagnose_upcoming_match_fixture(
+        fixtures, home_team_id, away_team_id, season_id, now_timestamp
+    )["fixture"]
 
 
 def extract_sportmonks_match_details(
