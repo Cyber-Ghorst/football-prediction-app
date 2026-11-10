@@ -1,30 +1,30 @@
 {
-  "records_total": 68,
+  "records_total": 69,
   "eligibility_audit": {
-    "records_total": 68,
+    "records_total": 69,
     "invalid_probabilities": 0,
     "missing_prediction_timestamp": 0,
     "missing_kickoff_timestamp": 4,
     "at_or_after_kickoff": 4,
-    "valid_pre_kickoff_records": 60,
+    "valid_pre_kickoff_records": 61,
     "unidentifiable_pre_match_records": 0,
-    "duplicate_records_excluded": 39,
+    "duplicate_records_excluded": 40,
     "unique_pre_match_fixtures": 21,
     "completed_with_verified_scores": 1,
     "scores_present_but_unverified": 0,
     "awaiting_valid_score": 20
   },
-  "pre_match_prediction_records": 60,
+  "pre_match_prediction_records": 61,
   "pre_match_predictions": 21,
-  "duplicate_records_excluded": 39,
+  "duplicate_records_excluded": 40,
   "unidentifiable_pre_match_records": 0,
   "completed_pre_match_predictions": 1,
   "unverified_score_records": 0,
   "player_snapshots_pre_kickoff": 0,
   "team_snapshots_pre_kickoff": 0,
-  "availability_snapshots_pre_kickoff": 1,
+  "availability_snapshots_pre_kickoff": 2,
   "availability_snapshot_coverage_by_competition": {
-    "Premier League": 1
+    "Premier League": 2
   },
   "team_snapshot_competitions": 0,
   "player_snapshot_competitions": 0,
@@ -223,6 +223,6 @@
   },
   "opta_comparable_fixtures": 0,
   "opta_comparison_note": "Opta is scored only on the same deduplicated completed fixtures as the model.",
-  "generated_at_utc": "2026-11-10T07:07:07.040849+00:00",
+  "generated_at_utc": "2026-11-10T07:08:00.063291+00:00",
   "report_name": "prediction_performance"
 }
