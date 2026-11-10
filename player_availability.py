@@ -93,6 +93,18 @@ def _unknown(evidence: dict[str, Any], reason: str, count: int) -> dict[str, Any
     }
 
 
+def _strict_positive_id(value: Any) -> int | None:
+    """Parse provider identity without accepting booleans or fractional coercion."""
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return value if value > 0 else None
+    if isinstance(value, str) and value.strip().isdigit():
+        parsed = int(value.strip())
+        return parsed if parsed > 0 else None
+    return None
+
+
 def _availability_date(value: Any):
     if value is None or str(value).strip() == "":
         return None
@@ -136,11 +148,13 @@ def build_sportmonks_availability_evidence(
     importance proxy. Fixture-specific sidelined records determine status.
     Incomplete, conflicting or out-of-season data remains unknown.
     """
+    parsed_team_id = _strict_positive_id(team_id)
+    parsed_season_id = _strict_positive_id(season_id)
     base = {
         "source": "sportmonks",
         "fixture_id": fixture_id,
-        "team_id": int(team_id),
-        "season_id": int(season_id),
+        "team_id": parsed_team_id,
+        "season_id": parsed_season_id,
         "roster_complete": False,
         "sidelined_feed_available": bool(sidelined_feed_available),
         "injury_data_available": bool(sidelined_feed_available),
@@ -168,6 +182,8 @@ def build_sportmonks_availability_evidence(
     def unknown(reason: str, **extra: Any) -> dict[str, Any]:
         return {**base, **diagnostics, "reason": reason, **extra}
 
+    if parsed_team_id is None or parsed_season_id is None:
+        return unknown("The requested team or season ID is invalid.")
     if not isinstance(squad_rows, list) or not squad_rows:
         return unknown("The extended squad endpoint returned no player list.")
     for squad_row in squad_rows:
@@ -184,8 +200,8 @@ def build_sportmonks_availability_evidence(
                     if not isinstance(squad_stat, dict):
                         continue
                     try:
-                        matches_team = int(squad_stat.get("team_id")) == int(team_id)
-                        matches_season = int(squad_stat.get("season_id")) == int(season_id)
+                        matches_team = _strict_positive_id(squad_stat.get("team_id")) == parsed_team_id
+                        matches_season = _strict_positive_id(squad_stat.get("season_id")) == parsed_season_id
                     except (TypeError, ValueError):
                         continue
                     if matches_team and matches_season:
@@ -222,10 +238,10 @@ def build_sportmonks_availability_evidence(
             return unknown("An extended squad row is missing its explicit in_squad status.")
         if row["in_squad"] is False:
             continue
-        try:
-            player_id = str(int(row.get("id")))
-        except (TypeError, ValueError):
+        parsed_player_id = _strict_positive_id(row.get("id"))
+        if parsed_player_id is None:
             return unknown("A current-squad player has no valid player ID.")
+        player_id = str(parsed_player_id)
         if player_id in current_players:
             return unknown("Duplicate player IDs make the current squad ambiguous.")
 
@@ -239,22 +255,22 @@ def build_sportmonks_availability_evidence(
             if not isinstance(statistic, dict):
                 continue
             try:
-                statistic_team_id = int(statistic.get("team_id"))
-                statistic_season_id = int(statistic.get("season_id"))
+                statistic_team_id = _strict_positive_id(statistic.get("team_id"))
+                statistic_season_id = _strict_positive_id(statistic.get("season_id"))
             except (TypeError, ValueError):
                 continue
-            if statistic_team_id == int(team_id) and statistic_season_id == int(season_id):
+            if statistic_team_id == parsed_team_id and statistic_season_id == parsed_season_id:
                 matching_statistics.append(statistic)
         if len(matching_statistics) != 1:
             return unknown("A current-squad player does not have exactly one matching team-season statistic row.")
         statistic = matching_statistics[0]
         if statistic.get("player_id") is None:
             return unknown("A team-season statistic row has no player ID.")
-        try:
-            if int(statistic["player_id"]) != int(player_id):
-                return unknown("A player-statistic row belongs to a different player.")
-        except (TypeError, ValueError):
+        statistic_player_id = _strict_positive_id(statistic.get("player_id"))
+        if statistic_player_id is None:
             return unknown("A player-statistic row has an invalid player ID.")
+        if statistic_player_id != parsed_player_id:
+            return unknown("A player-statistic row belongs to a different player.")
         if statistic.get("has_values") is False:
             # Sportmonks explicitly marks a player statistic row with
             # has_values=false when the player has no statistics for the
@@ -370,10 +386,10 @@ def build_sportmonks_availability_evidence(
         player_id_value = row.get("player_id")
         if player_id_value is None:
             return unknown("A sidelined record has no stable player ID.")
-        try:
-            player_id = str(int(player_id_value))
-        except (TypeError, ValueError):
+        parsed_sidelined_player_id = _strict_positive_id(player_id_value)
+        if parsed_sidelined_player_id is None:
             return unknown("A sidelined record has an invalid player ID.")
+        player_id = str(parsed_sidelined_player_id)
         if player_id not in current_players:
             return unknown("A sidelined player is absent from the current squad.")
         row_fixture_id = row.get("fixture_id")
@@ -381,18 +397,18 @@ def build_sportmonks_availability_evidence(
             return unknown("A sidelined record belongs to a different fixture.")
         row_season_id = row.get("season_id")
         if row_season_id is not None:
-            try:
-                if int(row_season_id) != int(season_id):
-                    return unknown("A sidelined record belongs to a different season.")
-            except (TypeError, ValueError):
+            parsed_row_season_id = _strict_positive_id(row_season_id)
+            if parsed_row_season_id is None:
                 return unknown("A sidelined record has an invalid season ID.")
+            if parsed_row_season_id != parsed_season_id:
+                return unknown("A sidelined record belongs to a different season.")
         row_team = row.get("team_id")
         if row_team is not None:
-            try:
-                if int(row_team) != int(team_id):
-                    return unknown("A sidelined record belongs to a different team.")
-            except (TypeError, ValueError):
+            parsed_row_team_id = _strict_positive_id(row_team)
+            if parsed_row_team_id is None:
                 return unknown("A sidelined record has an invalid team ID.")
+            if parsed_row_team_id != parsed_team_id:
+                return unknown("A sidelined record belongs to a different team.")
 
         start_date = _availability_date(row.get("start_date"))
         if start_date is None:
