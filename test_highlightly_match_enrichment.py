@@ -96,7 +96,8 @@ class HighlightlyMatchEnrichmentTests(unittest.TestCase):
             }],
         }
         report = {
-            "fetched_at": "2026-11-08T12:00:00Z",
+            "fetched_at": "2026-11-08T11:59:00Z",
+            "collection_completed_at": "2026-11-08T12:00:00Z",
             "statistics": [{
                 "sportmonks_fixture_id": "700",
                 "highlightly_match_id": "9001",
@@ -147,7 +148,8 @@ class HighlightlyMatchEnrichmentTests(unittest.TestCase):
             }],
         }
         report = {
-            "fetched_at": "invalid",
+            "fetched_at": "2026-11-08T11:59:00Z",
+            "collection_completed_at": "invalid",
             "statistics": [{
                 "sportmonks_fixture_id": "700",
                 "teams": {
@@ -176,7 +178,8 @@ class HighlightlyMatchEnrichmentTests(unittest.TestCase):
             }],
         }
         report = {
-            "fetched_at": "2026-11-08T12:00:00Z",
+            "fetched_at": "2026-11-08T11:59:00Z",
+            "collection_completed_at": "2026-11-08T12:00:00Z",
             "statistics": [{
                 "sportmonks_fixture_id": "700",
                 "highlightly_match_id": "9001",
