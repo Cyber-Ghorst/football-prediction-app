@@ -523,11 +523,18 @@ def apply_highlightly_statistics_fallback(
                         continue
                     grouped.setdefault(metric, []).append(observation)
 
-                target_stats = match.setdefault(target_key, {})
+                target_stats = match.get(target_key)
                 if not isinstance(target_stats, dict):
-                    continue
-                provenance = match.setdefault(provenance_key, [])
-                diagnostics = match.setdefault(diagnostics_key, [])
+                    target_stats = {}
+                    match[target_key] = target_stats
+                provenance = match.get(provenance_key)
+                if not isinstance(provenance, list):
+                    provenance = []
+                    match[provenance_key] = provenance
+                diagnostics = match.get(diagnostics_key)
+                if not isinstance(diagnostics, list):
+                    diagnostics = []
+                    match[diagnostics_key] = diagnostics
 
                 for metric, metric_observations in grouped.items():
                     values = {round(float(item["normalized_value"]), 6) for item in metric_observations}
