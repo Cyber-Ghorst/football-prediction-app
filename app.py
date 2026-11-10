@@ -2191,13 +2191,20 @@ try:
                             corroboration["candidate_verification"] = candidate_verification
                             corroboration["candidate_verification_diagnostics"] = candidate_verification_diagnostics
                             if use_verified_result_history_fallback:
-                                corroboration["layer2_history_fallback"] = (
-                                    apply_verified_result_candidates_to_profiles(
-                                        [home, away],
-                                        candidate_verification,
-                                        expected_season_id=int(selected_season_id),
+                                try:
+                                    corroboration["layer2_history_fallback"] = (
+                                        apply_verified_result_candidates_to_profiles(
+                                            [home, away],
+                                            candidate_verification,
+                                            expected_season_id=int(selected_season_id),
+                                        )
                                     )
-                                )
+                                except Exception as fallback_error:
+                                    corroboration["layer2_history_fallback"] = {
+                                        "status": "error",
+                                        "error_type": type(fallback_error).__name__,
+                                        "profiles_changed": False,
+                                    }
 
                         if cross_check_highlightly_details or cross_check_highlightly_players or use_highlightly_statistics_fallback or use_highlightly_lineups_fallback:
                             if hl_client is None:
