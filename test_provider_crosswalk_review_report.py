@@ -59,8 +59,7 @@ class ProviderCrosswalkReviewReportTests(unittest.TestCase):
         self.assertEqual(report["snapshot_count"], 1)
         self.assertEqual(report["observation_count"], 1)
         self.assertEqual(report["source_entity_counts"]["teams"], 2)
-        self.assertEqual(report["candidates"]["leagues"][0]["status"],
-                         "candidate_requires_manual_approval")
+        self.assertEqual(report["candidates"]["leagues"][0]["status"], "already_linked")
         self.assertEqual(report["candidates"]["seasons"][0]["status"],
                          "candidate_requires_manual_approval")
         self.assertEqual(len(report["candidates"]["teams"]), 2)
