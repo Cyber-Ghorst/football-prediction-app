@@ -316,5 +316,106 @@ class SportmonksLayer2Tests(unittest.TestCase):
             extract_sportmonks_match_details(row, 20, 10, 2026)
 
 
+    def test_history_is_sorted_by_parsed_utc_kickoff_not_iso_text(self):
+        older = fixture(1, 10, 20, 1, 0)
+        older["starting_at"] = "2026-10-01T20:00:00+03:00"
+        newer = fixture(2, 10, 20, 2, 0)
+        newer["starting_at"] = "2026-10-01T18:30:00Z"
+        newest = fixture(3, 10, 20, 3, 0)
+        newest["starting_at"] = "2026-10-02T10:00:00Z"
+        for row in (older, newer, newest):
+            row["collection_fetched_at"] = "2026-11-07T12:00:00+00:00"
+
+        profile = collect_sportmonks_team_profile(
+            {"id": 10, "name": "Home FC"}, 2026,
+            [older, newest, newer], [],
+        )
+        self.assertEqual([m["fixture_id"] for m in profile["matches"]], [3, 2, 1])
+        diagnostics = profile["history_collection_diagnostics"]
+        self.assertEqual(diagnostics["history_order"], "newest_first_by_parsed_utc_kickoff")
+        self.assertEqual(diagnostics["history_collection_fetched_at"], "2026-11-07T12:00:00+00:00")
+        self.assertEqual(diagnostics["history_latest_match_at"], "2026-10-02T10:00:00+00:00")
+
+    def test_invalid_score_and_kickoff_are_excluded_and_reported(self):
+        invalid_score = fixture(1, 10, 20, 1, 0)
+        invalid_score["scores"][0]["score"]["goals"] = 1.5
+        invalid_date = fixture(2, 10, 20, 2, 0)
+        invalid_date["starting_at"] = "not-a-real-date"
+        profile = collect_sportmonks_team_profile(
+            {"id": 10, "name": "Home FC"}, 2026,
+            [invalid_score, invalid_date], [],
+        )
+        diagnostics = profile["history_collection_diagnostics"]
+        self.assertEqual(profile["data_quality"]["matches_returned"], 0)
+        self.assertEqual(diagnostics["excluded_invalid_scores"], 1)
+        self.assertEqual(diagnostics["excluded_invalid_kickoff"], 1)
+        self.assertEqual(diagnostics["team_fixture_accounting_status"], "balanced")
+        self.assertEqual(diagnostics["history_integrity_status"], "issues_detected")
+
+    def test_statistics_coverage_is_reported_without_dropping_valid_matches(self):
+        row = fixture(1, 10, 20, 1, 0)
+        row["statistics"] = [
+            item for item in row["statistics"]
+            if item["type"]["name"] in {"Ball Possession", "Total Shots"}
+        ]
+        profile = collect_sportmonks_team_profile(
+            {"id": 10, "name": "Home FC"}, 2026, [row], [],
+        )
+        diagnostics = profile["history_collection_diagnostics"]
+        self.assertEqual(profile["data_quality"]["matches_returned"], 1)
+        self.assertEqual(diagnostics["matches_with_any_statistics"], 1)
+        self.assertEqual(diagnostics["matches_with_complete_core_statistics"], 0)
+        self.assertEqual(diagnostics["statistics_coverage_by_metric"]["Ball Possession"], 1)
+        self.assertEqual(diagnostics["core_statistics_completeness_pct"], 40.0)
+
+    def test_duplicate_fixture_ids_are_reported_and_excluded_from_history(self):
+        first = fixture(1, 10, 20, 1, 0)
+        duplicate = fixture(1, 10, 20, 3, 0)
+        profile = collect_sportmonks_team_profile(
+            {"id": 10, "name": "Home FC"}, 2026, [first, duplicate], [],
+        )
+        diagnostics = profile["history_collection_diagnostics"]
+        self.assertEqual(profile["data_quality"]["matches_returned"], 1)
+        self.assertEqual(diagnostics["duplicate_fixture_id_count"], 1)
+        self.assertEqual(diagnostics["excluded_duplicate_fixture_id"], 1)
+        self.assertEqual(diagnostics["history_integrity_status"], "issues_detected")
+
+    def test_upcoming_fixture_diagnostics_accept_iso_kickoff_and_report_counts(self):
+        from datetime import datetime, timezone
+        from sportmonks_layer2 import diagnose_upcoming_match_fixture
+
+        row = fixture(30, 10, 20, 0, 0, state="unknown")
+        row["state_id"] = 1
+        row["state"] = {}
+        row["starting_at"] = "2026-11-08T15:00:00Z"
+        now = int(datetime(2026, 11, 7, 12, tzinfo=timezone.utc).timestamp())
+        diagnostic = diagnose_upcoming_match_fixture(
+            [row], 10, 20, 2026, now_timestamp=now
+        )
+        self.assertTrue(diagnostic["verified"])
+        self.assertEqual(diagnostic["fixture"]["id"], 30)
+        self.assertEqual(diagnostic["same_season"], 1)
+        self.assertEqual(diagnostic["scheduled"], 1)
+        self.assertEqual(diagnostic["exact_home_away"], 1)
+        self.assertEqual(diagnostic["future_kickoff"], 1)
+
+    def test_upcoming_fixture_diagnostics_report_unparseable_kickoff(self):
+        from datetime import datetime, timezone
+        from sportmonks_layer2 import diagnose_upcoming_match_fixture
+
+        row = fixture(31, 10, 20, 0, 0, state="unknown")
+        row["state"] = "NS"
+        row["state_id"] = None
+        row["starting_at"] = "not-a-date"
+        now = int(datetime(2026, 11, 7, tzinfo=timezone.utc).timestamp())
+        diagnostic = diagnose_upcoming_match_fixture(
+            [row], 10, 20, 2026, now_timestamp=now
+        )
+        self.assertFalse(diagnostic["verified"])
+        self.assertEqual(diagnostic["exact_home_away"], 1)
+        self.assertEqual(diagnostic["missing_kickoff"], 1)
+        self.assertIn("kickoff timestamp could not be parsed", diagnostic["reason"])
+
+
 if __name__ == "__main__":
     unittest.main()
