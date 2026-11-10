@@ -1,9 +1,9 @@
-"""Targeted verification of unmatched Highlightly results against Sportmonks.
+"""Targeted verification of secondary-provider result candidates against Sportmonks.
 
 The verifier reports exact season, competition, home/away team IDs, kickoff,
 completion and score. A separate opt-in helper may append only a single exact,
-completed Sportmonks result whose full-time score agrees with Highlightly.
-Unverified candidates remain diagnostic-only.
+completed Sportmonks result whose full-time score agrees with the independent
+Highlightly or API Ninjas candidate. Unverified candidates remain diagnostic-only.
 """
 from __future__ import annotations
 
