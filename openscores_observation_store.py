@@ -300,6 +300,13 @@ def reconcile_openscores_observations(
                         )
                         status, note = "matched", "Unique canonical fixture matched via verified entity IDs and kickoff"
                         counts["matched"] += 1
+                        matched_status = (
+                            "outside_upcoming_window" if preserve_historical else status
+                        )
+                        matched_note = (
+                            "Matched to canonical Sportmonks fixture; retained outside upcoming window"
+                            if preserve_historical else note
+                        )
                         cursor.execute(
                             """
                             UPDATE provider_fixture_observations
@@ -307,7 +314,7 @@ def reconcile_openscores_observations(
                                 reconciliation_note = %s
                             WHERE observation_id = %s
                             """,
-                            (status, canonical_fixture_id, note, observation_id),
+                            (matched_status, canonical_fixture_id, matched_note, observation_id),
                         )
                         continue
 
