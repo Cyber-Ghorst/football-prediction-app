@@ -197,6 +197,30 @@ class OpenLigaDBAdapter(_HttpAdapter):
     provider = "openligadb"
     BASE_URL = "https://api.openligadb.de"
 
+    def available_leagues(self, season: int | None = None) -> list[dict[str, Any]]:
+        suffix = f"/{int(season)}" if season is not None else ""
+        payload = self._get_json(f"{self.BASE_URL}/getavailableleagues{suffix}")
+        if not isinstance(payload, list):
+            raise FreeFixtureProviderError("OpenLigaDB league catalogue response is not an array.")
+        return [row for row in payload if isinstance(row, dict)]
+
+    def discover_scopes(self, seasons: Iterable[int], *, max_scopes: int = 120) -> list[dict[str, Any]]:
+        scopes: dict[tuple[str, int], dict[str, Any]] = {}
+        for season in seasons:
+            for league in self.available_leagues(int(season)):
+                shortcut = _text(league.get("leagueShortcut"))
+                league_season = league.get("leagueSeason") or season
+                if not shortcut or not str(league_season).isdigit():
+                    continue
+                key = (shortcut, int(league_season))
+                scopes[key] = {
+                    "league_shortcut": shortcut,
+                    "season": int(league_season),
+                    "provider_competition_id": league.get("leagueId"),
+                    "competition_name": league.get("leagueName") or shortcut,
+                }
+        return list(scopes.values())[:max(1, int(max_scopes))]
+
     def matches(self, league_shortcut: str, season: int) -> list[dict[str, Any]]:
         if not league_shortcut.strip() or int(season) < 1900:
             raise ValueError("A league shortcut and valid season are required.")
@@ -254,6 +278,41 @@ class OpenFootballAdapter(_StaticDatasetAdapter):
     """Parse football.json schedules; date-only and timezone-less rows stay excluded."""
     provider = "openfootball"
     BASE_URL = "https://raw.githubusercontent.com/openfootball/football.json/master"
+
+    COMPETITION_NAMES = {
+        "en.1": "Premier League",
+        "en.2": "Championship",
+        "de.1": "Bundesliga",
+        "de.2": "2. Bundesliga",
+        "es.1": "La Liga",
+        "it.1": "Serie A",
+        "fr.1": "Ligue 1",
+        "nl.1": "Eredivisie",
+        "pt.1": "Primeira Liga",
+        "us.1": "Major League Soccer",
+    }
+
+    def discover_season_files(self, season: str) -> list[dict[str, str]]:
+        season_value = str(season or "").strip()
+        if not re.fullmatch(r"20\\d{2}-\\d{2}", season_value):
+            raise ValueError("season must use the YYYY-YY football.json directory format.")
+        url = f"https://api.github.com/repos/openfootball/football.json/contents/{quote(season_value, safe='')}"
+        payload = self._get_json(url, headers={"Accept": "application/vnd.github+json"})
+        if not isinstance(payload, list):
+            raise FreeFixtureProviderError("OpenFootball season directory response is not an array.")
+        datasets = []
+        for item in payload:
+            if not isinstance(item, dict) or item.get("type") != "file":
+                continue
+            filename = str(item.get("name") or "")
+            if not filename.endswith(".json"):
+                continue
+            code = filename.removesuffix(".json")
+            datasets.append({
+                "season_file": f"{season_value}/{filename}",
+                "competition": self.COMPETITION_NAMES.get(code, code),
+            })
+        return sorted(datasets, key=lambda row: row["season_file"])
 
     def season(self, season_file: str, competition: str) -> list[dict[str, Any]]:
         if not season_file.endswith(".json") or season_file.startswith("/") or ".." in season_file.split("/"):
