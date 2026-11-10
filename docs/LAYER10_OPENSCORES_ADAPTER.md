@@ -44,6 +44,7 @@ The live connection test requires a valid key. Unit tests use mocked HTTP respon
 ## Known limitations / next validation
 
 - No authenticated live call has been made as part of this implementation until a valid key is configured in the deployment.
+- The Streamlit app's Provider readiness panel includes a **Test OpenScores connection** control. It performs one authenticated, read-only `list_leagues` request and reports connection status, returned league count and UTC check time; it never displays the key or imports fixture data.
 - Validate actual response shapes and coverage before building normalization or persistence.
 - OpenScores does not document structured shot-level xG, shot coordinates or xG chain endpoints in the current public tools reference; do not market this adapter as an xG provider.
 - This adapter is secondary research/corroboration only. It must not enter production model inputs without a separate, tested, explicitly approved integration objective.
