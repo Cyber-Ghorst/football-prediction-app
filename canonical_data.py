@@ -212,12 +212,19 @@ def canonicalize_highlightly_match(
     }
 
 def _int_or_none(value: Any) -> int | None:
-    if value is None or value == "":
+    """Accept only non-negative whole-number scores; preserve invalid values as unknown."""
+    import math
+    import re
+
+    if isinstance(value, bool) or value is None:
         return None
-    try:
-        return int(value)
-    except (TypeError, ValueError):
-        return None
+    if isinstance(value, int):
+        return value if value >= 0 else None
+    if isinstance(value, float):
+        return int(value) if math.isfinite(value) and value >= 0 and value.is_integer() else None
+    if isinstance(value, str) and re.fullmatch(r"\s*\d+\s*", value):
+        return int(value.strip())
+    return None
 
 
 def match_identity(
