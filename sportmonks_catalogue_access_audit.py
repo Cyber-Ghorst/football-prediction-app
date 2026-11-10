@@ -79,7 +79,7 @@ def build_catalogue_report(client_factory=SportmonksClient) -> dict[str, Any]:
             }
 
         report["country_search_probes"] = {}
-        for country_name in ("Germany", "France"):
+        for country_name in ("Germany", "France", "World", "International"):
             try:
                 response = client.session.get(
                     f"{api_root}/core/countries/search/{country_name}",
