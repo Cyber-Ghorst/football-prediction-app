@@ -84,6 +84,22 @@ class OpenScoresObservationStoreTests(unittest.TestCase):
         self.assertIn("provider_fixture_observations", sql)
         self.assertNotIn("INSERT INTO football_fixtures", sql)
 
+    def test_outside_window_observations_are_retained_but_marked_inactive(self):
+        from datetime import datetime, timezone
+        from openscores_observation_store import mark_outside_upcoming_window_observations
+        connection = FakeConnection()
+        start = datetime(2026, 11, 10, tzinfo=timezone.utc)
+        end = datetime(2026, 11, 17, tzinfo=timezone.utc)
+        with patch("openscores_observation_store._connect", return_value=connection):
+            count = mark_outside_upcoming_window_observations(
+                "postgresql://db", window_start=start, window_end=end
+            )
+        self.assertEqual(count, 0)
+        sql, params = connection.cursor_obj.calls[0]
+        self.assertIn("outside_upcoming_window", sql)
+        self.assertIn("kickoff_utc < %s OR kickoff_utc > %s", sql)
+        self.assertEqual(params, (start, end))
+
     def test_empty_observation_list_is_safe(self):
         connection = FakeConnection()
         with patch("openscores_observation_store.ensure_observation_store"), \
@@ -118,6 +134,7 @@ class OpenScoresObservationStoreTests(unittest.TestCase):
         self.assertEqual(report["matched"], 0)
         sql = "\n".join(call[0] for call in cursor.calls)
         self.assertIn("pending_entity_mapping", sql)
+        self.assertIn("outside_upcoming_window", sql)
         self.assertNotIn("INSERT INTO football_fixtures", sql)
 
     def test_unique_sportmonks_fixture_fingerprint_is_linked(self):
