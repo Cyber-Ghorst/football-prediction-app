@@ -517,10 +517,13 @@ def collect_sportmonks_team_profile(
         for match in recent
         if _kickoff_timestamp({"starting_at": match.get("date")}) is not None
     ]
-    collection_timestamps = [
-        str(match.get("collection_fetched_at"))
+    collection_timestamp_epochs = [
+        _kickoff_timestamp({"starting_at": match.get("collection_fetched_at")})
         for match in recent
         if match.get("collection_fetched_at")
+    ]
+    collection_timestamp_epochs = [
+        value for value in collection_timestamp_epochs if value is not None
     ]
     team_fixture_accounting_gap = (
         history_diagnostics["team_fixtures"]
@@ -531,7 +534,10 @@ def collect_sportmonks_team_profile(
         "history_shortfall": max(0, 10 - len(recent)),
         "history_latest_match_at": recent_dates[0] if recent_dates else None,
         "history_oldest_match_at": recent_dates[-1] if recent_dates else None,
-        "history_collection_fetched_at": max(collection_timestamps) if collection_timestamps else None,
+        "history_collection_fetched_at": (
+            datetime.fromtimestamp(max(collection_timestamp_epochs), tz=timezone.utc).isoformat()
+            if collection_timestamp_epochs else None
+        ),
         "history_order": "newest_first_by_parsed_utc_kickoff",
         "statistics_core_metrics": list(_CORE_STATISTICS),
         "statistics_coverage_by_metric": statistics_coverage,
