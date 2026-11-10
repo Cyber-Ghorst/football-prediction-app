@@ -23,22 +23,22 @@ Future-fixture discovery is its own domain: `future_fixtures`. It must not be in
 | OpenLigaDB | Free public fixture discovery candidate, strongest German coverage | Registered but disabled; adapter/live coverage not yet verified |
 | OpenFootball | CC0 public JSON schedule dataset | Registered but disabled; freshness and timezone must be verified |
 | Open Matchday | Non-commercial CSV schedule dataset | Registered but disabled; commercial use prohibited absent written permission; fixed CET-1 timestamp needs correction/validation |
-| WorldCup26 / LiveScoreFootball API | Public REST fixture candidate | Registered but disabled; actual competition coverage and third-party data rights unresolved |
+| WorldCup26 label | Not a separate provider; the `worldcup26.ir` host is the public service used by the LiveScoreFootball adapter | Do not register or count this as a second provider |
 | Bzzoiro Sports Data | Free-tier football fixture API | Registered but disabled; requires `BZZOIRO_API_TOKEN` and per-competition live validation |
 | OpenScores | Read-only historical/result observations and entity-mapping audit | **Not a future-fixture source. Never route it into `future_fixtures`.** |
 | Highlightly | Match enrichment: statistics, lineups and supported result corroboration | Not part of the dedicated future-fixture search pipeline |
 | API Ninjas | Result/standings and club/squad corroboration; exact result candidates require Sportmonks verification | Not part of the dedicated future-fixture search pipeline |
 | API-Football v3 | Historical fixtures/results and supported historical detail within account seasons | Historical only for the configured 2022–2024 account |
-| LiveScoreFootball database snapshot | Competition-scoped completed-result/standings corroboration after freshness and identity checks | Not a future-fixture source |
+| LiveScoreFootball / worldcup26.ir | Scheduled fixtures plus competition-scoped results/standings corroboration through one public API | Registered as the fifth free future-fixture candidate; adapter exists, but its route remains disabled until live kickoff precision, scheduled status, exact team/season identity and per-event freshness pass validation |
 
-The five free candidates are not considered active sources merely because they are registered. A candidate remains disabled until its adapter has demonstrated future kickoff records, stable IDs, timezone-aware timestamps, scheduled status, competition/season/team identity, freshness, applicable reuse rights, canonical crosswalks, normalization tests and database round-trip behavior. Eligibility is per provider and competition.
+The five unique free candidates are OpenLigaDB, OpenFootball, Open Matchday, LiveScoreFootball (served at `worldcup26.ir`) and Bzzoiro. The WorldCup26 label is an alias/host reference for LiveScoreFootball here, not an additional independent provider. The candidates are not considered active sources merely because they are registered. A candidate remains disabled until its adapter has demonstrated future kickoff records, stable IDs, timezone-aware timestamps, scheduled status, competition/season/team identity, freshness, applicable reuse rights, canonical crosswalks, normalization tests and database round-trip behavior. Eligibility is per provider and competition.
 
 ## Routing invariants
 
 - `future_fixtures` is the only category used to populate the upcoming-fixture search catalogue.
 - OpenScores has no `fixtures` or `future_fixtures` assignment. Its disabled result-validation assignment is audit-only. The legacy scheduled-fixture observation sync is disabled in both the controller workflow and Python entry point; existing observations are retained without deletion.
 - Highlightly, API Ninjas, API-Football and LiveScoreFootball may supply their supported enrichment or historical/result domains, but do not become future-fixture discovery sources by implication.
-- The existing collector currently calls Sportmonks only. The five selected free candidates remain disabled until their adapters and live audits are complete.
+- The existing collector currently calls Sportmonks only. The five selected free candidates remain disabled until their adapters and live audits are complete. LiveScoreFootball has an existing fixtures adapter, but it remains disabled for future-fixture collection until the same live validation gates pass.
 - No provider may silently overwrite a canonical fixture, kickoff, team identity or score. Conflicts remain visible with provenance.
 - Temporary fixture staging is separate from the prediction ledger.
 
