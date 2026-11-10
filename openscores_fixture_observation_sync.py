@@ -131,6 +131,7 @@ def run_sync(
     candidate_by_id: dict[str, tuple[dict[str, Any], str, str]] = {}
     conflicting_provider_ids: set[str] = set()
     season_to_league: dict[str, str] = {}
+    season_api_ids: dict[tuple[str, str], Any] = {}
     ambiguous_season_ids: set[str] = set()
     grouped_records: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
     grouped_retrieval: dict[tuple[str, str], str | None] = {}
@@ -161,6 +162,10 @@ def run_sync(
                 ("seasons", "items", "results", "data", "records"),
             )
             for season in seasons or []:
+                raw_season_id = (
+                    season.get("id") if season.get("id") is not None
+                    else season.get("season_id")
+                )
                 season_id = _identity(season, ("id", "season_id"), "season")
                 if not season_id:
                     continue
@@ -172,6 +177,7 @@ def run_sync(
                     season_to_league.pop(season_id, None)
                     continue
                 seasons_by_league[league_id].append(season_id)
+                season_api_ids[(league_id, season_id)] = raw_season_id
                 previous_league_id = season_to_league.get(season_id)
                 if previous_league_id and previous_league_id != league_id:
                     ambiguous_season_ids.add(season_id)
@@ -191,7 +197,7 @@ def run_sync(
             for season_id in sorted(set(season_ids)):
                 for page in range(1, max_pages + 1):
                     fixture_result = client.list_fixtures(
-                        season_id=season_id,
+                        season_id=season_api_ids[(league_id, season_id)],
                         status="scheduled",
                         date_from=date_from,
                         date_to=date_to,
