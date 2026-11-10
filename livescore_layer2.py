@@ -13,7 +13,7 @@ from typing import Any, Mapping
 
 from canonical_data import MatchNormalizationError, canonicalize_livescore_event, match_identity
 from competition_crosswalk import build_competition_crosswalk, verified_livescore_slug
-from provider_health import assess_livescore_metadata
+from provider_health import assess_livescore_fixture_freshness, assess_livescore_metadata
 from sportmonks_canonical import canonicalize_sportmonks_fixture
 from sportmonks_layer2 import _CORE_STATISTICS, _provider_id, _state
 
@@ -235,13 +235,24 @@ def collect_livescore_verified_result_fallback(
                 )
             except MatchNormalizationError:
                 continue
+            event_freshness = assess_livescore_fixture_freshness(
+                event, now=current, max_age_seconds=max_age_seconds
+            )
             if (
+                canonical_live.get("status") == "finished"
+                and canonical_live.get("home_score") is not None
+                and canonical_live.get("away_score") is not None
+                and event_freshness.get("eligible") is True
+                and match_identity(canonical_sm, canonical_live, kickoff_tolerance_seconds=300)
+            ):
+                exact_events.append((event, canonical_live))
+            elif (
                 canonical_live.get("status") == "finished"
                 and canonical_live.get("home_score") is not None
                 and canonical_live.get("away_score") is not None
                 and match_identity(canonical_sm, canonical_live, kickoff_tolerance_seconds=300)
             ):
-                exact_events.append((event, canonical_live))
+                report["stale_or_unverifiable_event_matches"] += 1
         if len(exact_events) > 1:
             report["ambiguous_event_matches"] += 1
             continue
