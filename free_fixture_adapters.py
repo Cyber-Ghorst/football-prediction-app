@@ -28,7 +28,9 @@ class FixtureObservation:
     provider: str
     provider_fixture_id: str
     competition_key: str | None
+    competition_name: str | None
     season_key: str | None
+    season_name: str | None
     home_team_key: str | None
     away_team_key: str | None
     home_team_name: str
@@ -87,7 +89,9 @@ def _observation(
     licence: str,
     fixture_id: Any = None,
     competition: Any = None,
+    competition_name: Any = None,
     season: Any = None,
+    season_name: Any = None,
     home: Any = None,
     away: Any = None,
     home_id: Any = None,
@@ -98,6 +102,8 @@ def _observation(
 ) -> FixtureObservation:
     home_name, away_name = _text(home), _text(away)
     competition_key, season_key = _text(competition), _text(season)
+    competition_display = _text(competition_name) or competition_key
+    season_display = _text(season_name) or season_key
     parsed = _parse_aware_datetime(kickoff)
     status_text = _text(status).casefold().replace("_", " ")
     if status_text.startswith("status "):
@@ -129,7 +135,9 @@ def _observation(
         provider=provider,
         provider_fixture_id=str(fixture_id),
         competition_key=competition_key or None,
+        competition_name=competition_display or None,
         season_key=season_key or None,
+        season_name=season_display or None,
         home_team_key=str(home_id) if home_id is not None else None,
         away_team_key=str(away_id) if away_id is not None else None,
         home_team_name=home_name,
@@ -215,8 +223,10 @@ class OpenLigaDBAdapter(_HttpAdapter):
                 self.provider, row, fetched_at=fetched, source_url=url,
                 licence="OpenLigaDB public API; reuse terms require separate review",
                 fixture_id=row.get("matchID") or row.get("MatchID"),
-                competition=(row.get("leagueName") or row.get("LeagueName") or league_shortcut),
+                competition=(row.get("leagueId") or row.get("LeagueId") or row.get("leagueShortcut") or row.get("LeagueShortcut") or league_shortcut),
+                competition_name=(row.get("leagueName") or row.get("LeagueName") or league_shortcut),
                 season=(row.get("leagueSeason") or row.get("LeagueSeason") or season),
+                season_name=str(row.get("leagueSeason") or row.get("LeagueSeason") or season),
                 home=team1, away=team2,
                 home_id=team1.get("teamId") if isinstance(team1, dict) else None,
                 away_id=team2.get("teamId") if isinstance(team2, dict) else None,
@@ -264,7 +274,10 @@ class OpenFootballAdapter(_StaticDatasetAdapter):
             output.append(_observation(
                 self.provider, row, fetched_at=fetched, source_url=url,
                 licence="CC0-1.0 (football.json dataset; verify upstream source provenance)",
-                competition=competition, season=season_file.removesuffix(".json"),
+                competition=season_file.rsplit("/", 1)[-1].removesuffix(".json"),
+                competition_name=competition,
+                season=(season_file.split("/", 1)[0] if "/" in season_file else season_file.removesuffix(".json")),
+                season_name=(season_file.split("/", 1)[0] if "/" in season_file else season_file.removesuffix(".json")),
                 home=row.get("team1") or row.get("home"), away=row.get("team2") or row.get("away"),
                 kickoff=kickoff,
                 status=row.get("status") or "scheduled",
@@ -299,8 +312,10 @@ class OpenMatchdayAdapter(_StaticDatasetAdapter):
                 self.provider, row, fetched_at=fetched, source_url=csv_url,
                 licence="Open Matchday non-commercial-only; upstream rights must be reviewed",
                 fixture_id=lowered.get("match_id") or lowered.get("fixture_id"),
-                competition=lowered.get("competition") or lowered.get("league") or competition,
-                season=lowered.get("season") or season,
+                competition=lowered.get("competition_id") or lowered.get("league_id") or csv_url.rstrip("/").split("/")[-2],
+                competition_name=lowered.get("competition") or lowered.get("league") or competition,
+                season=lowered.get("season_id") or lowered.get("season") or season,
+                season_name=lowered.get("season") or season,
                 home=lowered.get("home_team") or lowered.get("home") or lowered.get("team1"),
                 away=lowered.get("away_team") or lowered.get("away") or lowered.get("team2"),
                 kickoff=kickoff,
@@ -346,8 +361,10 @@ class BzzoiroAdapter(_HttpAdapter):
                     self.provider, row, fetched_at=fetched, source_url=self.endpoint,
                     licence="Bzzoiro API licence; app display/derived outputs only, no raw-feed redistribution",
                     fixture_id=row.get("id") or row.get("event_id") or row.get("fixture_id"),
-                    competition=row.get("league_id") or row.get("competition") or league.get("name") or league.get("id"),
+                    competition=row.get("league_id") or league.get("id") or row.get("competition_id"),
+                    competition_name=league.get("name") or row.get("competition") or row.get("league_name"),
                     season=row.get("season_id") or season.get("id") or row.get("season"),
+                    season_name=season.get("name") or season.get("year") or row.get("season_name") or row.get("season_id"),
                     home=home, away=away,
                     home_id=(home.get("id") if isinstance(home, Mapping) else row.get("home_team_id")),
                     away_id=(away.get("id") if isinstance(away, Mapping) else row.get("away_team_id")),
@@ -394,8 +411,10 @@ def normalize_livescore_football_events(
             "livescore_football", event, fetched_at=fetched, source_url=source_url,
             licence="LiveScoreFootball public API; upstream snapshot freshness and reuse terms require review",
             fixture_id=event.get("id") or event.get("uid"),
-            competition=competition.get("id") or competition.get("name") or league_key,
+            competition=competition.get("id") or league_key,
+            competition_name=competition.get("name") or league_key,
             season=event.get("season_id") or season.get("id") or season.get("year"),
+            season_name=season.get("name") or season.get("year") or event.get("season_id"),
             home=home, away=away,
             home_id=home.get("id") if isinstance(home, Mapping) else None,
             away_id=away.get("id") if isinstance(away, Mapping) else None,

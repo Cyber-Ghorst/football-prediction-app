@@ -43,6 +43,9 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         self.assertTrue(result[0]["eligible_for_review"])
         self.assertEqual(result[0]["provider_fixture_id"], "42")
         self.assertEqual(result[0]["home_team_key"], "1")
+        self.assertEqual(result[0]["competition_key"], "bl1")
+        self.assertEqual(result[0]["competition_name"], "Bundesliga")
+        self.assertEqual(result[0]["season_key"], "2026")
         self.assertTrue(result[0]["kickoff_utc"].endswith("Z"))
         self.assertIn("/getmatchdata/bl1/2026", client._get_json.call_args.args[0])
         client.close()
@@ -60,10 +63,13 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         }
         client = OpenFootballAdapter()
         client._get_json = Mock(return_value={"matches": [good, bad]})
-        rows = client.season("eng.1.json", "Premier League")
+        rows = client.season("2026-27/eng.1.json", "Premier League")
         self.assertTrue(rows[0]["eligible_for_review"])
         self.assertEqual(rows[1]["exclusion_reason"], "kickoff_missing_timezone_or_precision")
         self.assertTrue(rows[0]["provider_fixture_id"].startswith("openfootball:dataset:"))
+        self.assertEqual(rows[0]["competition_key"], "eng.1")
+        self.assertEqual(rows[0]["competition_name"], "Premier League")
+        self.assertEqual(rows[0]["season_key"], "2026-27")
         client.close()
 
     def test_openfootball_date_only_is_never_prediction_ready(self):
@@ -72,7 +78,7 @@ class FreeFixtureAdapterTests(unittest.TestCase):
             "date": (NOW + timedelta(days=2)).date().isoformat(),
             "team1": "Home FC", "team2": "Away FC",
         }]})
-        row = client.season("eng.1.json", "Premier League")[0]
+        row = client.season("2026-27/eng.1.json", "Premier League")[0]
         self.assertFalse(row["eligible_for_review"])
         self.assertIsNone(row["kickoff_utc"])
         client.close()
@@ -80,15 +86,17 @@ class FreeFixtureAdapterTests(unittest.TestCase):
     def test_openmatchday_fixed_offset_time_is_not_guessed(self):
         client = OpenMatchdayAdapter()
         client._get_text = Mock(return_value=(
-            "date,time,home_team,away_team,competition,season\n"
-            f"{(NOW + timedelta(days=2)).date().isoformat()},19:00,Home FC,Away FC,League,2026\n"
+            "gw,date,time,home,away\n"
+            f"11,{(NOW + timedelta(days=2)).date().isoformat()},19:00,Home FC,Away FC\n"
         ))
         row = client.season_csv(
-            "https://raw.githubusercontent.com/oladeeayo/open-matchday/main/fixtures_2026.csv",
-            competition="League", season="2026",
+            "https://raw.githubusercontent.com/oladeeayo/open-matchday/main/data/ENG_1_premier-league/fixtures_2627.csv",
+            competition="League", season="2627",
         )[0]
         self.assertFalse(row["eligible_for_review"])
         self.assertEqual(row["exclusion_reason"], "kickoff_missing_timezone_or_precision")
+        self.assertEqual(row["competition_key"], "ENG_1_premier-league")
+        self.assertEqual(row["season_key"], "2627")
         self.assertIn("non-commercial-only", row["licence"])
         client.close()
 
@@ -112,6 +120,8 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         row = client.upcoming()[0]
         self.assertTrue(row["eligible_for_review"])
         self.assertEqual(row["provider_fixture_id"], "99")
+        self.assertEqual(row["competition_key"], "10")
+        self.assertEqual(row["season_key"], "2026")
         self.assertNotIn("secret", str(row))
         self.assertEqual(client._get_json.call_args.kwargs["headers"]["Authorization"], "Token secret")
         self.assertEqual(client._get_json.call_args.args[0], BzzoiroAdapter.BASE_URL)
@@ -159,6 +169,21 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         )[0]
         self.assertFalse(row["eligible_for_review"])
         self.assertEqual(row["exclusion_reason"], "kickoff_missing_timezone_or_precision")
+
+    def test_bzzoiro_does_not_fabricate_missing_competition_identity(self):
+        client = BzzoiroAdapter(token="secret")
+        client._get_json = Mock(return_value={"results": [{
+            "id": 100, "season_id": 2026,
+            "home_team": {"id": 1, "name": "Home FC"},
+            "away_team": {"id": 2, "name": "Away FC"},
+            "event_date": (NOW + timedelta(days=1)).isoformat(),
+            "status": "upcoming",
+        }]})
+        row = client.upcoming()[0]
+        self.assertFalse(row["eligible_for_review"])
+        self.assertIsNone(row["competition_key"])
+        self.assertEqual(row["exclusion_reason"], "missing_competition_or_season_identity")
+        client.close()
 
     def test_only_explicitly_eligible_observations_are_selected(self):
         rows = [
