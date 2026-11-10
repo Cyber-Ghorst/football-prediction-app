@@ -230,7 +230,8 @@ def run_sync(
                             report["fixtures_unknown_league_id"] += 1
                             continue
                         if explicit_league_id and explicit_league_id != league_id:
-                            report["fixtures_season_league_mismatch"] += 1
+                            if season_id not in ambiguous_season_ids:
+                                report["fixtures_season_league_mismatch"] += 1
                             continue
                         resolved_league_id = explicit_league_id or season_to_league.get(season_id)
                         if not resolved_league_id:
