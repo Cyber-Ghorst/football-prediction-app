@@ -2,9 +2,34 @@ import unittest
 from sportmonks_catalogue_access_audit import build_catalogue_report
 
 
+class FakeResponse:
+    status_code = 200
+    def __init__(self, payload): self.payload = payload
+    def raise_for_status(self): return None
+    def json(self): return self.payload
+
+
+class FakeSession:
+    def __init__(self, client): self.client = client
+    def get(self, url, timeout=None, params=None):
+        if url.endswith("/my/leagues"):
+            return FakeResponse({"data": self.client.available_leagues()})
+        if "/core/countries/search/" in url:
+            country = url.rsplit("/", 1)[-1]
+            return FakeResponse({"data": [{
+                "id": 276 if country == "Germany" else 77,
+                "name": country,
+                "leagues": {"data": []},
+            }]})
+        raise AssertionError("Unexpected URL: " + url)
+
+
 class FakeSportmonks:
     def __init__(self):
         self.closed = False
+        self.base_url = "https://api.sportmonks.com/v3/football"
+        self.session = FakeSession(self)
+        self.timeout = 20
     def __enter__(self): return self
     def __exit__(self, *args):
         self.closed = True
