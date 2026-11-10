@@ -102,6 +102,35 @@ class HighlightlyCandidateVerificationTests(unittest.TestCase):
         )
         self.assertFalse(home["verified_result_history_fallback"]["tactical_evidence_updated"])
 
+    def test_api_ninjas_candidate_can_be_verified_and_used_as_corroboration(self):
+        candidate = {
+            "candidate_provider": "api_ninjas",
+            "kickoff_utc": self.candidate["kickoff_utc"],
+            "home": "Coventry",
+            "away": "Fulham",
+            "score": [0, 1],
+            "api_ninjas_match_id": "ninja-555",
+        }
+        verified = verify_highlightly_candidate(candidate, [sm_fixture()], **self.identity)
+        verified["verification_completed_at"] = "2026-10-24T14:05:00Z"
+        profile = {"id": 10, "name": "Coventry", "matches": []}
+
+        result = apply_verified_result_candidates_to_profiles(
+            [profile], [verified], expected_season_id=2026
+        )
+
+        self.assertEqual(result["matches_added"], 1)
+        self.assertEqual(
+            profile["matches"][0]["result_verification"]["corroborated_by"],
+            "api_ninjas",
+        )
+        self.assertEqual(
+            profile["matches"][0]["result_verification"]["external_match_id"],
+            "ninja-555",
+        )
+        self.assertEqual(profile["matches"][0]["result_verification"]["candidate_provider"], "api_ninjas")
+
+
     def test_verified_result_fallback_rejects_mismatch_and_invalid_timestamp(self):
         verified = verify_highlightly_candidate(
             self.candidate, [sm_fixture(home_goals=1, away_goals=1)], **self.identity
