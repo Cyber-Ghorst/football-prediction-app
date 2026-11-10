@@ -361,7 +361,7 @@ An opt-in diagnostic path now uses the exact selected-fixture Highlightly lineup
 
 ### Runtime optimization
 - Independent Highlightly/API Ninjas result corroboration remains available, but is now opt-in by default because it is diagnostic-only and does not change prediction inputs.
-- Same-fixture benchmark: Chelsea vs Leeds United, 2026-11-10. Before the change, elapsed time was 60.99 seconds and optional corroboration consumed 11.157 seconds. After the change, elapsed time was 46.19 seconds and corroboration consumed 0 seconds. The 1X2 probabilities remained identical at 45.9% / 26.9% / 27.2%.
+- Same-fixture benchmark: Chelsea vs Leeds United, 2026-11-10. Before the change, elapsed time was 60.99 seconds and optional corroboration consumed 11.157 seconds. Two post-change runs took 46.19 and 49.61 seconds, with corroboration at 0 seconds in both. The 1X2 probabilities remained identical at 45.9% / 26.9% / 27.2%. The latest run completed with zero app errors.
 - Timings vary with cache and provider response latency; the measured reduction is a real run comparison, not a guaranteed runtime.
 
 ### Evaluation boundary and remaining work
@@ -370,7 +370,20 @@ An opt-in diagnostic path now uses the exact selected-fixture Highlightly lineup
 - Highlightly match statistics, lineups, player statistics and team-season aggregates remain diagnostic-only. They are not merged into Layer 2 or the prediction model. A future player-impact feature must be a separate experimental signal and pass chronological, out-of-sample evaluation before any production use.
 - Further provider integration must remain field-level and fail-closed: exact competition, season, fixture, team orientation, freshness, canonical metric, provenance and conflict handling are required. Missing or conflicting values must not be averaged or silently imputed.
 
-Validation at this milestone: 27/27 application smoke checks, 5/5 live provider checks and 324 unit tests passed. The deployment probe reached Streamlit and received its authentication redirect; this confirms protected reachability, not an authenticated health response. The CI probe now reports this as `protected_reachable` rather than implying the app is fully health-verified.
+Validation at this milestone: 28/28 application smoke checks, 5/5 live provider checks and 341 unit tests passed. The deployment probe reached Streamlit and received its authentication redirect; this confirms protected reachability, not an authenticated health response. The CI probe reports `protected_reachable`; application code smoke and live provider checks run separately.
+
+## Layer completion status (2026-11-10)
+
+| Layer | Scope | Status and evidence |
+|---|---|---|
+| 1 | Provider/API setup | Complete: authenticated provider adapters, request diagnostics, credential isolation and provider readiness checks. |
+| 2 | Data collection, normalization and storage | Complete: Sportmonks current-season collection, API-Football historical path, canonical fixture/state normalization, shared eight-metric definitions, strict season/score/stat parsing, timestamp provenance and Neon prediction ledger. |
+| 3 | Prediction validation | Complete for the current evidence threshold: exact fixture/team/competition/season/state checks; 10 completed history matches per team; 8/8 core statistics at 100% coverage; 4/5 tactical pairings available (72% coverage, above the 70% integration threshold). Missing counter-attack evidence remains unknown, never imputed. |
+| 4 | Probability validation | Complete: 1X2 probabilities must be finite, within 0–100 and sum to 100; model weights remain unchanged and sum to 100%. Proper scoring and calibration diagnostics are calculated by the evaluation layer, but empirical calibration is not established yet. |
+| 5 | Prediction evaluation | Operational: timestamped prediction ledger, verified-result synchronizer, accuracy/Brier/log-loss and calibration reporting. The latest ledger has 74 saved predictions and one unique completed fixture with a verified result, below the 30-fixture minimum; the six-hour sync will continue accumulating evidence. |
+| 6 | Authenticated deployment and reliability | Operational: authentication-protected Streamlit deployment, 28/28 code smoke checks, 5/5 live integrations, 341 unit tests and scheduled controller checks. CI confirms protected reachability; it cannot verify an authenticated user session without a deployment login. |
+
+The application is operational across all six layers. The remaining non-blocking work is longitudinal rather than a missing core feature: allow verified outcomes to accumulate to at least 30 unique fixtures before making model-accuracy or calibration claims. Keep the agreed model weights and recency weighting fixed until that evidence exists.
 
 ### Snapshot validation coverage correction (2026-11-07)
 - Player-level and team-season statistics are now counted separately in the prediction ledger.
