@@ -107,9 +107,21 @@ class SportmonksLayer2Tests(unittest.TestCase):
         self.assertEqual(profile["matches"][0]["goals_for"], 2)
         self.assertEqual(profile["matches"][0]["opponent_strength"], 50.0)
         self.assertEqual(profile["matches"][0]["statistics"]["Ball Possession"], 60.0)
-        self.assertEqual(profile["matches"][0]["statistics"]["Total Shots"], 14.0)
+        # Provider emits two different values for the same canonical metric;
+        # strict integrity handling must leave it unknown rather than pick one.
+        self.assertNotIn("Total Shots", profile["matches"][0]["statistics"])
+        self.assertTrue(any(
+            item["canonical_name"] == "Total Shots"
+            and item["reason"] == "conflicting_duplicate_observations"
+            for item in profile["matches"][0]["statistics_conflicts"]
+        ))
         self.assertEqual(profile["matches"][0]["statistics"]["Blocked Shots"], 3.0)
-        self.assertEqual(profile["matches"][0]["statistics"]["Passes %"], 84.0)
+        self.assertNotIn("Passes %", profile["matches"][0]["statistics"])
+        self.assertTrue(any(
+            item["canonical_name"] == "Passes %"
+            and item["reason"] == "conflicting_duplicate_observations"
+            for item in profile["matches"][0]["statistics_conflicts"]
+        ))
         self.assertEqual(profile["matches"][0]["statistics"]["Big Chances Created"], 4.0)
         self.assertEqual(profile["matches"][0]["statistics"]["Counter Attacks"], 7.0)
         self.assertNotIn("Shots Accuracy", profile["matches"][0]["statistics"])
@@ -566,11 +578,12 @@ class SportmonksLayer2Tests(unittest.TestCase):
         expected_labels = [label for label, _group, _aliases in CORE_STATISTICS]
 
         self.assertEqual(diagnostics["statistics_core_metrics"], expected_labels)
-        self.assertEqual(diagnostics["statistics_coverage_by_metric"], {
-            label: 1 for label in expected_labels
-        })
-        self.assertEqual(diagnostics["matches_with_complete_core_statistics"], 1)
-        self.assertEqual(diagnostics["core_statistics_completeness_pct"], 100.0)
+        expected_coverage = {label: 1 for label in expected_labels}
+        expected_coverage["Total Shots"] = 0
+        expected_coverage["Passes %"] = 0
+        self.assertEqual(diagnostics["statistics_coverage_by_metric"], expected_coverage)
+        self.assertEqual(diagnostics["matches_with_complete_core_statistics"], 0)
+        self.assertEqual(diagnostics["core_statistics_completeness_pct"], 0.0)
 
 
     def test_duplicate_fixture_ids_are_reported_and_excluded_from_history(self):
