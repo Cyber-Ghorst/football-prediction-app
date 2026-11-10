@@ -126,6 +126,25 @@ def _team_quality(
     else:
         add("reported_history_count", "pass", f"{name}: reported and actual history counts agree.")
 
+    statistic_conflicts = [
+        conflict
+        for match in matches if isinstance(match, Mapping)
+        for conflict in (match.get("statistics_conflicts") or [])
+    ]
+    invalid_statistics = [
+        row
+        for match in matches if isinstance(match, Mapping)
+        for row in (match.get("statistics_invalid_rows") or [])
+    ]
+    if statistic_conflicts or invalid_statistics:
+        add(
+            "statistics_integrity",
+            "warning",
+            f"{name}: {len(statistic_conflicts)} conflicting and {len(invalid_statistics)} invalid supported statistic observation(s) were excluded or left unknown.",
+        )
+    else:
+        add("statistics_integrity", "pass", f"{name}: no conflicting or invalid supported statistic observations were reported.")
+
     if quality.get("history_integrity_status") == "issues_detected":
         add(
             "collection_exclusions",
