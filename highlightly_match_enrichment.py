@@ -575,7 +575,8 @@ def apply_highlightly_statistics_fallback(
                         "canonical_name": metric,
                         "raw_value": metric_observations[0].get("raw_value"),
                         "normalized_value": value,
-                        "fetched_at": fetched_at.isoformat(),
+                        "collection_started_at": enrichment_report.get("fetched_at"),
+                        "collection_completed_at": collection_completed_at.isoformat(),
                         "fallback_used": True,
                     })
                     profile_fixtures_enriched.add(fixture_key)
@@ -593,7 +594,8 @@ def apply_highlightly_statistics_fallback(
                 "status": "applied",
                 "fields_added": profile_fields_added,
                 "matches_enriched": len(profile_fixtures_enriched),
-                "fetched_at": fetched_at.isoformat(),
+                "collection_started_at": enrichment_report.get("fetched_at"),
+                        "collection_completed_at": collection_completed_at.isoformat(),
                 "tactical_evidence_updated": False,
             }
             summary["profiles_updated"] += 1
