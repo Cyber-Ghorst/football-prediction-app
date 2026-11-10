@@ -63,7 +63,7 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         }
         client = OpenFootballAdapter()
         client._get_json = Mock(return_value={"matches": [good, bad]})
-        rows = client.season("eng.1.json", "Premier League")
+        rows = client.season("2026-27/eng.1.json", "Premier League")
         self.assertTrue(rows[0]["eligible_for_review"])
         self.assertEqual(rows[1]["exclusion_reason"], "kickoff_missing_timezone_or_precision")
         self.assertTrue(rows[0]["provider_fixture_id"].startswith("openfootball:dataset:"))
@@ -78,7 +78,7 @@ class FreeFixtureAdapterTests(unittest.TestCase):
             "date": (NOW + timedelta(days=2)).date().isoformat(),
             "team1": "Home FC", "team2": "Away FC",
         }]})
-        row = client.season("eng.1.json", "Premier League")[0]
+        row = client.season("2026-27/eng.1.json", "Premier League")[0]
         self.assertFalse(row["eligible_for_review"])
         self.assertIsNone(row["kickoff_utc"])
         client.close()
@@ -86,11 +86,11 @@ class FreeFixtureAdapterTests(unittest.TestCase):
     def test_openmatchday_fixed_offset_time_is_not_guessed(self):
         client = OpenMatchdayAdapter()
         client._get_text = Mock(return_value=(
-            "date,time,home_team,away_team,competition,season\n"
-            f"{(NOW + timedelta(days=2)).date().isoformat()},19:00,Home FC,Away FC,League,2026\n"
+            "gw,date,time,home,away\n"
+            f"11,{(NOW + timedelta(days=2)).date().isoformat()},19:00,Home FC,Away FC\n"
         ))
         row = client.season_csv(
-            "https://raw.githubusercontent.com/oladeeayo/open-matchday/main/fixtures_2026.csv",
+            "https://raw.githubusercontent.com/oladeeayo/open-matchday/main/data/ENG_1_premier-league/fixtures_2627.csv",
             competition="League", season="2026",
         )[0]
         self.assertFalse(row["eligible_for_review"])
