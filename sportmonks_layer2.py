@@ -269,6 +269,9 @@ def _fixture_statistics_index(fixture: dict[str, Any]) -> dict[int, dict[str, An
             "statistics": {},
             "provenance": [],
             "raw_diagnostics": [],
+            "conflicts": [],
+            "invalid_statistics": [],
+            "conflicted_names": set(),
         })
         stat_type = row.get("type") or {}
         raw_name = (
@@ -285,7 +288,12 @@ def _fixture_statistics_index(fixture: dict[str, Any]) -> dict[int, dict[str, An
             else None
         )
 
-        team_data["raw_diagnostics"].append({
+        mapping_status = (
+            "unmapped" if canonical_name is None
+            else "invalid" if normalized_value is None
+            else "mapped"
+        )
+        raw_diagnostic = {
             "provider": "sportmonks",
             "fixture_id": fixture_id,
             "participant_id": team_id,
@@ -294,10 +302,52 @@ def _fixture_statistics_index(fixture: dict[str, Any]) -> dict[int, dict[str, An
             "canonical_name": canonical_name,
             "raw_value": raw_value,
             "normalized_value": normalized_value,
-            "mapping_status": "mapped" if canonical_name is not None else "unmapped",
-        })
+            "mapping_status": mapping_status,
+        }
+        team_data["raw_diagnostics"].append(raw_diagnostic)
 
-        if canonical_name is None or normalized_value is None:
+        if canonical_name is None:
+            continue
+        if normalized_value is None:
+            team_data["invalid_statistics"].append({
+                "canonical_name": canonical_name,
+                "statistic_name_raw": str(raw_name or ""),
+                "raw_value": raw_value,
+                "fixture_id": fixture_id,
+            })
+            # If the provider sends both valid and invalid rows for one
+            # canonical metric, remove that metric rather than choosing one.
+            if canonical_name in team_data["statistics"]:
+                team_data["statistics"].pop(canonical_name, None)
+                team_data["provenance"] = [
+                    row for row in team_data["provenance"]
+                    if row.get("canonical_name") != canonical_name
+                ]
+                team_data["conflicted_names"].add(canonical_name)
+                team_data["conflicts"].append({
+                    "canonical_name": canonical_name,
+                    "reason": "valid_and_invalid_duplicate_observations",
+                    "fixture_id": fixture_id,
+                })
+            continue
+
+        if canonical_name in team_data["conflicted_names"]:
+            continue
+        if canonical_name in team_data["statistics"]:
+            existing_value = team_data["statistics"][canonical_name]
+            if existing_value != normalized_value:
+                team_data["statistics"].pop(canonical_name, None)
+                team_data["provenance"] = [
+                    row for row in team_data["provenance"]
+                    if row.get("canonical_name") != canonical_name
+                ]
+                team_data["conflicted_names"].add(canonical_name)
+                team_data["conflicts"].append({
+                    "canonical_name": canonical_name,
+                    "reason": "conflicting_duplicate_observations",
+                    "values": [existing_value, normalized_value],
+                    "fixture_id": fixture_id,
+                })
             continue
 
         team_data["statistics"][canonical_name] = normalized_value
@@ -496,6 +546,8 @@ def collect_sportmonks_team_profile(
             "opponent_statistics": fixture_index.get(opponent_id, {}).get("statistics", {}),
             "statistics_provenance": fixture_index.get(team_id, {}).get("provenance", []),
             "statistics_raw_diagnostics": fixture_index.get(team_id, {}).get("raw_diagnostics", []),
+            "statistics_conflicts": fixture_index.get(team_id, {}).get("conflicts", []),
+            "statistics_invalid_rows": fixture_index.get(team_id, {}).get("invalid_statistics", []),
         })
 
     matches.sort(
@@ -663,6 +715,8 @@ def collect_sportmonks_team_profile(
                 sum(row.get("mapping_status") == "unmapped" for row in (m.get("statistics_raw_diagnostics") or []))
                 for m in recent
             ),
+            "statistics_conflicts": sum(len(m.get("statistics_conflicts") or []) for m in recent),
+            "statistics_invalid_values": sum(len(m.get("statistics_invalid_rows") or []) for m in recent),
             "fixtures_scanned": len(fixtures),
             **history_diagnostics,
         },
