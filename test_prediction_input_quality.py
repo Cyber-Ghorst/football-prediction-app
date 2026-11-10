@@ -20,7 +20,7 @@ def profile(team_id, name):
             }
             for index in range(6)
         ],
-        "data_quality": {"matches_returned": 6, "season_id": 2026},
+        "data_quality": {"matches_returned": 6, "season_id": 2026, "history_collection_fetched_at": NOW.isoformat()},
     }
 
 
@@ -122,6 +122,63 @@ class PredictionInputQualityTests(unittest.TestCase):
                     self.home, self.away, home_team_id=10, away_team_id=20,
                     minimum_matches=value, now=NOW,
                 )
+
+    def test_stale_history_collection_blocks_prediction(self):
+        self.home["data_quality"]["history_collection_fetched_at"] = (
+            NOW - timedelta(hours=25)
+        ).isoformat()
+        result = self.report()
+        self.assertFalse(result["prediction_allowed"])
+        self.assertEqual(result["status"], "blocked")
+        self.assertTrue(any("older than 24 hours" in failure for failure in result["failures"]))
+
+    def test_fresh_history_collection_passes(self):
+        self.home["data_quality"]["history_collection_fetched_at"] = (
+            NOW - timedelta(hours=2)
+        ).isoformat()
+        result = self.report()
+        self.assertTrue(result["prediction_allowed"])
+        self.assertEqual(result["status"], "passed")
+
+    def test_missing_history_collection_timestamp_downgrades_readiness(self):
+        self.home["data_quality"].pop("history_collection_fetched_at")
+        result = self.report()
+        self.assertTrue(result["prediction_allowed"])
+        self.assertEqual(result["status"], "attention")
+        self.assertTrue(any("freshness cannot be confirmed" in warning for warning in result["warnings"]))
+
+    def test_future_history_collection_timestamp_blocks_prediction(self):
+        self.home["data_quality"]["history_collection_fetched_at"] = (
+            NOW + timedelta(minutes=1)
+        ).isoformat()
+        self.assertFalse(self.report()["prediction_allowed"])
+
+    def test_stale_verified_fixture_blocks_fixture_specific_prediction(self):
+        result = build_prediction_input_quality_report(
+            self.home, self.away, home_team_id=10, away_team_id=20,
+            now=NOW,
+            fixture_readiness={"verified": True, "source_freshness": "stale"},
+        )
+        self.assertFalse(result["prediction_allowed"])
+        self.assertEqual(result["status"], "blocked")
+
+    def test_unknown_fixture_freshness_downgrades_but_does_not_block_matchup_analysis(self):
+        result = build_prediction_input_quality_report(
+            self.home, self.away, home_team_id=10, away_team_id=20,
+            now=NOW,
+            fixture_readiness={"verified": True, "source_freshness": "unknown"},
+        )
+        self.assertTrue(result["prediction_allowed"])
+        self.assertEqual(result["status"], "attention")
+
+    def test_unresolved_statistics_conflicts_downgrade_without_imputation(self):
+        self.home["matches"][0]["statistics_conflicts"] = [
+            {"canonical_name": "Total Shots", "reason": "unresolved"}
+        ]
+        result = self.report()
+        self.assertTrue(result["prediction_allowed"])
+        self.assertEqual(result["status"], "attention")
+        self.assertFalse(result["prediction_inputs_modified"])
 
 
 if __name__ == "__main__":
