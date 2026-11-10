@@ -20,7 +20,7 @@ def profile(team_id, name):
             }
             for index in range(6)
         ],
-        "data_quality": {"matches_returned": 6, "season_id": 2026},
+        "data_quality": {"matches_returned": 6, "season_id": 2026, "history_collection_fetched_at": NOW.isoformat()},
     }
 
 
@@ -141,6 +141,7 @@ class PredictionInputQualityTests(unittest.TestCase):
         self.assertEqual(result["status"], "passed")
 
     def test_missing_history_collection_timestamp_downgrades_readiness(self):
+        self.home["data_quality"].pop("history_collection_fetched_at")
         result = self.report()
         self.assertTrue(result["prediction_allowed"])
         self.assertEqual(result["status"], "attention")
