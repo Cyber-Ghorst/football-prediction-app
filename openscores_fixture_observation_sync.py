@@ -75,7 +75,7 @@ def run_sync(
     *, client_factory=OpenScoresClient, database_url: str | None = None,
     max_leagues: int | None = None, now: datetime | None = None,
 ) -> dict[str, Any]:
-    """Fetch one globally filtered fixture stream, then group by explicit provider identities."""
+    """Fetch season-scoped fixture collections and apply the strict window locally."""
     db_url = (database_url or os.getenv("PROVIDER_DATABASE_URL", "")).strip()
     if not db_url:
         raise ValueError("PROVIDER_DATABASE_URL is required")
@@ -191,16 +191,13 @@ def run_sync(
             len(set(season_ids)) for season_ids in seasons_by_league.values()
         )
 
-        # The live API returns useful fixture collections when season_id is supplied.
-        # Keep each request scoped to its verified season and league relationship.
+        # Live checks showed fixture collections are populated by season_id requests;
+        # apply status and date-window filters locally to avoid empty filtered responses.
         for league_id, season_ids in seasons_by_league.items():
             for season_id in sorted(set(season_ids)):
                 for page in range(1, max_pages + 1):
                     fixture_result = client.list_fixtures(
                         season_id=season_api_ids[(league_id, season_id)],
-                        status="scheduled",
-                        date_from=date_from,
-                        date_to=date_to,
                         page=page,
                         page_size=page_size,
                     )
