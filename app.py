@@ -851,7 +851,7 @@ with st.sidebar:
     use_verified_result_history_fallback = st.checkbox(
         "Use exact verified results to fill missing recent history",
         value=False,
-        help="Opt-in Layer 2 fallback. A result is added only when Highlightly and a completed Sportmonks fixture agree on exact competition, season, home/away teams, kickoff and score. It updates recent form/goals only; missing match statistics and TVD evidence remain unchanged.",
+        help="Opt-in Layer 2 fallback. A result is added only when Highlightly or API Ninjas and a completed Sportmonks fixture agree on exact competition, season, home/away teams, kickoff and score. It updates recent form/goals only; missing match statistics and TVD evidence remain unchanged.",
     )
     cross_check_highlightly_details = st.checkbox(
         "Cross-check match statistics and lineups with Highlightly",
@@ -2013,7 +2013,7 @@ try:
                         hl_client = _new_cached_highlightly_client()
                     except HighlightlyError as exc:
                         corroboration_errors["highlightly"] = str(exc)
-                    if cross_check_recent_results:
+                    if cross_check_recent_results or use_verified_result_history_fallback:
                         try:
                             ninjas_client = APINinjasClient()
                         except APINinjasError as exc:
@@ -2044,22 +2044,35 @@ try:
                             )
                             corroboration["errors"].update(corroboration_errors)
 
-                            # Target each unmatched Highlightly result by its UTC calendar date.
+                            # Target each unmatched secondary-provider result by its UTC calendar date.
                             # The verifier remains fail-closed; a separate opt-in step below may
                             # append only one exact completed Sportmonks result with an agreeing
                             # Highlightly score. Unverified candidates remain diagnostic-only.
                             candidate_rows = []
                             seen_candidate_keys = set()
                             for team_report in (corroboration.get("team_history_coverage") or {}).values():
-                                for candidate in team_report.get("unmatched_completed_candidates") or []:
-                                    candidate_key = str(candidate.get("highlightly_match_id") or "|".join((
-                                        str(candidate.get("kickoff_utc") or ""),
-                                        str(candidate.get("home") or ""),
-                                        str(candidate.get("away") or ""),
-                                    )))
-                                    if candidate_key not in seen_candidate_keys:
-                                        seen_candidate_keys.add(candidate_key)
-                                        candidate_rows.append(candidate)
+                                candidate_sources = (
+                                    ("highlightly", team_report.get("unmatched_completed_candidates") or [], "highlightly_match_id"),
+                                    ("api_ninjas", team_report.get("api_ninjas_unmatched_candidates") or [], "api_ninjas_match_id"),
+                                )
+                                for candidate_provider, provider_candidates, id_field in candidate_sources:
+                                    for raw_candidate in provider_candidates:
+                                        candidate = dict(raw_candidate)
+                                        candidate["candidate_provider"] = candidate_provider
+                                        source_id = str(candidate.get(id_field) or "")
+                                        candidate_key = (
+                                            f"{candidate_provider}:{source_id}"
+                                            if source_id
+                                            else "|".join((
+                                                candidate_provider,
+                                                str(candidate.get("kickoff_utc") or ""),
+                                                str(candidate.get("home") or ""),
+                                                str(candidate.get("away") or ""),
+                                            ))
+                                        )
+                                        if candidate_key not in seen_candidate_keys:
+                                            seen_candidate_keys.add(candidate_key)
+                                            candidate_rows.append(candidate)
 
                             candidate_verification = []
                             candidate_verification_diagnostics = {
