@@ -156,6 +156,42 @@ def build_entity_crosswalk_candidates(
     return output
 
 
+def load_provider_entity_links(
+    database_url: str,
+    *,
+    provider: str,
+    entity_type: str | None = None,
+) -> dict[str, str]:
+    """Load existing provider-scoped links without modifying them."""
+    provider_name = str(provider or "").strip().casefold()
+    if provider_name not in SUPPORTED_PROVIDERS:
+        raise ValueError("Unsupported provider.")
+    if entity_type is not None and entity_type not in ENTITY_TABLES:
+        raise ValueError("Unsupported canonical entity type.")
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+    ensure_football_repository(database_url)
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            if entity_type:
+                cursor.execute(
+                    """SELECT provider_entity_id, canonical_entity_id
+                       FROM provider_entity_links
+                       WHERE provider = %s AND entity_type = %s
+                       ORDER BY provider_entity_id""",
+                    (provider_name, entity_type),
+                )
+            else:
+                cursor.execute(
+                    """SELECT provider_entity_id, canonical_entity_id
+                       FROM provider_entity_links
+                       WHERE provider = %s
+                       ORDER BY entity_type, provider_entity_id""",
+                    (provider_name,),
+                )
+            return {str(row[0]): str(row[1]) for row in cursor.fetchall()}
+
+
 def save_explicit_provider_entity_links(
     database_url: str,
     *,
