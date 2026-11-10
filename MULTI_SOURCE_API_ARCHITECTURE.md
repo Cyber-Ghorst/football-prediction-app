@@ -351,6 +351,7 @@ An opt-in diagnostic path now uses the exact selected-fixture Highlightly lineup
 ### Data quality and provenance
 - Layer 2 history diagnostics now consume the same shared eight-metric definitions as the system-wide statistics coverage report. Shots on Target and Shots on Goal are treated as aliases for one canonical input; the app does not double-count them.
 - Repository fixture rows carry separate `history_repository_collected_at` and `history_provider_updated_at` timestamps. Direct live-fetch time remains `history_collection_fetched_at`; repository ingestion time is never mislabeled as a direct API fetch. Provider update time remains unknown when the source does not supply it.
+- Sportmonks and Highlightly statistic parsers reject non-finite and negative observations and percentage values above 100; supported fractional percentages are normalized, and explicit percent units are preserved.
 - The latest verified Chelsea–Leeds run reported 10 completed matches per team, 8/8 core match-statistic metrics with 100% coverage for both teams, zero duplicate fixture IDs, and healthy readiness diagnostics.
 
 ### Prediction result automation
