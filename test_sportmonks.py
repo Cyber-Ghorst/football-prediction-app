@@ -176,5 +176,41 @@ class UpcomingFixtureEnrichmentTests(unittest.TestCase):
         self.assertEqual(client.calls[0][0], "schedules/seasons/2026")
 
 
+    def test_schedule_records_endpoint_season_and_duplicate_id_diagnostics(self):
+        schedule = [
+            {"id": 1, "rounds": [{"id": 2, "fixtures": [
+                {"id": 100, "starting_at": "2026-08-01 12:00:00"},
+                {"id": 100, "starting_at": "2026-08-01 12:00:00"},
+                {"id": 101, "starting_at": "2026-08-02 12:00:00"},
+            ]}]}
+        ]
+        client = FakeSportmonksClient(schedule, [])
+        fixtures = client.fixtures_by_season(2026, include_statistics=False, team_ids=[])
+        self.assertEqual([row["id"] for row in fixtures], [100, 101])
+        self.assertTrue(all(row["season_id"] == 2026 for row in fixtures))
+        self.assertEqual(fixtures[0]["_schedule_duplicate_fixture_ids"], [100])
+        self.assertEqual(fixtures[1]["_schedule_unique_fixture_count"], 2)
+
+    def test_schedule_kickoff_parser_handles_epoch_milliseconds_and_timezone_offsets(self):
+        expected = int(datetime(2026, 11, 7, 12, tzinfo=timezone.utc).timestamp())
+        self.assertEqual(
+            SportmonksClient._fixture_kickoff_timestamp({
+                "starting_at_timestamp": expected * 1000,
+            }),
+            expected,
+        )
+        self.assertEqual(
+            SportmonksClient._fixture_kickoff_timestamp({
+                "starting_at": "2026-11-07T15:00:00+03:00",
+            }),
+            expected,
+        )
+
+    def test_schedule_completed_status_fallback_accepts_string_without_state_id(self):
+        self.assertTrue(SportmonksClient._fixture_is_completed({"state": "FT"}))
+        self.assertTrue(SportmonksClient._fixture_is_completed({"status": {"name": "Finished"}}))
+        self.assertFalse(SportmonksClient._fixture_is_completed({"state": "NS"}))
+
+
 if __name__ == "__main__":
     unittest.main()
