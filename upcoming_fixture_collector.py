@@ -346,7 +346,10 @@ def main() -> int:
         database_url=database_url,
         temporary_database_url=temporary_database_url,
     )
-    safe_report = {key: value for key, value in result.items() if key != "fixtures"}
+    safe_report = {
+        key: value for key, value in result.items()
+        if key not in {"fixtures", "highlighted_fixtures"}
+    }
     print(json.dumps(safe_report, default=str, sort_keys=True))
     if not result["target_met"]:
         print(
