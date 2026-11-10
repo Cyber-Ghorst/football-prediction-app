@@ -414,6 +414,12 @@ jobs:
           set -euo pipefail
           python openscores_fixture_observation_sync.py
 
+      - name: Install Sportmonks catalogue audit dependency
+        if: steps.operation.outputs.operation == 'sportmonks_catalogue_access_audit'
+        run: |
+          set -euo pipefail
+          python -m pip install requests
+
       - name: Audit Sportmonks account catalogue access (read-only)
         if: steps.operation.outputs.operation == 'sportmonks_catalogue_access_audit'
         env:
