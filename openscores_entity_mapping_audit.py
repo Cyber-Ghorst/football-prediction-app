@@ -227,6 +227,12 @@ def run_audit(*, client_factory=OpenScoresClient, database_url: str | None = Non
         "prediction_ledger_touched": False,
     }
     with client_factory() as client:
+        tool_catalogue = client.list_tools().get("tools", [])
+        fixture_tool_schema = next(
+            (tool.get("inputSchema") for tool in tool_catalogue
+             if isinstance(tool, Mapping) and tool.get("name") == "list_fixtures"),
+            None,
+        )
         league_result = client.list_leagues()
         leagues, _ = client._league_collection(league_result.get("data"))
         if leagues is None:
@@ -379,6 +385,13 @@ def run_audit(*, client_factory=OpenScoresClient, database_url: str | None = Non
             "by_competition_season": observation_time_coverage,
             "total_future_fixtures": sum(row["future_fixtures"] for row in observation_time_coverage),
             "total_fixtures_next_7_days": sum(row["fixtures_next_7_days"] for row in observation_time_coverage),
+        },
+        "openscores_tool_catalogue": {
+            "tool_names": sorted(
+                str(tool.get("name")) for tool in tool_catalogue
+                if isinstance(tool, Mapping) and tool.get("name")
+            ),
+            "list_fixtures_input_schema": fixture_tool_schema,
         },
         "source_identity_evidence": {
             "openscores_league_fields": {
