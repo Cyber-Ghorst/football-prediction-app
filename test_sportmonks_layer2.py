@@ -376,7 +376,31 @@ class SportmonksLayer2Tests(unittest.TestCase):
         self.assertEqual(diagnostics["matches_with_any_statistics"], 1)
         self.assertEqual(diagnostics["matches_with_complete_core_statistics"], 0)
         self.assertEqual(diagnostics["statistics_coverage_by_metric"]["Ball Possession"], 1)
-        self.assertEqual(diagnostics["core_statistics_completeness_pct"], 40.0)
+        self.assertEqual(diagnostics["core_statistics_completeness_pct"], 25.0)
+
+    def test_layer2_statistics_coverage_uses_shared_eight_metric_definitions(self):
+        from statistics_coverage import CORE_STATISTICS
+
+        row = fixture(1, 10, 20, 1, 0)
+        row["statistics"].extend([
+            {"participant_id": 10, "type": {"id": 5, "name": "Shots on Target"}, "data": {"value": 6}},
+            {"participant_id": 10, "type": {"id": 6, "name": "Tackles"}, "data": {"value": 14}},
+            {"participant_id": 10, "type": {"id": 7, "name": "Interceptions"}, "data": {"value": 9}},
+            {"participant_id": 10, "type": {"id": 8, "name": "Corner Kicks"}, "data": {"value": 7}},
+        ])
+        profile = collect_sportmonks_team_profile(
+            {"id": 10, "name": "Home FC"}, 2026, [row], [],
+        )
+        diagnostics = profile["history_collection_diagnostics"]
+        expected_labels = [label for label, _group, _aliases in CORE_STATISTICS]
+
+        self.assertEqual(diagnostics["statistics_core_metrics"], expected_labels)
+        self.assertEqual(diagnostics["statistics_coverage_by_metric"], {
+            label: 1 for label in expected_labels
+        })
+        self.assertEqual(diagnostics["matches_with_complete_core_statistics"], 1)
+        self.assertEqual(diagnostics["core_statistics_completeness_pct"], 100.0)
+
 
     def test_duplicate_fixture_ids_are_reported_and_excluded_from_history(self):
         first = fixture(1, 10, 20, 1, 0)
