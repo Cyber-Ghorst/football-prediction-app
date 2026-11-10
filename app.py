@@ -2699,12 +2699,12 @@ try:
                         "conflicts": [
                             {"fixture_id": match.get("fixture_id"), "conflicts": match.get("statistics_conflicts", [])}
                             for match in (profile.get("matches") or [])
-                            if match.get("statistics_conflicts")
+                            if isinstance(match, dict) and match.get("statistics_conflicts")
                         ],
                         "invalid_observations": [
                             {"fixture_id": match.get("fixture_id"), "invalid_rows": match.get("statistics_invalid_rows", [])}
                             for match in (profile.get("matches") or [])
-                            if match.get("statistics_invalid_rows")
+                            if isinstance(match, dict) and match.get("statistics_invalid_rows")
                         ],
                     },
                     "counter_attack_source_diagnostics": build_counter_attack_source_diagnostics(profile.get("matches", [])),
