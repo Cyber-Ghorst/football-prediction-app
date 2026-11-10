@@ -51,6 +51,19 @@ def build_catalogue_report(client_factory=SportmonksClient) -> dict[str, Any]:
         seasons = client.available_seasons()
         report["league_catalogue_count"] = len(leagues)
         report["season_catalogue_count"] = len(seasons)
+        season_counts: dict[str, int] = {}
+        for season in seasons:
+            key = str(season.get("league_id") or "")
+            season_counts[key] = season_counts.get(key, 0) + 1
+        report["catalogue_leagues"] = [
+            {
+                "sportmonks_league_id": str(league.get("id")),
+                "name": league.get("name"),
+                "country": _country_name(league),
+                "season_count": season_counts.get(str(league.get("id")), 0),
+            }
+            for league in leagues
+        ]
         for target in TARGETS:
             matches = [
                 row for row in leagues
