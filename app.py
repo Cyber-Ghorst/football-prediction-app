@@ -2200,6 +2200,11 @@ try:
                                         [home, away], highlightly_enrichment
                                     )
                                     highlightly_enrichment["layer2_fallback"] = fallback_report
+                                    highlightly_enrichment["note"] = (
+                                        "Opt-in Layer 2 fallback was requested. Only exact-match missing "
+                                        "statistics may be filled from Highlightly; Sportmonks values remain "
+                                        "authoritative, and TVD tactical_evidence is unchanged."
+                                    )
                     except Exception as exc:
                         st.warning(f"Optional Highlightly enrichment could not be completed: {exc}. Sportmonks prediction inputs remain unchanged.")
                     finally:
