@@ -238,6 +238,25 @@ def normalize_highlightly_lineups(
             raise ValueError(f"Highlightly {side} lineup provider team ID does not match the exact fixture.")
         starters = _flatten_lineup_players(team.get("initialLineup"))
         substitutes = _flatten_lineup_players(team.get("substitutes"))
+        seen_player_ids: set[str] = set()
+        for player in starters + substitutes:
+            player_id = player.get("player_id")
+            if isinstance(player_id, bool):
+                raise ValueError(f"Highlightly {side} lineup contains an invalid player ID.")
+            if isinstance(player_id, int):
+                parsed_player_id = player_id if player_id > 0 else None
+            elif isinstance(player_id, str) and player_id.strip().isdigit():
+                parsed_player_id = int(player_id.strip())
+                if parsed_player_id <= 0:
+                    parsed_player_id = None
+            else:
+                parsed_player_id = None
+            if parsed_player_id is None:
+                raise ValueError(f"Highlightly {side} lineup contains a player without a valid stable ID.")
+            normalized_player_id = str(parsed_player_id)
+            if normalized_player_id in seen_player_ids:
+                raise ValueError(f"Highlightly {side} lineup contains a duplicate player ID.")
+            seen_player_ids.add(normalized_player_id)
         result[side] = {
             "team_id": team.get("id"),
             "team_name": actual_name,
