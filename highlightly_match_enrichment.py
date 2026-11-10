@@ -595,7 +595,7 @@ def apply_highlightly_statistics_fallback(
                 "fields_added": profile_fields_added,
                 "matches_enriched": len(profile_fixtures_enriched),
                 "collection_started_at": enrichment_report.get("fetched_at"),
-                        "collection_completed_at": collection_completed_at.isoformat(),
+                "collection_completed_at": collection_completed_at.isoformat(),
                 "tactical_evidence_updated": False,
             }
             summary["profiles_updated"] += 1
