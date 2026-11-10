@@ -208,7 +208,7 @@ def collect_upcoming_fixtures(
     owns_client = client is None
     api = client or SportmonksClient()
     try:
-        raw = api.fixtures_between(
+        raw = api.fixtures_between_all_pages(
             current.date().isoformat(),
             end.date().isoformat(),
             include=FIXTURE_INCLUDE,
