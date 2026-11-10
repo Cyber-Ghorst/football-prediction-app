@@ -2628,6 +2628,7 @@ try:
             home_team_id=int(team_map[home_name]["id"]),
             away_team_id=int(team_map[away_name]["id"]),
             minimum_matches=5,
+            fixture_readiness=readiness.get("fixture"),
         )
         statistics_reports = {
             profile["name"]: build_statistics_coverage(profile.get("matches", []))
