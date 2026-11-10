@@ -188,6 +188,26 @@ class ProviderAdapterTests(unittest.TestCase):
         )
         client.close()
 
+    def test_sportmonks_does_not_hydrate_ambiguous_duplicate_schedule_ids(self):
+        client = SportmonksClient(api_token="test-only")
+        duplicate = {
+            "id": 100,
+            "state_id": 5,
+            "starting_at": "2026-08-01 12:00:00",
+            "participants": [{"id": 1}, {"id": 2}],
+            "scores": [],
+        }
+        schedule = {"data": [{
+            "id": 10,
+            "rounds": [{"id": 20, "fixtures": [duplicate, dict(duplicate)]}],
+        }]}
+        client._get = Mock(return_value=schedule)
+        fixtures = client.fixtures_by_season(123, team_ids=[1, 2])
+        self.assertEqual(client._get.call_count, 1)
+        self.assertEqual(len(fixtures), 1)
+        self.assertTrue(fixtures[0]["_schedule_duplicate"])
+        client.close()
+
     def test_sportmonks_schedule_enriches_labelled_finished_fixtures_without_state_id(self):
         client = SportmonksClient(api_token="test-only")
         schedule = {"data": [{
