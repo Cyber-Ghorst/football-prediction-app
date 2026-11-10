@@ -89,6 +89,66 @@ def _source_id_keys(payloads: list[Any]) -> list[str]:
     return sorted(keys)
 
 
+
+def _source_id_summary(records: list[Any]) -> dict[str, Any]:
+    """Summarize explicit external-ID namespaces without treating names as IDs."""
+    counts: dict[str, int] = {}
+    examples: dict[str, list[str]] = {}
+    for record in records:
+        if not isinstance(record, Mapping):
+            continue
+        for namespace, value in record.items():
+            key = str(namespace).strip().casefold()
+            if not key or value in (None, ""):
+                continue
+            counts[key] = counts.get(key, 0) + 1
+            sample = str(value)
+            if sample not in examples.setdefault(key, []) and len(examples[key]) < 5:
+                examples[key].append(sample)
+    return {
+        "namespace_counts": dict(sorted(counts.items())),
+        "examples": dict(sorted(examples.items())),
+    }
+
+
+def _external_id_evidence(
+    observation_rows: list[tuple[Any, Any]],
+    leagues: list[Mapping[str, Any]],
+    seasons_by_league: Mapping[str, list[Mapping[str, Any]]],
+) -> dict[str, Any]:
+    fixture_ids = []
+    team_ids = []
+    for source_ids, raw_payload in observation_rows:
+        if isinstance(source_ids, Mapping):
+            fixture_ids.append(source_ids)
+        if isinstance(raw_payload, Mapping):
+            for key in ("home_team", "away_team"):
+                team = raw_payload.get(key)
+                if not isinstance(team, Mapping):
+                    continue
+                ids = team.get("source_ids") or team.get("external_ids")
+                if isinstance(ids, Mapping):
+                    team_ids.append(ids)
+    league_ids = [
+        item.get("source_ids") or item.get("external_ids")
+        for item in leagues if isinstance(item, Mapping)
+    ]
+    season_ids = [
+        season.get("source_ids") or season.get("external_ids")
+        for rows in seasons_by_league.values() for season in rows
+        if isinstance(season, Mapping)
+    ]
+    return {
+        "fixture_external_ids": _source_id_summary(fixture_ids),
+        "team_external_ids": _source_id_summary(team_ids),
+        "league_external_ids": _source_id_summary([x for x in league_ids if isinstance(x, Mapping)]),
+        "season_external_ids": _source_id_summary([x for x in season_ids if isinstance(x, Mapping)]),
+        "matching_policy": (
+            "Evidence only. Shared provider IDs must be checked against canonical provider links "
+            "before any crosswalk can be approved."
+        ),
+    }
+
 def _unique_name_candidates(source: Mapping[str, Any], canonical: list[Mapping[str, Any]],
                             *, require_country: bool = False) -> dict[str, Any]:
     source_name = _norm(source.get("name"))
@@ -341,6 +401,9 @@ def run_audit(*, client_factory=OpenScoresClient, database_url: str | None = Non
             ),
         },
         "candidates": candidates,
+        "external_id_evidence": _external_id_evidence(
+            source_id_observations, leagues, seasons_by_league
+        ),
         "summary": {
             "league_unique_candidates": sum(x["status"] == "unique_name_candidate_requires_review" for x in candidates["leagues"]),
             "league_country_review_candidates": sum(x["status"] == "unique_name_candidate_requires_country_review" for x in candidates["leagues"]),
