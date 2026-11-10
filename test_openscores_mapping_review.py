@@ -9,7 +9,7 @@ class OpenScoresMappingReviewTests(unittest.TestCase):
             [{"id": "os-1", "name": "Arsenal"}],
             [{"id": "sportmonks:1", "name": "Arsenal"}],
         )
-        self.assertEqual(rows[0]["candidate_status"], "no_exact_candidate")
+        self.assertEqual(rows[0]["candidate_status"], "unique_exact_candidate")
         self.assertEqual(rows[0]["candidates"][0]["canonical_entity_id"], "sportmonks:1")
         self.assertFalse(rows[0]["auto_linked"])
 
@@ -50,7 +50,7 @@ class OpenScoresMappingReviewTests(unittest.TestCase):
             [{"id": "sportmonks:1", "name": "Premier League", "country": "England"}],
             require_country=True,
         )
-        self.assertEqual(rows[0]["candidate_status"], "unique_exact_candidate")
+        self.assertEqual(rows[0]["candidate_status"], "no_exact_candidate")
 
 
 if __name__ == "__main__":
