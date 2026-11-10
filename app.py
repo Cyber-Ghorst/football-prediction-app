@@ -1123,7 +1123,7 @@ with st.sidebar:
                             "canonical_entity_id": str(row.get("canonical_entity_id") or "").strip(),
                         }
                         for row in edited.to_dict(orient="records")
-                        if row.get("approve") is True
+                        if bool(row.get("approve", False))
                         and str(row.get("provider_entity_id") or "").strip()
                         and str(row.get("canonical_entity_id") or "").strip()
                     ]
