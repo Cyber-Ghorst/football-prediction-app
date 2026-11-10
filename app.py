@@ -120,9 +120,14 @@ try:
     from highlightly_player_enrichment import collect_highlightly_player_enrichment
     from prediction_evaluation import (
         build_availability_snapshot, build_prediction_record,
-        evaluate_prediction_ledger, merge_prediction_records,
+        evaluate_prediction_ledger, evaluate_tipmaster_benchmark,
+        merge_prediction_records,
     )
     from prediction_storage import load_prediction_ledger, save_prediction_records
+    from tipmaster_benchmark import fetch_tipmaster_consensus, TipMasterError
+    from tipmaster_storage import (
+        load_tipmaster_benchmark_records, save_tipmaster_benchmark_records,
+    )
     from prediction_results import verified_final_score, group_completed_fixture_candidates, automatic_result_check_due
     from prediction_readiness import build_prediction_readiness
     from prediction_input_quality import build_prediction_input_quality_report
@@ -394,6 +399,58 @@ def _persist_database_ledger():
         st.session_state["_ledger_db_status"] = "error"
         st.session_state["_ledger_db_message"] = "Could not save to Neon. Your current browser-session data is still available; check DATABASE_URL."
 
+def _load_tipmaster_benchmark():
+    if st.session_state.get("_tipmaster_loaded"):
+        return
+    st.session_state["tipmaster_benchmark_records"] = []
+    if DATABASE_URL:
+        try:
+            st.session_state["tipmaster_benchmark_records"] = load_tipmaster_benchmark_records(DATABASE_URL)
+            st.session_state["_tipmaster_storage_status"] = "connected"
+        except Exception as exc:
+            st.session_state["_tipmaster_storage_status"] = f"storage_error:{type(exc).__name__}"
+    else:
+        st.session_state["_tipmaster_storage_status"] = "not_configured"
+    st.session_state["_tipmaster_loaded"] = True
+
+
+def _refresh_tipmaster_benchmark(force=False):
+    _load_tipmaster_benchmark()
+    now = datetime.now(timezone.utc)
+    last_attempt = st.session_state.get("_tipmaster_last_attempt")
+    if not force and last_attempt:
+        try:
+            previous = datetime.fromisoformat(str(last_attempt).replace("Z", "+00:00"))
+            if (now - previous).total_seconds() < 900:
+                return
+        except ValueError:
+            pass
+    st.session_state["_tipmaster_last_attempt"] = now.isoformat()
+    try:
+        response = fetch_tipmaster_consensus()
+        incoming = response.get("matches", [])
+        if DATABASE_URL and incoming:
+            save_tipmaster_benchmark_records(DATABASE_URL, incoming)
+            # Reload the persisted source-of-record after the idempotent upsert.
+            incoming = load_tipmaster_benchmark_records(DATABASE_URL)
+            st.session_state["_tipmaster_storage_status"] = "connected"
+        merged = {
+            str(item.get("source_match_id")): item
+            for item in st.session_state.get("tipmaster_benchmark_records", [])
+            if item.get("source_match_id")
+        }
+        for item in incoming:
+            key = str(item.get("source_match_id") or "")
+            if key:
+                merged[key] = item
+        st.session_state["tipmaster_benchmark_records"] = list(merged.values())
+        st.session_state["_tipmaster_last_success"] = now.isoformat()
+        st.session_state["_tipmaster_refresh_counts"] = response.get("counts", {})
+        st.session_state["_tipmaster_fetch_status"] = "success"
+    except Exception as exc:
+        st.session_state["_tipmaster_fetch_status"] = f"error:{type(exc).__name__}"
+
+
 def _sync_completed_sportmonks_results():
     """Fetch each completed fixture once and apply its verified score to blank ledger rows."""
     now = datetime.now(timezone.utc)
@@ -496,6 +553,8 @@ def _automatic_result_collection(enabled):
 
 if not st.session_state.get("_ledger_db_loaded"):
     _load_database_ledger()
+_load_tipmaster_benchmark()
+_refresh_tipmaster_benchmark()
 
 @st.cache_data(ttl=3600, show_spinner=False)
 def get_leagues(_client, season):
@@ -3600,6 +3659,12 @@ with st.expander("Prediction tracking, Opta comparison and performance evaluatio
         st.session_state["prediction_ledger"] = merge_prediction_records(ledger, edited_records)
         _persist_database_ledger()
         report = evaluate_prediction_ledger(st.session_state["prediction_ledger"])
+        if st.button("Refresh TipMaster benchmark now", key="refresh_tipmaster_benchmark"):
+            _refresh_tipmaster_benchmark(force=True)
+        tipmaster_report = evaluate_tipmaster_benchmark(
+            st.session_state["prediction_ledger"],
+            st.session_state.get("tipmaster_benchmark_records", []),
+        )
         try:
             github_performance_report = _upload_report_once("prediction_performance", report)
             if github_performance_report:
@@ -3782,6 +3847,51 @@ with st.expander("Prediction tracking, Opta comparison and performance evaluatio
         m1.metric("Model accuracy", f"{model_metrics['accuracy_pct']}%" if model_metrics["accuracy_pct"] is not None else "—")
         m2.metric("Model Brier score", f"{model_metrics['multiclass_brier']}" if model_metrics["multiclass_brier"] is not None else "—", help="Lower is better; multiclass score over home/draw/away.")
         m3.metric("Model log loss", f"{model_metrics['log_loss']}" if model_metrics["log_loss"] is not None else "—", help="Lower is better; penalizes confident incorrect forecasts.")
+        st.subheader("Independent TipMaster consensus benchmark")
+        st.caption(
+            "TipMaster crowd shares are agreement distributions, not calibrated probabilities. "
+            "They are scored descriptively only on uniquely matched fixtures with verified "
+            "Sportmonks results; they never enter prediction generation or TVD."
+        )
+        st.markdown("[TipMaster source and methodology](https://tipmaster.de/agents/)")
+        fetch_status = st.session_state.get("_tipmaster_fetch_status", "not_fetched")
+        storage_status = st.session_state.get("_tipmaster_storage_status", "not_configured")
+        last_success = st.session_state.get("_tipmaster_last_success", "not yet refreshed")
+        st.caption(
+            f"Feed status: {fetch_status} · Storage: {storage_status} · "
+            f"Last successful fetch: {last_success}"
+        )
+        st.write(
+            f"Verified fixtures matched to TipMaster: "
+            f"{tipmaster_report['matched_verified_fixtures']} / "
+            f"{tipmaster_report['completed_verified_model_fixtures']}"
+        )
+        if tipmaster_report["groups"]:
+            tipmaster_rows = []
+            for group_id, metrics in tipmaster_report["groups"].items():
+                tipmaster_rows.append({
+                    "TipMaster cohort": group_id,
+                    "Matched fixtures": metrics["matches"],
+                    "Mean cohort size": metrics["mean_cohort_size"],
+                    "Consensus accuracy (%)": metrics["crowd_consensus_accuracy_pct"],
+                    "Distributional Brier": metrics["distributional_brier"],
+                    "Distributional log loss": metrics["distributional_log_loss"],
+                    "Model Brier on same fixtures": metrics["model_same_fixtures"]["multiclass_brier"],
+                    "Model log loss on same fixtures": metrics["model_same_fixtures"]["log_loss"],
+                })
+            st.dataframe(pd.DataFrame(tipmaster_rows), use_container_width=True, hide_index=True)
+        else:
+            st.info(
+                "No TipMaster matches are currently eligible for same-fixture scoring. "
+                "The comparison will populate only when exact team/competition/kickoff "
+                "matches receive independently verified final scores."
+            )
+        st.caption(
+            f"Unmatched verified fixtures: {tipmaster_report['unmatched_verified_fixtures']} · "
+            f"Ambiguous matches excluded: {tipmaster_report['ambiguous_fixture_matches_excluded']} · "
+            f"Invalid benchmark rows excluded: {tipmaster_report['invalid_benchmark_records_excluded']}. "
+            "Lower distributional Brier/log loss is better, but these are not calibration claims."
+        )
         if report["opta_comparable_fixtures"]:
             st.write(f"Opta comparison on the same {report['opta_comparable_fixtures']} completed fixtures")
             o1, o2, o3 = st.columns(3)

@@ -56,3 +56,32 @@ freeze deadline, sample sizes, source attribution and usage terms. Unlike
 market-derived probabilities, this is an independent human-consensus
 comparator. It is not equivalent to Opta's statistical model, so reports must
 identify it accurately as an expert/crowd consensus benchmark.
+
+
+## Persistence and same-fixture evaluation
+
+The app stores normalized TipMaster snapshots in the separate Neon table
+`tipmaster_benchmark_records`. It does not add benchmark fields to
+`prediction_ledger`, and it never writes to the prediction ledger from the
+benchmark adapter. Source observations are upserted by TipMaster match ID;
+older fetched snapshots cannot overwrite newer ones. The app loads the stored
+records and refreshes the public feed no more frequently than once every
+15 minutes while the Streamlit app is active (or on an explicit manual refresh).
+
+The comparison is evaluated only against the latest valid pre-kickoff
+prediction per fixture that has an exact, independently verified Sportmonks
+final score. Fixture matching is deliberately conservative: normalized
+competition, home team and away team must match exactly, and kickoff must be
+within 15 minutes. If more than one TipMaster record matches a prediction, that
+fixture is excluded as ambiguous. No fuzzy alias guessing is performed.
+
+For each available TipMaster cohort (Top 20%, Top 25%, All players), the report
+shows matched sample size, mean cohort size, consensus hit rate, distributional
+Brier and log loss, plus the model's Brier/log loss on that same fixture subset.
+The scoring metrics are descriptive comparisons of crowd-share distributions;
+they must not be described as probability calibration or used to tune the model.
+A match missing from TipMaster is not treated as a failed crowd prediction.
+
+The Neon connection must be configured through the existing Streamlit
+`DATABASE_URL` secret. Without it, feed retrieval and same-session comparison
+can still operate, but benchmark snapshots will not persist across app restarts.
