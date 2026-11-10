@@ -12,6 +12,7 @@ on:
           - test_suite
           - full_check
           - prediction_run
+          - result_sync
         default: health_check
       season:
         description: "Season start year (Sportmonks current-season path: 2025+)"
@@ -115,7 +116,7 @@ jobs:
               trigger = json.loads(Path(".agent/trigger.json").read_text(encoding="utf-8"))
               operation = trigger.get("operation", "")
 
-          allowed = {"health_check", "test_suite", "full_check", "prediction_run"}
+          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync"}
           if operation not in allowed:
               raise SystemExit("Rejected unsupported or missing operation")
           if operation == "prediction_run":
@@ -301,7 +302,7 @@ jobs:
           PY
 
       - name: Install health-check dependencies
-        if: steps.operation.outputs.operation == 'health_check' || steps.operation.outputs.operation == 'full_check'
+        if: steps.operation.outputs.operation == 'health_check' || steps.operation.outputs.operation == 'full_check' || steps.operation.outputs.operation == 'result_sync'
         run: |
           exec > >(tee -a controller-report.txt) 2>&1
           python -m pip install --upgrade pip
@@ -328,6 +329,17 @@ jobs:
           set -o pipefail
           exec > >(tee -a controller-report.txt) 2>&1
           python integration_smoke_check.py | tee integration-smoke-report.json
+
+      - name: Sync verified completed prediction results
+        if: steps.operation.outputs.operation == 'result_sync' || github.event_name == 'schedule'
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SPORTMONKS_API_TOKEN: ${{ secrets.SPORTMONKS_API_TOKEN }}
+          SPORTMONKS_API_KEY: ${{ secrets.SPORTMONKS_API_KEY }}
+        run: |
+          set -o pipefail
+          exec > >(tee -a controller-report.txt) 2>&1
+          python sync_prediction_results.py --limit 10 | tee prediction-result-sync-report.json
 
       - name: Install test dependencies
         if: always() && (steps.operation.outputs.operation == 'test_suite' || steps.operation.outputs.operation == 'full_check')
