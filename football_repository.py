@@ -115,6 +115,19 @@ CREATE TABLE IF NOT EXISTS provider_entity_links (
 CREATE INDEX IF NOT EXISTS provider_entity_links_canonical_idx
     ON provider_entity_links (entity_type, canonical_entity_id);
 
+CREATE TABLE IF NOT EXISTS provider_entity_link_approval_audit (
+    audit_id TEXT PRIMARY KEY,
+    link_id TEXT NOT NULL,
+    provider TEXT NOT NULL,
+    entity_type TEXT NOT NULL,
+    provider_entity_id TEXT NOT NULL,
+    canonical_entity_id TEXT NOT NULL,
+    approval_reason TEXT NOT NULL,
+    recorded_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS provider_entity_link_audit_scope
+    ON provider_entity_link_approval_audit (provider, entity_type, recorded_at DESC);
+
 CREATE TABLE IF NOT EXISTS football_repository_sync_state (
     sync_key TEXT PRIMARY KEY,
     provider TEXT NOT NULL,
