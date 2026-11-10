@@ -14,6 +14,7 @@ from psycopg.types.json import Jsonb
 from provider_data_storage import _connect
 
 
+
 CREATE_OPENSCORES_OBSERVATIONS_SQL = """
 CREATE TABLE IF NOT EXISTS provider_fixture_observations (
     observation_id TEXT PRIMARY KEY,
@@ -42,6 +43,39 @@ CREATE TABLE IF NOT EXISTS provider_fixture_observations (
 CREATE INDEX IF NOT EXISTS provider_fixture_observations_status_idx
     ON provider_fixture_observations (provider, reconciliation_status, kickoff_utc);
 """
+
+
+CREATE_PROVIDER_ENTITY_LINK_VERIFICATIONS_SQL = """
+CREATE TABLE IF NOT EXISTS provider_entity_link_verifications (
+    link_id TEXT PRIMARY KEY REFERENCES provider_entity_links(link_id) ON DELETE CASCADE,
+    provider TEXT NOT NULL,
+    entity_type TEXT NOT NULL,
+    provider_entity_id TEXT NOT NULL,
+    canonical_entity_id TEXT NOT NULL,
+    verification_status TEXT NOT NULL CHECK (
+        verification_status IN ('verified', 'review_required', 'rejected')
+    ),
+    verification_method TEXT NOT NULL,
+    evidence JSONB NOT NULL DEFAULT '{}'::JSONB,
+    verified_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (provider, entity_type, provider_entity_id)
+);
+CREATE INDEX IF NOT EXISTS provider_entity_link_verifications_status_idx
+    ON provider_entity_link_verifications (provider, verification_status);
+"""
+
+
+def ensure_provider_entity_link_verifications(database_url: str) -> None:
+    """Create the auditable verification ledger for provider entity crosswalks."""
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required")
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            for statement in CREATE_PROVIDER_ENTITY_LINK_VERIFICATIONS_SQL.split(";"):
+                if statement.strip():
+                    cursor.execute(statement)
 
 
 def ensure_observation_store(database_url: str) -> None:
@@ -172,6 +206,7 @@ def reconcile_openscores_observations(
         raise ValueError("kickoff_tolerance_seconds must be a non-negative integer")
     if preserve_outside_window_status and not include_outside_upcoming_window:
         raise ValueError("Preserving historical status requires include_outside_upcoming_window=True")
+    ensure_provider_entity_link_verifications(database_url)
     safe_limit = max(1, min(int(limit), 5000))
     counts = {
         "observations_checked": 0,
@@ -209,10 +244,13 @@ def reconcile_openscores_observations(
                 counts["observations_checked"] += 1
                 cursor.execute(
                     """
-                    SELECT entity_type, provider_entity_id, canonical_entity_id
-                    FROM provider_entity_links
-                    WHERE provider = 'openscores'
-                      AND (entity_type, provider_entity_id) IN (
+                    SELECT l.entity_type, l.provider_entity_id, l.canonical_entity_id
+                    FROM provider_entity_links AS l
+                    INNER JOIN provider_entity_link_verifications AS v
+                      ON v.link_id = l.link_id
+                     AND v.verification_status = 'verified'
+                    WHERE l.provider = 'openscores'
+                      AND (l.entity_type, l.provider_entity_id) IN (
                         ('league', %s), ('season', %s), ('team', %s), ('team', %s)
                       )
                     """,
