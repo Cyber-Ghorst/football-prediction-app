@@ -266,6 +266,7 @@ def run_sync(
         report["fixtures_missing_league_id"]
         + report["fixtures_missing_season_id"]
         + report["fixtures_unknown_league_id"]
+        + report["fixtures_conflicting_provider_id"]
     )
     report["status"] = (
         "pass" if not identity_gaps and not report["pagination_truncated"]
