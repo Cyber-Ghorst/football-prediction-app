@@ -6,6 +6,7 @@ provider links, prediction inputs, or the prediction ledger.
 from __future__ import annotations
 
 import json
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping
@@ -27,6 +28,33 @@ def _date_value(row: Mapping[str, Any]) -> str | None:
         if value:
             return str(value)
     return None
+
+
+def _season_start_year(value: Any) -> int | None:
+    if isinstance(value, Mapping):
+        value = value.get("year") if value.get("year") is not None else value.get("start")
+    if isinstance(value, bool) or value is None:
+        return None
+    match = re.search(r"20\\d{2}", str(value))
+    return int(match.group(0)) if match else None
+
+
+def _identity_sample(row: Mapping[str, Any]) -> dict[str, Any]:
+    league = row.get("league") if isinstance(row.get("league"), Mapping) else {}
+    country = league.get("country")
+    country_name = country.get("name") if isinstance(country, Mapping) else country
+    return {
+        "league_name": league.get("name") or row.get("leagueName"),
+        "league_country": country_name or league.get("countryName") or row.get("countryName"),
+        "season": league.get("season") if league.get("season") is not None else row.get("season"),
+        "kickoff": _date_value(row),
+        "home_team": (row.get("homeTeam") or row.get("home_team") or {}).get("name")
+            if isinstance(row.get("homeTeam") or row.get("home_team"), Mapping)
+            else row.get("homeTeam") or row.get("home_team_name") or row.get("home_team"),
+        "away_team": (row.get("awayTeam") or row.get("away_team") or {}).get("name")
+            if isinstance(row.get("awayTeam") or row.get("away_team"), Mapping)
+            else row.get("awayTeam") or row.get("away_team_name") or row.get("away_team"),
+    }
 
 
 def _team_names(row: Mapping[str, Any]) -> set[str]:
@@ -67,16 +95,11 @@ def _highlightly_audit(client: HighlightlyClient, target: Mapping[str, Any]) -> 
     for row in rows:
         league = row.get("league") if isinstance(row.get("league"), Mapping) else {}
         league_name = league.get("name") or row.get("leagueName")
-        country = league.get("country") or {}
-        if isinstance(country, Mapping):
-            country_name = country.get("name")
-        else:
-            country_name = country or league.get("countryName") or row.get("countryName")
+        country = league.get("country")
+        country_name = country.get("name") if isinstance(country, Mapping) else country
+        country_name = country_name or league.get("countryName") or row.get("countryName")
         season = league.get("season") if league.get("season") is not None else row.get("season")
-        try:
-            season_value = int(season.get("year") if isinstance(season, Mapping) else season)
-        except (TypeError, ValueError):
-            season_value = None
+        season_value = _season_start_year(season)
         if normalize_competition_name(str(league_name or "")) != normalize_competition_name(target["name"]):
             continue
         if target["country"] and normalize_country(str(country_name or "")) != normalize_country(target["country"]):
@@ -95,6 +118,7 @@ def _highlightly_audit(client: HighlightlyClient, target: Mapping[str, Any]) -> 
         "team_names_sample": teams[:12],
         "earliest_fixture": dates[0] if dates else None,
         "latest_fixture": dates[-1] if dates else None,
+        "identity_samples": [_identity_sample(row) for row in rows[:3]],
         "request_metadata": dict(client.last_metadata or {}),
     }
 
