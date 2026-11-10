@@ -25,6 +25,10 @@ class FakeCursor:
             self.connection.runs.append(params)
         elif normalized.startswith("INSERT INTO provider_reliability_history"):
             self.connection.reliability.append(params)
+        elif normalized.startswith("INSERT INTO provider_conflict_resolution_audit"):
+            self.connection.conflict_audits.append(params)
+        elif normalized.startswith("SELECT audit_id, competition, season, fixture_identity"):
+            self.result = self.connection.conflict_audits[:params[2]]
         elif normalized.startswith("SELECT snapshot_id, competition, season, primary_provider"):
             self.connection.reliability_rows = self.connection.reliability_rows or [
                 tuple(row) for row in self.connection.reliability
@@ -54,6 +58,7 @@ class FakeConnection:
         self.runs = []
         self.reliability = []
         self.reliability_rows = []
+        self.conflict_audits = []
         self.fresh = None
         self.latest = None
         self.fail_run_insert = False
@@ -288,6 +293,35 @@ class ProviderStorageTests(unittest.TestCase):
             storage.load_provider_reliability_history(
                 "postgresql://example", competition="Premier League", season=2026, limit=0
             )
+
+    def test_conflict_audit_is_append_only_and_loadable(self):
+        event = {
+            "competition": "Premier League", "season": 2026,
+            "fixture_identity": {"home_team": "Arsenal", "away_team": "Chelsea"},
+            "field": "home_score", "triage_status": "resolved_by_configured_priority",
+            "selected_provider": "sportmonks", "selected_value": 2,
+            "observations": [{"provider": "sportmonks", "value": 2}, {"provider": "highlightly", "value": 3}],
+            "corroborating_providers": [], "conflicting_providers": ["highlightly"],
+            "resolution_reason": "Configured results priority selected Sportmonks.",
+            "recorded_at": datetime(2026, 11, 10, tzinfo=timezone.utc).isoformat(),
+            "manual_override": False,
+        }
+        count = storage.save_conflict_resolution_audit("postgresql://example", events=[event])
+        self.assertEqual(count, 1)
+        self.assertEqual(len(self.connection.conflict_audits), 1)
+        row = self.connection.conflict_audits[0]
+        self.assertEqual(row[1], "Premier League")
+        self.assertEqual(row[4:6], ("home_score", "resolved_by_configured_priority"))
+        self.assertEqual(row[8].obj[1]["value"], 3)
+        loaded = storage.load_conflict_resolution_audit("postgresql://example", competition="Premier League", season=2026)
+        self.assertEqual(loaded[0]["audit_id"], row[0])
+        self.assertEqual(loaded[0]["field_name"], "home_score")
+
+    def test_conflict_audit_rejects_invalid_events(self):
+        with self.assertRaises(ValueError):
+            storage.save_conflict_resolution_audit("postgresql://example", events=[{"competition": "", "season": 2026}])
+        with self.assertRaises(ValueError):
+            storage.load_conflict_resolution_audit("postgresql://example", competition="Premier League", season=True)
 
     def test_invalid_payload_or_ttl_is_rejected(self):
         base = {
