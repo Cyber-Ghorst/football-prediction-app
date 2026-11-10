@@ -326,7 +326,7 @@ def collect_sportmonks_team_profile(
     league_reference_statistics: dict[str, list[float]] | None = None,
     fixture_statistics_indexes: dict[int, dict[int, dict[str, Any]]] | None = None,
 ) -> dict[str, Any]:
-    """Build a profile from one validated Sportmonks season collection."""
+    """Build a profile with exact identity, UTC-ordered history and integrity diagnostics."""
     team_id = int(team["id"])
     strength_map = standings_strength(standings)
     if fixture_statistics_indexes is None:
