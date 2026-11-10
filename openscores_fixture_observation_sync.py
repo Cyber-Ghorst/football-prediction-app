@@ -199,10 +199,13 @@ def run_sync(
                 if not season_id:
                     report["fixtures_missing_season_id"] += 1
                     continue
-                if season_id in ambiguous_season_ids:
+                if season_id in ambiguous_season_ids and not explicit_league_id:
                     report["fixtures_ambiguous_season_id"] += 1
                     continue
-                mapped_league_id = season_to_league.get(season_id)
+                mapped_league_id = (
+                    None if season_id in ambiguous_season_ids
+                    else season_to_league.get(season_id)
+                )
                 if explicit_league_id and mapped_league_id and explicit_league_id != mapped_league_id:
                     report["fixtures_season_league_mismatch"] += 1
                     continue
