@@ -104,7 +104,7 @@ class GlobalCompetitionScopeTests(unittest.TestCase):
             )
         return report, save
 
-    def test_global_query_groups_each_fixture_by_its_own_league_and_season(self):
+    def test_season_scoped_queries_group_each_fixture_by_its_own_league_and_season(self):
         client = FakeOpenScores([page([
             fixture(77, 1, 2025),
             fixture(78, 2, 2027),
@@ -118,9 +118,7 @@ class GlobalCompetitionScopeTests(unittest.TestCase):
             {"2025", "2026", "2027"},
         )
         for filters in client.calls:
-            self.assertEqual(filters["status"], "scheduled")
-            self.assertEqual(filters["date_from"], "2026-11-10T18:00:00Z")
-            self.assertEqual(filters["date_to"], "2026-11-17T18:00:00Z")
+            self.assertIn(filters["season_id"], {2025, 2026, 2027})
             self.assertEqual(filters["page"], 1)
             self.assertEqual(filters["page_size"], 200)
         rows = save.call_args.args[1]
