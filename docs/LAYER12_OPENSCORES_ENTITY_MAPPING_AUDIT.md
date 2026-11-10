@@ -43,9 +43,12 @@ zero-write safety indicators.
 
 ## Activation status
 
-OpenScores remains a staged co-primary candidate, not enabled for production
-prediction routing. This audit does not activate it or change Sportmonks'
-current primary status.
+OpenScores is an observation-only source for historical/result review and
+entity-mapping audits. It is not a future-fixture discovery source and must not
+be routed into the upcoming-fixture catalogue. Its observations are not
+canonical fixtures or production prediction inputs. No result-validation
+route is enabled until entity mappings and exact result verification are
+approved. Sportmonks remains the current scheduled-fixture collector.
 
 
 ## Season and fixture freshness diagnostics
