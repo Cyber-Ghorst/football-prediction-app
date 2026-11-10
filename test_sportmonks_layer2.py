@@ -109,7 +109,12 @@ class SportmonksLayer2Tests(unittest.TestCase):
                 {"team_id": "sportmonks:20", "name": "Away FC"},
             ],
             "fixtures": [
-                {"fixture_id": "sportmonks:1", "raw_payload": raw_fixture},
+                {
+                    "fixture_id": "sportmonks:1",
+                    "raw_payload": raw_fixture,
+                    "collected_at": "2026-11-09T10:30:00+00:00",
+                    "provider_updated_at": "2026-11-08T14:00:00+00:00",
+                },
             ],
             "statistics": [],
         }
@@ -140,6 +145,18 @@ class SportmonksLayer2Tests(unittest.TestCase):
             profiles["sportmonks:20"]["matches"][0]["statistics"]["Ball Possession"],
             40.0,
         )
+        for profile in profiles.values():
+            diagnostics = profile["history_collection_diagnostics"]
+            self.assertEqual(
+                diagnostics["history_repository_collected_at"],
+                "2026-11-09T10:30:00+00:00",
+            )
+            self.assertEqual(
+                diagnostics["history_provider_updated_at"],
+                "2026-11-08T14:00:00+00:00",
+            )
+            # Repository ingestion time is not mislabeled as a direct live-fetch timestamp.
+            self.assertIsNone(diagnostics["history_collection_fetched_at"])
 
     def test_history_collection_diagnostics_explain_fixture_exclusions(self):
         valid = fixture(1, 10, 20, 2, 1)
