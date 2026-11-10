@@ -37,6 +37,19 @@ class FakeSession:
         self.closed = True
 
 
+class FlakySession(FakeSession):
+    def __init__(self, response):
+        super().__init__(response)
+        self.attempts = 0
+
+    def post(self, url, **kwargs):
+        self.attempts += 1
+        if self.attempts == 1:
+            import requests
+            raise requests.ConnectionError("temporary disconnect")
+        return super().post(url, **kwargs)
+
+
 class OpenScoresClientTests(unittest.TestCase):
     def test_requires_api_key(self):
         with patch.dict("os.environ", {}, clear=True):
@@ -65,6 +78,18 @@ class OpenScoresClientTests(unittest.TestCase):
         self.assertEqual(result["data"][0]["name"], "Premier League")
         client.close()
         self.assertTrue(session.closed)
+
+    def test_retries_transient_connection_disconnect(self):
+        response = FakeResponse({
+            "jsonrpc": "2.0", "id": 1,
+            "result": {"structuredContent": {"ok": True}},
+        })
+        session = FlakySession(response)
+        client = OpenScoresClient(api_key="test", session=session)
+        with patch("openscores.time.sleep"):
+            result = client.list_leagues()
+        self.assertEqual(result["data"], {"ok": True})
+        self.assertEqual(session.attempts, 2)
 
     def test_lists_tool_schemas_without_invoking_a_data_tool(self):
         response = FakeResponse({
