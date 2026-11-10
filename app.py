@@ -1839,8 +1839,9 @@ try:
     if sportmonks_mode:
         st.subheader("Search upcoming fixtures")
         st.caption(
-            "Choose a fixture already collected automatically from Sportmonks. "
-            "Search covers the selected competition and season, and never extends beyond the next seven days."
+            "Search the automatically collected fixture catalogue across competitions. "
+            "Filter by competition and team, then select the exact provider-confirmed fixture. "
+            "Only fixtures in the next seven days are shown."
         )
         if not DATABASE_URL:
             st.error(
@@ -1857,10 +1858,8 @@ try:
             upcoming_fixture_rows = search_temporary_upcoming_fixtures(
                 DATABASE_URL,
                 search_term=fixture_search_term,
-                league_id=f"sportmonks:{league_id}",
-                season_id=f"sportmonks:{selected_season_id}",
                 window_days=7,
-                limit=300,
+                limit=500,
             )
         except Exception as fixture_search_error:
             st.error(
@@ -1870,10 +1869,31 @@ try:
             st.stop()
         if not upcoming_fixture_rows:
             st.info(
-                "No matching upcoming fixtures are currently stored for this competition "
+                "No matching upcoming fixtures are currently stored across the collected competitions "
                 "within the next seven days. Automatic collection runs every six hours; "
                 "check the fixture-collection workflow and its Sportmonks, CockroachDB and Neon secrets."
             )
+            st.stop()
+
+        competition_options = sorted({
+            f"{row.get('competition', 'Unknown competition')} — {row.get('country') or 'Country unknown'}"
+            for row in upcoming_fixture_rows
+        })
+        selected_competition = st.selectbox(
+            "Filter by competition",
+            ["All competitions", *competition_options],
+            key="layer11_fixture_competition_filter",
+        )
+        if selected_competition != "All competitions":
+            upcoming_fixture_rows = [
+                row for row in upcoming_fixture_rows
+                if (
+                    f"{row.get('competition', 'Unknown competition')} — "
+                    f"{row.get('country') or 'Country unknown'}"
+                ) == selected_competition
+            ]
+        if not upcoming_fixture_rows:
+            st.info("No upcoming fixtures match this competition filter. Choose another competition or select All competitions.")
             st.stop()
 
         fixture_options = {}
@@ -1900,6 +1920,23 @@ try:
         )
         selected_fixture_row = fixture_options[selected_fixture_label]
         selected_discovered_fixture_id = str(selected_fixture_row["fixture_id"])
+        # Resolve the exact competition-season from the selected staged fixture,
+        # rather than relying on the unrelated catalogue defaults above.
+        try:
+            league_id = int(str(selected_fixture_row["league_id"]).rsplit(":", 1)[-1])
+            selected_season_id = int(str(selected_fixture_row["season_id"]).rsplit(":", 1)[-1])
+            team_rows = get_sm_teams(selected_season_id)
+        except (KeyError, TypeError, ValueError, SportmonksError) as fixture_context_error:
+            st.error(
+                "The selected fixture's competition or season could not be resolved "
+                f"from Sportmonks ({type(fixture_context_error).__name__}). Refresh fixture collection before predicting."
+            )
+            st.stop()
+        team_map = {
+            str(row.get("name")): row
+            for row in team_rows
+            if row.get("id") is not None and row.get("name")
+        }
         selected_home_provider_id = str(selected_fixture_row["home_team_id"]).rsplit(":", 1)[-1]
         selected_away_provider_id = str(selected_fixture_row["away_team_id"]).rsplit(":", 1)[-1]
         home_name = next(
