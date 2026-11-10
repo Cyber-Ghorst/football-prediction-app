@@ -10,27 +10,34 @@ class FakeClient:
         self.calls = []
         self.total_pages = total_pages
         self.fixtures = fixtures if fixtures is not None else [{
-            "id": 77, "season_id": 2026,
+            "id": 77, "league_id": 1, "season_id": 2026,
             "scheduled_kickoff_at": "2026-11-12T19:00:00Z",
             "home_team": {"id": 10, "name": "Home"},
             "away_team": {"id": 20, "name": "Away"},
             "status": "scheduled",
         }]
+
     def __enter__(self): return self
     def __exit__(self, *args): return False
+
     def list_leagues(self):
         return {"data": [{"id": 1, "name": "Test League"}]}
+
     @staticmethod
     def _league_collection(data):
         return data, "$"
-    def list_seasons(self, league_id):
-        self.calls.append(("seasons", league_id))
-        return {"data": {"seasons": [{"id": 2026}]}}
+
     def list_fixtures(self, **filters):
         self.calls.append(("fixtures", filters))
         return {
             "retrieved_at_utc": "2026-11-10T17:00:00Z",
-            "data": {"items": self.fixtures, "pagination": {"page": 1, "total_pages": self.total_pages}},
+            "data": {
+                "items": self.fixtures,
+                "pagination": {
+                    "page": filters["page"],
+                    "total_pages": self.total_pages,
+                },
+            },
         }
 
 
@@ -55,15 +62,18 @@ class OpenScoresObservationSyncTests(unittest.TestCase):
             )
         return report, save, retire, reconcile
 
-    def test_live_flow_uses_scheduled_status_and_exact_seven_day_filters(self):
+    def test_live_flow_uses_global_scheduled_status_and_exact_seven_day_filters(self):
         client = FakeClient()
         report, save, retire, reconcile = self._run(client)
         filters = next(call[1] for call in client.calls if call[0] == "fixtures")
         self.assertEqual(filters, {
-            "season_id": 2026, "status": "scheduled",
-            "date_from": "2026-11-10T18:00:00Z", "date_to": "2026-11-17T18:00:00Z",
-            "page": 1, "page_size": 200,
+            "status": "scheduled",
+            "date_from": "2026-11-10T18:00:00Z",
+            "date_to": "2026-11-17T18:00:00Z",
+            "page": 1,
+            "page_size": 200,
         })
+        self.assertEqual(len(client.calls), 1)
         self.assertEqual(report["fixtures_accepted_for_window"], 1)
         self.assertEqual(report["observations_upserted"], 1)
         self.assertEqual(report["historical_observations_marked_out_of_window"], 300)
@@ -76,7 +86,7 @@ class OpenScoresObservationSyncTests(unittest.TestCase):
 
     def test_outside_window_fixture_is_never_staged(self):
         client = FakeClient(fixtures=[{
-            "id": 78, "season_id": 2026,
+            "id": 78, "league_id": 1, "season_id": 2026,
             "scheduled_kickoff_at": "2026-11-20T19:00:00Z",
             "home_team": {"id": 10, "name": "Home"},
             "away_team": {"id": 20, "name": "Away"},
@@ -89,7 +99,7 @@ class OpenScoresObservationSyncTests(unittest.TestCase):
 
     def test_non_scheduled_fixture_is_never_staged(self):
         client = FakeClient(fixtures=[{
-            "id": 79, "season_id": 2026,
+            "id": 79, "league_id": 1, "season_id": 2026,
             "scheduled_kickoff_at": "2026-11-12T19:00:00Z",
             "home_team": {"id": 10, "name": "Home"},
             "away_team": {"id": 20, "name": "Away"},
@@ -100,10 +110,12 @@ class OpenScoresObservationSyncTests(unittest.TestCase):
         self.assertEqual(report["fixtures_accepted_for_window"], 0)
         save.assert_called_once_with("postgresql://db", [])
 
-    def test_reports_truncated_provider_pagination(self):
-        client = FakeClient(total_pages=2)
+    def test_reports_truncated_provider_pagination_after_safe_page_cap(self):
+        client = FakeClient(total_pages=12)
         report, _, _, _ = self._run(client)
+        self.assertEqual(len(client.calls), 10)
         self.assertTrue(report["pagination_truncated"])
+        self.assertEqual(report["status"], "partial")
 
     def test_requires_database_before_provider_calls(self):
         client = FakeClient()
