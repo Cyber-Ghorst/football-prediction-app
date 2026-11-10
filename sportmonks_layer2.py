@@ -354,8 +354,11 @@ def collect_sportmonks_team_profile(
 ) -> dict[str, Any]:
     """Build a profile from one validated Sportmonks season collection."""
     team_id = _provider_id(team.get("id"))
+    expected_season_id = _provider_id(season_id)
     if team_id is None:
         raise ValueError("Sportmonks team is missing a valid positive provider ID.")
+    if expected_season_id is None:
+        raise ValueError("Sportmonks season is missing a valid positive provider ID.")
     strength_map = standings_strength(standings)
     if fixture_statistics_indexes is None:
         fixture_statistics_indexes = {
@@ -424,11 +427,8 @@ def collect_sportmonks_team_profile(
         fixture_index = fixture_statistics_indexes.get(id(fixture), {})
         fixture_season_id = fixture.get("season_id")
         if fixture_season_id is not None:
-            try:
-                if int(fixture_season_id) != int(season_id):
-                    history_diagnostics["excluded_wrong_season"] += 1
-                    continue
-            except (TypeError, ValueError):
+            parsed_season_id = _provider_id(fixture_season_id)
+            if parsed_season_id is None or parsed_season_id != expected_season_id:
                 history_diagnostics["excluded_wrong_season"] += 1
                 continue
             history_diagnostics["same_season_fixtures"] += 1
