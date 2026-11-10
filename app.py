@@ -3238,10 +3238,23 @@ try:
             st.warning("No exact Sportmonks fixture was found for this home/away pairing and season. This prediction is saved but cannot be auto-linked for result collection or fixture-based backtesting.")
         elif prediction_row.get("prediction_before_kickoff") is False:
             st.warning("This prediction was recorded at or after kickoff. Its fixture is linked, but it will not be counted as a pre-match forecast in accuracy reports.")
-        cols=st.columns(3)
-        cols[0].metric(f"{home_name} win",f"{probabilities['home_win']}%")
-        cols[1].metric("Draw",f"{probabilities['draw']}%")
-        cols[2].metric(f"{away_name} win",f"{probabilities['away_win']}%")
+        st.subheader("1X2 outcome probabilities")
+        st.caption(
+            "The bars compare the model's estimated home-win, draw and away-win "
+            "probabilities. They are model estimates, not betting odds or guarantees."
+        )
+        probability_columns = st.columns(3)
+        for column, label, field in zip(
+            probability_columns,
+            (f"{home_name} win", "Draw", f"{away_name} win"),
+            ("home_win", "draw", "away_win"),
+        ):
+            probability_pct = float(probabilities[field])
+            column.metric(label, f"{probability_pct:.1f}%")
+            column.progress(
+                int(round(probability_pct)),
+                text=f"{probability_pct:.1f}% probability",
+            )
         st.subheader("Goals market")
         cols=st.columns(4)
         cols[0].metric("Home expected goals",result["home_expected_goals"])
