@@ -324,8 +324,8 @@ def save_provider_snapshot_and_record_run(
 ) -> dict[str, Any]:
     """Save an immutable snapshot and success audit row using one DB connection.
 
-    A savepoint keeps the snapshot even if the secondary audit-row insert fails,
-    matching the previous two-connection best-effort audit behavior.
+    The snapshot is committed before the best-effort audit insert, preserving it
+    if that secondary insert fails while reusing the same connection.
     """
     if not database_url:
         raise ValueError("PROVIDER_DATABASE_URL is required.")
