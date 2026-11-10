@@ -116,6 +116,7 @@ try:
     from prediction_storage import load_prediction_ledger, save_prediction_records
     from prediction_results import verified_final_score, group_completed_fixture_candidates, automatic_result_check_due
     from prediction_readiness import build_prediction_readiness
+    from prediction_input_quality import build_prediction_input_quality_report
     from player_availability import (
         assess_player_availability,
         build_sportmonks_availability_evidence,
@@ -2621,6 +2622,13 @@ try:
             season_id=int(selected_season_id) if selected_season_id is not None else None,
             exact_pairing_fixture=prediction_fixture,
         )
+        input_quality_report = build_prediction_input_quality_report(
+            home,
+            away,
+            home_team_id=int(team_map[home_name]["id"]),
+            away_team_id=int(team_map[away_name]["id"]),
+            minimum_matches=5,
+        )
         statistics_reports = {
             profile["name"]: build_statistics_coverage(profile.get("matches", []))
             for profile in (home, away)
@@ -2633,6 +2641,7 @@ try:
             readiness=readiness,
             statistics_coverage=statistics_reports,            provider_configuration=provider_readiness(),
             corroboration=corroboration,
+            input_quality_report=input_quality_report,
             model_weights=WEIGHTS,
         )
         source_reliability_report = (
@@ -2692,6 +2701,7 @@ try:
             },
             "statistics_coverage": statistics_reports,
             "prediction_readiness": readiness,
+            "prediction_input_quality": input_quality_report,
             "corroboration": corroboration,
             "source_reliability": source_reliability_report,
             "player_enrichment": player_report,
@@ -2819,6 +2829,17 @@ try:
         else:
             st.caption("Sportmonks detailed-fixture retrieval time is unavailable; source age remains unknown.")
         st.json(readiness)
+        st.subheader("Layer 3 — prediction input quality control")
+        if input_quality_report["status"] == "blocked":
+            st.error("Prediction input quality gate: blocked")
+        elif input_quality_report["status"] == "attention":
+            st.warning("Prediction input quality gate: passed with upstream data-quality warnings")
+        else:
+            st.success("Prediction input quality gate: passed")
+        st.json(input_quality_report)
+        if not input_quality_report["prediction_allowed"]:
+            st.error("Prediction stopped: core match history failed identity, score, timestamp, duplicate or recency-order validation. No data was repaired or imputed.")
+            st.stop()
         if not readiness["prediction_minimum_history_met"]:
             st.error("Prediction stopped: at least one team has fewer than five completed matches. No missing matches or ratings will be fabricated.")
             st.stop()

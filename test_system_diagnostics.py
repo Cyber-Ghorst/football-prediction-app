@@ -85,6 +85,17 @@ class SystemDiagnosticsTests(unittest.TestCase):
         self.assertEqual(report["summary"]["failed"], 0)
         self.assertEqual(report["selected_context"]["primary_provider"], "sportmonks")
 
+    def test_boolean_and_fractional_scores_fail_history_integrity(self):
+        home = profile("Home FC")
+        home["matches"][0]["goals_for"] = True
+        away = profile("Away FC")
+        away["matches"][0]["goals_against"] = 1.5
+        report = self.build(home_profile=home, away_profile=away)
+        for side in ("home", "away"):
+            check = next(row for row in report["checks"] if row["id"] == f"{side}_history_integrity")
+            self.assertEqual(check["status"], "fail")
+        self.assertEqual(report["overall_status"], "blocked")
+
     def test_tactical_recency_metadata_is_exposed_and_audited(self):
         report = self.build()
         home = report["teams"]["home"]
@@ -108,6 +119,25 @@ class SystemDiagnosticsTests(unittest.TestCase):
         check = next(row for row in report["checks"] if row["id"] == "home_tactical_recency_weighting")
         self.assertEqual(check["status"], "info")
         self.assertIsNone(report["teams"]["home"]["tactical_recency_weighting"])
+
+    def test_failed_prediction_input_quality_gate_blocks_system_diagnostics(self):
+        report = self.build(input_quality_report={
+            "status": "blocked",
+            "prediction_allowed": False,
+            "failures": ["duplicate fixture IDs"],
+            "warnings": [],
+        })
+        check = next(row for row in report["checks"] if row["id"] == "prediction_input_quality")
+        self.assertEqual(check["status"], "fail")
+        self.assertEqual(report["overall_status"], "blocked")
+
+    def test_passed_input_quality_gate_is_reported_without_changing_weights(self):
+        report = self.build(input_quality_report={
+            "status": "passed", "prediction_allowed": True, "failures": [], "warnings": [],
+        })
+        check = next(row for row in report["checks"] if row["id"] == "prediction_input_quality")
+        self.assertEqual(check["status"], "pass")
+        self.assertEqual(report["model_configuration"]["weights"]["recent_form"], 0.20)
 
     def test_unverified_fixture_requires_attention_not_fake_verification(self):
         report = self.build(

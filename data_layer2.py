@@ -1,11 +1,24 @@
 """Fetch and normalize API-Football v3 histories into the Layer 2 profile."""
 from __future__ import annotations
 
+from datetime import datetime, timezone
 from typing import Any
 from api_football import APIFootballClient
 from tactical_indicators import analyze_tactics
 from form_analyzer import analyze_form, venue_rating
 from availability import summarize_injuries, summarize_lineups
+
+
+def _fixture_kickoff_utc(value: Any) -> datetime | None:
+    if not isinstance(value, str) or not value.strip():
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.strip().replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
 
 
 def _stat_map(rows: list[dict], team_id: int) -> dict[str, Any]:
@@ -78,7 +91,10 @@ def collect_team_profile(client: APIFootballClient, team: dict, league_id: int, 
             match["statistics"] = _stat_map(stat_rows, team_id)
         matches.append(match)
 
-    matches.sort(key=lambda x: x.get("date") or "", reverse=True)
+    matches.sort(
+        key=lambda row: _fixture_kickoff_utc(row.get("date")) or datetime.min.replace(tzinfo=timezone.utc),
+        reverse=True,
+    )
     form = analyze_form(matches)
     tactics = analyze_tactics(matches)
     try:
@@ -112,6 +128,7 @@ def collect_team_profile(client: APIFootballClient, team: dict, league_id: int, 
         "lineups": lineups,
         "upcoming_fixture_id": upcoming_id,
         "data_quality": {
+            "season_id": int(season),
             "matches_returned": len(recent),
             "goals_complete": len(recent) >= 5,
             "opponent_strength_matches": sum(m.get("opponent_strength") is not None for m in recent),

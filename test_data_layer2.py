@@ -50,6 +50,28 @@ class Layer2NormalizationTests(unittest.TestCase):
         # losses (weight 0.24), so the recency-aware venue rating is 50%.
         self.assertEqual(venue_rating(matches, "home"), 50.0)
 
+    def test_history_is_sorted_by_absolute_utc_kickoff_not_timestamp_text(self):
+        client = Mock()
+        client.last_fixtures.return_value = [
+            {
+                "fixture": {"id": 1, "date": "2026-11-02T00:30:00+03:00", "status": {"short": "FT"}},
+                "teams": {"home": {"id": 1, "name": "A"}, "away": {"id": 2, "name": "B"}},
+                "goals": {"home": 1, "away": 0},
+            },
+            {
+                "fixture": {"id": 2, "date": "2026-11-01T23:00:00Z", "status": {"short": "FT"}},
+                "teams": {"home": {"id": 1, "name": "A"}, "away": {"id": 3, "name": "C"}},
+                "goals": {"home": 2, "away": 0},
+            },
+        ]
+        client.injuries.return_value = []
+        client.next_fixture.return_value = None
+        result = collect_team_profile(
+            client, {"id": 1, "name": "A"}, 39, 2026, [], include_match_statistics=False
+        )
+        self.assertEqual([row["fixture_id"] for row in result["matches"]], [2, 1])
+        self.assertEqual(result["data_quality"]["season_id"], 2026)
+
     def test_non_final_fixtures_are_excluded(self):
         client = Mock()
         client.last_fixtures.return_value = [
