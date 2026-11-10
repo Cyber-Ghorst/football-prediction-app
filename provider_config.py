@@ -12,7 +12,7 @@ PROVIDER_ROLES: dict[str, dict[str, Any]] = {
         "display_name": "Sportmonks Football API v3",
         "rank": 1,
         "role": "Primary current-season provider",
-        "domains": ("fixtures", "results", "standings", "statistics", "injuries", "lineups", "players", "squads"),
+        "domains": ("fixtures", "future_fixtures", "results", "standings", "statistics", "injuries", "lineups", "players", "squads"),
         "limitation": "Coverage is limited to competitions/seasons enabled by the account; each selected competition must pass data-quality gates.",
     },
     "highlightly": {
@@ -47,36 +47,43 @@ PROVIDER_ROLES: dict[str, dict[str, Any]] = {
         "display_name": "OpenLigaDB",
         "rank": 6,
         "role": "Free fixture discovery and validation candidate",
-        "domains": ("fixtures", "results", "standings"),
+        "domains": ("future_fixtures", "results", "standings"),
         "limitation": "No API key; strongest in German football; public API documents a 60-requests-per-minute IP limit. Community-maintained data and applicable reuse terms must be checked before commercial use.",
     },
     "openfootball": {
         "display_name": "OpenFootball football.json",
         "rank": 7,
         "role": "Open fixture discovery and validation candidate",
-        "domains": ("fixtures", "results"),
+        "domains": ("future_fixtures", "results"),
         "limitation": "Public CC0 JSON datasets. Current-season mirror refreshes daily, but upstream source updates are not automatically daily; timezone and event freshness must be validated.",
     },
     "open_matchday": {
         "display_name": "Open Matchday",
         "rank": 8,
         "role": "Non-commercial fixture discovery candidate",
-        "domains": ("fixtures", "results", "match_statistics"),
+        "domains": ("future_fixtures", "results", "match_statistics"),
         "limitation": "Advertises 75 competitions and daily CSV refresh, but terms restrict use to non-commercial purposes. Not live; fixed CET-1 kickoff convention can be inaccurate during daylight-saving time. Disabled for commercial use.",
     },
     "worldcup26": {
         "display_name": "WorldCup26 / LiveScoreFootball",
         "rank": 9,
         "role": "Competition-scoped fixture discovery candidate",
-        "domains": ("fixtures", "results", "standings"),
+        "domains": ("future_fixtures", "results", "standings"),
         "limitation": "Public no-key REST API advertises 33 verified competitions, while its source repository says verified coverage focuses on England and Spain. ISC applies to source code; no separate third-party football-data licence is asserted. Keep disabled pending rights and coverage verification.",
     },
     "bzzoiro": {
         "display_name": "Bzzoiro Sports Data",
         "rank": 10,
-        "role": "Free-tier fixture discovery and validation candidate",
-        "domains": ("fixtures", "results", "standings", "statistics", "lineups", "odds", "predictions"),
-        "limitation": "Football free tier advertises 60+ competitions and 7,500 requests/day; requires BZZOIRO_API_TOKEN. Terms permit app display and derived prediction outputs but prohibit raw-data redistribution as a standalone feed/database/API.",
+        "role": "Free-tier future-fixture discovery candidate",
+        "domains": ("future_fixtures", "results", "standings", "statistics", "lineups", "odds", "predictions"),
+        "limitation": "Football free tier advertises 60+ competitions and 7,500 requests/day; requires BZZOIRO_API_TOKEN. Terms permit app display and derived prediction outputs but prohibit raw-data redistribution as a standalone feed/database/API. Future-fixture route remains disabled pending live validation.",
+    },
+    "openscores": {
+        "display_name": "OpenScores",
+        "rank": 11,
+        "role": "Read-only historical result observations and entity-mapping audit; not a future-fixture source",
+        "domains": ("results", "historical_results"),
+        "limitation": "Staged observations are not canonical fixtures or prediction inputs. Entity crosswalks remain unapproved; do not use OpenScores for future-fixture discovery or production prediction routing.",
     },
 }
 
@@ -103,6 +110,7 @@ def provider_readiness() -> list[dict[str, Any]]:
         "open_matchday": False,
         "worldcup26": False,
         "bzzoiro": _secret_present("BZZOIRO_API_TOKEN"),
+        "openscores": _secret_present("OPENSCORES_API_KEY"),
     }
     integration = {
         "api_football": "historical Layer 2 path active for supported seasons; account status/quota diagnostic available",
@@ -115,6 +123,7 @@ def provider_readiness() -> list[dict[str, Any]]:
         "open_matchday": "candidate registered only; non-commercial CSV dataset; no fixture adapter or production route yet",
         "worldcup26": "candidate registered only; public no-key REST endpoint; no fixture adapter or production route yet",
         "bzzoiro": "candidate registered only; free football API; requires BZZOIRO_API_TOKEN; no fixture adapter or production route yet",
+        "openscores": "read-only historical/result observations for mapping and audit; not a future-fixture source; not enabled for production prediction inputs",
     }
     credential_names = {
         "api_football": "APISPORTS_API_KEY",
@@ -127,12 +136,13 @@ def provider_readiness() -> list[dict[str, Any]]:
         "open_matchday": "none required",
         "worldcup26": "none required",
         "bzzoiro": "BZZOIRO_API_TOKEN",
+        "openscores": "OPENSCORES_API_KEY",
     }
     rows = []
     for key in (
         "sportmonks", "highlightly", "api_football", "api_ninjas",
         "livescore_football", "openligadb", "openfootball",
-        "open_matchday", "worldcup26", "bzzoiro",
+        "open_matchday", "worldcup26", "bzzoiro", "openscores",
     ):
         role = PROVIDER_ROLES[key]
         rows.append({
@@ -144,10 +154,10 @@ def provider_readiness() -> list[dict[str, Any]]:
             "limitation": role["limitation"],
             "adapter": "implemented" if key in {
                 "sportmonks", "highlightly", "api_football", "api_ninjas",
-                "livescore_football",
+                "livescore_football", "openscores",
             } else "candidate_only_not_implemented",
             "credential_configured": configured[key],
-            "credential_required": key in {"sportmonks", "highlightly", "api_football", "api_ninjas", "bzzoiro"},
+            "credential_required": key in {"sportmonks", "highlightly", "api_football", "api_ninjas", "bzzoiro", "openscores"},
             "app_integration": integration[key],
             "credential_name": credential_names[key],
         })

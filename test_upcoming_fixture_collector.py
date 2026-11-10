@@ -175,6 +175,19 @@ class UpcomingFixtureCollectorTests(unittest.TestCase):
         save.assert_called_once_with("postgresql://example", result["fixtures"])
         self.assertTrue(result["persisted"])
         self.assertEqual(result["fixtures_upserted"], 1)
+        self.assertEqual(result["future_fixture_sources"], ["sportmonks"])
+
+    def test_unimplemented_future_fixture_provider_fails_closed(self):
+        client = FakeClient([])
+        with patch(
+            "upcoming_fixture_collector.default_provider_registry"
+        ) as registry_factory:
+            registry_factory.return_value.primary_sources.return_value = [
+                "sportmonks", "openligadb"
+            ]
+            with self.assertRaisesRegex(RuntimeError, "unimplemented provider"):
+                collect_upcoming_fixtures(client=client, now=NOW)
+        self.assertEqual(client.calls, [])
 
     def test_invalid_window_is_rejected_before_provider_call(self):
         client = FakeClient([])

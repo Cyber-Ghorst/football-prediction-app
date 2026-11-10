@@ -11,6 +11,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Any, Mapping
 
 from sportmonks import SportmonksClient
+from provider_routing import default_provider_registry
 
 
 WINDOW_DAYS = 7
@@ -282,6 +283,15 @@ def collect_upcoming_fixtures(
     """Fetch the rolling seven-day window and persist canonical plus temporary rows."""
     if isinstance(window_days, bool) or not isinstance(window_days, int) or not 1 <= window_days <= 7:
         raise ValueError("window_days must be an integer from 1 through 7.")
+    routed_sources = default_provider_registry().primary_sources("future_fixtures")
+    # This collector currently implements only Sportmonks. If a disabled
+    # candidate is accidentally enabled before its adapter exists, fail closed
+    # instead of silently treating it as a working fixture source.
+    if routed_sources != ["sportmonks"]:
+        raise RuntimeError(
+            "Future-fixture routing includes an unimplemented provider; "
+            "complete its adapter and validation gates before activation."
+        )
     current = now or datetime.now(timezone.utc)
     if current.tzinfo is None:
         current = current.replace(tzinfo=timezone.utc)
@@ -303,6 +313,7 @@ def collect_upcoming_fixtures(
 
     result = normalize_upcoming_fixtures(raw, now=current, window_days=window_days)
     result["provider"] = "sportmonks"
+    result["future_fixture_sources"] = routed_sources
     result["provider_request"] = {
         "start_date": current.date().isoformat(),
         "end_date": end.date().isoformat(),

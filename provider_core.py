@@ -11,13 +11,14 @@ from datetime import datetime, timezone
 from typing import Any, Iterable
 
 
-# LiveScoreFootball is deliberately absent from the default order. Its public
-# catalogue is only eligible for a competition after exact name/country,
-# active-state, stored-data and season checks have passed. Sportmonks is the
-# intended current-season primary source once that exact league is enabled in
-# the account and match-level coverage has been validated. API-Football remains
-# a historical/secondary source within the seasons allowed by its subscription.
+# Future-fixture discovery is a separate domain from match enrichment.
+# Only Sportmonks is currently wired into the rolling-window collector.
+# The five free candidates are intentionally absent until their adapters pass
+# live kickoff, identity, freshness, licensing and persistence checks.
+# LiveScoreFootball remains a completed-result/standings corroboration source;
+# OpenScores remains an observation/audit source, never a future-fixture feed.
 PROVIDER_ORDER = {
+    "future_fixtures": ("sportmonks",),
     "fixtures": ("sportmonks", "highlightly", "api_ninjas", "api_football"),
     "results": ("sportmonks", "highlightly", "api_ninjas", "api_football"),
     "standings": ("sportmonks", "highlightly", "api_ninjas", "api_football"),
@@ -97,7 +98,7 @@ def resolve_field(
         raise ValueError(f"Unknown data domain: {domain}")
     priority = (
         ("livescore_football", *base_priority)
-        if livescore_verified and domain in {"fixtures", "results", "standings"}
+        if livescore_verified and domain in {"results", "standings"}
         else base_priority
     )
 

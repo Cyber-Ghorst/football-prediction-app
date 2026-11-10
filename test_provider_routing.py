@@ -13,19 +13,19 @@ class ProviderRoutingTests(unittest.TestCase):
         registry = ProviderRegistry([
             ProviderAssignment("sportmonks", "fixtures", "primary", 10),
             ProviderAssignment("api_football", "fixtures", "co_primary", 20),
-            ProviderAssignment("openscores", "fixtures", "co_primary", 30),
+            ProviderAssignment("api_ninjas", "fixtures", "co_primary", 30),
         ])
         self.assertEqual(registry.primary_sources("fixtures"),
-                         ["sportmonks", "api_football", "openscores"])
+                         ["sportmonks", "api_football", "api_ninjas"])
 
     def test_competition_scoping_prevents_global_provider_override(self):
         registry = ProviderRegistry([
             ProviderAssignment("sportmonks", "fixtures", "primary"),
-            ProviderAssignment("openscores", "fixtures", "co_primary",
+            ProviderAssignment("api_ninjas", "fixtures", "co_primary",
                                competitions=("premier league", "la liga")),
         ])
         self.assertEqual(registry.primary_sources("fixtures", "premier league"),
-                         ["sportmonks", "openscores"])
+                         ["sportmonks", "api_ninjas"])
         self.assertEqual(registry.primary_sources("fixtures", "bundesliga"),
                          ["sportmonks"])
 
@@ -42,10 +42,13 @@ class ProviderRoutingTests(unittest.TestCase):
         self.assertEqual(result["fallback"], ["fallback_b"])
         self.assertEqual(result["validation"], ["validator"])
 
-    def test_disabled_openscores_candidate_is_not_live(self):
+    def test_openscores_is_not_a_future_fixture_provider(self):
         registry = default_provider_registry()
-        self.assertEqual(registry.primary_sources("fixtures", "premier league"), ["sportmonks"])
-        self.assertEqual(registry.primary_sources("fixtures", "bundesliga"), ["sportmonks"])
+        self.assertEqual(registry.primary_sources("future_fixtures"), ["sportmonks"])
+        self.assertEqual(registry.primary_sources("future_fixtures", "premier league"), ["sportmonks"])
+        self.assertNotIn("openscores", registry.primary_sources("fixtures"))
+        self.assertNotIn("openscores", registry.primary_sources("future_fixtures"))
+        self.assertEqual(registry.resolve("results")["validation"], [])
 
     def test_free_fixture_candidates_are_registered_but_not_routed(self):
         registry = default_provider_registry()
@@ -53,8 +56,8 @@ class ProviderRoutingTests(unittest.TestCase):
             set(FREE_FIXTURE_CANDIDATES),
             {"openligadb", "openfootball", "open_matchday", "worldcup26", "bzzoiro"},
         )
-        self.assertEqual(registry.primary_sources("fixtures"), ["sportmonks"])
-        self.assertEqual(registry.primary_sources("fixtures", "premier league"), ["sportmonks"])
+        self.assertEqual(registry.primary_sources("future_fixtures"), ["sportmonks"])
+        self.assertEqual(registry.primary_sources("future_fixtures", "premier league"), ["sportmonks"])
 
     def test_api_football_route_is_historical_category_specific(self):
         registry = default_provider_registry()

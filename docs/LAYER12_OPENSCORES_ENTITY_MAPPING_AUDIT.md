@@ -43,9 +43,12 @@ zero-write safety indicators.
 
 ## Activation status
 
-OpenScores remains a staged co-primary candidate, not enabled for production
-prediction routing. This audit does not activate it or change Sportmonks'
-current primary status.
+OpenScores is an observation-only source for historical/result review and
+entity-mapping audits. It is not a future-fixture discovery source and must not
+be routed into the upcoming-fixture catalogue. Its observations are not
+canonical fixtures or production prediction inputs. No result-validation
+route is enabled until entity mappings and exact result verification are
+approved. Sportmonks remains the current scheduled-fixture collector.
 
 
 ## Season and fixture freshness diagnostics
@@ -57,10 +60,14 @@ CockroachDB server clock. This prevents a historical season sample from being
 mistaken for a current upcoming-fixture feed.
 
 
-## Strict upcoming-fixture collection
+## Future-fixture exclusion
 
-The sync requests only `scheduled` fixtures using the provider's live
-`date_from` / `date_to` filters, bounded from the UTC collection time through
-exactly seven days later. It requests up to 200 records per competition and
-checks the kickoff window again locally. Historical observations are retained
-for audit but marked `outside_upcoming_window` and excluded from reconciliation.
+OpenScores is not an approved future-fixture source. The former scheduled-fixture
+observation sync has been disabled in both the controller workflow and its
+Python entry point. No new OpenScores scheduled fixtures may be fetched or
+staged. Existing provider observations are retained unchanged for audit; this
+change does not delete or rewrite historical observation rows.
+
+OpenScores remains limited to read-only connection diagnostics, entity-mapping
+review and reconciliation of already-staged observations. It is not routed to
+the upcoming-fixture catalogue or the prediction workflow.
