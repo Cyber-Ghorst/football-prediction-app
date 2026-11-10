@@ -1420,7 +1420,7 @@ try:
             st.json({
                 **sportmonks_status,
                 "credential_configured": True,
-                "current_season_primary": "candidate; validate selected league and season before use",
+                "current_season_primary": "active; selected league and season are validated before collection and prediction",
             })
         except SportmonksError as exc:
             st.warning(f"Sportmonks connection could not be verified: {exc}")
