@@ -38,7 +38,7 @@ def _score_value(score: Mapping[str, Any], keys: tuple[str, ...]) -> int | None:
     for key in keys:
         value = score.get(key)
         if isinstance(value, dict):
-            value = value.get("value") or value.get("goals")
+            value = value.get("value") if "value" in value else value.get("goals")
         if value is None:
             continue
         try:
