@@ -119,6 +119,67 @@ class OpenScoresClient:
                 return decoded
         return result
 
+    @staticmethod
+    def _league_collection(data: Any) -> tuple[list[Any] | None, str | None]:
+        """Find a plausible league-record collection without assuming one wrapper shape."""
+        preferred_keys = (
+            "leagues", "items", "results", "competitions", "data", "records"
+        )
+        visited: set[int] = set()
+
+        def walk(value: Any, path: str, depth: int = 0):
+            if depth > 6 or id(value) in visited:
+                return None
+            if isinstance(value, (dict, list)):
+                visited.add(id(value))
+            if isinstance(value, list):
+                if value and all(
+                    isinstance(item, dict)
+                    and ("id" in item or "league_id" in item)
+                    and any(key in item for key in ("name", "league_name", "title"))
+                    for item in value
+                ):
+                    return value, path or "$"
+                return None
+            if isinstance(value, dict):
+                for key in preferred_keys:
+                    if key in value:
+                        found = walk(value[key], f"{path}.{key}" if path else key, depth + 1)
+                        if found:
+                            return found
+                for key, child in value.items():
+                    if key not in preferred_keys and isinstance(child, (dict, list)):
+                        found = walk(child, f"{path}.{key}" if path else key, depth + 1)
+                        if found:
+                            return found
+            return None
+
+        return walk(data) or (None, None)
+
+    @staticmethod
+    def _payload_shape(data: Any) -> dict[str, Any]:
+        """Return schema-only diagnostics; never include provider record values."""
+        shape: dict[str, Any] = {"root_type": type(data).__name__}
+        if isinstance(data, dict):
+            shape["root_keys"] = sorted(str(key) for key in data.keys())[:30]
+            nested = {}
+            for key, value in list(data.items())[:20]:
+                nested[str(key)] = {
+                    "type": type(value).__name__,
+                    "keys": sorted(str(k) for k in value.keys())[:20]
+                    if isinstance(value, dict) else None,
+                    "length": len(value) if isinstance(value, (list, str)) else None,
+                }
+            shape["fields"] = nested
+        elif isinstance(data, list):
+            shape["root_length"] = len(data)
+            shape["first_item_type"] = type(data[0]).__name__ if data else None
+            if data and isinstance(data[0], dict):
+                shape["first_item_keys"] = sorted(str(key) for key in data[0].keys())[:30]
+        elif isinstance(data, str):
+            shape["text_length"] = len(data)
+        return shape
+
     def call_tool(self, name: str, arguments: dict[str, Any] | None = None) -> dict[str, Any]:
         """Call one documented read-only tool and retain source provenance."""
         request_id = next(self._request_ids)
@@ -217,18 +278,16 @@ class OpenScoresClient:
         return self.call_tool("get_player", {"player_id": player_id})
 
     def test_connection(self) -> dict[str, Any]:
-        """Check authenticated connectivity without changing remote or app data."""
+        """Check authenticated connectivity and safely describe list_leagues' response."""
         result = self.list_leagues()
         data = result.get("data")
-        if isinstance(data, dict) and isinstance(data.get("items"), list):
-            count = len(data["items"])
-        elif isinstance(data, list):
-            count = len(data)
-        else:
-            count = None
+        records, collection_path = self._league_collection(data)
         return {
             "status": "connected",
-            "league_count_returned": count,
+            "league_count_returned": len(records) if records is not None else None,
+            "league_collection_found": records is not None,
+            "league_collection_path": collection_path,
+            "response_shape": self._payload_shape(data),
             "provider": "openscores",
             "retrieved_at_utc": result["retrieved_at_utc"],
         }
