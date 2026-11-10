@@ -294,6 +294,44 @@ def write_explicit_openscores_links(
     return {"inserted": inserted, "existing": existing, "conflicts": [], "status": "pass"}
 
 
+def _pending_mapping_diagnostics(database_url: str) -> dict[str, Any]:
+    """Expose safe names/IDs needed to resolve pending cross-provider mappings."""
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT provider_league_id, provider_season_id,
+                       COUNT(*) AS observations,
+                       COUNT(DISTINCT provider_home_team_id) AS home_ids,
+                       COUNT(DISTINCT provider_away_team_id) AS away_ids,
+                       ARRAY_AGG(DISTINCT home_team_name) AS home_names,
+                       ARRAY_AGG(DISTINCT away_team_name) AS away_names
+                FROM provider_fixture_observations
+                WHERE provider = 'openscores'
+                  AND reconciliation_status IN (
+                      'pending_entity_mapping', 'outside_upcoming_window'
+                  )
+                GROUP BY provider_league_id, provider_season_id
+                ORDER BY provider_league_id, provider_season_id
+                """
+            )
+            rows = cursor.fetchall()
+    return {
+        "pending_groups": [
+            {
+                "openscores_league_id": str(row[0]),
+                "openscores_season_id": str(row[1]),
+                "observations": int(row[2]),
+                "distinct_home_team_ids": int(row[3]),
+                "distinct_away_team_ids": int(row[4]),
+                "home_team_names": list(row[5] or []),
+                "away_team_names": list(row[6] or []),
+            }
+            for row in rows
+        ]
+    }
+
+
 def run_reconciliation(
     *,
     openscores_client_factory=OpenScoresClient,
@@ -451,8 +489,14 @@ def run_reconciliation(
         include_outside_upcoming_window=True,
         preserve_outside_window_status=True,
     )
+    report["mapping_diagnostics"] = _pending_mapping_diagnostics(db_url)
     matched = int(report["reconciliation"].get("matched", 0))
-    report["status"] = "pass" if matched > 0 else "fail"
+    pending = int(report["reconciliation"].get("pending_entity_mapping", 0))
+    report["status"] = (
+        "pass" if matched > 0 and pending == 0
+        else "partial" if matched > 0
+        else "fail"
+    )
     return report
 
 
