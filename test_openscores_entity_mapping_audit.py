@@ -4,6 +4,16 @@ from openscores_entity_mapping_audit import build_entity_mapping_candidates
 
 
 class OpenScoresEntityMappingAuditTests(unittest.TestCase):
+    def test_season_source_metadata_preserves_date_and_current_flags(self):
+        from openscores_entity_mapping_audit import _season_metadata
+        result = _season_metadata(
+            {"id": 9, "name": "2026/2027", "start_date": "2026-08-01",
+             "end_date": "2027-05-31", "is_current": True}
+        )
+        self.assertEqual(result["id"], "9")
+        self.assertEqual(result["name"], "2026/2027")
+        self.assertTrue(result["is_current"])
+
     def test_payload_inventory_reports_paths_without_values(self):
         from openscores_entity_mapping_audit import _key_inventory, _source_id_keys
         payloads = [{"source_ids": {"flashscore": "secret-id"}, "home_team": {"id": 12}}]
