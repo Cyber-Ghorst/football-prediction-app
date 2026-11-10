@@ -1,6 +1,4 @@
 import unittest
-from unittest.mock import Mock
-
 from openscores_connection_check import run_check
 
 
