@@ -102,6 +102,7 @@ try:
     from competition_crosswalk import build_competition_crosswalk
     from provider_health import assess_api_football_status, assess_livescore_metadata
     from provider_corroboration import collect_recent_result_corroboration
+    from source_reliability import build_source_reliability_report
     from highlightly_match_enrichment import (
         apply_highlightly_lineups_fallback,
         apply_highlightly_statistics_fallback,
@@ -2309,6 +2310,16 @@ try:
 
                     if cross_check_recent_results or use_verified_result_history_fallback:
                         if corroboration is not None:
+                            st.subheader("Layer 3 — provider reliability")
+                            st.caption(
+                                "Reliability is measured against the selected season's primary provider "
+                                "using exact-identity, freshness-eligible full-time score pairs. "
+                                "At least 30 paired fixtures are required before a descriptive score is shown. "
+                                "These diagnostics do not change provider priority or prediction inputs."
+                            )
+                            with st.expander("Provider reliability evidence", expanded=True):
+                                st.json(source_reliability_report)
+
                             st.subheader("Independent result corroboration")
                             st.caption(
                                 "Only exact competition/season/team/kickoff matches are considered. "
@@ -2624,6 +2635,20 @@ try:
             corroboration=corroboration,
             model_weights=WEIGHTS,
         )
+        source_reliability_report = (
+            build_source_reliability_report(
+                corroboration,
+                primary_provider="sportmonks",
+                minimum_score_samples=30,
+            )
+            if int(season) > 2024
+            else {
+                "status": "not_applicable",
+                "reason": "The current corroboration collector is anchored to Sportmonks; historical API-Football seasons are not scored against that source.",
+                "prediction_inputs_modified": False,
+                "provider_priority_modified": False,
+            }
+        )
         for profile in (home, away):
             team_name = profile.get("name")
             if team_name in squad_fetch_diagnostics:
@@ -2668,6 +2693,7 @@ try:
             "statistics_coverage": statistics_reports,
             "prediction_readiness": readiness,
             "corroboration": corroboration,
+            "source_reliability": source_reliability_report,
             "player_enrichment": player_report,
             "system_diagnostics": diagnostic_report,
         }

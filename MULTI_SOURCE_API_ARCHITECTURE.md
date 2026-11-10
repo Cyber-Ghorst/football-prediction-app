@@ -459,3 +459,30 @@ The app now has a separate opt-in control to fill missing recent result history 
 - Provider IDs remain namespaced. Cross-provider joins still require competition, season, home/away orientation and kickoff agreement; candidate result imports still require exact Sportmonks fixture and score agreement.
 - Highlightly statistics, lineups and player/team-season enrichment remain opt-in and retain provider provenance. Missing statistics, injury evidence and player availability are not inferred.
 - No prediction weights, tactical evidence rules or 60/40 recent-match weighting were changed by this audit.
+
+
+## Layer 3 — data verification, reconciliation and quality control (started 2026-11-10)
+
+Layer 3 adds evidence-based checks around the canonical records delivered by Layer 2. It does not change Layer 1 model calculations or Layer 2 provider priority.
+
+### First implementation milestone: source reliability diagnostics
+
+- `source_reliability.py` calculates secondary-provider agreement against the current-season Sportmonks primary using exact-identity, freshness-eligible records produced by the existing corroboration collector.
+- Score reliability is measured as an exact home-away full-time score pair per fixture, not as two independent score-field votes.
+- Status and kickoff agreement are reported separately. Kickoff agreement uses a five-minute tolerance, matching the canonical fixture-identity window.
+- Each provider report includes compared/agreed/disagreed counts, agreement percentage, a 95% Wilson interval, and the configured minimum sample size.
+- A minimum of 30 paired score fixtures is required before a descriptive score is marked sample-sufficient. Smaller samples are explicitly labelled insufficient; no reliability ranking is inferred.
+- Duplicate observations from one provider/field are excluded as ambiguous.
+- Reliability is diagnostic only. It cannot change provider priority, substitute data, prediction inputs, weights, TVD or tactical recency weighting.
+- The Streamlit data-collection report archives the reliability evidence and exposes it in the provider corroboration panel.
+- Historical API-Football seasons are not compared against Sportmonks by this report because the current corroboration collector is anchored to Sportmonks.
+
+### Remaining Layer 3 work
+
+1. Extend field-level quality checks to statistics, lineups, injuries and player/season records, with exact fixture/team/season identity and freshness evidence.
+2. Add explicit prediction-input quality gates for duplicates, invalid values, stale evidence, missing required fields and unresolved conflicts. A quality failure must block or downgrade readiness without inventing replacements.
+3. Add persistent provider-quality history so reliability can be assessed over a rolling sample rather than a single optional diagnostic run.
+4. Add conflict triage and auditable resolution records, retaining the raw observations and selected authoritative value.
+5. Validate the quality-control layer against archived reports and a sufficient historical sample before considering any provider-priority changes.
+
+The reliability report is a descriptive baseline, not a source ranking or an automated model adjustment.
