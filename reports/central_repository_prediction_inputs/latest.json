@@ -1,16 +1,16 @@
 {
-  "generated_at": "2026-11-10T07:14:59.367135+00:00",
+  "generated_at": "2026-11-10T07:24:31.690073+00:00",
   "season_id": 28083,
-  "home_team": "Manchester City",
-  "away_team": "Fulham",
+  "home_team": "Chelsea",
+  "away_team": "Leeds United",
   "profiles": {
-    "Manchester City": {
+    "Chelsea": {
       "source": "cockroachdb_central_repository",
       "completed_matches": 10,
       "repository_fixture_rows": 380,
       "fallback_used": false
     },
-    "Fulham": {
+    "Leeds United": {
       "source": "cockroachdb_central_repository",
       "completed_matches": 10,
       "repository_fixture_rows": 380,
@@ -19,6 +19,6 @@
   },
   "prediction_engine_modified": false,
   "neon_prediction_ledger_modified": false,
-  "generated_at_utc": "2026-11-10T07:15:04.978292+00:00",
+  "generated_at_utc": "2026-11-10T07:24:36.540890+00:00",
   "report_name": "central_repository_prediction_inputs"
 }
