@@ -1,6 +1,6 @@
 {
   "diagnostic_version": 1,
-  "generated_at": "2026-11-10T07:07:45.433919+00:00",
+  "generated_at": "2026-11-10T07:15:21.724370+00:00",
   "overall_status": "healthy",
   "selected_context": {
     "season_start_year": 2026,
@@ -174,8 +174,8 @@
     "kickoff_utc": "2026-11-21T12:30:00+00:00",
     "source_updated_at": null,
     "source_fetched_at": "2026-11-10T07:07:16.297627+00:00",
-    "source_age_seconds": 29.1,
-    "source_age_minutes": 0.5,
+    "source_age_seconds": 485.4,
+    "source_age_minutes": 8.1,
     "source_freshness": "fresh",
     "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
   },
@@ -885,7 +885,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "92",
+            "requests_remaining": "88",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -908,7 +908,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "91",
+            "requests_remaining": "86",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -931,7 +931,7 @@
           "response": {
             "http_status": 200,
             "requests_limit": "100",
-            "requests_remaining": "90",
+            "requests_remaining": "87",
             "response_payload_type": "dict",
             "response_top_level_keys": [
               "data",
@@ -2458,8 +2458,8 @@
       "kickoff_utc": "2026-11-21T12:30:00+00:00",
       "source_updated_at": null,
       "source_fetched_at": "2026-11-10T07:07:16.297627+00:00",
-      "source_age_seconds": 29.1,
-      "source_age_minutes": 0.5,
+      "source_age_seconds": 485.4,
+      "source_age_minutes": 8.1,
       "source_freshness": "fresh",
       "freshness_note": "Detailed fixture data was retrieved less than 24 hours ago."
     },
@@ -2514,6 +2514,6 @@
     "weights_total": 1.0,
     "model_impact": "Diagnostics only; weights, recency weighting, prediction inputs and missing-data rules are not changed."
   },
-  "generated_at_utc": "2026-11-10T07:07:49.117238+00:00",
+  "generated_at_utc": "2026-11-10T07:15:25.254451+00:00",
   "report_name": "system_diagnostics"
 }
