@@ -129,6 +129,32 @@ def upsert_openscores_observations(
     return {"observations_upserted": len(rows), "canonical_fixtures_written": 0}
 
 
+def mark_outside_upcoming_window_observations(
+    database_url: str, *, window_start: Any, window_end: Any
+) -> int:
+    """Retain historical observations but exclude them from upcoming reconciliation."""
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required")
+    if window_start is None or window_end is None or window_start >= window_end:
+        raise ValueError("A valid increasing upcoming-fixture window is required")
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                UPDATE provider_fixture_observations
+                SET reconciliation_status = 'outside_upcoming_window',
+                    canonical_fixture_id = NULL,
+                    reconciliation_note = 'Retained as provider history; outside the current seven-day window'
+                WHERE provider = 'openscores'
+                  AND canonical_fixture_id IS NULL
+                  AND reconciliation_status <> 'matched'
+                  AND (kickoff_utc < %s OR kickoff_utc > %s)
+                """,
+                (window_start, window_end),
+            )
+            return int(getattr(cursor, "rowcount", 0) or 0)
+
+
 def reconcile_openscores_observations(
     database_url: str, *, kickoff_tolerance_seconds: int = 300,
     limit: int = 1000,
@@ -156,7 +182,7 @@ def reconcile_openscores_observations(
                        kickoff_utc
                 FROM provider_fixture_observations
                 WHERE provider = 'openscores'
-                  AND reconciliation_status NOT IN ('matched')
+                  AND reconciliation_status NOT IN ('matched', 'outside_upcoming_window')
                 ORDER BY kickoff_utc
                 LIMIT %s
                 """,
