@@ -1978,6 +1978,24 @@ try:
                     season_id=int(selected_season_id),
                 )
                 selected_match_fixture = selected_match_diagnostic["fixture"]
+                if selected_discovered_fixture_id:
+                    expected_fixture_id = selected_discovered_fixture_id.rsplit(":", 1)[-1]
+                    selected_match_fixture = next(
+                        (
+                            row for row in fixtures
+                            if str(row.get("id")) == expected_fixture_id
+                        ),
+                        None,
+                    )
+                    if selected_match_fixture is None:
+                        st.error(
+                            "The selected fixture is not present in the live Sportmonks "
+                            "season response. Refresh automatic collection before predicting; "
+                            "the app will not silently substitute another match."
+                        )
+                        st.stop()
+                    selected_match_diagnostic["selected_fixture_id"] = selected_discovered_fixture_id
+                    selected_match_diagnostic["selected_fixture_exact_match"] = True
                 with st.expander(
                     "Exact fixture verification diagnostics",
                     expanded=not selected_match_diagnostic["verified"],
@@ -2162,6 +2180,18 @@ try:
                     away_team_id=int(team_map[away_name]["id"]),
                     season_id=int(selected_season_id),
                 )
+                if selected_discovered_fixture_id:
+                    expected_fixture_id = selected_discovered_fixture_id.rsplit(":", 1)[-1]
+                    if (
+                        not isinstance(prediction_fixture, dict)
+                        or str(prediction_fixture.get("id")) != expected_fixture_id
+                    ):
+                        st.error(
+                            "The prediction fixture does not match the fixture selected "
+                            "from the automatic catalogue. Prediction stopped to prevent "
+                            "a different fixture from being analysed."
+                        )
+                        st.stop()
                 fixture_detail_processing_started = time.perf_counter()
                 fixture_detail_fetch_seconds = 0.0
                 squad_enrichment_seconds = 0.0
