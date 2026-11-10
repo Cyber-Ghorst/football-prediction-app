@@ -13,6 +13,7 @@ on:
           - full_check
           - prediction_run
           - result_sync
+          - tipmaster_refresh_verify
         default: health_check
       season:
         description: "Season start year (Sportmonks current-season path: 2025+)"
@@ -116,7 +117,7 @@ jobs:
               trigger = json.loads(Path(".agent/trigger.json").read_text(encoding="utf-8"))
               operation = trigger.get("operation", "")
 
-          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync"}
+          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync", "tipmaster_refresh_verify"}
           if operation not in allowed:
               raise SystemExit("Rejected unsupported or missing operation")
           if operation == "prediction_run":
@@ -271,7 +272,7 @@ jobs:
           PY
 
       - name: Install health-check dependencies
-        if: steps.operation.outputs.operation == 'health_check' || steps.operation.outputs.operation == 'full_check' || steps.operation.outputs.operation == 'result_sync'
+        if: steps.operation.outputs.operation == 'health_check' || steps.operation.outputs.operation == 'full_check' || steps.operation.outputs.operation == 'result_sync' || steps.operation.outputs.operation == 'tipmaster_refresh_verify'
         run: |
           exec > >(tee -a controller-report.txt) 2>&1
           python -m pip install --upgrade pip
@@ -389,6 +390,80 @@ jobs:
               "--away-team", str(request["away_team"]),
           ]
           raise SystemExit(main())
+          PY
+
+      - name: Refresh TipMaster and verify Neon persistence
+        if: steps.operation.outputs.operation == 'tipmaster_refresh_verify'
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          import sys
+          from datetime import datetime, timezone
+
+          from tipmaster_benchmark import fetch_tipmaster_consensus
+          from tipmaster_storage import load_tipmaster_benchmark_records, save_tipmaster_benchmark_records
+
+          report = {
+              "operation": "tipmaster_refresh_verify",
+              "checked_at_utc": datetime.now(timezone.utc).isoformat(),
+              "feed_status": "not_started",
+              "neon_status": "not_started",
+              "incoming_records": 0,
+              "saved_records": 0,
+              "reloaded_records": 0,
+              "round_trip_verified": False,
+              "prediction_ledger_touched": False,
+          }
+          database_url = os.environ.get("DATABASE_URL", "").strip()
+          if not database_url:
+              report.update({"neon_status": "not_configured", "result": "missing_DATABASE_URL_secret"})
+              print(json.dumps(report, indent=2))
+              with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as out:
+                  out.write("## TipMaster / Neon verification failed\n\nDATABASE_URL Actions secret is missing. No credentials were printed.\n")
+              sys.exit(2)
+
+          feed = fetch_tipmaster_consensus()
+          records = feed.get("matches", [])
+          report["feed_status"] = "connected"
+          report["feed_counts"] = feed.get("counts", {})
+          report["incoming_records"] = len(records)
+
+          before = load_tipmaster_benchmark_records(database_url)
+          report["neon_status"] = "connected"
+          report["records_before"] = len(before)
+          if not records:
+              report.update({"reloaded_records": len(before), "result": "feed_returned_no_valid_records"})
+              print(json.dumps(report, indent=2))
+              with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as out:
+                  out.write("## TipMaster / Neon partially verified\n\nNeon connection and read succeeded, but the feed returned no valid records to round-trip.\n")
+              sys.exit(1)
+
+          saved = save_tipmaster_benchmark_records(database_url, records)
+          after = load_tipmaster_benchmark_records(database_url)
+          saved_ids = {row["source_match_id"] for row in records}
+          reloaded_ids = {row["source_match_id"] for row in after}
+          missing_ids = saved_ids - reloaded_ids
+          report.update({
+              "saved_records": saved,
+              "reloaded_records": len(after),
+              "round_trip_verified": not missing_ids,
+              "missing_reloaded_ids_count": len(missing_ids),
+              "result": "passed" if not missing_ids else "round_trip_mismatch",
+          })
+          print(json.dumps(report, indent=2))
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as out:
+              out.write("## TipMaster / Neon persistence verification\n\n")
+              out.write(f"- Feed: connected ({len(records)} valid records)\n")
+              out.write(f"- Neon: connected; {len(before)} records before, {len(after)} after\n")
+              out.write(f"- Records saved: {saved}\n")
+              out.write(f"- Round-trip verified: {report['round_trip_verified']}\n")
+              out.write("- Prediction ledger touched: no\n")
+          if missing_ids:
+              sys.exit(1)
           PY
 
       - name: Publish result to control issue
