@@ -61,7 +61,7 @@ class ProviderEntityCrosswalkTests(unittest.TestCase):
         )
         self.assertEqual(rows[0]["status"], "candidate_requires_manual_approval")
         self.assertEqual(rows[0]["canonical_entity_id"], "sportmonks:1")
-        self.assertIn("manual review", rows[0]["reason"])
+        self.assertIn("explicit review", rows[0]["reason"])
         
     def test_missing_country_never_creates_automatic_team_candidate(self):
         rows = build_entity_crosswalk_candidates(
