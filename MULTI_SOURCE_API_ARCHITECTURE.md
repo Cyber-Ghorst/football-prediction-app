@@ -393,3 +393,22 @@ The application is operational across all six layers. The remaining non-blocking
 - Both snapshot types must have completed before the selected fixture kickoff to count toward pre-match coverage.
 - API request counters increment when a request is attempted, including failed calls, so quota diagnostics do not undercount exceptions.
 - The app reports player-stat and team-season snapshot counts independently.
+
+
+## Opt-in Highlightly missing-stat fallback (2026-11-10)
+
+The current Layer 2 flow now supports a controlled field-level fallback from Highlightly into the selected teams' recent match profiles.
+
+- The sidebar option is disabled by default to protect Highlightly quota and keep the existing Sportmonks-only path unchanged unless explicitly enabled.
+- The fallback uses the same exact-match collection gate: competition, country, season, home/away orientation, team identities and kickoff within five minutes must match the Sportmonks anchor fixture.
+- It considers the latest ten completed Sportmonks matches per selected team. It can populate both a team's own match statistics and the opponent-statistics view for that exact fixture.
+- Only supported canonical metrics with valid finite, non-negative values and valid percentage ranges are eligible.
+- A Highlightly value is inserted only when the corresponding Layer 2 field is missing. Existing Sportmonks values remain authoritative, whether they agree or conflict; no values are averaged.
+- Duplicate Highlightly rows that disagree for the same canonical metric are skipped as ambiguous.
+- Added values carry provider, Sportmonks fixture ID, Highlightly match ID, raw and normalized values, collection start and completion timestamps, and a fallback marker in match-level provenance and diagnostics.
+- The team's tactical summary is recomputed from the enriched match rows so supported missing statistics can contribute to the existing tactical analysis. Prediction weights and 60/40 history weighting are unchanged.
+- The separate tactical_evidence object consumed by automatic TVD is deliberately not rebuilt from Highlightly. TVD continues to use its existing primary-source evidence path until its own provider-quality and league-reference integration is separately validated.
+- This fallback does not infer injuries, player availability, confirmed lineups or squad membership. Those fields remain on their existing verified-source rules.
+- The opt-in fallback is not a blanket promotion of Highlightly to primary provider status. It fills only missing fields after exact identity checks and preserves Sportmonks precedence.
+
+The fallback is covered by unit tests for missing-field fill, primary-value preservation, opponent-stat attribution, invalid timestamps, team-identity mismatch and conflicting duplicate observations. Live account coverage and authenticated runtime behavior still require deployment-level verification.

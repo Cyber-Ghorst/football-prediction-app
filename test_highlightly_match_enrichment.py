@@ -5,6 +5,7 @@ from highlightly_match_enrichment import (
     _highlightly_rows,
     _highlightly_stat_value,
     _season_value,
+    apply_highlightly_statistics_fallback,
     collect_highlightly_match_enrichment,
     normalize_highlightly_lineups,
 )
@@ -69,6 +70,136 @@ class FakeHighlightly:
 
 
 class HighlightlyMatchEnrichmentTests(unittest.TestCase):
+    def test_layer2_fallback_fills_only_missing_fields_after_exact_identity(self):
+        home = {
+            "name": "Arsenal",
+            "matches": [{
+                "fixture_id": 700,
+                "venue": "home",
+                "opponent_name": "Chelsea",
+                "statistics": {"Total Shots": 12.0},
+                "opponent_statistics": {},
+                "statistics_provenance": [],
+                "statistics_raw_diagnostics": [],
+            }],
+        }
+        away = {
+            "name": "Chelsea",
+            "matches": [{
+                "fixture_id": 700,
+                "venue": "away",
+                "opponent_name": "Arsenal",
+                "statistics": {},
+                "opponent_statistics": {},
+                "statistics_provenance": [],
+                "statistics_raw_diagnostics": [],
+            }],
+        }
+        report = {
+            "fetched_at": "2026-11-08T11:59:00Z",
+            "collection_completed_at": "2026-11-08T12:00:00Z",
+            "statistics": [{
+                "sportmonks_fixture_id": "700",
+                "highlightly_match_id": "9001",
+                "teams": {
+                    "home": {
+                        "team_name": "Arsenal",
+                        "highlightly_observations": [
+                            {"canonical_name": "Total Shots", "raw_value": 14, "normalized_value": 14.0},
+                            {"canonical_name": "Ball Possession", "raw_value": 0.6, "normalized_value": 60.0},
+                        ],
+                    },
+                    "away": {
+                        "team_name": "Chelsea",
+                        "highlightly_observations": [
+                            {"canonical_name": "Total Shots", "raw_value": 8, "normalized_value": 8.0},
+                            {"canonical_name": "Ball Possession", "raw_value": 0.4, "normalized_value": 40.0},
+                        ],
+                    },
+                },
+            }],
+        }
+
+        result = apply_highlightly_statistics_fallback([home, away], report)
+
+        self.assertEqual(result["status"], "completed")
+        self.assertEqual(result["fields_added"], 7)
+        self.assertEqual(result["primary_values_preserved"], 1)
+        self.assertEqual(home["matches"][0]["statistics"]["Total Shots"], 12.0)
+        self.assertEqual(home["matches"][0]["statistics"]["Ball Possession"], 60.0)
+        self.assertEqual(home["matches"][0]["opponent_statistics"]["Total Shots"], 8.0)
+        self.assertEqual(away["matches"][0]["statistics"]["Total Shots"], 8.0)
+        self.assertEqual(away["matches"][0]["opponent_statistics"]["Ball Possession"], 60.0)
+        self.assertEqual(home["matches"][0]["statistics_provenance"][-1]["provider"], "highlightly")
+        self.assertEqual(
+            home["tactical_summary"]["available_metrics"]["average_possession"], 60.0
+        )
+        self.assertFalse(home["highlightly_statistics_fallback"]["tactical_evidence_updated"])
+
+    def test_layer2_fallback_rejects_wrong_team_and_invalid_timestamp(self):
+        profile = {
+            "name": "Arsenal",
+            "matches": [{
+                "fixture_id": 700,
+                "venue": "home",
+                "opponent_name": "Chelsea",
+                "statistics": {},
+                "opponent_statistics": {},
+            }],
+        }
+        report = {
+            "fetched_at": "2026-11-08T11:59:00Z",
+            "collection_completed_at": "invalid",
+            "statistics": [{
+                "sportmonks_fixture_id": "700",
+                "teams": {
+                    "home": {"team_name": "Different Club", "highlightly_observations": [
+                        {"canonical_name": "Total Shots", "normalized_value": 14.0}
+                    ]},
+                    "away": {"team_name": "Chelsea", "highlightly_observations": []},
+                },
+            }],
+        }
+
+        result = apply_highlightly_statistics_fallback([profile], report)
+
+        self.assertEqual(result["status"], "skipped")
+        self.assertEqual(profile["matches"][0]["statistics"], {})
+
+    def test_layer2_fallback_skips_conflicting_duplicate_metric_rows(self):
+        profile = {
+            "name": "Arsenal",
+            "matches": [{
+                "fixture_id": 700,
+                "venue": "home",
+                "opponent_name": "Chelsea",
+                "statistics": {},
+                "opponent_statistics": {},
+            }],
+        }
+        report = {
+            "fetched_at": "2026-11-08T11:59:00Z",
+            "collection_completed_at": "2026-11-08T12:00:00Z",
+            "statistics": [{
+                "sportmonks_fixture_id": "700",
+                "highlightly_match_id": "9001",
+                "teams": {
+                    "home": {"team_name": "Arsenal", "highlightly_observations": [
+                        {"canonical_name": "Total Shots", "normalized_value": 14.0},
+                        {"canonical_name": "Total Shots", "normalized_value": 15.0},
+                    ]},
+                    "away": {"team_name": "Chelsea", "highlightly_observations": []},
+                },
+            }],
+        }
+
+        result = apply_highlightly_statistics_fallback([profile], report)
+
+        self.assertEqual(result["fields_added"], 0)
+        self.assertEqual(result["ambiguous_metrics_skipped"], 1)
+        self.assertEqual(profile["matches"][0]["statistics"], {})
+
+
     def test_highlightly_statistics_reject_nonfinite_negative_and_out_of_range_values(self):
         self.assertEqual(_highlightly_stat_value("Ball Possession", 0.6), 60.0)
         self.assertEqual(_highlightly_stat_value("Ball Possession", "60%"), 60.0)

@@ -93,7 +93,10 @@ try:
     from competition_crosswalk import build_competition_crosswalk
     from provider_health import assess_api_football_status, assess_livescore_metadata
     from provider_corroboration import collect_recent_result_corroboration
-    from highlightly_match_enrichment import collect_highlightly_match_enrichment
+    from highlightly_match_enrichment import (
+        apply_highlightly_statistics_fallback,
+        collect_highlightly_match_enrichment,
+    )
     from highlightly_player_enrichment import collect_highlightly_player_enrichment
     from prediction_evaluation import (
         build_availability_snapshot, build_prediction_record,
@@ -843,6 +846,11 @@ with st.sidebar:
         "Cross-check match statistics and lineups with Highlightly",
         value=False,
         help="Optional extra requests: compares up to ten recent matches per selected team and checks lineups for the exact upcoming fixture. Diagnostic only; does not change predictions.",
+    )
+    use_highlightly_statistics_fallback = st.checkbox(
+        "Use Highlightly to fill missing match statistics",
+        value=False,
+        help="Opt-in Layer 2 fallback. Only fills missing supported metrics after exact competition, country, season, fixture, team orientation and kickoff checks. Existing Sportmonks values remain authoritative; TVD evidence is not replaced.",
     )
     cross_check_highlightly_players = st.checkbox(
         "Fetch player and team-season performance statistics",
@@ -1979,7 +1987,7 @@ try:
                 )
                 prediction_stage_started = time.perf_counter()
 
-                if cross_check_recent_results or cross_check_highlightly_details or cross_check_highlightly_players:
+                if cross_check_recent_results or cross_check_highlightly_details or cross_check_highlightly_players or use_highlightly_statistics_fallback:
                     selected_league_row = league_by_id.get(league_id, {})
                     selected_country = selected_league_row.get("country") or {}
                     selected_country_name = selected_country.get("name") if isinstance(selected_country, dict) else str(selected_country or "")
@@ -2166,7 +2174,7 @@ try:
                             corroboration["candidate_verification"] = candidate_verification
                             corroboration["candidate_verification_diagnostics"] = candidate_verification_diagnostics
 
-                        if cross_check_highlightly_details or cross_check_highlightly_players:
+                        if cross_check_highlightly_details or cross_check_highlightly_players or use_highlightly_statistics_fallback:
                             if hl_client is None:
                                 corroboration_errors["highlightly_details"] = corroboration_errors.get(
                                     "highlightly", "Highlightly client unavailable."
@@ -2180,9 +2188,27 @@ try:
                                     season=int(season),
                                     home_team_name=home_name,
                                     away_team_name=away_name,
-                                    selected_upcoming_fixture=selected_match_fixture,
-                                    history_per_team=10 if cross_check_highlightly_details else 0,
+                                    selected_upcoming_fixture=(
+                                        selected_match_fixture
+                                        if cross_check_highlightly_details or cross_check_highlightly_players
+                                        else None
+                                    ),
+                                    history_per_team=(
+                                        10
+                                        if cross_check_highlightly_details or use_highlightly_statistics_fallback
+                                        else 0
+                                    ),
                                 )
+                                if use_highlightly_statistics_fallback:
+                                    fallback_report = apply_highlightly_statistics_fallback(
+                                        [home, away], highlightly_enrichment
+                                    )
+                                    highlightly_enrichment["layer2_fallback"] = fallback_report
+                                    highlightly_enrichment["note"] = (
+                                        "Opt-in Layer 2 fallback was requested. Only exact-match missing "
+                                        "statistics may be filled from Highlightly; Sportmonks values remain "
+                                        "authoritative, and TVD tactical_evidence is unchanged."
+                                    )
                     except Exception as exc:
                         st.warning(f"Optional Highlightly enrichment could not be completed: {exc}. Sportmonks prediction inputs remain unchanged.")
                     finally:
@@ -2254,7 +2280,14 @@ try:
 
                     if cross_check_highlightly_details:
                         st.subheader("Highlightly match-statistics and lineup corroboration")
-                        st.caption("Only exact competition, country, season, home/away and kickoff matches are compared. Highlightly values remain diagnostic and never overwrite Sportmonks prediction inputs.")
+                        st.caption(
+                            "Only exact competition, country, season, home/away and kickoff matches are accepted. "
+                            + (
+                                "The opt-in Layer 2 fallback fills missing supported metrics only; existing Sportmonks values remain authoritative."
+                                if use_highlightly_statistics_fallback
+                                else "Highlightly values remain diagnostic and do not change prediction inputs."
+                            )
+                        )
                         if highlightly_enrichment is not None:
                             st.json({
                                 key: value for key, value in highlightly_enrichment.items()
@@ -2271,6 +2304,16 @@ try:
                                 st.warning(highlightly_enrichment["errors"])
                         else:
                             st.warning("Highlightly statistics and lineup corroboration did not complete. No substitute data was used.")
+
+                    if use_highlightly_statistics_fallback and not cross_check_highlightly_details:
+                        st.subheader("Highlightly Layer 2 missing-stat fallback")
+                        if highlightly_enrichment is not None:
+                            st.json(highlightly_enrichment.get("layer2_fallback", {
+                                "status": "not_applied",
+                                "reason": "No fallback report was produced.",
+                            }))
+                        else:
+                            st.warning("Highlightly fallback did not complete. Sportmonks values remain unchanged.")
 
                     if cross_check_highlightly_players:
                         st.subheader("Highlightly player and team-season performance")
