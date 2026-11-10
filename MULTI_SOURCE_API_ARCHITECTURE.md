@@ -533,7 +533,17 @@ Layer 3 adds evidence-based checks around the canonical records delivered by Lay
 - Tests cover all classifications, unconfigured credentials, duplicate identities and the no-auto-promotion rule.
 - No provider priority, prediction input, model weight, TVD rule or tactical recency weighting changed.
 
-### Remaining Layer 3 work
+### Sixth implementation milestone: historical coverage validation (2026-11-10)
 
-1. Validate the quality-control layer against archived reports and sufficient historical samples before considering any provider-priority changes.
-The reliability report is a descriptive baseline, not a source ranking or an automated model adjustment.
+- `historical_coverage.py` loads timestamped prediction-performance archive snapshots and the latest report, retaining parse errors instead of silently dropping unreadable files.
+- Archive snapshots are not independent observations. Fixture rows are deduplicated by competition, UTC kickoff, home team and away team; where multiple valid pre-kickoff forecasts exist, the latest forecast before kickoff is selected.
+- Rows are excluded when prediction time is missing/invalid or at/after kickoff, score is malformed, actual outcome disagrees with the score, predicted outcome is invalid, or the recorded correctness flag is inconsistent.
+- Conflicting archived final scores for the same fixture are excluded as ambiguous. Reported completed counts are compared with the fixture-level history to expose archive inconsistencies.
+- The validation reports unique verified fixtures, repeated snapshot rows, invalid rows, ambiguous fixtures, a Wilson interval and progress toward the existing 30-fixture descriptive minimum.
+- The Streamlit performance panel reads the repository's archived JSON reports and shows the historical coverage audit. A sample meeting 30 remains descriptive only; this report never authorizes provider-priority or model-weight changes.
+- Current archive evidence remains insufficient: the latest report contains one unique completed pre-match fixture, with 20 other unique pre-match fixtures awaiting verified scores. Repeated archive snapshots do not increase that count.
+- Regression tests cover snapshot deduplication, latest pre-kickoff forecast selection, leakage and score validation, ambiguous outcomes, minimum sample labeling, report inconsistencies and archive parse failures.
+
+### Layer 3 completion boundary
+
+All eight implementation objectives are complete when this milestone is merged. Historical evidence is still longitudinal: the system must continue collecting independently verified outcomes until at least 30 unique fixtures are available before making descriptive performance claims. No provider priority, prediction input, model weight, TVD rule or tactical recency weighting is changed by this milestone.
