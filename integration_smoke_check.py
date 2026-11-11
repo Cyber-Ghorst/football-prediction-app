@@ -15,9 +15,26 @@ from typing import Any
 import psycopg
 
 
-def run_check(name: str, configured: bool, callback) -> dict[str, Any]:
+def run_check(
+    name: str,
+    configured: bool,
+    callback,
+    *,
+    skip_details: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     if not configured:
         return {"check": name, "status": "skipped", "reason": "credential_not_configured"}
+    if skip_details:
+        result = {"check": name, "status": "skipped", **skip_details}
+        if name == "highlightly":
+            credential = os.getenv("HIGHLIGHTLY_API_KEY") or os.getenv("API_FOOTBALL_KEY", "")
+            result["credential_format"] = {
+                "length": len(credential),
+                "trimmed_length": len(credential.strip()),
+                "contains_control_characters": any(ord(char) < 32 or ord(char) == 127 for char in credential),
+                "has_outer_whitespace": credential != credential.strip(),
+            }
+        return result
     try:
         details = callback()
         return {"check": name, "status": "pass", "details": details}
@@ -50,6 +67,24 @@ def run_check(name: str, configured: bool, callback) -> dict[str, Any]:
             if isinstance(errno, int):
                 result["cause_errno"] = errno
         return result
+
+
+def highlightly_refresh_cooldown_skip_details(
+    report_path: str | Path = "reports/free_fixture_provider_refresh/latest.json",
+) -> dict[str, Any] | None:
+    """Avoid a second live Highlightly probe while the fixture collector is in 429 cooldown."""
+    try:
+        report = json.loads(Path(report_path).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError, TypeError):
+        return None
+    provider = (report.get("providers") or {}).get("highlightly") or {}
+    if provider.get("skipped") != "refresh_cooldown":
+        return None
+    return {
+        "reason": "provider_refresh_cooldown_active",
+        "cooldown_hours": provider.get("cooldown_hours"),
+        "last_successful_snapshot_at": provider.get("last_successful_snapshot_at"),
+    }
 
 
 def check_cockroach() -> dict[str, Any]:
@@ -97,6 +132,7 @@ def main() -> int:
             "highlightly",
             bool(os.getenv("HIGHLIGHTLY_API_KEY") or os.getenv("API_FOOTBALL_KEY")),
             lambda: _provider_probe(HighlightlyClient(), "test_connection"),
+            skip_details=highlightly_refresh_cooldown_skip_details(),
         ),
         run_check(
             "sportmonks",
@@ -110,7 +146,7 @@ def main() -> int:
     report = {
         "operation": "read_only_live_integration_check",
         "checked_at_utc": datetime.now(timezone.utc).isoformat(),
-        "status": "fail" if failed else ("pass" if passed else "skipped"),
+        "status": "fail" if failed else ("partial" if skipped else ("pass" if passed else "skipped")),
         "checks_passed": passed,
         "checks_failed": failed,
         "checks_skipped": skipped,
