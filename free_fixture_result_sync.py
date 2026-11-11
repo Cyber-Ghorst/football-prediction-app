@@ -6,13 +6,13 @@ import re
 from typing import Any, Mapping
 from urllib.parse import urlparse
 
-from free_fixture_adapters import BzzoiroAdapter, OpenLigaDBAdapter
+from free_fixture_adapters import BzzoiroAdapter, OpenLigaDBAdapter, OpenMatchdayAdapter
 from livescore_football import LiveScoreFootballClient
 from provider_data_storage import _connect
 from free_fixture_canonical_promotion import _ensure_promotion_tables
 
 
-SUPPORTED_RESULT_PROVIDERS = {"openligadb", "livescore_football", "bzzoiro"}
+SUPPORTED_RESULT_PROVIDERS = {"openligadb", "open_matchday", "livescore_football", "bzzoiro"}
 
 
 def _normalise(value: Any) -> str:
@@ -48,8 +48,16 @@ def _integer_score(home: Any, away: Any) -> tuple[int, int] | None:
 
 
 def _season_year(value: Any) -> str:
-    match = re.search(r"\b(20\d{2})\b", str(value or ""))
-    return match.group(1) if match else ""
+    text = str(value or "")
+    match = re.search(r"\b(20\d{2})\b", text)
+    if match:
+        return match.group(1)
+    compact = text.strip()
+    if re.fullmatch(r"\d{4}", compact):
+        start, end = int(compact[:2]), int(compact[2:])
+        if end == (start + 1) % 100:
+            return f"20{start:02d}"
+    return ""
 
 
 def verify_openligadb_final_score(
@@ -160,6 +168,51 @@ def verify_livescore_final_score(
     if kickoff is None or kickoff > now:
         return None
     return _integer_score(sides["home"].get("score"), sides["away"].get("score"))
+
+
+def verify_openmatchday_final_score(
+    record: Mapping[str, Any],
+    observation: Mapping[str, Any],
+    *,
+    provider_fixture_id: str,
+    now: datetime,
+) -> tuple[int, int] | None:
+    """Verify a result-file row against the same deterministic future-fixture key."""
+    if str(observation.get("provider_fixture_id") or "") != str(provider_fixture_id):
+        return None
+    if _normalise(observation.get("home_team_name")) != _normalise(record.get("home_team")):
+        return None
+    if _normalise(observation.get("away_team_name")) != _normalise(record.get("away_team")):
+        return None
+    if _normalise(observation.get("competition_name")) != _normalise(record.get("competition")):
+        return None
+    if _season_year(observation.get("season_name") or observation.get("season_key")) != str(record.get("season") or "")[:4]:
+        return None
+    kickoff = _timestamp(observation.get("kickoff_utc"))
+    recorded_kickoff = _timestamp(record.get("kickoff_at"))
+    if kickoff is None or recorded_kickoff is None or kickoff > now:
+        return None
+    if abs((kickoff - recorded_kickoff).total_seconds()) > 300:
+        return None
+
+    competition_key = str(observation.get("competition_key") or "").casefold()
+    competition_name = str(observation.get("competition_name") or "").casefold()
+    # Open Matchday does not expose separate extra-time/penalty fields in its
+    # results CSV. Do not treat cup results as 90-minute scores.
+    if "cup" in competition_key or "cup" in competition_name or "pokal" in competition_name:
+        return None
+
+    raw = observation.get("raw_payload")
+    if not isinstance(raw, Mapping):
+        return None
+    score = _integer_score(raw.get("ft_home"), raw.get("ft_away"))
+    if score is None:
+        return None
+    declared_result = str(raw.get("ft_result") or "").strip().upper()
+    expected_result = "H" if score[0] > score[1] else "A" if score[0] < score[1] else "D"
+    if declared_result and declared_result != expected_result:
+        return None
+    return score
 
 
 def verify_bzzoiro_final_score(
@@ -349,6 +402,35 @@ def sync_free_source_results(
                         )
                     if score is None:
                         item["reason"] = "livescore_final_90_minute_score_not_verified"
+            elif provider == "open_matchday":
+                source_path = urlparse(source_url).path
+                if "/fixtures_" not in source_path or not source_path.endswith(".csv"):
+                    item["reason"] = "open_matchday_fixture_dataset_url_unavailable"
+                else:
+                    results_url = source_url.replace("/fixtures_", "/results_", 1)
+                    competition = str(
+                        raw_observation.get("competition_name")
+                        or representative.get("competition") or ""
+                    )
+                    season = str(
+                        raw_observation.get("season_name")
+                        or representative.get("season") or ""
+                    )
+                    with OpenMatchdayAdapter() as client:
+                        result_rows = client.season_csv(
+                            results_url, competition=competition, season=season
+                        )
+                    result_row = next((
+                        row for row in result_rows
+                        if str(row.get("provider_fixture_id")) == source_id
+                    ), None)
+                    if result_row:
+                        score = verify_openmatchday_final_score(
+                            representative, result_row,
+                            provider_fixture_id=source_id, now=current,
+                        )
+                    if score is None:
+                        item["reason"] = "open_matchday_full_time_score_not_verified"
             elif provider == "bzzoiro":
                 with BzzoiroAdapter(token=bzzoiro_token) as client:
                     event = client.event(source_id)
