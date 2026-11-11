@@ -88,74 +88,27 @@ def audit_highlightly() -> dict[str, Any]:
 
 
 def audit_livescore() -> dict[str, Any]:
-    client = LiveScoreFootballClient()
-    try:
-        metadata = client.meta()
-        all_leagues = client.leagues(kind="all", available=False)
-        available = client.leagues(kind="all", available=True)
-        coverage = [assess_livescore_competition_coverage(row) for row in all_leagues]
-        fresh = sum(row["fallback_eligible"] for row in coverage)
-        countries = Counter(str(row.get("country") or "Unknown") for row in all_leagues)
-        clubs = sum(int((row.get("coverage") or {}).get("clubs") or 0)
-                    for row in all_leagues)
-        matches = sum(int((row.get("coverage") or {}).get("matches") or 0)
-                      for row in all_leagues)
-        standings = sum(int((row.get("coverage") or {}).get("standingsGroups") or 0)
-                        for row in all_leagues)
-        first = all_leagues[0] if all_leagues else {}
-        timestamp_candidates = {}
-        for row in all_leagues:
-            values = {}
-            for key, value in row.items():
-                if any(token in str(key).casefold() for token in ("sync", "updated", "timestamp", "generated")):
-                    values[str(key)] = value
-            nested = row.get("coverage") if isinstance(row.get("coverage"), dict) else {}
-            for key, value in nested.items():
-                if any(token in str(key).casefold() for token in ("sync", "updated", "timestamp", "generated")):
-                    values["coverage." + str(key)] = value
-            if values:
-                timestamp_candidates[str(row.get("slug") or row.get("name") or len(timestamp_candidates))] = values
-        return {
-            "status": "responding", "catalogue_count": len(all_leagues),
-            "available_count": len(available), "country_count": len(countries),
-            "active_count": sum(row.get("active") is True for row in all_leagues),
-            "with_match_data_count": sum(
-                (row.get("coverage") or {}).get("hasData") is True for row in all_leagues
-            ),
-            "fresh_competition_count": fresh,
-            "club_count": clubs, "stored_match_count": matches,
-            "standings_record_count": standings,
-            "competition_schema": {
-                "root_fields": sorted(str(key) for key in first.keys()),
-                "coverage_fields": sorted(str(key) for key in
-                    (first.get("coverage") or {}).keys()),
-                "timestamp_candidates": timestamp_candidates,
-            },
-            "metadata_freshness": assess_livescore_metadata(metadata),
-            "metadata": {
-                "service": metadata.get("service"),
-                "coverage": metadata.get("coverage"),
-                "lastSuccessfulSyncAt": metadata.get("lastSuccessfulSyncAt"),
-                "generatedAt": metadata.get("generatedAt"),
-            },
-            "countries": dict(countries),
-            "competitions": [{
-                "slug": row.get("slug"), "name": row.get("name"),
-                "country": row.get("country"), "active": row.get("active"),
-                "coverage": row.get("coverage"),
-            } for row in all_leagues],
-            "competition_freshness": coverage,
-        }
-    except Exception as exc:
-        cause = exc.__cause__
-        response = getattr(cause, "response", None)
-        status = getattr(response, "status_code", None)
-        return {"status": "error", "catalogue_count": None,
-                "http_status": status,
-                "error_kind": type(cause).__name__ if cause else type(exc).__name__,
-                "reason": str(exc)[:300]}
-    finally:
-        client.close()
+    """Report the documented WorldCup26 historical scope without probing generic fixtures."""
+    reason = (
+        "The current worldcup26.ir fork covers FIFA World Cup 2026 only (48 teams, "
+        "104 matches; tournament completed 2026-07-19). Its generic /get/soccer/{league}/fixtures "
+        "route returned HTTP 400 in the live audit. The documented /get/games endpoint is "
+        "historical-only and requires JWT authentication."
+    )
+    return {
+        "status": "historical_only",
+        "catalogue_count": 0,
+        "available_count": 0,
+        "country_count": 0,
+        "fresh_competition_count": 0,
+        "documented_matches": 104,
+        "documented_teams": 48,
+        "tournament_completed_on": "2026-07-19",
+        "future_fixture_eligible": False,
+        "documented_historical_endpoint": "/get/games",
+        "authentication_required": "JWT",
+        "reason": reason,
+    }
 
 
 def main() -> int:
