@@ -10,6 +10,7 @@ import os
 import datetime as _datetime
 import time
 from typing import Any, Mapping
+from urllib.parse import parse_qs, urlparse
 
 import requests
 
@@ -136,23 +137,34 @@ class SportmonksClient:
         seen_page_signatures: set[tuple[str, ...]] = set()
         page = 1
         max_pages = 20
-        per_page = min(int(params.get("per_page", 50)), 50)
+        page_params = dict(params)
+        per_page = min(int(page_params.get("per_page", 50)), 50)
         while page <= max_pages:
-            query = {**params, "per_page": per_page, "page": page}
+            query = {**page_params, "per_page": per_page, "page": page}
             payload = self._get(path, query)
             page_rows = self._rows(payload)
             signature = tuple(
                 str(row.get("id")) if row.get("id") is not None else repr(row)
                 for row in page_rows
             )
+            pagination = payload.get("pagination") or {}
+            has_more = pagination.get("has_more")
+            self.last_metadata.update({
+                "page": page,
+                "per_page": per_page,
+                "rows_returned": len(page_rows),
+                "pagination_has_more": has_more,
+                "pagination_current_page": pagination.get("current_page"),
+                "pagination_next_page_present": bool(pagination.get("next_page")),
+            })
             if signature and signature in seen_page_signatures:
                 raise SportmonksError(
-                    "Sportmonks returned a repeated page; refusing a potentially incomplete dataset."
+                    "Sportmonks returned a repeated page "
+                    f"at page {page} ({len(page_rows)} rows; has_more={has_more}); "
+                    "refusing a potentially incomplete dataset."
                 )
             if signature:
                 seen_page_signatures.add(signature)
-            pagination = payload.get("pagination") or {}
-            has_more = pagination.get("has_more")
             if has_more is None:
                 if len(page_rows) < per_page:
                     rows.extend(page_rows)
@@ -167,7 +179,28 @@ class SportmonksClient:
             rows.extend(page_rows)
             if not has_more:
                 return rows
-            page += 1
+
+            next_page_url = pagination.get("next_page")
+            if isinstance(next_page_url, str) and next_page_url.strip():
+                next_query = parse_qs(urlparse(next_page_url).query)
+                if "page" in next_query and next_query["page"]:
+                    try:
+                        page = int(next_query["page"][-1])
+                    except (TypeError, ValueError):
+                        page += 1
+                else:
+                    page += 1
+                for key, values in next_query.items():
+                    if key.casefold() in {"page", "api_token", "token"} or not values:
+                        continue
+                    page_params[key] = values[-1]
+                if "per_page" in page_params:
+                    try:
+                        per_page = min(int(page_params["per_page"]), 50)
+                    except (TypeError, ValueError):
+                        per_page = min(int(params.get("per_page", 50)), 50)
+            else:
+                page += 1
         raise SportmonksError("Sportmonks season collection exceeded the safe pagination limit; no partial dataset was accepted.")
 
     def leagues(self, **params: Any) -> list[dict[str, Any]]:
