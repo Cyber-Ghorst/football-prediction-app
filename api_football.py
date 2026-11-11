@@ -110,11 +110,11 @@ class APIFootballClient:
         rows: list[dict[str, Any]] = []
         self.last_fixture_request_count = 0
         for page in range(1, int(max_pages) + 1):
+            self.last_fixture_request_count += 1
             page_rows = self._request(
                 "fixtures",
                 {"date": normalized_date, "timezone": timezone, "page": page},
             )
-            self.last_fixture_request_count += 1
             paging = self.last_paging or {}
             if not page_rows:
                 total_pages = int(paging.get("total") or page)
@@ -161,11 +161,11 @@ class APIFootballClient:
         rows: list[dict[str, Any]] = []
         self.last_fixture_request_count = 0
         for page in range(1, int(max_pages) + 1):
+            self.last_fixture_request_count += 1
             page_rows = self._request(
                 "fixtures",
                 {"from": start, "to": end, "timezone": timezone, "page": page},
             )
-            self.last_fixture_request_count += 1
             paging = self.last_paging or {}
             if not page_rows:
                 total_pages = int(paging.get("total") or page)
