@@ -13,6 +13,8 @@ from free_fixture_adapters import (
 )
 from free_fixture_observation_pipeline import (
     collect_bzzoiro_observations,
+    collect_highlightly_observations,
+    collect_api_ninjas_observations,
     collect_livescore_observations,
     collect_openfootball_observations,
     collect_openligadb_observations,
@@ -43,6 +45,8 @@ def refresh_free_fixture_sources(
     *,
     today: datetime | None = None,
     bzzoiro_token: str | None = None,
+    highlightly_token: str | None = None,
+    api_ninjas_token: str | None = None,
     max_openligadb_scopes: int = 45,
     max_livescore_leagues: int = 30,
 ) -> dict[str, Any]:
@@ -142,6 +146,42 @@ def refresh_free_fixture_sources(
     except Exception as exc:
         results["bzzoiro"] = _error("bzzoiro", exc)
 
+    # Highlightly documents scheduled matches with stable IDs and UTC dates.
+    # Query each UTC day separately and retain all observations for review only.
+    if highlightly_token:
+        try:
+            results["highlightly"] = collect_highlightly_observations(
+                database_url, date_from=date_from, days=7,
+                api_key=highlightly_token,
+            )
+        except Exception as exc:
+            results["highlightly"] = _error("highlightly", exc)
+    else:
+        results["highlightly"] = {
+            "provider": "highlightly", "archived": False,
+            "observation_count": 0, "eligible_for_review_count": 0,
+            "skipped": "HIGHLIGHTLY_API_KEY is not configured",
+            "errors": [],
+        }
+
+    # API Ninjas' documented free tier covers eight current-season leagues.
+    # Restrict discovery to those leagues and keep the result read-only.
+    if api_ninjas_token:
+        try:
+            results["api_ninjas"] = collect_api_ninjas_observations(
+                database_url, season=season_start_year,
+                api_key=api_ninjas_token,
+            )
+        except Exception as exc:
+            results["api_ninjas"] = _error("api_ninjas", exc)
+    else:
+        results["api_ninjas"] = {
+            "provider": "api_ninjas", "archived": False,
+            "observation_count": 0, "eligible_for_review_count": 0,
+            "skipped": "API_NINJAS_API_KEY is not configured",
+            "errors": [],
+        }
+
     # Open Matchday is intentionally excluded from unattended refresh because
     # its upstream licence is non-commercial-only. The manual UI requires an
     # explicit acknowledgement before any collection.
@@ -166,11 +206,15 @@ def refresh_free_fixture_sources(
 def main() -> int:
     database_url = os.getenv("PROVIDER_DATABASE_URL", "")
     token = os.getenv("BZZOIRO_API_TOKEN", "")
+    highlightly_token = os.getenv("HIGHLIGHTLY_API_KEY") or os.getenv("API_FOOTBALL_KEY")
+    api_ninjas_token = os.getenv("API_NINJAS_API_KEY") or os.getenv("API_NINJAS_KEY")
     max_openligadb = int(os.getenv("FREE_FIXTURE_OPENLIGADB_MAX_SCOPES", "45"))
     max_livescore = int(os.getenv("FREE_FIXTURE_LIVESCORE_MAX_LEAGUES", "30"))
     report = refresh_free_fixture_sources(
         database_url,
         bzzoiro_token=token or None,
+        highlightly_token=highlightly_token or None,
+        api_ninjas_token=api_ninjas_token or None,
         max_openligadb_scopes=max_openligadb,
         max_livescore_leagues=max_livescore,
     )
