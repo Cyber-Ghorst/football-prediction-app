@@ -7,6 +7,7 @@ on:
       - "free_fixture_provider_refresh.py"
       - "free_fixture_crosswalk_audit.py"
       - "docs/LAYER11_SCHEDULED_FIXTURE_PROMOTION.md"
+      - "docs/FUTURE_FIXTURE_PROVIDER_SEPARATION.md"
       - "test_free_fixture_auto_promotion.py"
       - "free_fixture_auto_promotion.py"
       - "provider_crosswalk_review_report.py"
