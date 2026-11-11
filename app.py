@@ -227,6 +227,7 @@ if not any(getattr(handler, "_football_github_runtime_handler", False) for handl
 
 st.set_page_config(page_title="Football Prediction Lab", page_icon="⚽", layout="wide")
 st.title("⚽ Football Prediction Lab")
+st.caption("Deployment build: startup-import compatibility 2026-11-11")
 if "github_runtime_log_upload_error" in st.session_state:
     st.warning(
         "Automatic GitHub runtime-log upload failed: "

@@ -3,6 +3,12 @@ import unittest
 
 
 class StreamlitStartupImportContractTests(unittest.TestCase):
+    def test_deployment_build_marker_is_present_for_live_revision_verification(self):
+        from pathlib import Path
+
+        source = Path(__file__).with_name("app.py").read_text(encoding="utf-8")
+        self.assertIn("Deployment build: startup-import compatibility 2026-11-11", source)
+
     def test_optional_fixture_promotion_writer_is_imported_lazily(self):
         from pathlib import Path
 
