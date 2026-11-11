@@ -307,6 +307,7 @@ def collect_highlightly_observations(
     client: Any | None = None,
     page_size: int = 100,
     max_pages: int = 10,
+    api_key: str | None = None,
 ) -> dict[str, Any]:
     """Collect Highlightly scheduled matches by UTC day, paging each date."""
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(date_from)):
@@ -331,7 +332,7 @@ def collect_highlightly_observations(
     try:
         if api is None:
             from highlightly import HighlightlyClient
-            api = HighlightlyClient()
+            api = HighlightlyClient(api_key=api_key)
         for day in dates:
             offset = 0
             day_succeeded = False
@@ -384,6 +385,7 @@ def collect_api_ninjas_observations(
     client: Any | None = None,
     page_size: int = 50,
     max_pages: int = 10,
+    api_key: str | None = None,
 ) -> dict[str, Any]:
     """Collect current-season scheduled API Ninjas fixtures for its free-tier leagues."""
     if isinstance(season, bool) or not isinstance(season, int) or season < 1900:
@@ -404,7 +406,7 @@ def collect_api_ninjas_observations(
     try:
         if api is None:
             from api_ninjas import APINinjasClient
-            api = APINinjasClient()
+            api = APINinjasClient(api_key=api_key)
         for league in selected_leagues:
             league_key = str(league or "").strip().casefold()
             if league_key not in API_NINJAS_FREE_LEAGUES:
