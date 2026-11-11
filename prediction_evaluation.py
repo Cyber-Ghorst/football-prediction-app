@@ -375,20 +375,34 @@ def _score_records(records: Iterable[Mapping[str, Any]], prefix: str) -> dict[st
     }
 
 
+FREE_FIXTURE_RESULT_PROVIDERS = frozenset({
+    "openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro",
+})
+
+
 def _verified_actual_score(row: Mapping[str, Any]) -> tuple[int, int] | None:
-    """Accept only scores carrying the exact automatic Sportmonks verification trail."""
-    if str(row.get("actual_result_verification") or "") != (
-        "exact_fixture_team_competition_season_and_score"
-    ):
-        return None
-    if str(row.get("actual_result_provider") or "").casefold() != "sportmonks":
-        return None
-    if str(row.get("fixture_provider") or "").casefold() != "sportmonks":
-        return None
+    """Accept only exact provider-specific result verification trails."""
+    provider = str(row.get("fixture_provider") or "").strip().casefold()
+    result_provider = str(row.get("actual_result_provider") or "").strip().casefold()
     fixture_id = str(row.get("fixture_id") or "").strip()
     verified_fixture_id = str(row.get("actual_result_fixture_id") or "").strip()
-    if not fixture_id or verified_fixture_id != fixture_id:
+    verification = str(row.get("actual_result_verification") or "")
+
+    if provider == "sportmonks":
+        if verification != "exact_fixture_team_competition_season_and_score":
+            return None
+        if result_provider != "sportmonks" or not fixture_id or verified_fixture_id != fixture_id:
+            return None
+    elif provider in FREE_FIXTURE_RESULT_PROVIDERS:
+        if verification != "exact_provider_fixture_team_competition_season_and_90_minute_score":
+            return None
+        if result_provider != provider or not fixture_id or not verified_fixture_id:
+            return None
+        if fixture_id != f"{provider}:{verified_fixture_id}":
+            return None
+    else:
         return None
+
     if _parse_datetime(row.get("actual_result_verified_at")) is None:
         return None
     if outcome_from_score(row.get("actual_home_goals"), row.get("actual_away_goals")) is None:
@@ -409,6 +423,12 @@ def _fixture_identity(row: Mapping[str, Any]) -> str | None:
     kickoff = _parse_datetime(row.get("kickoff_at"))
     if kickoff is None:
         return None
+    canonical_parts = tuple(
+        str(row.get(key) or "").strip()
+        for key in ("league_id", "season_id", "home_team_id", "away_team_id")
+    )
+    if all(canonical_parts):
+        return "canonical:" + "|".join((*canonical_parts, kickoff.isoformat()))
     provider = str(row.get("fixture_provider") or "").strip().casefold()
     fixture_id = str(row.get("fixture_id") or "").strip()
     if provider and fixture_id:
