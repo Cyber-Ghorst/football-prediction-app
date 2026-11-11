@@ -42,11 +42,12 @@ def canonical_entities():
 
 class FreeFixtureCanonicalPromotionAssessmentTests(unittest.TestCase):
     def assess(self, observation=None, **kwargs):
+        retrieved_at = kwargs.pop("snapshot_retrieved_at", "2026-11-11T01:56:00Z")
         return assess_free_fixture_observation(
             "openligadb",
             observation or OBSERVATION,
             snapshot_id="snapshot-1",
-            snapshot_retrieved_at="2026-11-11T01:56:00Z",
+            snapshot_retrieved_at=retrieved_at,
             league_links={"league-1": "sportmonks:10"},
             season_links={"season-1": "sportmonks:20"},
             team_links={"home-1": "sportmonks:30", "away-1": "sportmonks:40"},
