@@ -252,6 +252,30 @@ def normalize_upcoming_fixtures(
     competition_keys = {
         (str(row["league_id"]), str(row["season_id"])) for row in rows
     }
+    # The requirement is 90 fixtures per calendar day, not 90 fixtures
+    # across the entire seven-day window. Count only validated, deduplicated
+    # provider fixtures and expose each date's shortfall explicitly.
+    window_dates = []
+    date_cursor = current.date()
+    final_date = (current + timedelta(days=window_days)).date()
+    while date_cursor <= final_date:
+        window_dates.append(date_cursor.isoformat())
+        date_cursor += timedelta(days=1)
+    daily_fixture_counts = {day: 0 for day in window_dates}
+    for row in rows:
+        kickoff_date = datetime.fromtimestamp(
+            row["starting_at_timestamp"], timezone.utc
+        ).date().isoformat()
+        if kickoff_date in daily_fixture_counts:
+            daily_fixture_counts[kickoff_date] += 1
+    daily_target_shortfalls = {
+        day: max(0, DAILY_FIXTURE_TARGET - count)
+        for day, count in daily_fixture_counts.items()
+    }
+    daily_target_met = all(
+        count >= DAILY_FIXTURE_TARGET for count in daily_fixture_counts.values()
+    )
+    total_target_shortfall = sum(daily_target_shortfalls.values())
     return {
         "fixtures": rows,
         "highlighted_fixtures": highlighted,
@@ -266,8 +290,15 @@ def normalize_upcoming_fixtures(
         "window_end_utc": (current + timedelta(days=window_days)).isoformat(),
         "window_days": window_days,
         "daily_target": DAILY_FIXTURE_TARGET,
-        "target_met": len(rows) >= DAILY_FIXTURE_TARGET,
-        "target_shortfall": max(0, DAILY_FIXTURE_TARGET - len(rows)),
+        "daily_fixture_counts_utc": daily_fixture_counts,
+        "daily_target_shortfalls_utc": daily_target_shortfalls,
+        "days_meeting_target": sum(
+            1 for count in daily_fixture_counts.values()
+            if count >= DAILY_FIXTURE_TARGET
+        ),
+        "days_in_window": len(window_dates),
+        "target_met": daily_target_met,
+        "target_shortfall": total_target_shortfall,
         "excluded": excluded,
     }
 
