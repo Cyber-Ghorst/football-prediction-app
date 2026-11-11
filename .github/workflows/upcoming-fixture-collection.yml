@@ -9,6 +9,7 @@ on:
       - "provider_data_storage.py"
       - "free_fixture_adapters.py"
       - "free_fixture_observation_pipeline.py"
+      - "free_fixture_observation_store.py"
       - "upcoming_fixture_collector.py"
       - "temporary_fixture_store.py"
       - "provider_routing.py"
