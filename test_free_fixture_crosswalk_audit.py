@@ -23,7 +23,10 @@ class FreeFixtureCrosswalkAuditTests(unittest.TestCase):
                 "teams": [{"provider_entity_id": "team-a", "status": "no_exact_candidate"}],
             },
         }
-        report = build_crosswalk_audit("provider-db")
+        report = build_crosswalk_audit(
+            "provider-db", highlightly_use_allowed=True,
+            api_ninjas_noncommercial_confirmed=True,
+        )
         self.assertEqual(set(report["providers"]), set(PROVIDERS))
         first = report["providers"]["openligadb"]
         self.assertEqual(first["status"], "ok")
@@ -58,7 +61,10 @@ class FreeFixtureCrosswalkAuditTests(unittest.TestCase):
                 for index in range(60)
             ]},
         }
-        report = build_crosswalk_audit("provider-db")
+        report = build_crosswalk_audit(
+            "provider-db", highlightly_use_allowed=True,
+            api_ninjas_noncommercial_confirmed=True,
+        )
         teams = report["providers"]["openligadb"]["categories"]["teams"]
         self.assertEqual(teams["candidate_count"], 60)
         self.assertEqual(len(teams["candidates"]), 25)
@@ -81,7 +87,10 @@ class FreeFixtureCrosswalkAuditTests(unittest.TestCase):
                 for index in range(10)
             ]},
         }
-        report = build_crosswalk_audit("provider-db")
+        report = build_crosswalk_audit(
+            "provider-db", highlightly_use_allowed=True,
+            api_ninjas_noncommercial_confirmed=True,
+        )
         teams = report["providers"]["openligadb"]["categories"]["teams"]
         manual_ids = {
             row["provider_entity_id"] for row in teams["candidates"]
@@ -94,6 +103,16 @@ class FreeFixtureCrosswalkAuditTests(unittest.TestCase):
 
     @patch("free_fixture_crosswalk_audit.load_canonical_crosswalk_catalogue", return_value={"leagues": [], "seasons": [], "teams": []})
     @patch("free_fixture_crosswalk_audit.build_provider_crosswalk_review_report")
+    def test_restricted_provider_audits_are_skipped_without_acknowledgements(self, builder, catalogue):
+        report = build_crosswalk_audit("provider-db")
+        self.assertEqual(report["providers"]["highlightly"]["status"], "skipped")
+        self.assertEqual(report["providers"]["api_ninjas"]["status"], "skipped")
+        self.assertEqual(builder.call_count, len(PROVIDERS) - 2)
+        catalogue.assert_called_once_with("provider-db")
+
+
+    @patch("free_fixture_crosswalk_audit.load_canonical_crosswalk_catalogue", return_value={"leagues": [], "seasons": [], "teams": []})
+    @patch("free_fixture_crosswalk_audit.build_provider_crosswalk_review_report")
     def test_isolates_provider_failure_without_losing_other_reports(self, builder, catalogue):
         builder.side_effect = [RuntimeError("db error")] + [{
             "snapshot_count": 0,
@@ -102,7 +121,10 @@ class FreeFixtureCrosswalkAuditTests(unittest.TestCase):
             "existing_link_counts": {},
             "candidates": {},
         }] * (len(PROVIDERS) - 1)
-        report = build_crosswalk_audit("provider-db")
+        report = build_crosswalk_audit(
+            "provider-db", highlightly_use_allowed=True,
+            api_ninjas_noncommercial_confirmed=True,
+        )
         self.assertEqual(report["providers"]["openligadb"]["status"], "error")
         self.assertEqual(report["providers"]["openligadb"]["error_type"], "RuntimeError")
         self.assertEqual(report["providers"]["openfootball"]["status"], "ok")
