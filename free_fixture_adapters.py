@@ -384,6 +384,89 @@ class OpenMatchdayAdapter(_StaticDatasetAdapter):
         return output
 
 
+class TheSportsDBAdapter(_HttpAdapter):
+    """TheSportsDB v1 free API; schedule limits are one next event per league."""
+    provider = "thesportsdb"
+    BASE_URL = "https://www.thesportsdb.com/api/v1/json/123"
+
+    def leagues_by_country(self, country: str, *, sport: str = "Soccer") -> list[dict[str, Any]]:
+        country_value = _text(country)
+        if not country_value:
+            raise ValueError("A country name is required for TheSportsDB league discovery.")
+        payload = self._get_json(
+            f"{self.BASE_URL}/search_all_leagues.php",
+            params={"c": country_value, "s": sport},
+        )
+        rows = payload.get("countries") or payload.get("leagues") if isinstance(payload, dict) else None
+        if rows is None:
+            return []
+        if not isinstance(rows, list):
+            raise FreeFixtureProviderError("TheSportsDB league catalogue response is not an array.")
+        return [row for row in rows if isinstance(row, dict)]
+
+    def events_next_league(self, league_id: str | int) -> list[dict[str, Any]]:
+        league_value = _text(league_id)
+        if not league_value:
+            raise ValueError("A TheSportsDB league ID is required.")
+        payload = self._get_json(
+            f"{self.BASE_URL}/eventsnextleague.php",
+            params={"id": league_value},
+        )
+        rows = payload.get("events") if isinstance(payload, dict) else None
+        if rows is None:
+            return []
+        if not isinstance(rows, list):
+            raise FreeFixtureProviderError("TheSportsDB next-league response is not an array.")
+        return [row for row in rows if isinstance(row, dict)]
+
+
+def normalize_thesportsdb_events(
+    events: Iterable[Mapping[str, Any]],
+    *,
+    league: Mapping[str, Any],
+    fetched_at: datetime | None = None,
+) -> list[dict[str, Any]]:
+    fetched = fetched_at or datetime.now(timezone.utc)
+    league_id = league.get("idLeague") or league.get("id")
+    league_name = league.get("strLeague") or league.get("name")
+    league_country = league.get("strCountry") or league.get("country")
+    output = []
+    for event in events:
+        if not isinstance(event, Mapping):
+            continue
+        event_id = event.get("idEvent")
+        raw_payload = {
+            "event": dict(event),
+            "league": {
+                "id": league_id,
+                "name": league_name,
+                "country": league_country,
+            },
+        }
+        output.append(_observation(
+            "thesportsdb", event, fetched_at=fetched,
+            source_url=f"https://www.thesportsdb.com/api/v1/json/123/eventsnextleague.php?id={league_id}",
+            licence=(
+                "TheSportsDB free API key 123; 30 requests/minute; one next event per league "
+                "on the free tier. Development use only; app-store publication requires a paid "
+                "subscription. Attribute TheSportsDB before production use."
+            ),
+            provider_fixture_id=event_id,
+            kickoff=event.get("strTimestamp"),
+            home=event.get("strHomeTeam"),
+            away=event.get("strAwayTeam"),
+            home_id=event.get("idHomeTeam"),
+            away_id=event.get("idAwayTeam"),
+            competition=league_id,
+            competition_name=league_name,
+            season=event.get("strSeason"),
+            season_name=event.get("strSeason"),
+            status=event.get("strStatus"),
+            raw_payload=raw_payload,
+        ))
+    return output
+
+
 class BzzoiroAdapter(_HttpAdapter):
     """Bzzoiro v2 upcoming-events adapter using the documented events endpoint."""
     provider = "bzzoiro"
