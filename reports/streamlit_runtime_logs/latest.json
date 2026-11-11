@@ -1,6 +1,6 @@
 {
   "report_name": "streamlit_runtime_logs",
-  "generated_at_utc": "2026-11-11T10:09:07.795059+00:00",
+  "generated_at_utc": "2026-11-11T10:24:15.978241+00:00",
   "event": "streamlit_application_error",
   "traceback": "Traceback (most recent call last):\n  File \"/mount/src/football-prediction-app/app.py\", line 108, in <module>\n    from provider_crosswalk_review_report import build_provider_crosswalk_review_report\n  File \"/mount/src/football-prediction-app/provider_crosswalk_review_report.py\", line 12, in <module>\n    from provider_entity_crosswalk import (\n    ...<3 lines>...\n    )\nImportError: cannot import name 'load_provider_entity_links_by_type' from 'provider_entity_crosswalk' (/mount/src/football-prediction-app/provider_entity_crosswalk.py). Did you mean: 'load_provider_entity_links'?\n",
   "sensitive_data_policy": "Secrets and credential patterns are redacted; no prediction ledger or user data is included."
