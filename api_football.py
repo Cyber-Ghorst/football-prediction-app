@@ -58,7 +58,24 @@ class APIFootballClient:
         if not isinstance(payload, dict):
             raise APIFootballError("API-Football returned an unexpected response.")
         if payload.get("errors"):
-            raise APIFootballError("API-Football rejected the request; check endpoint parameters, coverage and account quota.")
+            errors = payload.get("errors")
+            sensitive_keys = {"key", "api_key", "apikey", "authorization", "token", "secret"}
+            if isinstance(errors, dict):
+                safe_errors = {
+                    str(key): str(value).replace(self.api_key, "[redacted]")[:240]
+                    for key, value in errors.items()
+                    if str(key).lower() not in sensitive_keys
+                }
+            elif isinstance(errors, list):
+                safe_errors = [
+                    str(value).replace(self.api_key, "[redacted]")[:240]
+                    for value in errors[:8]
+                ]
+            else:
+                safe_errors = str(errors).replace(self.api_key, "[redacted]")[:500]
+            raise APIFootballError(
+                f"API-Football rejected endpoint '{endpoint}': {safe_errors}"
+            )
         self.last_paging = payload.get("paging") or {}
         rows = payload.get("response", [])
         if not isinstance(rows, list):

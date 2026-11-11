@@ -54,6 +54,16 @@ jobs:
           git add reports/api_football_fixture_audit
           if ! git diff --cached --quiet; then
             git commit -m "Archive API-Football future fixture audit ${stamp}"
-            git pull --rebase origin main
-            git push origin HEAD:main
+            pushed=0
+            for attempt in 1 2 3; do
+              git fetch origin main
+              git rebase origin/main
+              if git push origin HEAD:main; then
+                pushed=1
+                break
+              fi
+              echo "Main advanced during report archival (attempt ${attempt}); retrying rebase/push."
+              sleep 2
+            done
+            test "$pushed" -eq 1 || { echo "::error::Could not publish API-Football audit report after three retries."; exit 1; }
           fi
