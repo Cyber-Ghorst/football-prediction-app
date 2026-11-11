@@ -980,40 +980,65 @@ with st.sidebar:
     season = st.number_input("Season start year", min_value=2015, max_value=2035, value=2026, step=1,
                              help="For a 2026/27 season, enter 2026. Use the season year supported by your API plan.")
     include_stats = st.checkbox("Fetch match statistics (more API requests)", value=True)
-    cross_check_recent_results = st.checkbox(
-        "Cross-check recent results with Highlightly and API Ninjas",
-        value=False,
-        help="Optional independent audit. It makes additional provider requests and adds latency, but does not change prediction inputs.",
+    highlightly_use_allowed = (
+        _setting_enabled("FREE_FIXTURE_TERMS_ACK_HIGHLIGHTLY")
+        and _setting_enabled("HIGHLIGHTLY_NON_BETTING_USE_CONFIRMED")
     )
-    use_verified_result_history_fallback = st.checkbox(
-        "Use exact verified results to fill missing recent history",
-        value=False,
-        help="Opt-in Layer 2 fallback. Uses extra Highlightly/API Ninjas and targeted Sportmonks requests (capped at ten unique dates). A result is added only when an independent provider and a completed Sportmonks fixture agree on exact competition, season, home/away teams, kickoff and score. It updates recent form/goals only; missing match statistics and TVD evidence remain unchanged.",
+    api_ninjas_use_allowed = (
+        _setting_enabled("FREE_FIXTURE_TERMS_ACK_API_NINJAS")
+        and _setting_enabled("FREE_FIXTURE_NONCOMMERCIAL_ACK_API_NINJAS")
     )
-    cross_check_highlightly_details = st.checkbox(
-        "Cross-check match statistics and lineups with Highlightly",
-        value=False,
-        help="Optional extra requests: compares up to ten recent matches per selected team and checks lineups for the exact upcoming fixture. Diagnostic only; does not change predictions.",
-    )
-    use_highlightly_statistics_fallback = st.checkbox(
-        "Use Highlightly to fill missing match statistics",
-        value=False,
-        help="Opt-in Layer 2 fallback. Only fills missing supported metrics after exact competition, country, season, fixture, team orientation and kickoff checks. Existing Sportmonks values remain authoritative; TVD evidence is not replaced.",
-    )
-    use_highlightly_lineups_fallback = st.checkbox(
-        "Use Highlightly lineups when Sportmonks lineups are missing",
-        value=False,
-        help="Opt-in exact-selected-fixture fallback. Uses provider-reported starters/substitutes only inside Highlightly's lineup window. It does not infer injuries or player availability.",
-    )
+    if highlightly_use_allowed and api_ninjas_use_allowed:
+        cross_check_recent_results = st.checkbox(
+            "Cross-check recent results with Highlightly and API Ninjas",
+            value=False,
+            help="Optional independent audit. It makes additional provider requests and adds latency, but does not change prediction inputs.",
+        )
+        use_verified_result_history_fallback = st.checkbox(
+            "Use exact verified results to fill missing recent history",
+            value=False,
+            help="Opt-in Layer 2 fallback. Uses extra Highlightly/API Ninjas and targeted Sportmonks requests (capped at ten unique dates). A result is added only when an independent provider and a completed Sportmonks fixture agree on exact competition, season, home/away teams, kickoff and score. It updates recent form/goals only; missing match statistics and TVD evidence remain unchanged.",
+        )
+    else:
+        st.caption(
+            "Highlightly/API Ninjas result checks are disabled until their terms and permitted-use acknowledgements are configured."
+        )
+        cross_check_recent_results = False
+        use_verified_result_history_fallback = False
+
+    if highlightly_use_allowed:
+        cross_check_highlightly_details = st.checkbox(
+            "Cross-check match statistics and lineups with Highlightly",
+            value=False,
+            help="Optional extra requests: compares up to ten recent matches per selected team and checks lineups for the exact upcoming fixture. Diagnostic only; does not change predictions.",
+        )
+        use_highlightly_statistics_fallback = st.checkbox(
+            "Use Highlightly to fill missing match statistics",
+            value=False,
+            help="Opt-in Layer 2 fallback. Only fills missing supported metrics after exact competition, country, season, fixture, team orientation and kickoff checks. Existing Sportmonks values remain authoritative; TVD evidence is not replaced.",
+        )
+        use_highlightly_lineups_fallback = st.checkbox(
+            "Use Highlightly lineups when Sportmonks lineups are missing",
+            value=False,
+            help="Opt-in exact-selected-fixture fallback. Uses provider-reported starters/substitutes only inside Highlightly's lineup window. It does not infer injuries or player availability.",
+        )
+        cross_check_highlightly_players = st.checkbox(
+            "Fetch player and team-season performance statistics",
+            value=False,
+            help="Uses exact selected-fixture starters. Performs a quota preflight and skips collection when remaining requests are unknown or insufficient. Maximum 22 player-stat requests plus two team-stat requests. Diagnostic only.",
+        )
+    else:
+        st.caption(
+            "Highlightly match-statistics, lineup and player-enrichment options are disabled until permitted non-betting use is confirmed."
+        )
+        cross_check_highlightly_details = False
+        use_highlightly_statistics_fallback = False
+        use_highlightly_lineups_fallback = False
+        cross_check_highlightly_players = False
     use_livescore_missing_result_fallback = st.checkbox(
         "Use fresh LiveScoreFootball to fill missing Sportmonks results",
         value=False,
         help="Opt-in fallback. Requires fresh global and per-competition sync metadata plus an exact competition/season crosswalk. It fills only completed Sportmonks fixtures with no explicit CURRENT score rows, after exact team/kickoff matching. Valid Sportmonks scores are never overwritten; requests are capped at ten unique dates.",
-    )
-    cross_check_highlightly_players = st.checkbox(
-        "Fetch player and team-season performance statistics",
-        value=False,
-        help="Uses exact selected-fixture starters. Performs a quota preflight and skips collection when remaining requests are unknown or insufficient. Maximum 22 player-stat requests plus two team-stat requests. Diagnostic only.",
     )
     st.caption("For 2022–2024 add APISPORTS_API_KEY; for 2025+ add SPORTMONKS_API_TOKEN in Streamlit Secrets. Never paste keys into public code.")
     with st.expander("Provider readiness", expanded=True):

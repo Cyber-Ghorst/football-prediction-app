@@ -69,6 +69,72 @@ def run_check(
         return result
 
 
+def _enabled(name: str) -> bool:
+    return os.getenv(name, "").strip().casefold() in {"1", "true", "yes", "on"}
+
+
+def highlightly_use_skip_details() -> dict[str, Any] | None:
+    if not (
+        _enabled("FREE_FIXTURE_TERMS_ACK_HIGHLIGHTLY")
+        and _enabled("HIGHLIGHTLY_NON_BETTING_USE_CONFIRMED")
+    ):
+        return {
+            "reason": "provider_use_not_confirmed",
+            "required_acknowledgements": [
+                "FREE_FIXTURE_TERMS_ACK_HIGHLIGHTLY",
+                "HIGHLIGHTLY_NON_BETTING_USE_CONFIRMED",
+            ],
+        }
+    return highlightly_refresh_cooldown_skip_details()
+
+
+def api_ninjas_use_skip_details() -> dict[str, Any] | None:
+    if not (
+        _enabled("FREE_FIXTURE_TERMS_ACK_API_NINJAS")
+        and _enabled("FREE_FIXTURE_NONCOMMERCIAL_ACK_API_NINJAS")
+    ):
+        return {
+            "reason": "free_plan_noncommercial_use_not_confirmed",
+            "required_acknowledgements": [
+                "FREE_FIXTURE_TERMS_ACK_API_NINJAS",
+                "FREE_FIXTURE_NONCOMMERCIAL_ACK_API_NINJAS",
+            ],
+        }
+    return None
+
+
+def api_football_account_probe(client=None) -> dict[str, Any]:
+    """Return API-Football account/quota metadata without exposing account PII."""
+    if client is None:
+        from api_football import APIFootballClient
+        client = APIFootballClient()
+    try:
+        status_payload = client.status()
+        status = (
+            status_payload.get("response")
+            if isinstance(status_payload, dict) and isinstance(status_payload.get("response"), dict)
+            else status_payload
+        )
+        leagues = client.leagues()
+        subscription = status.get("subscription") if isinstance(status, dict) else {}
+        requests_info = status.get("requests") if isinstance(status, dict) else {}
+        subscription = subscription if isinstance(subscription, dict) else {}
+        requests_info = requests_info if isinstance(requests_info, dict) else {}
+        return {
+            "authenticated": True,
+            "leagues_returned": len(leagues),
+            "subscription_plan": subscription.get("plan"),
+            "subscription_active": subscription.get("active"),
+            "requests_used_today": requests_info.get("current"),
+            "requests_limit_per_day": requests_info.get("limit_day"),
+            "status_endpoint_quota_exempt": True,
+        }
+    finally:
+        close = getattr(client, "close", None)
+        if close:
+            close()
+
+
 def highlightly_refresh_cooldown_skip_details(
     report_path: str | Path = "reports/free_fixture_provider_refresh/latest.json",
 ) -> dict[str, Any] | None:
@@ -121,18 +187,19 @@ def main() -> int:
         run_check(
             "api_football",
             bool(os.getenv("APISPORTS_API_KEY")),
-            lambda: _provider_probe(APIFootballClient(), "leagues"),
+            lambda: api_football_account_probe(APIFootballClient()),
         ),
         run_check(
             "api_ninjas",
             bool(os.getenv("API_NINJAS_API_KEY")),
             lambda: _provider_probe(APINinjasClient(), "test_connection"),
+            skip_details=api_ninjas_use_skip_details(),
         ),
         run_check(
             "highlightly",
             bool(os.getenv("HIGHLIGHTLY_API_KEY") or os.getenv("API_FOOTBALL_KEY")),
             lambda: _provider_probe(HighlightlyClient(), "test_connection"),
-            skip_details=highlightly_refresh_cooldown_skip_details(),
+            skip_details=highlightly_use_skip_details(),
         ),
         run_check(
             "sportmonks",

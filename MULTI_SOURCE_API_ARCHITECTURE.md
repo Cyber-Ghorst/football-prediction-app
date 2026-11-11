@@ -559,3 +559,8 @@ Layer 3 adds evidence-based checks around the canonical records delivered by Lay
 ### Layer 3 completion boundary
 
 All eight implementation objectives are complete when this milestone is merged. Historical evidence is still longitudinal: the system must continue collecting independently verified outcomes until at least 30 unique fixtures are available before making descriptive performance claims. No provider priority, prediction input, model weight, TVD rule or tactical recency weighting is changed by this milestone.
+
+
+## Highlightly permitted-use control
+
+Highlightly's optional corroboration, statistics, lineup and player-enrichment paths are disabled unless both `FREE_FIXTURE_TERMS_ACK_HIGHLIGHTLY` and `HIGHLIGHTLY_NON_BETTING_USE_CONFIRMED` are explicitly configured. The latter must only be enabled when the application will not use Highlightly data to operate, facilitate or support betting or wagering. The Streamlit UI, scheduled collection, catalogue audit, integration smoke check, promotion and result-verification paths all enforce this control.

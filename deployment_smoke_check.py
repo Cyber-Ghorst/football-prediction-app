@@ -6,6 +6,7 @@ Streamlit session or exercise provider credentials/database connections.
 """
 from __future__ import annotations
 
+import ast
 import importlib
 import json
 import sys
@@ -49,6 +50,10 @@ APP_MODULES = (
     "free_fixture_canonical_promotion",
     "free_fixture_provider_refresh",
     "free_fixture_crosswalk_audit",
+    "free_fixture_window_coverage",
+    "free_fixture_auto_promotion",
+    "integration_smoke_check",
+    "provider_league_catalogue_audit",
     "sportmonks_catalogue_sync",
     "learning_dataset",
     "learning_experiments",
@@ -93,17 +98,42 @@ APP_SYMBOLS = {
         "load_provider_entity_links",
         "extract_provider_entities_from_observations",
         "load_provider_entity_links_by_type",
+        "provider_season_entity_id",
     ),
     "provider_crosswalk_review_report": ("build_provider_crosswalk_review_report",),
     "free_fixture_result_sync": ("sync_free_source_results",),
     "free_fixture_canonical_promotion": ("review_and_promote_free_fixture_observations",),
     "free_fixture_provider_refresh": ("refresh_free_fixture_sources",),
     "free_fixture_crosswalk_audit": ("build_crosswalk_audit",),
+    "free_fixture_window_coverage": ("build_free_fixture_window_coverage", "build_window_coverage_report"),
+    "free_fixture_auto_promotion": ("run_automatic_fixture_promotion",),
+    "integration_smoke_check": ("run_check", "api_football_account_probe"),
+    "provider_league_catalogue_audit": ("audit_highlightly", "audit_livescore"),
     "learning_dataset": ("build_learning_dataset",),
     "learning_experiments": ("run_offline_experiments",),
     "learning_readiness_audit": ("build_learning_readiness_audit",),
     "sportmonks_catalogue_sync": ("select_current_seasons", "sync_sportmonks_catalogue"),
 }
+
+
+def has_eager_crosswalk_review_import(source: str) -> bool:
+    """Detect the startup-time import pattern that previously broke Streamlit boot."""
+    tree = ast.parse(source)
+    for node in tree.body:
+        if isinstance(node, ast.ImportFrom) and node.module == "provider_crosswalk_review_report":
+            return True
+        if isinstance(node, ast.Import) and any(
+            alias.name == "provider_crosswalk_review_report" for alias in node.names
+        ):
+            return True
+        if isinstance(node, ast.Try):
+            for child in ast.walk(node):
+                if isinstance(child, ast.ImportFrom) and child.module == "provider_crosswalk_review_report":
+                    return True
+                if isinstance(child, ast.Import):
+                    if any(alias.name == "provider_crosswalk_review_report" for alias in child.names):
+                        return True
+    return False
 
 
 def main() -> int:
@@ -113,6 +143,14 @@ def main() -> int:
         source = app_path.read_text(encoding="utf-8")
         compile(source, str(app_path), "exec")
         checks.append({"id": "app_entrypoint_syntax", "status": "pass"})
+        if has_eager_crosswalk_review_import(source):
+            checks.append({
+                "id": "app_eager_import_safety",
+                "status": "fail",
+                "error_type": "ProviderCrosswalkReviewImportedAtStartup",
+            })
+        else:
+            checks.append({"id": "app_eager_import_safety", "status": "pass"})
     except Exception as exc:
         checks.append({
             "id": "app_entrypoint_syntax",

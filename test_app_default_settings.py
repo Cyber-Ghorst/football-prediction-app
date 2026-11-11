@@ -4,7 +4,7 @@ from streamlit.testing.v1 import AppTest
 
 
 class AppDefaultSettingsTests(unittest.TestCase):
-    def test_optional_recent_result_corroboration_is_disabled_by_default(self):
+    def test_optional_recent_result_corroboration_is_hidden_without_usage_acknowledgements(self):
         app = AppTest.from_file("app.py", default_timeout=90)
         app.run(timeout=90)
 
@@ -16,8 +16,10 @@ class AppDefaultSettingsTests(unittest.TestCase):
             ),
             None,
         )
-        self.assertIsNotNone(checkbox)
-        self.assertFalse(checkbox.value)
+        self.assertIsNone(
+            checkbox,
+            "Restricted-provider controls should be hidden until permitted-use acknowledgements are configured.",
+        )
 
 
 if __name__ == "__main__":
