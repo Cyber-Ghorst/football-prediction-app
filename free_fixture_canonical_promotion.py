@@ -300,6 +300,7 @@ def review_and_promote_free_fixture_observations(
                 window_days=int(window_days),
                 licence_acknowledged=licence_acknowledged,
                 open_matchday_noncommercial_confirmed=open_matchday_noncommercial_confirmed,
+                api_ninjas_noncommercial_confirmed=api_ninjas_noncommercial_confirmed,
             ))
 
     counts: dict[str, int] = {}
