@@ -37,11 +37,11 @@ PROVIDER_ROLES: dict[str, dict[str, Any]] = {
         "limitation": "The adapter supplies fixtures/results/standings and club/squad data, but no detailed fixture statistics, injuries or lineups. Result candidates enter history only after exact Sportmonks fixture and score verification.",
     },
     "livescore_football": {
-        "display_name": "LiveScoreFootball",
+        "display_name": "WorldCup26 (LiveScoreFootball fork)",
         "rank": 5,
-        "role": "Scheduled-fixture candidate plus competition-specific results/standings corroboration",
-        "domains": ("future_fixtures", "fixtures", "results", "standings"),
-        "limitation": "The existing adapter exposes a scheduled-fixtures endpoint and the public service is hosted at worldcup26.ir. This is one provider, not a separate WorldCup26 provider. The database-backed snapshot depends on an external listener; keep the future-fixture route disabled until live scheduled records, kickoff timestamps, coverage and per-event freshness pass validation.",
+        "role": "World Cup 2026 historical results and group standings only",
+        "domains": ("results", "historical_results", "standings"),
+        "limitation": "The current worldcup26.ir service documents a 104-match, 48-team FIFA World Cup 2026 dataset, not a broad multi-league schedule. Its documented /get/games endpoint is historical-only after the tournament ended on 19 July 2026 and requires JWT authentication. The generic /get/soccer/{league}/fixtures route returned HTTP 400 in the live audit. Excluded from future-fixture discovery.",
     },
     "openligadb": {
         "display_name": "OpenLigaDB",
@@ -64,16 +64,23 @@ PROVIDER_ROLES: dict[str, dict[str, Any]] = {
         "domains": ("future_fixtures", "results", "match_statistics"),
         "limitation": "Advertises 75 competitions and daily CSV refresh, but terms restrict use to non-commercial purposes. Not live; fixed CET-1 kickoff convention can be inaccurate during daylight-saving time. Disabled for commercial use.",
     },
+    "thesportsdb": {
+        "display_name": "TheSportsDB",
+        "rank": 9,
+        "role": "Free-tier, low-volume future-fixture discovery candidate",
+        "domains": ("future_fixtures", "results"),
+        "limitation": "Public free API key 123; 30 requests/minute; free search returns up to 10 leagues per country and eventsnextleague returns only one next event per league. Free-tier use is for development; app-store publication requires a paid subscription. Manual staging only until coverage, exact kickoff timestamps and deployment rights are verified.",
+    },
     "bzzoiro": {
         "display_name": "Bzzoiro Sports Data",
-        "rank": 9,
+        "rank": 10,
         "role": "Free-tier future-fixture discovery candidate",
         "domains": ("future_fixtures", "results", "standings", "statistics", "lineups", "odds", "predictions"),
         "limitation": "Football free tier advertises 60+ competitions and 7,500 requests/day; requires BZZOIRO_API_TOKEN. Terms permit app display and derived prediction outputs but prohibit raw-data redistribution as a standalone feed/database/API. Future-fixture route remains disabled pending live validation.",
     },
     "openscores": {
         "display_name": "OpenScores",
-        "rank": 10,
+        "rank": 11,
         "role": "Read-only historical result observations and entity-mapping audit; not a future-fixture source",
         "domains": ("results", "historical_results"),
         "limitation": "Staged observations are not canonical fixtures or prediction inputs. Entity crosswalks remain unapproved; do not use OpenScores for future-fixture discovery or production prediction routing.",
@@ -98,6 +105,7 @@ def provider_readiness() -> list[dict[str, Any]]:
         "highlightly": _secret_present("HIGHLIGHTLY_API_KEY", ("API_FOOTBALL_KEY",)),
         "sportmonks": _secret_present("SPORTMONKS_API_TOKEN", ("SPORTMONKS_API_KEY",)),
         "livescore_football": False,
+        "thesportsdb": True,
         "openligadb": False,
         "openfootball": False,
         "open_matchday": False,
@@ -109,7 +117,8 @@ def provider_readiness() -> list[dict[str, Any]]:
         "api_ninjas": "adapter and authenticated smoke test available; exact result candidates can trigger an opt-in Sportmonks-verified history fallback; no direct statistics, injury or lineup fields",
         "highlightly": "adapter and authenticated smoke test available; opt-in exact-match missing-stat, lineup and Sportmonks-verified result-history fallbacks are wired into Layer 2; no injury or availability inference",
         "sportmonks": "current-season Layer 2 path active; exact competition/season coverage and data-quality gates enforced",
-        "livescore_football": "implemented read-only adapter exposes scheduled fixtures, results and standings; 35-competition catalogue audit and opt-in missing-score fallback are wired into Streamlit (default off). Future-fixture route remains disabled until live scheduled fixtures, kickoff precision, exact season/team crosswalks and event freshness are verified; worldcup26.ir is this same service, not a second provider",
+        "livescore_football": "historical World Cup 2026 results/standings only; generic future-fixture request returned HTTP 400; documented /get/games endpoint requires JWT; not used for fixture discovery",
+        "thesportsdb": "manual-only future-event adapter; free-tier country/league and one-next-event limits; requires explicit terms acknowledgement and exact timestamp validation",
         "openligadb": "read-only season adapter implemented; live coverage, freshness, canonical crosswalk and route activation remain pending",
         "openfootball": "read-only football.json adapter implemented; timezone-bearing future rows, upstream freshness, canonical crosswalk and route activation remain pending",
         "open_matchday": "read-only CSV adapter implemented; fixed CET-1 timestamps are rejected without a verified timezone; non-commercial rights and route activation remain pending",
@@ -121,7 +130,8 @@ def provider_readiness() -> list[dict[str, Any]]:
         "api_ninjas": "API_NINJAS_API_KEY",
         "highlightly": "HIGHLIGHTLY_API_KEY",
         "sportmonks": "SPORTMONKS_API_TOKEN",
-        "livescore_football": "none required for documented public endpoints",
+        "livescore_football": "LIVESCORE_FOOTBALL_JWT for documented historical game endpoints",
+        "thesportsdb": "public free API key 123 (no secret required)",
         "openligadb": "none required",
         "openfootball": "none required",
         "open_matchday": "none required",
@@ -132,7 +142,7 @@ def provider_readiness() -> list[dict[str, Any]]:
     for key in (
         "sportmonks", "highlightly", "api_football", "api_ninjas",
         "livescore_football", "openligadb", "openfootball",
-        "open_matchday", "bzzoiro", "openscores",
+        "open_matchday", "thesportsdb", "bzzoiro", "openscores",
     ):
         role = PROVIDER_ROLES[key]
         rows.append({
