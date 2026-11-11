@@ -169,8 +169,11 @@ class FreeFixtureObservationPipelineTests(unittest.TestCase):
         archive.assert_not_called()
 
 
+    @patch("free_fixture_observation_pipeline.load_provider_observation_snapshots", return_value=[])
     @patch("free_fixture_observation_pipeline.archive_future_fixture_observations")
-    def test_highlightly_collects_each_utc_day_and_archives_observations(self, archive):
+    def test_highlightly_collects_each_utc_day_and_archives_observations(
+        self, archive, snapshots
+    ):
         archive.return_value = {"snapshot_id": "highlightly-snapshot"}
         client = Mock()
         client.base_url = "https://soccer.highlightly.net"
@@ -194,6 +197,56 @@ class FreeFixtureObservationPipelineTests(unittest.TestCase):
         self.assertTrue(result["archived"])
         self.assertEqual(archive.call_args.kwargs["provider"], "highlightly")
         self.assertEqual(archive.call_args.kwargs["observations"][0]["provider_fixture_id"], "1001")
+
+    @patch("free_fixture_observation_pipeline.load_provider_observation_snapshots")
+    @patch("free_fixture_observation_pipeline.archive_future_fixture_observations")
+    def test_highlightly_skips_api_calls_inside_quota_cooldown(self, archive, snapshots):
+        snapshots.return_value = [{
+            "retrieved_at": datetime(2026, 11, 11, 10, 0, tzinfo=timezone.utc),
+        }]
+        client = Mock()
+        report = collect_highlightly_observations(
+            "provider-db", date_from="2026-11-11", days=7, client=client,
+            now=datetime(2026, 11, 11, 12, 0, tzinfo=timezone.utc),
+            cooldown_hours=23,
+        )
+        self.assertEqual(report["skipped"], "refresh_cooldown")
+        self.assertEqual(report["last_successful_snapshot_at"], "2026-11-11T10:00:00+00:00")
+        client.matches.assert_not_called()
+        archive.assert_not_called()
+
+    @patch("free_fixture_observation_pipeline.load_provider_observation_snapshots")
+    @patch("free_fixture_observation_pipeline.archive_future_fixture_observations")
+    def test_highlightly_refreshes_after_quota_cooldown(self, archive, snapshots):
+        snapshots.return_value = [{
+            "retrieved_at": datetime(2026, 11, 10, 12, 0, tzinfo=timezone.utc),
+        }]
+        archive.return_value = {"snapshot_id": "highlightly-refresh"}
+        client = Mock()
+        client.base_url = "https://soccer.highlightly.net"
+        client.last_metadata = {}
+        client.matches.return_value = []
+        report = collect_highlightly_observations(
+            "provider-db", date_from="2026-11-11", days=1, client=client,
+            now=datetime(2026, 11, 11, 12, 0, tzinfo=timezone.utc),
+            cooldown_hours=23,
+        )
+        self.assertEqual(client.matches.call_count, 1)
+        self.assertTrue(report["archived"])
+        archive.assert_called_once()
+
+    @patch("free_fixture_observation_pipeline.load_provider_observation_snapshots")
+    def test_highlightly_fails_closed_if_cooldown_state_cannot_be_read(self, snapshots):
+        snapshots.side_effect = RuntimeError("database unavailable")
+        client = Mock()
+        report = collect_highlightly_observations(
+            "provider-db", date_from="2026-11-11", days=7, client=client,
+            now=datetime(2026, 11, 11, 12, 0, tzinfo=timezone.utc),
+        )
+        self.assertEqual(report["skipped"], "cooldown_state_unavailable")
+        self.assertEqual(report["observation_count"], 0)
+        self.assertEqual(len(report["errors"]), 1)
+        client.matches.assert_not_called()
 
     @patch("free_fixture_observation_pipeline.archive_future_fixture_observations")
     def test_api_ninjas_collects_only_documented_free_leagues(self, archive):
