@@ -121,7 +121,10 @@ class FreeFixtureResultVerificationTests(unittest.TestCase):
 
     @patch("free_fixture_result_sync._source_metadata")
     @patch("free_fixture_result_sync.OpenLigaDBAdapter")
-    def test_openligadb_result_sync_updates_only_blank_ledger_rows(self, adapter_cls, source):
+    @patch("free_fixture_result_sync._ensure_promotion_tables")
+    def test_openligadb_result_sync_updates_only_blank_ledger_rows(
+        self, ensure_tables, adapter_cls, source
+    ):
         record = {**RECORD, "fixture_provider": "openligadb"}
         duplicate = {**record, "record_id": "second"}
         source.return_value = {
