@@ -101,7 +101,7 @@ class UpcomingFixtureCollectorTests(unittest.TestCase):
                 kickoff = (
                     kickoff_day
                     if day_offset == 7
-                    else kickoff_day + timedelta(minutes=index)
+                    else kickoff_day + timedelta(minutes=index + 1)
                 )
                 rows.append(fixture(
                     fixture_id, kickoff, league_id=8 + index % 3,
