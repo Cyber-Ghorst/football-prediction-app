@@ -1,4 +1,4 @@
-"""Seven-day coverage audit across archived future-fixture providers.
+"""Four-day coverage audit across archived future-fixture providers.
 
 This report measures potential fixture supply only. It does not approve
 crosswalks, write canonical fixtures, stage fixtures for prediction, or touch
@@ -84,9 +84,9 @@ def build_window_coverage_report(
     snapshots_by_provider: Mapping[str, list[Mapping[str, Any]]],
     *,
     now: datetime | None = None,
-    window_days: int = 7,
-    daily_target: int = 90,
-    max_highlights: int = 50,
+    window_days: int = 4,
+    daily_target: int = 50,
+    max_highlights: int = 15,
     max_age_hours: int = 24,
     highlightly_use_allowed: bool = False,
     api_ninjas_noncommercial_confirmed: bool = False,
@@ -336,9 +336,9 @@ def main() -> int:
     database_url = os.getenv("PROVIDER_DATABASE_URL") or os.getenv("COCKROACHDB_URL")
     report = build_free_fixture_window_coverage(
         database_url or "",
-        window_days=int(os.getenv("FREE_FIXTURE_WINDOW_DAYS", "7")),
-        daily_target=int(os.getenv("FREE_FIXTURE_DAILY_TARGET", "90")),
-        max_highlights=int(os.getenv("FREE_FIXTURE_MAX_HIGHLIGHTS", "50")),
+        window_days=int(os.getenv("FREE_FIXTURE_WINDOW_DAYS", "4")),
+        daily_target=int(os.getenv("FREE_FIXTURE_DAILY_TARGET", "50")),
+        max_highlights=int(os.getenv("FREE_FIXTURE_MAX_HIGHLIGHTS", "15")),
         max_age_hours=int(os.getenv("FREE_FIXTURE_WINDOW_MAX_AGE_HOURS", "24")),
         snapshot_limit=int(os.getenv("FREE_FIXTURE_WINDOW_SNAPSHOT_LIMIT", "5")),
         highlightly_use_allowed=(
