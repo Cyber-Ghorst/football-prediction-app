@@ -63,6 +63,18 @@ class APIFootballFixtureAuditTests(unittest.TestCase):
         self.assertEqual(report["status"], "quota_exhausted")
         client.fixtures_between.assert_not_called()
 
+    def test_remaining_quota_caps_fixture_pagination(self):
+        client = MagicMock()
+        client.__enter__.return_value = client
+        client.status.return_value = {"requests": {"current": 99, "limit_day": 100}}
+        client.fixtures_between.return_value = []
+        client.last_fixture_request_count = 1
+        build_api_football_fixture_audit(
+            client_factory=lambda: client, now=NOW, max_pages=20,
+        )
+        self.assertEqual(client.fixtures_between.call_args.kwargs["max_pages"], 1)
+
+
     def test_partial_boundary_date_is_reported_but_not_targeted(self):
         client = MagicMock()
         client.__enter__.return_value = client
