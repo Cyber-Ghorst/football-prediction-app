@@ -1,7 +1,7 @@
 {
   "automatic_mapping_approvals": 0,
   "canonical_fixture_writes": 0,
-  "generated_at_utc": "2026-11-11T09:49:40.583697+00:00",
+  "generated_at_utc": "2026-11-11T09:55:51.462947+00:00",
   "prediction_ledger_writes": 0,
   "providers": {
     "api_ninjas": {
@@ -1052,8 +1052,8 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 7075,
-      "snapshot_count": 5,
+      "observation_count": 4245,
+      "snapshot_count": 3,
       "source_entity_counts": {
         "leagues": 8,
         "seasons": 1,
@@ -1846,8 +1846,8 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 6748,
-      "snapshot_count": 5,
+      "observation_count": 3712,
+      "snapshot_count": 3,
       "source_entity_counts": {
         "leagues": 179,
         "seasons": 3,
@@ -2398,8 +2398,8 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 210,
-      "snapshot_count": 5,
+      "observation_count": 126,
+      "snapshot_count": 3,
       "source_entity_counts": {
         "leagues": 9,
         "seasons": 1,
@@ -2589,8 +2589,8 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 14580,
-      "snapshot_count": 5,
+      "observation_count": 8748,
+      "snapshot_count": 3,
       "source_entity_counts": {
         "leagues": 8,
         "seasons": 1,
@@ -3466,8 +3466,8 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 19043,
-      "snapshot_count": 5,
+      "observation_count": 11215,
+      "snapshot_count": 3,
       "source_entity_counts": {
         "leagues": 32,
         "seasons": 1,
