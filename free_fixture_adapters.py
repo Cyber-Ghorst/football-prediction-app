@@ -13,7 +13,7 @@ import json
 import os
 import re
 from dataclasses import asdict, dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Any, Iterable, Mapping
 from urllib.parse import quote
 
@@ -354,7 +354,7 @@ class OpenFootballAdapter(_StaticDatasetAdapter):
 class OpenMatchdayAdapter(_StaticDatasetAdapter):
     """Parse an explicitly supplied Open Matchday season CSV without guessing timezone."""
     provider = "open_matchday"
-    DEFAULT_BASE_URL = "https://raw.githubusercontent.com/oladeeayo/open-matchday/main"
+    DEFAULT_BASE_URL = "https://raw.githubusercontent.com/oladeeayo/open-matchday/master"
 
     def season_csv(self, csv_url: str, *, competition: str, season: str) -> list[dict[str, Any]]:
         if not csv_url.startswith("https://raw.githubusercontent.com/oladeeayo/open-matchday/"):
@@ -371,9 +371,18 @@ class OpenMatchdayAdapter(_StaticDatasetAdapter):
             lowered = {str(k).strip().casefold(): v for k, v in row.items() if k}
             date_value = lowered.get("date") or lowered.get("match_date") or ""
             time_value = lowered.get("time") or lowered.get("kickoff") or ""
-            # Dataset documentation uses a fixed CET-1 convention. It is not a
-            # timezone database and is unsafe around DST; never silently convert.
-            kickoff = f"{date_value}T{time_value}" if time_value else date_value
+            # DATA_DICTIONARY.md defines time as fixed CET-1 (UTC+1), not a
+            # daylight-saving-aware local timezone. Convert that documented
+            # fixed offset explicitly to UTC; date-only rows remain ineligible.
+            kickoff = date_value
+            if date_value and time_value:
+                try:
+                    source_local = datetime.strptime(
+                        f"{date_value} {time_value}", "%Y-%m-%d %H:%M"
+                    ).replace(tzinfo=timezone(timedelta(hours=1)))
+                    kickoff = source_local.astimezone(timezone.utc)
+                except ValueError:
+                    kickoff = f"{date_value}T{time_value}"
             output.append(_observation(
                 self.provider, row, fetched_at=fetched, source_url=csv_url,
                 licence="Open Matchday non-commercial-only; upstream rights must be reviewed",
