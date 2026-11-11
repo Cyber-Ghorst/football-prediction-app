@@ -174,12 +174,15 @@ jobs:
           git add -- '*.py'
           git commit -m "Autonomous development: bounded Python improvement"
           git push origin "$BRANCH"
-          PR_URL=$(gh pr create --repo "$GITHUB_REPOSITORY" --base main --head "$BRANCH" --title "Autonomous development: validated Python improvement" --body "$(printf '%s\n\n' "$SUMMARY" "Automated checks passed: unit tests and deployment smoke checks." "Workflow: $RUN_URL" "This PR is intentionally not auto-merged; review before merging.")")
+          PR_URL=$(gh pr create --repo "$GITHUB_REPOSITORY" --base main --head "$BRANCH" --title "Autonomous development: validated Python improvement" --body "$(printf '%s\n\n' "$SUMMARY" "Automated checks passed: unit tests and deployment smoke checks." "Workflow: $RUN_URL" "GitHub auto-merge is enabled. GitHub will wait for all repository-required reviews and status checks before merging.")")
           echo "url=$PR_URL" >> "$GITHUB_OUTPUT"
+          gh pr merge "$PR_URL" --auto --squash
           {
-            echo "## Pull request created"
+            echo "## Pull request created and auto-merge enabled"
             echo
             echo "$PR_URL"
+            echo
+            echo "GitHub will merge only after repository-required reviews and status checks are satisfied."
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Publish timestamped result to the controller issue
@@ -209,7 +212,7 @@ jobs:
               f"**Validation job:** {status}\n"
               f"**Pull request:** {pr}\n"
               f"**Workflow:** {os.environ['RUN_URL']}\n\n"
-              "Changes are proposed through pull requests and are never auto-merged or deployed."
+              "Agent PRs are queued for GitHub auto-merge after unit tests and deployment smoke checks pass. GitHub-required reviews and status checks remain authoritative; deployment follows the repository branch configuration."
           )
           url = f"https://api.github.com/repos/{os.environ['GITHUB_REPOSITORY']}/issues/54/comments"
           request = Request(url, data=json.dumps({"body": body}).encode(), headers={
