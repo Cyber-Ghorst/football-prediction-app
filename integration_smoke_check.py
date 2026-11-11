@@ -109,7 +109,12 @@ def api_football_account_probe(client=None) -> dict[str, Any]:
         from api_football import APIFootballClient
         client = APIFootballClient()
     try:
-        status = client.status()
+        status_payload = client.status()
+        status = (
+            status_payload.get("response")
+            if isinstance(status_payload, dict) and isinstance(status_payload.get("response"), dict)
+            else status_payload
+        )
         leagues = client.leagues()
         subscription = status.get("subscription") if isinstance(status, dict) else {}
         requests_info = status.get("requests") if isinstance(status, dict) else {}
