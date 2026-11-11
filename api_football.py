@@ -118,9 +118,9 @@ class APIFootballClient:
             paging = self.last_paging or {}
             if not page_rows:
                 total_pages = int(paging.get("total") or page)
-                if total_pages > page:
+                if page > 1 or total_pages > page:
                     raise APIFootballError(
-                        "API-Football returned an empty page before the reported final page."
+                        "API-Football returned an empty page despite reporting additional pagination."
                     )
                 return rows
             if not paging:
@@ -169,9 +169,9 @@ class APIFootballClient:
             paging = self.last_paging or {}
             if not page_rows:
                 total_pages = int(paging.get("total") or page)
-                if total_pages > page:
+                if page > 1 or total_pages > page:
                     raise APIFootballError(
-                        "API-Football returned an empty page before the reported final page."
+                        "API-Football returned an empty page despite reporting additional pagination."
                     )
                 return rows
             if not paging:
