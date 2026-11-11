@@ -430,6 +430,36 @@ class HighlightlyResultUseGateTests(unittest.TestCase):
         source.assert_not_called()
 
 
+    @patch("free_fixture_result_sync._ensure_promotion_tables")
+    @patch("free_fixture_result_sync._free_candidates")
+    @patch("free_fixture_result_sync._source_metadata")
+    def test_noncommercial_provider_result_sync_is_blocked_without_acknowledgement(
+        self, source, candidates, ensure_tables
+    ):
+        records = [
+            {
+                **RECORD,
+                "fixture_provider": provider,
+                "fixture_id": f"{provider}:42",
+            }
+            for provider in ("api_ninjas", "open_matchday")
+        ]
+        candidates.return_value = [[record] for record in records]
+        report, updated = sync_free_source_results(
+            records, provider_database_url="provider-db", now=NOW,
+        )
+        self.assertEqual(updated, [])
+        self.assertEqual(report["fixtures_without_verified_score"], 2)
+        self.assertEqual(
+            [row["reason"] for row in report["fixture_results"]],
+            [
+                "api_ninjas_noncommercial_use_not_confirmed",
+                "open_matchday_noncommercial_use_not_confirmed",
+            ],
+        )
+        source.assert_not_called()
+
+
 class AdditionalProviderResultVerificationTests(unittest.TestCase):
     def setUp(self):
         self.highlightly_source = {
