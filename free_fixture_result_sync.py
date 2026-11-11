@@ -404,7 +404,7 @@ def verify_highlightly_final_score(
         return None
     score_state = state.get("score") if isinstance(state.get("score"), Mapping) else {}
     current_score = str(score_state.get("current") or "")
-    score_match = re.fullmatch(r"\\s*(\\d+)\\s*-\\s*(\\d+)\\s*", current_score)
+    score_match = re.fullmatch(r"\s*(\d+)\s*-\s*(\d+)\s*", current_score)
     if not score_match:
         return None
     return _integer_score(score_match.group(1), score_match.group(2))
