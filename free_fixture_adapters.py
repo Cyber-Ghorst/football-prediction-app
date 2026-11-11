@@ -77,6 +77,7 @@ def _text(value: Any) -> str:
 
 def _normalise_openligadb_competition_name(value: Any) -> str:
     name = _text(value)
+    name = re.sub(r"\\s*\\((?:Herren|Men)\\)$", "", name, flags=re.IGNORECASE).strip()
     name = re.sub(r"\\s+20\\d{2}(?:\\s*/\\s*(?:20)?\\d{2})?$", "", name).strip()
     aliases = {
         "1. Fußball-Bundesliga": "Bundesliga",
