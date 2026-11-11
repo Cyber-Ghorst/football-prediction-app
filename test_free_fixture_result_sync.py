@@ -146,7 +146,7 @@ class FreeFixtureResultVerificationTests(unittest.TestCase):
         record = {
             **RECORD,
             "fixture_provider": "open_matchday",
-            "fixture_id": "open_matchday:dataset-42",
+            "fixture_id": "open_matchday:open_matchday:dataset-42",
             "kickoff_at": "2026-11-21T12:30:00+00:00",
             "season": "2026",
         }
