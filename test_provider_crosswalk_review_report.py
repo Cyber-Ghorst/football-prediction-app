@@ -6,7 +6,6 @@ from provider_crosswalk_review_report import build_provider_crosswalk_review_rep
 
 
 class ProviderCrosswalkReviewReportTests(unittest.TestCase):
-    @patch("provider_crosswalk_review_report._load_provider_links_by_type")
     @patch("provider_crosswalk_review_report.provider_entity_crosswalk.load_provider_entity_links")
     def test_falls_back_to_legacy_link_loader_for_older_deployments(self, loader):
         loader.side_effect = [
@@ -27,6 +26,7 @@ class ProviderCrosswalkReviewReportTests(unittest.TestCase):
         self.assertEqual(result["team"], {"team-1": "sportmonks:1"})
         self.assertEqual(loader.call_count, 3)
 
+    @patch("provider_crosswalk_review_report._load_provider_links_by_type")
     @patch("provider_crosswalk_review_report.get_repository_teams")
     @patch("provider_crosswalk_review_report.get_repository_seasons")
     @patch("provider_crosswalk_review_report.get_repository_leagues")
