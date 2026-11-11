@@ -101,7 +101,7 @@ try:
         collect_openligadb_observations,
         collect_openfootball_observations,
         collect_openmatchday_observations,
-        collect_livescore_observations,
+        collect_thesportsdb_observations,
         collect_bzzoiro_observations,
     )
     from provider_entity_crosswalk import save_explicit_provider_entity_links
@@ -1039,7 +1039,7 @@ with st.sidebar:
         )
         stage_provider = st.selectbox(
             "Free fixture source",
-            ["openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro"],
+            ["openligadb", "openfootball", "open_matchday", "thesportsdb", "bzzoiro"],
             key="free_fixture_stage_provider",
         )
         bzzoiro_configured = bool(st.secrets.get("BZZOIRO_API_TOKEN", "")) if stage_provider == "bzzoiro" else False
@@ -1083,18 +1083,20 @@ with st.sidebar:
                     value=False,
                     key="stage_openmatchday_noncommercial",
                 )
-            elif stage_provider == "livescore_football":
-                stage_league_slug = st.text_input(
-                    "LiveScoreFootball league slug", value="eng.1",
-                    key="stage_livescore_slug"
+            elif stage_provider == "thesportsdb":
+                stage_thesportsdb_country = st.text_input(
+                    "TheSportsDB country", value="England",
+                    key="stage_thesportsdb_country"
                 )
-                stage_date_from = st.date_input(
-                    "Start date (UTC)", value=datetime.now(timezone.utc).date(),
-                    key="stage_livescore_date_from"
+                stage_thesportsdb_max_leagues = st.slider(
+                    "Maximum leagues to query (free-tier limit: 10)",
+                    min_value=1, max_value=10, value=10,
+                    key="stage_thesportsdb_max_leagues"
                 )
-                stage_date_to = st.date_input(
-                    "End date (UTC)", value=datetime.now(timezone.utc).date() + timedelta(days=7),
-                    key="stage_livescore_date_to"
+                stage_thesportsdb_terms = st.checkbox(
+                    "I acknowledge TheSportsDB's free development-tier terms; app-store publication requires a paid subscription.",
+                    value=False,
+                    key="stage_thesportsdb_terms",
                 )
             submit_fixture_stage = st.form_submit_button(
                 "Fetch and archive observations",
@@ -1126,13 +1128,14 @@ with st.sidebar:
                             [{"url": stage_csv_url, "competition": stage_competition,
                               "season": stage_season}],
                         )
-                    elif stage_provider == "livescore_football":
-                        if stage_date_to < stage_date_from:
-                            raise ValueError("End date must not be earlier than start date.")
-                        stage_result = collect_livescore_observations(
-                            PROVIDER_DATABASE_URL, [stage_league_slug],
-                            date_from=stage_date_from.isoformat(),
-                            date_to=stage_date_to.isoformat(),
+                    elif stage_provider == "thesportsdb":
+                        if not stage_thesportsdb_terms:
+                            raise ValueError("TheSportsDB free-tier terms acknowledgement is required.")
+                        stage_result = collect_thesportsdb_observations(
+                            PROVIDER_DATABASE_URL,
+                            country=stage_thesportsdb_country,
+                            max_leagues=stage_thesportsdb_max_leagues,
+                            terms_acknowledged=True,
                         )
                     else:
                         bzz_token = st.secrets.get("BZZOIRO_API_TOKEN", "")
