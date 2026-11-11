@@ -8,6 +8,8 @@ from __future__ import annotations
 from datetime import datetime, timezone
 import json
 import os
+import sys
+from contextlib import redirect_stdout
 import re
 import time
 from typing import Any, Iterable, Mapping
@@ -166,11 +168,14 @@ def main() -> int:
     year_value = os.getenv("SPORTMONKS_CATALOGUE_YEAR", "").strip()
     max_value = os.getenv("SPORTMONKS_CATALOGUE_MAX_SEASONS", str(DEFAULT_MAX_SEASONS))
     try:
-        report = sync_sportmonks_catalogue(
-            database_url,
-            target_year=int(year_value) if year_value else None,
-            max_seasons=int(max_value),
-        )
+        # Repository import helpers may emit progress messages. Keep stdout
+        # reserved for the single machine-readable JSON report.
+        with redirect_stdout(sys.stderr):
+            report = sync_sportmonks_catalogue(
+                database_url,
+                target_year=int(year_value) if year_value else None,
+                max_seasons=int(max_value),
+            )
     except Exception as exc:
         report = {
             "report_name": "sportmonks_canonical_catalogue_sync",
