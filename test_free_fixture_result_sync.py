@@ -405,6 +405,31 @@ class FreeFixtureResultVerificationTests(unittest.TestCase):
         client.matches.assert_called_once_with("bl1", 2026)
 
 
+class HighlightlyResultUseGateTests(unittest.TestCase):
+    @patch("free_fixture_result_sync._ensure_promotion_tables")
+    @patch("free_fixture_result_sync._free_candidates")
+    @patch("free_fixture_result_sync._source_metadata")
+    def test_highlightly_result_sync_is_blocked_without_non_betting_confirmation(
+        self, source, candidates, ensure_tables
+    ):
+        record = {
+            **RECORD,
+            "fixture_provider": "highlightly",
+            "fixture_id": "highlightly:42",
+        }
+        candidates.return_value = [[record]]
+        report, updated = sync_free_source_results(
+            [record], provider_database_url="provider-db", now=NOW,
+        )
+        self.assertEqual(updated, [])
+        self.assertEqual(report["fixtures_without_verified_score"], 1)
+        self.assertEqual(
+            report["fixture_results"][0]["reason"],
+            "highlightly_non_betting_use_not_confirmed",
+        )
+        source.assert_not_called()
+
+
 class AdditionalProviderResultVerificationTests(unittest.TestCase):
     def setUp(self):
         self.highlightly_source = {
