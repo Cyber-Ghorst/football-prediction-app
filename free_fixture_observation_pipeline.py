@@ -197,7 +197,22 @@ def collect_livescore_observations(
     rows: list[dict[str, Any]] = []
     errors: list[dict[str, str]] = []
     successful = 0
+    sync_times = {str(key): value for key, value in (league_sync_times or {}).items()}
     try:
+        if league_sync_times is None:
+            try:
+                catalogue = api.leagues(kind="all", available=True)
+                if isinstance(catalogue, list):
+                    sync_times = {
+                        str(row.get("slug") or row.get("league_slug") or row.get("leagueSlug")): row.get("lastSyncedAt")
+                        for row in catalogue
+                        if isinstance(row, Mapping)
+                        and (row.get("slug") or row.get("league_slug") or row.get("leagueSlug"))
+                    }
+            except Exception:
+                # Archive observations for diagnostics; promotion will block
+                # them until the source provides an upstream sync timestamp.
+                sync_times = {}
         for slug in league_slugs:
             try:
                 events = api.fixtures(
