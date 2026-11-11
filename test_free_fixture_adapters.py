@@ -133,13 +133,19 @@ class FreeFixtureAdapterTests(unittest.TestCase):
     def test_openmatchday_fixed_cet_minus_one_time_is_converted_to_utc(self):
         client = OpenMatchdayAdapter()
         match_date = (NOW + timedelta(days=2)).date()
-        client._get_text = Mock(return_value=(
+        fixtures_url = "https://raw.githubusercontent.com/oladeeayo/open-matchday/master/data/ENG_1_premier-league/fixtures_2627.csv"
+        results_url = fixtures_url.replace("fixtures_", "results_")
+        client._get_text = Mock(side_effect=[
             "gw,date,time,home,away\n"
-            f"11,{match_date.isoformat()},19:00,Home FC,Away FC\n"
-        ))
+            f"11,{match_date.isoformat()},19:00,Home FC,Away FC\n",
+            "gw,date,time,home,away,ft_home,ft_away,ft_result\n"
+            f"11,{match_date.isoformat()},19:00,Home FC,Away FC,2,1,H\n",
+        ])
         row = client.season_csv(
-            "https://raw.githubusercontent.com/oladeeayo/open-matchday/master/data/ENG_1_premier-league/fixtures_2627.csv",
-            competition="League", season="2627",
+            fixtures_url, competition="League", season="2627",
+        )[0]
+        result_row = client.season_csv(
+            results_url, competition="League", season="2627",
         )[0]
         expected = datetime.combine(
             match_date, datetime.min.time().replace(hour=19),
@@ -149,6 +155,8 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         self.assertEqual(row["kickoff_utc"], expected.isoformat().replace("+00:00", "Z"))
         self.assertEqual(row["competition_key"], "ENG_1_premier-league")
         self.assertEqual(row["season_key"], "2627")
+        self.assertEqual(row["provider_fixture_id"], result_row["provider_fixture_id"])
+        self.assertEqual(result_row["raw_payload"]["ft_home"], "2")
         self.assertIn("non-commercial-only", row["licence"])
         client.close()
 
