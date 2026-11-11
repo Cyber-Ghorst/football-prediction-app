@@ -128,6 +128,7 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         self.assertTrue(rows[0]["provider_fixture_id"].startswith("openfootball:dataset:"))
         self.assertEqual(rows[0]["competition_key"], "eng.1")
         self.assertEqual(rows[0]["competition_name"], "Premier League")
+        self.assertEqual(rows[0]["raw_payload"]["country"], "England")
         self.assertEqual(rows[0]["season_key"], "2026-27")
         client.close()
 
@@ -141,6 +142,70 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         self.assertFalse(row["eligible_for_review"])
         self.assertIsNone(row["kickoff_utc"])
         client.close()
+
+    def test_openligadb_normalizes_season_suffix_in_competition_name(self):
+        row = {
+            "matchID": 43,
+            "matchDateTimeUTC": (NOW + timedelta(days=1)).replace(tzinfo=None).isoformat(),
+            "leagueName": "1. Fußball-Bundesliga 2026/2027",
+            "leagueSeason": 2026,
+            "leagueCountry": "Deutschland",
+            "matchStatus": "scheduled",
+            "team1": {"teamId": 1, "teamName": "Home FC"},
+            "team2": {"teamId": 2, "teamName": "Away FC"},
+        }
+        client = OpenLigaDBAdapter()
+        client._get_json = Mock(return_value=[row])
+        result = client.matches("bl1", 2026)[0]
+        self.assertEqual(result["competition_name"], "Bundesliga")
+        self.assertEqual(result["raw_payload"]["leagueCountry"], "Deutschland")
+        client.close()
+
+    def test_openligadb_normalizes_herren_suffix(self):
+        row = {
+            "matchID": 44,
+            "matchDateTimeUTC": (NOW + timedelta(days=1)).replace(tzinfo=None).isoformat(),
+            "leagueName": "2. Bundesliga 2026/27 (Herren)",
+            "leagueSeason": 2026,
+            "leagueCountry": "Deutschland",
+            "matchStatus": "scheduled",
+            "team1": {"teamId": 1, "teamName": "Home FC"},
+            "team2": {"teamId": 2, "teamName": "Away FC"},
+        }
+        client = OpenLigaDBAdapter()
+        client._get_json = Mock(return_value=[row])
+        self.assertEqual(client.matches("bl2", 2026)[0]["competition_name"], "2. Bundesliga")
+        client.close()
+
+    def test_livescore_uses_league_catalogue_name_and_country(self):
+        event = {
+            "id": "event-10",
+            "date": (NOW + timedelta(days=2)).isoformat(),
+            "status": {"type": {"name": "STATUS_SCHEDULED"}},
+            "season": {"id": "season-26"},
+            "competitions": [{
+                "id": "event-competition-id",
+                "competitors": [
+                    {"homeAway": "home", "team": {"id": "1", "displayName": "Home FC"}},
+                    {"homeAway": "away", "team": {"id": "2", "displayName": "Away FC"}},
+                ],
+            }],
+        }
+        row = normalize_livescore_football_events(
+            [event],
+            league_key="eng.1",
+            source_url="https://worldcup26.ir/get/soccer/eng.1/fixtures",
+            league_metadata={
+                "id": "catalogue-competition-id",
+                "slug": "eng.1",
+                "name": "Premier League",
+                "country": "England",
+            },
+        )[0]
+        self.assertEqual(row["competition_key"], "catalogue-competition-id")
+        self.assertEqual(row["competition_name"], "Premier League")
+        self.assertEqual(row["raw_payload"]["country"], "England")
+        self.assertEqual(row["raw_payload"]["league"]["country"], "England")
 
     def test_openmatchday_fixed_cet_minus_one_time_is_converted_to_utc(self):
         client = OpenMatchdayAdapter()

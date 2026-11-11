@@ -74,6 +74,10 @@ class FreeFixtureObservationPipelineTests(unittest.TestCase):
         archive.return_value = {"snapshot_id": "snapshot-4"}
         client = Mock()
         client.base_url = "https://worldcup26.ir"
+        client.leagues.return_value = [{
+            "id": "league-1", "slug": "league-1", "name": "Premier League",
+            "country": "England", "lastSyncedAt": "2026-11-11T01:30:00Z",
+        }]
         client.fixtures.return_value = [{
             "id": "event-9",
             "date": "2026-11-20T19:00:00+00:00",
@@ -86,7 +90,7 @@ class FreeFixtureObservationPipelineTests(unittest.TestCase):
         }]
         result = collect_livescore_observations(
             "provider-db", ["league-1"], date_from="2026-11-11", date_to="2026-11-18",
-            client=client, league_sync_times={"league-1": "2026-11-11T01:30:00Z"},
+            client=client,
         )
         client.fixtures.assert_called_once_with(
             "league-1", status="scheduled", date_from="20261111", date_to="20261118"
@@ -96,6 +100,9 @@ class FreeFixtureObservationPipelineTests(unittest.TestCase):
         self.assertEqual(result["eligible_for_review_count"], 1)
         self.assertEqual(archive.call_args.kwargs["observations"][0]["provider_fixture_id"], "event-9")
         self.assertEqual(archive.call_args.kwargs["observations"][0]["source_sync_at"], "2026-11-11T01:30:00Z")
+        self.assertEqual(archive.call_args.kwargs["observations"][0]["competition_name"], "Premier League")
+        self.assertEqual(archive.call_args.kwargs["observations"][0]["raw_payload"]["country"], "England")
+        client.leagues.assert_called_once_with(kind="all", available=True)
 
     def test_livescore_rejects_invalid_or_reversed_date_ranges(self):
         client = Mock()

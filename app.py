@@ -1249,6 +1249,7 @@ with st.sidebar:
                     editor_rows.append({
                         "provider_entity_id": candidate.get("provider_entity_id") or "",
                         "provider_name": candidate.get("provider_name") or "",
+                        "provider_country": candidate.get("provider_country") or "",
                         "suggested_canonical_id": candidate.get("canonical_entity_id") or "",
                         "canonical_entity_id": candidate.get("canonical_entity_id") or "",
                         "status": candidate.get("status") or "",
@@ -1263,8 +1264,8 @@ with st.sidebar:
                     hide_index=True,
                     num_rows="fixed",
                     disabled=[
-                        "provider_entity_id", "provider_name", "suggested_canonical_id",
-                        "status", "reason",
+                        "provider_entity_id", "provider_name", "provider_country",
+                        "suggested_canonical_id", "status", "reason",
                     ],
                     column_config={
                         "canonical_entity_id": st.column_config.SelectboxColumn(

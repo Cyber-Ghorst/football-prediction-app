@@ -75,6 +75,20 @@ def _text(value: Any) -> str:
     return str(value).strip() if value is not None else ""
 
 
+def _normalise_openligadb_competition_name(value: Any) -> str:
+    name = _text(value)
+    name = re.sub(r"\s*\((?:Herren|Men)\)$", "", name, flags=re.IGNORECASE).strip()
+    name = re.sub(r"\s+20\d{2}(?:\s*/\s*(?:20)?\d{2})?$", "", name).strip()
+    aliases = {
+        "1. Fußball-Bundesliga": "Bundesliga",
+        "1. Fussball-Bundesliga": "Bundesliga",
+        "2. Fußball-Bundesliga": "2. Bundesliga",
+        "2. Fussball-Bundesliga": "2. Bundesliga",
+        "Champions League": "UEFA Champions League",
+    }
+    return aliases.get(name, name)
+
+
 def _stable_dataset_id(provider: str, competition: str, season: str,
                        kickoff: str, home: str, away: str) -> str:
     material = "|".join((provider, competition, season, kickoff, home.casefold(), away.casefold()))
@@ -256,7 +270,7 @@ class OpenLigaDBAdapter(_HttpAdapter):
                 licence="OpenLigaDB public API; reuse terms require separate review",
                 fixture_id=row.get("matchID") or row.get("MatchID"),
                 competition=(row.get("leagueId") or row.get("LeagueId") or row.get("leagueShortcut") or row.get("LeagueShortcut") or league_shortcut),
-                competition_name=(row.get("leagueName") or row.get("LeagueName") or league_shortcut),
+                competition_name=_normalise_openligadb_competition_name(row.get("leagueName") or row.get("LeagueName") or league_shortcut),
                 season=(row.get("leagueSeason") or row.get("LeagueSeason") or season),
                 season_name=str(row.get("leagueSeason") or row.get("LeagueSeason") or season),
                 home=team1, away=team2,
@@ -298,6 +312,11 @@ class OpenFootballAdapter(_StaticDatasetAdapter):
         "nl.1": "Eredivisie",
         "pt.1": "Primeira Liga",
         "us.1": "Major League Soccer",
+    }
+
+    COUNTRY_NAMES = {
+        "en": "England", "eng": "England", "de": "Germany", "es": "Spain", "it": "Italy",
+        "fr": "France", "nl": "Netherlands", "pt": "Portugal", "us": "United States",
     }
 
     def discover_season_files(self, season: str) -> list[dict[str, str]]:
@@ -377,8 +396,19 @@ class OpenFootballAdapter(_StaticDatasetAdapter):
             date_value = str(row.get("date") or "")
             time_value = str(row.get("time") or "")
             kickoff = self._kickoff(date_value, time_value, row)
+            filename = season_file.rsplit("/", 1)[-1].removesuffix(".json")
+            code = next(
+                (key.split(".", 1)[0] for key, name in self.COMPETITION_NAMES.items()
+                 if name == competition and filename == key),
+                filename.split(".", 1)[0],
+            )
+            country = self.COUNTRY_NAMES.get(code)
+            raw_row = dict(row)
+            if country:
+                raw_row["country"] = country
+                raw_row["league"] = {"name": competition, "country": country}
             output.append(_observation(
-                self.provider, row, fetched_at=fetched, source_url=url,
+                self.provider, raw_row, fetched_at=fetched, source_url=url,
                 licence="CC0-1.0 (football.json dataset; verify upstream source provenance)",
                 competition=season_file.rsplit("/", 1)[-1].removesuffix(".json"),
                 competition_name=competition,
@@ -514,6 +544,7 @@ def normalize_livescore_football_events(
     *,
     league_key: str,
     source_url: str,
+    league_metadata: Mapping[str, Any] | None = None,
     fetched_at: datetime | None = None,
 ) -> list[dict[str, Any]]:
     """Normalize LiveScoreFootball events while requiring event-level identities."""
@@ -539,12 +570,27 @@ def normalize_livescore_football_events(
         status_type = status.get("type") if isinstance(status.get("type"), Mapping) else {}
         status_value = status_type.get("name") or status.get("display") or event.get("status") or "unknown"
         season = event.get("season") if isinstance(event.get("season"), Mapping) else {}
+        metadata = league_metadata if isinstance(league_metadata, Mapping) else {}
+        league_name = (
+            metadata.get("name") or metadata.get("leagueName")
+            or competition.get("name") or league_key
+        )
+        country_value = metadata.get("country") or metadata.get("country_name")
+        country = _text(country_value) or None
+        raw_event = dict(event)
+        if country:
+            raw_event["country"] = country
+        raw_event["league"] = {
+            "id": metadata.get("id") or competition.get("id") or league_key,
+            "name": league_name,
+            "country": country,
+        }
         output.append(_observation(
-            "livescore_football", event, fetched_at=fetched, source_url=source_url,
+            "livescore_football", raw_event, fetched_at=fetched, source_url=source_url,
             licence="LiveScoreFootball public API; upstream snapshot freshness and reuse terms require review",
             fixture_id=event.get("id") or event.get("uid"),
-            competition=competition.get("id") or league_key,
-            competition_name=competition.get("name") or league_key,
+            competition=metadata.get("id") or competition.get("id") or league_key,
+            competition_name=league_name,
             season=event.get("season_id") or season.get("id") or season.get("year"),
             season_name=season.get("name") or season.get("year") or event.get("season_id"),
             home=home, away=away,
