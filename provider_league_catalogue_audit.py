@@ -22,7 +22,13 @@ def _rows(payload: Any) -> list[dict[str, Any]]:
     return []
 
 
-def audit_highlightly() -> dict[str, Any]:
+def audit_highlightly(*, use_allowed: bool = False) -> dict[str, Any]:
+    if not use_allowed:
+        return {
+            "status": "skipped",
+            "catalogue_count": None,
+            "reason": "Highlightly terms acknowledgement and non-betting-use confirmation are required.",
+        }
     key = (os.getenv("HIGHLIGHTLY_API_KEY") or os.getenv("API_FOOTBALL_KEY") or "").strip()
     if not key:
         return {"status": "not_configured", "catalogue_count": None,
@@ -159,11 +165,16 @@ def audit_livescore() -> dict[str, Any]:
 
 
 def main() -> int:
+    enabled = lambda name: os.getenv(name, "").strip().casefold() in {"1", "true", "yes", "on"}
+    highlightly_use_allowed = (
+        enabled("FREE_FIXTURE_TERMS_ACK_HIGHLIGHTLY")
+        and enabled("HIGHLIGHTLY_NON_BETTING_USE_CONFIRMED")
+    )
     report = {
         "checked_at": datetime.now(timezone.utc).isoformat(),
         "read_only": True, "database_touched": False,
         "prediction_model_modified": False, "prediction_ledger_touched": False,
-        "highlightly": audit_highlightly(),
+        "highlightly": audit_highlightly(use_allowed=highlightly_use_allowed),
         "livescore_football": audit_livescore(),
         "coverage_policy": (
             "Raw catalogue counts are not prediction-ready counts. LiveScore "
