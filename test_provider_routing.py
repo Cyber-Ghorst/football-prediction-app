@@ -46,6 +46,8 @@ class ProviderRoutingTests(unittest.TestCase):
         registry = default_provider_registry()
         self.assertEqual(registry.primary_sources("future_fixtures"), ["sportmonks"])
         self.assertEqual(registry.primary_sources("future_fixtures", "premier league"), ["sportmonks"])
+        self.assertNotIn("highlightly", registry.primary_sources("future_fixtures"))
+        self.assertNotIn("api_ninjas", registry.primary_sources("future_fixtures"))
         self.assertNotIn("openscores", registry.primary_sources("fixtures"))
         self.assertNotIn("openscores", registry.primary_sources("future_fixtures"))
         self.assertEqual(registry.resolve("results")["validation"], [])
@@ -54,10 +56,11 @@ class ProviderRoutingTests(unittest.TestCase):
         registry = default_provider_registry()
         self.assertEqual(
             set(FREE_FIXTURE_CANDIDATES),
-            {"openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro"},
+            {"openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro", "highlightly", "api_ninjas"},
         )
         self.assertNotIn("worldcup26", FREE_FIXTURE_CANDIDATES)
-        self.assertNotIn("livescore_football", registry.primary_sources("future_fixtures"))
+        for provider in FREE_FIXTURE_CANDIDATES:
+            self.assertNotIn(provider, registry.primary_sources("future_fixtures"))
         self.assertEqual(registry.primary_sources("future_fixtures"), ["sportmonks"])
         self.assertEqual(registry.primary_sources("future_fixtures", "premier league"), ["sportmonks"])
 

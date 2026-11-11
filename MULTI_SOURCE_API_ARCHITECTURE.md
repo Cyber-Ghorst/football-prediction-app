@@ -23,21 +23,22 @@ Tactical sub-weights remain: playing style 6%, defensive structure 7%, attacking
 Future-fixture discovery is a separate domain (`future_fixtures`) and is not
 synonymous with generic fixture details or historical fixture retrieval.
 Sportmonks is currently the only wired scheduled-fixture collector. OpenLigaDB,
-OpenFootball, Open Matchday, WorldCup26 and Bzzoiro are registered as disabled
-future-fixture candidates pending live adapter, identity, timestamp, licence
-and persistence validation. OpenScores is read-only result-observation and
-entity-audit data only; it is not a future-fixture provider. Highlightly, API
-Ninjas, API-Football and LiveScoreFootball remain in their respective
-enrichment, historical, or completed-result corroboration roles.
+OpenFootball, Open Matchday, LiveScoreFootball, Bzzoiro, Highlightly and API
+Ninjas are registered as disabled future-fixture candidates pending live
+account coverage, adapter, identity, timestamp, licence and persistence
+validation. OpenScores is read-only result-observation and entity-audit data
+only; it is not a future-fixture provider. Highlightly and API Ninjas also
+retain their existing enrichment/corroboration roles; API-Football remains
+historical-only for the configured account seasons.
 
 Provider roles are domain-specific. A provider is not assumed to be authoritative for every field.
 
 | Rank | Provider | Assigned role | Eligible data domains | Main limitation / activation gate |
 |---:|---|---|---|---|
 | 1 | **Sportmonks Football API v3** | Primary current-season source | Fixtures, results, standings, match statistics, injuries, lineups, players and squads, where returned | Account-enabled competitions/seasons only. Current-season Layer 2 path is active; selected competition still must pass history and data-quality checks. |
-| 2 | **Highlightly** | Independent current-season corroboration and secondary source | Fixtures, results, standings, statistics, injuries, lineups, players and squads, where explicitly supplied | Plan-dependent coverage, fields, quotas and refresh interval. Adapter, smoke test and canonical normalizer exist; records are not yet active in Layer 2 reconciliation. |
+| 2 | **Highlightly** | Independent current-season corroboration and secondary source; disabled future-fixture candidate | Fixtures, results, standings, statistics, injuries, lineups, players and squads, where explicitly supplied | Official matches endpoint supports scheduled discovery; plan-dependent coverage, fields, quotas and refresh interval require live account validation. Not activated for fixture routing. |
 | 3 | **API-Football v3** | Historical specialist source; secondary detail source where season access is confirmed | Fixtures, results, standings, statistics, injuries, lineups, players and squads | This account is limited to seasons 2022–2024. Current historical Layer 2 path is active; do not request unsupported newer seasons. |
-| 4 | **API Ninjas** | Independent fixtures/results/standings and club/squad corroboration | Fixtures, results, standings, clubs and squads | Current adapter does not supply detailed fixture statistics, injuries or lineups. Adapter, smoke test and canonical normalizer exist; records are not yet active in Layer 2 reconciliation. |
+| 4 | **API Ninjas** | Independent fixtures/results/standings and club/squad corroboration; disabled future-fixture candidate | Fixtures, results, standings, clubs and squads | Official soccermatches endpoint supports scheduled current-season discovery. Free plan coverage is limited to eight competitions and is non-commercial; live account coverage and canonical mappings are not yet validated. |
 | 5 | **LiveScoreFootball** | Conditional competition-specific corroboration | Fixtures, results and standings only | Database-backed snapshots can be delayed. Opt-in missing-score fallback is wired into Streamlit. Requires fresh global, per-competition and per-event sync timestamps, an exact competition/season crosswalk and exact completed fixture identity; it never overwrites valid Sportmonks scores. |
 
 The rank is a practical role assignment, not a claim that one provider has universal coverage or is always freshest. Domain-specific priorities in `provider_core.py` remain authoritative. A source is eligible only when its account coverage, identity, timestamps and record validation pass.
@@ -76,7 +77,7 @@ The default priority is encoded in `provider_core.py`:
 
 | Data domain | Priority order |
 |---|---|
-| Future-fixture discovery | Sportmonks only until the five free candidates pass activation gates; OpenScores is excluded |
+| Future-fixture discovery | Sportmonks only until the seven registered candidates pass activation gates; OpenScores is excluded |
 | Generic fixture details, results, standings | Sportmonks → Highlightly → API Ninjas → API-Football; LiveScoreFootball is prepended only for verified results/standings |
 | Match statistics | Sportmonks → Highlightly → API-Football |
 | Injuries | Sportmonks → Highlightly → API-Football |

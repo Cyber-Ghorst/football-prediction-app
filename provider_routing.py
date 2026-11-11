@@ -79,14 +79,16 @@ OPENSCORES_COMPETITIONS = (
 
 # Future-fixture discovery is deliberately distinct from match-data enrichment.
 # Only Sportmonks is currently implemented in the rolling-window collector.
-# The five free sources remain disabled candidates until live coverage,
-# timestamp, identity, licence and database round-trip gates pass.
+# These documented future-fixture sources remain disabled until live account
+# coverage, timestamp, identity, licence and database round-trip gates pass.
 FREE_FIXTURE_CANDIDATES = (
     "openligadb",
     "openfootball",
     "open_matchday",
     "livescore_football",
     "bzzoiro",
+    "highlightly",
+    "api_ninjas",
 )
 
 DEFAULT_PROVIDER_ASSIGNMENTS = (
@@ -109,6 +111,10 @@ DEFAULT_PROVIDER_ASSIGNMENTS = (
     # remains disabled until live fixture identity/time/freshness checks pass.
     ProviderAssignment("livescore_football", "future_fixtures", "co_primary", 33, enabled=False),
     ProviderAssignment("bzzoiro", "future_fixtures", "co_primary", 34, enabled=False),
+    # Both APIs document current/future scheduled matches, but account-level
+    # free-tier coverage and canonical crosswalks have not passed live gates.
+    ProviderAssignment("highlightly", "future_fixtures", "co_primary", 35, enabled=False),
+    ProviderAssignment("api_ninjas", "future_fixtures", "co_primary", 36, enabled=False),
 )
 
 
