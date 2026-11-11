@@ -41,7 +41,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      SPORTMONKS_API_TOKEN: ${{ secrets.SPORTMONKS_API_TOKEN }}
       PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       BZZOIRO_API_TOKEN: ${{ secrets.BZZOIRO_API_TOKEN }}
@@ -81,28 +80,9 @@ jobs:
 
       - name: Validate required secrets
         run: |
-          test -n "$SPORTMONKS_API_TOKEN" || { echo "::error::SPORTMONKS_API_TOKEN secret is missing."; exit 1; }
           test -n "$PROVIDER_DATABASE_URL" || { echo "::error::PROVIDER_DATABASE_URL secret is missing."; exit 1; }
           test -n "$DATABASE_URL" || { echo "::error::DATABASE_URL (Neon) secret is missing."; exit 1; }
           test -f root.crt || { echo "::error::CockroachDB root.crt is missing."; exit 1; }
-
-      - name: Collect, upsert and archive rolling seven-day fixture report
-        run: |
-          set -euo pipefail
-          mkdir -p reports/upcoming_fixture_collection/archive
-          stamp="$(date -u +%Y%m%dT%H%M%SZ)"
-          report="reports/upcoming_fixture_collection/archive/${stamp}.json"
-          python upcoming_fixture_collector.py | tee "$report"
-          python -m json.tool "$report" >/dev/null
-          cp "$report" reports/upcoming_fixture_collection/latest.json
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add reports/upcoming_fixture_collection
-          if ! git diff --cached --quiet; then
-            git commit -m "Archive upcoming fixture collection report ${stamp}"
-            git pull --rebase origin main
-            git push origin HEAD:main
-          fi
 
       - name: Refresh free-source fixture observations (staging only)
         continue-on-error: true
@@ -149,7 +129,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add reports/free_fixture_window_coverage
           if ! git diff --cached --quiet; then
-            git commit -m "Archive seven-day provider fixture coverage report ${stamp}"
+            git commit -m "Archive four-day provider fixture coverage report ${stamp}"
             git pull --rebase origin main
             git push origin HEAD:main
           fi

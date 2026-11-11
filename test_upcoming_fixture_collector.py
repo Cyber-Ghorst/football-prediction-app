@@ -199,28 +199,13 @@ class UpcomingFixtureCollectorTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             normalize_upcoming_fixtures([], now=NOW, window_days=8)
 
-    def test_collector_requests_provider_date_range_and_persists_valid_rows(self):
-        rows = [fixture(10, NOW + timedelta(hours=2))]
-        client = FakeClient(rows)
-        with patch(
-            "football_repository.upsert_discovered_fixtures",
-            return_value={
-                "fixtures_upserted": 1,
-                "competitions_upserted": 1,
-                "teams_upserted": 2,
-            },
-        ) as save:
-            result = collect_upcoming_fixtures(
+    def test_legacy_sportmonks_collector_is_retired(self):
+        client = FakeClient([fixture(10, NOW + timedelta(hours=2))])
+        with self.assertRaisesRegex(RuntimeError, "not an approved future-fixture"):
+            collect_upcoming_fixtures(
                 client=client, now=NOW, database_url="postgresql://example"
             )
-        self.assertEqual(
-            client.calls,
-            [("2026-11-10", "2026-11-17", {"include": FIXTURE_INCLUDE})],
-        )
-        save.assert_called_once_with("postgresql://example", result["fixtures"])
-        self.assertTrue(result["persisted"])
-        self.assertEqual(result["fixtures_upserted"], 1)
-        self.assertEqual(result["future_fixture_sources"], ["sportmonks"])
+        self.assertEqual(client.calls, [])
 
     def test_unimplemented_future_fixture_provider_fails_closed(self):
         client = FakeClient([])
@@ -228,9 +213,9 @@ class UpcomingFixtureCollectorTests(unittest.TestCase):
             "upcoming_fixture_collector.default_provider_registry"
         ) as registry_factory:
             registry_factory.return_value.primary_sources.return_value = [
-                "sportmonks", "openligadb"
+                "livescore_football", "openligadb"
             ]
-            with self.assertRaisesRegex(RuntimeError, "unimplemented provider"):
+            with self.assertRaisesRegex(RuntimeError, "not an approved future-fixture"):
                 collect_upcoming_fixtures(client=client, now=NOW)
         self.assertEqual(client.calls, [])
 
