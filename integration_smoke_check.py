@@ -78,10 +78,12 @@ def highlightly_refresh_cooldown_skip_details(
     except (OSError, json.JSONDecodeError, TypeError):
         return None
     provider = (report.get("providers") or {}).get("highlightly") or {}
-    if provider.get("skipped") != "refresh_cooldown":
+    skip_reason = provider.get("skipped")
+    if not skip_reason or skip_reason == "HIGHLIGHTLY_API_KEY is not configured":
         return None
     return {
-        "reason": "provider_refresh_cooldown_active",
+        "reason": "provider_collection_skipped",
+        "provider_skip_reason": str(skip_reason)[:500],
         "cooldown_hours": provider.get("cooldown_hours"),
         "last_successful_snapshot_at": provider.get("last_successful_snapshot_at"),
     }
