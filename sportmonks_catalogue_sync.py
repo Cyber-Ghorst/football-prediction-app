@@ -6,11 +6,13 @@ statistics and never touches the Neon prediction ledger.
 from __future__ import annotations
 
 from datetime import datetime, timezone
+import contextlib
 import json
 import os
 import sys
 from contextlib import redirect_stdout
 import re
+import sys
 import time
 from typing import Any, Iterable, Mapping
 
@@ -127,10 +129,13 @@ def sync_sportmonks_catalogue(
                         "error": "No teams returned; season was not imported.",
                     })
                     continue
-                result = importer(
-                    database_url, league=league, season=season,
-                    teams=teams, fixtures=[],
-                )
+                # The existing repository importer emits human progress lines.
+                # Keep the stdout stream reserved for this script's single JSON report.
+                with contextlib.redirect_stdout(sys.stderr):
+                    result = importer(
+                        database_url, league=league, season=season,
+                        teams=teams, fixtures=[],
+                    )
                 report["imported_seasons"].append({
                     "league_id": str(league.get("id")),
                     "league": league.get("name"),
@@ -159,7 +164,12 @@ def sync_sportmonks_catalogue(
     report["teams_upserted"] = sum(x["teams_upserted"] for x in report["imported_seasons"])
     report["fixtures_upserted"] = sum(x["fixtures_upserted"] for x in report["imported_seasons"])
     report["provider_links_written"] = sum(x["provider_links_written"] for x in report["imported_seasons"])
-    report["success"] = bool(report["seasons_imported"]) and not report["errors"]
+    report["success"] = bool(report["seasons_imported"])
+    report["complete"] = (
+        bool(report["seasons_imported"])
+        and report["seasons_imported"] == report["selected_seasons"]
+        and not report["errors"]
+    )
     return report
 
 
