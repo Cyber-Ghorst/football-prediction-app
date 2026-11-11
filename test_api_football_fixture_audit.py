@@ -85,7 +85,7 @@ class APIFootballFixtureAuditTests(unittest.TestCase):
         client = MagicMock()
         client.__enter__.return_value = client
         client.status.return_value = {"requests": {"current": 1, "limit_day": 100}}
-        def query_date(day, timezone="UTC", max_pages=20):
+        def query_date(day, timezone="UTC"):
             client.last_fixture_request_count = 1
             if day == "2026-11-18":
                 return [fixture(1, "2026-11-18T10:00:00+00:00")]
