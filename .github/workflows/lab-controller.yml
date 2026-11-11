@@ -54,7 +54,7 @@ permissions:
   issues: write
 
 concurrency:
-  group: prediction-lab-controller
+  group: main-report-archive
   cancel-in-progress: false
 
 jobs:
