@@ -1,6 +1,7 @@
 """Collect and archive free future-fixture observations without canonical writes."""
 from __future__ import annotations
 
+from datetime import date
 from typing import Any, Mapping
 from urllib.parse import quote
 import time
@@ -175,6 +176,16 @@ def collect_livescore_observations(
     """Collect scheduled LiveScoreFootball events for explicitly supplied leagues."""
     if not league_slugs or not date_from or not date_to:
         raise ValueError("League slugs and an explicit date range are required.")
+    try:
+        start_date = date.fromisoformat(str(date_from))
+        end_date = date.fromisoformat(str(date_to))
+    except (TypeError, ValueError) as exc:
+        raise ValueError("LiveScoreFootball dates must use YYYY-MM-DD.") from exc
+    if end_date < start_date:
+        raise ValueError("LiveScoreFootball end date must not precede start date.")
+    # The documented endpoint requires YYYYMMDD; accept ISO dates at this layer.
+    api_date_from = start_date.strftime("%Y%m%d")
+    api_date_to = end_date.strftime("%Y%m%d")
     owned = client is None
     api = client or LiveScoreFootballClient()
     rows: list[dict[str, Any]] = []
@@ -184,7 +195,7 @@ def collect_livescore_observations(
         for slug in league_slugs:
             try:
                 events = api.fixtures(
-                    slug, status="scheduled", date_from=date_from, date_to=date_to
+                    slug, status="scheduled", date_from=api_date_from, date_to=api_date_to
                 )
                 source_url = (
                     f"{api.base_url}/get/soccer/{quote(str(slug), safe='')}/fixtures"
@@ -202,7 +213,8 @@ def collect_livescore_observations(
     return _archive(
         database_url, "livescore_football",
         {"league_slugs": list(league_slugs), "date_from": date_from,
-         "date_to": date_to, "status": "scheduled"},
+         "date_to": date_to, "api_date_from": api_date_from,
+         "api_date_to": api_date_to, "status": "scheduled"},
         rows, errors, successful,
     )
 
