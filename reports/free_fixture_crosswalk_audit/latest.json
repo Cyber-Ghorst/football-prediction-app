@@ -1,7 +1,7 @@
 {
   "automatic_mapping_approvals": 0,
   "canonical_fixture_writes": 0,
-  "generated_at_utc": "2026-11-11T09:40:56.292851+00:00",
+  "generated_at_utc": "2026-11-11T09:49:40.583697+00:00",
   "prediction_ledger_writes": 0,
   "providers": {
     "api_ninjas": {
@@ -9,6 +9,42 @@
         "leagues": {
           "candidate_count": 8,
           "candidates": [
+            {
+              "canonical_entity_id": "sportmonks:564",
+              "canonical_name": "La Liga",
+              "entity_type": "league",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Spain",
+              "provider_entity_id": "laliga",
+              "provider_name": "La Liga",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:8",
+              "canonical_name": "Premier League",
+              "entity_type": "league",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "England",
+              "provider_entity_id": "epl",
+              "provider_name": "Premier League",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:384",
+              "canonical_name": "Serie A",
+              "entity_type": "league",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Italy",
+              "provider_entity_id": "seriea",
+              "provider_name": "Serie A",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
             {
               "canonical_entity_id": null,
               "canonical_name": null,
@@ -46,18 +82,6 @@
               "status": "no_exact_contextual_match"
             },
             {
-              "canonical_entity_id": "sportmonks:564",
-              "canonical_name": "La Liga",
-              "entity_type": "league",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "api_ninjas",
-              "provider_country": "Spain",
-              "provider_entity_id": "laliga",
-              "provider_name": "La Liga",
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
-            },
-            {
               "canonical_entity_id": null,
               "canonical_name": null,
               "entity_type": "league",
@@ -80,33 +104,10 @@
               "provider_name": "MLS",
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
               "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": "sportmonks:8",
-              "canonical_name": "Premier League",
-              "entity_type": "league",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "api_ninjas",
-              "provider_country": "England",
-              "provider_entity_id": "epl",
-              "provider_name": "Premier League",
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
-            },
-            {
-              "canonical_entity_id": "sportmonks:384",
-              "canonical_name": "Serie A",
-              "entity_type": "league",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "api_ninjas",
-              "provider_country": "Italy",
-              "provider_entity_id": "seriea",
-              "provider_name": "Serie A",
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
             }
           ],
           "candidates_truncated": false,
+          "manual_review_candidate_count": 3,
           "status_counts": {
             "candidate_requires_manual_approval": 3,
             "no_exact_contextual_match": 5
@@ -129,6 +130,7 @@
             }
           ],
           "candidates_truncated": false,
+          "manual_review_candidate_count": 0,
           "status_counts": {
             "parent_competition_unmapped": 1
           }
@@ -136,18 +138,6 @@
         "teams": {
           "candidate_count": 151,
           "candidates": [
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "team",
-              "match_method": null,
-              "provider": "api_ninjas",
-              "provider_country": "Germany",
-              "provider_entity_id": "soccer-1-fc-union-berlin",
-              "provider_name": "1. FC Union Berlin",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
             {
               "canonical_entity_id": "sportmonks:113",
               "canonical_name": "AC Milan",
@@ -161,18 +151,6 @@
               "status": "candidate_requires_manual_approval"
             },
             {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "team",
-              "match_method": null,
-              "provider": "api_ninjas",
-              "provider_country": "Europe",
-              "provider_entity_id": "soccer-aek-athens",
-              "provider_name": "AEK Athens",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
               "canonical_entity_id": "sportmonks:52",
               "canonical_name": "AFC Bournemouth",
               "entity_type": "team",
@@ -183,6 +161,606 @@
               "provider_name": "AFC Bournemouth",
               "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
               "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:19",
+              "canonical_name": "Arsenal",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "England",
+              "provider_entity_id": "soccer-arsenal",
+              "provider_name": "Arsenal",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:15",
+              "canonical_name": "Aston Villa",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "England",
+              "provider_entity_id": "soccer-aston-villa",
+              "provider_name": "Aston Villa",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:708",
+              "canonical_name": "Atalanta",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Italy",
+              "provider_entity_id": "soccer-atalanta",
+              "provider_name": "Atalanta",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:13258",
+              "canonical_name": "Athletic Club",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Spain",
+              "provider_entity_id": "soccer-athletic-club",
+              "provider_name": "Athletic Club",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:8513",
+              "canonical_name": "Bologna",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Italy",
+              "provider_entity_id": "soccer-bologna",
+              "provider_name": "Bologna",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:236",
+              "canonical_name": "Brentford",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "England",
+              "provider_entity_id": "soccer-brentford",
+              "provider_name": "Brentford",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:78",
+              "canonical_name": "Brighton & Hove Albion",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "England",
+              "provider_entity_id": "soccer-brighton-hove-albion",
+              "provider_name": "Brighton & Hove Albion",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:585",
+              "canonical_name": "Cagliari",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Italy",
+              "provider_entity_id": "soccer-cagliari",
+              "provider_name": "Cagliari",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:18",
+              "canonical_name": "Chelsea",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "England",
+              "provider_entity_id": "soccer-chelsea",
+              "provider_name": "Chelsea",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:268",
+              "canonical_name": "Como",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Italy",
+              "provider_entity_id": "soccer-como",
+              "provider_name": "Como",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:117",
+              "canonical_name": "Coventry City",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "England",
+              "provider_entity_id": "soccer-coventry-city",
+              "provider_name": "Coventry City",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:51",
+              "canonical_name": "Crystal Palace",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "England",
+              "provider_entity_id": "soccer-crystal-palace",
+              "provider_name": "Crystal Palace",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:1099",
+              "canonical_name": "Elche",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Spain",
+              "provider_entity_id": "soccer-elche",
+              "provider_name": "Elche",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:528",
+              "canonical_name": "Espanyol",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Spain",
+              "provider_entity_id": "soccer-espanyol",
+              "provider_name": "Espanyol",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:13",
+              "canonical_name": "Everton",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "England",
+              "provider_entity_id": "soccer-everton",
+              "provider_name": "Everton",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:109",
+              "canonical_name": "Fiorentina",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Italy",
+              "provider_entity_id": "soccer-fiorentina",
+              "provider_name": "Fiorentina",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:11",
+              "canonical_name": "Fulham",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "England",
+              "provider_entity_id": "soccer-fulham",
+              "provider_name": "Fulham",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:102",
+              "canonical_name": "Genoa",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Italy",
+              "provider_entity_id": "soccer-genoa",
+              "provider_name": "Genoa",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:106",
+              "canonical_name": "Getafe",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Spain",
+              "provider_entity_id": "soccer-getafe",
+              "provider_name": "Getafe",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:22",
+              "canonical_name": "Hull City",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "England",
+              "provider_entity_id": "soccer-hull-city",
+              "provider_name": "Hull City",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:116",
+              "canonical_name": "Ipswich Town",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "England",
+              "provider_entity_id": "soccer-ipswich-town",
+              "provider_name": "Ipswich Town",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:625",
+              "canonical_name": "Juventus",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Italy",
+              "provider_entity_id": "soccer-juventus",
+              "provider_name": "Juventus",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:43",
+              "canonical_name": "Lazio",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Italy",
+              "provider_entity_id": "soccer-lazio",
+              "provider_name": "Lazio",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:7790",
+              "canonical_name": "Lecce",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Italy",
+              "provider_entity_id": "soccer-lecce",
+              "provider_name": "Lecce",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:71",
+              "canonical_name": "Leeds United",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "England",
+              "provider_entity_id": "soccer-leeds-united",
+              "provider_name": "Leeds United",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:3457",
+              "canonical_name": "Levante",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Spain",
+              "provider_entity_id": "soccer-levante",
+              "provider_name": "Levante",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:8",
+              "canonical_name": "Liverpool",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "England",
+              "provider_entity_id": "soccer-liverpool",
+              "provider_name": "Liverpool",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:9",
+              "canonical_name": "Manchester City",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "England",
+              "provider_entity_id": "soccer-manchester-city",
+              "provider_name": "Manchester City",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:14",
+              "canonical_name": "Manchester United",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "England",
+              "provider_entity_id": "soccer-manchester-united",
+              "provider_name": "Manchester United",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:126",
+              "canonical_name": "M\u00e1laga",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Spain",
+              "provider_entity_id": "soccer-malaga",
+              "provider_name": "M\u00e1laga",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:597",
+              "canonical_name": "Napoli",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Italy",
+              "provider_entity_id": "soccer-napoli",
+              "provider_name": "Napoli",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:20",
+              "canonical_name": "Newcastle United",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "England",
+              "provider_entity_id": "soccer-newcastle-united",
+              "provider_name": "Newcastle United",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:63",
+              "canonical_name": "Nottingham Forest",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "England",
+              "provider_entity_id": "soccer-nottingham-forest",
+              "provider_name": "Nottingham Forest",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:459",
+              "canonical_name": "Osasuna",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Spain",
+              "provider_entity_id": "soccer-osasuna",
+              "provider_name": "Osasuna",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:398",
+              "canonical_name": "Parma",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Italy",
+              "provider_entity_id": "soccer-parma",
+              "provider_name": "Parma",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:9818",
+              "canonical_name": "Racing Santander",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Spain",
+              "provider_entity_id": "soccer-racing-santander",
+              "provider_name": "Racing Santander",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:377",
+              "canonical_name": "Rayo Vallecano",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Spain",
+              "provider_entity_id": "soccer-rayo-vallecano",
+              "provider_name": "Rayo Vallecano",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:485",
+              "canonical_name": "Real Betis",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Spain",
+              "provider_entity_id": "soccer-real-betis",
+              "provider_name": "Real Betis",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:3468",
+              "canonical_name": "Real Madrid",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Spain",
+              "provider_entity_id": "soccer-real-madrid",
+              "provider_name": "Real Madrid",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:594",
+              "canonical_name": "Real Sociedad",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Spain",
+              "provider_entity_id": "soccer-real-sociedad",
+              "provider_name": "Real Sociedad",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:2714",
+              "canonical_name": "Sassuolo",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Italy",
+              "provider_entity_id": "soccer-sassuolo",
+              "provider_name": "Sassuolo",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:676",
+              "canonical_name": "Sevilla",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Spain",
+              "provider_entity_id": "soccer-sevilla",
+              "provider_name": "Sevilla",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:3",
+              "canonical_name": "Sunderland",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "England",
+              "provider_entity_id": "soccer-sunderland",
+              "provider_name": "Sunderland",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:613",
+              "canonical_name": "Torino",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Italy",
+              "provider_entity_id": "soccer-torino",
+              "provider_name": "Torino",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:6",
+              "canonical_name": "Tottenham Hotspur",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "England",
+              "provider_entity_id": "soccer-tottenham-hotspur",
+              "provider_name": "Tottenham Hotspur",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:346",
+              "canonical_name": "Udinese",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Italy",
+              "provider_entity_id": "soccer-udinese",
+              "provider_name": "Udinese",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:214",
+              "canonical_name": "Valencia",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Spain",
+              "provider_entity_id": "soccer-valencia",
+              "provider_name": "Valencia",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:3477",
+              "canonical_name": "Villarreal",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Spain",
+              "provider_entity_id": "soccer-villarreal",
+              "provider_name": "Villarreal",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "Germany",
+              "provider_entity_id": "soccer-1-fc-union-berlin",
+              "provider_name": "1. FC Union Berlin",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "Europe",
+              "provider_entity_id": "soccer-aek-athens",
+              "provider_name": "AEK Athens",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
             },
             {
               "canonical_entity_id": null,
@@ -245,18 +823,6 @@
               "status": "no_exact_contextual_match"
             },
             {
-              "canonical_entity_id": "sportmonks:19",
-              "canonical_name": "Arsenal",
-              "entity_type": "team",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "api_ninjas",
-              "provider_country": "England",
-              "provider_entity_id": "soccer-arsenal",
-              "provider_name": "Arsenal",
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
-            },
-            {
               "canonical_entity_id": null,
               "canonical_name": null,
               "entity_type": "team",
@@ -279,42 +845,6 @@
               "provider_name": "AS Roma",
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
               "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": "sportmonks:15",
-              "canonical_name": "Aston Villa",
-              "entity_type": "team",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "api_ninjas",
-              "provider_country": "England",
-              "provider_entity_id": "soccer-aston-villa",
-              "provider_name": "Aston Villa",
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
-            },
-            {
-              "canonical_entity_id": "sportmonks:708",
-              "canonical_name": "Atalanta",
-              "entity_type": "team",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "api_ninjas",
-              "provider_country": "Italy",
-              "provider_entity_id": "soccer-atalanta",
-              "provider_name": "Atalanta",
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
-            },
-            {
-              "canonical_entity_id": "sportmonks:13258",
-              "canonical_name": "Athletic Club",
-              "entity_type": "team",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "api_ninjas",
-              "provider_country": "Spain",
-              "provider_entity_id": "soccer-athletic-club",
-              "provider_name": "Athletic Club",
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
             },
             {
               "canonical_entity_id": null,
@@ -413,18 +943,6 @@
               "status": "no_exact_contextual_match"
             },
             {
-              "canonical_entity_id": "sportmonks:8513",
-              "canonical_name": "Bologna",
-              "entity_type": "team",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "api_ninjas",
-              "provider_country": "Italy",
-              "provider_entity_id": "soccer-bologna",
-              "provider_name": "Bologna",
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
-            },
-            {
               "canonical_entity_id": null,
               "canonical_name": null,
               "entity_type": "team",
@@ -435,9 +953,94 @@
               "provider_name": "Borussia Dortmund",
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
               "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "Germany",
+              "provider_entity_id": "soccer-borussia-monchengladbach",
+              "provider_name": "Borussia M\u00f6nchengladbach",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "France",
+              "provider_entity_id": "soccer-brest",
+              "provider_name": "Brest",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "Spain",
+              "provider_entity_id": "soccer-celta-vigo",
+              "provider_name": "Celta Vigo",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "Europe",
+              "provider_entity_id": "soccer-celtic",
+              "provider_name": "Celtic",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "United States and Canada",
+              "provider_entity_id": "soccer-charlotte-fc",
+              "provider_name": "Charlotte FC",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "United States and Canada",
+              "provider_entity_id": "soccer-chicago-fire-fc",
+              "provider_name": "Chicago Fire FC",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "Europe",
+              "provider_entity_id": "soccer-club-brugge",
+              "provider_name": "Club Brugge",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
             }
           ],
           "candidates_truncated": true,
+          "manual_review_candidate_count": 50,
           "status_counts": {
             "candidate_requires_manual_approval": 50,
             "no_exact_contextual_match": 101
@@ -464,18 +1067,21 @@
           "candidate_count": 0,
           "candidates": [],
           "candidates_truncated": false,
+          "manual_review_candidate_count": 0,
           "status_counts": {}
         },
         "seasons": {
           "candidate_count": 0,
           "candidates": [],
           "candidates_truncated": false,
+          "manual_review_candidate_count": 0,
           "status_counts": {}
         },
         "teams": {
           "candidate_count": 0,
           "candidates": [],
           "candidates_truncated": false,
+          "manual_review_candidate_count": 0,
           "status_counts": {}
         }
       },
@@ -800,6 +1406,7 @@
             }
           ],
           "candidates_truncated": true,
+          "manual_review_candidate_count": 0,
           "status_counts": {
             "no_exact_contextual_match": 179
           }
@@ -845,6 +1452,7 @@
             }
           ],
           "candidates_truncated": false,
+          "manual_review_candidate_count": 0,
           "status_counts": {
             "parent_competition_unmapped": 3
           }
@@ -852,6 +1460,78 @@
         "teams": {
           "candidate_count": 2427,
           "candidates": [
+            {
+              "canonical_entity_id": "sportmonks:36",
+              "canonical_name": "Celta de Vigo",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "458622",
+              "provider_name": "Celta de Vigo",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:2975",
+              "canonical_name": "Deportivo Alav\u00e9s",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "14610752",
+              "provider_name": "Deportivo Alav\u00e9s",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:231",
+              "canonical_name": "Girona",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "466281",
+              "provider_name": "Girona",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:3457",
+              "canonical_name": "Levante",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "459473",
+              "provider_name": "Levante",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:645",
+              "canonical_name": "Mallorca",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "679882",
+              "provider_name": "Mallorca",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:485",
+              "canonical_name": "Real Betis",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "462877",
+              "provider_name": "Real Betis",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
             {
               "canonical_entity_id": null,
               "canonical_name": null,
@@ -1154,6 +1834,7 @@
             }
           ],
           "candidates_truncated": true,
+          "manual_review_candidate_count": 6,
           "status_counts": {
             "candidate_requires_manual_approval": 6,
             "no_exact_contextual_match": 2421
@@ -1289,6 +1970,7 @@
             }
           ],
           "candidates_truncated": false,
+          "manual_review_candidate_count": 0,
           "status_counts": {
             "no_exact_contextual_match": 9
           }
@@ -1310,6 +1992,7 @@
             }
           ],
           "candidates_truncated": false,
+          "manual_review_candidate_count": 0,
           "status_counts": {
             "parent_competition_unmapped": 1
           }
@@ -1317,6 +2000,90 @@
         "teams": {
           "candidate_count": 80,
           "candidates": [
+            {
+              "canonical_entity_id": "sportmonks:528",
+              "canonical_name": "Espanyol",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "livescore_football",
+              "provider_country": "Spain",
+              "provider_entity_id": "21154",
+              "provider_name": "Espanyol",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:3457",
+              "canonical_name": "Levante",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "livescore_football",
+              "provider_country": "Spain",
+              "provider_entity_id": "1538",
+              "provider_name": "Levante",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:645",
+              "canonical_name": "Mallorca",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "livescore_football",
+              "provider_country": "Spain",
+              "provider_entity_id": "84",
+              "provider_name": "Mallorca",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:459",
+              "canonical_name": "Osasuna",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "livescore_football",
+              "provider_country": "Spain",
+              "provider_entity_id": "21151",
+              "provider_name": "Osasuna",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:485",
+              "canonical_name": "Real Betis",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "livescore_football",
+              "provider_country": "Spain",
+              "provider_entity_id": "244",
+              "provider_name": "Real Betis",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:3468",
+              "canonical_name": "Real Madrid",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "livescore_football",
+              "provider_country": "Spain",
+              "provider_entity_id": "21128",
+              "provider_name": "Real Madrid",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:214",
+              "canonical_name": "Valencia",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "livescore_football",
+              "provider_country": "Spain",
+              "provider_entity_id": "21374",
+              "provider_name": "Valencia",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
             {
               "canonical_entity_id": null,
               "canonical_name": null,
@@ -1619,6 +2386,7 @@
             }
           ],
           "candidates_truncated": true,
+          "manual_review_candidate_count": 7,
           "status_counts": {
             "candidate_requires_manual_approval": 7,
             "no_exact_contextual_match": 73
@@ -1645,18 +2413,21 @@
           "candidate_count": 0,
           "candidates": [],
           "candidates_truncated": false,
+          "manual_review_candidate_count": 0,
           "status_counts": {}
         },
         "seasons": {
           "candidate_count": 0,
           "candidates": [],
           "candidates_truncated": false,
+          "manual_review_candidate_count": 0,
           "status_counts": {}
         },
         "teams": {
           "candidate_count": 0,
           "candidates": [],
           "candidates_truncated": false,
+          "manual_review_candidate_count": 0,
           "status_counts": {}
         }
       },
@@ -1679,6 +2450,42 @@
         "leagues": {
           "candidate_count": 8,
           "candidates": [
+            {
+              "canonical_entity_id": "sportmonks:564",
+              "canonical_name": "La Liga",
+              "entity_type": "league",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openfootball",
+              "provider_country": "Spain",
+              "provider_entity_id": "es.1",
+              "provider_name": "La Liga",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:8",
+              "canonical_name": "Premier League",
+              "entity_type": "league",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openfootball",
+              "provider_country": "England",
+              "provider_entity_id": "en.1",
+              "provider_name": "Premier League",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:384",
+              "canonical_name": "Serie A",
+              "entity_type": "league",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openfootball",
+              "provider_country": "Italy",
+              "provider_entity_id": "it.1",
+              "provider_name": "Serie A",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
             {
               "canonical_entity_id": null,
               "canonical_name": null,
@@ -1716,18 +2523,6 @@
               "status": "no_exact_contextual_match"
             },
             {
-              "canonical_entity_id": "sportmonks:564",
-              "canonical_name": "La Liga",
-              "entity_type": "league",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "openfootball",
-              "provider_country": "Spain",
-              "provider_entity_id": "es.1",
-              "provider_name": "La Liga",
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
-            },
-            {
               "canonical_entity_id": null,
               "canonical_name": null,
               "entity_type": "league",
@@ -1740,18 +2535,6 @@
               "status": "no_exact_contextual_match"
             },
             {
-              "canonical_entity_id": "sportmonks:8",
-              "canonical_name": "Premier League",
-              "entity_type": "league",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "openfootball",
-              "provider_country": "England",
-              "provider_entity_id": "en.1",
-              "provider_name": "Premier League",
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
-            },
-            {
               "canonical_entity_id": null,
               "canonical_name": null,
               "entity_type": "league",
@@ -1762,21 +2545,10 @@
               "provider_name": "Primeira Liga",
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
               "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": "sportmonks:384",
-              "canonical_name": "Serie A",
-              "entity_type": "league",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "openfootball",
-              "provider_country": "Italy",
-              "provider_entity_id": "it.1",
-              "provider_name": "Serie A",
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
             }
           ],
           "candidates_truncated": false,
+          "manual_review_candidate_count": 3,
           "status_counts": {
             "candidate_requires_manual_approval": 3,
             "no_exact_contextual_match": 5
@@ -1799,6 +2571,7 @@
             }
           ],
           "candidates_truncated": false,
+          "manual_review_candidate_count": 0,
           "status_counts": {
             "parent_competition_unmapped": 1
           }
@@ -1807,6 +2580,7 @@
           "candidate_count": 0,
           "candidates": [],
           "candidates_truncated": false,
+          "manual_review_candidate_count": 0,
           "status_counts": {}
         }
       },
@@ -1829,6 +2603,30 @@
         "leagues": {
           "candidate_count": 32,
           "candidates": [
+            {
+              "canonical_entity_id": "sportmonks:564",
+              "canonical_name": "La Liga",
+              "entity_type": "league",
+              "match_method": "curated_provider_id_alias",
+              "provider": "openligadb",
+              "provider_country": "Spain",
+              "provider_entity_id": "4936",
+              "provider_name": "LaLiga EA Sports",
+              "reason": "Curated stable provider-ID alias and exact country context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:8",
+              "canonical_name": "Premier League",
+              "entity_type": "league",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openligadb",
+              "provider_country": "England",
+              "provider_entity_id": "5996",
+              "provider_name": "Premier League",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
             {
               "canonical_entity_id": null,
               "canonical_name": null,
@@ -2022,18 +2820,6 @@
               "status": "no_exact_contextual_match"
             },
             {
-              "canonical_entity_id": "sportmonks:564",
-              "canonical_name": "La Liga",
-              "entity_type": "league",
-              "match_method": "curated_provider_id_alias",
-              "provider": "openligadb",
-              "provider_country": "Spain",
-              "provider_entity_id": "4936",
-              "provider_name": "LaLiga EA Sports",
-              "reason": "Curated stable provider-ID alias and exact country context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
-            },
-            {
               "canonical_entity_id": null,
               "canonical_name": null,
               "entity_type": "league",
@@ -2082,18 +2868,6 @@
               "status": "no_exact_contextual_match"
             },
             {
-              "canonical_entity_id": "sportmonks:8",
-              "canonical_name": "Premier League",
-              "entity_type": "league",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "openligadb",
-              "provider_country": "England",
-              "provider_entity_id": "5996",
-              "provider_name": "Premier League",
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
-            },
-            {
               "canonical_entity_id": null,
               "canonical_name": null,
               "entity_type": "league",
@@ -2128,9 +2902,34 @@
               "provider_name": "tem26",
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
               "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "4943",
+              "provider_name": "Testliga Outi77",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "4927",
+              "provider_name": "Testspiele Eintracht Frankfurt 26/27",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
             }
           ],
           "candidates_truncated": true,
+          "manual_review_candidate_count": 2,
           "status_counts": {
             "candidate_requires_manual_approval": 2,
             "no_exact_contextual_match": 30
@@ -2153,6 +2952,7 @@
             }
           ],
           "candidates_truncated": false,
+          "manual_review_candidate_count": 0,
           "status_counts": {
             "parent_competition_unmapped": 1
           }
@@ -2160,6 +2960,198 @@
         "teams": {
           "candidate_count": 434,
           "candidates": [
+            {
+              "canonical_entity_id": "sportmonks:52",
+              "canonical_name": "AFC Bournemouth",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openligadb",
+              "provider_country": "England",
+              "provider_entity_id": "2942",
+              "provider_name": "AFC Bournemouth",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:15",
+              "canonical_name": "Aston Villa",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openligadb",
+              "provider_country": "England",
+              "provider_entity_id": "438",
+              "provider_name": "Aston Villa",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:13258",
+              "canonical_name": "Athletic Club",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openligadb",
+              "provider_country": "Spain",
+              "provider_entity_id": "1135",
+              "provider_name": "Athletic Club",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:78",
+              "canonical_name": "Brighton & Hove Albion",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openligadb",
+              "provider_country": "England",
+              "provider_entity_id": "8790",
+              "provider_name": "Brighton & Hove Albion",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:117",
+              "canonical_name": "Coventry City",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openligadb",
+              "provider_country": "England",
+              "provider_entity_id": "8795",
+              "provider_name": "Coventry City",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:429",
+              "canonical_name": "Deportivo A Coru\u00f1a",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openligadb",
+              "provider_country": "Spain",
+              "provider_entity_id": "440",
+              "provider_name": "Deportivo A Coru\u00f1a",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:2975",
+              "canonical_name": "Deportivo Alav\u00e9s",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openligadb",
+              "provider_country": "Spain",
+              "provider_entity_id": "4257",
+              "provider_name": "Deportivo Alaves",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:83",
+              "canonical_name": "FC Barcelona",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openligadb",
+              "provider_country": "Spain",
+              "provider_entity_id": "356",
+              "provider_name": "FC Barcelona",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:22",
+              "canonical_name": "Hull City",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openligadb",
+              "provider_country": "England",
+              "provider_entity_id": "8791",
+              "provider_name": "Hull City",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:116",
+              "canonical_name": "Ipswich Town",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openligadb",
+              "provider_country": "England",
+              "provider_entity_id": "8796",
+              "provider_name": "Ipswich Town",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:71",
+              "canonical_name": "Leeds United",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openligadb",
+              "provider_country": "England",
+              "provider_entity_id": "8792",
+              "provider_name": "Leeds United",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:9",
+              "canonical_name": "Manchester City",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openligadb",
+              "provider_country": "England",
+              "provider_entity_id": "4244",
+              "provider_name": "Manchester City",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:63",
+              "canonical_name": "Nottingham Forest",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openligadb",
+              "provider_country": "England",
+              "provider_entity_id": "8793",
+              "provider_name": "Nottingham Forest",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:9818",
+              "canonical_name": "Racing Santander",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openligadb",
+              "provider_country": "Spain",
+              "provider_entity_id": "1278",
+              "provider_name": "Racing Santander",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:377",
+              "canonical_name": "Rayo Vallecano",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openligadb",
+              "provider_country": "Spain",
+              "provider_entity_id": "1802",
+              "provider_name": "Rayo Vallecano",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:3",
+              "canonical_name": "Sunderland",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openligadb",
+              "provider_country": "England",
+              "provider_entity_id": "8794",
+              "provider_name": "Sunderland",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
             {
               "canonical_entity_id": null,
               "canonical_name": null,
@@ -2462,6 +3454,7 @@
             }
           ],
           "candidates_truncated": true,
+          "manual_review_candidate_count": 16,
           "status_counts": {
             "candidate_requires_manual_approval": 16,
             "no_exact_contextual_match": 418
