@@ -369,12 +369,15 @@ def collect_highlightly_observations(
                 successful += 1
     finally:
         _close_owned(api, owned)
-    return _archive(
+    report = _archive(
         database_url, "highlightly",
         {"dates": dates, "timezone": "Etc/UTC", "status": "Not started",
          "page_size": page_size, "max_pages": max_pages},
         rows, errors, successful,
     )
+    metadata = getattr(api, "last_metadata", {})
+    report["provider_metadata"] = dict(metadata) if isinstance(metadata, Mapping) else {}
+    return report
 
 
 def collect_api_ninjas_observations(
@@ -445,9 +448,12 @@ def collect_api_ninjas_observations(
                 successful += 1
     finally:
         _close_owned(api, owned)
-    return _archive(
+    report = _archive(
         database_url, "api_ninjas",
         {"leagues": selected_leagues, "season": season,
          "status": "scheduled", "page_size": page_size, "max_pages": max_pages},
         rows, errors, successful,
     )
+    metadata = getattr(api, "last_metadata", {})
+    report["provider_metadata"] = dict(metadata) if isinstance(metadata, Mapping) else {}
+    return report
