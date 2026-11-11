@@ -30,11 +30,16 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         client = OpenLigaDBAdapter()
         client._get_json = Mock(side_effect=[
             [
-                {"leagueId": 1, "leagueName": "Bundesliga", "leagueShortcut": "bl1", "leagueSeason": "2026"},
-                {"leagueId": 2, "leagueName": "2. Bundesliga", "leagueShortcut": "bl2", "leagueSeason": "2026"},
+                {"leagueId": 1, "leagueName": "Bundesliga", "leagueShortcut": "bl1", "leagueSeason": "2026",
+                 "sport": {"sportName": "Fußball"}},
+                {"leagueId": 2, "leagueName": "2. Bundesliga", "leagueShortcut": "bl2", "leagueSeason": "2026",
+                 "sport": {"sportName": "Football"}},
+                {"leagueId": 9, "leagueName": "Handball", "leagueShortcut": "hand1", "leagueSeason": "2026",
+                 "sport": {"sportName": "Handball"}},
             ],
             [
-                {"leagueId": 1, "leagueName": "Bundesliga", "leagueShortcut": "bl1", "leagueSeason": "2027"},
+                {"leagueId": 1, "leagueName": "Bundesliga", "leagueShortcut": "bl1", "leagueSeason": "2027",
+                 "sport": {"sportName": "Fußball"}},
             ],
         ])
         scopes = client.discover_scopes([2026, 2027])

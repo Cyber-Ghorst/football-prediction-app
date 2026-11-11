@@ -209,6 +209,12 @@ class OpenLigaDBAdapter(_HttpAdapter):
         scopes: dict[tuple[str, int], dict[str, Any]] = {}
         for season in seasons:
             for league in self.available_leagues(int(season)):
+                sport = league.get("sport") if isinstance(league.get("sport"), Mapping) else {}
+                sport_name = _text(sport.get("sportName") or sport.get("name")).casefold()
+                if sport_name and not any(
+                    token in sport_name for token in ("football", "soccer", "fußball", "fussball")
+                ):
+                    continue
                 shortcut = _text(league.get("leagueShortcut"))
                 league_season = league.get("leagueSeason") or season
                 if not shortcut or not str(league_season).isdigit():
