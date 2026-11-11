@@ -111,18 +111,28 @@ def run_automatic_fixture_promotion(
                     provider == "api_ninjas" and _enabled(settings, noncommercial_key)
                 ),
             )
-            staging_fixtures = promotion.get("staging_fixtures") or []
-            staging_report = (
-                staging_fn(temporary_database_url, staging_fixtures)
-                if staging_fixtures else {
-                    "fixtures_inserted": 0,
-                    "fixtures_already_present": 0,
-                    "fixtures_removed": 0,
-                    "prediction_ledger_modified": 0,
-                }
-            )
             provider_writes = int(promotion.get("canonical_fixture_writes") or 0)
             canonical_writes += provider_writes
+            staging_fixtures = promotion.get("staging_fixtures") or []
+            try:
+                staging_report = (
+                    staging_fn(temporary_database_url, staging_fixtures)
+                    if staging_fixtures else {
+                        "fixtures_inserted": 0,
+                        "fixtures_already_present": 0,
+                        "fixtures_removed": 0,
+                        "prediction_ledger_modified": 0,
+                    }
+                )
+            except Exception as staging_exc:
+                results[provider] = {
+                    "status": "canonical_promoted_staging_failed",
+                    "error_type": type(staging_exc).__name__,
+                    "canonical_fixture_writes": provider_writes,
+                    "decisions": promotion.get("decisions") or {},
+                    "prediction_ledger_writes": 0,
+                }
+                continue
             temporary_inserts += int(staging_report.get("fixtures_inserted") or 0)
             results[provider] = {
                 "status": "completed",
