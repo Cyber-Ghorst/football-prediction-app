@@ -406,6 +406,20 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         self.assertTrue(result["eligible_for_review"])
         self.assertEqual(result["raw_payload"]["country"], "England")
 
+    def test_api_ninjas_rejects_competition_or_season_scope_mismatch(self):
+        kickoff = (NOW + timedelta(days=1)).isoformat().replace("+00:00", "Z")
+        row = {
+            "game_id": "laliga-game-1", "league": "laliga", "season": 2025,
+            "start_time": kickoff, "status": "scheduled",
+            "home_team": {"team_id": "home-1", "name": "Home FC"},
+            "away_team": {"team_id": "away-1", "name": "Away FC"},
+        }
+        result = normalize_api_ninjas_matches(
+            [row], league="epl", season=2026, fetched_at=NOW
+        )[0]
+        self.assertFalse(result["eligible_for_review"])
+        self.assertEqual(result["exclusion_reason"], "season_scope_mismatch")
+
     def test_api_ninjas_rejects_missing_provider_fixture_id(self):
         kickoff = (NOW + timedelta(days=1)).isoformat().replace("+00:00", "Z")
         row = {
