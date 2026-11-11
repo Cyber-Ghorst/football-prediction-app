@@ -286,7 +286,8 @@ def search_temporary_upcoming_fixtures(
                        home_team, away_team, competition, country, starting_at,
                        status, payload->>'venue' AS venue,
                        COALESCE(payload->>'source_provider', 'sportmonks') AS source_provider,
-                       COALESCE(payload->>'provider_updated_at', payload->>'updated_at') AS provider_updated_at
+                       COALESCE(payload->>'provider_updated_at', payload->>'updated_at') AS provider_updated_at,
+                       COALESCE(payload->>'season_name', payload->'season'->>'name') AS season_name
                 FROM upcoming_fixture_staging
                 WHERE {" AND ".join(clauses)}
                 ORDER BY starting_at ASC, fixture_id ASC
@@ -298,6 +299,6 @@ def search_temporary_upcoming_fixtures(
             columns = (
                 "fixture_id", "season_id", "league_id", "home_team_id", "away_team_id",
                 "home_team", "away_team", "competition", "country", "starting_at",
-                "status", "venue", "source_provider", "provider_updated_at",
+                "status", "venue", "source_provider", "provider_updated_at", "season_name",
             )
             return [dict(zip(columns, row)) for row in rows]
