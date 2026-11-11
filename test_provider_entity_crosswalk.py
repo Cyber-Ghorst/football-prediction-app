@@ -253,10 +253,33 @@ class ProviderEntityCrosswalkTests(unittest.TestCase):
         entities = extract_provider_entities_from_observations("openligadb", observations)
         self.assertEqual(len(entities["leagues"]), 1)
         self.assertEqual(len(entities["seasons"]), 1)
+        self.assertEqual(entities["seasons"][0]["id"], "bl1::2026")
         self.assertEqual(len(entities["teams"]), 3)
         home = next(row for row in entities["teams"] if row["id"] == "openligadb:team:1")
         self.assertEqual(home["country"], "Germany")
         self.assertEqual(home["observation_count"], 2)
+
+    def test_reused_season_ids_are_scoped_to_their_provider_competition(self):
+        observations = [
+            {
+                "competition_key": "bl1", "competition_name": "Bundesliga",
+                "season_key": "2026", "season_name": "2026",
+            },
+            {
+                "competition_key": "bl2", "competition_name": "2. Bundesliga",
+                "season_key": "2026", "season_name": "2026",
+            },
+        ]
+        entities = extract_provider_entities_from_observations("openligadb", observations)
+        self.assertEqual(
+            {row["id"] for row in entities["seasons"]},
+            {"bl1::2026", "bl2::2026"},
+        )
+        self.assertEqual(
+            {row["provider_competition_id"] for row in entities["seasons"]},
+            {"bl1", "bl2"},
+        )
+
 
     def test_explicit_link_requires_reason_and_existing_canonical_entity(self):
         with self.assertRaisesRegex(ValueError, "approval_reason"):

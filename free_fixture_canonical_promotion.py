@@ -16,7 +16,7 @@ from psycopg.types.json import Jsonb
 from football_repository import ensure_football_repository
 from provider_data_storage import _connect
 import provider_data_storage
-from provider_entity_crosswalk import load_provider_entity_links
+from provider_entity_crosswalk import load_provider_entity_links, provider_season_entity_id
 
 SUPPORTED_PROVIDERS = {
     "openligadb", "openfootball", "open_matchday",
@@ -157,7 +157,9 @@ def assess_free_fixture_observation(
 
     source_keys = {
         "league": str(observation.get("competition_key") or "").strip(),
-        "season": str(observation.get("season_key") or "").strip(),
+        "season": provider_season_entity_id(
+            observation.get("competition_key"), observation.get("season_key")
+        ),
         "home_team": str(observation.get("home_team_key") or "").strip(),
         "away_team": str(observation.get("away_team_key") or "").strip(),
     }
