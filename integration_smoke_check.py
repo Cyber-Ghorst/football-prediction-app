@@ -103,7 +103,9 @@ def api_ninjas_use_skip_details() -> dict[str, Any] | None:
     return None
 
 
-def api_football_account_probe(client=None) -> dict[str, Any]:
+def api_football_account_probe(
+    client=None, *, data_use_allowed: bool = False,
+) -> dict[str, Any]:
     """Return API-Football account/quota metadata without exposing account PII."""
     if client is None:
         from api_football import APIFootballClient
@@ -115,14 +117,17 @@ def api_football_account_probe(client=None) -> dict[str, Any]:
             if isinstance(status_payload, dict) and isinstance(status_payload.get("response"), dict)
             else status_payload
         )
-        leagues = client.leagues()
+        leagues = client.leagues() if data_use_allowed else None
         subscription = status.get("subscription") if isinstance(status, dict) else {}
         requests_info = status.get("requests") if isinstance(status, dict) else {}
         subscription = subscription if isinstance(subscription, dict) else {}
         requests_info = requests_info if isinstance(requests_info, dict) else {}
         return {
             "authenticated": True,
-            "leagues_returned": len(leagues),
+            "leagues_returned": len(leagues) if isinstance(leagues, list) else None,
+            "league_catalogue_probe_status": (
+                "completed" if data_use_allowed else "skipped_data_use_not_confirmed"
+            ),
             "subscription_plan": subscription.get("plan"),
             "subscription_active": subscription.get("active"),
             "requests_used_today": requests_info.get("current"),
@@ -187,7 +192,10 @@ def main() -> int:
         run_check(
             "api_football",
             bool(os.getenv("APISPORTS_API_KEY")),
-            lambda: api_football_account_probe(APIFootballClient()),
+            lambda: api_football_account_probe(
+                APIFootballClient(),
+                data_use_allowed=_enabled("APISPORTS_DATA_USE_ALLOWED_CONFIRMED"),
+            ),
         ),
         run_check(
             "api_ninjas",
