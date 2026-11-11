@@ -118,7 +118,7 @@ def provider_readiness() -> list[dict[str, Any]]:
         "highlightly": "adapter and authenticated smoke test available; opt-in exact-match missing-stat, lineup and Sportmonks-verified result-history fallbacks are wired into Layer 2; no injury or availability inference",
         "sportmonks": "current-season Layer 2 path active; exact competition/season coverage and data-quality gates enforced",
         "livescore_football": "historical World Cup 2026 results/standings only; generic future-fixture request returned HTTP 400; documented /get/games endpoint requires JWT; not used for fixture discovery",
-        "thesportsdb": "manual-only future-event adapter; free-tier country/league and one-next-event limits; requires explicit terms acknowledgement and exact timestamp validation",
+        "thesportsdb": "adapter implemented; manual-only future-event staging; free-tier country/league and one-next-event limits; requires explicit terms acknowledgement and exact timestamp validation",
         "openligadb": "read-only season adapter implemented; live coverage, freshness, canonical crosswalk and route activation remain pending",
         "openfootball": "read-only football.json adapter implemented; timezone-bearing future rows, upstream freshness, canonical crosswalk and route activation remain pending",
         "open_matchday": "read-only CSV adapter implemented; fixed CET-1 timestamps are rejected without a verified timezone; non-commercial rights and route activation remain pending",
