@@ -45,7 +45,7 @@ Provider roles in the current app:
 - API-Football v3 is the historical specialist for seasons 2022–2024, subject to account plan coverage.
 - Highlightly is an independent corroboration/enrichment source; its player enrichment now performs a quota preflight and refuses to proceed when remaining quota is unknown or insufficient.
 - API Ninjas supplies optional fixtures/results/standings and club/squad corroboration. Its adapter includes the documented Danish Superliga slug and exposes available rate-limit headers when returned.
-- LiveScoreFootball is a read-only, database-snapshot source. Its automatic fallback remains disabled. The diagnostics build its current-season crosswalk from Sportmonks and require fresh per-competition sync metadata; fixture-level update timestamps must also be validated before an individual fixture can be eligible.
+- LiveScoreFootball is not used for future fixtures. Its current worldcup26.ir host is a historical FIFA World Cup 2026 data source only; a JWT-authenticated historical results adapter remains pending.
 
 Provider health, account quota, competition coverage, and source-data freshness are distinct checks. A successful unit test or public status page does not prove that a user's credential, plan, quota, or selected competition is available.
 
