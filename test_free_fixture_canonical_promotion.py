@@ -84,6 +84,7 @@ class FreeFixtureCanonicalPromotionAssessmentTests(unittest.TestCase):
                 canonical_entities=canonical_entities(),
                 now=NOW,
                 licence_acknowledged=True,
+                api_ninjas_noncommercial_confirmed=(provider == "api_ninjas"),
             )
             self.assertEqual(result["decision"], "ready_for_promotion")
             self.assertTrue(all(
@@ -91,6 +92,22 @@ class FreeFixtureCanonicalPromotionAssessmentTests(unittest.TestCase):
                 for key, value in result["canonical"].items()
                 if key.endswith("_id")
             ))
+
+    def test_api_ninjas_free_plan_requires_noncommercial_acknowledgement(self):
+        result = assess_free_fixture_observation(
+            "api_ninjas", OBSERVATION, snapshot_id="snapshot-1",
+            snapshot_retrieved_at="2026-11-11T01:56:00Z",
+            league_links={"league-1": "sportmonks:10"},
+            season_links={"season-1": "sportmonks:20"},
+            team_links={"home-1": "sportmonks:30", "away-1": "sportmonks:40"},
+            canonical_entities=canonical_entities(), now=NOW,
+            licence_acknowledged=True,
+        )
+        self.assertEqual(result["decision"], "blocked")
+        self.assertEqual(
+            result["reason"],
+            "api_ninjas_free_plan_noncommercial_use_not_confirmed",
+        )
 
     def test_missing_any_entity_link_blocks_promotion(self):
         result = assess_free_fixture_observation(
