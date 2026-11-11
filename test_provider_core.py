@@ -11,15 +11,14 @@ class ProviderCoreTests(unittest.TestCase):
     def obs(self, provider, value, **kwargs):
         return Observation(provider=provider, value=value, fetched_at=NOW, **kwargs)
 
-    def test_verified_livescore_primary_wins_without_averaging_conflicts(self):
+    def test_legacy_livescore_verification_flag_is_ignored(self):
         result = resolve_field("results", [
             self.obs("api_ninjas", {"home": 2, "away": 1}),
             self.obs("livescore_football", {"home": 1, "away": 1}),
         ], now=NOW, livescore_verified=True)
-        self.assertEqual(result.value, {"home": 1, "away": 1})
-        self.assertEqual(result.provider, "livescore_football")
-        self.assertEqual(result.status, "conflict")
-        self.assertEqual(result.conflicting_providers, ("api_ninjas",))
+        self.assertEqual(result.value, {"home": 2, "away": 1})
+        self.assertEqual(result.provider, "api_ninjas")
+        self.assertEqual(result.status, "single_source")
 
     def test_future_fixture_discovery_excludes_non_discovery_providers(self):
         result = resolve_field("future_fixtures", [
