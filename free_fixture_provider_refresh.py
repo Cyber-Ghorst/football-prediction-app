@@ -13,11 +13,9 @@ from free_fixture_adapters import (
 )
 from free_fixture_observation_pipeline import (
     collect_bzzoiro_observations,
-    collect_livescore_observations,
     collect_openfootball_observations,
     collect_openligadb_observations,
 )
-from livescore_football import LiveScoreFootballClient
 
 
 def _rotate_batch(items: list[Any], batch_size: int, slot: int) -> list[Any]:
@@ -96,36 +94,6 @@ def refresh_free_fixture_sources(
     except Exception as exc:
         results["openfootball"] = _error("openfootball", exc)
 
-    # LiveScoreFootball discovery is bounded to avoid an uncontrolled burst of
-    # per-league calls. Only explicit league slugs are queried.
-    livescore_client = None
-    try:
-        livescore_client = LiveScoreFootballClient()
-        league_rows = livescore_client.leagues(kind="all", available=True)
-        slugs = []
-        if isinstance(league_rows, list):
-            for row in league_rows:
-                if not isinstance(row, dict):
-                    continue
-                slug = row.get("slug") or row.get("league_slug") or row.get("leagueSlug")
-                if slug and str(slug) not in slugs:
-                    slugs.append(str(slug))
-        all_slugs = list(slugs)
-        slugs = _rotate_batch(all_slugs, max_livescore_leagues, batch_slot)
-        results["livescore_football"] = collect_livescore_observations(
-            database_url, slugs, date_from=date_from, date_to=date_to,
-            client=livescore_client, request_delay_seconds=0.5,
-        ) if slugs else {
-            "provider": "livescore_football", "archived": False,
-            "observation_count": 0, "eligible_for_review_count": 0,
-            "errors": [{"scope": "discovery", "error": "No league slugs returned by the league catalogue."}],
-        }
-    except Exception as exc:
-        results["livescore_football"] = _error("livescore_football", exc)
-    finally:
-        if livescore_client is not None:
-            livescore_client.close()
-
     # Bzzoiro's v2 upcoming endpoint returns all accessible competitions via
     # pagination. The token is passed only to the client, never to snapshot metadata.
     try:
@@ -138,6 +106,17 @@ def refresh_free_fixture_sources(
             results["bzzoiro"] = collect_bzzoiro_observations(database_url, max_pages=20)
     except Exception as exc:
         results["bzzoiro"] = _error("bzzoiro", exc)
+
+    # TheSportsDB's free tier is development-only, returns one next event per
+    # league, and requires explicit terms acknowledgement. Keep it manual.
+    results["thesportsdb"] = {
+        "provider": "thesportsdb",
+        "archived": False,
+        "observation_count": 0,
+        "eligible_for_review_count": 0,
+        "skipped": "free-tier terms acknowledgement required; manual staging only",
+        "errors": [],
+    }
 
     # Open Matchday is intentionally excluded from unattended refresh because
     # its upstream licence is non-commercial-only. The manual UI requires an
