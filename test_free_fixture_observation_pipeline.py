@@ -86,7 +86,7 @@ class FreeFixtureObservationPipelineTests(unittest.TestCase):
         }]
         result = collect_livescore_observations(
             "provider-db", ["league-1"], date_from="2026-11-11", date_to="2026-11-18",
-            client=client,
+            client=client, league_sync_times={"league-1": "2026-11-11T01:30:00Z"},
         )
         client.fixtures.assert_called_once_with(
             "league-1", status="scheduled", date_from="20261111", date_to="20261118"
@@ -95,6 +95,7 @@ class FreeFixtureObservationPipelineTests(unittest.TestCase):
         self.assertEqual(archive.call_args.kwargs["request_params"]["api_date_from"], "20261111")
         self.assertEqual(result["eligible_for_review_count"], 1)
         self.assertEqual(archive.call_args.kwargs["observations"][0]["provider_fixture_id"], "event-9")
+        self.assertEqual(archive.call_args.kwargs["observations"][0]["source_sync_at"], "2026-11-11T01:30:00Z")
 
     def test_livescore_rejects_invalid_or_reversed_date_ranges(self):
         client = Mock()
