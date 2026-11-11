@@ -1,7 +1,7 @@
 {
   "automatic_mapping_approvals": 0,
   "canonical_fixture_writes": 0,
-  "generated_at_utc": "2026-11-11T10:37:52.841804+00:00",
+  "generated_at_utc": "2026-11-11T11:00:42.782735+00:00",
   "prediction_ledger_writes": 0,
   "providers": {
     "api_ninjas": {
@@ -1140,7 +1140,7 @@
     "openligadb": {
       "categories": {
         "leagues": {
-          "candidate_count": 32,
+          "candidate_count": 37,
           "candidates": [
             {
               "canonical_entity_id": "sportmonks:564",
@@ -1179,8 +1179,38 @@
               "entity_type": "league",
               "match_method": null,
               "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "5972",
+              "provider_name": "1. Frauen Fu\u00dfballbundesliga",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
               "provider_country": "Germany",
               "provider_entity_id": "4938",
+              "provider_name": "2. Bundesliga",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "5958",
               "provider_name": "2. Bundesliga",
               "provider_parent_id": null,
               "provider_parent_name": null,
@@ -1209,8 +1239,38 @@
               "entity_type": "league",
               "match_method": null,
               "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "5960",
+              "provider_name": "BLClaude",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
               "provider_country": "Germany",
               "provider_entity_id": "4937",
+              "provider_name": "Bundesliga",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "5957",
               "provider_name": "Bundesliga",
               "provider_parent_id": null,
               "provider_parent_name": null,
@@ -1302,6 +1362,21 @@
               "provider_country": "",
               "provider_entity_id": "6020",
               "provider_name": "DFB-Pokal Frauen",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "5959",
+              "provider_name": "Empty Stands Spendenliga 2026/2027 (https://emptystands.me/aktivismus/spendenliga)",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
@@ -1471,92 +1546,17 @@
               "provider_parent_name": null,
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
               "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "league",
-              "match_method": null,
-              "provider": "openligadb",
-              "provider_country": "",
-              "provider_entity_id": "5994",
-              "provider_name": "Regionalliga West Frauen",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "league",
-              "match_method": null,
-              "provider": "openligadb",
-              "provider_country": "",
-              "provider_entity_id": "5992",
-              "provider_name": "Spiele mit Arminia Bielefeld Beteiligung",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "league",
-              "match_method": null,
-              "provider": "openligadb",
-              "provider_country": "",
-              "provider_entity_id": "4922",
-              "provider_name": "tem26",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "league",
-              "match_method": null,
-              "provider": "openligadb",
-              "provider_country": "",
-              "provider_entity_id": "4943",
-              "provider_name": "Testliga Outi77",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "league",
-              "match_method": null,
-              "provider": "openligadb",
-              "provider_country": "",
-              "provider_entity_id": "4927",
-              "provider_name": "Testspiele Eintracht Frankfurt 26/27",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
             }
           ],
           "candidates_truncated": true,
           "manual_review_candidate_count": 2,
           "status_counts": {
             "candidate_requires_manual_approval": 2,
-            "no_exact_contextual_match": 30
+            "no_exact_contextual_match": 35
           }
         },
         "seasons": {
-          "candidate_count": 32,
+          "candidate_count": 37,
           "candidates": [
             {
               "canonical_entity_id": null,
@@ -1791,10 +1791,85 @@
               "match_method": null,
               "provider": "openligadb",
               "provider_country": null,
+              "provider_entity_id": "5957::2026",
+              "provider_name": "2026",
+              "provider_parent_id": "5957",
+              "provider_parent_name": "Bundesliga",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": null,
+              "provider_entity_id": "5958::2026",
+              "provider_name": "2026",
+              "provider_parent_id": "5958",
+              "provider_parent_name": "2. Bundesliga",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": null,
+              "provider_entity_id": "5959::2026",
+              "provider_name": "2026",
+              "provider_parent_id": "5959",
+              "provider_parent_name": "Empty Stands Spendenliga 2026/2027 (https://emptystands.me/aktivismus/spendenliga)",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": null,
+              "provider_entity_id": "5960::2026",
+              "provider_name": "2026",
+              "provider_parent_id": "5960",
+              "provider_parent_name": "BLClaude",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": null,
               "provider_entity_id": "5966::2026",
               "provider_name": "2026",
               "provider_parent_id": "5966",
               "provider_parent_name": "Franz-Beckenbauer-Supercup",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": null,
+              "provider_entity_id": "5972::2026",
+              "provider_name": "2026",
+              "provider_parent_id": "5972",
+              "provider_parent_name": "1. Frauen Fu\u00dfballbundesliga",
               "reason": "A verified provider-competition to canonical-competition link is required first.",
               "status": "parent_competition_unmapped"
             },
@@ -1857,91 +1932,16 @@
               "provider_parent_name": "DFB U21",
               "reason": "A verified provider-competition to canonical-competition link is required first.",
               "status": "parent_competition_unmapped"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "season",
-              "match_method": null,
-              "provider": "openligadb",
-              "provider_country": null,
-              "provider_entity_id": "5985::2026",
-              "provider_name": "2026",
-              "provider_parent_id": "5985",
-              "provider_parent_name": "DFB Frauen Supercup",
-              "reason": "A verified provider-competition to canonical-competition link is required first.",
-              "status": "parent_competition_unmapped"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "season",
-              "match_method": null,
-              "provider": "openligadb",
-              "provider_country": null,
-              "provider_entity_id": "5991::2026",
-              "provider_name": "2026",
-              "provider_parent_id": "5991",
-              "provider_parent_name": "NOFV Regionalliga NordOst",
-              "reason": "A verified provider-competition to canonical-competition link is required first.",
-              "status": "parent_competition_unmapped"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "season",
-              "match_method": null,
-              "provider": "openligadb",
-              "provider_country": null,
-              "provider_entity_id": "5992::2026",
-              "provider_name": "2026",
-              "provider_parent_id": "5992",
-              "provider_parent_name": "Spiele mit Arminia Bielefeld Beteiligung",
-              "reason": "A verified provider-competition to canonical-competition link is required first.",
-              "status": "parent_competition_unmapped"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "season",
-              "match_method": null,
-              "provider": "openligadb",
-              "provider_country": null,
-              "provider_entity_id": "5994::2026",
-              "provider_name": "2026",
-              "provider_parent_id": "5994",
-              "provider_parent_name": "Regionalliga West Frauen",
-              "reason": "A verified provider-competition to canonical-competition link is required first.",
-              "status": "parent_competition_unmapped"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "season",
-              "match_method": null,
-              "provider": "openligadb",
-              "provider_country": null,
-              "provider_entity_id": "5996::2026",
-              "provider_name": "2026",
-              "provider_parent_id": "5996",
-              "provider_parent_name": "Premier League",
-              "reason": "A verified provider-competition to canonical-competition link is required first.",
-              "status": "parent_competition_unmapped"
             }
           ],
           "candidates_truncated": true,
           "manual_review_candidate_count": 0,
           "status_counts": {
-            "parent_competition_unmapped": 32
+            "parent_competition_unmapped": 37
           }
         },
         "teams": {
-          "candidate_count": 434,
+          "candidate_count": 442,
           "candidates": [
             {
               "canonical_entity_id": "sportmonks:52",
@@ -2536,8 +2536,8 @@
               "match_method": null,
               "provider": "openligadb",
               "provider_country": "",
-              "provider_entity_id": "8922",
-              "provider_name": "1. Spvg. Solingen Wald 03",
+              "provider_entity_id": "5736",
+              "provider_name": "1. SC G\u00f6ttingen 05",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
@@ -2550,9 +2550,9 @@
               "entity_type": "team",
               "match_method": null,
               "provider": "openligadb",
-              "provider_country": "Europe",
-              "provider_entity_id": "441",
-              "provider_name": "AC Mailand",
+              "provider_country": "",
+              "provider_entity_id": "8922",
+              "provider_name": "1. Spvg. Solingen Wald 03",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
@@ -2563,7 +2563,7 @@
           "manual_review_candidate_count": 16,
           "status_counts": {
             "candidate_requires_manual_approval": 16,
-            "no_exact_contextual_match": 418
+            "no_exact_contextual_match": 426
           }
         }
       },
@@ -2572,12 +2572,12 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 11742,
+      "observation_count": 12433,
       "snapshot_count": 3,
       "source_entity_counts": {
-        "leagues": 32,
-        "seasons": 32,
-        "teams": 434
+        "leagues": 37,
+        "seasons": 37,
+        "teams": 442
       },
       "status": "ok"
     }
