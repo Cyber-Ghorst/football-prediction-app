@@ -127,12 +127,12 @@ jobs:
             git push origin HEAD:main
           fi
 
-      - name: Build and archive seven-day cross-provider fixture coverage report
+      - name: Build and archive four-day cross-provider fixture coverage report
         continue-on-error: true
         env:
           PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
           FREE_FIXTURE_WINDOW_DAYS: "4"
-          FREE_FIXTURE_DAILY_TARGET: "50"
+          FREE_FIXTURE_DAILY_TARGET: "30"
           FREE_FIXTURE_MAX_HIGHLIGHTS: "15"
           FREE_FIXTURE_WINDOW_MAX_AGE_HOURS: "24"
           FREE_FIXTURE_WINDOW_SNAPSHOT_LIMIT: "5"

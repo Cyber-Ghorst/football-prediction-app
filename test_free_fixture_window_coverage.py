@@ -172,6 +172,13 @@ class FreeFixtureWindowCoverageTests(unittest.TestCase):
             {"highlightly", "api_ninjas", "open_matchday"},
         )
 
+    def test_loader_defaults_match_four_day_target_and_highlight_cap(self):
+        with patch("free_fixture_window_coverage.load_provider_observation_snapshots", return_value=[]):
+            report = build_free_fixture_window_coverage("provider-db", now=NOW)
+        self.assertEqual(report["window_days"], 4)
+        self.assertEqual(report["daily_target"], 30)
+        self.assertEqual(report["max_highlights"], 15)
+
     def test_requires_timezone_aware_now(self):
         with self.assertRaises(ValueError):
             build_window_coverage_report({}, now=datetime(2026, 11, 11))
