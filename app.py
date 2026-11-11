@@ -1297,6 +1297,121 @@ with st.sidebar:
                             st.error(f"Mappings were not saved ({type(exc).__name__}).")
                             st.caption(str(exc))
 
+with st.expander("Validate and publish approved free-source fixtures", expanded=False):
+    st.caption(
+        "Only fresh, scheduled fixtures with precise timezone-aware kickoffs and four "
+        "explicit league/season/home-team/away-team crosswalks to existing Sportmonks "
+        "canonical entities can be promoted. Conflicts are held for review."
+    )
+    promotion_provider = st.selectbox(
+        "Provider to validate",
+        ["openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro"],
+        key="free_fixture_promotion_provider",
+    )
+    promotion_licence_ack = st.checkbox(
+        "I have reviewed this provider's terms and confirm this app's collection, internal storage and fixture display are permitted.",
+        value=False,
+        key="free_fixture_promotion_licence_ack",
+    )
+    promotion_noncommercial_ack = False
+    if promotion_provider == "open_matchday":
+        promotion_noncommercial_ack = st.checkbox(
+            "I confirm the app and this use are non-commercial, as required by Open Matchday's licence.",
+            value=False,
+            key="free_fixture_promotion_openmatchday_ack",
+        )
+    preview_promotion = st.button(
+        "Preview promotion eligibility",
+        use_container_width=True,
+        disabled=not bool(PROVIDER_DATABASE_URL),
+        key="free_fixture_promotion_preview",
+    )
+    execute_promotion = st.button(
+        "Promote validated fixtures to the app catalogue",
+        use_container_width=True,
+        disabled=(
+            not bool(PROVIDER_DATABASE_URL)
+            or not bool(DATABASE_URL)
+            or not promotion_licence_ack
+            or (promotion_provider == "open_matchday" and not promotion_noncommercial_ack)
+        ),
+        key="free_fixture_promotion_execute",
+    )
+    if preview_promotion or execute_promotion:
+        try:
+            with st.spinner(
+                "Checking freshness, crosswalks, canonical identities and kickoff conflicts..."
+            ):
+                promotion_report = review_and_promote_free_fixture_observations(
+                    PROVIDER_DATABASE_URL,
+                    provider=promotion_provider,
+                    promote=bool(execute_promotion),
+                    licence_acknowledged=bool(promotion_licence_ack),
+                    open_matchday_noncommercial_confirmed=bool(promotion_noncommercial_ack),
+                    snapshot_limit=100,
+                    max_age_hours=24,
+                    window_days=7,
+                )
+            if execute_promotion:
+                st.session_state["free_fixture_promotion_report"] = promotion_report
+                staged_rows = promotion_report.get("staging_fixtures") or []
+                if staged_rows:
+                    try:
+                        neon_stage_result = add_temporary_upcoming_fixtures(
+                            DATABASE_URL, staged_rows
+                        )
+                        promotion_report["neon_staging"] = neon_stage_result
+                        st.success(
+                            f"Promotion complete: {promotion_report['decisions'].get('promoted', 0)} "
+                            "new canonical fixtures; "
+                            f"{neon_stage_result['fixtures_inserted']} added to the searchable app catalogue."
+                        )
+                    except Exception as staging_error:
+                        promotion_report["neon_staging_error"] = type(staging_error).__name__
+                        st.error(
+                            "Canonical fixtures were promoted in CockroachDB, but Neon catalogue "
+                            "staging failed. Rerun promotion after checking DATABASE_URL; exact "
+                            "source links are idempotent."
+                        )
+                        st.caption(f"Neon staging error: {type(staging_error).__name__}")
+                else:
+                    st.info("No fixtures passed all promotion gates; no app-catalogue rows were added.")
+                st.session_state["free_fixture_promotion_report"] = promotion_report
+            else:
+                st.session_state["free_fixture_promotion_preview"] = promotion_report
+        except Exception as promotion_error:
+            st.error(f"Fixture promotion check failed ({type(promotion_error).__name__}).")
+            st.caption(str(promotion_error))
+
+    report_key = (
+        "free_fixture_promotion_report"
+        if st.session_state.get("free_fixture_promotion_report", {}).get("provider") == promotion_provider
+        else "free_fixture_promotion_preview"
+    )
+    promotion_report = st.session_state.get(report_key)
+    if promotion_report and promotion_report.get("provider") == promotion_provider:
+        st.write(
+            f"Snapshots: {promotion_report.get('snapshot_count', 0)} · "
+            f"Observations: {promotion_report.get('observation_count', 0)} · "
+            f"Decisions: {promotion_report.get('decisions', {})}"
+        )
+        rows = promotion_report.get("rows") or []
+        if rows:
+            st.dataframe(
+                [{
+                    "Provider fixture ID": row.get("provider_fixture_id"),
+                    "Decision": row.get("decision"),
+                    "Reason": row.get("reason"),
+                    "Canonical fixture ID": row.get("canonical_fixture_id") or row.get("fixture_id"),
+                } for row in rows],
+                use_container_width=True,
+                hide_index=True,
+            )
+        st.caption(
+            f"Canonical fixture writes: {promotion_report.get('canonical_fixture_writes', 0)} · "
+            f"Prediction-ledger writes: {promotion_report.get('prediction_ledger_writes', 0)}"
+        )
+
 if test_provider_database:
     if not PROVIDER_DATABASE_URL:
         st.warning("Add PROVIDER_DATABASE_URL in Streamlit Secrets before testing CockroachDB.")
