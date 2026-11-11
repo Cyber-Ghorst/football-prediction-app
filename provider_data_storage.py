@@ -271,15 +271,26 @@ def load_provider_observation_snapshots(
     ensure_provider_storage(database_url)
     with _connect(database_url) as connection:
         with connection.cursor() as cursor:
-            cursor.execute(
-                """SELECT snapshot_id, provider, resource_type, request_params,
-                          source_ids, payload, retrieved_at, expires_at, payload_sha256
-                   FROM provider_api_snapshots
-                   WHERE resource_type = %s AND (%s IS NULL OR provider = %s)
-                   ORDER BY retrieved_at DESC, snapshot_id DESC
-                   LIMIT %s""",
-                ("future_fixture_observations", provider_name, provider_name, limit),
-            )
+            if provider_name:
+                cursor.execute(
+                    """SELECT snapshot_id, provider, resource_type, request_params,
+                              source_ids, payload, retrieved_at, expires_at, payload_sha256
+                       FROM provider_api_snapshots
+                       WHERE resource_type = %s AND provider = %s
+                       ORDER BY retrieved_at DESC, snapshot_id DESC
+                       LIMIT %s""",
+                    ("future_fixture_observations", provider_name, limit),
+                )
+            else:
+                cursor.execute(
+                    """SELECT snapshot_id, provider, resource_type, request_params,
+                              source_ids, payload, retrieved_at, expires_at, payload_sha256
+                       FROM provider_api_snapshots
+                       WHERE resource_type = %s
+                       ORDER BY retrieved_at DESC, snapshot_id DESC
+                       LIMIT %s""",
+                    ("future_fixture_observations", limit),
+                )
             rows = cursor.fetchall()
     return [_snapshot_from_row(row) for row in rows]
 
@@ -753,14 +764,16 @@ def load_competition_registry(
            canonical_competition_id, prediction_ready, readiness_reason,
            discovered_at, updated_at
     FROM provider_competition_registry
-    WHERE (%s IS NULL OR provider = %s)
+    {provider_filter}
     ORDER BY country, competition_name, season_name, provider
     LIMIT %s
     """
+    provider_filter = "WHERE provider = %s" if provider else ""
+    params = (provider, limit) if provider else (limit,)
     with _connect(database_url) as connection:
         _ensure_provider_storage_once(database_url, connection)
         with connection.cursor() as cursor:
-            cursor.execute(query, (provider, provider, limit))
+            cursor.execute(query.format(provider_filter=provider_filter), params)
             rows = cursor.fetchall()
     names = (
         "identity_key", "provider", "provider_competition_id", "provider_season_id",
