@@ -12,7 +12,7 @@ The scheduled result synchronizer now supports promoted fixtures from OpenLigaDB
 
 OpenLigaDB results are selected from the explicit full-time result type, not by array position. LiveScoreFootball requires a completed event with an explicit full-time detail and rejects extra-time/penalty detail. Bzzoiro requires a finished event and an explicit full-time score object; it does not infer a score from commentary or a score string.
 
-OpenFootball and Open Matchday remain unsupported as automatic result sources in this implementation. Their future-fixture observations can be promoted only after the normal crosswalk/licence checks, but the result synchronizer will not invent a result endpoint or infer scores from static schedules.
+Open Matchday is supported through its paired results_<season>.csv dataset. The results file is treated as a finished-match source, and the synchronizer requires the same deterministic fixture identity, exact teams/competition/season/kickoff, explicit ft_home/ft_away values and a consistent ft_result. Cup competitions are excluded because the CSV does not expose separate extra-time/penalty fields. OpenFootball remains unsupported as an automatic result source; its current fixture schedule often has timezone-less local kickoff values and is not promoted until an explicit timezone-safe source row is available.
 
 ## Credentials and schedule
 
