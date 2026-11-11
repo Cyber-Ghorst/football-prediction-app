@@ -1,7 +1,7 @@
 """Collect and archive free future-fixture observations without canonical writes."""
 from __future__ import annotations
 
-from datetime import date
+from datetime import date, datetime, timedelta, timezone
 import re
 from typing import Any, Mapping
 from urllib.parse import quote
@@ -13,6 +13,10 @@ from free_fixture_adapters import (
     OpenLigaDBAdapter,
     OpenMatchdayAdapter,
     normalize_livescore_football_events,
+    normalize_highlightly_matches,
+    normalize_api_ninjas_matches,
+    API_NINJAS_FREE_LEAGUES,
+    API_NINJAS_LEAGUE_NAMES,
 )
 from free_fixture_observation_store import archive_future_fixture_observations
 from livescore_football import LiveScoreFootballClient
@@ -23,6 +27,11 @@ def _close_owned(client: Any, owned: bool) -> None:
         close = getattr(client, "close", None)
         if callable(close):
             close()
+        else:
+            session = getattr(client, "session", None)
+            session_close = getattr(session, "close", None)
+            if callable(session_close):
+                session_close()
 
 
 def _archive(
@@ -286,5 +295,157 @@ def collect_bzzoiro_observations(
         _close_owned(api, owned)
     return _archive(
         database_url, "bzzoiro", query,
+        rows, errors, successful,
+    )
+
+
+def collect_highlightly_observations(
+    database_url: str,
+    *,
+    date_from: str,
+    days: int = 7,
+    client: Any | None = None,
+    page_size: int = 100,
+    max_pages: int = 10,
+) -> dict[str, Any]:
+    """Collect Highlightly scheduled matches by UTC day, paging each date."""
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(date_from)):
+        raise ValueError("Highlightly date_from must use YYYY-MM-DD.")
+    if isinstance(days, bool) or not isinstance(days, int) or not 1 <= days <= 7:
+        raise ValueError("Highlightly days must be an integer from 1 through 7.")
+    if isinstance(page_size, bool) or not isinstance(page_size, int) or not 1 <= page_size <= 100:
+        raise ValueError("Highlightly page_size must be between 1 and 100.")
+    if isinstance(max_pages, bool) or not isinstance(max_pages, int) or not 1 <= max_pages <= 20:
+        raise ValueError("Highlightly max_pages must be between 1 and 20.")
+    try:
+        start = date.fromisoformat(date_from)
+    except ValueError as exc:
+        raise ValueError("Highlightly date_from must be a valid calendar date.") from exc
+
+    owned = client is None
+    api = client
+    rows: list[dict[str, Any]] = []
+    errors: list[dict[str, str]] = []
+    successful = 0
+    dates = [(start + timedelta(days=offset)).isoformat() for offset in range(days)]
+    try:
+        if api is None:
+            from highlightly import HighlightlyClient
+            api = HighlightlyClient()
+        for day in dates:
+            offset = 0
+            day_succeeded = False
+            for page in range(max_pages):
+                try:
+                    batch = api.matches(
+                        date=day, timezone="Etc/UTC",
+                        limit=page_size, offset=offset,
+                    )
+                    if not isinstance(batch, list):
+                        raise ValueError("Highlightly matches response was not a list.")
+                    fetched = datetime.now(timezone.utc)
+                    rows.extend(normalize_highlightly_matches(
+                        batch, fetched_at=fetched,
+                        source_url=f"{api.base_url}/matches",
+                    ))
+                    day_succeeded = True
+                    pagination = getattr(api, "last_metadata", {}).get("pagination") or {}
+                    total = pagination.get("total_count")
+                    offset += len(batch)
+                    if len(batch) < page_size or (
+                        isinstance(total, int) and offset >= total
+                    ):
+                        break
+                    if page == max_pages - 1:
+                        errors.append({
+                            "scope": day,
+                            "error": f"Pagination cap reached at {max_pages} pages; remaining matches may be truncated.",
+                        })
+                except Exception as exc:
+                    errors.append({"scope": day, "error": str(exc)[:300]})
+                    break
+            if day_succeeded:
+                successful += 1
+    finally:
+        _close_owned(api, owned)
+    return _archive(
+        database_url, "highlightly",
+        {"dates": dates, "timezone": "Etc/UTC", "status": "Not started",
+         "page_size": page_size, "max_pages": max_pages},
+        rows, errors, successful,
+    )
+
+
+def collect_api_ninjas_observations(
+    database_url: str,
+    *,
+    season: int,
+    leagues: list[str] | None = None,
+    client: Any | None = None,
+    page_size: int = 50,
+    max_pages: int = 10,
+) -> dict[str, Any]:
+    """Collect current-season scheduled API Ninjas fixtures for its free-tier leagues."""
+    if isinstance(season, bool) or not isinstance(season, int) or season < 1900:
+        raise ValueError("API Ninjas season must be a valid integer start year.")
+    if isinstance(page_size, bool) or not isinstance(page_size, int) or page_size != 50:
+        raise ValueError("API Ninjas page_size must remain at the documented default of 50.")
+    if isinstance(max_pages, bool) or not isinstance(max_pages, int) or not 1 <= max_pages <= 20:
+        raise ValueError("API Ninjas max_pages must be between 1 and 20.")
+    selected_leagues = list(leagues or API_NINJAS_FREE_LEAGUES)
+    if not selected_leagues:
+        raise ValueError("At least one API Ninjas free-tier league is required.")
+
+    owned = client is None
+    api = client
+    rows: list[dict[str, Any]] = []
+    errors: list[dict[str, str]] = []
+    successful = 0
+    try:
+        if api is None:
+            from api_ninjas import APINinjasClient
+            api = APINinjasClient()
+        for league in selected_leagues:
+            league_key = str(league or "").strip().casefold()
+            if league_key not in API_NINJAS_FREE_LEAGUES:
+                errors.append({
+                    "scope": league_key or "unknown",
+                    "error": "League is outside the documented free-tier competition set.",
+                })
+                continue
+            league_succeeded = False
+            offset = 0
+            for page in range(max_pages):
+                try:
+                    batch = api.matches(
+                        league=league_key, season=season,
+                        status="scheduled", offset=offset,
+                    )
+                    if not isinstance(batch, list):
+                        raise ValueError("API Ninjas matches response was not a list.")
+                    fetched = datetime.now(timezone.utc)
+                    rows.extend(normalize_api_ninjas_matches(
+                        batch, league=league_key, season=season, fetched_at=fetched,
+                    ))
+                    league_succeeded = True
+                    offset += len(batch)
+                    if len(batch) < page_size:
+                        break
+                    if page == max_pages - 1:
+                        errors.append({
+                            "scope": league_key,
+                            "error": f"Pagination cap reached at {max_pages} pages; remaining matches may be truncated.",
+                        })
+                except Exception as exc:
+                    errors.append({"scope": league_key, "error": str(exc)[:300]})
+                    break
+            if league_succeeded:
+                successful += 1
+    finally:
+        _close_owned(api, owned)
+    return _archive(
+        database_url, "api_ninjas",
+        {"leagues": selected_leagues, "season": season,
+         "status": "scheduled", "page_size": page_size, "max_pages": max_pages},
         rows, errors, successful,
     )
