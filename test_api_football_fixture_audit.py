@@ -73,7 +73,7 @@ class APIFootballFixtureAuditTests(unittest.TestCase):
     def test_remaining_quota_caps_fixture_pagination(self):
         client = MagicMock()
         client.__enter__.return_value = client
-        client.status.return_value = {"requests": {"current": 99, "limit_day": 100}}
+        client.status.return_value = {"requests": {"current": 91, "limit_day": 100}}
         client.fixtures_by_date.return_value = []
         client.last_fixture_request_count = 1
         build_api_football_fixture_audit(
