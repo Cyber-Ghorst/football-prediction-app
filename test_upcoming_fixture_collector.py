@@ -201,7 +201,7 @@ class UpcomingFixtureCollectorTests(unittest.TestCase):
 
     def test_legacy_sportmonks_collector_is_retired(self):
         client = FakeClient([fixture(10, NOW + timedelta(hours=2))])
-        with self.assertRaisesRegex(RuntimeError, "Sportmonks-only.*retired"):
+        with self.assertRaisesRegex(RuntimeError, "not an approved future-fixture"):
             collect_upcoming_fixtures(
                 client=client, now=NOW, database_url="postgresql://example"
             )
