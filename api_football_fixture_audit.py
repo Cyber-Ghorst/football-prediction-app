@@ -125,11 +125,20 @@ def build_api_football_fixture_audit(
                 report["errors"].append("API-Football daily request quota is exhausted.")
                 return report
 
+            quota_page_cap = (
+                min(int(max_pages), remaining)
+                if remaining is not None else int(max_pages)
+            )
+            if quota_page_cap < 1:
+                report["status"] = "quota_exhausted"
+                report["errors"].append("No API-Football fixture requests remain in the daily quota.")
+                return report
+            report["max_pages_allowed_by_quota"] = quota_page_cap
             rows = client.fixtures_between(
                 first_date.isoformat(),
                 last_date.isoformat(),
                 timezone="UTC",
-                max_pages=max_pages,
+                max_pages=quota_page_cap,
             )
             report["requests_made"] = int(
                 getattr(client, "last_fixture_request_count", 0) or 0
