@@ -218,7 +218,7 @@ def main() -> int:
     token = os.getenv("BZZOIRO_API_TOKEN", "")
     highlightly_token = os.getenv("HIGHLIGHTLY_API_KEY") or os.getenv("API_FOOTBALL_KEY")
     api_ninjas_token = os.getenv("API_NINJAS_API_KEY") or os.getenv("API_NINJAS_KEY")
-    max_openligadb = int(os.getenv("FREE_FIXTURE_OPENLIGADB_MAX_SCOPES", "45"))
+    max_openligadb = int(os.getenv("FREE_FIXTURE_OPENLIGADB_MAX_SCOPES", "55"))
     max_livescore = int(os.getenv("FREE_FIXTURE_LIVESCORE_MAX_LEAGUES", "30"))
     enabled = lambda name: str(os.getenv(name, "")).strip().casefold() in {"1", "true", "yes", "on"}
     highlightly_use_allowed = (
