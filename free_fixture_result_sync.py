@@ -560,7 +560,7 @@ def sync_free_source_results(
                         item["reason"] = "livescore_final_90_minute_score_not_verified"
             elif provider == "openfootball":
                 source_path = urlparse(source_url).path
-                match = re.search(r"/master/(20\\d{2}-\\d{2}/[^/]+\\.json)$", source_path)
+                match = re.search(r"/master/(20\d{2}-\d{2}/[^/]+\.json)$", source_path)
                 if not match:
                     item["reason"] = "openfootball_season_dataset_url_unavailable"
                 else:
