@@ -157,6 +157,28 @@ class FreeFixtureObservationPipelineTests(unittest.TestCase):
         self.assertEqual(result["eligible_for_review_count"], 1)
 
     @patch("free_fixture_observation_pipeline.archive_future_fixture_observations")
+    def test_bzzoiro_report_counts_exclusion_reasons(self, archive):
+        archive.return_value = {"snapshot_id": "snapshot-bzz-diagnostics"}
+        client = Mock()
+        client.upcoming.return_value = [
+            {"provider": "bzzoiro", "provider_fixture_id": "1",
+             "eligible_for_review": False,
+             "exclusion_reason": "kickoff_missing_timezone_or_precision"},
+            {"provider": "bzzoiro", "provider_fixture_id": "2",
+             "eligible_for_review": False,
+             "exclusion_reason": "not_scheduled"},
+            {"provider": "bzzoiro", "provider_fixture_id": "3",
+             "eligible_for_review": True},
+        ]
+        result = collect_bzzoiro_observations("provider-db", client=client)
+        self.assertEqual(result["observation_count"], 3)
+        self.assertEqual(result["eligible_for_review_count"], 1)
+        self.assertEqual(result["exclusion_reason_counts"], {
+            "kickoff_missing_timezone_or_precision": 1,
+            "not_scheduled": 1,
+        })
+
+    @patch("free_fixture_observation_pipeline.archive_future_fixture_observations")
     def test_failed_provider_scope_does_not_archive_empty_success(self, archive):
         client = Mock()
         client.matches.side_effect = RuntimeError("upstream unavailable")
