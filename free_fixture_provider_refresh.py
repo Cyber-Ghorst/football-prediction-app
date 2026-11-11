@@ -47,7 +47,7 @@ def refresh_free_fixture_sources(
     bzzoiro_token: str | None = None,
     highlightly_token: str | None = None,
     api_ninjas_token: str | None = None,
-    max_openligadb_scopes: int = 45,
+    max_openligadb_scopes: int = 55,
     max_livescore_leagues: int = 30,
 ) -> dict[str, Any]:
     """Discover current provider scopes, collect schedules and archive observations."""
