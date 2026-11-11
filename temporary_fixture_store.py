@@ -149,7 +149,7 @@ def add_temporary_upcoming_fixtures(
     prepared = []
     allowed_providers = {
         "openligadb", "openfootball", "open_matchday",
-        "livescore_football", "bzzoiro",
+        "livescore_football", "bzzoiro", "highlightly", "api_ninjas",
     }
     for fixture in fixtures:
         if not isinstance(fixture, dict):
