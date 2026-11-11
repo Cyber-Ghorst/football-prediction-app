@@ -94,7 +94,10 @@ try:
     from provider_core import normalize_team_name
     from engine import predict_match, build_prediction_feature_snapshot, WEIGHTS, most_likely_outcome
     from tvd import run_tvd
-    from temporary_fixture_store import search_temporary_upcoming_fixtures
+    from temporary_fixture_store import (
+        add_temporary_upcoming_fixtures,
+        search_temporary_upcoming_fixtures,
+    )
     from provider_config import provider_readiness
     from free_fixture_adapters import BzzoiroAdapter
     from free_fixture_observation_pipeline import (
@@ -106,6 +109,7 @@ try:
     )
     from provider_entity_crosswalk import save_explicit_provider_entity_links
     from provider_crosswalk_review_report import build_provider_crosswalk_review_report
+    from free_fixture_canonical_promotion import review_and_promote_free_fixture_observations
     from livescore_football import LiveScoreFootballClient, LiveScoreFootballError
     from livescore_layer2 import (
         apply_livescore_verified_result_fallback_to_profiles,
