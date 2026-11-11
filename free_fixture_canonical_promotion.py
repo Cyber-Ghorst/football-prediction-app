@@ -92,6 +92,7 @@ def assess_free_fixture_observation(
     licence_acknowledged: bool = False,
     open_matchday_noncommercial_confirmed: bool = False,
     api_ninjas_noncommercial_confirmed: bool = False,
+    highlightly_non_betting_confirmed: bool = False,
 ) -> dict[str, Any]:
     """Validate freshness, schedule precision, licence and four explicit canonical links."""
     source_id = str(observation.get("provider_fixture_id") or "").strip()
@@ -116,6 +117,9 @@ def assess_free_fixture_observation(
         return result
     if provider == "api_ninjas" and not api_ninjas_noncommercial_confirmed:
         result["reason"] = "api_ninjas_free_plan_noncommercial_use_not_confirmed"
+        return result
+    if provider == "highlightly" and not highlightly_non_betting_confirmed:
+        result["reason"] = "highlightly_non_betting_use_not_confirmed"
         return result
     if observation.get("eligible_for_review") is not True:
         result["reason"] = str(observation.get("exclusion_reason") or "observation_not_eligible_for_review")
@@ -234,6 +238,7 @@ def review_and_promote_free_fixture_observations(
     licence_acknowledged: bool = False,
     open_matchday_noncommercial_confirmed: bool = False,
     api_ninjas_noncommercial_confirmed: bool = False,
+    highlightly_non_betting_confirmed: bool = False,
 ) -> dict[str, Any]:
     """Preview eligible observations or explicitly promote safe, mapped fixtures."""
     provider_name = str(provider or "").strip().casefold()
@@ -303,6 +308,7 @@ def review_and_promote_free_fixture_observations(
                 licence_acknowledged=licence_acknowledged,
                 open_matchday_noncommercial_confirmed=open_matchday_noncommercial_confirmed,
                 api_ninjas_noncommercial_confirmed=api_ninjas_noncommercial_confirmed,
+                highlightly_non_betting_confirmed=highlightly_non_betting_confirmed,
             ))
 
     counts: dict[str, int] = {}
