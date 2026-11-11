@@ -13,9 +13,10 @@ import json
 import os
 import re
 from dataclasses import asdict, dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Any, Iterable, Mapping
 from urllib.parse import quote
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 import requests
 
@@ -321,6 +322,45 @@ class OpenFootballAdapter(_StaticDatasetAdapter):
             })
         return sorted(datasets, key=lambda row: row["season_file"])
 
+    @staticmethod
+    def _kickoff(date_value: str, time_value: str, row: Mapping[str, Any]) -> Any:
+        if not date_value:
+            return None
+        if not time_value:
+            return date_value
+        combined = f"{date_value}T{time_value}"
+        try:
+            parsed = datetime.fromisoformat(combined.replace("Z", "+00:00"))
+        except ValueError:
+            return combined
+        if parsed.tzinfo is not None and parsed.utcoffset() is not None:
+            return parsed.isoformat()
+        zone_value = (
+            row.get("timezone") or row.get("time_zone") or row.get("timeZone")
+            or row.get("tz") or row.get("utc_offset")
+        )
+        if not zone_value:
+            return combined
+        zone_text = str(zone_value).strip()
+        if zone_text.casefold() in {"utc", "gmt", "z"}:
+            zone = timezone.utc
+        else:
+            offset = re.fullmatch(
+                r"(?:UTC|GMT)?([+-])(\d{1,2})(?::?(\d{2}))?",
+                zone_text, flags=re.IGNORECASE,
+            )
+            if offset:
+                hours = int(offset.group(2))
+                minutes = int(offset.group(3) or 0)
+                delta = timedelta(hours=hours, minutes=minutes)
+                zone = timezone(delta if offset.group(1) == "+" else -delta)
+            else:
+                try:
+                    zone = ZoneInfo(zone_text)
+                except ZoneInfoNotFoundError:
+                    return combined
+        return parsed.replace(tzinfo=zone).astimezone(timezone.utc).isoformat()
+
     def season(self, season_file: str, competition: str) -> list[dict[str, Any]]:
         if not season_file.endswith(".json") or season_file.startswith("/") or ".." in season_file.split("/"):
             raise ValueError("season_file must be a safe JSON path within the dataset.")
@@ -336,7 +376,7 @@ class OpenFootballAdapter(_StaticDatasetAdapter):
                 continue
             date_value = str(row.get("date") or "")
             time_value = str(row.get("time") or "")
-            kickoff = f"{date_value}T{time_value}" if time_value else date_value
+            kickoff = self._kickoff(date_value, time_value, row)
             output.append(_observation(
                 self.provider, row, fetched_at=fetched, source_url=url,
                 licence="CC0-1.0 (football.json dataset; verify upstream source provenance)",
@@ -354,7 +394,7 @@ class OpenFootballAdapter(_StaticDatasetAdapter):
 class OpenMatchdayAdapter(_StaticDatasetAdapter):
     """Parse an explicitly supplied Open Matchday season CSV without guessing timezone."""
     provider = "open_matchday"
-    DEFAULT_BASE_URL = "https://raw.githubusercontent.com/oladeeayo/open-matchday/main"
+    DEFAULT_BASE_URL = "https://raw.githubusercontent.com/oladeeayo/open-matchday/master"
 
     def season_csv(self, csv_url: str, *, competition: str, season: str) -> list[dict[str, Any]]:
         if not csv_url.startswith("https://raw.githubusercontent.com/oladeeayo/open-matchday/"):
@@ -371,9 +411,18 @@ class OpenMatchdayAdapter(_StaticDatasetAdapter):
             lowered = {str(k).strip().casefold(): v for k, v in row.items() if k}
             date_value = lowered.get("date") or lowered.get("match_date") or ""
             time_value = lowered.get("time") or lowered.get("kickoff") or ""
-            # Dataset documentation uses a fixed CET-1 convention. It is not a
-            # timezone database and is unsafe around DST; never silently convert.
-            kickoff = f"{date_value}T{time_value}" if time_value else date_value
+            # DATA_DICTIONARY.md defines time as fixed CET-1 (UTC+1), not a
+            # daylight-saving-aware local timezone. Convert that documented
+            # fixed offset explicitly to UTC; date-only rows remain ineligible.
+            kickoff = date_value
+            if date_value and time_value:
+                try:
+                    source_local = datetime.strptime(
+                        f"{date_value} {time_value}", "%Y-%m-%d %H:%M"
+                    ).replace(tzinfo=timezone(timedelta(hours=1)))
+                    kickoff = source_local.astimezone(timezone.utc).isoformat()
+                except ValueError:
+                    kickoff = f"{date_value}T{time_value}"
             output.append(_observation(
                 self.provider, row, fetched_at=fetched, source_url=csv_url,
                 licence="Open Matchday non-commercial-only; upstream rights must be reviewed",

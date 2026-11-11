@@ -108,11 +108,23 @@ class FreeFixtureAdapterTests(unittest.TestCase):
             "time": "18:30:00",
             "team1": "Other Home", "team2": "Other Away",
         }
+        explicit_offset = {
+            "date": (NOW + timedelta(days=2)).date().isoformat(),
+            "time": "18:30:00",
+            "utc_offset": "+01:00",
+            "team1": "Offset Home", "team2": "Offset Away",
+        }
         client = OpenFootballAdapter()
-        client._get_json = Mock(return_value={"matches": [good, bad]})
+        client._get_json = Mock(return_value={"matches": [good, bad, explicit_offset]})
         rows = client.season("2026-27/eng.1.json", "Premier League")
         self.assertTrue(rows[0]["eligible_for_review"])
         self.assertEqual(rows[1]["exclusion_reason"], "kickoff_missing_timezone_or_precision")
+        self.assertTrue(rows[2]["eligible_for_review"])
+        self.assertTrue(rows[2]["kickoff_utc"].endswith("Z"))
+        self.assertEqual(
+            rows[2]["kickoff_utc"],
+            f"{(NOW + timedelta(days=2)).date().isoformat()}T17:30:00Z",
+        )
         self.assertTrue(rows[0]["provider_fixture_id"].startswith("openfootball:dataset:"))
         self.assertEqual(rows[0]["competition_key"], "eng.1")
         self.assertEqual(rows[0]["competition_name"], "Premier League")
@@ -130,20 +142,33 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         self.assertIsNone(row["kickoff_utc"])
         client.close()
 
-    def test_openmatchday_fixed_offset_time_is_not_guessed(self):
+    def test_openmatchday_fixed_cet_minus_one_time_is_converted_to_utc(self):
         client = OpenMatchdayAdapter()
-        client._get_text = Mock(return_value=(
+        match_date = (NOW + timedelta(days=2)).date()
+        fixtures_url = "https://raw.githubusercontent.com/oladeeayo/open-matchday/master/data/ENG_1_premier-league/fixtures_2627.csv"
+        results_url = fixtures_url.replace("fixtures_", "results_")
+        client._get_text = Mock(side_effect=[
             "gw,date,time,home,away\n"
-            f"11,{(NOW + timedelta(days=2)).date().isoformat()},19:00,Home FC,Away FC\n"
-        ))
+            f"11,{match_date.isoformat()},19:00,Home FC,Away FC\n",
+            "gw,date,time,home,away,ft_home,ft_away,ft_result\n"
+            f"11,{match_date.isoformat()},19:00,Home FC,Away FC,2,1,H\n",
+        ])
         row = client.season_csv(
-            "https://raw.githubusercontent.com/oladeeayo/open-matchday/main/data/ENG_1_premier-league/fixtures_2627.csv",
-            competition="League", season="2627",
+            fixtures_url, competition="League", season="2627",
         )[0]
-        self.assertFalse(row["eligible_for_review"])
-        self.assertEqual(row["exclusion_reason"], "kickoff_missing_timezone_or_precision")
+        result_row = client.season_csv(
+            results_url, competition="League", season="2627",
+        )[0]
+        expected = datetime.combine(
+            match_date, datetime.min.time().replace(hour=19),
+            tzinfo=timezone(timedelta(hours=1)),
+        ).astimezone(timezone.utc)
+        self.assertTrue(row["eligible_for_review"])
+        self.assertEqual(row["kickoff_utc"], expected.isoformat().replace("+00:00", "Z"))
         self.assertEqual(row["competition_key"], "ENG_1_premier-league")
         self.assertEqual(row["season_key"], "2627")
+        self.assertEqual(row["provider_fixture_id"], result_row["provider_fixture_id"])
+        self.assertEqual(result_row["raw_payload"]["ft_home"], "2")
         self.assertIn("non-commercial-only", row["licence"])
         client.close()
 

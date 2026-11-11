@@ -7,6 +7,7 @@ from free_fixture_result_sync import (
     verify_bzzoiro_final_score,
     verify_livescore_final_score,
     verify_openligadb_final_score,
+    verify_openmatchday_final_score,
 )
 
 
@@ -98,6 +99,86 @@ class FreeFixtureResultVerificationTests(unittest.TestCase):
         self.assertIsNone(verify_livescore_final_score(
             record, aet, provider_fixture_id="event-1", now=NOW
         ))
+
+    def test_openmatchday_uses_results_csv_and_exact_deterministic_fixture_identity(self):
+        record = {
+            **RECORD,
+            "fixture_provider": "open_matchday",
+            "fixture_id": "open_matchday:dataset-42",
+            "kickoff_at": "2026-11-21T12:30:00+00:00",
+            "season": "2026",
+        }
+        observation = {
+            "provider_fixture_id": "open_matchday:dataset-42",
+            "competition_key": "ENG_1_premier-league",
+            "competition_name": "Premier League",
+            "season_key": "2627",
+            "season_name": "2627",
+            "home_team_name": "Home FC",
+            "away_team_name": "Away FC",
+            "kickoff_utc": "2026-11-21T12:30:00Z",
+            "raw_payload": {"ft_home": "2", "ft_away": "1", "ft_result": "H"},
+        }
+        self.assertEqual(
+            verify_openmatchday_final_score(
+                record, observation,
+                provider_fixture_id="open_matchday:dataset-42",
+                now=datetime(2026, 11, 22, 12, 0, tzinfo=timezone.utc),
+            ),
+            (2, 1),
+        )
+        cup = {
+            **observation,
+            "competition_key": "ENG_CUP_efl-cup",
+            "competition_name": "EFL Cup",
+        }
+        self.assertIsNone(verify_openmatchday_final_score(
+            record, cup, provider_fixture_id="open_matchday:dataset-42",
+            now=datetime(2026, 11, 22, 12, 0, tzinfo=timezone.utc)
+        ))
+
+    @patch("free_fixture_result_sync._source_metadata")
+    @patch("free_fixture_result_sync.OpenMatchdayAdapter")
+    @patch("free_fixture_result_sync._ensure_promotion_tables")
+    def test_openmatchday_result_sync_reads_results_csv(
+        self, ensure_tables, adapter_cls, source
+    ):
+        record = {
+            **RECORD,
+            "fixture_provider": "open_matchday",
+            "fixture_id": "open_matchday:open_matchday:dataset-42",
+            "kickoff_at": "2026-11-21T12:30:00+00:00",
+            "season": "2026",
+        }
+        source.return_value = {
+            "source_url": "https://raw.githubusercontent.com/oladeeayo/open-matchday/master/data/ENG_1_premier-league/fixtures_2627.csv",
+            "raw_payload": {
+                "competition_name": "Premier League", "season_name": "2627",
+            },
+            "canonical_fixture_id": "open_matchday:dataset-42",
+        }
+        result_row = {
+            "provider_fixture_id": "open_matchday:dataset-42",
+            "competition_key": "ENG_1_premier-league",
+            "competition_name": "Premier League",
+            "season_key": "2627",
+            "season_name": "2627",
+            "home_team_name": "Home FC",
+            "away_team_name": "Away FC",
+            "kickoff_utc": "2026-11-21T12:30:00Z",
+            "raw_payload": {"ft_home": 2, "ft_away": 1, "ft_result": "H"},
+        }
+        adapter = adapter_cls.return_value.__enter__.return_value
+        adapter.season_csv.return_value = [result_row]
+        records = [record]
+        report, updated = sync_free_source_results(
+            records, provider_database_url="provider-db",
+            now=datetime(2026, 11, 22, 12, 0, tzinfo=timezone.utc),
+        )
+        self.assertEqual(report["records_updated"], 1)
+        self.assertEqual(updated[0]["actual_home_goals"], 2)
+        self.assertEqual(updated[0]["actual_result_provider"], "open_matchday")
+        self.assertTrue(adapter.season_csv.call_args.args[0].endswith("results_2627.csv"))
 
     def test_bzzoiro_requires_finished_event_and_explicit_full_time_score(self):
         record = {**RECORD, "fixture_provider": "bzzoiro", "fixture_id": "bzzoiro:42"}
