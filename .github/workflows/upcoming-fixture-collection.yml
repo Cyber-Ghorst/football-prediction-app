@@ -6,6 +6,9 @@ on:
     paths:
       - "free_fixture_provider_refresh.py"
       - "free_fixture_crosswalk_audit.py"
+      - "docs/LAYER11_SCHEDULED_FIXTURE_PROMOTION.md"
+      - "test_free_fixture_auto_promotion.py"
+      - "free_fixture_auto_promotion.py"
       - "provider_crosswalk_review_report.py"
       - "provider_entity_crosswalk.py"
       - "provider_data_storage.py"
@@ -43,6 +46,23 @@ jobs:
       BZZOIRO_API_TOKEN: ${{ secrets.BZZOIRO_API_TOKEN }}
       HIGHLIGHTLY_API_KEY: ${{ secrets.HIGHLIGHTLY_API_KEY }}
       API_NINJAS_API_KEY: ${{ secrets.API_NINJAS_API_KEY }}
+      FREE_FIXTURE_NONCOMMERCIAL_ACK_API_NINJAS: ${{ secrets.FREE_FIXTURE_NONCOMMERCIAL_ACK_API_NINJAS }}
+      FREE_FIXTURE_TERMS_ACK_API_NINJAS: ${{ secrets.FREE_FIXTURE_TERMS_ACK_API_NINJAS }}
+      FREE_FIXTURE_AUTO_PROMOTE_API_NINJAS: ${{ secrets.FREE_FIXTURE_AUTO_PROMOTE_API_NINJAS }}
+      FREE_FIXTURE_TERMS_ACK_HIGHLIGHTLY: ${{ secrets.FREE_FIXTURE_TERMS_ACK_HIGHLIGHTLY }}
+      FREE_FIXTURE_AUTO_PROMOTE_HIGHLIGHTLY: ${{ secrets.FREE_FIXTURE_AUTO_PROMOTE_HIGHLIGHTLY }}
+      FREE_FIXTURE_TERMS_ACK_BZZOIRO: ${{ secrets.FREE_FIXTURE_TERMS_ACK_BZZOIRO }}
+      FREE_FIXTURE_AUTO_PROMOTE_BZZOIRO: ${{ secrets.FREE_FIXTURE_AUTO_PROMOTE_BZZOIRO }}
+      FREE_FIXTURE_TERMS_ACK_LIVESCORE: ${{ secrets.FREE_FIXTURE_TERMS_ACK_LIVESCORE }}
+      FREE_FIXTURE_AUTO_PROMOTE_LIVESCORE: ${{ secrets.FREE_FIXTURE_AUTO_PROMOTE_LIVESCORE }}
+      FREE_FIXTURE_NONCOMMERCIAL_ACK_OPEN_MATCHDAY: ${{ secrets.FREE_FIXTURE_NONCOMMERCIAL_ACK_OPEN_MATCHDAY }}
+      FREE_FIXTURE_TERMS_ACK_OPEN_MATCHDAY: ${{ secrets.FREE_FIXTURE_TERMS_ACK_OPEN_MATCHDAY }}
+      FREE_FIXTURE_AUTO_PROMOTE_OPEN_MATCHDAY: ${{ secrets.FREE_FIXTURE_AUTO_PROMOTE_OPEN_MATCHDAY }}
+      FREE_FIXTURE_TERMS_ACK_OPENFOOTBALL: ${{ secrets.FREE_FIXTURE_TERMS_ACK_OPENFOOTBALL }}
+      FREE_FIXTURE_AUTO_PROMOTE_OPENFOOTBALL: ${{ secrets.FREE_FIXTURE_AUTO_PROMOTE_OPENFOOTBALL }}
+      FREE_FIXTURE_TERMS_ACK_OPENLIGADB: ${{ secrets.FREE_FIXTURE_TERMS_ACK_OPENLIGADB }}
+      FREE_FIXTURE_AUTO_PROMOTE_OPENLIGADB: ${{ secrets.FREE_FIXTURE_AUTO_PROMOTE_OPENLIGADB }}
+      FREE_FIXTURE_AUTO_PROMOTION_ENABLED: ${{ secrets.FREE_FIXTURE_AUTO_PROMOTION_ENABLED }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -126,6 +146,45 @@ jobs:
           git add reports/free_fixture_window_coverage
           if ! git diff --cached --quiet; then
             git commit -m "Archive seven-day provider fixture coverage report ${stamp}"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+
+      - name: Promote explicitly approved fixtures into Neon app catalogue
+        continue-on-error: true
+        env:
+          PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          FREE_FIXTURE_AUTO_PROMOTION_ENABLED: ${{ secrets.FREE_FIXTURE_AUTO_PROMOTION_ENABLED }}
+          FREE_FIXTURE_AUTO_PROMOTE_OPENLIGADB: ${{ secrets.FREE_FIXTURE_AUTO_PROMOTE_OPENLIGADB }}
+          FREE_FIXTURE_TERMS_ACK_OPENLIGADB: ${{ secrets.FREE_FIXTURE_TERMS_ACK_OPENLIGADB }}
+          FREE_FIXTURE_AUTO_PROMOTE_OPENFOOTBALL: ${{ secrets.FREE_FIXTURE_AUTO_PROMOTE_OPENFOOTBALL }}
+          FREE_FIXTURE_TERMS_ACK_OPENFOOTBALL: ${{ secrets.FREE_FIXTURE_TERMS_ACK_OPENFOOTBALL }}
+          FREE_FIXTURE_AUTO_PROMOTE_OPEN_MATCHDAY: ${{ secrets.FREE_FIXTURE_AUTO_PROMOTE_OPEN_MATCHDAY }}
+          FREE_FIXTURE_TERMS_ACK_OPEN_MATCHDAY: ${{ secrets.FREE_FIXTURE_TERMS_ACK_OPEN_MATCHDAY }}
+          FREE_FIXTURE_NONCOMMERCIAL_ACK_OPEN_MATCHDAY: ${{ secrets.FREE_FIXTURE_NONCOMMERCIAL_ACK_OPEN_MATCHDAY }}
+          FREE_FIXTURE_AUTO_PROMOTE_LIVESCORE: ${{ secrets.FREE_FIXTURE_AUTO_PROMOTE_LIVESCORE }}
+          FREE_FIXTURE_TERMS_ACK_LIVESCORE: ${{ secrets.FREE_FIXTURE_TERMS_ACK_LIVESCORE }}
+          FREE_FIXTURE_AUTO_PROMOTE_BZZOIRO: ${{ secrets.FREE_FIXTURE_AUTO_PROMOTE_BZZOIRO }}
+          FREE_FIXTURE_TERMS_ACK_BZZOIRO: ${{ secrets.FREE_FIXTURE_TERMS_ACK_BZZOIRO }}
+          FREE_FIXTURE_AUTO_PROMOTE_HIGHLIGHTLY: ${{ secrets.FREE_FIXTURE_AUTO_PROMOTE_HIGHLIGHTLY }}
+          FREE_FIXTURE_TERMS_ACK_HIGHLIGHTLY: ${{ secrets.FREE_FIXTURE_TERMS_ACK_HIGHLIGHTLY }}
+          FREE_FIXTURE_AUTO_PROMOTE_API_NINJAS: ${{ secrets.FREE_FIXTURE_AUTO_PROMOTE_API_NINJAS }}
+          FREE_FIXTURE_TERMS_ACK_API_NINJAS: ${{ secrets.FREE_FIXTURE_TERMS_ACK_API_NINJAS }}
+          FREE_FIXTURE_NONCOMMERCIAL_ACK_API_NINJAS: ${{ secrets.FREE_FIXTURE_NONCOMMERCIAL_ACK_API_NINJAS }}
+        run: |
+          set -euo pipefail
+          mkdir -p reports/free_fixture_auto_promotion/archive
+          stamp="$(date -u +%Y%m%dT%H%M%SZ)"
+          report="reports/free_fixture_auto_promotion/archive/${stamp}.json"
+          python free_fixture_auto_promotion.py | tee "$report"
+          python -m json.tool "$report" >/dev/null
+          cp "$report" reports/free_fixture_auto_promotion/latest.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/free_fixture_auto_promotion
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive scheduled free fixture promotion report ${stamp}"
             git pull --rebase origin main
             git push origin HEAD:main
           fi
