@@ -85,7 +85,7 @@ FREE_FIXTURE_CANDIDATES = (
     "openligadb",
     "openfootball",
     "open_matchday",
-    "livescore_football",
+    "thesportsdb",
     "bzzoiro",
 )
 
@@ -105,9 +105,9 @@ DEFAULT_PROVIDER_ASSIGNMENTS = (
     ProviderAssignment("openligadb", "future_fixtures", "co_primary", 30, enabled=False),
     ProviderAssignment("openfootball", "future_fixtures", "co_primary", 31, enabled=False),
     ProviderAssignment("open_matchday", "future_fixtures", "co_primary", 32, enabled=False),
-    # Existing LiveScoreFootball adapter has a scheduled-fixtures endpoint, but
-    # remains disabled until live fixture identity/time/freshness checks pass.
-    ProviderAssignment("livescore_football", "future_fixtures", "co_primary", 33, enabled=False),
+    # TheSportsDB free tier returns one next event per league; keep disabled
+    # pending terms, coverage and timestamp validation.
+    ProviderAssignment("thesportsdb", "future_fixtures", "co_primary", 33, enabled=False),
     ProviderAssignment("bzzoiro", "future_fixtures", "co_primary", 34, enabled=False),
 )
 
