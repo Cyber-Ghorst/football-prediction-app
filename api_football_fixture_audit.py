@@ -45,6 +45,7 @@ def build_api_football_fixture_audit(
     window_days: int = 7,
     daily_target: int = 90,
     max_pages: int = 20,
+    data_use_allowed: bool = False,
 ) -> dict[str, Any]:
     current = now or datetime.now(timezone.utc)
     if current.tzinfo is None:
@@ -102,6 +103,18 @@ def build_api_football_fixture_audit(
             "prediction_ledger_writes": 0,
         },
     }
+
+    if not data_use_allowed:
+        report["status"] = "skipped"
+        report["skip_reason"] = (
+            "APISPORTS_DATA_USE_ALLOWED_CONFIRMED is required before collecting "
+            "future fixture data; review API-SPORTS terms and any rights-holder "
+            "licensing obligations that apply to the app's use."
+        )
+        report["daily_target_shortfalls_utc"] = {
+            day: daily_target for day in target_dates
+        }
+        return report
 
     try:
         with client_factory() as client:
@@ -252,7 +265,10 @@ def build_api_football_fixture_audit(
 
 
 def main() -> int:
-    report = build_api_football_fixture_audit()
+    data_use_allowed = os.getenv(
+        "APISPORTS_DATA_USE_ALLOWED_CONFIRMED", ""
+    ).strip().casefold() in {"1", "true", "yes", "on"}
+    report = build_api_football_fixture_audit(data_use_allowed=data_use_allowed)
     output = Path(os.getenv(
         "API_FOOTBALL_FIXTURE_AUDIT_PATH",
         "reports/api_football_fixture_audit/latest.json",
