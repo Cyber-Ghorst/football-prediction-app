@@ -6,6 +6,7 @@ from upcoming_fixture_collector import (
     DAILY_FIXTURE_TARGET,
     FIXTURE_INCLUDE,
     collect_upcoming_fixtures,
+    build_safe_collection_report,
     normalize_upcoming_fixtures,
     select_highlighted_fixtures,
 )
@@ -59,6 +60,27 @@ class UpcomingFixtureCollectorTests(unittest.TestCase):
         self.assertEqual(result["window_days"], 7)
         self.assertEqual(result["excluded"]["outside_window"], 2)
         self.assertEqual(result["excluded"]["not_scheduled"], 1)
+
+    def test_safe_report_breaks_down_fixture_counts_by_competition(self):
+        rows = [
+            fixture(1, NOW + timedelta(hours=1)),
+            fixture(2, NOW + timedelta(hours=2)),
+            fixture(3, NOW + timedelta(days=1), league_id=564),
+        ]
+        result = normalize_upcoming_fixtures(rows, now=NOW)
+        report = build_safe_collection_report(result)
+        summary = report["competition_summary"]
+        self.assertEqual(len(summary), 2)
+        premier = next(row for row in summary if row["league_id"] == "8")
+        self.assertEqual(premier["competition_name"], "Premier League")
+        self.assertEqual(premier["country"], "England")
+        self.assertEqual(premier["fixtures_found"], 2)
+        self.assertEqual(sum(premier["daily_counts_utc"].values()), 2)
+        self.assertNotIn("fixtures", report)
+        self.assertNotIn("highlighted_fixtures", report)
+        serialized = str(report)
+        self.assertNotIn("Home 2", serialized)
+        self.assertNotIn('"id": "1"', serialized)
 
     def test_rejects_fixtures_with_missing_identity_or_kickoff(self):
         missing_team = fixture(1, NOW + timedelta(hours=1))

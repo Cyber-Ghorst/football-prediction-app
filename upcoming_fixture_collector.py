@@ -378,6 +378,51 @@ def collect_upcoming_fixtures(
     return result
 
 
+def build_safe_collection_report(result: dict[str, Any]) -> dict[str, Any]:
+    """Summarize fixture coverage by competition without exposing fixture/team rows."""
+    summaries: dict[tuple[str, str], dict[str, Any]] = {}
+    for fixture in result.get("fixtures", []):
+        if not isinstance(fixture, dict):
+            continue
+        league = fixture.get("league") if isinstance(fixture.get("league"), dict) else {}
+        season = fixture.get("season") if isinstance(fixture.get("season"), dict) else {}
+        league_id = fixture.get("league_id") or league.get("id")
+        season_id = fixture.get("season_id") or season.get("id")
+        if league_id is None or season_id is None:
+            continue
+        key = (str(league_id), str(season_id))
+        country_value = league.get("country") or fixture.get("country")
+        if isinstance(country_value, dict):
+            country_value = country_value.get("name") or country_value.get("display_name")
+        summary = summaries.setdefault(key, {
+            "league_id": str(league_id),
+            "season_id": str(season_id),
+            "competition_name": (
+                league.get("name") or fixture.get("league_name")
+                or fixture.get("competition_name") or str(league_id)
+            ),
+            "country": str(country_value) if country_value else None,
+            "season_name": season.get("name") or fixture.get("season_name") or str(season_id),
+            "fixtures_found": 0,
+            "daily_counts_utc": {},
+        })
+        summary["fixtures_found"] += 1
+        kickoff = fixture.get("_collector_kickoff_utc")
+        if isinstance(kickoff, str) and len(kickoff) >= 10:
+            day = kickoff[:10]
+            summary["daily_counts_utc"][day] = summary["daily_counts_utc"].get(day, 0) + 1
+
+    safe_report = {
+        key: value for key, value in result.items()
+        if key not in {"fixtures", "highlighted_fixtures"}
+    }
+    safe_report["competition_summary"] = sorted(
+        summaries.values(),
+        key=lambda row: (-row["fixtures_found"], row["competition_name"].casefold(), row["league_id"]),
+    )
+    return safe_report
+
+
 def main() -> int:
     database_url = os.getenv("PROVIDER_DATABASE_URL", "").strip()
     temporary_database_url = os.getenv("DATABASE_URL", "").strip()
@@ -389,10 +434,7 @@ def main() -> int:
         database_url=database_url,
         temporary_database_url=temporary_database_url,
     )
-    safe_report = {
-        key: value for key, value in result.items()
-        if key not in {"fixtures", "highlighted_fixtures"}
-    }
+    safe_report = build_safe_collection_report(result)
     print(json.dumps(safe_report, default=str, sort_keys=True))
     if not result["target_met"]:
         print(
