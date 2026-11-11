@@ -94,7 +94,10 @@ try:
     from provider_core import normalize_team_name
     from engine import predict_match, build_prediction_feature_snapshot, WEIGHTS, most_likely_outcome
     from tvd import run_tvd
-    from temporary_fixture_store import search_temporary_upcoming_fixtures
+    from temporary_fixture_store import (
+        add_temporary_upcoming_fixtures,
+        search_temporary_upcoming_fixtures,
+    )
     from provider_config import provider_readiness
     from free_fixture_adapters import BzzoiroAdapter
     from free_fixture_observation_pipeline import (
@@ -106,6 +109,7 @@ try:
     )
     from provider_entity_crosswalk import save_explicit_provider_entity_links
     from provider_crosswalk_review_report import build_provider_crosswalk_review_report
+    from free_fixture_canonical_promotion import review_and_promote_free_fixture_observations
     from livescore_football import LiveScoreFootballClient, LiveScoreFootballError
     from livescore_layer2 import (
         apply_livescore_verified_result_fallback_to_profiles,
@@ -1293,6 +1297,127 @@ with st.sidebar:
                             st.error(f"Mappings were not saved ({type(exc).__name__}).")
                             st.caption(str(exc))
 
+with st.expander("Validate and publish approved free-source fixtures", expanded=False):
+    st.caption(
+        "Only fresh, scheduled fixtures with precise timezone-aware kickoffs and four "
+        "explicit league/season/home-team/away-team crosswalks to existing Sportmonks "
+        "canonical entities can be promoted. Conflicts are held for review."
+    )
+    promotion_provider = st.selectbox(
+        "Provider to validate",
+        ["openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro"],
+        key="free_fixture_promotion_provider",
+    )
+    promotion_licence_ack = st.checkbox(
+        "I have reviewed this provider's terms and confirm this app's collection, internal storage and fixture display are permitted.",
+        value=False,
+        key="free_fixture_promotion_licence_ack",
+    )
+    promotion_noncommercial_ack = False
+    if promotion_provider == "open_matchday":
+        promotion_noncommercial_ack = st.checkbox(
+            "I confirm the app and this use are non-commercial, as required by Open Matchday's licence.",
+            value=False,
+            key="free_fixture_promotion_openmatchday_ack",
+        )
+    preview_promotion = st.button(
+        "Preview promotion eligibility",
+        use_container_width=True,
+        disabled=not bool(PROVIDER_DATABASE_URL),
+        key="free_fixture_promotion_preview",
+    )
+    execute_promotion = st.button(
+        "Promote validated fixtures to the app catalogue",
+        use_container_width=True,
+        disabled=(
+            not bool(PROVIDER_DATABASE_URL)
+            or not bool(DATABASE_URL)
+            or not promotion_licence_ack
+            or (promotion_provider == "open_matchday" and not promotion_noncommercial_ack)
+        ),
+        key="free_fixture_promotion_execute",
+    )
+    if preview_promotion or execute_promotion:
+        try:
+            with st.spinner(
+                "Checking freshness, crosswalks, canonical identities and kickoff conflicts..."
+            ):
+                promotion_report = review_and_promote_free_fixture_observations(
+                    PROVIDER_DATABASE_URL,
+                    provider=promotion_provider,
+                    promote=bool(execute_promotion),
+                    licence_acknowledged=bool(promotion_licence_ack),
+                    open_matchday_noncommercial_confirmed=bool(promotion_noncommercial_ack),
+                    snapshot_limit=100,
+                    max_age_hours=24,
+                    window_days=7,
+                )
+            if execute_promotion:
+                st.session_state["free_fixture_promotion_report"] = promotion_report
+                staged_rows = [
+                    row for row in (promotion_report.get("staging_fixtures") or [])
+                    if row.get("source_provider") in {
+                        "openligadb", "openfootball", "open_matchday",
+                        "livescore_football", "bzzoiro",
+                    }
+                ]
+                if staged_rows:
+                    try:
+                        neon_stage_result = add_temporary_upcoming_fixtures(
+                            DATABASE_URL, staged_rows
+                        )
+                        promotion_report["neon_staging"] = neon_stage_result
+                        st.success(
+                            f"Promotion complete: {promotion_report['decisions'].get('promoted', 0)} "
+                            "new canonical fixtures; "
+                            f"{neon_stage_result['fixtures_inserted']} added to the searchable app catalogue."
+                        )
+                    except Exception as staging_error:
+                        promotion_report["neon_staging_error"] = type(staging_error).__name__
+                        st.error(
+                            "Canonical fixtures were promoted in CockroachDB, but Neon catalogue "
+                            "staging failed. Rerun promotion after checking DATABASE_URL; exact "
+                            "source links are idempotent."
+                        )
+                        st.caption(f"Neon staging error: {type(staging_error).__name__}")
+                else:
+                    st.info("No fixtures passed all promotion gates; no app-catalogue rows were added.")
+                st.session_state["free_fixture_promotion_report"] = promotion_report
+            else:
+                st.session_state["free_fixture_promotion_preview"] = promotion_report
+        except Exception as promotion_error:
+            st.error(f"Fixture promotion check failed ({type(promotion_error).__name__}).")
+            st.caption(str(promotion_error))
+
+    report_key = (
+        "free_fixture_promotion_report"
+        if st.session_state.get("free_fixture_promotion_report", {}).get("provider") == promotion_provider
+        else "free_fixture_promotion_preview"
+    )
+    promotion_report = st.session_state.get(report_key)
+    if promotion_report and promotion_report.get("provider") == promotion_provider:
+        st.write(
+            f"Snapshots: {promotion_report.get('snapshot_count', 0)} · "
+            f"Observations: {promotion_report.get('observation_count', 0)} · "
+            f"Decisions: {promotion_report.get('decisions', {})}"
+        )
+        rows = promotion_report.get("rows") or []
+        if rows:
+            st.dataframe(
+                [{
+                    "Provider fixture ID": row.get("provider_fixture_id"),
+                    "Decision": row.get("decision"),
+                    "Reason": row.get("reason"),
+                    "Canonical fixture ID": row.get("canonical_fixture_id") or row.get("fixture_id"),
+                } for row in rows],
+                use_container_width=True,
+                hide_index=True,
+            )
+        st.caption(
+            f"Canonical fixture writes: {promotion_report.get('canonical_fixture_writes', 0)} · "
+            f"Prediction-ledger writes: {promotion_report.get('prediction_ledger_writes', 0)}"
+        )
+
 if test_provider_database:
     if not PROVIDER_DATABASE_URL:
         st.warning("Add PROVIDER_DATABASE_URL in Streamlit Secrets before testing CockroachDB.")
@@ -2108,6 +2233,8 @@ try:
         st.warning("The selected provider returned fewer than two teams for this competition and season.")
         st.stop()
     selected_discovered_fixture_id = None
+    selected_fixture_provider = None
+    selected_fixture_row = None
     if sportmonks_mode:
         st.subheader("Search upcoming fixtures")
         st.caption(
@@ -2192,6 +2319,9 @@ try:
         )
         selected_fixture_row = fixture_options[selected_fixture_label]
         selected_discovered_fixture_id = str(selected_fixture_row["fixture_id"])
+        selected_fixture_provider = str(
+            selected_fixture_row.get("source_provider") or "sportmonks"
+        ).strip().casefold()
         # Resolve the exact competition-season from the selected staged fixture,
         # rather than relying on the unrelated catalogue defaults above.
         try:
@@ -2209,6 +2339,16 @@ try:
             for row in team_rows
             if row.get("id") is not None and row.get("name")
         }
+        selected_competition_name = str(selected_fixture_row.get("competition") or "Unknown competition")
+        selected_country_value = str(selected_fixture_row.get("country") or "")
+        selected_league = (
+            f"{selected_competition_name} — {selected_country_value}"
+            if selected_country_value else selected_competition_name
+        )
+        season_label = str(selected_fixture_row.get("season_name") or "").strip()
+        season_start_year = season_label[:4]
+        if season_start_year.isdigit():
+            season = int(season_start_year)
         selected_home_provider_id = str(selected_fixture_row["home_team_id"]).rsplit(":", 1)[-1]
         selected_away_provider_id = str(selected_fixture_row["away_team_id"]).rsplit(":", 1)[-1]
         home_name = next(
@@ -2369,13 +2509,10 @@ try:
                     season_id=int(selected_season_id),
                 )
                 selected_match_fixture = selected_match_diagnostic["fixture"]
-                if selected_discovered_fixture_id:
+                if selected_discovered_fixture_id and selected_fixture_provider == "sportmonks":
                     expected_fixture_id = selected_discovered_fixture_id.rsplit(":", 1)[-1]
                     selected_match_fixture = next(
-                        (
-                            row for row in fixtures
-                            if str(row.get("id")) == expected_fixture_id
-                        ),
+                        (row for row in fixtures if str(row.get("id")) == expected_fixture_id),
                         None,
                     )
                     if (
@@ -2388,7 +2525,7 @@ try:
                         ) is None
                     ):
                         st.error(
-                            "The selected fixture is not present with the same exact "
+                            "The selected Sportmonks fixture is not present with the same exact "
                             "home/away teams and season in the live Sportmonks response. "
                             "Refresh automatic collection before predicting; the app will "
                             "not silently substitute another match."
@@ -2396,6 +2533,44 @@ try:
                         st.stop()
                     selected_match_diagnostic["selected_fixture_id"] = selected_discovered_fixture_id
                     selected_match_diagnostic["selected_fixture_exact_match"] = True
+                elif selected_discovered_fixture_id:
+                    # Free-source fixture IDs are not Sportmonks event IDs. Use
+                    # Sportmonks only as optional match-detail corroboration:
+                    # exact canonical teams/season plus kickoff within five minutes.
+                    corroborating_fixture = find_exact_match_fixture(
+                        fixtures,
+                        home_team_id=int(team_map[home_name]["id"]),
+                        away_team_id=int(team_map[away_name]["id"]),
+                        season_id=int(selected_season_id),
+                    )
+                    selected_kickoff = pd.to_datetime(
+                        selected_fixture_row.get("starting_at"), utc=True, errors="coerce"
+                    )
+                    corroborating_kickoff = pd.to_datetime(
+                        (corroborating_fixture or {}).get("starting_at"),
+                        utc=True, errors="coerce",
+                    )
+                    kickoff_matches = (
+                        not pd.isna(selected_kickoff)
+                        and not pd.isna(corroborating_kickoff)
+                        and abs((selected_kickoff - corroborating_kickoff).total_seconds()) <= 300
+                    )
+                    selected_match_fixture = corroborating_fixture if kickoff_matches else None
+                    selected_match_diagnostic = {
+                        "verified": bool(kickoff_matches),
+                        "selected_fixture_id": selected_discovered_fixture_id,
+                        "selected_fixture_provider": selected_fixture_provider,
+                        "canonical_team_season_match": bool(corroborating_fixture),
+                        "sportmonks_kickoff_corroborated_within_5_minutes": bool(kickoff_matches),
+                        "sportmonks_fixture_id": (
+                            str(corroborating_fixture.get("id")) if kickoff_matches else None
+                        ),
+                        "note": (
+                            "Sportmonks corroborated the selected fixture; its match detail may enrich lineups and player availability."
+                            if kickoff_matches else
+                            "No exact Sportmonks kickoff corroboration was found. The selected provider fixture remains authoritative; Sportmonks lineup and player-availability enrichment will be unavailable."
+                        ),
+                    }
                 with st.expander(
                     "Exact fixture verification diagnostics",
                     expanded=not selected_match_diagnostic["verified"],
@@ -2574,8 +2749,18 @@ try:
 
                 # Ledger identity uses the closest exact pairing in this season,
                 # including live/completed fixtures. Lineup enrichment stays upcoming-only.
-                if selected_discovered_fixture_id:
+                if selected_discovered_fixture_id and selected_fixture_provider == "sportmonks":
                     prediction_fixture = selected_match_fixture
+                elif selected_discovered_fixture_id:
+                    # Keep the selected source's fixture identity in the ledger.
+                    # A corroborating Sportmonks event is used only for optional
+                    # match-detail enrichment and is never substituted as the pick.
+                    prediction_fixture = {
+                        "id": selected_discovered_fixture_id,
+                        "starting_at": selected_fixture_row.get("starting_at"),
+                        "status": selected_fixture_row.get("status") or "scheduled",
+                        "source_provider": selected_fixture_provider,
+                    }
                 else:
                     prediction_fixture = find_exact_match_fixture(
                         fixtures,
@@ -3696,11 +3881,11 @@ try:
             opta_values = {"home_win": opta_home, "draw": opta_draw, "away_win": opta_away}
         player_snapshot = player_report if isinstance(player_report, dict) else None
         availability_snapshot = None
-        if sportmonks_mode and prediction_fixture:
+        if sportmonks_mode and selected_match_fixture:
             availability_snapshot = build_availability_snapshot(
                 home_profile=home,
                 away_profile=away,
-                fixture_id=prediction_fixture.get("id"),
+                fixture_id=selected_match_fixture.get("id"),
                 season_id=int(selected_season_id),
                 home_team_id=int(team_map[home_name]["id"]),
                 away_team_id=int(team_map[away_name]["id"]),
@@ -3721,7 +3906,9 @@ try:
             predicted_at=prediction_captured_at,
             kickoff_at=(prediction_fixture or {}).get("starting_at") or (prediction_fixture or {}).get("starting_at_at") or (datetime.fromtimestamp(int(prediction_fixture["starting_at_timestamp"]), timezone.utc).isoformat() if prediction_fixture and prediction_fixture.get("starting_at_timestamp") else None),
             fixture_id=(prediction_fixture or {}).get("id"),
-            fixture_provider="sportmonks" if prediction_fixture else "",
+            fixture_provider=(
+                selected_fixture_provider or "sportmonks"
+            ) if prediction_fixture else "",
             opta_probabilities=opta_values,
             opta_source_url=opta_source_url.strip() if opta_values else "",
             opta_captured_at=datetime.now(timezone.utc).isoformat() if opta_values else "",
