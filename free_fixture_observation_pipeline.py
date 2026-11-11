@@ -43,13 +43,22 @@ def _archive(
     errors: list[dict[str, str]],
     successful_scopes: int,
 ) -> dict[str, Any]:
+    eligible_count = sum(row.get("eligible_for_review") is True for row in observations)
+    exclusion_counts: dict[str, int] = {}
+    for row in observations:
+        if row.get("eligible_for_review") is True:
+            continue
+        reason = str(row.get("exclusion_reason") or "not_eligible_for_review")
+        exclusion_counts[reason] = exclusion_counts.get(reason, 0) + 1
+    diagnostics = {
+        "exclusion_reason_counts": dict(sorted(exclusion_counts.items())),
+    }
     if successful_scopes == 0:
         return {
             "provider": provider, "archived": False,
             "observation_count": len(observations),
-            "eligible_for_review_count": sum(
-                row.get("eligible_for_review") is True for row in observations
-            ),
+            "eligible_for_review_count": eligible_count,
+            **diagnostics,
             "errors": errors,
         }
     stored = archive_future_fixture_observations(
@@ -61,9 +70,8 @@ def _archive(
     return {
         **stored, "provider": provider, "archived": True,
         "observation_count": len(observations),
-        "eligible_for_review_count": sum(
-            row.get("eligible_for_review") is True for row in observations
-        ),
+        "eligible_for_review_count": eligible_count,
+        **diagnostics,
         "successful_scopes": successful_scopes,
         "errors": errors,
     }
