@@ -100,7 +100,11 @@ def group_completed_fixture_candidates(
         fixture_id = str(record.get("fixture_id") or "").strip()
         if not fixture_id:
             continue
-        if record.get("actual_home_goals") not in (None, "") or record.get("actual_away_goals") not in (None, ""):
+        if (
+            record.get("actual_home_goals") not in (None, "")
+            or record.get("actual_away_goals") not in (None, "")
+            or record.get("actual_result") not in (None, "")
+        ):
             continue
         try:
             kickoff = datetime.fromisoformat(

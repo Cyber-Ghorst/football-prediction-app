@@ -15,6 +15,7 @@ from prediction_evaluation import evaluate_prediction_ledger
 from prediction_results import group_completed_fixture_candidates, verified_final_score
 from prediction_storage import load_prediction_ledger, save_prediction_records
 from sportmonks import SportmonksClient, SportmonksError
+from free_fixture_result_sync import sync_free_source_results
 
 
 def _utc_now(value: datetime | None = None) -> datetime:
@@ -44,6 +45,9 @@ def sync_completed_results(
     ledger_loader: Callable[[str], list[dict[str, Any]]] | None = None,
     ledger_saver: Callable[[str, list[Mapping[str, Any]]], int] | None = None,
     client_factory: Callable[..., Any] | None = None,
+    provider_database_url: str | None = None,
+    bzzoiro_token: str | None = None,
+    free_source_limit: int = 10,
 ) -> tuple[dict[str, Any], int]:
     """Sync up to `limit` unique fixtures; return a report and process exit code."""
     started = _utc_now(now)
@@ -80,26 +84,76 @@ def sync_completed_results(
         return report, 1
 
     report["ledger_records"] = len(records)
+    updated_rows: list[dict[str, Any]] = []
+    try:
+        free_report, free_updated_rows = sync_free_source_results(
+            records,
+            provider_database_url=provider_database_url,
+            now=started,
+            limit=free_source_limit,
+            bzzoiro_token=bzzoiro_token,
+        )
+        report["free_source_results"] = free_report
+        updated_rows.extend(free_updated_rows)
+        report["records_updated"] = len(updated_rows)
+        report["errors"].extend([
+            {"provider": item.get("provider"), "fixture_id": item.get("fixture_id"),
+             "error_type": item.get("error_type"), "message": item.get("message")}
+            for item in (free_report.get("errors") or [])
+        ])
+    except Exception as exc:
+        report["free_source_results"] = {
+            "status": "processing_error",
+            "error_type": type(exc).__name__,
+            "message": str(exc)[:250],
+        }
+
     candidates = group_completed_fixture_candidates(records, started)
     report["candidate_fixtures"] = len(candidates)
     report["limit_reached"] = len(candidates) > limit
     report["fixtures_deferred"] = max(0, len(candidates) - limit)
     if not candidates:
-        report["status"] = "no_eligible_fixtures"
+        try:
+            if updated_rows:
+                saver(database_url, updated_rows)
+                report["status"] = "updated"
+            else:
+                report["status"] = (
+                    "attention_required"
+                    if (
+                        report.get("free_source_results", {}).get("errors")
+                        or report.get("free_source_results", {}).get("status") == "processing_error"
+                    )
+                    else "no_eligible_fixtures"
+                )
+        except Exception as exc:
+            report["status"] = "database_write_failed"
+            report["error_type"] = type(exc).__name__
+            report["completed_at_utc"] = _utc_now().isoformat()
+            return report, 1
         report["evaluation"] = _evaluation_summary(records)
         report["completed_at_utc"] = _utc_now().isoformat()
         return report, 0
 
     token = (api_token or os.getenv("SPORTMONKS_API_TOKEN") or os.getenv("SPORTMONKS_API_KEY") or "").strip()
     if not token:
-        report["status"] = "blocked_missing_sportmonks_credential"
-        report["note"] = "Eligible results exist, but no Sportmonks credential is configured. No score was changed."
+        if updated_rows:
+            try:
+                saver(database_url, updated_rows)
+                report["status"] = "updated_without_sportmonks_credential"
+            except Exception as exc:
+                report["status"] = "database_write_failed"
+                report["error_type"] = type(exc).__name__
+                report["completed_at_utc"] = _utc_now().isoformat()
+                return report, 1
+        else:
+            report["status"] = "blocked_missing_sportmonks_credential"
+            report["note"] = "Sportmonks results could not be checked because no credential is configured. No unverified score was changed."
         report["evaluation"] = _evaluation_summary(records)
         report["completed_at_utc"] = _utc_now().isoformat()
         return report, 0
 
     factory = client_factory or SportmonksClient
-    updated_rows: list[dict[str, Any]] = []
     try:
         client_context = factory(api_token=token)
     except TypeError:
@@ -144,7 +198,11 @@ def sync_completed_results(
                         continue
                     # group_completed_fixture_candidates excludes all rows with
                     # existing scores; this guard protects against future callers.
-                    if row.get("actual_home_goals") not in (None, "") or row.get("actual_away_goals") not in (None, ""):
+                    if (
+                        row.get("actual_home_goals") not in (None, "")
+                        or row.get("actual_away_goals") not in (None, "")
+                        or row.get("actual_result") not in (None, "")
+                    ):
                         continue
                     home_goals, away_goals = score
                     row["actual_home_goals"] = home_goals
@@ -221,6 +279,8 @@ def main() -> int:
     report, exit_code = sync_completed_results(
         database_url=os.getenv("DATABASE_URL"),
         api_token=os.getenv("SPORTMONKS_API_TOKEN") or os.getenv("SPORTMONKS_API_KEY"),
+        provider_database_url=os.getenv("PROVIDER_DATABASE_URL"),
+        bzzoiro_token=os.getenv("BZZOIRO_API_TOKEN"),
         limit=args.limit,
     )
     print(json.dumps(report, ensure_ascii=False, indent=2, default=str))

@@ -309,8 +309,11 @@ jobs:
         if: steps.operation.outputs.operation == 'result_sync' || github.event_name == 'schedule'
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
           SPORTMONKS_API_TOKEN: ${{ secrets.SPORTMONKS_API_TOKEN }}
           SPORTMONKS_API_KEY: ${{ secrets.SPORTMONKS_API_KEY }}
+          BZZOIRO_API_TOKEN: ${{ secrets.BZZOIRO_API_TOKEN }}
+          LIVESCORE_FOOTBALL_BASE_URL: ${{ secrets.LIVESCORE_FOOTBALL_BASE_URL }}
         run: |
           set -o pipefail
           exec > >(tee -a controller-report.txt) 2>&1

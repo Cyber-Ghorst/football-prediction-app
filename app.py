@@ -109,6 +109,7 @@ try:
     )
     from provider_entity_crosswalk import save_explicit_provider_entity_links
     from provider_crosswalk_review_report import build_provider_crosswalk_review_report
+    from free_fixture_result_sync import sync_free_source_results
     from free_fixture_canonical_promotion import review_and_promote_free_fixture_observations
     from livescore_football import LiveScoreFootballClient, LiveScoreFootballError
     from livescore_layer2 import (
@@ -474,7 +475,24 @@ def _sync_completed_sportmonks_results():
     skipped = 0
     errors = 0
     records = st.session_state["prediction_ledger"]
-    # Repeated predictions for one fixture share a single provider lookup.
+    free_source_report = {"status": "skipped", "records_updated": 0, "errors": []}
+    free_source_updated = []
+    try:
+        free_source_report, free_source_updated = sync_free_source_results(
+            records,
+            provider_database_url=PROVIDER_DATABASE_URL,
+            now=now,
+            limit=10,
+            bzzoiro_token=st.secrets.get("BZZOIRO_API_TOKEN", ""),
+        )
+        updated += len(free_source_updated)
+        checked += int(free_source_report.get("fixtures_checked") or 0)
+        skipped += int(free_source_report.get("fixtures_without_verified_score") or 0)
+        errors += len(free_source_report.get("errors") or [])
+    except Exception:
+        errors += 1
+
+    # Repeated predictions for one Sportmonks fixture share a single provider lookup.
     # The helper includes only linked Sportmonks records with a passed kickoff
     # and blank actual-score fields; manual scores are never overwritten.
     fixture_groups = group_completed_fixture_candidates(records, now)
@@ -527,7 +545,11 @@ def _sync_completed_sportmonks_results():
         "updated": updated,
         "not_verified_or_not_finished": skipped,
         "errors": errors,
-        "limit_reached": len(fixture_groups) > 10,
+        "limit_reached": (
+            len(fixture_groups) > 10
+            or bool(free_source_report.get("limit_reached"))
+        ),
+        "free_source_status": free_source_report.get("status"),
     }
 
 @st.fragment(run_every="15m")
@@ -547,10 +569,10 @@ def _automatic_result_collection(enabled):
     # repeated API calls on every ordinary Streamlit rerun.
     st.session_state["_automatic_result_check_last_at"] = now
     try:
-        with st.spinner("Automatically checking completed Sportmonks fixtures..."):
+        with st.spinner("Automatically checking completed fixtures across verified providers..."):
             report = _sync_completed_sportmonks_results()
         st.caption(
-            f"Automatic result check • {report['eligible_checked']} unique fixture(s) checked • "
+            f"Automatic result check • {report['eligible_checked']} unique fixture(s) checked across verified providers • "
             f"{report['updated']} verified prediction result(s) saved."
         )
         if report["errors"]:
@@ -563,7 +585,7 @@ def _automatic_result_collection(enabled):
         if report["updated"]:
             st.rerun()
     except SportmonksError as exc:
-        st.warning(f"Automatic Sportmonks result check failed: {exc}")
+        st.warning(f"Automatic result check failed: {exc}")
 
 
 if not st.session_state.get("_ledger_db_loaded"):
