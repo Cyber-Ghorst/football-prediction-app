@@ -9,6 +9,10 @@ on:
       - "provider_data_storage.py"
       - "free_fixture_adapters.py"
       - "free_fixture_observation_pipeline.py"
+      - "upcoming_fixture_collector.py"
+      - "temporary_fixture_store.py"
+      - "provider_routing.py"
+      - "football_repository.py"
       - ".github/workflows/upcoming-fixture-collection.yml"
   workflow_dispatch:
   schedule:
