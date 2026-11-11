@@ -33,6 +33,12 @@ def normalize_entity_name(value: Any) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
+def _season_start_year(value: Any) -> int | None:
+    """Extract a season's first four-digit year for parent-scoped season review."""
+    match = re.search(r"(?<!\d)(20\d{2})(?!\d)", str(value or ""))
+    return int(match.group(1)) if match else None
+
+
 def _country_key(value: Any) -> str:
     key = normalize_entity_name(value)
     aliases = {
@@ -145,7 +151,8 @@ def build_entity_crosswalk_candidates(
         source_key = _candidate_name_key(
             provider_name, entity_type, curated_alias or source_name
         )
-        matches = []
+        matches: list[tuple[str, str, str]] = []
+        source_season_year = _season_start_year(source_name) if entity_type == "season" else None
         for target in canonical:
             if entity_type == "league":
                 target_id = _value(target, "league_id", "canonical_entity_id")
@@ -169,26 +176,40 @@ def build_entity_crosswalk_candidates(
                 target_parent = _value(target, "league_id", "canonical_league_id")
                 exact_context = str(target_parent or "") == source_parent
 
-            if (
-                target_id is not None and target_name
-                and _candidate_name_key(provider_name, entity_type, target_name) == source_key
-                and exact_context
-            ):
-                matches.append((str(target_id), str(target_name)))
+            if target_id is None or not target_name or not exact_context:
+                continue
+            exact_name = (
+                _candidate_name_key(provider_name, entity_type, target_name) == source_key
+            )
+            exact_start_year = (
+                entity_type == "season"
+                and source_season_year is not None
+                and _season_start_year(target_name) == source_season_year
+            )
+            if exact_name or exact_start_year:
+                match_method = (
+                    "exact_start_year_and_parent"
+                    if entity_type == "season" and exact_start_year and not exact_name
+                    else "exact_name_and_country_or_parent"
+                )
+                matches.append((str(target_id), str(target_name), match_method))
 
         if len(matches) == 1:
+            match_method = (
+                "curated_provider_id_alias" if curated_alias else matches[0][2]
+            )
             output.append({
                 **base, "canonical_entity_id": matches[0][0],
                 "canonical_name": matches[0][1],
                 "status": "candidate_requires_manual_approval",
-                "match_method": (
-                    "curated_provider_id_alias" if curated_alias
-                    else "exact_name_and_country_or_parent"
-                ),
+                "match_method": match_method,
                 "reason": (
                     "Curated stable provider-ID alias and exact country context match; "
                     "explicit review is still mandatory."
                     if curated_alias else
+                    "Exact season start year and verified parent competition match; "
+                    "explicit review is still mandatory."
+                    if match_method == "exact_start_year_and_parent" else
                     "Exact normalized name and required country/parent context match; "
                     "explicit review is still mandatory."
                 ),
