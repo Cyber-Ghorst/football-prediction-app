@@ -334,7 +334,7 @@ class OpenFootballAdapter(_StaticDatasetAdapter):
         except ValueError:
             return combined
         if parsed.tzinfo is not None and parsed.utcoffset() is not None:
-            return parsed
+            return parsed.isoformat()
         zone_value = (
             row.get("timezone") or row.get("time_zone") or row.get("timeZone")
             or row.get("tz") or row.get("utc_offset")
