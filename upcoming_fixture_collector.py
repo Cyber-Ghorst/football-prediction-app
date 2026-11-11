@@ -326,14 +326,17 @@ def collect_upcoming_fixtures(
     if isinstance(window_days, bool) or not isinstance(window_days, int) or not 1 <= window_days <= 7:
         raise ValueError("window_days must be an integer from 1 through 7.")
     routed_sources = default_provider_registry().primary_sources("future_fixtures")
-    # This collector currently implements only Sportmonks. If a disabled
-    # candidate is accidentally enabled before its adapter exists, fail closed
-    # instead of silently treating it as a working fixture source.
-    if routed_sources != ["sportmonks"]:
+    # This legacy collector is retired: it only knows how to call Sportmonks.
+    # Future fixtures are now collected by free_fixture_provider_refresh.py.
+    if "sportmonks" not in routed_sources:
         raise RuntimeError(
-            "Future-fixture routing includes an unimplemented provider; "
-            "complete its adapter and validation gates before activation."
+            "Sportmonks is not an approved future-fixture discovery source; "
+            "use free_fixture_provider_refresh.py for LiveScore Football and OpenLigaDB."
         )
+    raise RuntimeError(
+        "The Sportmonks-only future-fixture collector is retired; "
+        "use free_fixture_provider_refresh.py."
+    )
     current = now or datetime.now(timezone.utc)
     if current.tzinfo is None:
         current = current.replace(tzinfo=timezone.utc)
