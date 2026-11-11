@@ -538,6 +538,7 @@ def normalize_livescore_football_events(
     *,
     league_key: str,
     source_url: str,
+    league_metadata: Mapping[str, Any] | None = None,
     fetched_at: datetime | None = None,
 ) -> list[dict[str, Any]]:
     """Normalize LiveScoreFootball events while requiring event-level identities."""
@@ -563,12 +564,27 @@ def normalize_livescore_football_events(
         status_type = status.get("type") if isinstance(status.get("type"), Mapping) else {}
         status_value = status_type.get("name") or status.get("display") or event.get("status") or "unknown"
         season = event.get("season") if isinstance(event.get("season"), Mapping) else {}
+        metadata = league_metadata if isinstance(league_metadata, Mapping) else {}
+        league_name = (
+            metadata.get("name") or metadata.get("leagueName")
+            or competition.get("name") or league_key
+        )
+        country_value = metadata.get("country") or metadata.get("country_name")
+        country = _text(country_value) or None
+        raw_event = dict(event)
+        if country:
+            raw_event["country"] = country
+        raw_event["league"] = {
+            "id": metadata.get("id") or competition.get("id") or league_key,
+            "name": league_name,
+            "country": country,
+        }
         output.append(_observation(
-            "livescore_football", event, fetched_at=fetched, source_url=source_url,
+            "livescore_football", raw_event, fetched_at=fetched, source_url=source_url,
             licence="LiveScoreFootball public API; upstream snapshot freshness and reuse terms require review",
             fixture_id=event.get("id") or event.get("uid"),
-            competition=competition.get("id") or league_key,
-            competition_name=competition.get("name") or league_key,
+            competition=metadata.get("id") or competition.get("id") or league_key,
+            competition_name=league_name,
             season=event.get("season_id") or season.get("id") or season.get("year"),
             season_name=season.get("name") or season.get("year") or event.get("season_id"),
             home=home, away=away,
