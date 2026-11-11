@@ -57,6 +57,26 @@ class ProviderObservationSnapshotLoadingTests(unittest.TestCase):
         self.assertEqual(cursor.params, ("future_fixture_observations", "openligadb", 25))
         self.assertIn("ORDER BY retrieved_at DESC", cursor.sql)
 
+    def test_loads_highlightly_and_api_ninjas_observation_snapshots(self):
+        for provider in ("highlightly", "api_ninjas"):
+            row = (
+                f"{provider}-snapshot", provider, "future_fixture_observations",
+                {"status": "scheduled"}, [f"{provider}:fixture-1"],
+                {"observations": []}, "2026-11-11T00:00:00Z", None, "sha256",
+            )
+            cursor = FakeCursor([row])
+            with patch("provider_data_storage.ensure_provider_storage"), patch(
+                "provider_data_storage._connect", return_value=FakeConnection(cursor)
+            ):
+                result = load_provider_observation_snapshots(
+                    "provider-db", provider=provider, limit=5,
+                )
+            self.assertEqual(result[0]["provider"], provider)
+            self.assertEqual(
+                cursor.params,
+                ("future_fixture_observations", provider, 5),
+            )
+
     def test_loads_all_providers_without_nullable_parameter_predicate(self):
         cursor = FakeCursor([])
         with patch("provider_data_storage.ensure_provider_storage"), patch(
