@@ -149,6 +149,7 @@ class FreeFixtureWindowCoverageTests(unittest.TestCase):
         report = build_free_fixture_window_coverage(
             "provider-db", now=NOW, highlightly_use_allowed=True,
             api_ninjas_noncommercial_confirmed=True,
+            open_matchday_noncommercial_confirmed=True,
         )
         self.assertEqual(load.call_count, len(PROVIDERS))
         self.assertEqual(
@@ -166,7 +167,7 @@ class FreeFixtureWindowCoverageTests(unittest.TestCase):
         self.assertNotIn("api_ninjas", loaded)
         self.assertEqual(
             set(report["providers_excluded_by_terms"]),
-            {"highlightly", "api_ninjas"},
+            {"highlightly", "api_ninjas", "open_matchday"},
         )
 
     def test_requires_timezone_aware_now(self):
