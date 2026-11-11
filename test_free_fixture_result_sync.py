@@ -122,7 +122,8 @@ class FreeFixtureResultVerificationTests(unittest.TestCase):
         self.assertEqual(
             verify_openmatchday_final_score(
                 record, observation,
-                provider_fixture_id="open_matchday:dataset-42", now=NOW,
+                provider_fixture_id="open_matchday:dataset-42",
+                now=datetime(2026, 11, 22, 12, 0, tzinfo=timezone.utc),
             ),
             (2, 1),
         )
@@ -132,7 +133,8 @@ class FreeFixtureResultVerificationTests(unittest.TestCase):
             "competition_name": "EFL Cup",
         }
         self.assertIsNone(verify_openmatchday_final_score(
-            record, cup, provider_fixture_id="open_matchday:dataset-42", now=NOW
+            record, cup, provider_fixture_id="open_matchday:dataset-42",
+            now=datetime(2026, 11, 22, 12, 0, tzinfo=timezone.utc)
         ))
 
     @patch("free_fixture_result_sync._source_metadata")
@@ -170,7 +172,8 @@ class FreeFixtureResultVerificationTests(unittest.TestCase):
         adapter.season_csv.return_value = [result_row]
         records = [record]
         report, updated = sync_free_source_results(
-            records, provider_database_url="provider-db", now=NOW,
+            records, provider_database_url="provider-db",
+            now=datetime(2026, 11, 22, 12, 0, tzinfo=timezone.utc),
         )
         self.assertEqual(report["records_updated"], 1)
         self.assertEqual(updated[0]["actual_home_goals"], 2)
