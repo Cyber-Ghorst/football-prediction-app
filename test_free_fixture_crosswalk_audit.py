@@ -26,6 +26,7 @@ class FreeFixtureCrosswalkAuditTests(unittest.TestCase):
         report = build_crosswalk_audit(
             "provider-db", highlightly_use_allowed=True,
             api_ninjas_noncommercial_confirmed=True,
+            open_matchday_noncommercial_confirmed=True,
         )
         self.assertEqual(set(report["providers"]), set(PROVIDERS))
         first = report["providers"]["openligadb"]
@@ -64,6 +65,7 @@ class FreeFixtureCrosswalkAuditTests(unittest.TestCase):
         report = build_crosswalk_audit(
             "provider-db", highlightly_use_allowed=True,
             api_ninjas_noncommercial_confirmed=True,
+            open_matchday_noncommercial_confirmed=True,
         )
         teams = report["providers"]["openligadb"]["categories"]["teams"]
         self.assertEqual(teams["candidate_count"], 60)
@@ -90,6 +92,7 @@ class FreeFixtureCrosswalkAuditTests(unittest.TestCase):
         report = build_crosswalk_audit(
             "provider-db", highlightly_use_allowed=True,
             api_ninjas_noncommercial_confirmed=True,
+            open_matchday_noncommercial_confirmed=True,
         )
         teams = report["providers"]["openligadb"]["categories"]["teams"]
         manual_ids = {
@@ -107,7 +110,8 @@ class FreeFixtureCrosswalkAuditTests(unittest.TestCase):
         report = build_crosswalk_audit("provider-db")
         self.assertEqual(report["providers"]["highlightly"]["status"], "skipped")
         self.assertEqual(report["providers"]["api_ninjas"]["status"], "skipped")
-        self.assertEqual(builder.call_count, len(PROVIDERS) - 2)
+        self.assertEqual(report["providers"]["open_matchday"]["status"], "skipped")
+        self.assertEqual(builder.call_count, len(PROVIDERS) - 3)
         catalogue.assert_called_once_with("provider-db")
 
 
@@ -124,6 +128,7 @@ class FreeFixtureCrosswalkAuditTests(unittest.TestCase):
         report = build_crosswalk_audit(
             "provider-db", highlightly_use_allowed=True,
             api_ninjas_noncommercial_confirmed=True,
+            open_matchday_noncommercial_confirmed=True,
         )
         self.assertEqual(report["providers"]["openligadb"]["status"], "error")
         self.assertEqual(report["providers"]["openligadb"]["error_type"], "RuntimeError")
