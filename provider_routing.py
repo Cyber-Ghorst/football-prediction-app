@@ -78,9 +78,9 @@ OPENSCORES_COMPETITIONS = (
 )
 
 # Future-fixture discovery is deliberately distinct from match-data enrichment.
-# Only Sportmonks is currently implemented in the rolling-window collector.
-# These documented future-fixture sources remain disabled until live account
-# coverage, timestamp, identity, licence and database round-trip gates pass.
+# LiveScore Football and OpenLigaDB are the active free discovery sources.
+# Other candidates remain disabled until their coverage, timestamp, identity,
+# licence and database round-trip gates pass.
 FREE_FIXTURE_CANDIDATES = (
     "openligadb",
     "openfootball",
@@ -93,7 +93,8 @@ FREE_FIXTURE_CANDIDATES = (
 
 DEFAULT_PROVIDER_ASSIGNMENTS = (
     ProviderAssignment("sportmonks", "fixtures", "primary", 10),
-    ProviderAssignment("sportmonks", "future_fixtures", "primary", 10),
+    ProviderAssignment("livescore_football", "future_fixtures", "primary", 10),
+    ProviderAssignment("openligadb", "future_fixtures", "co_primary", 20),
     ProviderAssignment("sportmonks", "results", "primary", 10),
     ProviderAssignment("sportmonks", "match_statistics", "primary", 10),
     ProviderAssignment("sportmonks", "lineups", "primary", 10),
@@ -104,12 +105,11 @@ DEFAULT_PROVIDER_ASSIGNMENTS = (
     # It is deliberately not assigned to either fixtures or future_fixtures.
     ProviderAssignment("openscores", "results", "validation", 20,
                        competitions=OPENSCORES_COMPETITIONS, enabled=False),
-    ProviderAssignment("openligadb", "future_fixtures", "co_primary", 30, enabled=False),
+    ProviderAssignment("openligadb", "future_fixtures", "co_primary", 20),
     ProviderAssignment("openfootball", "future_fixtures", "co_primary", 31, enabled=False),
     ProviderAssignment("open_matchday", "future_fixtures", "co_primary", 32, enabled=False),
-    # Existing LiveScoreFootball adapter has a scheduled-fixtures endpoint, but
-    # remains disabled until live fixture identity/time/freshness checks pass.
-    ProviderAssignment("livescore_football", "future_fixtures", "co_primary", 33, enabled=False),
+    # LiveScore Football and OpenLigaDB are the selected active discovery pair.
+    # Their observations remain staged until explicit promotion gates pass.
     ProviderAssignment("bzzoiro", "future_fixtures", "co_primary", 34, enabled=False),
     # Both APIs document current/future scheduled matches, but account-level
     # free-tier coverage and canonical crosswalks have not passed live gates.
