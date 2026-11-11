@@ -89,18 +89,15 @@ def resolve_field(
 ) -> ResolvedField:
     """Choose a source by domain priority and expose agreement/conflicts.
 
-    LiveScoreFootball is considered only when the caller has independently
-    verified coverage for the exact competition and season. Invalid, null and
-    stale observations are excluded. Conflicts are never averaged.
+    The legacy livescore_verified argument is retained for call compatibility
+    but ignored: the current WorldCup26 fork is historical-only and is not a
+    general results/standings provider. Invalid, null and stale observations
+    are excluded. Conflicts are never averaged.
     """
     base_priority = PROVIDER_ORDER.get(domain)
     if base_priority is None:
         raise ValueError(f"Unknown data domain: {domain}")
-    priority = (
-        ("livescore_football", *base_priority)
-        if livescore_verified and domain in {"results", "standings"}
-        else base_priority
-    )
+    priority = base_priority
 
     current = _utc(now or datetime.now(timezone.utc))
     eligible: list[Observation] = []
