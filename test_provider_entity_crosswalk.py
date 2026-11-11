@@ -188,6 +188,46 @@ class ProviderEntityCrosswalkTests(unittest.TestCase):
         )
         self.assertEqual(mapped[0]["status"], "candidate_requires_manual_approval")
 
+    def test_season_start_year_alias_is_a_manual_candidate_only(self):
+        source = [{"id": "2026", "name": "2026", "league_id": "openliga:pl"}]
+        canonical = [{
+            "season_id": "sportmonks:28083",
+            "name": "2026/2027",
+            "league_id": "sportmonks:8",
+        }]
+        rows = build_entity_crosswalk_candidates(
+            "openligadb", "season", source, canonical,
+            canonical_parent_ids={"openliga:pl": "sportmonks:8"},
+        )
+        self.assertEqual(rows[0]["status"], "candidate_requires_manual_approval")
+        self.assertEqual(rows[0]["canonical_entity_id"], "sportmonks:28083")
+        self.assertEqual(rows[0]["match_method"], "exact_start_year_and_parent")
+        self.assertIn("explicit review is still mandatory", rows[0]["reason"])
+
+    def test_season_start_year_alias_never_crosses_parent_or_year(self):
+        source = [{"id": "2026", "name": "2026", "league_id": "openliga:pl"}]
+        wrong_parent = [{
+            "season_id": "sportmonks:28083",
+            "name": "2026/2027",
+            "league_id": "sportmonks:564",
+        }]
+        wrong_year = [{
+            "season_id": "sportmonks:2025",
+            "name": "2025/2026",
+            "league_id": "sportmonks:8",
+        }]
+        parent_result = build_entity_crosswalk_candidates(
+            "openligadb", "season", source, wrong_parent,
+            canonical_parent_ids={"openliga:pl": "sportmonks:8"},
+        )[0]
+        year_result = build_entity_crosswalk_candidates(
+            "openligadb", "season", source, wrong_year,
+            canonical_parent_ids={"openliga:pl": "sportmonks:8"},
+        )[0]
+        self.assertEqual(parent_result["status"], "no_exact_contextual_match")
+        self.assertEqual(year_result["status"], "no_exact_contextual_match")
+
+
 
     def test_extracts_unique_source_entities_from_archived_observations(self):
         observations = [
