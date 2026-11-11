@@ -148,6 +148,37 @@ class TemporaryFixtureStoreTests(unittest.TestCase):
         self.assertNotIn("DELETE FROM upcoming_fixture_staging", sql)
         self.assertNotIn("DO UPDATE", sql)
 
+    def test_additive_staging_accepts_reviewed_highlightly_and_api_ninjas_fixtures(self):
+        for provider in ("highlightly", "api_ninjas"):
+            cursor = FakeCursor()
+            connection = FakeConnection(cursor)
+
+            @contextmanager
+            def fake_connect(*_args, **_kwargs):
+                yield connection
+
+            canonical_fixture = {
+                "fixture_id": f"{provider}:match-42",
+                "source_provider": provider,
+                "league_id": "sportmonks:8",
+                "season_id": "sportmonks:2026",
+                "starting_at": "2026-11-12T18:00:00+00:00",
+                "status": "scheduled",
+                "home_team_id": "sportmonks:1",
+                "away_team_id": "sportmonks:2",
+                "home_team": "Home",
+                "away_team": "Away",
+                "competition": "Premier League",
+                "country": "England",
+            }
+            with patch.object(temporary_fixture_store.psycopg, "connect", fake_connect):
+                result = temporary_fixture_store.add_temporary_upcoming_fixtures(
+                    "postgresql://neon", [canonical_fixture]
+                )
+            self.assertEqual(result["fixtures_inserted"], 1)
+            self.assertEqual(result["fixtures_removed"], 0)
+            self.assertEqual(result["prediction_ledger_modified"], 0)
+
     def test_additive_free_provider_staging_rejects_unmapped_canonical_ids(self):
         invalid = {
             "fixture_id": "openligadb:42",
