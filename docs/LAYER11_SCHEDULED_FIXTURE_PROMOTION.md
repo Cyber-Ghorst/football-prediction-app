@@ -40,7 +40,7 @@ because its observations appear in a coverage report.
 ## Promotion gates
 
 The runner does not create or approve crosswalks. It consumes only links
-already explicitly saved in CockroachDB and reuses the existing checks for
+already explicitly saved in CockroachDB (using the latest three observation snapshots) and reuses the existing checks for
 provider freshness, scheduled status, timezone-aware kickoff, seven-day
 window, exact league/season/home-team/away-team identity, canonical conflicts,
 and provider licence acknowledgements.
