@@ -2,7 +2,7 @@ import unittest
 from datetime import datetime, timezone
 from unittest.mock import Mock, patch
 
-from free_fixture_provider_refresh import refresh_free_fixture_sources
+from free_fixture_provider_refresh import _rotate_batch, refresh_free_fixture_sources
 
 
 class FreeFixtureProviderRefreshTests(unittest.TestCase):
@@ -78,6 +78,12 @@ class FreeFixtureProviderRefreshTests(unittest.TestCase):
         self.assertFalse(report["providers"]["bzzoiro"]["archived"])
         collect_bzz.assert_called_once_with("provider-db", max_pages=20)
         bzz_cls.assert_not_called()
+
+    def test_rotation_covers_different_league_batches(self):
+        items = list(range(10))
+        self.assertEqual(_rotate_batch(items, 3, 0), [0, 1, 2])
+        self.assertEqual(_rotate_batch(items, 3, 1), [3, 4, 5])
+        self.assertEqual(_rotate_batch(items, 3, 4), [2, 3, 4])
 
     def test_requires_provider_database_url(self):
         with self.assertRaisesRegex(ValueError, "PROVIDER_DATABASE_URL"):
