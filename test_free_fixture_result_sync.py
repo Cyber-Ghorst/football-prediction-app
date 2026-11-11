@@ -10,6 +10,8 @@ from free_fixture_result_sync import (
     verify_openligadb_final_score,
     verify_openmatchday_final_score,
     verify_openfootball_final_score,
+    verify_highlightly_final_score,
+    verify_api_ninjas_final_score,
 )
 
 
@@ -401,6 +403,153 @@ class FreeFixtureResultVerificationTests(unittest.TestCase):
         self.assertEqual(duplicate["actual_home_goals"], 2)
         self.assertEqual(record["actual_result_provider"], "openligadb")
         client.matches.assert_called_once_with("bl1", 2026)
+
+
+class AdditionalProviderResultVerificationTests(unittest.TestCase):
+    def setUp(self):
+        self.highlightly_source = {
+            "competition_key": "564",
+            "competition_name": "La Liga",
+            "season_key": "2026",
+            "season_name": "2026-27",
+            "home_team_key": "101",
+            "away_team_key": "202",
+            "home_team_name": "Home FC",
+            "away_team_name": "Away FC",
+            "kickoff_utc": "2026-11-10T18:00:00Z",
+        }
+        self.highlightly_match = {
+            "id": 489389,
+            "date": "2026-11-10T18:00:00.000Z",
+            "league": {"id": 564, "name": "La Liga", "season": 2026},
+            "homeTeam": {"id": 101, "name": "Home FC"},
+            "awayTeam": {"id": 202, "name": "Away FC"},
+            "state": {"description": "Finished", "score": {"current": "2 - 1", "penalties": None}},
+        }
+        self.api_ninjas_source = {
+            "competition_key": "epl",
+            "competition_name": "Premier League",
+            "season_key": "2026",
+            "season_name": "2026-27",
+            "home_team_key": "soccer-home",
+            "away_team_key": "soccer-away",
+            "home_team_name": "Home FC",
+            "away_team_name": "Away FC",
+            "kickoff_utc": "2026-11-10T18:00:00Z",
+        }
+        self.api_ninjas_match = {
+            "game_id": "epl-20261110-hom-awa",
+            "league": "epl",
+            "season": 2026,
+            "start_time": "2026-11-10T18:00:00Z",
+            "status": "final",
+            "decided_in": "regulation",
+            "home_team": {"team_id": "soccer-home", "name": "Home FC"},
+            "away_team": {"team_id": "soccer-away", "name": "Away FC"},
+            "home_score": 2,
+            "away_score": 1,
+        }
+
+    def test_highlightly_accepts_only_exact_regulation_finished_match(self):
+        record = {
+            **RECORD, "fixture_provider": "highlightly",
+            "fixture_id": "highlightly:489389",
+            "competition": "La Liga", "season": "2026",
+        }
+        self.assertEqual(
+            verify_highlightly_final_score(
+                record, self.highlightly_match, provider_fixture_id="489389",
+                now=NOW, source_observation=self.highlightly_source,
+            ),
+            (2, 1),
+        )
+        for state in ("Finished after extra time", "Finished after penalties", "Awarded"):
+            invalid = {
+                **self.highlightly_match,
+                "state": {**self.highlightly_match["state"], "description": state},
+            }
+            self.assertIsNone(verify_highlightly_final_score(
+                record, invalid, provider_fixture_id="489389",
+                now=NOW, source_observation=self.highlightly_source,
+            ))
+        self.assertIsNone(verify_highlightly_final_score(
+            record, self.highlightly_match, provider_fixture_id="wrong",
+            now=NOW, source_observation=self.highlightly_source,
+        ))
+
+    def test_api_ninjas_requires_exact_id_and_regulation_result(self):
+        record = {
+            **RECORD, "fixture_provider": "api_ninjas",
+            "fixture_id": "api_ninjas:epl-20261110-hom-awa",
+            "competition": "Premier League", "season": "2026",
+        }
+        self.assertEqual(
+            verify_api_ninjas_final_score(
+                record, self.api_ninjas_match,
+                provider_fixture_id="epl-20261110-hom-awa",
+                now=NOW, source_observation=self.api_ninjas_source,
+            ),
+            (2, 1),
+        )
+        for decided_in in ("extra_time", "penalties", None):
+            invalid = {**self.api_ninjas_match, "decided_in": decided_in}
+            self.assertIsNone(verify_api_ninjas_final_score(
+                record, invalid, provider_fixture_id="epl-20261110-hom-awa",
+                now=NOW, source_observation=self.api_ninjas_source,
+            ))
+        self.assertIsNone(verify_api_ninjas_final_score(
+            record, self.api_ninjas_match, provider_fixture_id="wrong",
+            now=NOW, source_observation=self.api_ninjas_source,
+        ))
+
+    @patch("free_fixture_result_sync._source_metadata")
+    @patch("highlightly.HighlightlyClient")
+    @patch("free_fixture_result_sync._ensure_promotion_tables")
+    def test_highlightly_sync_updates_only_exact_provider_fixture(
+        self, ensure_tables, client_cls, source
+    ):
+        record = {
+            **RECORD, "fixture_provider": "highlightly",
+            "fixture_id": "highlightly:489389",
+            "competition": "La Liga", "season": "2026",
+        }
+        source.return_value = {
+            "source_url": "https://soccer.highlightly.net/matches/489389",
+            "raw_payload": self.highlightly_source,
+            "canonical_fixture_id": record["fixture_id"],
+        }
+        client_cls.return_value.__enter__.return_value.match.return_value = self.highlightly_match
+        report, updated = sync_free_source_results(
+            [record], provider_database_url="provider-db", now=NOW,
+        )
+        self.assertEqual(report["records_updated"], 1)
+        self.assertEqual(updated[0]["actual_result_provider"], "highlightly")
+        self.assertEqual(updated[0]["actual_result_verification"],
+            "exact_provider_fixture_team_competition_season_and_90_minute_score")
+
+    @patch("free_fixture_result_sync._source_metadata")
+    @patch("api_ninjas.APINinjasClient")
+    @patch("free_fixture_result_sync._ensure_promotion_tables")
+    def test_api_ninjas_sync_updates_only_exact_regulation_fixture(
+        self, ensure_tables, client_cls, source
+    ):
+        record = {
+            **RECORD, "fixture_provider": "api_ninjas",
+            "fixture_id": "api_ninjas:epl-20261110-hom-awa",
+            "competition": "Premier League", "season": "2026",
+        }
+        source.return_value = {
+            "source_url": "https://api.api-ninjas.com/v1/soccermatches",
+            "raw_payload": self.api_ninjas_source,
+            "canonical_fixture_id": record["fixture_id"],
+        }
+        client_cls.return_value.__enter__.return_value.match_details.return_value = self.api_ninjas_match
+        report, updated = sync_free_source_results(
+            [record], provider_database_url="provider-db", now=NOW,
+        )
+        self.assertEqual(report["records_updated"], 1)
+        self.assertEqual(updated[0]["actual_result_provider"], "api_ninjas")
+        self.assertEqual(updated[0]["actual_home_goals"], 2)
 
 
 if __name__ == "__main__":
