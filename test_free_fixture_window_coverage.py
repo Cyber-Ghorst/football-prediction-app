@@ -127,6 +127,21 @@ class FreeFixtureWindowCoverageTests(unittest.TestCase):
             1,
         )
 
+    def test_bzzoiro_notstarted_status_is_counted_in_coverage(self):
+        snapshots = {
+            "bzzoiro": [snapshot("bzzoiro", [
+                observation("bzzoiro", "bz:notstarted", status="notstarted"),
+            ])],
+        }
+        report = build_window_coverage_report(snapshots, now=NOW)
+        self.assertEqual(report["fresh_provider_fixture_records_in_window"], 1)
+        self.assertEqual(report["unique_fixtures_in_window"], 1)
+        self.assertEqual(report["daily_counts_by_provider_utc"]["bzzoiro"]["2026-11-12"], 1)
+        self.assertNotIn(
+            "not_scheduled",
+            report["rejected_observation_counts_by_provider"].get("bzzoiro", {}),
+        )
+
     def test_future_dated_snapshot_is_rejected(self):
         snapshots = {
             "highlightly": [snapshot(
