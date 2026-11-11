@@ -127,7 +127,9 @@ class FreeFixtureWindowCoverageTests(unittest.TestCase):
                 retrieved="2026-11-11T00:10:00Z",
             )],
         }
-        report = build_window_coverage_report(snapshots, now=NOW)
+        report = build_window_coverage_report(
+            snapshots, now=NOW, highlightly_use_allowed=True,
+        )
         self.assertEqual(report["stale_snapshots_skipped"], 1)
         self.assertEqual(report["unique_fixtures_in_window"], 0)
 
