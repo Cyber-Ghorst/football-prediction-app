@@ -20,6 +20,7 @@ on:
           - openscores_sportmonks_reconciliation
           - sportmonks_catalogue_access_audit
           - provider_league_catalogue_audit
+          - deployment_redeploy
         default: health_check
       season:
         description: "Season start year (Sportmonks current-season path: 2025+)"
@@ -123,7 +124,7 @@ jobs:
               trigger = json.loads(Path(".agent/trigger.json").read_text(encoding="utf-8"))
               operation = trigger.get("operation", "")
 
-          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync", "tipmaster_refresh_verify", "openscores_connection_check", "openscores_entity_mapping_audit", "openscores_sportmonks_reconciliation", "sportmonks_catalogue_access_audit", "provider_league_catalogue_audit", "learning_audit"}
+          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync", "tipmaster_refresh_verify", "openscores_connection_check", "openscores_entity_mapping_audit", "openscores_sportmonks_reconciliation", "sportmonks_catalogue_access_audit", "provider_league_catalogue_audit", "learning_audit", "deployment_redeploy"}
           if operation not in allowed:
               raise SystemExit("Rejected unsupported or missing operation")
           if operation == "prediction_run":
@@ -204,8 +205,46 @@ jobs:
           print(json.dumps(report, indent=2))
           PY
 
+      - name: Request Streamlit Community Cloud redeploy through main-branch push
+        if: steps.operation.outputs.operation == 'deployment_redeploy'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git checkout -B main origin/main
+          stamp="$(date -u +%Y%m%dT%H%M%SZ)"
+          mkdir -p reports/deployment/redeploy_requests
+          cat > "reports/deployment/redeploy_requests/${RUN_ID}.json" <<EOF
+          {
+            "requested_at_utc": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "requested_by_workflow": "${RUN_URL}",
+            "strategy": "push a non-code deployment marker to main to request the configured Streamlit Community Cloud deployment to rebuild",
+            "source_commit": "${GITHUB_SHA}",
+            "target_branch": "main",
+            "application_code_changed": false
+          }
+          EOF
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "reports/deployment/redeploy_requests/${RUN_ID}.json"
+          git commit -m "Request Streamlit deployment refresh ${stamp}"
+          git push origin HEAD:main
+          echo "Redeploy request pushed to main. This triggers a rebuild only if Streamlit Community Cloud is configured to deploy this repository's main branch."
+          {
+            echo "## Streamlit redeploy request"
+            echo
+            echo "- Marker commit: $(git rev-parse HEAD)"
+            echo "- Target: main"
+            echo "- No application or prediction code changed."
+            echo "- A successful push requests a Streamlit rebuild; it does not prove the live app has restarted."
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Check Streamlit deployment
-        if: steps.operation.outputs.operation == 'health_check' || steps.operation.outputs.operation == 'full_check'
+        if: steps.operation.outputs.operation == 'health_check' || steps.operation.outputs.operation == 'full_check' || steps.operation.outputs.operation == 'deployment_redeploy'
         env:
           APP_URL: https://football-prediction-app-evzek8cthsuavun8hanejj.streamlit.app/
           HEALTH_URL: https://football-prediction-app-evzek8cthsuavun8hanejj.streamlit.app/_stcore/health
@@ -278,14 +317,14 @@ jobs:
           PY
 
       - name: Install health-check dependencies
-        if: steps.operation.outputs.operation == 'health_check' || steps.operation.outputs.operation == 'full_check' || steps.operation.outputs.operation == 'result_sync' || steps.operation.outputs.operation == 'learning_audit' || steps.operation.outputs.operation == 'tipmaster_refresh_verify' || steps.operation.outputs.operation == 'openscores_connection_check' || steps.operation.outputs.operation == 'openscores_entity_mapping_audit' || steps.operation.outputs.operation == 'openscores_sportmonks_reconciliation'
+        if: steps.operation.outputs.operation == 'health_check' || steps.operation.outputs.operation == 'full_check' || steps.operation.outputs.operation == 'deployment_redeploy' || steps.operation.outputs.operation == 'result_sync' || steps.operation.outputs.operation == 'learning_audit' || steps.operation.outputs.operation == 'tipmaster_refresh_verify' || steps.operation.outputs.operation == 'openscores_connection_check' || steps.operation.outputs.operation == 'openscores_entity_mapping_audit' || steps.operation.outputs.operation == 'openscores_sportmonks_reconciliation'
         run: |
           exec > >(tee -a controller-report.txt) 2>&1
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Run application code smoke check
-        if: steps.operation.outputs.operation == 'health_check' || steps.operation.outputs.operation == 'full_check'
+        if: steps.operation.outputs.operation == 'health_check' || steps.operation.outputs.operation == 'full_check' || steps.operation.outputs.operation == 'deployment_redeploy'
         run: |
           set -o pipefail
           exec > >(tee -a controller-report.txt) 2>&1
