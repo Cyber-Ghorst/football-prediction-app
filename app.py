@@ -1354,7 +1354,13 @@ with st.expander("Validate and publish approved free-source fixtures", expanded=
                 )
             if execute_promotion:
                 st.session_state["free_fixture_promotion_report"] = promotion_report
-                staged_rows = promotion_report.get("staging_fixtures") or []
+                staged_rows = [
+                    row for row in (promotion_report.get("staging_fixtures") or [])
+                    if row.get("source_provider") in {
+                        "openligadb", "openfootball", "open_matchday",
+                        "livescore_football", "bzzoiro",
+                    }
+                ]
                 if staged_rows:
                     try:
                         neon_stage_result = add_temporary_upcoming_fixtures(
