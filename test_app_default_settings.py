@@ -16,8 +16,10 @@ class AppDefaultSettingsTests(unittest.TestCase):
             ),
             None,
         )
-        self.assertIsNotNone(checkbox)
-        self.assertFalse(checkbox.value)
+        self.assertIsNone(
+            checkbox,
+            "Restricted-provider controls should be hidden until permitted-use acknowledgements are configured.",
+        )
 
 
 if __name__ == "__main__":
