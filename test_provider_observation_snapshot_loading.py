@@ -59,8 +59,9 @@ class ProviderObservationSnapshotLoadingTests(unittest.TestCase):
 
     def test_loads_all_providers_without_nullable_parameter_predicate(self):
         cursor = FakeCursor([])
-        with patch("provider_data_storage.ensure_provider_storage"), \\
-             patch("provider_data_storage._connect", return_value=FakeConnection(cursor)):
+        with patch("provider_data_storage.ensure_provider_storage"), patch(
+            "provider_data_storage._connect", return_value=FakeConnection(cursor)
+        ):
             result = load_provider_observation_snapshots("provider-db", limit=10)
         self.assertEqual(result, [])
         self.assertEqual(cursor.params, ("future_fixture_observations", 10))
