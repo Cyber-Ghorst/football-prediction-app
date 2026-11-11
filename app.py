@@ -7,6 +7,7 @@ import time
 import re
 import traceback
 import logging
+import os
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone, timedelta
@@ -14,6 +15,16 @@ import requests
 import pandas as pd
 import streamlit as st
 # Capture startup/import failures before the rest of the application loads.
+def _setting_enabled(name):
+    value = os.getenv(name, "")
+    if not value:
+        try:
+            value = st.secrets.get(name, "")
+        except Exception:
+            value = ""
+    return str(value).strip().casefold() in {"1", "true", "yes", "on"}
+
+
 def _redact_runtime_trace(raw_trace):
     try:
         secret_values = []
@@ -480,6 +491,10 @@ def _sync_completed_sportmonks_results():
             now=now,
             limit=10,
             bzzoiro_token=st.secrets.get("BZZOIRO_API_TOKEN", ""),
+            highlightly_non_betting_confirmed=(
+                _setting_enabled("FREE_FIXTURE_TERMS_ACK_HIGHLIGHTLY")
+                and _setting_enabled("HIGHLIGHTLY_NON_BETTING_USE_CONFIRMED")
+            ),
         )
         updated += len(free_source_updated)
         checked += int(free_source_report.get("fixtures_checked") or 0)
@@ -1194,9 +1209,24 @@ with st.sidebar:
             "Review archived source IDs against existing canonical leagues, seasons and teams. "
             "Exact matches are suggestions only; every saved link requires an explicit selection and reason."
         )
+        crosswalk_providers = [
+            "openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro",
+        ]
+        if (
+            _setting_enabled("FREE_FIXTURE_TERMS_ACK_HIGHLIGHTLY")
+            and _setting_enabled("HIGHLIGHTLY_NON_BETTING_USE_CONFIRMED")
+        ):
+            crosswalk_providers.append("highlightly")
+        if (
+            _setting_enabled("FREE_FIXTURE_TERMS_ACK_API_NINJAS")
+            and _setting_enabled("FREE_FIXTURE_NONCOMMERCIAL_ACK_API_NINJAS")
+        ):
+            crosswalk_providers.append("api_ninjas")
+        if st.session_state.get("free_fixture_crosswalk_provider") not in crosswalk_providers:
+            st.session_state.pop("free_fixture_crosswalk_provider", None)
         crosswalk_provider = st.selectbox(
             "Provider observations to review",
-            ["openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro", "highlightly", "api_ninjas"],
+            crosswalk_providers,
             key="free_fixture_crosswalk_provider",
         )
         build_crosswalk_review = st.button(
@@ -1328,9 +1358,24 @@ with st.expander("Validate and publish approved free-source fixtures", expanded=
         "explicit league/season/home-team/away-team crosswalks to existing Sportmonks "
         "canonical entities can be promoted. Conflicts are held for review."
     )
+    promotion_providers = [
+        "openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro",
+    ]
+    if (
+        _setting_enabled("FREE_FIXTURE_TERMS_ACK_HIGHLIGHTLY")
+        and _setting_enabled("HIGHLIGHTLY_NON_BETTING_USE_CONFIRMED")
+    ):
+        promotion_providers.append("highlightly")
+    if (
+        _setting_enabled("FREE_FIXTURE_TERMS_ACK_API_NINJAS")
+        and _setting_enabled("FREE_FIXTURE_NONCOMMERCIAL_ACK_API_NINJAS")
+    ):
+        promotion_providers.append("api_ninjas")
+    if st.session_state.get("free_fixture_promotion_provider") not in promotion_providers:
+        st.session_state.pop("free_fixture_promotion_provider", None)
     promotion_provider = st.selectbox(
         "Provider to validate",
-        ["openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro", "highlightly", "api_ninjas"],
+        promotion_providers,
         key="free_fixture_promotion_provider",
     )
     promotion_licence_ack = st.checkbox(
@@ -1339,6 +1384,13 @@ with st.expander("Validate and publish approved free-source fixtures", expanded=
         key="free_fixture_promotion_licence_ack",
     )
     promotion_noncommercial_ack = False
+    promotion_highlightly_non_betting_ack = False
+    if promotion_provider == "highlightly":
+        promotion_highlightly_non_betting_ack = st.checkbox(
+            "I confirm this app will not use Highlightly data to operate, facilitate or support betting or wagering.",
+            value=False,
+            key="free_fixture_promotion_highlightly_non_betting_ack",
+        )
     if promotion_provider in {"open_matchday", "api_ninjas"}:
         noncommercial_label = (
             "I confirm the app and this use are non-commercial, as required by Open Matchday's licence."
@@ -1364,6 +1416,7 @@ with st.expander("Validate and publish approved free-source fixtures", expanded=
             or not bool(DATABASE_URL)
             or not promotion_licence_ack
             or (promotion_provider in {"open_matchday", "api_ninjas"} and not promotion_noncommercial_ack)
+            or (promotion_provider == "highlightly" and not promotion_highlightly_non_betting_ack)
         ),
         key="free_fixture_promotion_execute",
     )
@@ -1379,6 +1432,7 @@ with st.expander("Validate and publish approved free-source fixtures", expanded=
                     licence_acknowledged=bool(promotion_licence_ack),
                     open_matchday_noncommercial_confirmed=bool(promotion_noncommercial_ack),
                     api_ninjas_noncommercial_confirmed=bool(promotion_noncommercial_ack),
+                    highlightly_non_betting_confirmed=bool(promotion_highlightly_non_betting_ack),
                     snapshot_limit=100,
                     max_age_hours=24,
                     window_days=7,
