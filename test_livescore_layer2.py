@@ -1,5 +1,6 @@
 import unittest
 from copy import deepcopy
+from unittest.mock import Mock
 
 from livescore_layer2 import (
     apply_livescore_verified_result_fallback_to_profiles,
@@ -9,11 +10,10 @@ from livescore_layer2 import (
 
 class LiveScoreLayer2FallbackTests(unittest.TestCase):
     def test_collection_is_disabled_without_calling_provider(self):
-        client = type("Client", (), {
-            "meta": lambda self: self.fail("historical-only provider must not be queried"),
-            "leagues": lambda self, **kwargs: self.fail("historical-only provider must not be queried"),
-            "fixtures": lambda self, *args, **kwargs: self.fail("historical-only provider must not be queried"),
-        })()
+        client = Mock()
+        client.meta.side_effect = AssertionError("historical-only provider must not be queried")
+        client.leagues.side_effect = AssertionError("historical-only provider must not be queried")
+        client.fixtures.side_effect = AssertionError("historical-only provider must not be queried")
         report = collect_livescore_verified_result_fallback(
             client,
             source_competition={"id": 8, "name": "Premier League"},
