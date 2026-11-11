@@ -64,6 +64,34 @@ class FreeFixtureCrosswalkAuditTests(unittest.TestCase):
         self.assertEqual(len(teams["candidates"]), 25)
         self.assertTrue(teams["candidates_truncated"])
 
+    @patch("free_fixture_crosswalk_audit.load_canonical_crosswalk_catalogue")
+    @patch("free_fixture_crosswalk_audit.build_provider_crosswalk_review_report")
+    def test_all_manual_review_candidates_are_retained_ahead_of_unmatched_sample(
+        self, builder, catalogue
+    ):
+        catalogue.return_value = {"leagues": [], "seasons": [], "teams": []}
+        builder.return_value = {
+            "snapshot_count": 1, "observation_count": 70,
+            "source_entity_counts": {}, "existing_link_counts": {},
+            "candidates": {"teams": [
+                {"provider_entity_id": f"unmatched-{index}", "status": "no_exact_contextual_match"}
+                for index in range(60)
+            ] + [
+                {"provider_entity_id": f"manual-{index}", "status": "candidate_requires_manual_approval"}
+                for index in range(10)
+            ]},
+        }
+        report = build_crosswalk_audit("provider-db")
+        teams = report["providers"]["openligadb"]["categories"]["teams"]
+        manual_ids = {
+            row["provider_entity_id"] for row in teams["candidates"]
+            if row["status"] == "candidate_requires_manual_approval"
+        }
+        self.assertEqual(teams["manual_review_candidate_count"], 10)
+        self.assertEqual(manual_ids, {f"manual-{index}" for index in range(10)})
+        self.assertEqual(len(teams["candidates"]), 35)
+        self.assertTrue(teams["candidates_truncated"])
+
     @patch("free_fixture_crosswalk_audit.load_canonical_crosswalk_catalogue", return_value={"leagues": [], "seasons": [], "teams": []})
     @patch("free_fixture_crosswalk_audit.build_provider_crosswalk_review_report")
     def test_isolates_provider_failure_without_losing_other_reports(self, builder, catalogue):
