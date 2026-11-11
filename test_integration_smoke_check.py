@@ -55,9 +55,11 @@ class APIFootballAccountProbeTests(unittest.TestCase):
     def test_status_probe_returns_only_plan_and_quota_metadata(self):
         client = Mock()
         client.status.return_value = {
-            "account": {"email": "private@example.com", "firstname": "Private"},
-            "subscription": {"plan": "Pro", "active": True},
-            "requests": {"current": 23, "limit_day": 7500},
+            "response": {
+                "account": {"email": "private@example.com", "firstname": "Private"},
+                "subscription": {"plan": "Pro", "active": True},
+                "requests": {"current": 23, "limit_day": 7500},
+            }
         }
         client.leagues.return_value = [{"league": {"id": 1}}, {"league": {"id": 2}}]
 
