@@ -1197,7 +1197,7 @@ with st.sidebar:
         )
         crosswalk_provider = st.selectbox(
             "Provider observations to review",
-            ["openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro"],
+            ["openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro", "highlightly", "api_ninjas"],
             key="free_fixture_crosswalk_provider",
         )
         build_crosswalk_review = st.button(
