@@ -219,6 +219,36 @@ def load_provider_entity_links(
             return {str(row[0]): str(row[1]) for row in cursor.fetchall()}
 
 
+def load_provider_entity_links_by_type(
+    database_url: str,
+    *,
+    provider: str,
+) -> dict[str, dict[str, str]]:
+    """Load all entity-type links for one provider with a single read query."""
+    provider_name = str(provider or "").strip().casefold()
+    if provider_name not in SUPPORTED_PROVIDERS:
+        raise ValueError("Unsupported provider.")
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+    ensure_football_repository(database_url)
+    grouped: dict[str, dict[str, str]] = {
+        entity_type: {} for entity_type in ENTITY_TABLES
+    }
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """SELECT entity_type, provider_entity_id, canonical_entity_id
+                   FROM provider_entity_links
+                   WHERE provider = %s
+                   ORDER BY entity_type, provider_entity_id""",
+                (provider_name,),
+            )
+            for entity_type, provider_id, canonical_id in cursor.fetchall():
+                if entity_type in grouped:
+                    grouped[entity_type][str(provider_id)] = str(canonical_id)
+    return grouped
+
+
 def save_explicit_provider_entity_links(
     database_url: str,
     *,
