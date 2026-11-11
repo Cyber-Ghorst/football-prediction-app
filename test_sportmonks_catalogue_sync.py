@@ -84,6 +84,36 @@ class SportmonksCatalogueSyncTests(unittest.TestCase):
         self.assertEqual(report["seasons_imported"], 0)
         self.assertFalse(report["success"])
 
+    def test_partial_catalogue_import_is_successful_but_not_complete(self):
+        client = MagicMock()
+        client.__enter__.return_value = client
+        client.available_leagues.return_value = [
+            {"id": 8, "name": "Premier League", "country": {"name": "England"}},
+            {"id": 9, "name": "FA Cup", "country": {"name": "England"}},
+        ]
+        client.available_seasons.return_value = [
+            {"id": 80, "league_id": 8, "name": "2026/27", "starting_at": "2026-08-01"},
+            {"id": 90, "league_id": 9, "name": "2026/27", "starting_at": "2026-08-01"},
+        ]
+        client.teams_by_season.side_effect = [
+            [{"id": 1, "name": "Arsenal"}],
+            RuntimeError("pagination metadata unavailable"),
+        ]
+        importer = MagicMock(return_value={
+            "upserted": {"teams": 1, "fixtures": 0},
+            "provider_links_written": 3,
+        })
+        report = sync_sportmonks_catalogue(
+            "cockroach-url", target_year=2026, max_seasons=2, pause_seconds=0,
+            client_factory=lambda: client, importer=importer,
+            repository_initializer=MagicMock(),
+        )
+        self.assertTrue(report["success"])
+        self.assertFalse(report["complete"])
+        self.assertEqual(report["seasons_imported"], 1)
+        self.assertEqual(len(report["errors"]), 1)
+
+
 
 class SportmonksCatalogueMainOutputTests(unittest.TestCase):
     def test_main_keeps_progress_logs_off_machine_readable_stdout(self):

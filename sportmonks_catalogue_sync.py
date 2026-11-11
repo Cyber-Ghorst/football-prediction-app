@@ -159,7 +159,15 @@ def sync_sportmonks_catalogue(
     report["teams_upserted"] = sum(x["teams_upserted"] for x in report["imported_seasons"])
     report["fixtures_upserted"] = sum(x["fixtures_upserted"] for x in report["imported_seasons"])
     report["provider_links_written"] = sum(x["provider_links_written"] for x in report["imported_seasons"])
-    report["success"] = bool(report["seasons_imported"]) and not report["errors"]
+    # A bounded catalogue run can make useful partial progress when a
+    # provider endpoint refuses a complete page. Report that separately from
+    # full coverage so a single inaccessible competition does not hide imports.
+    report["success"] = bool(report["seasons_imported"])
+    report["complete"] = (
+        bool(report["seasons_imported"])
+        and report["seasons_imported"] == report["selected_seasons"]
+        and not report["errors"]
+    )
     return report
 
 
