@@ -49,7 +49,7 @@ def _country_key(value: Any) -> str:
 def _candidate_name_key(provider: str, entity_type: str, value: Any) -> str:
     key = normalize_entity_name(value)
     if provider == "openligadb" and entity_type == "league":
-        key = re.sub(r"\\s+20\\d{2}(?:\\s*/\\s*(?:20)?\\d{2})?$", "", key).strip()
+        key = re.sub(r"\\s+20\\d{2}\\s+(?:20)?\\d{2}$", "", key).strip()
         aliases = {
             "1 fussball bundesliga": "bundesliga",
             "2 fussball bundesliga": "2 bundesliga",
