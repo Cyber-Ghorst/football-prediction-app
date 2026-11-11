@@ -7,8 +7,9 @@ from free_fixture_adapters import (
     OpenFootballAdapter,
     OpenLigaDBAdapter,
     OpenMatchdayAdapter,
+    TheSportsDBAdapter,
     eligible_observations,
-    normalize_livescore_football_events,
+    normalize_thesportsdb_events,
 )
 
 
@@ -171,44 +172,43 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         client.close()
 
 
-    def test_livescore_event_requires_timezone_and_home_away_competitors(self):
+    def test_thesportsdb_discovers_country_leagues(self):
+        client = TheSportsDBAdapter()
+        client._get_json = Mock(return_value={"leagues": [{
+            "idLeague": "4328", "strLeague": "Premier League", "strCountry": "England"
+        }]})
+        leagues = client.leagues_by_country("England")
+        self.assertEqual(leagues[0]["idLeague"], "4328")
+        self.assertEqual(client._get_json.call_args.kwargs["params"], {"c": "England", "s": "Soccer"})
+        client.close()
+
+    def test_thesportsdb_next_event_requires_timezone_and_identity(self):
+        league = {"idLeague": "4328", "strLeague": "Premier League", "strCountry": "England"}
         event = {
-            "id": "event-1",
-            "date": (NOW + timedelta(days=1)).isoformat(),
-            "status": {"type": {"name": "STATUS_SCHEDULED"}},
-            "season": {"id": "season-26"},
-            "competitions": [{
-                "id": "league-1",
-                "competitors": [
-                    {"homeAway": "home", "team": {"id": "team-1", "displayName": "Home FC"}},
-                    {"homeAway": "away", "team": {"id": "team-2", "displayName": "Away FC"}},
-                ],
-            }],
+            "idEvent": "event-1",
+            "idLeague": "4328",
+            "strSeason": "2026-2027",
+            "strTimestamp": "2026-11-20T19:00:00Z",
+            "strStatus": "Not Started",
+            "idHomeTeam": "home-1", "strHomeTeam": "Home FC",
+            "idAwayTeam": "away-1", "strAwayTeam": "Away FC",
         }
-        rows = normalize_livescore_football_events(
-            [event], league_key="league-1",
-            source_url="https://worldcup26.ir/get/soccer/league-1/fixtures",
-            fetched_at=NOW,
-        )
+        rows = normalize_thesportsdb_events([event], league=league, fetched_at=NOW)
         self.assertTrue(rows[0]["eligible_for_review"])
         self.assertEqual(rows[0]["provider_fixture_id"], "event-1")
-        self.assertEqual(rows[0]["home_team_key"], "team-1")
-        self.assertEqual(rows[0]["season_key"], "season-26")
+        self.assertEqual(rows[0]["competition_key"], "4328")
+        self.assertEqual(rows[0]["competition_name"], "Premier League")
+        self.assertEqual(rows[0]["home_team_key"], "home-1")
 
-    def test_livescore_naive_event_date_is_excluded(self):
+    def test_thesportsdb_local_timestamp_is_excluded(self):
+        league = {"idLeague": "4328", "strLeague": "Premier League", "strCountry": "England"}
         event = {
-            "id": "event-2", "date": "2026-11-15T19:00:00",
-            "status": {"type": {"name": "STATUS_SCHEDULED"}},
-            "season": {"id": "season-26"},
-            "competitions": [{"id": "league-1", "competitors": [
-                {"homeAway": "home", "team": {"id": "1", "displayName": "Home FC"}},
-                {"homeAway": "away", "team": {"id": "2", "displayName": "Away FC"}},
-            ]}],
+            "idEvent": "event-2", "idLeague": "4328", "strSeason": "2026-2027",
+            "strTimestamp": "2026-11-20 19:00:00", "strStatus": "Not Started",
+            "idHomeTeam": "1", "strHomeTeam": "Home FC",
+            "idAwayTeam": "2", "strAwayTeam": "Away FC",
         }
-        row = normalize_livescore_football_events(
-            [event], league_key="league-1", source_url="https://example.test",
-            fetched_at=NOW,
-        )[0]
+        row = normalize_thesportsdb_events([event], league=league, fetched_at=NOW)[0]
         self.assertFalse(row["eligible_for_review"])
         self.assertEqual(row["exclusion_reason"], "kickoff_missing_timezone_or_precision")
 
