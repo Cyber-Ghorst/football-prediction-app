@@ -2,7 +2,7 @@ import unittest
 from datetime import datetime, timezone
 from unittest.mock import Mock, patch
 
-from free_fixture_provider_refresh import _rotate_batch, refresh_free_fixture_sources
+from free_fixture_provider_refresh import _rotate_batch, refresh_free_fixture_sources, main
 
 
 class FreeFixtureProviderRefreshTests(unittest.TestCase):
