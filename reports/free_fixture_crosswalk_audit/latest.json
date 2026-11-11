@@ -1,7 +1,7 @@
 {
   "automatic_mapping_approvals": 0,
   "canonical_fixture_writes": 0,
-  "generated_at_utc": "2026-11-11T08:56:22.116195+00:00",
+  "generated_at_utc": "2026-11-11T09:04:45.740363+00:00",
   "prediction_ledger_writes": 0,
   "providers": {
     "api_ninjas": {
@@ -1797,8 +1797,8 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 1415,
-      "snapshot_count": 1,
+      "observation_count": 2830,
+      "snapshot_count": 2,
       "source_entity_counts": {
         "leagues": 8,
         "seasons": 1,
@@ -30569,8 +30569,8 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 1518,
-      "snapshot_count": 1,
+      "observation_count": 3036,
+      "snapshot_count": 2,
       "source_entity_counts": {
         "leagues": 179,
         "seasons": 3,
@@ -30581,30 +30581,8 @@
     "livescore_football": {
       "categories": {
         "leagues": {
-          "candidate_count": 51,
+          "candidate_count": 9,
           "candidates": [
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401841175",
-              "provider_name": "bra.1",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401841311",
-              "provider_name": "bra.1",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
             {
               "canonical_entity_id": null,
               "canonical_name": null,
@@ -30613,314 +30591,6 @@
               "provider_country": "Brazil",
               "provider_entity_id": "630",
               "provider_name": "Brazilian Serie A",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401880744",
-              "provider_name": "eng.3",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401880745",
-              "provider_name": "eng.3",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401880747",
-              "provider_name": "eng.3",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401880749",
-              "provider_name": "eng.3",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401880754",
-              "provider_name": "eng.3",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401881266",
-              "provider_name": "eng.4",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401881267",
-              "provider_name": "eng.4",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401881268",
-              "provider_name": "eng.4",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401881270",
-              "provider_name": "eng.4",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401881271",
-              "provider_name": "eng.4",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401881272",
-              "provider_name": "eng.4",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401881273",
-              "provider_name": "eng.4",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401881274",
-              "provider_name": "eng.4",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401881275",
-              "provider_name": "eng.4",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401881276",
-              "provider_name": "eng.4",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401889202",
-              "provider_name": "eng.5",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401889204",
-              "provider_name": "eng.5",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401889205",
-              "provider_name": "eng.5",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401889206",
-              "provider_name": "eng.5",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401889207",
-              "provider_name": "eng.5",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401889208",
-              "provider_name": "eng.5",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401889209",
-              "provider_name": "eng.5",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401889210",
-              "provider_name": "eng.5",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401889211",
-              "provider_name": "eng.5",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401889212",
-              "provider_name": "eng.5",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401889418",
-              "provider_name": "eng.5",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401906340",
-              "provider_name": "eng.trophy",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401911177",
-              "provider_name": "eng.trophy",
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
               "status": "no_exact_contextual_match"
             },
@@ -30973,138 +30643,6 @@
               "canonical_name": null,
               "entity_type": "league",
               "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401928540",
-              "provider_name": "esp.copa_de_la_reina",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401928561",
-              "provider_name": "esp.copa_de_la_reina",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401928562",
-              "provider_name": "esp.copa_de_la_reina",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401928487",
-              "provider_name": "esp.copa_del_rey",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401928505",
-              "provider_name": "esp.copa_del_rey",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401928506",
-              "provider_name": "esp.copa_del_rey",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401928527",
-              "provider_name": "esp.copa_del_rey",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401928551",
-              "provider_name": "esp.copa_del_rey",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401882456",
-              "provider_name": "esp.w.1",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401882458",
-              "provider_name": "esp.w.1",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401882460",
-              "provider_name": "esp.w.1",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
-              "provider_country": "",
-              "provider_entity_id": "401876988",
-              "provider_name": "mex.1",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "livescore_football",
               "provider_country": "Mexico",
               "provider_entity_id": "760",
               "provider_name": "Mexican Liga BBVA MX",
@@ -31146,7 +30684,7 @@
             }
           ],
           "status_counts": {
-            "no_exact_contextual_match": 51
+            "no_exact_contextual_match": 9
           }
         },
         "seasons": {
@@ -32065,7 +31603,7 @@
       "observation_count": 210,
       "snapshot_count": 5,
       "source_entity_counts": {
-        "leagues": 51,
+        "leagues": 9,
         "seasons": 1,
         "teams": 80
       },
