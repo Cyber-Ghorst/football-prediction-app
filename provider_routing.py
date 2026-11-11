@@ -105,7 +105,7 @@ DEFAULT_PROVIDER_ASSIGNMENTS = (
     # It is deliberately not assigned to either fixtures or future_fixtures.
     ProviderAssignment("openscores", "results", "validation", 20,
                        competitions=OPENSCORES_COMPETITIONS, enabled=False),
-    ProviderAssignment("openligadb", "future_fixtures", "co_primary", 20),
+
     ProviderAssignment("openfootball", "future_fixtures", "co_primary", 31, enabled=False),
     ProviderAssignment("open_matchday", "future_fixtures", "co_primary", 32, enabled=False),
     # LiveScore Football and OpenLigaDB are the selected active discovery pair.
