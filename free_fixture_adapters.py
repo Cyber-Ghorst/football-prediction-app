@@ -315,7 +315,7 @@ class OpenFootballAdapter(_StaticDatasetAdapter):
     }
 
     COUNTRY_NAMES = {
-        "en": "England", "de": "Germany", "es": "Spain", "it": "Italy",
+        "en": "England", "eng": "England", "de": "Germany", "es": "Spain", "it": "Italy",
         "fr": "France", "nl": "Netherlands", "pt": "Portugal", "us": "United States",
     }
 
