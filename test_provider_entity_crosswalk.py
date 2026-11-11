@@ -204,6 +204,27 @@ class ProviderEntityCrosswalkTests(unittest.TestCase):
         self.assertEqual(rows[0]["match_method"], "exact_start_year_and_parent")
         self.assertIn("explicit review is still mandatory", rows[0]["reason"])
 
+    def test_season_candidate_exposes_both_parent_competition_ids(self):
+        source = [{
+            "id": "bl1::2026",
+            "name": "2026",
+            "provider_competition_id": "bl1",
+            "provider_competition_name": "Bundesliga",
+        }]
+        canonical = [{
+            "season_id": "sportmonks:season-2026",
+            "name": "2026/2027",
+            "league_id": "sportmonks:league-bl1",
+        }]
+        row = build_entity_crosswalk_candidates(
+            "openligadb", "season", source, canonical,
+            canonical_parent_ids={"bl1": "sportmonks:league-bl1"},
+        )[0]
+        self.assertEqual(row["provider_parent_id"], "bl1")
+        self.assertEqual(row["provider_parent_name"], "Bundesliga")
+        self.assertEqual(row["canonical_parent_id"], "sportmonks:league-bl1")
+
+
     def test_season_start_year_alias_never_crosses_parent_or_year(self):
         source = [{"id": "2026", "name": "2026", "league_id": "openliga:pl"}]
         wrong_parent = [{

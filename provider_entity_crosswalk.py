@@ -131,6 +131,7 @@ def build_entity_crosswalk_candidates(
             source_country = None
             provider_parent = _value(source, "provider_competition_id", "competition_id", "league_id")
             source_parent = parent_map.get(str(provider_parent)) if provider_parent is not None else None
+            source_parent_name = _value(source, "provider_competition_name", "competition_name", "league_name")
 
         base = {
             "provider": provider_name,
@@ -138,6 +139,9 @@ def build_entity_crosswalk_candidates(
             "provider_entity_id": str(source_id) if source_id is not None else None,
             "provider_name": str(source_name or ""),
             "provider_country": str(source_country or "") if entity_type != "season" else None,
+            "provider_parent_id": str(provider_parent) if entity_type == "season" and provider_parent is not None else None,
+            "provider_parent_name": str(source_parent_name or "") if entity_type == "season" else None,
+            "canonical_parent_id": None,
             "canonical_entity_id": None,
             "canonical_name": None,
             "status": "unmatched",
@@ -160,7 +164,7 @@ def build_entity_crosswalk_candidates(
         source_key = _candidate_name_key(
             provider_name, entity_type, curated_alias or source_name
         )
-        matches: list[tuple[str, str, str]] = []
+        matches: list[tuple[str, str, str, str | None]] = []
         source_season_year = _season_start_year(source_name) if entity_type == "season" else None
         for target in canonical:
             if entity_type == "league":
@@ -201,7 +205,7 @@ def build_entity_crosswalk_candidates(
                     if entity_type == "season" and exact_start_year and not exact_name
                     else "exact_name_and_country_or_parent"
                 )
-                matches.append((str(target_id), str(target_name), match_method))
+                matches.append((str(target_id), str(target_name), match_method, str(target_parent) if entity_type == "season" and target_parent is not None else None))
 
         if len(matches) == 1:
             match_method = (
@@ -210,6 +214,7 @@ def build_entity_crosswalk_candidates(
             output.append({
                 **base, "canonical_entity_id": matches[0][0],
                 "canonical_name": matches[0][1],
+                "canonical_parent_id": matches[0][3],
                 "status": "candidate_requires_manual_approval",
                 "match_method": match_method,
                 "reason": (
@@ -453,6 +458,7 @@ def extract_provider_entities_from_observations(
         add(
             "seasons", season_link_id, season_name,
             provider_competition_id=str(competition_id) if competition_id is not None else None,
+            provider_competition_name=competition_name,
         )
         add(
             "teams", observation.get("home_team_key"), observation.get("home_team_name"),
