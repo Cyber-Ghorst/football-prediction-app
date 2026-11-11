@@ -72,6 +72,43 @@ class FakeClient:
 
 
 class ScheduledPredictionResultSyncTests(unittest.TestCase):
+    @patch("sync_prediction_results.sync_free_source_results")
+    def test_free_provider_results_persist_even_without_sportmonks_candidates(
+        self, free_sync
+    ):
+        record = ledger_record(
+            fixture_id="openligadb:42",
+            fixture_provider="openligadb",
+            kickoff_at="2026-11-09T18:00:00+00:00",
+        )
+        record["actual_home_goals"] = ""
+        record["actual_away_goals"] = ""
+        record["actual_result"] = ""
+        saved = []
+        free_sync.return_value = (
+            {"status": "updated", "candidate_fixtures": 1, "records_updated": 1, "errors": []},
+            [record],
+        )
+        with patch.dict("os.environ", {
+            "SPORTMONKS_API_TOKEN": "", "SPORTMONKS_API_KEY": "",
+        }):
+            report, exit_code = sync_completed_results(
+                database_url="postgresql://example",
+                provider_database_url="provider-db",
+                now=NOW,
+                ledger_loader=lambda _url: [record],
+                ledger_saver=lambda _url, rows: saved.extend(rows) or len(rows),
+            )
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(report["status"], "updated")
+        self.assertEqual(report["records_updated"], 1)
+        self.assertEqual(len(saved), 1)
+        free_sync.assert_called_once()
+        self.assertEqual(
+            free_sync.call_args.kwargs["provider_database_url"], "provider-db"
+        )
+
     def test_verified_final_score_updates_and_persists_ledger(self):
         records = [ledger_record()]
         saved = []
