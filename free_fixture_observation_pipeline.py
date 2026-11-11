@@ -19,6 +19,7 @@ from free_fixture_adapters import (
     API_NINJAS_LEAGUE_NAMES,
 )
 from free_fixture_observation_store import archive_future_fixture_observations
+from provider_data_storage import load_provider_observation_snapshots
 from livescore_football import LiveScoreFootballClient
 
 
@@ -308,8 +309,52 @@ def collect_highlightly_observations(
     page_size: int = 100,
     max_pages: int = 10,
     api_key: str | None = None,
+    cooldown_hours: int = 23,
+    now: datetime | None = None,
+    force: bool = False,
 ) -> dict[str, Any]:
-    """Collect Highlightly scheduled matches by UTC day, paging each date."""
+    """Collect Highlightly scheduled matches at most once per quota window."""
+    current = now or datetime.now(timezone.utc)
+    if current.tzinfo is None:
+        raise ValueError("now must be timezone-aware.")
+    current = current.astimezone(timezone.utc)
+    if isinstance(cooldown_hours, bool) or not isinstance(cooldown_hours, int) or not 0 <= cooldown_hours <= 168:
+        raise ValueError("cooldown_hours must be an integer from 0 through 168.")
+    if not force and cooldown_hours:
+        try:
+            recent = load_provider_observation_snapshots(
+                database_url, provider="highlightly", limit=1
+            )
+        except Exception as exc:
+            return {
+                "provider": "highlightly", "archived": False,
+                "observation_count": 0, "eligible_for_review_count": 0,
+                "successful_scopes": 0, "errors": [{
+                    "scope": "quota_cooldown_check",
+                    "error": f"Could not verify Highlightly refresh cooldown ({type(exc).__name__}).",
+                }],
+                "skipped": "cooldown_state_unavailable",
+            }
+        if recent:
+            retrieved_at = recent[0].get("retrieved_at")
+            if isinstance(retrieved_at, str):
+                try:
+                    retrieved_at = datetime.fromisoformat(retrieved_at.replace("Z", "+00:00"))
+                except ValueError:
+                    retrieved_at = None
+            if isinstance(retrieved_at, datetime):
+                if retrieved_at.tzinfo is None:
+                    retrieved_at = retrieved_at.replace(tzinfo=timezone.utc)
+                age = current - retrieved_at.astimezone(timezone.utc)
+                if age < timedelta(hours=cooldown_hours):
+                    return {
+                        "provider": "highlightly", "archived": False,
+                        "observation_count": 0, "eligible_for_review_count": 0,
+                        "successful_scopes": 0, "errors": [],
+                        "skipped": "refresh_cooldown",
+                        "last_successful_snapshot_at": retrieved_at.astimezone(timezone.utc).isoformat(),
+                        "cooldown_hours": cooldown_hours,
+                    }
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(date_from)):
         raise ValueError("Highlightly date_from must use YYYY-MM-DD.")
     if isinstance(days, bool) or not isinstance(days, int) or not 1 <= days <= 7:
