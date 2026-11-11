@@ -25,6 +25,15 @@ ENTITY_TABLES = {
 }
 
 
+def provider_season_entity_id(competition_id: Any, season_id: Any) -> str:
+    """Build a parent-scoped provider season key because season IDs are often reused per league."""
+    competition = str(competition_id or "").strip()
+    season = str(season_id or "").strip()
+    if not competition or not season:
+        return ""
+    return f"{competition}::{season}"
+
+
 def normalize_entity_name(value: Any) -> str:
     text = unicodedata.normalize("NFKD", str(value or ""))
     text = "".join(character for character in text if not unicodedata.combining(character))
@@ -440,8 +449,9 @@ def extract_provider_entities_from_observations(
         add("leagues", competition_id, competition_name, country=country)
         season_id = observation.get("season_key")
         season_name = observation.get("season_name") or season_id
+        season_link_id = provider_season_entity_id(competition_id, season_id)
         add(
-            "seasons", season_id, season_name,
+            "seasons", season_link_id, season_name,
             provider_competition_id=str(competition_id) if competition_id is not None else None,
         )
         add(
