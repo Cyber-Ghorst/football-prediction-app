@@ -5,6 +5,7 @@ from provider_entity_crosswalk import (
     build_entity_crosswalk_candidates,
     extract_provider_entities_from_observations,
     normalize_entity_name,
+    load_provider_entity_links_by_type,
     save_explicit_provider_entity_links,
 )
 
@@ -15,6 +16,7 @@ class FakeCursor:
         self.existing_link = existing_link
         self.last_result = None
         self.executed = []
+        self.rows = []
 
     def execute(self, sql, params=None):
         self.executed.append((sql, params))
@@ -27,6 +29,9 @@ class FakeCursor:
 
     def fetchone(self):
         return self.last_result
+
+    def fetchall(self):
+        return self.rows
 
     def __enter__(self):
         return self
@@ -50,6 +55,25 @@ class FakeConnection:
 
 
 class ProviderEntityCrosswalkTests(unittest.TestCase):
+    def test_loads_all_provider_link_types_in_one_query(self):
+        cursor = FakeCursor()
+        cursor.rows = [
+            ("league", "league-1", "canonical-league-1"),
+            ("season", "season-1", "canonical-season-1"),
+            ("team", "team-1", "canonical-team-1"),
+        ]
+        with patch("provider_entity_crosswalk.ensure_football_repository") as ensure, \
+             patch("provider_entity_crosswalk._connect", return_value=FakeConnection(cursor)):
+            links = load_provider_entity_links_by_type(
+                "provider-db", provider="highlightly",
+            )
+        ensure.assert_called_once_with("provider-db")
+        self.assertEqual(links["league"], {"league-1": "canonical-league-1"})
+        self.assertEqual(links["season"], {"season-1": "canonical-season-1"})
+        self.assertEqual(links["team"], {"team-1": "canonical-team-1"})
+        self.assertEqual(len(cursor.executed), 1)
+        self.assertEqual(cursor.executed[0][1], ("highlightly",))
+
     def test_name_normalization_removes_accents_and_punctuation(self):
         self.assertEqual(normalize_entity_name("Atlético-Madrid"), "atletico madrid")
         self.assertEqual(normalize_entity_name("A&B FC"), "a and b fc")
