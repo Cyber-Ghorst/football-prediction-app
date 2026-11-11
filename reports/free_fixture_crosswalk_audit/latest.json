@@ -1,0 +1,29 @@
+{
+  "automatic_mapping_approvals": 0,
+  "canonical_fixture_writes": 0,
+  "generated_at_utc": "2026-11-11T08:03:45.399527+00:00",
+  "prediction_ledger_writes": 0,
+  "providers": {
+    "bzzoiro": {
+      "error_type": "IndeterminateDatatype",
+      "status": "error"
+    },
+    "livescore_football": {
+      "error_type": "IndeterminateDatatype",
+      "status": "error"
+    },
+    "open_matchday": {
+      "error_type": "IndeterminateDatatype",
+      "status": "error"
+    },
+    "openfootball": {
+      "error_type": "IndeterminateDatatype",
+      "status": "error"
+    },
+    "openligadb": {
+      "error_type": "IndeterminateDatatype",
+      "status": "error"
+    }
+  },
+  "report_name": "free_fixture_crosswalk_audit"
+}
