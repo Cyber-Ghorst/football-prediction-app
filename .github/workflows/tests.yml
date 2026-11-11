@@ -28,3 +28,5 @@ jobs:
         run: python -m compileall -q .
       - name: Run unit tests
         run: python -m unittest discover -v
+      - name: Smoke-check app entrypoint and internal imports
+        run: python deployment_smoke_check.py
