@@ -89,10 +89,26 @@ class FreeFixtureObservationPipelineTests(unittest.TestCase):
             client=client,
         )
         client.fixtures.assert_called_once_with(
-            "league-1", status="scheduled", date_from="2026-11-11", date_to="2026-11-18"
+            "league-1", status="scheduled", date_from="20261111", date_to="20261118"
         )
+        self.assertEqual(archive.call_args.kwargs["request_params"]["date_from"], "2026-11-11")
+        self.assertEqual(archive.call_args.kwargs["request_params"]["api_date_from"], "20261111")
         self.assertEqual(result["eligible_for_review_count"], 1)
         self.assertEqual(archive.call_args.kwargs["observations"][0]["provider_fixture_id"], "event-9")
+
+    def test_livescore_rejects_invalid_or_reversed_date_ranges(self):
+        client = Mock()
+        with self.assertRaisesRegex(ValueError, "YYYY-MM-DD"):
+            collect_livescore_observations(
+                "provider-db", ["eng.1"], date_from="20261111", date_to="2026-11-18",
+                client=client,
+            )
+        with self.assertRaisesRegex(ValueError, "must not precede"):
+            collect_livescore_observations(
+                "provider-db", ["eng.1"], date_from="2026-11-18", date_to="2026-11-11",
+                client=client,
+            )
+        client.fixtures.assert_not_called()
 
     @patch("free_fixture_observation_pipeline.archive_future_fixture_observations")
     def test_bzzoiro_requires_credentials_but_fails_closed_without_them(self, archive):
