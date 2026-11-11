@@ -1,0 +1,2487 @@
+{
+  "automatic_mapping_approvals": 0,
+  "canonical_fixture_writes": 0,
+  "generated_at_utc": "2026-11-11T09:40:56.292851+00:00",
+  "prediction_ledger_writes": 0,
+  "providers": {
+    "api_ninjas": {
+      "categories": {
+        "leagues": {
+          "candidate_count": 8,
+          "candidates": [
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "Germany",
+              "provider_entity_id": "bundesliga",
+              "provider_name": "Bundesliga",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "Europe",
+              "provider_entity_id": "ucl",
+              "provider_name": "Champions League",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "Europe",
+              "provider_entity_id": "uel",
+              "provider_name": "Europa League",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": "sportmonks:564",
+              "canonical_name": "La Liga",
+              "entity_type": "league",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Spain",
+              "provider_entity_id": "laliga",
+              "provider_name": "La Liga",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "France",
+              "provider_entity_id": "ligue1",
+              "provider_name": "Ligue 1",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "United States and Canada",
+              "provider_entity_id": "mls",
+              "provider_name": "MLS",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": "sportmonks:8",
+              "canonical_name": "Premier League",
+              "entity_type": "league",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "England",
+              "provider_entity_id": "epl",
+              "provider_name": "Premier League",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:384",
+              "canonical_name": "Serie A",
+              "entity_type": "league",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Italy",
+              "provider_entity_id": "seriea",
+              "provider_name": "Serie A",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            }
+          ],
+          "candidates_truncated": false,
+          "status_counts": {
+            "candidate_requires_manual_approval": 3,
+            "no_exact_contextual_match": 5
+          }
+        },
+        "seasons": {
+          "candidate_count": 1,
+          "candidates": [
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": null,
+              "provider_entity_id": "2026",
+              "provider_name": "2026-27",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            }
+          ],
+          "candidates_truncated": false,
+          "status_counts": {
+            "parent_competition_unmapped": 1
+          }
+        },
+        "teams": {
+          "candidate_count": 151,
+          "candidates": [
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "Germany",
+              "provider_entity_id": "soccer-1-fc-union-berlin",
+              "provider_name": "1. FC Union Berlin",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": "sportmonks:113",
+              "canonical_name": "AC Milan",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Italy",
+              "provider_entity_id": "soccer-ac-milan",
+              "provider_name": "AC Milan",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "Europe",
+              "provider_entity_id": "soccer-aek-athens",
+              "provider_name": "AEK Athens",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": "sportmonks:52",
+              "canonical_name": "AFC Bournemouth",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "England",
+              "provider_entity_id": "soccer-afc-bournemouth",
+              "provider_name": "AFC Bournemouth",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "France",
+              "provider_entity_id": "soccer-aj-auxerre",
+              "provider_name": "AJ Auxerre",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "Spain",
+              "provider_entity_id": "soccer-alaves",
+              "provider_name": "Alav\u00e9s",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "Europe",
+              "provider_entity_id": "soccer-anderlecht",
+              "provider_name": "Anderlecht",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "France",
+              "provider_entity_id": "soccer-angers",
+              "provider_name": "Angers",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "Europe",
+              "provider_entity_id": "soccer-ararat-armenia",
+              "provider_name": "Ararat-Armenia",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": "sportmonks:19",
+              "canonical_name": "Arsenal",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "England",
+              "provider_entity_id": "soccer-arsenal",
+              "provider_name": "Arsenal",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "France",
+              "provider_entity_id": "soccer-as-monaco",
+              "provider_name": "AS Monaco",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "Italy",
+              "provider_entity_id": "soccer-as-roma",
+              "provider_name": "AS Roma",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": "sportmonks:15",
+              "canonical_name": "Aston Villa",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "England",
+              "provider_entity_id": "soccer-aston-villa",
+              "provider_name": "Aston Villa",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:708",
+              "canonical_name": "Atalanta",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Italy",
+              "provider_entity_id": "soccer-atalanta",
+              "provider_name": "Atalanta",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:13258",
+              "canonical_name": "Athletic Club",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Spain",
+              "provider_entity_id": "soccer-athletic-club",
+              "provider_name": "Athletic Club",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "Spain",
+              "provider_entity_id": "soccer-atletico-madrid",
+              "provider_name": "Atl\u00e9tico Madrid",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "Europe",
+              "provider_entity_id": "soccer-az-alkmaar",
+              "provider_name": "AZ Alkmaar",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "Spain",
+              "provider_entity_id": "soccer-barcelona",
+              "provider_name": "Barcelona",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "Germany",
+              "provider_entity_id": "soccer-bayer-leverkusen",
+              "provider_name": "Bayer Leverkusen",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "Germany",
+              "provider_entity_id": "soccer-bayern-munich",
+              "provider_name": "Bayern Munich",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "Europe",
+              "provider_entity_id": "soccer-benfica",
+              "provider_name": "Benfica",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "Europe",
+              "provider_entity_id": "soccer-besiktas",
+              "provider_name": "Besiktas",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "Europe",
+              "provider_entity_id": "soccer-bodo-glimt",
+              "provider_name": "Bodo/Glimt",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": "sportmonks:8513",
+              "canonical_name": "Bologna",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "api_ninjas",
+              "provider_country": "Italy",
+              "provider_entity_id": "soccer-bologna",
+              "provider_name": "Bologna",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "api_ninjas",
+              "provider_country": "Germany",
+              "provider_entity_id": "soccer-borussia-dortmund",
+              "provider_name": "Borussia Dortmund",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            }
+          ],
+          "candidates_truncated": true,
+          "status_counts": {
+            "candidate_requires_manual_approval": 50,
+            "no_exact_contextual_match": 101
+          }
+        }
+      },
+      "existing_link_counts": {
+        "leagues": 0,
+        "seasons": 0,
+        "teams": 0
+      },
+      "observation_count": 7075,
+      "snapshot_count": 5,
+      "source_entity_counts": {
+        "leagues": 8,
+        "seasons": 1,
+        "teams": 151
+      },
+      "status": "ok"
+    },
+    "bzzoiro": {
+      "categories": {
+        "leagues": {
+          "candidate_count": 0,
+          "candidates": [],
+          "candidates_truncated": false,
+          "status_counts": {}
+        },
+        "seasons": {
+          "candidate_count": 0,
+          "candidates": [],
+          "candidates_truncated": false,
+          "status_counts": {}
+        },
+        "teams": {
+          "candidate_count": 0,
+          "candidates": [],
+          "candidates_truncated": false,
+          "status_counts": {}
+        }
+      },
+      "existing_link_counts": {
+        "leagues": 0,
+        "seasons": 0,
+        "teams": 0
+      },
+      "observation_count": 0,
+      "snapshot_count": 0,
+      "source_entity_counts": {
+        "leagues": 0,
+        "seasons": 0,
+        "teams": 0
+      },
+      "status": "ok"
+    },
+    "highlightly": {
+      "categories": {
+        "leagues": {
+          "candidate_count": 179,
+          "candidates": [
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Lithuania",
+              "provider_entity_id": "307995",
+              "provider_name": "1 Lyga",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Norway",
+              "provider_entity_id": "779449",
+              "provider_name": "1. divisjon Kvinner",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Switzerland",
+              "provider_entity_id": "434794",
+              "provider_name": "1. Liga Promotion",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Czech Republic",
+              "provider_entity_id": "570103",
+              "provider_name": "1. Liga Women",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Bosnia",
+              "provider_entity_id": "269700",
+              "provider_name": "1st League - FBiH",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Bosnia",
+              "provider_entity_id": "270551",
+              "provider_name": "1st League - RS",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Germany",
+              "provider_entity_id": "880718",
+              "provider_name": "2. Frauen Bundesliga",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Turkey",
+              "provider_entity_id": "175239",
+              "provider_name": "2. Lig",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Slovakia",
+              "provider_entity_id": "431390",
+              "provider_name": "2. liga",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Slovenia",
+              "provider_entity_id": "319058",
+              "provider_name": "2. SNL",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Denmark",
+              "provider_entity_id": "104606",
+              "provider_name": "2nd Division - Group 1",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Slovenia",
+              "provider_entity_id": "676478",
+              "provider_name": "3. SNL - East",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "World",
+              "provider_entity_id": "861996",
+              "provider_name": "AFC U17 Asian Cup",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "World",
+              "provider_entity_id": "31420",
+              "provider_name": "Africa Cup of Nations - Qualification",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Australia",
+              "provider_entity_id": "1023686",
+              "provider_name": "Australian Championship",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Iran",
+              "provider_entity_id": "248425",
+              "provider_name": "Azadegan League",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Denmark",
+              "provider_entity_id": "1059428",
+              "provider_name": "B-Liga Women",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Belarus",
+              "provider_entity_id": "414370",
+              "provider_name": "Belarus Cup",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Morocco",
+              "provider_entity_id": "171835",
+              "provider_name": "Botola 2",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "World",
+              "provider_entity_id": "864549",
+              "provider_name": "CAF U23 Cup of Nations",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "World",
+              "provider_entity_id": "991348",
+              "provider_name": "CAF Women's Champions League",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Brazil",
+              "provider_entity_id": "532659",
+              "provider_name": "Carioca - 2",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Brazil",
+              "provider_entity_id": "983689",
+              "provider_name": "Carioca B2",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Brazil",
+              "provider_entity_id": "948798",
+              "provider_name": "Carioca U20",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Poland",
+              "provider_entity_id": "576060",
+              "provider_name": "Central Youth League",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            }
+          ],
+          "candidates_truncated": true,
+          "status_counts": {
+            "no_exact_contextual_match": 179
+          }
+        },
+        "seasons": {
+          "candidate_count": 3,
+          "candidates": [
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": null,
+              "provider_entity_id": "2025",
+              "provider_name": "2025",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": null,
+              "provider_entity_id": "2026",
+              "provider_name": "2026",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": null,
+              "provider_entity_id": "2027",
+              "provider_name": "2027",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            }
+          ],
+          "candidates_truncated": false,
+          "status_counts": {
+            "parent_competition_unmapped": 3
+          }
+        },
+        "teams": {
+          "candidate_count": 2427,
+          "candidates": [
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Turkey",
+              "provider_entity_id": "5535688",
+              "provider_name": "12 Bing\u00f6lspor",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Germany",
+              "provider_entity_id": "1581942",
+              "provider_name": "1899 Hoffenheim Women",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Turkey",
+              "provider_entity_id": "6291376",
+              "provider_name": "24 Erzincanspor",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Kenya",
+              "provider_entity_id": "20992401",
+              "provider_name": "3K",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Turkey",
+              "provider_entity_id": "5538241",
+              "provider_name": "68 Aksaray Belediyespor",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Ghana",
+              "provider_entity_id": "24067915",
+              "provider_name": "7th Wave",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Denmark",
+              "provider_entity_id": "11897764",
+              "provider_name": "AaB",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Switzerland",
+              "provider_entity_id": "14778399",
+              "provider_name": "Aarau",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Wales",
+              "provider_entity_id": "299485",
+              "provider_name": "Aberystwyth Town",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Nigeria",
+              "provider_entity_id": "4401305",
+              "provider_name": "Abia Warriors",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Italy",
+              "provider_entity_id": "1611727",
+              "provider_name": "AC Milan Women",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Portugal",
+              "provider_entity_id": "204173",
+              "provider_name": "Academica",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Mexico",
+              "provider_entity_id": "21232383",
+              "provider_name": "Acatlan",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Ghana",
+              "provider_entity_id": "15311976",
+              "provider_name": "Accra Lions",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "England",
+              "provider_entity_id": "1158144",
+              "provider_name": "Accrington ST",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "8629073",
+              "provider_name": "AD Ceuta FC",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Costa Rica",
+              "provider_entity_id": "16796971",
+              "provider_name": "AD Sarch\u00ed",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Turkey",
+              "provider_entity_id": "18730443",
+              "provider_name": "Adana 1954 FK",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Turkey",
+              "provider_entity_id": "3032897",
+              "provider_name": "Adana Demirspor",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Australia",
+              "provider_entity_id": "3221819",
+              "provider_name": "Adelaide City",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Australia",
+              "provider_entity_id": "1678956",
+              "provider_name": "Adelaide United Women",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Netherlands",
+              "provider_entity_id": "1612578",
+              "provider_name": "ADO Den Haag Women",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Costa Rica",
+              "provider_entity_id": "1739377",
+              "provider_name": "ADR Jicaral",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Peru",
+              "provider_entity_id": "8929476",
+              "provider_name": "ADT",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "highlightly",
+              "provider_country": "Ghana",
+              "provider_entity_id": "6876013",
+              "provider_name": "Aduana Stars",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            }
+          ],
+          "candidates_truncated": true,
+          "status_counts": {
+            "candidate_requires_manual_approval": 6,
+            "no_exact_contextual_match": 2421
+          }
+        }
+      },
+      "existing_link_counts": {
+        "leagues": 0,
+        "seasons": 0,
+        "teams": 0
+      },
+      "observation_count": 6748,
+      "snapshot_count": 5,
+      "source_entity_counts": {
+        "leagues": 179,
+        "seasons": 3,
+        "teams": 2427
+      },
+      "status": "ok"
+    },
+    "livescore_football": {
+      "categories": {
+        "leagues": {
+          "candidate_count": 9,
+          "candidates": [
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "Brazil",
+              "provider_entity_id": "630",
+              "provider_name": "Brazilian Serie A",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "18481",
+              "provider_name": "English EFL Trophy",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "3915",
+              "provider_name": "English League One",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "3916",
+              "provider_name": "English League Two",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "3917",
+              "provider_name": "English National League",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "Mexico",
+              "provider_entity_id": "760",
+              "provider_name": "Mexican Liga BBVA MX",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "Spain",
+              "provider_entity_id": "20381",
+              "provider_name": "Spanish Copa de la Reina",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "Spain",
+              "provider_entity_id": "3951",
+              "provider_name": "Spanish Copa del Rey",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "Spain",
+              "provider_entity_id": "20956",
+              "provider_name": "Spanish Liga F",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            }
+          ],
+          "candidates_truncated": false,
+          "status_counts": {
+            "no_exact_contextual_match": 9
+          }
+        },
+        "seasons": {
+          "candidate_count": 1,
+          "candidates": [
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": null,
+              "provider_entity_id": "2026",
+              "provider_name": "2026",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            }
+          ],
+          "candidates_truncated": false,
+          "status_counts": {
+            "parent_competition_unmapped": 1
+          }
+        },
+        "teams": {
+          "candidate_count": 80,
+          "candidates": [
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "2731",
+              "provider_name": "Accrington Stanley",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "13884",
+              "provider_name": "AFC Fylde",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "10167",
+              "provider_name": "AFC Hornchurch",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "3802",
+              "provider_name": "AFC Wimbledon",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "Spain",
+              "provider_entity_id": "21378",
+              "provider_name": "Alav\u00e9s",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "Spain",
+              "provider_entity_id": "2737",
+              "provider_name": "Albacete",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "Spain",
+              "provider_entity_id": "6827",
+              "provider_name": "Alcoyano",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "632",
+              "provider_name": "Aldershot Town",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "633",
+              "provider_name": "Altrincham",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "Brazil",
+              "provider_entity_id": "7632",
+              "provider_name": "Atl\u00e9tico-MG",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "397",
+              "provider_name": "Barnsley",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "642",
+              "provider_name": "Barrow",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "346",
+              "provider_name": "Blackpool",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "2595",
+              "provider_name": "Boreham Wood",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "3256",
+              "provider_name": "Boston United",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "308",
+              "provider_name": "Bristol Rovers",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "2567",
+              "provider_name": "Burton Albion",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "Spain",
+              "provider_entity_id": "21291",
+              "provider_name": "Calvo Sotelo",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "322",
+              "provider_name": "Carlisle United",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "Spain",
+              "provider_entity_id": "19288",
+              "provider_name": "CD Artistico Navalcarnero",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "Spain",
+              "provider_entity_id": "133287",
+              "provider_name": "CD Samper",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "Spain",
+              "provider_entity_id": "133837",
+              "provider_name": "CD Tarancon",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "Spain",
+              "provider_entity_id": "21656",
+              "provider_name": "CE Europa",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "Spain",
+              "provider_entity_id": "85",
+              "provider_name": "Celta Vigo",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "Brazil",
+              "provider_entity_id": "9318",
+              "provider_name": "Chapecoense",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            }
+          ],
+          "candidates_truncated": true,
+          "status_counts": {
+            "candidate_requires_manual_approval": 7,
+            "no_exact_contextual_match": 73
+          }
+        }
+      },
+      "existing_link_counts": {
+        "leagues": 0,
+        "seasons": 0,
+        "teams": 0
+      },
+      "observation_count": 210,
+      "snapshot_count": 5,
+      "source_entity_counts": {
+        "leagues": 9,
+        "seasons": 1,
+        "teams": 80
+      },
+      "status": "ok"
+    },
+    "open_matchday": {
+      "categories": {
+        "leagues": {
+          "candidate_count": 0,
+          "candidates": [],
+          "candidates_truncated": false,
+          "status_counts": {}
+        },
+        "seasons": {
+          "candidate_count": 0,
+          "candidates": [],
+          "candidates_truncated": false,
+          "status_counts": {}
+        },
+        "teams": {
+          "candidate_count": 0,
+          "candidates": [],
+          "candidates_truncated": false,
+          "status_counts": {}
+        }
+      },
+      "existing_link_counts": {
+        "leagues": 0,
+        "seasons": 0,
+        "teams": 0
+      },
+      "observation_count": 0,
+      "snapshot_count": 0,
+      "source_entity_counts": {
+        "leagues": 0,
+        "seasons": 0,
+        "teams": 0
+      },
+      "status": "ok"
+    },
+    "openfootball": {
+      "categories": {
+        "leagues": {
+          "candidate_count": 8,
+          "candidates": [
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openfootball",
+              "provider_country": "Germany",
+              "provider_entity_id": "de.1",
+              "provider_name": "Bundesliga",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openfootball",
+              "provider_country": "England",
+              "provider_entity_id": "en.2",
+              "provider_name": "Championship",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openfootball",
+              "provider_country": "Netherlands",
+              "provider_entity_id": "nl.1",
+              "provider_name": "Eredivisie",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": "sportmonks:564",
+              "canonical_name": "La Liga",
+              "entity_type": "league",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openfootball",
+              "provider_country": "Spain",
+              "provider_entity_id": "es.1",
+              "provider_name": "La Liga",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openfootball",
+              "provider_country": "France",
+              "provider_entity_id": "fr.1",
+              "provider_name": "Ligue 1",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": "sportmonks:8",
+              "canonical_name": "Premier League",
+              "entity_type": "league",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openfootball",
+              "provider_country": "England",
+              "provider_entity_id": "en.1",
+              "provider_name": "Premier League",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openfootball",
+              "provider_country": "Portugal",
+              "provider_entity_id": "pt.1",
+              "provider_name": "Primeira Liga",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": "sportmonks:384",
+              "canonical_name": "Serie A",
+              "entity_type": "league",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openfootball",
+              "provider_country": "Italy",
+              "provider_entity_id": "it.1",
+              "provider_name": "Serie A",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            }
+          ],
+          "candidates_truncated": false,
+          "status_counts": {
+            "candidate_requires_manual_approval": 3,
+            "no_exact_contextual_match": 5
+          }
+        },
+        "seasons": {
+          "candidate_count": 1,
+          "candidates": [
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "openfootball",
+              "provider_country": null,
+              "provider_entity_id": "2026-27",
+              "provider_name": "2026-27",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            }
+          ],
+          "candidates_truncated": false,
+          "status_counts": {
+            "parent_competition_unmapped": 1
+          }
+        },
+        "teams": {
+          "candidate_count": 0,
+          "candidates": [],
+          "candidates_truncated": false,
+          "status_counts": {}
+        }
+      },
+      "existing_link_counts": {
+        "leagues": 0,
+        "seasons": 0,
+        "teams": 0
+      },
+      "observation_count": 14580,
+      "snapshot_count": 5,
+      "source_entity_counts": {
+        "leagues": 8,
+        "seasons": 1,
+        "teams": 0
+      },
+      "status": "ok"
+    },
+    "openligadb": {
+      "categories": {
+        "leagues": {
+          "candidate_count": 32,
+          "candidates": [
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "Germany",
+              "provider_entity_id": "4938",
+              "provider_name": "2. Bundesliga",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "Germany",
+              "provider_entity_id": "4939",
+              "provider_name": "3. Liga",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "Germany",
+              "provider_entity_id": "4937",
+              "provider_name": "Bundesliga",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "Europe",
+              "provider_entity_id": "6015",
+              "provider_name": "Conference League",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "5985",
+              "provider_name": "DFB Frauen Supercup",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "5981",
+              "provider_name": "DFB Nationalspiele",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "Germany",
+              "provider_entity_id": "4945",
+              "provider_name": "DFB Pokal",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "5984",
+              "provider_name": "DFB U21",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "6020",
+              "provider_name": "DFB-Pokal Frauen",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "Europe",
+              "provider_entity_id": "6000",
+              "provider_name": "Europa League",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "4949",
+              "provider_name": "FIFA World Cup",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "5966",
+              "provider_name": "Franz-Beckenbauer-Supercup",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "5983",
+              "provider_name": "Frauen-Nationalmannschaft",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "4941",
+              "provider_name": "Freundschafts-und Testspiele",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "5998",
+              "provider_name": "Fu\u00dfball-Regionalliga Nord",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "4900",
+              "provider_name": "Hallenstadtmeisterschaft 2026 Bottrop",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": "sportmonks:564",
+              "canonical_name": "La Liga",
+              "entity_type": "league",
+              "match_method": "curated_provider_id_alias",
+              "provider": "openligadb",
+              "provider_country": "Spain",
+              "provider_entity_id": "4936",
+              "provider_name": "LaLiga EA Sports",
+              "reason": "Curated stable provider-ID alias and exact country context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "Europe",
+              "provider_entity_id": "5978",
+              "provider_name": "Nations League A",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "5991",
+              "provider_name": "NOFV Regionalliga NordOst",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "6010",
+              "provider_name": "NOFV-Oberliga S\u00fcd",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "6016",
+              "provider_name": "Oberliga Niederrhein",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": "sportmonks:8",
+              "canonical_name": "Premier League",
+              "entity_type": "league",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openligadb",
+              "provider_country": "England",
+              "provider_entity_id": "5996",
+              "provider_name": "Premier League",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "5994",
+              "provider_name": "Regionalliga West Frauen",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "5992",
+              "provider_name": "Spiele mit Arminia Bielefeld Beteiligung",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "4922",
+              "provider_name": "tem26",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            }
+          ],
+          "candidates_truncated": true,
+          "status_counts": {
+            "candidate_requires_manual_approval": 2,
+            "no_exact_contextual_match": 30
+          }
+        },
+        "seasons": {
+          "candidate_count": 1,
+          "candidates": [
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": null,
+              "provider_entity_id": "2026",
+              "provider_name": "2026",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            }
+          ],
+          "candidates_truncated": false,
+          "status_counts": {
+            "parent_competition_unmapped": 1
+          }
+        },
+        "teams": {
+          "candidate_count": 434,
+          "candidates": [
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "8887",
+              "provider_name": "1. FC Frankfurt",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "Germany",
+              "provider_entity_id": "199",
+              "provider_name": "1. FC Heidenheim 1846",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "Germany",
+              "provider_entity_id": "76",
+              "provider_name": "1. FC Kaiserslautern",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "Germany",
+              "provider_entity_id": "65",
+              "provider_name": "1. FC K\u00f6ln",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "6068",
+              "provider_name": "1. FC K\u00f6ln Frauen",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "1584",
+              "provider_name": "1. FC Lok Leipzig",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "Germany",
+              "provider_entity_id": "78",
+              "provider_name": "1. FC Magdeburg",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "8953",
+              "provider_name": "1. FC Magdeburg F",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "7332",
+              "provider_name": "1. FC Magdeburg II",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "8927",
+              "provider_name": "1. FC Monheim",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "Germany",
+              "provider_entity_id": "79",
+              "provider_name": "1. FC N\u00fcrnberg",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "6066",
+              "provider_name": "1. FC N\u00fcrnberg Frauen",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "Germany",
+              "provider_entity_id": "6326",
+              "provider_name": "1. FC Ph\u00f6nix L\u00fcbeck",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "Germany",
+              "provider_entity_id": "3078",
+              "provider_name": "1. FC Saarbr\u00fccken",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "Germany",
+              "provider_entity_id": "417",
+              "provider_name": "1. FC Saarbr\u00fccken",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "8956",
+              "provider_name": "1. FC Saarbr\u00fccken F",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "Germany",
+              "provider_entity_id": "80",
+              "provider_name": "1. FC Union Berlin",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "6447",
+              "provider_name": "1. FC Union Berlin Frauen",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "6567",
+              "provider_name": "1. FFC Recklinghausen",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "8955",
+              "provider_name": "1. FFC Turbine Potsdam F",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "8943",
+              "provider_name": "1. FFV Erfurt F",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "Germany",
+              "provider_entity_id": "81",
+              "provider_name": "1. FSV Mainz 05",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "6976",
+              "provider_name": "1. FSV Mainz 05 Frauen",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "8922",
+              "provider_name": "1. Spvg. Solingen Wald 03",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "openligadb",
+              "provider_country": "Europe",
+              "provider_entity_id": "441",
+              "provider_name": "AC Mailand",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            }
+          ],
+          "candidates_truncated": true,
+          "status_counts": {
+            "candidate_requires_manual_approval": 16,
+            "no_exact_contextual_match": 418
+          }
+        }
+      },
+      "existing_link_counts": {
+        "leagues": 0,
+        "seasons": 0,
+        "teams": 0
+      },
+      "observation_count": 19043,
+      "snapshot_count": 5,
+      "source_entity_counts": {
+        "leagues": 32,
+        "seasons": 1,
+        "teams": 434
+      },
+      "status": "ok"
+    }
+  },
+  "report_name": "free_fixture_crosswalk_audit"
+}
