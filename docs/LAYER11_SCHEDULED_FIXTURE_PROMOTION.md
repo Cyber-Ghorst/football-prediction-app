@@ -39,7 +39,8 @@ because its observations appear in a coverage report.
 
 ## Promotion gates
 
-The runner does not create or approve crosswalks. It consumes only links
+Season crosswalk keys are scoped by provider competition (`competition_id::season_id`)
+because several providers reuse a season ID such as `2026` across leagues. The runner does not create or approve crosswalks. It consumes only links
 already explicitly saved in CockroachDB (using the latest three observation snapshots) and reuses the existing checks for
 provider freshness, scheduled status, timezone-aware kickoff, seven-day
 window, exact league/season/home-team/away-team identity, canonical conflicts,
