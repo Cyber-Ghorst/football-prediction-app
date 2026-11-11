@@ -1,6 +1,6 @@
 {
   "report_name": "streamlit_runtime_logs",
-  "generated_at_utc": "2026-11-11T08:16:13.072618+00:00",
+  "generated_at_utc": "2026-11-11T08:32:37.141174+00:00",
   "event": "streamlit_application_error",
   "traceback": "Traceback (most recent call last):\n  File \"/mount/src/football-prediction-app/app.py\", line 108, in <module>\n    from provider_crosswalk_review_report import build_provider_crosswalk_review_report\n  File \"/mount/src/football-prediction-app/provider_crosswalk_review_report.py\", line 11, in <module>\n    from provider_data_storage import load_provider_observation_snapshots\nImportError: cannot import name 'load_provider_observation_snapshots' from 'provider_data_storage' (/mount/src/football-prediction-app/provider_data_storage.py)\n",
   "sensitive_data_policy": "Secrets and credential patterns are redacted; no prediction ledger or user data is included."
