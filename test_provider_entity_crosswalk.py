@@ -75,7 +75,7 @@ class ProviderEntityCrosswalkTests(unittest.TestCase):
 
     def test_duplicate_exact_matches_are_flagged_ambiguous(self):
         rows = build_entity_crosswalk_candidates(
-            "livescore_football", "team",
+            "thesportsdb", "team",
             [{"id": "t-1", "name": "United FC", "country": "England"}],
             [
                 {"team_id": "sportmonks:1", "name": "United FC", "country": "England"},
