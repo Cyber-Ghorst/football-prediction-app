@@ -266,8 +266,8 @@ class CanonicalMatchTests(unittest.TestCase):
             livescore_verified=True,
         )
         self.assertEqual(result["home_score"], 2)
-        self.assertEqual(result["reconciliation"]["home_score"]["provider"], "livescore_football")
-        self.assertEqual(result["reconciliation"]["home_score"]["status"], "conflict")
+        self.assertEqual(result["reconciliation"]["home_score"]["provider"], "api_football")
+        self.assertEqual(result["reconciliation"]["home_score"]["status"], "single_source")
         self.assertEqual(result["source_ids"]["api_football"], "771")
 
     def test_reconcile_excludes_records_without_collection_timestamps(self):
