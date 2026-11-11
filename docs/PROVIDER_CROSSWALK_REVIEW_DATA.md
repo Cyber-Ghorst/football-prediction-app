@@ -19,3 +19,10 @@ canonical team IDs.
 This data-loading layer does not approve or persist mappings. Use
 save_explicit_provider_entity_links only after a human has reviewed the source
 and canonical identities and supplied an approval reason.
+
+Country context is enriched only from provider evidence: OpenFootball competition
+file country codes, the LiveScoreFootball league catalogue, or country fields in
+the original provider payload. OpenLigaDB season suffixes and documented
+Bundesliga naming variants are normalized for candidate comparison. The report
+retains the original provider display name and country; normalized matches are
+still suggestions requiring explicit human approval.
