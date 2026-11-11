@@ -108,11 +108,23 @@ class FreeFixtureAdapterTests(unittest.TestCase):
             "time": "18:30:00",
             "team1": "Other Home", "team2": "Other Away",
         }
+        explicit_offset = {
+            "date": (NOW + timedelta(days=2)).date().isoformat(),
+            "time": "18:30:00",
+            "utc_offset": "+01:00",
+            "team1": "Offset Home", "team2": "Offset Away",
+        }
         client = OpenFootballAdapter()
-        client._get_json = Mock(return_value={"matches": [good, bad]})
+        client._get_json = Mock(return_value={"matches": [good, bad, explicit_offset]})
         rows = client.season("2026-27/eng.1.json", "Premier League")
         self.assertTrue(rows[0]["eligible_for_review"])
         self.assertEqual(rows[1]["exclusion_reason"], "kickoff_missing_timezone_or_precision")
+        self.assertTrue(rows[2]["eligible_for_review"])
+        self.assertTrue(rows[2]["kickoff_utc"].endswith("Z"))
+        self.assertEqual(
+            rows[2]["kickoff_utc"],
+            f"{(NOW + timedelta(days=2)).date().isoformat()}T17:30:00Z",
+        )
         self.assertTrue(rows[0]["provider_fixture_id"].startswith("openfootball:dataset:"))
         self.assertEqual(rows[0]["competition_key"], "eng.1")
         self.assertEqual(rows[0]["competition_name"], "Premier League")
