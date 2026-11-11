@@ -327,6 +327,46 @@ class FreeFixtureResultVerificationTests(unittest.TestCase):
         ))
 
     @patch("free_fixture_result_sync._source_metadata")
+    @patch("free_fixture_result_sync.load_provider_entity_links")
+    @patch("free_fixture_result_sync._ensure_promotion_tables")
+    def test_result_sync_blocks_when_saved_prediction_crosswalk_has_changed(
+        self, ensure_tables, links, source
+    ):
+        record = {
+            **RECORD,
+            "fixture_provider": "openligadb",
+            "fixture_id": "openligadb:42",
+            "league_id": "sportmonks:10",
+            "season_id": "sportmonks:20",
+            "home_team_id": "sportmonks:30",
+            "away_team_id": "sportmonks:40",
+        }
+        source.return_value = {
+            "source_url": "https://api.openligadb.de/getmatchdata/bl1/2026",
+            "raw_payload": {
+                "competition_key": "bl1", "season_key": "2026",
+                "home_team_key": "home-1", "away_team_key": "away-1",
+            },
+            "canonical_fixture_id": "openligadb:42",
+        }
+        links.side_effect = [
+            {"bl1": "sportmonks:10"},
+            {"2026": "sportmonks:20"},
+            {"home-1": "sportmonks:30", "away-1": "sportmonks:999"},
+        ]
+        with patch("free_fixture_result_sync.OpenLigaDBAdapter") as adapter:
+            report, updated = sync_free_source_results(
+                [record], provider_database_url="provider-db", now=NOW,
+            )
+        self.assertEqual(updated, [])
+        self.assertEqual(report["fixtures_without_verified_score"], 1)
+        self.assertEqual(
+            report["fixture_results"][0]["reason"],
+            "provider_crosswalk_does_not_match_saved_prediction_identity",
+        )
+        adapter.assert_not_called()
+
+    @patch("free_fixture_result_sync._source_metadata")
     @patch("free_fixture_result_sync.OpenLigaDBAdapter")
     @patch("free_fixture_result_sync._ensure_promotion_tables")
     def test_openligadb_result_sync_updates_only_blank_ledger_rows(
