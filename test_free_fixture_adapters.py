@@ -26,6 +26,48 @@ class Response:
 
 
 class FreeFixtureAdapterTests(unittest.TestCase):
+    def test_openligadb_discovers_current_league_season_scopes(self):
+        client = OpenLigaDBAdapter()
+        client._get_json = Mock(side_effect=[
+            [
+                {"leagueId": 1, "leagueName": "Bundesliga", "leagueShortcut": "bl1", "leagueSeason": "2026"},
+                {"leagueId": 2, "leagueName": "2. Bundesliga", "leagueShortcut": "bl2", "leagueSeason": "2026"},
+            ],
+            [
+                {"leagueId": 1, "leagueName": "Bundesliga", "leagueShortcut": "bl1", "leagueSeason": "2027"},
+            ],
+        ])
+        scopes = client.discover_scopes([2026, 2027])
+        self.assertEqual(len(scopes), 3)
+        self.assertEqual(scopes[0]["league_shortcut"], "bl1")
+        self.assertEqual(scopes[0]["season"], 2026)
+        self.assertEqual(scopes[2]["season"], 2027)
+        client.close()
+
+    def test_openfootball_discovers_json_files_for_season(self):
+        client = OpenFootballAdapter()
+        client._get_json = Mock(return_value=[
+            {"type": "file", "name": "en.1.json"},
+            {"type": "file", "name": "de.1.json"},
+            {"type": "file", "name": "README.md"},
+            {"type": "dir", "name": "archive"},
+        ])
+        datasets = client.discover_season_files("2026-27")
+        self.assertEqual(
+            datasets,
+            [
+                {"season_file": "2026-27/de.1.json", "competition": "Bundesliga"},
+                {"season_file": "2026-27/en.1.json", "competition": "Premier League"},
+            ],
+        )
+        client.close()
+
+    def test_openfootball_rejects_invalid_season_directory(self):
+        client = OpenFootballAdapter()
+        with self.assertRaisesRegex(ValueError, "YYYY-YY"):
+            client.discover_season_files("../master")
+        client.close()
+
     def test_openligadb_maps_documented_utc_match_fields(self):
         row = {
             "matchID": 42,

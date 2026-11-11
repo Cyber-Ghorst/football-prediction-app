@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from typing import Any, Mapping
 from urllib.parse import quote
+import time
 
 from free_fixture_adapters import (
     BzzoiroAdapter,
@@ -61,6 +62,7 @@ def collect_openligadb_observations(
     scopes: list[Mapping[str, Any]],
     *,
     client: OpenLigaDBAdapter | None = None,
+    request_delay_seconds: float = 0.0,
 ) -> dict[str, Any]:
     """Collect configured OpenLigaDB league-shortcut/season pairs."""
     if not scopes:
@@ -81,6 +83,8 @@ def collect_openligadb_observations(
                 successful += 1
             except Exception as exc:
                 errors.append({"scope": shortcut or "unknown", "error": str(exc)[:300]})
+            if request_delay_seconds > 0:
+                time.sleep(min(float(request_delay_seconds), 5.0))
     finally:
         _close_owned(api, owned)
     return _archive(
@@ -166,6 +170,7 @@ def collect_livescore_observations(
     date_from: str,
     date_to: str,
     client: LiveScoreFootballClient | None = None,
+    request_delay_seconds: float = 0.0,
 ) -> dict[str, Any]:
     """Collect scheduled LiveScoreFootball events for explicitly supplied leagues."""
     if not league_slugs or not date_from or not date_to:
@@ -190,6 +195,8 @@ def collect_livescore_observations(
                 successful += 1
             except Exception as exc:
                 errors.append({"scope": str(slug), "error": str(exc)[:300]})
+            if request_delay_seconds > 0:
+                time.sleep(min(float(request_delay_seconds), 5.0))
     finally:
         _close_owned(api, owned)
     return _archive(
@@ -205,6 +212,7 @@ def collect_bzzoiro_observations(
     *,
     params: Mapping[str, Any] | None = None,
     client: BzzoiroAdapter | None = None,
+    max_pages: int = 20,
 ) -> dict[str, Any]:
     """Collect authenticated Bzzoiro v2 upcoming events."""
     owned = client is None
@@ -216,7 +224,7 @@ def collect_bzzoiro_observations(
     try:
         if api is None:
             api = BzzoiroAdapter()
-        rows = api.upcoming(params=query)
+        rows = api.upcoming(params=query, max_pages=max_pages)
         successful = 1
     except Exception as exc:
         errors.append({"scope": "upcoming", "error": str(exc)[:300]})

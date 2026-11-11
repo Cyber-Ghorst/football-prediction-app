@@ -1,6 +1,13 @@
 name: Automatic upcoming fixture collection
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "free_fixture_provider_refresh.py"
+      - "free_fixture_adapters.py"
+      - "free_fixture_observation_pipeline.py"
+      - ".github/workflows/upcoming-fixture-collection.yml"
   workflow_dispatch:
   schedule:
     - cron: "17 */6 * * *"
@@ -21,6 +28,7 @@ jobs:
       SPORTMONKS_API_TOKEN: ${{ secrets.SPORTMONKS_API_TOKEN }}
       PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      BZZOIRO_API_TOKEN: ${{ secrets.BZZOIRO_API_TOKEN }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -44,3 +52,10 @@ jobs:
 
       - name: Collect and upsert rolling seven-day fixture window
         run: python upcoming_fixture_collector.py
+
+      - name: Refresh free-source fixture observations (staging only)
+        continue-on-error: true
+        env:
+          PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
+          BZZOIRO_API_TOKEN: ${{ secrets.BZZOIRO_API_TOKEN }}
+        run: python free_fixture_provider_refresh.py
