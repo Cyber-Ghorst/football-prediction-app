@@ -22,13 +22,13 @@ Tactical sub-weights remain: playing style 6%, defensive structure 7%, attacking
 
 Future-fixture discovery is a separate domain (`future_fixtures`) and is not
 synonymous with generic fixture details or historical fixture retrieval.
-Sportmonks is currently the only wired scheduled-fixture collector. OpenLigaDB,
-OpenFootball, Open Matchday, WorldCup26 and Bzzoiro are registered as disabled
+Sportmonks is currently the only wired scheduled-fixture collector. OpenLigaDB, OpenFootball, Open Matchday, TheSportsDB and Bzzoiro are registered as disabled
 future-fixture candidates pending live adapter, identity, timestamp, licence
 and persistence validation. OpenScores is read-only result-observation and
 entity-audit data only; it is not a future-fixture provider. Highlightly, API
-Ninjas, API-Football and LiveScoreFootball remain in their respective
-enrichment, historical, or completed-result corroboration roles.
+Ninjas and API-Football remain in their respective enrichment and historical
+roles. LiveScoreFootball is limited to historical World Cup 2026 results and
+standings, pending a correct JWT-authenticated adapter.
 
 Provider roles are domain-specific. A provider is not assumed to be authoritative for every field.
 
@@ -38,7 +38,8 @@ Provider roles are domain-specific. A provider is not assumed to be authoritativ
 | 2 | **Highlightly** | Independent current-season corroboration and secondary source | Fixtures, results, standings, statistics, injuries, lineups, players and squads, where explicitly supplied | Plan-dependent coverage, fields, quotas and refresh interval. Adapter, smoke test and canonical normalizer exist; records are not yet active in Layer 2 reconciliation. |
 | 3 | **API-Football v3** | Historical specialist source; secondary detail source where season access is confirmed | Fixtures, results, standings, statistics, injuries, lineups, players and squads | This account is limited to seasons 2022–2024. Current historical Layer 2 path is active; do not request unsupported newer seasons. |
 | 4 | **API Ninjas** | Independent fixtures/results/standings and club/squad corroboration | Fixtures, results, standings, clubs and squads | Current adapter does not supply detailed fixture statistics, injuries or lineups. Adapter, smoke test and canonical normalizer exist; records are not yet active in Layer 2 reconciliation. |
-| 5 | **LiveScoreFootball** | Conditional competition-specific corroboration | Fixtures, results and standings only | Database-backed snapshots can be delayed. Opt-in missing-score fallback is wired into Streamlit. Requires fresh global, per-competition and per-event sync timestamps, an exact competition/season crosswalk and exact completed fixture identity; it never overwrites valid Sportmonks scores. |
+| 5 | **WorldCup26 (LiveScoreFootball fork)** | Historical World Cup 2026 results and group standings only | Results and standings | Not a broad multi-league provider. The generic fixtures route returned HTTP 400; documented /get/games requires JWT. No future-fixture or automatic Layer 2 fallback. |
+| 6 | **TheSportsDB** | Low-volume future-fixture candidate | Future fixtures only | Free tier returns one next event per league, 30 requests/minute, and requires development/app-store terms review. Manual staging only; exact timezone-bearing kickoff and deployment rights must pass validation. |
 
 The rank is a practical role assignment, not a claim that one provider has universal coverage or is always freshest. Domain-specific priorities in `provider_core.py` remain authoritative. A source is eligible only when its account coverage, identity, timestamps and record validation pass.
 
