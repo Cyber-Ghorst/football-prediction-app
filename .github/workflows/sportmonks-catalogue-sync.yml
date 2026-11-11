@@ -31,7 +31,7 @@ jobs:
     env:
       SPORTMONKS_API_TOKEN: ${{ secrets.SPORTMONKS_API_TOKEN }}
       PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
-      SPORTMONKS_CATALOGUE_YEAR: ${{ inputs.target_year || '2026' }}
+      SPORTMONKS_CATALOGUE_YEAR: ${{ inputs.target_year }}
       SPORTMONKS_CATALOGUE_MAX_SEASONS: ${{ inputs.max_seasons || '40' }}
     steps:
       - name: Check out repository
