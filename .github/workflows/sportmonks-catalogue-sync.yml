@@ -59,6 +59,7 @@ jobs:
       - name: Sync current-season catalogue only
         run: |
           set +e
+          set -o pipefail
           mkdir -p reports/sportmonks_catalogue_sync/archive
           stamp="$(date -u +%Y%m%dT%H%M%SZ)"
           python sportmonks_catalogue_sync.py | tee "reports/sportmonks_catalogue_sync/archive/${stamp}.json"
