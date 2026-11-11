@@ -65,6 +65,28 @@ class ProviderCrosswalkReviewReportTests(unittest.TestCase):
         self.assertEqual(len(report["candidates"]["teams"]), 2)
         self.assertEqual(links.call_count, 3)
 
+    @patch("provider_crosswalk_review_report.get_repository_teams")
+    @patch("provider_crosswalk_review_report.get_repository_seasons")
+    @patch("provider_crosswalk_review_report.get_repository_leagues")
+    def test_reuses_supplied_canonical_catalogue_without_requerying(
+        self, leagues, seasons, teams
+    ):
+        catalogue = {
+            "leagues": [{"league_id": "sportmonks:8", "name": "Premier League", "country": "England"}],
+            "seasons": [{"season_id": "sportmonks:2026", "name": "2026/27"}],
+            "teams": [{"team_id": "sportmonks:1", "name": "Arsenal", "country": "England"}],
+        }
+        with patch("provider_crosswalk_review_report.load_provider_observation_snapshots", return_value=[]), \
+             patch("provider_crosswalk_review_report.load_provider_entity_links", return_value={}):
+            report = build_provider_crosswalk_review_report(
+                "provider-db", provider="highlightly",
+                canonical_catalogue=catalogue,
+            )
+        self.assertEqual(report["canonical_options"]["leagues"], ["sportmonks:8"])
+        leagues.assert_not_called()
+        seasons.assert_not_called()
+        teams.assert_not_called()
+
     @patch("provider_crosswalk_review_report.load_provider_observation_snapshots", return_value=[])
     @patch("provider_crosswalk_review_report.get_repository_teams", return_value=[])
     @patch("provider_crosswalk_review_report.get_repository_seasons", return_value=[])
