@@ -10,6 +10,7 @@ on:
       - "free_fixture_adapters.py"
       - "free_fixture_observation_pipeline.py"
       - "free_fixture_observation_store.py"
+      - "free_fixture_canonical_promotion.py"
       - "upcoming_fixture_collector.py"
       - "temporary_fixture_store.py"
       - "provider_routing.py"
