@@ -50,63 +50,15 @@ class ProviderAdapterTests(unittest.TestCase):
         self.assertNotIn("secret-do-not-print", str(raised.exception))
         client.close()
 
-    def test_api_football_fixtures_by_date_paginates_completely(self):
+    def test_api_football_fixtures_by_date_uses_supported_filters_without_page(self):
         client = APIFootballClient(api_key="test-only")
-        pages = [
-            ([{"fixture": {"id": 1}}], {"current": 1, "total": 2}),
-            ([{"fixture": {"id": 2}}], {"current": 2, "total": 2}),
-        ]
-        def request(endpoint, params=None):
-            rows, paging = pages[params["page"] - 1]
-            client.last_paging = paging
-            return rows
-        client._request = Mock(side_effect=request)
+        client._request = Mock(return_value=[{"fixture": {"id": 1}}])
         rows = client.fixtures_by_date("2026-11-11", timezone="UTC")
-        self.assertEqual([row["fixture"]["id"] for row in rows], [1, 2])
-        self.assertEqual(client.last_fixture_request_count, 2)
-        self.assertEqual(client._request.call_args_list[0].args[1], {
-            "date": "2026-11-11", "timezone": "UTC", "page": 1,
-        })
-        client.close()
-
-    def test_api_football_fixtures_between_uses_date_range_and_pagination(self):
-        client = APIFootballClient(api_key="test-only")
-        client._request = Mock(return_value=[{"fixture": {"id": 1}}])
-        client.last_paging = {"current": 1, "total": 1}
-        rows = client.fixtures_between("2026-11-11", "2026-11-17", timezone="UTC")
         self.assertEqual(rows, [{"fixture": {"id": 1}}])
+        self.assertEqual(client.last_fixture_request_count, 1)
         self.assertEqual(client._request.call_args.args[1], {
-            "from": "2026-11-11", "to": "2026-11-17",
-            "timezone": "UTC", "page": 1,
+            "date": "2026-11-11", "timezone": "UTC",
         })
-        client.close()
-
-    def test_api_football_fixtures_between_rejects_reversed_dates(self):
-        client = APIFootballClient(api_key="test-only")
-        with self.assertRaisesRegex(ValueError, "earlier"):
-            client.fixtures_between("2026-11-18", "2026-11-17")
-        client.close()
-
-
-    def test_api_football_fixtures_by_date_rejects_missing_pagination(self):
-        client = APIFootballClient(api_key="test-only")
-        client._request = Mock(return_value=[{"fixture": {"id": 1}}])
-        client.last_paging = {}
-        with self.assertRaisesRegex(APIFootballError, "pagination metadata is missing"):
-            client.fixtures_by_date("2026-11-11")
-        client.close()
-
-    def test_api_football_fixtures_by_date_rejects_empty_intermediate_page(self):
-        client = APIFootballClient(api_key="test-only")
-        calls = 0
-        def request(endpoint, params=None):
-            nonlocal calls
-            calls += 1
-            client.last_paging = {"current": calls, "total": 2}
-            return [{"fixture": {"id": 1}}] if calls == 1 else []
-        client._request = Mock(side_effect=request)
-        with self.assertRaisesRegex(APIFootballError, "empty page"):
-            client.fixtures_by_date("2026-11-11")
         client.close()
 
     def test_api_football_fixtures_by_date_accepts_empty_single_page(self):

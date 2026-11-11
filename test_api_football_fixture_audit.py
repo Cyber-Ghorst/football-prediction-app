@@ -40,7 +40,7 @@ class APIFootballFixtureAuditTests(unittest.TestCase):
             "2026-11-14": [fixture(5, "2026-11-14T15:00:00Z", away_id=None)],
             "2026-11-15": [fixture(6, "2026-11-15T15:00:00Z", status="TBD")],
         }
-        def query_date(day, timezone="UTC", max_pages=20):
+        def query_date(day, timezone="UTC"):
             client.last_fixture_request_count = 1
             return fixtures_by_date.get(day, [])
         client.fixtures_by_date.side_effect = query_date
@@ -70,23 +70,22 @@ class APIFootballFixtureAuditTests(unittest.TestCase):
         self.assertEqual(report["status"], "quota_exhausted")
         client.fixtures_by_date.assert_not_called()
 
-    def test_remaining_quota_caps_fixture_pagination(self):
+    def test_insufficient_quota_stops_before_date_queries(self):
         client = MagicMock()
         client.__enter__.return_value = client
-        client.status.return_value = {"requests": {"current": 91, "limit_day": 100}}
-        client.fixtures_by_date.return_value = []
-        client.last_fixture_request_count = 1
-        build_api_football_fixture_audit(
-            client_factory=lambda: client, now=NOW, max_pages=20,
+        client.status.return_value = {"requests": {"current": 93, "limit_day": 100}}
+        report = build_api_football_fixture_audit(
+            client_factory=lambda: client, now=NOW,
         )
-        self.assertEqual(client.fixtures_by_date.call_args_list[0].kwargs["max_pages"], 2)
+        self.assertEqual(report["status"], "quota_insufficient")
+        client.fixtures_by_date.assert_not_called()
 
 
     def test_partial_boundary_date_is_reported_but_not_targeted(self):
         client = MagicMock()
         client.__enter__.return_value = client
         client.status.return_value = {"requests": {"current": 1, "limit_day": 100}}
-        def query_date(day, timezone="UTC", max_pages=20):
+        def query_date(day, timezone="UTC"):
             client.last_fixture_request_count = 1
             if day == "2026-11-18":
                 return [fixture(1, "2026-11-18T10:00:00+00:00")]
