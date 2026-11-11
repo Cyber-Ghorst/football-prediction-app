@@ -1,17 +1,14 @@
-"""Read-only catalogue audit for Highlightly and LiveScoreFootball."""
+"""Read-only catalogue audit for Highlightly and WorldCup26 historical scope."""
 from __future__ import annotations
 
 import json
 import os
-from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 import requests
 
-from livescore_football import LiveScoreFootballClient
-from provider_health import assess_livescore_competition_coverage, assess_livescore_metadata
 
 REPORT = Path("provider-league-catalogue-audit.json")
 
@@ -119,10 +116,9 @@ def main() -> int:
         "highlightly": audit_highlightly(),
         "livescore_football": audit_livescore(),
         "coverage_policy": (
-            "Raw catalogue counts are not prediction-ready counts. LiveScore "
-            "fallback eligibility requires active, data-backed competitions and "
-            "a fresh per-competition sync timestamp. Highlightly account coverage "
-            "is measured from its paginated authenticated catalogue."
+            "Raw catalogue counts are not prediction-ready counts. LiveScoreFootball "
+            "is historical World Cup 2026 only and is excluded from future fixtures. "
+            "Highlightly account coverage is measured from its paginated authenticated catalogue."
         ),
     }
     REPORT.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n",
