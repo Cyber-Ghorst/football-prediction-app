@@ -27,8 +27,8 @@ ENTITY_TABLES = {
 
 def provider_season_entity_id(competition_id: Any, season_id: Any) -> str:
     """Build a parent-scoped provider season key because season IDs are often reused per league."""
-    competition = str(competition_id or "").strip()
-    season = str(season_id or "").strip()
+    competition = "" if competition_id is None else str(competition_id).strip()
+    season = "" if season_id is None else str(season_id).strip()
     if not competition or not season:
         return ""
     return f"{competition}::{season}"
