@@ -90,7 +90,7 @@ def collect_openligadb_observations(
             try:
                 if not shortcut or isinstance(season, bool) or not str(season).isdigit():
                     raise ValueError("Scope requires league_shortcut and numeric season.")
-                rows.extend(api.matches(shortcut, int(season)))
+                rows.extend(api.matches(shortcut, int(season), league_metadata=scope))
                 successful += 1
             except Exception as exc:
                 errors.append({"scope": shortcut or "unknown", "error": str(exc)[:300]})

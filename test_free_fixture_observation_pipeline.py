@@ -23,10 +23,21 @@ class FreeFixtureObservationPipelineTests(unittest.TestCase):
             "eligible_for_review": True,
         }]
         result = collect_openligadb_observations(
-            "provider-db", [{"league_shortcut": "bl1", "season": 2026}],
+            "provider-db", [{
+                "league_shortcut": "bl1", "season": 2026,
+                "country": "Germany", "competition_name": "Bundesliga",
+                "provider_competition_id": 1,
+            }],
             client=client,
         )
-        client.matches.assert_called_once_with("bl1", 2026)
+        client.matches.assert_called_once_with(
+            "bl1", 2026,
+            league_metadata={
+                "league_shortcut": "bl1", "season": 2026,
+                "country": "Germany", "competition_name": "Bundesliga",
+                "provider_competition_id": 1,
+            },
+        )
         self.assertTrue(result["archived"])
         self.assertEqual(result["snapshot_id"], "snapshot-1")
         self.assertEqual(archive.call_args.kwargs["provider"], "openligadb")

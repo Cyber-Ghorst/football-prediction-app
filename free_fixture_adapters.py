@@ -240,10 +240,15 @@ class OpenLigaDBAdapter(_HttpAdapter):
                     "season": int(league_season),
                     "provider_competition_id": league.get("leagueId"),
                     "competition_name": league.get("leagueName") or shortcut,
+                    "country": league.get("leagueCountry") or league.get("country") or league.get("countryName"),
+                    "country_code": league.get("countryCode") or league.get("country_code"),
                 }
         return list(scopes.values())[:max(1, int(max_scopes))]
 
-    def matches(self, league_shortcut: str, season: int) -> list[dict[str, Any]]:
+    def matches(
+        self, league_shortcut: str, season: int,
+        *, league_metadata: Mapping[str, Any] | None = None,
+    ) -> list[dict[str, Any]]:
         if not league_shortcut.strip() or int(season) < 1900:
             raise ValueError("A league shortcut and valid season are required.")
         url = f"{self.BASE_URL}/getmatchdata/{quote(league_shortcut, safe='')}/{int(season)}"
@@ -264,15 +269,36 @@ class OpenLigaDBAdapter(_HttpAdapter):
                 match_date += "Z"
             team1 = row.get("team1") or row.get("Team1") or {}
             team2 = row.get("team2") or row.get("Team2") or {}
-            group = row.get("group") or row.get("Group") or {}
+            metadata = league_metadata if isinstance(league_metadata, Mapping) else {}
+            country = _text(
+                metadata.get("country") or metadata.get("leagueCountry")
+                or metadata.get("country_name") or row.get("leagueCountry")
+                or row.get("LeagueCountry")
+            ) or None
+            competition_id = (
+                row.get("leagueId") or row.get("LeagueId")
+                or metadata.get("provider_competition_id")
+                or row.get("leagueShortcut") or row.get("LeagueShortcut") or league_shortcut
+            )
+            competition_name = (
+                metadata.get("competition_name") or row.get("leagueName")
+                or row.get("LeagueName") or league_shortcut
+            )
+            raw_row = dict(row)
+            if country:
+                raw_row["country"] = country
+                raw_row["leagueCountry"] = country
+            raw_row["league"] = {
+                "id": competition_id, "name": competition_name, "country": country,
+            }
             output.append(_observation(
-                self.provider, row, fetched_at=fetched, source_url=url,
+                self.provider, raw_row, fetched_at=fetched, source_url=url,
                 licence="OpenLigaDB public API; reuse terms require separate review",
                 fixture_id=row.get("matchID") or row.get("MatchID"),
-                competition=(row.get("leagueId") or row.get("LeagueId") or row.get("leagueShortcut") or row.get("LeagueShortcut") or league_shortcut),
-                competition_name=_normalise_openligadb_competition_name(row.get("leagueName") or row.get("LeagueName") or league_shortcut),
-                season=(row.get("leagueSeason") or row.get("LeagueSeason") or season),
-                season_name=str(row.get("leagueSeason") or row.get("LeagueSeason") or season),
+                competition=competition_id,
+                competition_name=_normalise_openligadb_competition_name(competition_name),
+                season=(row.get("leagueSeason") or row.get("LeagueSeason") or metadata.get("season") or season),
+                season_name=str(row.get("leagueSeason") or row.get("LeagueSeason") or metadata.get("season") or season),
                 home=team1, away=team2,
                 home_id=team1.get("teamId") if isinstance(team1, dict) else None,
                 away_id=team2.get("teamId") if isinstance(team2, dict) else None,
