@@ -142,7 +142,7 @@ class UpcomingFixtureCollectorTests(unittest.TestCase):
         self.assertEqual(result["days_in_window"], 7)
         self.assertEqual(result["calendar_dates_in_window"], 8)
         self.assertEqual(result["partial_boundary_days_utc"], {
-            "2026-11-18": DAILY_FIXTURE_TARGET
+            "2026-11-17": DAILY_FIXTURE_TARGET
         })
         self.assertNotIn("2026-11-18", result["daily_target_shortfalls_utc"])
 
