@@ -9,7 +9,7 @@ import traceback
 import logging
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone
 import requests
 import pandas as pd
 import streamlit as st
