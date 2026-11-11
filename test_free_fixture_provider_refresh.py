@@ -107,13 +107,13 @@ class FreeFixtureProviderRefreshTests(unittest.TestCase):
 
     @patch.dict("os.environ", {"PROVIDER_DATABASE_URL": "provider-db"}, clear=True)
     @patch("free_fixture_provider_refresh.refresh_free_fixture_sources")
-    def test_main_defaults_openligadb_batch_to_55(self, refresh):
+    def test_main_defaults_openligadb_batch_to_80(self, refresh):
         from contextlib import redirect_stdout
         import io
         refresh.return_value = {"providers": {}}
         with redirect_stdout(io.StringIO()):
             main()
-        self.assertEqual(refresh.call_args.kwargs["max_openligadb_scopes"], 55)
+        self.assertEqual(refresh.call_args.kwargs["max_openligadb_scopes"], 80)
 
     def test_rotation_covers_different_league_batches(self):
         items = list(range(10))
@@ -129,7 +129,7 @@ class FreeFixtureProviderRefreshTests(unittest.TestCase):
     @patch("free_fixture_provider_refresh.OpenFootballAdapter")
     @patch("free_fixture_provider_refresh.collect_openligadb_observations")
     @patch("free_fixture_provider_refresh.OpenLigaDBAdapter")
-    def test_openligadb_default_batch_expands_to_55_scopes_below_rate_limit(
+    def test_openligadb_default_batch_expands_to_80_scopes_below_rate_limit(
         self, openliga_cls, collect_openliga, openfootball_cls, collect_openfootball,
         livescore_cls, collect_livescore, bzz_cls, collect_bzz,
     ):
@@ -145,7 +145,7 @@ class FreeFixtureProviderRefreshTests(unittest.TestCase):
             "provider-db", today=datetime(2026, 11, 11, tzinfo=timezone.utc),
         )
         selected_scopes = collect_openliga.call_args.args[1]
-        self.assertEqual(len(selected_scopes), 55)
+        self.assertEqual(len(selected_scopes), 70)
         self.assertEqual(collect_openliga.call_args.kwargs["request_delay_seconds"], 1.05)
         self.assertTrue(report["providers"]["openligadb"]["archived"])
 
