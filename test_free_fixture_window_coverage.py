@@ -66,7 +66,7 @@ class FreeFixtureWindowCoverageTests(unittest.TestCase):
         self.assertEqual(report["daily_counts_by_provider_utc"]["highlightly"]["2026-11-12"], 1)
         self.assertEqual(report["daily_counts_by_provider_utc"]["api_ninjas"]["2026-11-12"], 1)
         self.assertEqual(report["target_shortfall_total"], 6)
-        self.assertEqual(report["minimum_target_shortfall_total"], 58)
+        self.assertEqual(report["minimum_target_shortfall_total"], 38)
         self.assertEqual(report["stretch_target_shortfall_total"], 118)
         self.assertFalse(report["minimum_target_met"])
         self.assertFalse(report["target_met"])
@@ -181,7 +181,7 @@ class FreeFixtureWindowCoverageTests(unittest.TestCase):
             report = build_free_fixture_window_coverage("provider-db", now=NOW)
         self.assertEqual(report["window_days"], 4)
         self.assertEqual(report["daily_target"], 20)
-        self.assertEqual(report["minimum_daily_target"], 15)
+        self.assertEqual(report["minimum_daily_target"], 10)
         self.assertEqual(report["stretch_daily_target"], 30)
         self.assertEqual(report["max_highlights"], 15)
 
