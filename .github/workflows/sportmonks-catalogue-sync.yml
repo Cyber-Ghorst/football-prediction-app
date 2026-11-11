@@ -1,0 +1,70 @@
+name: Sportmonks canonical catalogue sync
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_year:
+        description: "Season start year (for example 2026 for 2026/27)"
+        required: false
+        default: "2026"
+        type: string
+      max_seasons:
+        description: "Maximum current-year seasons to import (1–100)"
+        required: false
+        default: "40"
+        type: string
+  schedule:
+    - cron: "23 3 * * 1"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sportmonks-canonical-catalogue-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: Import bounded canonical catalogue
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SPORTMONKS_API_TOKEN: ${{ secrets.SPORTMONKS_API_TOKEN }}
+      PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
+      SPORTMONKS_CATALOGUE_YEAR: ${{ inputs.target_year || '2026' }}
+      SPORTMONKS_CATALOGUE_MAX_SEASONS: ${{ inputs.max_seasons || '40' }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Validate credentials and database certificate
+        run: |
+          test -n "$SPORTMONKS_API_TOKEN" || { echo "::error::SPORTMONKS_API_TOKEN secret is missing."; exit 1; }
+          test -n "$PROVIDER_DATABASE_URL" || { echo "::error::PROVIDER_DATABASE_URL secret is missing."; exit 1; }
+          test -f root.crt || { echo "::error::CockroachDB root.crt is missing."; exit 1; }
+      - name: Sync current-season catalogue only
+        run: |
+          set +e
+          mkdir -p reports/sportmonks_catalogue_sync/archive
+          stamp="$(date -u +%Y%m%dT%H%M%SZ)"
+          python sportmonks_catalogue_sync.py | tee "reports/sportmonks_catalogue_sync/archive/${stamp}.json"
+          exit_code=$?
+          set -e
+          python -m json.tool "reports/sportmonks_catalogue_sync/archive/${stamp}.json" >/dev/null
+          cp "reports/sportmonks_catalogue_sync/archive/${stamp}.json" reports/sportmonks_catalogue_sync/latest.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/sportmonks_catalogue_sync
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive Sportmonks canonical catalogue sync ${stamp}"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+          exit "$exit_code"
