@@ -1,7 +1,7 @@
 """Build read-only provider entity crosswalk review reports from archived fixtures."""
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Mapping
 
 from football_repository import (
     get_repository_leagues,
@@ -16,11 +16,21 @@ from provider_entity_crosswalk import (
 )
 
 
+def load_canonical_crosswalk_catalogue(database_url: str) -> dict[str, list[dict[str, Any]]]:
+    """Load the shared canonical catalogue once for a multi-provider audit."""
+    return {
+        "leagues": get_repository_leagues(database_url),
+        "seasons": get_repository_seasons(database_url),
+        "teams": get_repository_teams(database_url),
+    }
+
+
 def build_provider_crosswalk_review_report(
     database_url: str,
     *,
     provider: str,
     snapshot_limit: int = 100,
+    canonical_catalogue: Mapping[str, list[dict[str, Any]]] | None = None,
 ) -> dict[str, Any]:
     """Combine archived source entities with canonical records and exact-match candidates."""
     provider_name = str(provider or "").strip().casefold()
@@ -39,9 +49,10 @@ def build_provider_crosswalk_review_report(
             observations.extend(row for row in rows if isinstance(row, dict))
 
     source = extract_provider_entities_from_observations(provider_name, observations)
-    canonical_leagues = get_repository_leagues(database_url)
-    canonical_seasons = get_repository_seasons(database_url)
-    canonical_teams = get_repository_teams(database_url)
+    catalogue = canonical_catalogue or load_canonical_crosswalk_catalogue(database_url)
+    canonical_leagues = list(catalogue.get("leagues", []))
+    canonical_seasons = list(catalogue.get("seasons", []))
+    canonical_teams = list(catalogue.get("teams", []))
 
     league_candidates = build_entity_crosswalk_candidates(
         provider_name, "league", source["leagues"], canonical_leagues

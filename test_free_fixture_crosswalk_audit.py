@@ -5,8 +5,10 @@ from free_fixture_crosswalk_audit import PROVIDERS, build_crosswalk_audit
 
 
 class FreeFixtureCrosswalkAuditTests(unittest.TestCase):
+    @patch("free_fixture_crosswalk_audit.load_canonical_crosswalk_catalogue")
     @patch("free_fixture_crosswalk_audit.build_provider_crosswalk_review_report")
-    def test_reports_provider_entity_and_candidate_progress(self, builder):
+    def test_reports_provider_entity_and_candidate_progress(self, builder, catalogue):
+        catalogue.return_value = {"leagues": [], "seasons": [], "teams": []}
         builder.return_value = {
             "snapshot_count": 2,
             "observation_count": 30,
@@ -34,13 +36,19 @@ class FreeFixtureCrosswalkAuditTests(unittest.TestCase):
         self.assertEqual(report["canonical_fixture_writes"], 0)
         self.assertEqual(report["prediction_ledger_writes"], 0)
         self.assertEqual(builder.call_count, len(PROVIDERS))
+        catalogue.assert_called_once_with("provider-db")
+        self.assertTrue(all(
+            call.kwargs["canonical_catalogue"] is catalogue.return_value
+            for call in builder.call_args_list
+        ))
         self.assertEqual(
             [call.kwargs["snapshot_limit"] for call in builder.call_args_list],
             [5] * len(PROVIDERS),
         )
 
+    @patch("free_fixture_crosswalk_audit.load_canonical_crosswalk_catalogue", return_value={"leagues": [], "seasons": [], "teams": []})
     @patch("free_fixture_crosswalk_audit.build_provider_crosswalk_review_report")
-    def test_isolates_provider_failure_without_losing_other_reports(self, builder):
+    def test_isolates_provider_failure_without_losing_other_reports(self, builder, catalogue):
         builder.side_effect = [RuntimeError("db error")] + [{
             "snapshot_count": 0,
             "observation_count": 0,
