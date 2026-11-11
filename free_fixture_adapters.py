@@ -359,7 +359,7 @@ class OpenFootballAdapter(_StaticDatasetAdapter):
                     zone = ZoneInfo(zone_text)
                 except ZoneInfoNotFoundError:
                     return combined
-        return parsed.replace(tzinfo=zone).astimezone(timezone.utc)
+        return parsed.replace(tzinfo=zone).astimezone(timezone.utc).isoformat()
 
     def season(self, season_file: str, competition: str) -> list[dict[str, Any]]:
         if not season_file.endswith(".json") or season_file.startswith("/") or ".." in season_file.split("/"):
@@ -420,7 +420,7 @@ class OpenMatchdayAdapter(_StaticDatasetAdapter):
                     source_local = datetime.strptime(
                         f"{date_value} {time_value}", "%Y-%m-%d %H:%M"
                     ).replace(tzinfo=timezone(timedelta(hours=1)))
-                    kickoff = source_local.astimezone(timezone.utc)
+                    kickoff = source_local.astimezone(timezone.utc).isoformat()
                 except ValueError:
                     kickoff = f"{date_value}T{time_value}"
             output.append(_observation(
