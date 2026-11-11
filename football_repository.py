@@ -796,8 +796,8 @@ def get_repository_teams(
                 )
             elif league_id:
                 cursor.execute(
-                    """
-                    SELECT DISTINCT t.team_id, t.name, t.short_name, t.country,
+                    f"""
+                    SELECT DISTINCT t.team_id, t.name, t.short_name, {team_country_expression} AS country,
                            t.source_provider, t.provider_updated_at, t.collected_at
                     FROM football_teams AS t
                     JOIN football_fixtures AS f
