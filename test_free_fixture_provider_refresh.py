@@ -87,6 +87,35 @@ class FreeFixtureProviderRefreshTests(unittest.TestCase):
         self.assertEqual(_rotate_batch(items, 3, 1), [3, 4, 5])
         self.assertEqual(_rotate_batch(items, 3, 4), [2, 3, 4])
 
+    @patch("free_fixture_provider_refresh.collect_bzzoiro_observations")
+    @patch("free_fixture_provider_refresh.BzzoiroAdapter")
+    @patch("free_fixture_provider_refresh.collect_livescore_observations")
+    @patch("free_fixture_provider_refresh.LiveScoreFootballClient")
+    @patch("free_fixture_provider_refresh.collect_openfootball_observations")
+    @patch("free_fixture_provider_refresh.OpenFootballAdapter")
+    @patch("free_fixture_provider_refresh.collect_openligadb_observations")
+    @patch("free_fixture_provider_refresh.OpenLigaDBAdapter")
+    def test_openligadb_default_batch_expands_to_55_scopes_below_rate_limit(
+        self, openliga_cls, collect_openliga, openfootball_cls, collect_openfootball,
+        livescore_cls, collect_livescore, bzz_cls, collect_bzz,
+    ):
+        openliga = openliga_cls.return_value.__enter__.return_value
+        openliga.discover_scopes.return_value = [
+            {"league_shortcut": f"league-{index}", "season": 2026}
+            for index in range(70)
+        ]
+        collect_openliga.return_value = {"provider": "openligadb", "archived": True}
+        openfootball_cls.return_value.__enter__.return_value.discover_season_files.return_value = []
+        livescore_cls.return_value.leagues.return_value = []
+        report = refresh_free_fixture_sources(
+            "provider-db", today=datetime(2026, 11, 11, tzinfo=timezone.utc),
+        )
+        selected_scopes = collect_openliga.call_args.args[1]
+        self.assertEqual(len(selected_scopes), 55)
+        self.assertEqual(collect_openliga.call_args.kwargs["request_delay_seconds"], 1.05)
+        self.assertTrue(report["providers"]["openligadb"]["archived"])
+
+
     def test_requires_provider_database_url(self):
         with self.assertRaisesRegex(ValueError, "PROVIDER_DATABASE_URL"):
             refresh_free_fixture_sources("")
