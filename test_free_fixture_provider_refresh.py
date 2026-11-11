@@ -81,6 +81,30 @@ class FreeFixtureProviderRefreshTests(unittest.TestCase):
         collect_bzz.assert_called_once_with("provider-db", max_pages=20)
         bzz_cls.assert_not_called()
 
+    def test_terms_acknowledgements_are_required_before_restricted_provider_collection(self):
+        from unittest.mock import patch
+
+        with patch("free_fixture_provider_refresh.OpenLigaDBAdapter") as openliga_cls, \
+             patch("free_fixture_provider_refresh.OpenFootballAdapter") as openfootball_cls, \
+             patch("free_fixture_provider_refresh.LiveScoreFootballClient") as livescore_cls, \
+             patch("free_fixture_provider_refresh.collect_highlightly_observations") as collect_highlightly, \
+             patch("free_fixture_provider_refresh.collect_api_ninjas_observations") as collect_ninjas:
+            openliga_cls.return_value.__enter__.return_value.discover_scopes.return_value = []
+            openfootball_cls.return_value.__enter__.return_value.discover_season_files.return_value = []
+            livescore_cls.return_value.leagues.return_value = []
+            report = refresh_free_fixture_sources(
+                "provider-db",
+                today=datetime(2026, 11, 11, tzinfo=timezone.utc),
+                highlightly_token="highlightly-test-key",
+                api_ninjas_token="api-ninjas-test-key",
+            )
+
+        collect_highlightly.assert_not_called()
+        collect_ninjas.assert_not_called()
+        self.assertIn("will not use its data to support betting", report["providers"]["highlightly"]["skipped"])
+        self.assertIn("non-commercial-use confirmation", report["providers"]["api_ninjas"]["skipped"])
+
+
     def test_rotation_covers_different_league_batches(self):
         items = list(range(10))
         self.assertEqual(_rotate_batch(items, 3, 0), [0, 1, 2])
@@ -139,7 +163,9 @@ class FreeFixtureProviderRefreshTests(unittest.TestCase):
                 "provider-db",
                 today=datetime(2026, 11, 11, tzinfo=timezone.utc),
                 highlightly_token="highlightly-test-key",
+                highlightly_use_allowed=True,
                 api_ninjas_token="api-ninjas-test-key",
+                api_ninjas_noncommercial_confirmed=True,
             )
 
         collect_highlightly.assert_called_once_with(
