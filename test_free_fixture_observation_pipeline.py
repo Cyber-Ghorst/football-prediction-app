@@ -26,7 +26,10 @@ class FreeFixtureObservationPipelineTests(unittest.TestCase):
             "provider-db", [{"league_shortcut": "bl1", "season": 2026}],
             client=client,
         )
-        client.matches.assert_called_once_with("bl1", 2026)
+        client.matches.assert_called_once_with(
+            "bl1", 2026,
+            league_metadata={"league_shortcut": "bl1", "season": 2026},
+        )
         self.assertTrue(result["archived"])
         self.assertEqual(result["snapshot_id"], "snapshot-1")
         self.assertEqual(archive.call_args.kwargs["provider"], "openligadb")
