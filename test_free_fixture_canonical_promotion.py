@@ -108,6 +108,45 @@ class FreeFixtureCanonicalPromotionAssessmentTests(unittest.TestCase):
         )
         self.assertEqual(result["reason"], "canonical_season_belongs_to_a_different_competition")
 
+    def test_livescore_requires_upstream_competition_sync_timestamp(self):
+        observation = {**OBSERVATION, "source_sync_at": None}
+        result = assess_free_fixture_observation(
+            "livescore_football", observation, snapshot_id="snapshot-1",
+            snapshot_retrieved_at="2026-11-11T01:56:00Z",
+            league_links={"league-1": "sportmonks:10"},
+            season_links={"season-1": "sportmonks:20"},
+            team_links={"home-1": "sportmonks:30", "away-1": "sportmonks:40"},
+            canonical_entities=canonical_entities(), now=NOW,
+            licence_acknowledged=True,
+        )
+        self.assertEqual(result["reason"], "missing_upstream_competition_sync_timestamp")
+
+    def test_stale_livescore_upstream_competition_data_is_blocked(self):
+        observation = {**OBSERVATION, "source_sync_at": "2026-11-09T00:00:00Z"}
+        result = assess_free_fixture_observation(
+            "livescore_football", observation, snapshot_id="snapshot-1",
+            snapshot_retrieved_at="2026-11-11T01:56:00Z",
+            league_links={"league-1": "sportmonks:10"},
+            season_links={"season-1": "sportmonks:20"},
+            team_links={"home-1": "sportmonks:30", "away-1": "sportmonks:40"},
+            canonical_entities=canonical_entities(), now=NOW,
+            licence_acknowledged=True,
+        )
+        self.assertEqual(result["reason"], "stale_upstream_competition_data")
+
+    def test_fresh_livescore_upstream_competition_data_can_pass_freshness_gate(self):
+        observation = {**OBSERVATION, "source_sync_at": "2026-11-11T01:45:00Z"}
+        result = assess_free_fixture_observation(
+            "livescore_football", observation, snapshot_id="snapshot-1",
+            snapshot_retrieved_at="2026-11-11T01:56:00Z",
+            league_links={"league-1": "sportmonks:10"},
+            season_links={"season-1": "sportmonks:20"},
+            team_links={"home-1": "sportmonks:30", "away-1": "sportmonks:40"},
+            canonical_entities=canonical_entities(), now=NOW,
+            licence_acknowledged=True,
+        )
+        self.assertEqual(result["decision"], "ready_for_promotion")
+
     def test_non_sportmonks_canonical_targets_are_blocked(self):
         result = assess_free_fixture_observation(
             "openligadb", OBSERVATION, snapshot_id="snapshot-1",
