@@ -27,7 +27,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: sportmonks-canonical-catalogue-sync
+  group: main-report-archive
   cancel-in-progress: false
 
 jobs:
