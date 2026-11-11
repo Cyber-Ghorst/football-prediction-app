@@ -58,7 +58,7 @@ def _archive(
         observations=observations,
     )
     return {
-        **stored, "archived": True,
+        **stored, "provider": provider, "archived": True,
         "observation_count": len(observations),
         "eligible_for_review_count": sum(
             row.get("eligible_for_review") is True for row in observations
