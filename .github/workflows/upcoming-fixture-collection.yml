@@ -31,9 +31,11 @@ on:
 permissions:
   contents: write
 
+# Keep fixture collection independent from other report-archive workflows.
+# GitHub retains at most one pending run for this group; newer dispatches replace
+# older pending dispatches instead of building an unbounded manual-run backlog.
 concurrency:
-  group: main-report-archive
-  queue: max
+  group: upcoming-fixture-collection
 
 jobs:
   collect:
