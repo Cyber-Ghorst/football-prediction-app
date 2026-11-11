@@ -1,7 +1,7 @@
 {
   "automatic_mapping_approvals": 0,
   "canonical_fixture_writes": 0,
-  "generated_at_utc": "2026-11-11T12:32:15.012340+00:00",
+  "generated_at_utc": "2026-11-11T12:37:05.754215+00:00",
   "prediction_ledger_writes": 0,
   "providers": {
     "api_ninjas": {
@@ -53,7 +53,7 @@
     "livescore_football": {
       "categories": {
         "leagues": {
-          "candidate_count": 12,
+          "candidate_count": 11,
           "candidates": [
             {
               "canonical_entity_id": null,
@@ -65,21 +65,6 @@
               "provider_country": "Brazil",
               "provider_entity_id": "630",
               "provider_name": "Brazilian Serie A",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "league",
-              "match_method": null,
-              "provider": "livescore_football",
-              "provider_country": "England",
-              "provider_entity_id": "18481",
-              "provider_name": "English EFL Trophy",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
@@ -239,27 +224,12 @@
           "candidates_truncated": false,
           "manual_review_candidate_count": 0,
           "status_counts": {
-            "no_exact_contextual_match": 12
+            "no_exact_contextual_match": 11
           }
         },
         "seasons": {
-          "candidate_count": 12,
+          "candidate_count": 11,
           "candidates": [
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "season",
-              "match_method": null,
-              "provider": "livescore_football",
-              "provider_country": null,
-              "provider_entity_id": "18481::2026",
-              "provider_name": "2026",
-              "provider_parent_id": "18481",
-              "provider_parent_name": "English EFL Trophy",
-              "reason": "A verified provider-competition to canonical-competition link is required first.",
-              "status": "parent_competition_unmapped"
-            },
             {
               "canonical_entity_id": null,
               "canonical_name": null,
@@ -429,7 +399,7 @@
           "candidates_truncated": false,
           "manual_review_candidate_count": 0,
           "status_counts": {
-            "parent_competition_unmapped": 12
+            "parent_competition_unmapped": 11
           }
         },
         "teams": {
@@ -1049,11 +1019,11 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 134,
+      "observation_count": 138,
       "snapshot_count": 3,
       "source_entity_counts": {
-        "leagues": 12,
-        "seasons": 12,
+        "leagues": 11,
+        "seasons": 11,
         "teams": 92
       },
       "status": "ok"
