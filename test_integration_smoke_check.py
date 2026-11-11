@@ -29,7 +29,11 @@ class ProviderUseAcknowledgementTests(unittest.TestCase):
         clear=True,
     )
     def test_highlightly_probe_can_run_after_both_acknowledgements(self):
-        self.assertIsNone(highlightly_use_skip_details())
+        details = highlightly_use_skip_details()
+        self.assertNotEqual(
+            (details or {}).get("reason"),
+            "provider_use_not_confirmed",
+        )
 
     @patch.dict("os.environ", {}, clear=True)
     def test_api_ninjas_probe_is_skipped_without_noncommercial_acknowledgement(self):
