@@ -20,6 +20,14 @@ from free_fixture_observation_pipeline import (
 from livescore_football import LiveScoreFootballClient
 
 
+def _rotate_batch(items: list[Any], batch_size: int, slot: int) -> list[Any]:
+    if not items:
+        return []
+    size = max(1, int(batch_size))
+    start = (max(0, int(slot)) * size) % len(items)
+    return [items[(start + offset) % len(items)] for offset in range(min(size, len(items)))]
+
+
 def _error(provider: str, exc: Exception) -> dict[str, Any]:
     return {
         "provider": provider,
@@ -48,6 +56,7 @@ def refresh_free_fixture_sources(
     current_year = now.year
     date_from = now.date().isoformat()
     date_to = (now.date() + timedelta(days=7)).isoformat()
+    batch_slot = int(now.timestamp() // (6 * 60 * 60))
     results: dict[str, Any] = {}
 
     # OpenLigaDB publishes a league catalogue by season. Keep requests below
@@ -55,10 +64,11 @@ def refresh_free_fixture_sources(
     # as eligible observations.
     try:
         with OpenLigaDBAdapter() as client:
-            scopes = client.discover_scopes(
+            all_scopes = client.discover_scopes(
                 [current_year, current_year + 1],
-                max_scopes=max_openligadb_scopes,
+                max_scopes=1000,
             )
+            scopes = _rotate_batch(all_scopes, max_openligadb_scopes, batch_slot)
             results["openligadb"] = collect_openligadb_observations(
                 database_url, scopes, client=client, request_delay_seconds=1.05,
             ) if scopes else {
@@ -100,7 +110,8 @@ def refresh_free_fixture_sources(
                 slug = row.get("slug") or row.get("league_slug") or row.get("leagueSlug")
                 if slug and str(slug) not in slugs:
                     slugs.append(str(slug))
-        slugs = slugs[:max(1, int(max_livescore_leagues))]
+        all_slugs = list(slugs)
+        slugs = _rotate_batch(all_slugs, max_livescore_leagues, batch_slot)
         results["livescore_football"] = collect_livescore_observations(
             database_url, slugs, date_from=date_from, date_to=date_to,
             client=livescore_client, request_delay_seconds=0.15,
@@ -142,6 +153,7 @@ def refresh_free_fixture_sources(
     return {
         "run_at": now.isoformat(),
         "window": {"date_from": date_from, "date_to": date_to},
+        "batch_slot": batch_slot,
         "providers": results,
         "canonical_fixture_writes": 0,
         "prediction_ledger_writes": 0,
