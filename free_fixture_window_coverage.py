@@ -116,7 +116,11 @@ def build_window_coverage_report(
             payload = snapshot.get("payload") if isinstance(snapshot.get("payload"), Mapping) else {}
             if retrieved is None:
                 retrieved = _utc_datetime(payload.get("retrieved_at"))
-            if retrieved is None or current - retrieved > timedelta(hours=max_age_hours):
+            if (
+                retrieved is None
+                or retrieved > current + timedelta(minutes=5)
+                or current - retrieved > timedelta(hours=max_age_hours)
+            ):
                 stale_snapshot_count += 1
                 continue
             for observation in _observation_rows(snapshot):
@@ -224,7 +228,7 @@ def build_window_coverage_report(
         "source_observations_loaded": source_observation_count,
         "fresh_provider_fixture_records_in_window": len(provider_rows),
         "unique_fixtures_in_window": total_unique,
-        "cross_provider_duplicates_removed": cross_provider_duplicates,
+        "exact_identity_duplicates_removed": cross_provider_duplicates,
         "stale_snapshots_skipped": stale_snapshot_count,
         "rejected_observation_counts": dict(rejected_observation_counts),
         "daily_unique_fixture_counts_utc": daily_counts,
