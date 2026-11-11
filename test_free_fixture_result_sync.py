@@ -217,6 +217,53 @@ class FreeFixtureResultVerificationTests(unittest.TestCase):
         ))
 
     @patch("free_fixture_result_sync._source_metadata")
+    @patch("free_fixture_result_sync.OpenFootballAdapter")
+    @patch("free_fixture_result_sync._ensure_promotion_tables")
+    def test_openfootball_result_sync_refetches_exact_season_file(
+        self, ensure_tables, adapter_cls, source
+    ):
+        record = {
+            **RECORD,
+            "fixture_provider": "openfootball",
+            "fixture_id": "openfootball:openfootball:dataset-42",
+            "home_team": "Arsenal",
+            "away_team": "Coventry",
+            "kickoff_at": "2026-11-10T18:00:00Z",
+            "season": "2026",
+        }
+        source.return_value = {
+            "source_url": "https://raw.githubusercontent.com/openfootball/football.json/master/2026-27/en.1.json",
+            "raw_payload": {
+                "competition_name": "Premier League",
+                "season_name": "2026-27",
+                "home_team_name": "Arsenal FC",
+                "away_team_name": "Coventry City FC",
+            },
+            "canonical_fixture_id": record["fixture_id"],
+        }
+        adapter = adapter_cls.return_value.__enter__.return_value
+        adapter.season.return_value = [{
+            "provider_fixture_id": "openfootball:dataset-42",
+            "competition_key": "en.1",
+            "competition_name": "Premier League",
+            "season_key": "2026-27",
+            "season_name": "2026-27",
+            "home_team_name": "Arsenal FC",
+            "away_team_name": "Coventry City FC",
+            "kickoff_utc": "2026-11-10T18:00:00Z",
+            "raw_payload": {"score": {"ht": [1, 0], "ft": [2, 1]}},
+        }]
+        records = [record]
+        report, updated = sync_free_source_results(
+            records, provider_database_url="provider-db", now=NOW,
+        )
+        self.assertEqual(report["records_updated"], 1)
+        self.assertEqual(updated[0]["actual_home_goals"], 2)
+        adapter.season.assert_called_once_with(
+            "2026-27/en.1.json", competition="Premier League"
+        )
+
+    @patch("free_fixture_result_sync._source_metadata")
     @patch("free_fixture_result_sync.OpenMatchdayAdapter")
     @patch("free_fixture_result_sync._ensure_promotion_tables")
     def test_openmatchday_result_sync_reads_results_csv(
