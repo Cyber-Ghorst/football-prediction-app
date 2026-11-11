@@ -1,6 +1,13 @@
 name: Automatic upcoming fixture collection
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "free_fixture_provider_refresh.py"
+      - "free_fixture_adapters.py"
+      - "free_fixture_observation_pipeline.py"
+      - ".github/workflows/upcoming-fixture-collection.yml"
   workflow_dispatch:
   schedule:
     - cron: "17 */6 * * *"
