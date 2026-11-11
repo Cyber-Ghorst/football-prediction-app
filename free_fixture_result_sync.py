@@ -11,7 +11,7 @@ from free_fixture_adapters import (
 )
 from livescore_football import LiveScoreFootballClient
 from provider_data_storage import _connect
-from provider_entity_crosswalk import load_provider_entity_links
+from provider_entity_crosswalk import load_provider_entity_links, provider_season_entity_id
 from free_fixture_canonical_promotion import _ensure_promotion_tables
 
 
@@ -473,7 +473,9 @@ def _crosswalk_matches_record(
             str(source_observation.get("competition_key") or "")
         ),
         "season_id": entity_links.get("season", {}).get(
-            str(source_observation.get("season_key") or "")
+            provider_season_entity_id(
+                source_observation.get("competition_key"), source_observation.get("season_key")
+            )
         ),
         "home_team_id": entity_links.get("team", {}).get(
             str(source_observation.get("home_team_key") or "")
