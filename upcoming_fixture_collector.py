@@ -269,12 +269,17 @@ def normalize_upcoming_fixtures(
         ).date().isoformat()
         if kickoff_date in daily_fixture_counts:
             daily_fixture_counts[kickoff_date] += 1
+    # A rolling N-day window can touch N+1 UTC dates. The final date is
+    # only partially inside the window, so show its count but do not demand a
+    # full day's 90-fixture target from that partial boundary.
+    target_dates = window_dates[:window_days]
+    partial_boundary_dates = window_dates[window_days:]
     daily_target_shortfalls = {
-        day: max(0, DAILY_FIXTURE_TARGET - count)
-        for day, count in daily_fixture_counts.items()
+        day: max(0, DAILY_FIXTURE_TARGET - daily_fixture_counts[day])
+        for day in target_dates
     }
     daily_target_met = all(
-        count >= DAILY_FIXTURE_TARGET for count in daily_fixture_counts.values()
+        daily_fixture_counts[day] >= DAILY_FIXTURE_TARGET for day in target_dates
     )
     total_target_shortfall = sum(daily_target_shortfalls.values())
     return {
@@ -293,11 +298,16 @@ def normalize_upcoming_fixtures(
         "daily_target": DAILY_FIXTURE_TARGET,
         "daily_fixture_counts_utc": daily_fixture_counts,
         "daily_target_shortfalls_utc": daily_target_shortfalls,
+        "target_dates_utc": target_dates,
+        "partial_boundary_days_utc": {
+            day: daily_fixture_counts[day] for day in partial_boundary_dates
+        },
         "days_meeting_target": sum(
-            1 for count in daily_fixture_counts.values()
-            if count >= DAILY_FIXTURE_TARGET
+            1 for day in target_dates
+            if daily_fixture_counts[day] >= DAILY_FIXTURE_TARGET
         ),
-        "days_in_window": len(window_dates),
+        "days_in_window": len(target_dates),
+        "calendar_dates_in_window": len(window_dates),
         "target_met": daily_target_met,
         "target_shortfall": total_target_shortfall,
         "excluded": excluded,

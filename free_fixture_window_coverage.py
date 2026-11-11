@@ -202,9 +202,14 @@ def build_window_coverage_report(
     for row in unique_rows:
         daily_counts[row["date_utc"]] += 1
 
+    # The rolling window touches N+1 UTC dates; the last date is only a
+    # partial boundary. Keep its count visible but target the N calendar dates
+    # beginning today, not the incomplete final date.
+    target_days = calendar_days[:window_days]
+    partial_boundary_days = calendar_days[window_days:]
     shortfalls = {
-        day: max(0, daily_target - count)
-        for day, count in daily_counts.items()
+        day: max(0, daily_target - daily_counts[day])
+        for day in target_days
     }
     competition_summary = [
         {
@@ -216,7 +221,7 @@ def build_window_coverage_report(
         }
         for (provider, country, competition, season), count in competition_counts.most_common(100)
     ]
-    total_target = daily_target * len(calendar_days)
+    total_target = daily_target * len(target_days)
     total_unique = len(unique_rows)
     cross_provider_duplicates = max(0, len(provider_rows) - total_unique)
 
@@ -227,6 +232,11 @@ def build_window_coverage_report(
         "window_end_utc": window_end.isoformat(),
         "window_days": window_days,
         "calendar_days_in_window": len(calendar_days),
+        "target_days_in_window": len(target_days),
+        "target_dates_utc": target_days,
+        "partial_boundary_days_utc": {
+            day: daily_counts[day] for day in partial_boundary_days
+        },
         "daily_target": daily_target,
         "target_fixtures_in_window": total_target,
         "max_highlights": max_highlights,
@@ -245,10 +255,10 @@ def build_window_coverage_report(
         "daily_counts_by_provider_utc": daily_by_provider,
         "daily_target_shortfalls_utc": shortfalls,
         "target_met_by_day": {
-            day: count >= daily_target for day, count in daily_counts.items()
+            day: daily_counts[day] >= daily_target for day in target_days
         },
         "target_shortfall_total": sum(shortfalls.values()),
-        "target_met": all(count >= daily_target for count in daily_counts.values()),
+        "target_met": all(daily_counts[day] >= daily_target for day in target_days),
         "competition_summary": competition_summary,
         "identity_policy": (
             "Cross-provider deduplication requires exact normalized country, competition, "
