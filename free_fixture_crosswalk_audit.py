@@ -8,7 +8,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from provider_crosswalk_review_report import build_provider_crosswalk_review_report
+from provider_crosswalk_review_report import (
+    build_provider_crosswalk_review_report,
+    load_canonical_crosswalk_catalogue,
+)
 
 PROVIDERS = (
     "openligadb", "openfootball", "open_matchday",
@@ -20,10 +23,25 @@ def build_crosswalk_audit(database_url: str) -> dict[str, Any]:
     if not database_url:
         raise ValueError("PROVIDER_DATABASE_URL is required.")
     results: dict[str, Any] = {}
+    try:
+        canonical_catalogue = load_canonical_crosswalk_catalogue(database_url)
+    except Exception as exc:
+        return {
+            "report_name": "free_fixture_crosswalk_audit",
+            "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+            "providers": {
+                provider: {"status": "error", "error_type": type(exc).__name__}
+                for provider in PROVIDERS
+            },
+            "automatic_mapping_approvals": 0,
+            "canonical_fixture_writes": 0,
+            "prediction_ledger_writes": 0,
+        }
     for provider in PROVIDERS:
         try:
             report = build_provider_crosswalk_review_report(
                 database_url, provider=provider, snapshot_limit=5,
+                canonical_catalogue=canonical_catalogue,
             )
             categories = {}
             for category, candidates in report.get("candidates", {}).items():
