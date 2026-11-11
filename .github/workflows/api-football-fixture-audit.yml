@@ -15,7 +15,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: api-football-future-fixture-audit
+  group: main-report-archive
   cancel-in-progress: false
 
 jobs:
@@ -25,6 +25,7 @@ jobs:
     timeout-minutes: 15
     env:
       APISPORTS_API_KEY: ${{ secrets.APISPORTS_API_KEY }}
+      APISPORTS_DATA_USE_ALLOWED_CONFIRMED: ${{ secrets.APISPORTS_DATA_USE_ALLOWED_CONFIRMED }}
     steps:
       - name: Check out latest main
         uses: actions/checkout@v4
@@ -38,9 +39,13 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: Validate API credential
+      - name: Validate API credential when future-data use is authorized
         run: |
-          test -n "$APISPORTS_API_KEY" || { echo "::error::APISPORTS_API_KEY secret is missing."; exit 1; }
+          if [[ "${APISPORTS_DATA_USE_ALLOWED_CONFIRMED,,}" == "true" || "$APISPORTS_DATA_USE_ALLOWED_CONFIRMED" == "1" ]]; then
+            test -n "$APISPORTS_API_KEY" || { echo "::error::APISPORTS_API_KEY secret is missing."; exit 1; }
+          else
+            echo "Future fixture audit will be archived as skipped until APISPORTS_DATA_USE_ALLOWED_CONFIRMED is explicitly set."
+          fi
       - name: Collect read-only future-fixture audit
         run: |
           set -euo pipefail
