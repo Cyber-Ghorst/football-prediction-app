@@ -23,12 +23,13 @@ Tactical sub-weights remain: playing style 6%, defensive structure 7%, attacking
 Future-fixture discovery is a separate domain (`future_fixtures`) and is not
 synonymous with generic fixture details or historical fixture retrieval.
 Sportmonks is currently the only wired scheduled-fixture collector. OpenLigaDB,
-OpenFootball, Open Matchday, WorldCup26 and Bzzoiro are registered as disabled
-future-fixture candidates pending live adapter, identity, timestamp, licence
-and persistence validation. OpenScores is read-only result-observation and
-entity-audit data only; it is not a future-fixture provider. Highlightly, API
-Ninjas, API-Football and LiveScoreFootball remain in their respective
-enrichment, historical, or completed-result corroboration roles.
+OpenFootball, Open Matchday, LiveScoreFootball, Bzzoiro, Highlightly and API
+Ninjas are registered as disabled future-fixture candidates pending live
+account coverage, adapter, identity, timestamp, licence and persistence
+validation. OpenScores is read-only result-observation and entity-audit data
+only; it is not a future-fixture provider. Highlightly and API Ninjas also
+retain their existing enrichment/corroboration roles; API-Football remains
+historical-only for the configured account seasons.
 
 Provider roles are domain-specific. A provider is not assumed to be authoritative for every field.
 
@@ -76,7 +77,7 @@ The default priority is encoded in `provider_core.py`:
 
 | Data domain | Priority order |
 |---|---|
-| Future-fixture discovery | Sportmonks only until the five free candidates pass activation gates; OpenScores is excluded |
+| Future-fixture discovery | Sportmonks only until the seven registered candidates pass activation gates; OpenScores is excluded |
 | Generic fixture details, results, standings | Sportmonks → Highlightly → API Ninjas → API-Football; LiveScoreFootball is prepended only for verified results/standings |
 | Match statistics | Sportmonks → Highlightly → API-Football |
 | Injuries | Sportmonks → Highlightly → API-Football |
