@@ -173,6 +173,7 @@ def collect_livescore_observations(
     date_to: str,
     client: LiveScoreFootballClient | None = None,
     request_delay_seconds: float = 0.0,
+    league_sync_times: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Collect scheduled LiveScoreFootball events for explicitly supplied leagues."""
     if not league_slugs or not date_from or not date_to:
