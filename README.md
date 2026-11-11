@@ -87,3 +87,8 @@ PROVIDER_DATABASE_URL = "YOUR_COCKROACHDB_POSTGRESQL_CONNECTION_STRING"
 5. Cache keys are provider-scoped and deterministic. Callers must not include API tokens, passwords or other credentials in request parameters. A failed API call is recorded separately and must never replace the last successful snapshot.
 
 The storage module is integrated into the Sportmonks collection path for leagues, seasons, teams, standings, season fixtures, individual fixture details and date-range fixture lookups. The app checks CockroachDB for a fresh provider-scoped snapshot before making a live request, then archives successful responses with provenance and a TTL. Individual fixture details and date-range verification lookups currently use a five-minute freshness window; historical statistics backfill deliberately bypasses the cache and fetches the provider directly. The in-process Streamlit cache remains an additional performance layer. Highlightly/API Ninjas corroboration paths are not yet fully routed through the archive. Existing prediction inputs, provider hierarchy, model weights, recency rules and TVD behavior remain unchanged. Do not migrate or delete Neon ledger data.
+
+
+### API-Football future-fixture audit
+
+The read-only future-fixture audit is disabled unless `APISPORTS_DATA_USE_ALLOWED_CONFIRMED=true` is explicitly configured. Set it only after reviewing API-SPORTS terms and confirming the app's use is permitted, including any rights-holder licences required for betting-platform use. Without this acknowledgement, the integration check reads account plan/quota metadata only and does not query the league catalogue or fixtures.
