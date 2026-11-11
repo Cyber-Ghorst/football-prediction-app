@@ -45,7 +45,7 @@ class APIFootballFixtureAuditTests(unittest.TestCase):
             return fixtures_by_date.get(day, [])
         client.fixtures_by_date.side_effect = query_date
         report = build_api_football_fixture_audit(
-            client_factory=lambda: client, now=NOW,
+            client_factory=lambda: client, now=NOW, data_use_allowed=True,
         )
         self.assertEqual(report["status"], "ok")
         self.assertEqual(report["future_fixture_count"], 3)
@@ -65,7 +65,7 @@ class APIFootballFixtureAuditTests(unittest.TestCase):
         client.__enter__.return_value = client
         client.status.return_value = {"requests": {"current": 100, "limit_day": 100}}
         report = build_api_football_fixture_audit(
-            client_factory=lambda: client, now=NOW,
+            client_factory=lambda: client, now=NOW, data_use_allowed=True,
         )
         self.assertEqual(report["status"], "quota_exhausted")
         client.fixtures_by_date.assert_not_called()
@@ -75,7 +75,7 @@ class APIFootballFixtureAuditTests(unittest.TestCase):
         client.__enter__.return_value = client
         client.status.return_value = {"requests": {"current": 93, "limit_day": 100}}
         report = build_api_football_fixture_audit(
-            client_factory=lambda: client, now=NOW,
+            client_factory=lambda: client, now=NOW, data_use_allowed=True,
         )
         self.assertEqual(report["status"], "quota_insufficient")
         client.fixtures_by_date.assert_not_called()
@@ -92,11 +92,21 @@ class APIFootballFixtureAuditTests(unittest.TestCase):
             return []
         client.fixtures_by_date.side_effect = query_date
         report = build_api_football_fixture_audit(
-            client_factory=lambda: client, now=NOW,
+            client_factory=lambda: client, now=NOW, data_use_allowed=True,
         )
         self.assertIn("2026-11-18", report["partial_boundary_days_utc"])
         self.assertEqual(report["daily_fixture_counts_utc"]["2026-11-18"], 1)
         self.assertNotIn("2026-11-18", report["daily_target_shortfalls_utc"])
+
+    def test_audit_skips_without_explicit_data_use_acknowledgement(self):
+        client_factory = MagicMock()
+        report = build_api_football_fixture_audit(
+            client_factory=client_factory, now=NOW,
+        )
+        self.assertEqual(report["status"], "skipped")
+        self.assertEqual(report["requests_made"], 0)
+        self.assertIn("APISPORTS_DATA_USE_ALLOWED_CONFIRMED", report["skip_reason"])
+        client_factory.assert_not_called()
 
     def test_naive_now_is_rejected(self):
         client = MagicMock()
