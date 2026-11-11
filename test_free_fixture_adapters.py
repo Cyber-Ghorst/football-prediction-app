@@ -161,6 +161,22 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         self.assertEqual(result["raw_payload"]["leagueCountry"], "Deutschland")
         client.close()
 
+    def test_openligadb_normalizes_herren_suffix(self):
+        row = {
+            "matchID": 44,
+            "matchDateTimeUTC": (NOW + timedelta(days=1)).replace(tzinfo=None).isoformat(),
+            "leagueName": "2. Bundesliga 2026/27 (Herren)",
+            "leagueSeason": 2026,
+            "leagueCountry": "Deutschland",
+            "matchStatus": "scheduled",
+            "team1": {"teamId": 1, "teamName": "Home FC"},
+            "team2": {"teamId": 2, "teamName": "Away FC"},
+        }
+        client = OpenLigaDBAdapter()
+        client._get_json = Mock(return_value=[row])
+        self.assertEqual(client.matches("bl2", 2026)[0]["competition_name"], "2. Bundesliga")
+        client.close()
+
     def test_livescore_uses_league_catalogue_name_and_country(self):
         event = {
             "id": "event-10",
