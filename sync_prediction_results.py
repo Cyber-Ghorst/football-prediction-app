@@ -96,6 +96,11 @@ def sync_completed_results(
         report["free_source_results"] = free_report
         updated_rows.extend(free_updated_rows)
         report["records_updated"] = len(updated_rows)
+        report["errors"].extend([
+            {"provider": item.get("provider"), "fixture_id": item.get("fixture_id"),
+             "error_type": item.get("error_type"), "message": item.get("message")}
+            for item in (free_report.get("errors") or [])
+        ])
     except Exception as exc:
         report["free_source_results"] = {
             "status": "processing_error",
@@ -115,7 +120,10 @@ def sync_completed_results(
             else:
                 report["status"] = (
                     "attention_required"
-                    if report.get("free_source_results", {}).get("errors")
+                    if (
+                        report.get("free_source_results", {}).get("errors")
+                        or report.get("free_source_results", {}).get("status") == "processing_error"
+                    )
                     else "no_eligible_fixtures"
                 )
         except Exception as exc:
