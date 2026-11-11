@@ -44,6 +44,8 @@ class FreeFixtureProviderRefreshTests(unittest.TestCase):
         self.assertTrue(report["providers"]["livescore_football"]["archived"])
         self.assertTrue(report["providers"]["bzzoiro"]["archived"])
         self.assertIn("non-commercial-only", report["providers"]["open_matchday"]["skipped"])
+        self.assertIn("not configured", report["providers"]["highlightly"]["skipped"])
+        self.assertIn("not configured", report["providers"]["api_ninjas"]["skipped"])
         self.assertEqual(report["canonical_fixture_writes"], 0)
         self.assertEqual(report["prediction_ledger_writes"], 0)
         collect_livescore.assert_called_once()
