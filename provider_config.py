@@ -104,7 +104,7 @@ def provider_readiness() -> list[dict[str, Any]]:
         "api_ninjas": _secret_present("API_NINJAS_API_KEY", ("API_NINJAS_KEY",)),
         "highlightly": _secret_present("HIGHLIGHTLY_API_KEY", ("API_FOOTBALL_KEY",)),
         "sportmonks": _secret_present("SPORTMONKS_API_TOKEN", ("SPORTMONKS_API_KEY",)),
-        "livescore_football": False,
+        "livescore_football": _secret_present("LIVESCORE_FOOTBALL_JWT"),
         "thesportsdb": True,
         "openligadb": False,
         "openfootball": False,
