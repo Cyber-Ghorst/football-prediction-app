@@ -96,9 +96,15 @@ class UpcomingFixtureCollectorTests(unittest.TestCase):
                 hour=12, minute=0, second=0, microsecond=0
             )
             for index in range(DAILY_FIXTURE_TARGET):
+                # The final UTC date is only partially inside the rolling
+                # window, so keep its rows at the exact inclusive end instant.
+                kickoff = (
+                    kickoff_day
+                    if day_offset == 7
+                    else kickoff_day + timedelta(minutes=index)
+                )
                 rows.append(fixture(
-                    fixture_id, kickoff_day + timedelta(minutes=index),
-                    league_id=8 + index % 3,
+                    fixture_id, kickoff, league_id=8 + index % 3,
                 ))
                 fixture_id += 1
         result = normalize_upcoming_fixtures(rows, now=NOW)
