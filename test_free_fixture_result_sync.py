@@ -302,6 +302,7 @@ class FreeFixtureResultVerificationTests(unittest.TestCase):
         report, updated = sync_free_source_results(
             records, provider_database_url="provider-db",
             now=datetime(2026, 11, 22, 12, 0, tzinfo=timezone.utc),
+            open_matchday_noncommercial_confirmed=True,
         )
         self.assertEqual(report["records_updated"], 1)
         self.assertEqual(updated[0]["actual_home_goals"], 2)
@@ -576,6 +577,7 @@ class AdditionalProviderResultVerificationTests(unittest.TestCase):
         client_cls.return_value.__enter__.return_value.match.return_value = self.highlightly_match
         report, updated = sync_free_source_results(
             [record], provider_database_url="provider-db", now=NOW,
+            highlightly_non_betting_confirmed=True,
         )
         self.assertEqual(report["records_updated"], 1)
         self.assertEqual(updated[0]["actual_result_provider"], "highlightly")
@@ -601,6 +603,7 @@ class AdditionalProviderResultVerificationTests(unittest.TestCase):
         client_cls.return_value.__enter__.return_value.match_details.return_value = self.api_ninjas_match
         report, updated = sync_free_source_results(
             [record], provider_database_url="provider-db", now=NOW,
+            api_ninjas_noncommercial_confirmed=True,
         )
         self.assertEqual(report["records_updated"], 1)
         self.assertEqual(updated[0]["actual_result_provider"], "api_ninjas")
