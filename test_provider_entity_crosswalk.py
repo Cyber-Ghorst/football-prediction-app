@@ -93,6 +93,44 @@ class ProviderEntityCrosswalkTests(unittest.TestCase):
         self.assertEqual(result["match_method"], "curated_provider_id_alias")
         self.assertIn("explicit review is still mandatory", result["reason"])
 
+    def test_livescore_spanish_laliga2_alias_is_only_a_manual_candidate(self):
+        source = [{
+            "provider_competition_id": "3921",
+            "competition_name": "Spanish LALIGA 2",
+            "country": "Spain",
+        }]
+        canonical = [{
+            "league_id": "sportmonks:567",
+            "name": "La Liga 2",
+            "country": "Spain",
+        }]
+        row = build_entity_crosswalk_candidates(
+            "livescore_football", "league", source, canonical,
+        )[0]
+        self.assertEqual(row["status"], "candidate_requires_manual_approval")
+        self.assertEqual(row["canonical_entity_id"], "sportmonks:567")
+        self.assertEqual(row["match_method"], "curated_provider_id_alias")
+        self.assertIn("explicit review is still mandatory", row["reason"])
+
+    def test_livescore_spanish_laliga2_alias_requires_known_id_and_exact_country(self):
+        canonical = [{
+            "league_id": "sportmonks:567",
+            "name": "La Liga 2",
+            "country": "Spain",
+        }]
+        unknown_id = build_entity_crosswalk_candidates(
+            "livescore_football", "league",
+            [{"provider_competition_id": "9999", "competition_name": "Spanish LALIGA 2", "country": "Spain"}],
+            canonical,
+        )[0]
+        wrong_country = build_entity_crosswalk_candidates(
+            "livescore_football", "league",
+            [{"provider_competition_id": "3921", "competition_name": "Spanish LALIGA 2", "country": "Mexico"}],
+            canonical,
+        )[0]
+        self.assertEqual(unknown_id["status"], "no_exact_contextual_match")
+        self.assertEqual(wrong_country["status"], "no_exact_contextual_match")
+
     def test_openligadb_laliga_alias_requires_known_id_and_exact_country(self):
         canonical = [{
             "league_id": "sportmonks:564",

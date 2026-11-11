@@ -124,6 +124,7 @@ def _display_value(value: Any) -> str:
 # Stable provider-ID aliases are explicit review hints, never automatic links.
 CURATED_PROVIDER_LEAGUE_NAME_ALIASES = {
     ("openligadb", "4936"): "La Liga",  # OpenLigaDB "LaLiga EA Sports"
+    ("livescore_football", "3921"): "La Liga 2",  # LiveScoreFootball "Spanish LALIGA 2"
 }
 
 
