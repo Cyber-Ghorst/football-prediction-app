@@ -33,6 +33,31 @@ def normalize_entity_name(value: Any) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
+def _country_key(value: Any) -> str:
+    key = normalize_entity_name(value)
+    aliases = {
+        "de": "germany", "deutschland": "germany",
+        "england": "england", "es": "spain", "espana": "spain",
+        "españa": "spain", "it": "italy", "italia": "italy",
+        "fr": "france", "nl": "netherlands", "nederland": "netherlands",
+        "pt": "portugal", "us": "united states", "usa": "united states",
+        "united states of america": "united states",
+    }
+    return aliases.get(key, key)
+
+
+def _candidate_name_key(provider: str, entity_type: str, value: Any) -> str:
+    key = normalize_entity_name(value)
+    if provider == "openligadb" and entity_type == "league":
+        key = re.sub(r"\\s+20\\d{2}(?:\\s*/\\s*(?:20)?\\d{2})?$", "", key).strip()
+        aliases = {
+            "1 fussball bundesliga": "bundesliga",
+            "2 fussball bundesliga": "2 bundesliga",
+        }
+        key = aliases.get(key, key)
+    return key
+
+
 def _value(row: Mapping[str, Any], *keys: str) -> Any:
     for key in keys:
         value = row.get(key)
@@ -90,6 +115,7 @@ def build_entity_crosswalk_candidates(
             "entity_type": entity_type,
             "provider_entity_id": str(source_id) if source_id is not None else None,
             "provider_name": str(source_name or ""),
+            "provider_country": str(source_country or "") if entity_type != "season" else None,
             "canonical_entity_id": None,
             "canonical_name": None,
             "status": "unmatched",
@@ -104,7 +130,7 @@ def build_entity_crosswalk_candidates(
                            "reason": "A verified provider-competition to canonical-competition link is required first."})
             continue
 
-        source_key = normalize_entity_name(source_name)
+        source_key = _candidate_name_key(provider_name, entity_type, source_name)
         matches = []
         for target in canonical:
             if entity_type == "league":
@@ -113,7 +139,7 @@ def build_entity_crosswalk_candidates(
                 target_country = _value(target, "country", "country_name")
                 exact_context = (
                     bool(source_country) and bool(target_country)
-                    and normalize_entity_name(_display_value(source_country)) == normalize_entity_name(_display_value(target_country))
+                    and _country_key(_display_value(source_country)) == _country_key(_display_value(target_country))
                 )
             elif entity_type == "team":
                 target_id = _value(target, "team_id", "canonical_entity_id")
@@ -121,7 +147,7 @@ def build_entity_crosswalk_candidates(
                 target_country = _value(target, "country", "country_name")
                 exact_context = (
                     bool(source_country) and bool(target_country)
-                    and normalize_entity_name(source_country) == normalize_entity_name(target_country)
+                    and _country_key(source_country) == _country_key(target_country)
                 )
             else:
                 target_id = _value(target, "season_id", "canonical_entity_id")
@@ -131,7 +157,7 @@ def build_entity_crosswalk_candidates(
 
             if (
                 target_id is not None and target_name
-                and normalize_entity_name(target_name) == source_key
+                and _candidate_name_key(provider_name, entity_type, target_name) == source_key
                 and exact_context
             ):
                 matches.append((str(target_id), str(target_name)))
@@ -335,7 +361,7 @@ def extract_provider_entities_from_observations(
         raw = raw if isinstance(raw, Mapping) else {}
         competition_id = observation.get("competition_key")
         competition_name = observation.get("competition_name") or competition_id
-        country = _country_from_payload(raw)
+        country = _display_value(observation.get("country")) or _country_from_payload(raw)
         add("leagues", competition_id, competition_name, country=country)
         season_id = observation.get("season_key")
         season_name = observation.get("season_name") or season_id
@@ -345,11 +371,11 @@ def extract_provider_entities_from_observations(
         )
         add(
             "teams", observation.get("home_team_key"), observation.get("home_team_name"),
-            country=_country_from_payload(raw, "home") or country,
+            country=_display_value(observation.get("home_team_country")) or _country_from_payload(raw, "home") or country,
         )
         add(
             "teams", observation.get("away_team_key"), observation.get("away_team_name"),
-            country=_country_from_payload(raw, "away") or country,
+            country=_display_value(observation.get("away_team_country")) or _country_from_payload(raw, "away") or country,
         )
 
     return {
