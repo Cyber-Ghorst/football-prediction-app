@@ -8,7 +8,7 @@ from free_fixture_provider_refresh import _rotate_batch, refresh_free_fixture_so
 class FreeFixtureProviderRefreshTests(unittest.TestCase):
     @patch("free_fixture_provider_refresh.collect_bzzoiro_observations")
     @patch("free_fixture_provider_refresh.BzzoiroAdapter")
-        @patch("free_fixture_provider_refresh.collect_openfootball_observations")
+    @patch("free_fixture_provider_refresh.collect_openfootball_observations")
     @patch("free_fixture_provider_refresh.OpenFootballAdapter")
     @patch("free_fixture_provider_refresh.collect_openligadb_observations")
     @patch("free_fixture_provider_refresh.OpenLigaDBAdapter")
@@ -45,8 +45,6 @@ class FreeFixtureProviderRefreshTests(unittest.TestCase):
 
     @patch("free_fixture_provider_refresh.collect_bzzoiro_observations")
     @patch("free_fixture_provider_refresh.BzzoiroAdapter")
-    @patch("free_fixture_provider_refresh.collect_livescore_observations")
-    @patch("free_fixture_provider_refresh.LiveScoreFootballClient")
     @patch("free_fixture_provider_refresh.collect_openfootball_observations")
     @patch("free_fixture_provider_refresh.OpenFootballAdapter")
     @patch("free_fixture_provider_refresh.collect_openligadb_observations")
