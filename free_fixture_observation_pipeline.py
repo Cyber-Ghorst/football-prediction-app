@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from datetime import date
+import re
 from typing import Any, Mapping
 from urllib.parse import quote
 import time
@@ -176,11 +177,15 @@ def collect_livescore_observations(
     """Collect scheduled LiveScoreFootball events for explicitly supplied leagues."""
     if not league_slugs or not date_from or not date_to:
         raise ValueError("League slugs and an explicit date range are required.")
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(date_from)) or not re.fullmatch(
+        r"\d{4}-\d{2}-\d{2}", str(date_to)
+    ):
+        raise ValueError("LiveScoreFootball dates must use YYYY-MM-DD.")
     try:
         start_date = date.fromisoformat(str(date_from))
         end_date = date.fromisoformat(str(date_to))
     except (TypeError, ValueError) as exc:
-        raise ValueError("LiveScoreFootball dates must use YYYY-MM-DD.") from exc
+        raise ValueError("LiveScoreFootball dates must use valid calendar dates.") from exc
     if end_date < start_date:
         raise ValueError("LiveScoreFootball end date must not precede start date.")
     # The documented endpoint requires YYYYMMDD; accept ISO dates at this layer.
