@@ -106,7 +106,7 @@ jobs:
       - name: Build and archive seven-day cross-provider fixture coverage report
         continue-on-error: true
         env:
-          PROVIDER_DATABASE_URL: \${{ secrets.PROVIDER_DATABASE_URL }}
+          PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
           FREE_FIXTURE_WINDOW_DAYS: "7"
           FREE_FIXTURE_DAILY_TARGET: "90"
           FREE_FIXTURE_MAX_HIGHLIGHTS: "50"
@@ -116,14 +116,14 @@ jobs:
           set -euo pipefail
           mkdir -p reports/free_fixture_window_coverage/archive
           stamp="$(date -u +%Y%m%dT%H%M%SZ)"
-          python free_fixture_window_coverage.py | tee "reports/free_fixture_window_coverage/archive/\${stamp}.json"
-          python -m json.tool "reports/free_fixture_window_coverage/archive/\${stamp}.json" >/dev/null
-          cp "reports/free_fixture_window_coverage/archive/\${stamp}.json" reports/free_fixture_window_coverage/latest.json
+          python free_fixture_window_coverage.py | tee "reports/free_fixture_window_coverage/archive/${stamp}.json"
+          python -m json.tool "reports/free_fixture_window_coverage/archive/${stamp}.json" >/dev/null
+          cp "reports/free_fixture_window_coverage/archive/${stamp}.json" reports/free_fixture_window_coverage/latest.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add reports/free_fixture_window_coverage
           if ! git diff --cached --quiet; then
-            git commit -m "Archive seven-day provider fixture coverage report \${stamp}"
+            git commit -m "Archive seven-day provider fixture coverage report ${stamp}"
             git pull --rebase origin main
             git push origin HEAD:main
           fi
