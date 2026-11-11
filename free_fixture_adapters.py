@@ -75,6 +75,19 @@ def _text(value: Any) -> str:
     return str(value).strip() if value is not None else ""
 
 
+def _normalise_openligadb_competition_name(value: Any) -> str:
+    name = _text(value)
+    name = re.sub(r"\\s+20\\d{2}(?:\\s*/\\s*(?:20)?\\d{2})?$", "", name).strip()
+    aliases = {
+        "1. Fußball-Bundesliga": "Bundesliga",
+        "1. Fussball-Bundesliga": "Bundesliga",
+        "2. Fußball-Bundesliga": "2. Bundesliga",
+        "2. Fussball-Bundesliga": "2. Bundesliga",
+        "Champions League": "UEFA Champions League",
+    }
+    return aliases.get(name, name)
+
+
 def _stable_dataset_id(provider: str, competition: str, season: str,
                        kickoff: str, home: str, away: str) -> str:
     material = "|".join((provider, competition, season, kickoff, home.casefold(), away.casefold()))
@@ -300,6 +313,11 @@ class OpenFootballAdapter(_StaticDatasetAdapter):
         "us.1": "Major League Soccer",
     }
 
+    COUNTRY_NAMES = {
+        "en": "England", "de": "Germany", "es": "Spain", "it": "Italy",
+        "fr": "France", "nl": "Netherlands", "pt": "Portugal", "us": "United States",
+    }
+
     def discover_season_files(self, season: str) -> list[dict[str, str]]:
         season_value = str(season or "").strip()
         if not re.fullmatch(r"20\d{2}-\d{2}", season_value):
@@ -377,8 +395,14 @@ class OpenFootballAdapter(_StaticDatasetAdapter):
             date_value = str(row.get("date") or "")
             time_value = str(row.get("time") or "")
             kickoff = self._kickoff(date_value, time_value, row)
+            code = season_file.rsplit("/", 1)[-1].removesuffix(".json").split(".", 1)[0]
+            country = self.COUNTRY_NAMES.get(code)
+            raw_row = dict(row)
+            if country:
+                raw_row["country"] = country
+                raw_row["league"] = {"name": competition, "country": country}
             output.append(_observation(
-                self.provider, row, fetched_at=fetched, source_url=url,
+                self.provider, raw_row, fetched_at=fetched, source_url=url,
                 licence="CC0-1.0 (football.json dataset; verify upstream source provenance)",
                 competition=season_file.rsplit("/", 1)[-1].removesuffix(".json"),
                 competition_name=competition,
