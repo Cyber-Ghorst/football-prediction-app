@@ -1,7 +1,7 @@
 {
   "automatic_mapping_approvals": 0,
   "canonical_fixture_writes": 0,
-  "generated_at_utc": "2026-11-11T11:02:43.167899+00:00",
+  "generated_at_utc": "2026-11-11T12:08:10.929172+00:00",
   "prediction_ledger_writes": 0,
   "providers": {
     "api_ninjas": {
@@ -53,7 +53,7 @@
     "livescore_football": {
       "categories": {
         "leagues": {
-          "candidate_count": 9,
+          "candidate_count": 12,
           "candidates": [
             {
               "canonical_entity_id": null,
@@ -137,6 +137,36 @@
               "entity_type": "league",
               "match_method": null,
               "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "20226",
+              "provider_name": "English Women's FA Cup",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "8097",
+              "provider_name": "English Women's Super League",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "livescore_football",
               "provider_country": "Mexico",
               "provider_entity_id": "760",
               "provider_name": "Mexican Liga BBVA MX",
@@ -183,6 +213,21 @@
               "match_method": null,
               "provider": "livescore_football",
               "provider_country": "Spain",
+              "provider_entity_id": "3921",
+              "provider_name": "Spanish LALIGA 2",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "Spain",
               "provider_entity_id": "20956",
               "provider_name": "Spanish Liga F",
               "provider_parent_id": null,
@@ -194,11 +239,11 @@
           "candidates_truncated": false,
           "manual_review_candidate_count": 0,
           "status_counts": {
-            "no_exact_contextual_match": 9
+            "no_exact_contextual_match": 12
           }
         },
         "seasons": {
-          "candidate_count": 9,
+          "candidate_count": 12,
           "candidates": [
             {
               "canonical_entity_id": null,
@@ -212,6 +257,21 @@
               "provider_name": "2026",
               "provider_parent_id": "18481",
               "provider_parent_name": "English EFL Trophy",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": null,
+              "provider_entity_id": "20226::2026",
+              "provider_name": "2026",
+              "provider_parent_id": "20226",
+              "provider_parent_name": "English Women's FA Cup",
               "reason": "A verified provider-competition to canonical-competition link is required first.",
               "status": "parent_competition_unmapped"
             },
@@ -298,6 +358,21 @@
               "match_method": null,
               "provider": "livescore_football",
               "provider_country": null,
+              "provider_entity_id": "3921::2026",
+              "provider_name": "2026",
+              "provider_parent_id": "3921",
+              "provider_parent_name": "Spanish LALIGA 2",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": null,
               "provider_entity_id": "3951::2026",
               "provider_name": "2026",
               "provider_parent_id": "3951",
@@ -334,17 +409,77 @@
               "provider_parent_name": "Mexican Liga BBVA MX",
               "reason": "A verified provider-competition to canonical-competition link is required first.",
               "status": "parent_competition_unmapped"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": null,
+              "provider_entity_id": "8097::2026",
+              "provider_name": "2026",
+              "provider_parent_id": "8097",
+              "provider_parent_name": "English Women's Super League",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
             }
           ],
           "candidates_truncated": false,
           "manual_review_candidate_count": 0,
           "status_counts": {
-            "parent_competition_unmapped": 9
+            "parent_competition_unmapped": 12
           }
         },
         "teams": {
-          "candidate_count": 80,
+          "candidate_count": 92,
           "candidates": [
+            {
+              "canonical_entity_id": "sportmonks:78",
+              "canonical_name": "Brighton & Hove Albion",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "19976",
+              "provider_name": "Brighton & Hove Albion",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:18",
+              "canonical_name": "Chelsea",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "19970",
+              "provider_name": "Chelsea",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:51",
+              "canonical_name": "Crystal Palace",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "21037",
+              "provider_name": "Crystal Palace",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
             {
               "canonical_entity_id": "sportmonks:528",
               "canonical_name": "Espanyol",
@@ -355,6 +490,21 @@
               "provider_country": "Spain",
               "provider_entity_id": "21154",
               "provider_name": "Espanyol",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:13",
+              "canonical_name": "Everton",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "19972",
+              "provider_name": "Everton",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
@@ -376,6 +526,21 @@
               "status": "candidate_requires_manual_approval"
             },
             {
+              "canonical_entity_id": "sportmonks:8",
+              "canonical_name": "Liverpool",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "19971",
+              "provider_name": "Liverpool",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
               "canonical_entity_id": "sportmonks:645",
               "canonical_name": "Mallorca",
               "canonical_parent_id": null,
@@ -385,6 +550,36 @@
               "provider_country": "Spain",
               "provider_entity_id": "84",
               "provider_name": "Mallorca",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:9",
+              "canonical_name": "Manchester City",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "19257",
+              "provider_name": "Manchester City",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:14",
+              "canonical_name": "Manchester United",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "20061",
+              "provider_name": "Manchester United",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
@@ -430,6 +625,21 @@
               "provider_country": "Spain",
               "provider_entity_id": "21128",
               "provider_name": "Real Madrid",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:6",
+              "canonical_name": "Tottenham Hotspur",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "20062",
+              "provider_name": "Tottenham Hotspur",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
@@ -697,6 +907,21 @@
               "entity_type": "team",
               "match_method": null,
               "provider": "livescore_football",
+              "provider_country": "Spain",
+              "provider_entity_id": "12597",
+              "provider_name": "Burgos",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
               "provider_country": "England",
               "provider_entity_id": "2567",
               "provider_name": "Burton Albion",
@@ -809,28 +1034,13 @@
               "provider_parent_name": null,
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
               "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": null,
-              "provider": "livescore_football",
-              "provider_country": "Brazil",
-              "provider_entity_id": "9318",
-              "provider_name": "Chapecoense",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
             }
           ],
           "candidates_truncated": true,
-          "manual_review_candidate_count": 7,
+          "manual_review_candidate_count": 15,
           "status_counts": {
-            "candidate_requires_manual_approval": 7,
-            "no_exact_contextual_match": 73
+            "candidate_requires_manual_approval": 15,
+            "no_exact_contextual_match": 77
           }
         }
       },
@@ -839,12 +1049,12 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 126,
+      "observation_count": 130,
       "snapshot_count": 3,
       "source_entity_counts": {
-        "leagues": 9,
-        "seasons": 9,
-        "teams": 80
+        "leagues": 12,
+        "seasons": 12,
+        "teams": 92
       },
       "status": "ok"
     },
@@ -1959,21 +2169,6 @@
               "status": "candidate_requires_manual_approval"
             },
             {
-              "canonical_entity_id": "sportmonks:15",
-              "canonical_name": "Aston Villa",
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "openligadb",
-              "provider_country": "England",
-              "provider_entity_id": "438",
-              "provider_name": "Aston Villa",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
-            },
-            {
               "canonical_entity_id": "sportmonks:13258",
               "canonical_name": "Athletic Club",
               "canonical_parent_id": null,
@@ -2109,21 +2304,6 @@
               "status": "candidate_requires_manual_approval"
             },
             {
-              "canonical_entity_id": "sportmonks:9",
-              "canonical_name": "Manchester City",
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "openligadb",
-              "provider_country": "England",
-              "provider_entity_id": "4244",
-              "provider_name": "Manchester City",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
-            },
-            {
               "canonical_entity_id": "sportmonks:63",
               "canonical_name": "Nottingham Forest",
               "canonical_parent_id": null,
@@ -2163,6 +2343,51 @@
               "provider_country": "Spain",
               "provider_entity_id": "1802",
               "provider_name": "Rayo Vallecano",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:485",
+              "canonical_name": "Real Betis",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openligadb",
+              "provider_country": "Spain",
+              "provider_entity_id": "1804",
+              "provider_name": "Real Betis",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:3468",
+              "canonical_name": "Real Madrid",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openligadb",
+              "provider_country": "Spain",
+              "provider_entity_id": "1133",
+              "provider_name": "Real Madrid",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:594",
+              "canonical_name": "Real Sociedad",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openligadb",
+              "provider_country": "Spain",
+              "provider_entity_id": "1275",
+              "provider_name": "Real Sociedad",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
@@ -2560,10 +2785,10 @@
             }
           ],
           "candidates_truncated": true,
-          "manual_review_candidate_count": 16,
+          "manual_review_candidate_count": 17,
           "status_counts": {
-            "candidate_requires_manual_approval": 16,
-            "no_exact_contextual_match": 426
+            "candidate_requires_manual_approval": 17,
+            "no_exact_contextual_match": 425
           }
         }
       },
@@ -2572,7 +2797,7 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 12433,
+      "observation_count": 13124,
       "snapshot_count": 3,
       "source_entity_counts": {
         "leagues": 37,
