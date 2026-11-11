@@ -1,0 +1,55 @@
+name: Refresh crosswalk after canonical catalogue sync
+
+on:
+  workflow_run:
+    workflows: ["Sportmonks canonical catalogue sync"]
+    types: [completed]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: crosswalk-audit-after-catalogue-sync
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    if: github.event.workflow_run.conclusion == 'success'
+    name: Rebuild provider crosswalk review after catalogue import
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
+    steps:
+      - name: Check out latest main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Validate database credentials and certificate
+        run: |
+          test -n "$PROVIDER_DATABASE_URL" || { echo "::error::PROVIDER_DATABASE_URL secret is missing."; exit 1; }
+          test -f root.crt || { echo "::error::CockroachDB root.crt is missing."; exit 1; }
+      - name: Rebuild and archive crosswalk audit
+        run: |
+          set -euo pipefail
+          mkdir -p reports/free_fixture_crosswalk_audit/archive
+          stamp="$(date -u +%Y%m%dT%H%M%SZ)"
+          python free_fixture_crosswalk_audit.py
+          python -m json.tool reports/free_fixture_crosswalk_audit/latest.json >/dev/null
+          cp reports/free_fixture_crosswalk_audit/latest.json "reports/free_fixture_crosswalk_audit/archive/${stamp}.json"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/free_fixture_crosswalk_audit
+          if ! git diff --cached --quiet; then
+            git commit -m "Refresh crosswalk audit after canonical catalogue sync ${stamp}"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
