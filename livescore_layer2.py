@@ -7,60 +7,8 @@ completed Sportmonks fixture; it never replaces a valid Sportmonks score.
 """
 from __future__ import annotations
 
-from copy import deepcopy
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Any, Mapping
-
-from canonical_data import MatchNormalizationError, canonicalize_livescore_event, match_identity
-from competition_crosswalk import build_competition_crosswalk, verified_livescore_slug
-from provider_health import assess_livescore_fixture_freshness, assess_livescore_metadata
-from sportmonks_canonical import canonicalize_sportmonks_fixture
-from sportmonks_layer2 import _CORE_STATISTICS, _provider_id, _state
-
-
-def _utc_timestamp(value: Any) -> datetime | None:
-    if not isinstance(value, str) or not value.strip():
-        return None
-    try:
-        parsed = datetime.fromisoformat(value.strip().replace("Z", "+00:00"))
-    except ValueError:
-        return None
-    if parsed.tzinfo is None:
-        return None
-    return parsed.astimezone(timezone.utc)
-
-
-def _has_explicit_current_score_rows(fixture: Mapping[str, Any]) -> bool:
-    rows = fixture.get("scores")
-    if not isinstance(rows, list):
-        return False
-    for row in rows:
-        if not isinstance(row, Mapping):
-            continue
-        score_type = row.get("type") if isinstance(row.get("type"), Mapping) else {}
-        label = row.get("description") or score_type.get("name") or ""
-        if str(label).strip().casefold() == "current":
-            return True
-    return False
-
-
-def _fixture_participants(fixture: Mapping[str, Any]) -> tuple[dict[str, Any], dict[str, Any]] | None:
-    participants = fixture.get("participants")
-    if not isinstance(participants, list):
-        return None
-    by_side = {
-        str((row.get("meta") or {}).get("location") or "").casefold(): row
-        for row in participants
-        if isinstance(row, Mapping)
-    }
-    home, away = by_side.get("home"), by_side.get("away")
-    if not isinstance(home, dict) or not isinstance(away, dict):
-        return None
-    if _provider_id(home.get("id")) is None or _provider_id(away.get("id")) is None:
-        return None
-    if not home.get("name") or not away.get("name"):
-        return None
-    return home, away
 
 
 def collect_livescore_verified_result_fallback(
