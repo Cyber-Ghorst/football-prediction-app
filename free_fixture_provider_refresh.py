@@ -42,7 +42,6 @@ def refresh_free_fixture_sources(
     today: datetime | None = None,
     bzzoiro_token: str | None = None,
     max_openligadb_scopes: int = 45,
-    max_livescore_leagues: int = 30,
 ) -> dict[str, Any]:
     """Discover current provider scopes, collect schedules and archive observations."""
     if not database_url:
@@ -52,8 +51,6 @@ def refresh_free_fixture_sources(
         now = now.replace(tzinfo=timezone.utc)
     now = now.astimezone(timezone.utc)
     season_start_year = now.year if now.month >= 7 else now.year - 1
-    date_from = now.date().isoformat()
-    date_to = (now.date() + timedelta(days=7)).isoformat()
     batch_slot = int(now.timestamp() // (6 * 60 * 60))
     results: dict[str, Any] = {}
 
@@ -131,7 +128,6 @@ def refresh_free_fixture_sources(
     }
     return {
         "run_at": now.isoformat(),
-        "window": {"date_from": date_from, "date_to": date_to},
         "batch_slot": batch_slot,
         "providers": results,
         "canonical_fixture_writes": 0,
@@ -143,12 +139,10 @@ def main() -> int:
     database_url = os.getenv("PROVIDER_DATABASE_URL", "")
     token = os.getenv("BZZOIRO_API_TOKEN", "")
     max_openligadb = int(os.getenv("FREE_FIXTURE_OPENLIGADB_MAX_SCOPES", "45"))
-    max_livescore = int(os.getenv("FREE_FIXTURE_LIVESCORE_MAX_LEAGUES", "30"))
     report = refresh_free_fixture_sources(
         database_url,
         bzzoiro_token=token or None,
         max_openligadb_scopes=max_openligadb,
-        max_livescore_leagues=max_livescore,
     )
     print(json.dumps(report, sort_keys=True, default=str))
     return 0
