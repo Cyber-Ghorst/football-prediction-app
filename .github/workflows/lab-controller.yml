@@ -13,6 +13,7 @@ on:
           - full_check
           - prediction_run
           - result_sync
+          - learning_audit
           - tipmaster_refresh_verify
           - openscores_connection_check
           - openscores_entity_mapping_audit
@@ -122,7 +123,7 @@ jobs:
               trigger = json.loads(Path(".agent/trigger.json").read_text(encoding="utf-8"))
               operation = trigger.get("operation", "")
 
-          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync", "tipmaster_refresh_verify", "openscores_connection_check", "openscores_entity_mapping_audit", "openscores_sportmonks_reconciliation", "sportmonks_catalogue_access_audit", "provider_league_catalogue_audit"}
+          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync", "tipmaster_refresh_verify", "openscores_connection_check", "openscores_entity_mapping_audit", "openscores_sportmonks_reconciliation", "sportmonks_catalogue_access_audit", "provider_league_catalogue_audit", "learning_audit"}
           if operation not in allowed:
               raise SystemExit("Rejected unsupported or missing operation")
           if operation == "prediction_run":
@@ -277,7 +278,7 @@ jobs:
           PY
 
       - name: Install health-check dependencies
-        if: steps.operation.outputs.operation == 'health_check' || steps.operation.outputs.operation == 'full_check' || steps.operation.outputs.operation == 'result_sync' || steps.operation.outputs.operation == 'tipmaster_refresh_verify' || steps.operation.outputs.operation == 'openscores_connection_check' || steps.operation.outputs.operation == 'openscores_entity_mapping_audit' || steps.operation.outputs.operation == 'openscores_sportmonks_reconciliation'
+        if: steps.operation.outputs.operation == 'health_check' || steps.operation.outputs.operation == 'full_check' || steps.operation.outputs.operation == 'result_sync' || steps.operation.outputs.operation == 'learning_audit' || steps.operation.outputs.operation == 'tipmaster_refresh_verify' || steps.operation.outputs.operation == 'openscores_connection_check' || steps.operation.outputs.operation == 'openscores_entity_mapping_audit' || steps.operation.outputs.operation == 'openscores_sportmonks_reconciliation'
         run: |
           exec > >(tee -a controller-report.txt) 2>&1
           python -m pip install --upgrade pip
@@ -318,6 +319,27 @@ jobs:
           set -o pipefail
           exec > >(tee -a controller-report.txt) 2>&1
           python sync_prediction_results.py --limit 10 | tee prediction-result-sync-report.json
+
+      - name: Build leakage-safe learning readiness report
+        if: steps.operation.outputs.operation == 'learning_audit' || steps.operation.outputs.operation == 'full_check' || github.event_name == 'schedule'
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          set -euo pipefail
+          mkdir -p reports/learning_readiness/archive
+          stamp="$(date -u +%Y%m%dT%H%M%SZ)"
+          LEARNING_READINESS_REPORT_PATH=learning-readiness-report.json python learning_readiness_audit.py
+          python -m json.tool learning-readiness-report.json >/dev/null
+          cp learning-readiness-report.json reports/learning_readiness/latest.json
+          cp learning-readiness-report.json "reports/learning_readiness/archive/${stamp}.json"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/learning_readiness
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive learning readiness report ${stamp}"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
 
       - name: Install test dependencies
         if: always() && (steps.operation.outputs.operation == 'test_suite' || steps.operation.outputs.operation == 'full_check')
@@ -575,6 +597,7 @@ jobs:
               ("sportmonks-catalogue-access-report.json", "Sportmonks account catalogue access audit"),
               ("provider-league-catalogue-audit.json", "Highlightly and LiveScoreFootball league catalogue audit"),
               ("prediction-run-report.json", "Automated prediction run report"),
+              ("learning-readiness-report.json", "Leakage-safe learning readiness report"),
           )
           for filename, heading in report_files:
               path = Path(filename)
@@ -680,6 +703,7 @@ jobs:
             sportmonks-catalogue-access-report.json
             provider-league-catalogue-audit.json
             prediction-run-report.json
+            learning-readiness-report.json
             watchdog-report.json
             latest-controller-report.json
           if-no-files-found: warn
