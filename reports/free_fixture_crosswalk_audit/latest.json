@@ -1,7 +1,7 @@
 {
   "automatic_mapping_approvals": 0,
   "canonical_fixture_writes": 0,
-  "generated_at_utc": "2026-11-11T12:08:10.929172+00:00",
+  "generated_at_utc": "2026-11-11T12:32:15.012340+00:00",
   "prediction_ledger_writes": 0,
   "providers": {
     "api_ninjas": {
@@ -1049,7 +1049,7 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 130,
+      "observation_count": 134,
       "snapshot_count": 3,
       "source_entity_counts": {
         "leagues": 12,
@@ -2797,7 +2797,7 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 13124,
+      "observation_count": 13815,
       "snapshot_count": 3,
       "source_entity_counts": {
         "leagues": 37,
