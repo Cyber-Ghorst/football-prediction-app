@@ -64,6 +64,33 @@ class ProviderEntityCrosswalkTests(unittest.TestCase):
         self.assertEqual(rows[0]["canonical_entity_id"], "sportmonks:1")
         self.assertIn("explicit review", rows[0]["reason"])
         
+    def test_openligadb_season_suffixed_league_uses_safe_country_alias(self):
+        rows = build_entity_crosswalk_candidates(
+            "openligadb", "league",
+            [{
+                "id": "4937",
+                "name": "1. Fußball-Bundesliga 2026/2027",
+                "country": "Deutschland",
+            }],
+            [{
+                "league_id": "sportmonks:bundesliga",
+                "name": "Bundesliga",
+                "country": "Germany",
+            }],
+        )
+        self.assertEqual(rows[0]["status"], "candidate_requires_manual_approval")
+        self.assertEqual(rows[0]["canonical_entity_id"], "sportmonks:bundesliga")
+        self.assertEqual(rows[0]["provider_country"], "Deutschland")
+
+    def test_openfootball_league_requires_and_uses_country_context(self):
+        rows = build_entity_crosswalk_candidates(
+            "openfootball", "league",
+            [{"id": "en.1", "name": "Premier League", "country": "England"}],
+            [{"league_id": "sportmonks:8", "name": "Premier League", "country": "England"}],
+        )
+        self.assertEqual(rows[0]["status"], "candidate_requires_manual_approval")
+        self.assertEqual(rows[0]["provider_country"], "England")
+
     def test_missing_country_never_creates_automatic_team_candidate(self):
         rows = build_entity_crosswalk_candidates(
             "openfootball", "team",
