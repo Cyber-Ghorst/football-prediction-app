@@ -42,10 +42,16 @@ class ProviderRoutingTests(unittest.TestCase):
         self.assertEqual(result["fallback"], ["fallback_b"])
         self.assertEqual(result["validation"], ["validator"])
 
-    def test_openscores_is_not_a_future_fixture_provider(self):
+    def test_livescore_and_openligadb_are_active_future_fixture_sources(self):
         registry = default_provider_registry()
-        self.assertEqual(registry.primary_sources("future_fixtures"), ["sportmonks"])
-        self.assertEqual(registry.primary_sources("future_fixtures", "premier league"), ["sportmonks"])
+        self.assertEqual(
+            registry.primary_sources("future_fixtures"),
+            ["livescore_football", "openligadb"],
+        )
+        self.assertEqual(
+            registry.primary_sources("future_fixtures", "premier league"),
+            ["livescore_football", "openligadb"],
+        )
         self.assertNotIn("highlightly", registry.primary_sources("future_fixtures"))
         self.assertNotIn("api_ninjas", registry.primary_sources("future_fixtures"))
         self.assertNotIn("openscores", registry.primary_sources("fixtures"))
@@ -59,10 +65,13 @@ class ProviderRoutingTests(unittest.TestCase):
             {"openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro", "highlightly", "api_ninjas"},
         )
         self.assertNotIn("worldcup26", FREE_FIXTURE_CANDIDATES)
-        for provider in FREE_FIXTURE_CANDIDATES:
+        self.assertEqual(
+            registry.primary_sources("future_fixtures"),
+            ["livescore_football", "openligadb"],
+        )
+        for provider in ("openfootball", "open_matchday", "bzzoiro", "highlightly", "api_ninjas"):
             self.assertNotIn(provider, registry.primary_sources("future_fixtures"))
-        self.assertEqual(registry.primary_sources("future_fixtures"), ["sportmonks"])
-        self.assertEqual(registry.primary_sources("future_fixtures", "premier league"), ["sportmonks"])
+        self.assertNotIn("sportmonks", registry.primary_sources("future_fixtures"))
 
     def test_api_football_route_is_historical_category_specific(self):
         registry = default_provider_registry()
