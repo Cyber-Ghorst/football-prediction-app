@@ -52,6 +52,18 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         self.assertEqual(scopes[2]["season"], 2027)
         client.close()
 
+    def test_openligadb_unknown_league_id_keeps_country_unmapped(self):
+        client = OpenLigaDBAdapter()
+        client._get_json = Mock(return_value=[{
+            "leagueId": 999999, "leagueName": "Uncatalogued Competition",
+            "leagueShortcut": "unknown", "leagueSeason": "2026",
+            "sport": {"sportName": "Football"},
+        }])
+        scopes = client.discover_scopes([2026])
+        self.assertEqual(len(scopes), 1)
+        self.assertIsNone(scopes[0]["country"])
+        client.close()
+
     def test_openfootball_discovers_json_files_for_season(self):
         client = OpenFootballAdapter()
         client._get_json = Mock(return_value=[
