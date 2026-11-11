@@ -57,6 +57,7 @@ class FreeFixtureWindowCoverageTests(unittest.TestCase):
         }
         report = build_window_coverage_report(
             snapshots, now=NOW, daily_target=2,
+            highlightly_use_allowed=True, api_ninjas_noncommercial_confirmed=True,
         )
         self.assertEqual(report["fresh_provider_fixture_records_in_window"], 3)
         self.assertEqual(report["unique_fixtures_in_window"], 2)
@@ -86,7 +87,9 @@ class FreeFixtureWindowCoverageTests(unittest.TestCase):
                 observation("bzzoiro", "bz:1", kickoff="2026-11-12T15:00:00"),
             ])],
         }
-        report = build_window_coverage_report(snapshots, now=NOW)
+        report = build_window_coverage_report(
+            snapshots, now=NOW, highlightly_use_allowed=True,
+        )
         self.assertEqual(report["stale_snapshots_skipped"], 1)
         self.assertEqual(
             report["rejected_observation_counts"]["missing_timezone_aware_timestamp"],
@@ -103,7 +106,10 @@ class FreeFixtureWindowCoverageTests(unittest.TestCase):
                 observation("highlightly", "hl:bad-status", status="in_play"),
             ])],
         }
-        report = build_window_coverage_report(snapshots, now=NOW)
+        report = build_window_coverage_report(
+            snapshots, now=NOW, highlightly_use_allowed=True,
+            api_ninjas_noncommercial_confirmed=True,
+        )
         self.assertEqual(
             report["rejected_observation_counts_by_provider"]["api_ninjas"]["missing_timezone_aware_timestamp"],
             1,
@@ -132,13 +138,18 @@ class FreeFixtureWindowCoverageTests(unittest.TestCase):
                 observation("api_ninjas", "ninjas:late", kickoff="2026-11-20T15:00:00Z"),
             ])],
         }
-        report = build_window_coverage_report(snapshots, now=NOW)
+        report = build_window_coverage_report(
+            snapshots, now=NOW, api_ninjas_noncommercial_confirmed=True,
+        )
         self.assertEqual(report["source_observations_loaded"], 2)
         self.assertEqual(report["unique_fixtures_in_window"], 0)
 
     @patch("free_fixture_window_coverage.load_provider_observation_snapshots", return_value=[])
     def test_loads_recent_snapshots_for_every_approved_provider(self, load):
-        report = build_free_fixture_window_coverage("provider-db", now=NOW)
+        report = build_free_fixture_window_coverage(
+            "provider-db", now=NOW, highlightly_use_allowed=True,
+            api_ninjas_noncommercial_confirmed=True,
+        )
         self.assertEqual(load.call_count, len(PROVIDERS))
         self.assertEqual(
             {call.kwargs["provider"] for call in load.call_args_list},
@@ -146,6 +157,17 @@ class FreeFixtureWindowCoverageTests(unittest.TestCase):
         )
         self.assertTrue(all(call.kwargs["limit"] == 5 for call in load.call_args_list))
         self.assertEqual(report["unique_fixtures_in_window"], 0)
+
+    @patch("free_fixture_window_coverage.load_provider_observation_snapshots", return_value=[])
+    def test_restricted_providers_are_not_loaded_without_use_acknowledgements(self, load):
+        report = build_free_fixture_window_coverage("provider-db", now=NOW)
+        loaded = {call.kwargs["provider"] for call in load.call_args_list}
+        self.assertNotIn("highlightly", loaded)
+        self.assertNotIn("api_ninjas", loaded)
+        self.assertEqual(
+            set(report["providers_excluded_by_terms"]),
+            {"highlightly", "api_ninjas"},
+        )
 
     def test_requires_timezone_aware_now(self):
         with self.assertRaises(ValueError):
