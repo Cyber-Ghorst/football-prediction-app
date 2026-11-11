@@ -6,6 +6,7 @@ on:
     paths:
       - "free_fixture_provider_refresh.py"
       - "free_fixture_crosswalk_audit.py"
+      - "provider_data_storage.py"
       - "free_fixture_adapters.py"
       - "free_fixture_observation_pipeline.py"
       - ".github/workflows/upcoming-fixture-collection.yml"

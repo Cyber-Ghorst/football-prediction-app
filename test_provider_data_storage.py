@@ -30,7 +30,7 @@ class FakeCursor:
         elif normalized.startswith("INSERT INTO provider_competition_registry"):
             self.connection.competition_registry.append(params)
         elif normalized.startswith("SELECT identity_key, provider, provider_competition_id"):
-            self.result = self.connection.competition_registry[:params[2]]
+            self.result = self.connection.competition_registry[:params[-1]]
         elif normalized.startswith("SELECT audit_id, competition, season, fixture_identity"):
             self.result = self.connection.conflict_audits[:params[2]]
         elif normalized.startswith("SELECT snapshot_id, competition, season, primary_provider"):
@@ -344,6 +344,10 @@ class ProviderStorageTests(unittest.TestCase):
         loaded = storage.load_competition_registry("postgresql://example", provider="sportmonks")
         self.assertEqual(loaded[0]["identity_key"], "sportmonks|8|28083")
         self.assertFalse(loaded[0]["prediction_ready"])
+
+    def test_competition_registry_can_load_all_providers_without_nullable_filter(self):
+        loaded = storage.load_competition_registry("postgresql://example")
+        self.assertEqual(loaded, [])
 
     def test_competition_registry_rejects_invalid_identity_or_readiness(self):
         with self.assertRaises(ValueError):
