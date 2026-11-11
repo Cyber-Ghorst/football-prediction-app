@@ -12,7 +12,7 @@ from provider_data_storage import load_provider_observation_snapshots
 from provider_entity_crosswalk import (
     build_entity_crosswalk_candidates,
     extract_provider_entities_from_observations,
-    load_provider_entity_links,
+    load_provider_entity_links_by_type,
 )
 
 
@@ -57,15 +57,12 @@ def build_provider_crosswalk_review_report(
     league_candidates = build_entity_crosswalk_candidates(
         provider_name, "league", source["leagues"], canonical_leagues
     )
-    existing_league_links = load_provider_entity_links(
-        database_url, provider=provider_name, entity_type="league"
+    existing_links = load_provider_entity_links_by_type(
+        database_url, provider=provider_name
     )
-    existing_season_links = load_provider_entity_links(
-        database_url, provider=provider_name, entity_type="season"
-    )
-    existing_team_links = load_provider_entity_links(
-        database_url, provider=provider_name, entity_type="team"
-    )
+    existing_league_links = existing_links.get("league", {})
+    existing_season_links = existing_links.get("season", {})
+    existing_team_links = existing_links.get("team", {})
     season_candidates = build_entity_crosswalk_candidates(
         provider_name, "season", source["seasons"], canonical_seasons,
         canonical_parent_ids=existing_league_links,
