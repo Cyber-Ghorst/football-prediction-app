@@ -16,7 +16,7 @@ permissions:
 
 concurrency:
   group: main-report-archive
-  cancel-in-progress: false
+  queue: max
 
 jobs:
   audit:
