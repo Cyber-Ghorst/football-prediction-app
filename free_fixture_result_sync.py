@@ -230,7 +230,11 @@ def _free_candidates(records: list[Mapping[str, Any]], now: datetime) -> list[li
         fixture_id = str(row.get("fixture_id") or "").strip()
         if provider not in SUPPORTED_RESULT_PROVIDERS or not fixture_id.startswith(f"{provider}:"):
             continue
-        if row.get("actual_home_goals") not in (None, "") or row.get("actual_away_goals") not in (None, ""):
+        if (
+            row.get("actual_home_goals") not in (None, "")
+            or row.get("actual_away_goals") not in (None, "")
+            or row.get("actual_result") not in (None, "")
+        ):
             continue
         kickoff = _timestamp(row.get("kickoff_at"))
         if kickoff is None or kickoff > now:
@@ -364,7 +368,11 @@ def sync_free_source_results(
             for row in group:
                 if not isinstance(row, dict):
                     continue
-                if row.get("actual_home_goals") not in (None, "") or row.get("actual_away_goals") not in (None, ""):
+                if (
+                    row.get("actual_home_goals") not in (None, "")
+                    or row.get("actual_away_goals") not in (None, "")
+                    or row.get("actual_result") not in (None, "")
+                ):
                     continue
                 row["actual_home_goals"] = score[0]
                 row["actual_away_goals"] = score[1]
