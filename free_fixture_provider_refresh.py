@@ -103,6 +103,7 @@ def refresh_free_fixture_sources(
         livescore_client = LiveScoreFootballClient()
         league_rows = livescore_client.leagues(kind="all", available=True)
         slugs = []
+        league_sync_times = {}
         if isinstance(league_rows, list):
             for row in league_rows:
                 if not isinstance(row, dict):
@@ -110,11 +111,13 @@ def refresh_free_fixture_sources(
                 slug = row.get("slug") or row.get("league_slug") or row.get("leagueSlug")
                 if slug and str(slug) not in slugs:
                     slugs.append(str(slug))
+                    league_sync_times[str(slug)] = row.get("lastSyncedAt")
         all_slugs = list(slugs)
         slugs = _rotate_batch(all_slugs, max_livescore_leagues, batch_slot)
         results["livescore_football"] = collect_livescore_observations(
             database_url, slugs, date_from=date_from, date_to=date_to,
             client=livescore_client, request_delay_seconds=0.5,
+            league_sync_times=league_sync_times,
         ) if slugs else {
             "provider": "livescore_football", "archived": False,
             "observation_count": 0, "eligible_for_review_count": 0,
