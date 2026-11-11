@@ -47,10 +47,11 @@ class StreamlitApplicationSmokeTests(unittest.TestCase):
             msg="The app did not surface the expected controlled provider-configuration message.",
         )
         labels = {item.label: item.value for item in app.checkbox}
-        self.assertFalse(labels.get("Use exact verified results to fill missing recent history", True))
-        self.assertFalse(labels.get("Use fresh LiveScoreFootball to fill missing Sportmonks results", True))
-        self.assertFalse(labels.get("Use Highlightly to fill missing match statistics", True))
-        self.assertFalse(labels.get("Use Highlightly lineups when Sportmonks lineups are missing", True))
+        self.assertNotIn("Cross-check recent results with Highlightly and API Ninjas", labels)
+        self.assertNotIn("Use exact verified results to fill missing recent history", labels)
+        self.assertFalse(labels.get("Use fresh LiveScoreFootball to fill missing Sportmonks results", False))
+        self.assertNotIn("Use Highlightly to fill missing match statistics", labels)
+        self.assertNotIn("Use Highlightly lineups when Sportmonks lineups are missing", labels)
 
 
 if __name__ == "__main__":
