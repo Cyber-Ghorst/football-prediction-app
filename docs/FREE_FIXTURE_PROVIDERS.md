@@ -19,10 +19,10 @@ calculations, tactical recency policy, TVD or prediction ledger.
 | OpenLigaDB | Free public API; no key | Broad community catalogue, strongest in German football | 60 requests/minute per IP; community-maintained; no SLA. Confirm applicable data licence before commercial redistribution. | Candidate / validation |
 | OpenFootball (football.json) | Public JSON; no key | Major European leagues and additional competitions | CC0 dataset. Current-season JSON mirror refreshes daily, but upstream Football.TXT source updates are not automatically daily; kickoff timezone must be established before timestamp use. | Candidate / validation |
 | Open Matchday | Public CSV on GitHub; no key | Advertises 75 competitions and daily refresh | Explicitly non-commercial only; not a live feed; kickoff time uses a fixed CET-1 convention and can be one hour off in summer. **Do not use in a commercial deployment without written permission or a different licence.** | Research-only candidate |
-| LiveScoreFootball (public host: worldcup26.ir) | Public JSON REST API; no key | Competition catalogue currently documents verified coverage focused on England and Spain | Existing adapter exposes a paginated fixtures endpoint with scheduled status and date filters. Data is stored by an external listener, so freshness and per-event kickoff precision must be measured. This is one provider, not a separate WorldCup26 source. | Candidate / validation only |
+| TheSportsDB | Free API key 123; no private token | Broad international league catalogue searchable by country | 30 requests/minute; free search returns up to 10 leagues per country; eventsnextleague returns only one next event per league. Free tier is for development; app-store publication requires a paid subscription. Exact timestamps and deployment rights must be validated. | Manual, terms-gated candidate only |
 | Bzzoiro Sports Data | Free football API; account token required | Advertises 60+ competitions and 7,500 requests/day on free access | Free tier is stated to be permanent and no-card. Terms allow display in apps and use of derived prediction outputs, but prohibit redistributing raw data as a standalone feed/database/API. | Candidate / validation |
 
-## Live-fixture acceptance gates
+## Live audit: removed provider\n\nLiveScoreFootball is not a future-fixture source for this app. The current worldcup26.ir service is a FIFA World Cup 2026 dataset (48 teams, 104 matches), not a broad multi-league catalogue. The tournament ended on 19 July 2026. The generic /get/soccer/{league}/fixtures route used by the old adapter returned HTTP 400 for every tested league. The documented /get/games endpoint is historical World Cup data and requires JWT authentication. It has been removed from future-fixture candidates and scheduled fixture polling; its only retained role is a possible World Cup 2026 historical-results and group-standings source, pending a correct authenticated adapter.\n\n## Live-fixture acceptance gates
 
 A provider is not considered eligible globally. Eligibility is recorded per
 provider and canonical competition:
@@ -67,7 +67,7 @@ postponements until its event-level freshness has been measured.
 
 ## Required secret
 
-Only Bzzoiro requires an account token:
+Bzzoiro requires an account token; TheSportsDB uses its documented public free key 123:
 
 - `BZZOIRO_API_TOKEN`
 
@@ -80,6 +80,6 @@ are documented as no-key public endpoints/datasets.
 - OpenLigaDB API: https://api.openligadb.de/index.html
 - OpenFootball data and CC0 licence: https://github.com/openfootball/football.json
 - Open Matchday README and terms: https://github.com/oladeeayo/open-matchday
-- LiveScoreFootball API and source repository: https://worldcup26.ir/football-api and https://github.com/rezarahiminia/livescoreFootball
+- TheSportsDB API and terms: https://www.thesportsdb.com/api.php and https://www.thesportsdb.com/terms.php\n- WorldCup26 / LiveScoreFootball fork: https://github.com/rezarahiminia/livescoreFootball
 - Bzzoiro free plan: https://sports.bzzoiro.com/pricing/
 - Bzzoiro data licence: https://sports.bzzoiro.com/docs/api-license/
