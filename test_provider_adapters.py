@@ -90,6 +90,15 @@ class ProviderAdapterTests(unittest.TestCase):
             client.fixtures_by_date("2026-11-11")
         client.close()
 
+    def test_api_football_fixtures_by_date_accepts_empty_single_page(self):
+        client = APIFootballClient(api_key="test-only")
+        client._request = Mock(return_value=[])
+        client.last_paging = {"current": 1, "total": 1}
+        self.assertEqual(client.fixtures_by_date("2026-11-11"), [])
+        self.assertEqual(client.last_fixture_request_count, 1)
+        client.close()
+
+
 
     def test_api_ninjas_connection_test_exposes_safe_quota_headers(self):
         client = APINinjasClient(api_key="test-only")
