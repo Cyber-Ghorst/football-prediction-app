@@ -763,12 +763,28 @@ def get_repository_teams(
         raise ValueError("PROVIDER_DATABASE_URL is required.")
     if season_id and league_id:
         raise ValueError("Pass season_id or league_id, not both.")
+    team_country_expression = """COALESCE(
+        NULLIF(t.country, ''),
+        (
+            SELECT CASE
+                WHEN COUNT(DISTINCT LOWER(BTRIM(l.country))) = 1 THEN MAX(l.country)
+                ELSE NULL
+            END
+            FROM football_fixtures AS country_fixtures
+            JOIN football_leagues AS l
+              ON l.league_id = country_fixtures.league_id
+            WHERE (country_fixtures.home_team_id = t.team_id
+                   OR country_fixtures.away_team_id = t.team_id)
+              AND NULLIF(BTRIM(l.country), '') IS NOT NULL
+              AND LOWER(BTRIM(l.country)) NOT IN ('world', 'europe', 'international')
+        )
+    )"""
     with _connect(database_url) as connection:
         with connection.cursor() as cursor:
             if season_id:
                 cursor.execute(
-                    """
-                    SELECT DISTINCT t.team_id, t.name, t.short_name, t.country,
+                    f"""
+                    SELECT DISTINCT t.team_id, t.name, t.short_name, {team_country_expression} AS country,
                            t.source_provider, t.provider_updated_at, t.collected_at
                     FROM football_teams AS t
                     JOIN football_fixtures AS f
@@ -793,10 +809,10 @@ def get_repository_teams(
                 )
             else:
                 cursor.execute(
-                    """
-                    SELECT team_id, name, short_name, country, source_provider,
+                    f"""
+                    SELECT t.team_id, t.name, t.short_name, {team_country_expression} AS country, t.source_provider,
                            provider_updated_at, collected_at
-                    FROM football_teams
+                    FROM football_teams AS t
                     ORDER BY name
                     """
                 )
