@@ -88,6 +88,9 @@ def build_window_coverage_report(
     daily_target: int = 90,
     max_highlights: int = 50,
     max_age_hours: int = 24,
+    highlightly_use_allowed: bool = False,
+    api_ninjas_noncommercial_confirmed: bool = False,
+    open_matchday_noncommercial_confirmed: bool = False,
 ) -> dict[str, Any]:
     current = _utc_datetime(now or datetime.now(timezone.utc))
     if current is None:
@@ -108,6 +111,7 @@ def build_window_coverage_report(
     stale_snapshot_count = 0
     rejected_observation_counts: Counter[str] = Counter()
     rejected_by_provider: dict[str, Counter[str]] = {provider: Counter() for provider in PROVIDERS}
+    excluded_provider_snapshot_counts: dict[str, int] = {}
 
     def reject(provider: str, reason: str) -> None:
         rejected_observation_counts[reason] += 1
@@ -115,6 +119,18 @@ def build_window_coverage_report(
 
     for provider in PROVIDERS:
         snapshots = list(snapshots_by_provider.get(provider) or [])
+        if provider == "highlightly" and not highlightly_use_allowed:
+            provider_snapshot_counts[provider] = 0
+            excluded_provider_snapshot_counts[provider] = len(snapshots)
+            continue
+        if provider == "api_ninjas" and not api_ninjas_noncommercial_confirmed:
+            provider_snapshot_counts[provider] = 0
+            excluded_provider_snapshot_counts[provider] = len(snapshots)
+            continue
+        if provider == "open_matchday" and not open_matchday_noncommercial_confirmed:
+            provider_snapshot_counts[provider] = 0
+            excluded_provider_snapshot_counts[provider] = len(snapshots)
+            continue
         provider_snapshot_counts[provider] = len(snapshots)
         for snapshot in snapshots:
             retrieved = _utc_datetime(snapshot.get("retrieved_at"))
@@ -241,6 +257,14 @@ def build_window_coverage_report(
         "target_fixtures_in_window": total_target,
         "max_highlights": max_highlights,
         "provider_snapshot_counts": provider_snapshot_counts,
+        "excluded_provider_snapshot_counts_by_terms": excluded_provider_snapshot_counts,
+        "providers_excluded_by_terms": [
+            provider for provider, allowed in (
+                ("highlightly", highlightly_use_allowed),
+                ("api_ninjas", api_ninjas_noncommercial_confirmed),
+                ("open_matchday", open_matchday_noncommercial_confirmed),
+            ) if not allowed
+        ],
         "source_observations_loaded": source_observation_count,
         "fresh_provider_fixture_records_in_window": len(provider_rows),
         "unique_fixtures_in_window": total_unique,
@@ -280,19 +304,31 @@ def build_free_fixture_window_coverage(
     max_highlights: int = 50,
     max_age_hours: int = 24,
     snapshot_limit: int = 5,
+    highlightly_use_allowed: bool = False,
+    api_ninjas_noncommercial_confirmed: bool = False,
+    open_matchday_noncommercial_confirmed: bool = False,
 ) -> dict[str, Any]:
     if not database_url:
         raise ValueError("PROVIDER_DATABASE_URL is required.")
-    snapshots_by_provider = {
-        provider: load_provider_observation_snapshots(
-            database_url, provider=provider, limit=snapshot_limit,
-        )
-        for provider in PROVIDERS
-    }
+    snapshots_by_provider = {}
+    for provider in PROVIDERS:
+        if provider == "highlightly" and not highlightly_use_allowed:
+            snapshots_by_provider[provider] = []
+        elif provider == "api_ninjas" and not api_ninjas_noncommercial_confirmed:
+            snapshots_by_provider[provider] = []
+        elif provider == "open_matchday" and not open_matchday_noncommercial_confirmed:
+            snapshots_by_provider[provider] = []
+        else:
+            snapshots_by_provider[provider] = load_provider_observation_snapshots(
+                database_url, provider=provider, limit=snapshot_limit,
+            )
     return build_window_coverage_report(
         snapshots_by_provider, now=now, window_days=window_days,
         daily_target=daily_target, max_highlights=max_highlights,
         max_age_hours=max_age_hours,
+        highlightly_use_allowed=highlightly_use_allowed,
+        api_ninjas_noncommercial_confirmed=api_ninjas_noncommercial_confirmed,
+        open_matchday_noncommercial_confirmed=open_matchday_noncommercial_confirmed,
     )
 
 
@@ -305,6 +341,18 @@ def main() -> int:
         max_highlights=int(os.getenv("FREE_FIXTURE_MAX_HIGHLIGHTS", "50")),
         max_age_hours=int(os.getenv("FREE_FIXTURE_WINDOW_MAX_AGE_HOURS", "24")),
         snapshot_limit=int(os.getenv("FREE_FIXTURE_WINDOW_SNAPSHOT_LIMIT", "5")),
+        highlightly_use_allowed=(
+            os.getenv("FREE_FIXTURE_TERMS_ACK_HIGHLIGHTLY", "").casefold() in {"1", "true", "yes", "on"}
+            and os.getenv("HIGHLIGHTLY_NON_BETTING_USE_CONFIRMED", "").casefold() in {"1", "true", "yes", "on"}
+        ),
+        api_ninjas_noncommercial_confirmed=(
+            os.getenv("FREE_FIXTURE_TERMS_ACK_API_NINJAS", "").casefold() in {"1", "true", "yes", "on"}
+            and os.getenv("FREE_FIXTURE_NONCOMMERCIAL_ACK_API_NINJAS", "").casefold() in {"1", "true", "yes", "on"}
+        ),
+        open_matchday_noncommercial_confirmed=(
+            os.getenv("FREE_FIXTURE_TERMS_ACK_OPEN_MATCHDAY", "").casefold() in {"1", "true", "yes", "on"}
+            and os.getenv("FREE_FIXTURE_NONCOMMERCIAL_ACK_OPEN_MATCHDAY", "").casefold() in {"1", "true", "yes", "on"}
+        ),
     )
     print(json.dumps(report, default=str, sort_keys=True))
     return 0

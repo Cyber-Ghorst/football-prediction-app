@@ -53,3 +53,11 @@ idempotently. The prediction ledger is never modified by this workflow.
 
 OpenScores remains excluded from future-fixture discovery. Prediction weights,
 TVD and model inference are unchanged.
+
+
+## Provider terms gates
+
+- Highlightly fixture collection, crosswalk review, promotion and result verification are disabled unless both `FREE_FIXTURE_TERMS_ACK_HIGHLIGHTLY` and `HIGHLIGHTLY_NON_BETTING_USE_CONFIRMED` are explicitly set. The second setting must only be enabled when the app will not use its data to support betting or wagering.
+- API Ninjas free-plan collection, crosswalk review, promotion and result verification require both `FREE_FIXTURE_TERMS_ACK_API_NINJAS` and `FREE_FIXTURE_NONCOMMERCIAL_ACK_API_NINJAS`.
+- Open Matchday crosswalk review, promotion and result verification require both `FREE_FIXTURE_TERMS_ACK_OPEN_MATCHDAY` and `FREE_FIXTURE_NONCOMMERCIAL_ACK_OPEN_MATCHDAY`; its collection remains disabled pending the licence review.
+- Coverage reports exclude providers whose required use acknowledgements are absent, so archived observations do not inflate the production-eligible fixture target.

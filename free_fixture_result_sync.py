@@ -534,6 +534,9 @@ def sync_free_source_results(
     now: datetime | None = None,
     limit: int = 10,
     bzzoiro_token: str | None = None,
+    highlightly_non_betting_confirmed: bool = False,
+    api_ninjas_noncommercial_confirmed: bool = False,
+    open_matchday_noncommercial_confirmed: bool = False,
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     """Verify blank ledger scores using exact provider-scoped final results."""
     current = now or datetime.now(timezone.utc)
@@ -570,6 +573,19 @@ def sync_free_source_results(
         namespaced_id = str(representative.get("fixture_id") or "")
         source_id = namespaced_id.split(":", 1)[1]
         item = {"provider": provider, "fixture_id": namespaced_id, "status": "not_verified"}
+        restricted_reason = None
+        if provider == "highlightly" and not highlightly_non_betting_confirmed:
+            restricted_reason = "highlightly_non_betting_use_not_confirmed"
+        elif provider == "api_ninjas" and not api_ninjas_noncommercial_confirmed:
+            restricted_reason = "api_ninjas_noncommercial_use_not_confirmed"
+        elif provider == "open_matchday" and not open_matchday_noncommercial_confirmed:
+            restricted_reason = "open_matchday_noncommercial_use_not_confirmed"
+        if restricted_reason:
+            item["status"] = "blocked"
+            item["reason"] = restricted_reason
+            report["fixtures_without_verified_score"] += 1
+            report["fixture_results"].append(item)
+            continue
         try:
             metadata = _source_metadata(provider_database_url, provider, source_id)
             if not metadata:

@@ -62,6 +62,23 @@ class AutomaticFixturePromotionTests(unittest.TestCase):
         )
         promote.assert_not_called()
 
+    def test_highlightly_requires_non_betting_use_confirmation(self):
+        promote = Mock()
+        env = {
+            "FREE_FIXTURE_AUTO_PROMOTION_ENABLED": "true",
+            "FREE_FIXTURE_AUTO_PROMOTE_HIGHLIGHTLY": "true",
+            "FREE_FIXTURE_TERMS_ACK_HIGHLIGHTLY": "true",
+        }
+        report = run_automatic_fixture_promotion(
+            "provider-db", "neon-db", env=env, now=NOW,
+            promotion_fn=promote,
+        )
+        self.assertEqual(
+            report["providers"]["highlightly"]["reason"],
+            "highlightly_non_betting_use_not_confirmed",
+        )
+        promote.assert_not_called()
+
     def test_only_explicitly_enabled_provider_is_promoted_and_staged(self):
         promote = Mock(return_value={
             "canonical_fixture_writes": 2,

@@ -302,6 +302,7 @@ class FreeFixtureResultVerificationTests(unittest.TestCase):
         report, updated = sync_free_source_results(
             records, provider_database_url="provider-db",
             now=datetime(2026, 11, 22, 12, 0, tzinfo=timezone.utc),
+            open_matchday_noncommercial_confirmed=True,
         )
         self.assertEqual(report["records_updated"], 1)
         self.assertEqual(updated[0]["actual_home_goals"], 2)
@@ -403,6 +404,61 @@ class FreeFixtureResultVerificationTests(unittest.TestCase):
         self.assertEqual(duplicate["actual_home_goals"], 2)
         self.assertEqual(record["actual_result_provider"], "openligadb")
         client.matches.assert_called_once_with("bl1", 2026)
+
+
+class HighlightlyResultUseGateTests(unittest.TestCase):
+    @patch("free_fixture_result_sync._ensure_promotion_tables")
+    @patch("free_fixture_result_sync._free_candidates")
+    @patch("free_fixture_result_sync._source_metadata")
+    def test_highlightly_result_sync_is_blocked_without_non_betting_confirmation(
+        self, source, candidates, ensure_tables
+    ):
+        record = {
+            **RECORD,
+            "fixture_provider": "highlightly",
+            "fixture_id": "highlightly:42",
+        }
+        candidates.return_value = [[record]]
+        report, updated = sync_free_source_results(
+            [record], provider_database_url="provider-db", now=NOW,
+        )
+        self.assertEqual(updated, [])
+        self.assertEqual(report["fixtures_without_verified_score"], 1)
+        self.assertEqual(
+            report["fixture_results"][0]["reason"],
+            "highlightly_non_betting_use_not_confirmed",
+        )
+        source.assert_not_called()
+
+
+    @patch("free_fixture_result_sync._ensure_promotion_tables")
+    @patch("free_fixture_result_sync._free_candidates")
+    @patch("free_fixture_result_sync._source_metadata")
+    def test_noncommercial_provider_result_sync_is_blocked_without_acknowledgement(
+        self, source, candidates, ensure_tables
+    ):
+        records = [
+            {
+                **RECORD,
+                "fixture_provider": provider,
+                "fixture_id": f"{provider}:42",
+            }
+            for provider in ("api_ninjas", "open_matchday")
+        ]
+        candidates.return_value = [[record] for record in records]
+        report, updated = sync_free_source_results(
+            records, provider_database_url="provider-db", now=NOW,
+        )
+        self.assertEqual(updated, [])
+        self.assertEqual(report["fixtures_without_verified_score"], 2)
+        self.assertEqual(
+            [row["reason"] for row in report["fixture_results"]],
+            [
+                "api_ninjas_noncommercial_use_not_confirmed",
+                "open_matchday_noncommercial_use_not_confirmed",
+            ],
+        )
+        source.assert_not_called()
 
 
 class AdditionalProviderResultVerificationTests(unittest.TestCase):
@@ -521,6 +577,7 @@ class AdditionalProviderResultVerificationTests(unittest.TestCase):
         client_cls.return_value.__enter__.return_value.match.return_value = self.highlightly_match
         report, updated = sync_free_source_results(
             [record], provider_database_url="provider-db", now=NOW,
+            highlightly_non_betting_confirmed=True,
         )
         self.assertEqual(report["records_updated"], 1)
         self.assertEqual(updated[0]["actual_result_provider"], "highlightly")
@@ -546,6 +603,7 @@ class AdditionalProviderResultVerificationTests(unittest.TestCase):
         client_cls.return_value.__enter__.return_value.match_details.return_value = self.api_ninjas_match
         report, updated = sync_free_source_results(
             [record], provider_database_url="provider-db", now=NOW,
+            api_ninjas_noncommercial_confirmed=True,
         )
         self.assertEqual(report["records_updated"], 1)
         self.assertEqual(updated[0]["actual_result_provider"], "api_ninjas")
