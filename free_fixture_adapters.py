@@ -16,6 +16,7 @@ from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta, timezone
 from typing import Any, Iterable, Mapping
 from urllib.parse import quote
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 import requests
 
@@ -321,6 +322,45 @@ class OpenFootballAdapter(_StaticDatasetAdapter):
             })
         return sorted(datasets, key=lambda row: row["season_file"])
 
+    @staticmethod
+    def _kickoff(date_value: str, time_value: str, row: Mapping[str, Any]) -> Any:
+        if not date_value:
+            return None
+        if not time_value:
+            return date_value
+        combined = f"{date_value}T{time_value}"
+        try:
+            parsed = datetime.fromisoformat(combined.replace("Z", "+00:00"))
+        except ValueError:
+            return combined
+        if parsed.tzinfo is not None and parsed.utcoffset() is not None:
+            return parsed
+        zone_value = (
+            row.get("timezone") or row.get("time_zone") or row.get("timeZone")
+            or row.get("tz") or row.get("utc_offset")
+        )
+        if not zone_value:
+            return combined
+        zone_text = str(zone_value).strip()
+        if zone_text.casefold() in {"utc", "gmt", "z"}:
+            zone = timezone.utc
+        else:
+            offset = re.fullmatch(
+                r"(?:UTC|GMT)?([+-])(\\d{1,2})(?::?(\\d{2}))?",
+                zone_text, flags=re.IGNORECASE,
+            )
+            if offset:
+                hours = int(offset.group(2))
+                minutes = int(offset.group(3) or 0)
+                delta = timedelta(hours=hours, minutes=minutes)
+                zone = timezone(delta if offset.group(1) == "+" else -delta)
+            else:
+                try:
+                    zone = ZoneInfo(zone_text)
+                except ZoneInfoNotFoundError:
+                    return combined
+        return parsed.replace(tzinfo=zone).astimezone(timezone.utc)
+
     def season(self, season_file: str, competition: str) -> list[dict[str, Any]]:
         if not season_file.endswith(".json") or season_file.startswith("/") or ".." in season_file.split("/"):
             raise ValueError("season_file must be a safe JSON path within the dataset.")
@@ -336,7 +376,7 @@ class OpenFootballAdapter(_StaticDatasetAdapter):
                 continue
             date_value = str(row.get("date") or "")
             time_value = str(row.get("time") or "")
-            kickoff = f"{date_value}T{time_value}" if time_value else date_value
+            kickoff = self._kickoff(date_value, time_value, row)
             output.append(_observation(
                 self.provider, row, fetched_at=fetched, source_url=url,
                 licence="CC0-1.0 (football.json dataset; verify upstream source provenance)",
