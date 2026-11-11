@@ -13,7 +13,7 @@ and is not changed.
 - OpenFootball: discovers JSON files in the current football.json season
   directory and archives each dataset. Date-only or timezone-less kickoffs
   remain ineligible.
-- LiveScoreFootball: discovers available club league slugs, then polls a
+- LiveScoreFootball: discovers available club and international competition slugs, then polls a
   rotating batch of at most 30 leagues for the next seven days.
 - Bzzoiro: polls the authenticated v2 upcoming-events endpoint, up to 20 pages,
   when BZZOIRO_API_TOKEN is configured.
