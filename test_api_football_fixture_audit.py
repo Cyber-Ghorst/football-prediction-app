@@ -34,6 +34,7 @@ class APIFootballFixtureAuditTests(unittest.TestCase):
             fixture(3, "2026-11-10T15:00:00Z"),
             fixture(4, "2026-11-13T15:00:00Z", status="FT"),
             fixture(5, "2026-11-14T15:00:00Z", away_id=None),
+            fixture(6, "2026-11-15T15:00:00Z", status="TBD"),
         ]
         client.last_fixture_request_count = 1
         report = build_api_football_fixture_audit(
@@ -41,6 +42,7 @@ class APIFootballFixtureAuditTests(unittest.TestCase):
         )
         self.assertEqual(report["status"], "ok")
         self.assertEqual(report["future_fixture_count"], 3)
+        self.assertEqual(report["rejected_fixture_counts"]["kickoff_time_not_confirmed"], 1)
         self.assertEqual(report["prediction_ready_fixture_count"], 2)
         self.assertEqual(report["daily_fixture_counts_utc"]["2026-11-11"], 1)
         self.assertEqual(report["daily_fixture_counts_utc"]["2026-11-12"], 1)
