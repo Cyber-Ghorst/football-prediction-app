@@ -28,15 +28,22 @@ class APIFootballFixtureAuditTests(unittest.TestCase):
             "requests": {"current": 12, "limit_day": 100},
             "subscription": {"plan": "Test"},
         }
-        client.fixtures_between.return_value = [
-            fixture(1, "2026-11-11T13:00:00+00:00"),
-            fixture(2, "2026-11-12T15:00:00Z", league_id=140, home_id=11, away_id=21),
-            fixture(3, "2026-11-10T15:00:00Z"),
-            fixture(4, "2026-11-13T15:00:00Z", status="FT"),
-            fixture(5, "2026-11-14T15:00:00Z", away_id=None),
-            fixture(6, "2026-11-15T15:00:00Z", status="TBD"),
-        ]
-        client.last_fixture_request_count = 1
+        fixtures_by_date = {
+            "2026-11-11": [
+                fixture(1, "2026-11-11T13:00:00+00:00"),
+                fixture(3, "2026-11-11T11:00:00Z"),
+            ],
+            "2026-11-12": [
+                fixture(2, "2026-11-12T15:00:00Z", league_id=140, home_id=11, away_id=21),
+            ],
+            "2026-11-13": [fixture(4, "2026-11-13T15:00:00Z", status="FT")],
+            "2026-11-14": [fixture(5, "2026-11-14T15:00:00Z", away_id=None)],
+            "2026-11-15": [fixture(6, "2026-11-15T15:00:00Z", status="TBD")],
+        }
+        def query_date(day, timezone="UTC", max_pages=20):
+            client.last_fixture_request_count = 1
+            return fixtures_by_date.get(day, [])
+        client.fixtures_by_date.side_effect = query_date
         report = build_api_football_fixture_audit(
             client_factory=lambda: client, now=NOW,
         )
@@ -49,7 +56,7 @@ class APIFootballFixtureAuditTests(unittest.TestCase):
         self.assertEqual(report["rejected_fixture_counts"]["outside_rolling_window"], 1)
         self.assertEqual(report["rejected_fixture_counts"]["not_scheduled"], 1)
         self.assertEqual(report["rejected_fixture_counts"]["missing_competition_season_or_team_identity"], 1)
-        self.assertEqual(report["requests_made"], 1)
+        self.assertEqual(report["requests_made"], 8)
         self.assertEqual(report["subscription_plan"], "Test")
         self.assertEqual(report["writes"]["prediction_ledger_writes"], 0)
 
@@ -61,28 +68,30 @@ class APIFootballFixtureAuditTests(unittest.TestCase):
             client_factory=lambda: client, now=NOW,
         )
         self.assertEqual(report["status"], "quota_exhausted")
-        client.fixtures_between.assert_not_called()
+        client.fixtures_by_date.assert_not_called()
 
     def test_remaining_quota_caps_fixture_pagination(self):
         client = MagicMock()
         client.__enter__.return_value = client
         client.status.return_value = {"requests": {"current": 99, "limit_day": 100}}
-        client.fixtures_between.return_value = []
+        client.fixtures_by_date.return_value = []
         client.last_fixture_request_count = 1
         build_api_football_fixture_audit(
             client_factory=lambda: client, now=NOW, max_pages=20,
         )
-        self.assertEqual(client.fixtures_between.call_args.kwargs["max_pages"], 1)
+        self.assertEqual(client.fixtures_by_date.call_args_list[0].kwargs["max_pages"], 2)
 
 
     def test_partial_boundary_date_is_reported_but_not_targeted(self):
         client = MagicMock()
         client.__enter__.return_value = client
         client.status.return_value = {"requests": {"current": 1, "limit_day": 100}}
-        client.fixtures_between.return_value = [
-            fixture(1, "2026-11-18T10:00:00+00:00"),
-        ]
-        client.last_fixture_request_count = 1
+        def query_date(day, timezone="UTC", max_pages=20):
+            client.last_fixture_request_count = 1
+            if day == "2026-11-18":
+                return [fixture(1, "2026-11-18T10:00:00+00:00")]
+            return []
+        client.fixtures_by_date.side_effect = query_date
         report = build_api_football_fixture_audit(
             client_factory=lambda: client, now=NOW,
         )
