@@ -472,7 +472,7 @@ def review_and_promote_free_fixture_observations(
                     "source_provider": fixture_source_provider,
                     "provider_updated_at": _datetime(observation.get("fetched_at")),
                     "provider_fixture_id": source_id,
-                })
+                }
 
     staging_fixtures = list(staging_by_fixture.values())
     return {
