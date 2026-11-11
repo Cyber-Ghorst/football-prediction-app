@@ -8,7 +8,7 @@ selected free fixture sources.
 - OpenFootball requires a football.json season file and display name.
 - Open Matchday requires a CSV URL, competition/season labels and an explicit
   acknowledgement of its non-commercial-only licence.
-- LiveScoreFootball requires a league slug and UTC date range.
+- TheSportsDB requires a country, a maximum of 10 leagues and explicit acknowledgement of its free-tier development/app-store terms. The free endpoint returns one next event per league.
 - Bzzoiro requires BZZOIRO_API_TOKEN in Streamlit Secrets.
 
 A successful run archives normalized observations in CockroachDB. The result
