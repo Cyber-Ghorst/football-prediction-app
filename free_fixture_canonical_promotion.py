@@ -20,7 +20,7 @@ from provider_entity_crosswalk import load_provider_entity_links
 
 SUPPORTED_PROVIDERS = {
     "openligadb", "openfootball", "open_matchday",
-    "livescore_football", "bzzoiro",
+    "livescore_football", "bzzoiro", "highlightly", "api_ninjas",
 }
 
 
