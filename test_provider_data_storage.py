@@ -30,7 +30,7 @@ class FakeCursor:
         elif normalized.startswith("INSERT INTO provider_competition_registry"):
             self.connection.competition_registry.append(params)
         elif normalized.startswith("SELECT identity_key, provider, provider_competition_id"):
-            self.result = self.connection.competition_registry[:params[2]]
+            self.result = self.connection.competition_registry[:params[-1]]
         elif normalized.startswith("SELECT audit_id, competition, season, fixture_identity"):
             self.result = self.connection.conflict_audits[:params[2]]
         elif normalized.startswith("SELECT snapshot_id, competition, season, primary_provider"):
