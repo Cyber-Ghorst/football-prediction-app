@@ -321,7 +321,7 @@ jobs:
           python sync_prediction_results.py --limit 10 | tee prediction-result-sync-report.json
 
       - name: Build leakage-safe learning readiness report
-        if: steps.operation.outputs.operation == 'learning_audit' || github.event_name == 'schedule'
+        if: steps.operation.outputs.operation == 'learning_audit' || steps.operation.outputs.operation == 'full_check' || github.event_name == 'schedule'
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
