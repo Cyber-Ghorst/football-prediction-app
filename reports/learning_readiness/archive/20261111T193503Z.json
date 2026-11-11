@@ -1,0 +1,67 @@
+{
+  "dataset_audit": {
+    "conflicting_verified_fixtures_excluded": 0,
+    "duplicate_fixture_records_excluded": 0,
+    "eligible_records_before_deduplication": 0,
+    "excluded_reasons": {
+      "missing_feature_snapshot": 1,
+      "missing_or_invalid_result_verification_timestamp": 65,
+      "prediction_not_pre_kickoff": 4,
+      "unsupported_fixture_provider": 4
+    },
+    "excluded_records": 74,
+    "records_received": 74,
+    "unique_verified_fixtures": 0
+  },
+  "generated_at_utc": "2026-11-11T19:35:07.289185+00:00",
+  "ledger_record_count": 74,
+  "offline_experiment": {
+    "candidate_training_prior_pct": null,
+    "production_promotion_permitted": false,
+    "results": {
+      "test": {
+        "candidate": null,
+        "incumbent": null
+      },
+      "validation": {
+        "candidate": null,
+        "incumbent": null
+      }
+    },
+    "sample_gate": {
+      "minimum_fixtures": 30,
+      "passed": false,
+      "valid_targets_by_split": {
+        "test": 0,
+        "train": 0,
+        "validation": 0
+      },
+      "verified_fixtures": 0
+    },
+    "status": "blocked_insufficient_sample"
+  },
+  "report_name": "learning_readiness_audit",
+  "safety": {
+    "database_access": "read_only",
+    "live_model_modified": false,
+    "model_weights_modified": false,
+    "prediction_ledger_writes": 0,
+    "production_promotion_permitted": false,
+    "raw_feature_vectors_exported": false,
+    "raw_ledger_records_exported": false,
+    "tvd_modified": false
+  },
+  "sample_gate": {
+    "minimum_fixtures_for_offline_experiment": 30,
+    "note": "Passing this sample gate permits offline experiments only; it does not establish model validity, calibration, or production readiness.",
+    "offline_experiment_allowed": false,
+    "production_promotion_permitted": false,
+    "status": "insufficient_sample",
+    "verified_fixtures": 0
+  },
+  "split_fixture_counts": {
+    "test": 0,
+    "train": 0,
+    "validation": 0
+  }
+}
