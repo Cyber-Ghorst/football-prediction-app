@@ -24,8 +24,23 @@ class HighlightlyCooldownSmokeCheckTests(unittest.TestCase):
                 }
             }), encoding="utf-8")
             details = highlightly_refresh_cooldown_skip_details(report_path)
-        self.assertEqual(details["reason"], "provider_refresh_cooldown_active")
+        self.assertEqual(details["reason"], "provider_collection_skipped")
+        self.assertIn("refresh_cooldown", details["provider_skip_reason"])
         self.assertEqual(details["cooldown_hours"], 23)
+
+    def test_terms_restriction_skips_highlightly_probe(self):
+        with tempfile.TemporaryDirectory() as directory:
+            report_path = Path(directory) / "provider-refresh.json"
+            report_path.write_text(json.dumps({
+                "providers": {
+                    "highlightly": {
+                        "skipped": "Highlightly collection requires terms acknowledgement and non-betting-use confirmation."
+                    }
+                }
+            }), encoding="utf-8")
+            details = highlightly_refresh_cooldown_skip_details(report_path)
+        self.assertEqual(details["reason"], "provider_collection_skipped")
+        self.assertIn("non-betting-use confirmation", details["provider_skip_reason"])
 
     def test_no_skip_when_provider_refresh_is_not_in_cooldown(self):
         with tempfile.TemporaryDirectory() as directory:
