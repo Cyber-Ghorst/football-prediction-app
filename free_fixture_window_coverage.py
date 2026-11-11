@@ -104,7 +104,9 @@ def build_window_coverage_report(
     for label, value in (("minimum_daily_target", minimum_daily_target), ("stretch_daily_target", stretch_daily_target)):
         if isinstance(value, bool) or not isinstance(value, int) or value < 1:
             raise ValueError(f"{label} must be a positive integer.")
-    window_end = current + timedelta(days=window_days)
+    # Measure the next N complete UTC calendar days. The current UTC date is
+    # a partial day at report time and must not be held to a full-day target.
+    window_end = current + timedelta(days=window_days + 1)
     calendar_days = [
         (current.date() + timedelta(days=offset)).isoformat()
         for offset in range((window_end.date() - current.date()).days + 1)
@@ -223,11 +225,11 @@ def build_window_coverage_report(
     for row in unique_rows:
         daily_counts[row["date_utc"]] += 1
 
-    # The rolling window touches N+1 UTC dates; the last date is only a
-    # partial boundary. Keep its count visible but target the N calendar dates
-    # beginning today, not the incomplete final date.
-    target_days = calendar_days[:window_days]
-    partial_boundary_days = calendar_days[window_days:]
+    # The reporting window includes the current partial UTC date, the next N
+    # complete UTC dates, and a final partial boundary date. Keep both partial
+    # dates visible, but apply daily targets only to the N complete dates.
+    target_days = calendar_days[1:window_days + 1]
+    partial_boundary_days = [calendar_days[0], *calendar_days[window_days + 1:]]
     shortfalls = {
         day: max(0, daily_target - daily_counts[day])
         for day in target_days
