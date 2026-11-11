@@ -174,6 +174,7 @@ def collect_livescore_observations(
     client: LiveScoreFootballClient | None = None,
     request_delay_seconds: float = 0.0,
     league_sync_times: Mapping[str, Any] | None = None,
+    league_metadata: Mapping[str, Mapping[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """Collect scheduled LiveScoreFootball events for explicitly supplied leagues."""
     if not league_slugs or not date_from or not date_to:
@@ -198,21 +199,36 @@ def collect_livescore_observations(
     errors: list[dict[str, str]] = []
     successful = 0
     sync_times = {str(key): value for key, value in (league_sync_times or {}).items()}
+    metadata_by_slug = {
+        str(key): dict(value)
+        for key, value in (league_metadata or {}).items()
+        if isinstance(value, Mapping)
+    }
     try:
-        if league_sync_times is None:
+        if league_metadata is None or league_sync_times is None:
             try:
                 catalogue = api.leagues(kind="all", available=True)
                 if isinstance(catalogue, list):
-                    sync_times = {
-                        str(row.get("slug") or row.get("league_slug") or row.get("leagueSlug")): row.get("lastSyncedAt")
-                        for row in catalogue
-                        if isinstance(row, Mapping)
-                        and (row.get("slug") or row.get("league_slug") or row.get("leagueSlug"))
-                    }
+                    for row in catalogue:
+                        if not isinstance(row, Mapping):
+                            continue
+                        slug_key = (
+                            row.get("slug") or row.get("league_slug") or row.get("leagueSlug")
+                        )
+                        if not slug_key:
+                            continue
+                        slug_key = str(slug_key)
+                        if league_metadata is None:
+                            metadata_by_slug[slug_key] = dict(row)
+                        if league_sync_times is None:
+                            sync_times[slug_key] = row.get("lastSyncedAt")
             except Exception:
                 # Archive observations for diagnostics; promotion will block
                 # them until the source provides an upstream sync timestamp.
-                sync_times = {}
+                if league_sync_times is None:
+                    sync_times = {}
+                if league_metadata is None:
+                    metadata_by_slug = {}
         for slug in league_slugs:
             try:
                 events = api.fixtures(
@@ -222,7 +238,8 @@ def collect_livescore_observations(
                     f"{api.base_url}/get/soccer/{quote(str(slug), safe='')}/fixtures"
                 )
                 normalized = normalize_livescore_football_events(
-                    events, league_key=str(slug), source_url=source_url
+                    events, league_key=str(slug), source_url=source_url,
+                    league_metadata=metadata_by_slug.get(str(slug)),
                 )
                 for observation in normalized:
                     observation["source_sync_at"] = sync_times.get(str(slug))
