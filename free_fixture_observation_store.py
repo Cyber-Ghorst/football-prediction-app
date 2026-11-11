@@ -15,7 +15,7 @@ from provider_data_storage import (
 
 ALLOWED_PROVIDERS = {
     "openligadb", "openfootball", "open_matchday",
-    "livescore_football", "bzzoiro",
+    "thesportsdb", "bzzoiro",
 }
 RESOURCE_TYPE = "future_fixture_observations"
 SENSITIVE_PARAM_NAMES = {
