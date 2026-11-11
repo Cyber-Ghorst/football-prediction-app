@@ -112,6 +112,65 @@ class TemporaryFixtureStoreTests(unittest.TestCase):
                     "postgresql://neon", [fixture(7), fixture(7)]
                 )
 
+    def test_additive_free_provider_staging_never_deletes_existing_catalogue_rows(self):
+        cursor = FakeCursor()
+        cursor.rowcount = 1
+        connection = FakeConnection(cursor)
+
+        @contextmanager
+        def fake_connect(*_args, **_kwargs):
+            yield connection
+
+        canonical_fixture = {
+            "fixture_id": "openligadb:match-42",
+            "source_provider": "openligadb",
+            "league_id": "sportmonks:8",
+            "season_id": "sportmonks:2026",
+            "starting_at": "2026-11-12T18:00:00+00:00",
+            "status": "scheduled",
+            "home_team_id": "sportmonks:1",
+            "away_team_id": "sportmonks:2",
+            "home_team": "Home",
+            "away_team": "Away",
+            "competition": "Premier League",
+            "country": "England",
+        }
+        with patch.object(temporary_fixture_store.psycopg, "connect", fake_connect):
+            result = temporary_fixture_store.add_temporary_upcoming_fixtures(
+                "postgresql://neon", [canonical_fixture]
+            )
+
+        self.assertEqual(result["fixtures_inserted"], 1)
+        self.assertEqual(result["fixtures_removed"], 0)
+        self.assertEqual(result["prediction_ledger_modified"], 0)
+        sql = "\\n".join(call[0] for call in cursor.calls)
+        self.assertIn("ON CONFLICT (fixture_id) DO NOTHING", sql)
+        self.assertNotIn("DELETE FROM upcoming_fixture_staging", sql)
+        self.assertNotIn("DO UPDATE", sql)
+
+    def test_additive_free_provider_staging_rejects_unmapped_canonical_ids(self):
+        invalid = {
+            "fixture_id": "openligadb:42",
+            "source_provider": "openligadb",
+            "league_id": "openligadb:league",
+            "season_id": "sportmonks:2026",
+            "starting_at": "2026-11-12T18:00:00+00:00",
+            "status": "scheduled",
+            "home_team_id": "sportmonks:1",
+            "away_team_id": "sportmonks:2",
+            "home_team": "Home",
+            "away_team": "Away",
+            "competition": "Premier League",
+        }
+        with patch.object(
+            temporary_fixture_store.psycopg, "connect",
+            side_effect=AssertionError("Must reject before connecting"),
+        ):
+            with self.assertRaisesRegex(ValueError, "Sportmonks identity links"):
+                temporary_fixture_store.add_temporary_upcoming_fixtures(
+                    "postgresql://neon", [invalid]
+                )
+
     def test_neon_database_url_is_required(self):
         with self.assertRaisesRegex(ValueError, "DATABASE_URL"):
             temporary_fixture_store.sync_temporary_upcoming_fixtures("", [])
