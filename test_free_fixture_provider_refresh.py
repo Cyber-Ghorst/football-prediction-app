@@ -111,6 +111,17 @@ class FreeFixtureProviderRefreshTests(unittest.TestCase):
         self.assertEqual(_rotate_batch(items, 3, 1), [3, 4, 5])
         self.assertEqual(_rotate_batch(items, 3, 4), [2, 3, 4])
 
+    @patch.dict("os.environ", {"PROVIDER_DATABASE_URL": "provider-db"}, clear=True)
+    @patch("free_fixture_provider_refresh.refresh_free_fixture_sources")
+    def test_main_defaults_openligadb_batch_to_55(self, refresh):
+        from contextlib import redirect_stdout
+        import io
+        refresh.return_value = {"providers": {}}
+        with redirect_stdout(io.StringIO()):
+            main()
+        self.assertEqual(refresh.call_args.kwargs["max_openligadb_scopes"], 55)
+
+
     @patch("free_fixture_provider_refresh.collect_bzzoiro_observations")
     @patch("free_fixture_provider_refresh.BzzoiroAdapter")
     @patch("free_fixture_provider_refresh.collect_livescore_observations")
