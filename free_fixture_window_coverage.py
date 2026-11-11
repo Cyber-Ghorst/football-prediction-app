@@ -85,7 +85,9 @@ def build_window_coverage_report(
     *,
     now: datetime | None = None,
     window_days: int = 4,
-    daily_target: int = 30,
+    daily_target: int = 20,
+    minimum_daily_target: int = 15,
+    stretch_daily_target: int = 30,
     max_highlights: int = 15,
     max_age_hours: int = 24,
     highlightly_use_allowed: bool = False,
@@ -99,6 +101,9 @@ def build_window_coverage_report(
         raise ValueError("window_days must be an integer from 1 through 14.")
     if isinstance(daily_target, bool) or not isinstance(daily_target, int) or daily_target < 1:
         raise ValueError("daily_target must be a positive integer.")
+    for label, value in (("minimum_daily_target", minimum_daily_target), ("stretch_daily_target", stretch_daily_target)):
+        if isinstance(value, bool) or not isinstance(value, int) or value < 1:
+            raise ValueError(f"{label} must be a positive integer.")
     window_end = current + timedelta(days=window_days)
     calendar_days = [
         (current.date() + timedelta(days=offset)).isoformat()
@@ -227,6 +232,14 @@ def build_window_coverage_report(
         day: max(0, daily_target - daily_counts[day])
         for day in target_days
     }
+    minimum_shortfalls = {
+        day: max(0, minimum_daily_target - daily_counts[day])
+        for day in target_days
+    }
+    stretch_shortfalls = {
+        day: max(0, stretch_daily_target - daily_counts[day])
+        for day in target_days
+    }
     competition_summary = [
         {
             "provider": provider,
@@ -254,6 +267,10 @@ def build_window_coverage_report(
             day: daily_counts[day] for day in partial_boundary_days
         },
         "daily_target": daily_target,
+        "minimum_daily_target": minimum_daily_target,
+        "stretch_daily_target": stretch_daily_target,
+        "minimum_target_fixtures_in_window": minimum_daily_target * len(target_days),
+        "stretch_target_fixtures_in_window": stretch_daily_target * len(target_days),
         "target_fixtures_in_window": total_target,
         "max_highlights": max_highlights,
         "provider_snapshot_counts": provider_snapshot_counts,
@@ -278,10 +295,22 @@ def build_window_coverage_report(
         "daily_unique_fixture_counts_utc": daily_counts,
         "daily_counts_by_provider_utc": daily_by_provider,
         "daily_target_shortfalls_utc": shortfalls,
+        "minimum_target_shortfalls_utc": minimum_shortfalls,
+        "stretch_target_shortfalls_utc": stretch_shortfalls,
         "target_met_by_day": {
             day: daily_counts[day] >= daily_target for day in target_days
         },
+        "minimum_target_met_by_day": {
+            day: daily_counts[day] >= minimum_daily_target for day in target_days
+        },
+        "stretch_target_met_by_day": {
+            day: daily_counts[day] >= stretch_daily_target for day in target_days
+        },
         "target_shortfall_total": sum(shortfalls.values()),
+        "minimum_target_shortfall_total": sum(minimum_shortfalls.values()),
+        "stretch_target_shortfall_total": sum(stretch_shortfalls.values()),
+        "minimum_target_met": all(daily_counts[day] >= minimum_daily_target for day in target_days),
+        "stretch_target_met": all(daily_counts[day] >= stretch_daily_target for day in target_days),
         "target_met": all(daily_counts[day] >= daily_target for day in target_days),
         "competition_summary": competition_summary,
         "identity_policy": (
@@ -300,7 +329,9 @@ def build_free_fixture_window_coverage(
     *,
     now: datetime | None = None,
     window_days: int = 4,
-    daily_target: int = 30,
+    daily_target: int = 20,
+    minimum_daily_target: int = 15,
+    stretch_daily_target: int = 30,
     max_highlights: int = 15,
     max_age_hours: int = 24,
     snapshot_limit: int = 5,
@@ -324,7 +355,8 @@ def build_free_fixture_window_coverage(
             )
     return build_window_coverage_report(
         snapshots_by_provider, now=now, window_days=window_days,
-        daily_target=daily_target, max_highlights=max_highlights,
+        daily_target=daily_target, minimum_daily_target=minimum_daily_target,
+        stretch_daily_target=stretch_daily_target, max_highlights=max_highlights,
         max_age_hours=max_age_hours,
         highlightly_use_allowed=highlightly_use_allowed,
         api_ninjas_noncommercial_confirmed=api_ninjas_noncommercial_confirmed,
@@ -337,7 +369,9 @@ def main() -> int:
     report = build_free_fixture_window_coverage(
         database_url or "",
         window_days=int(os.getenv("FREE_FIXTURE_WINDOW_DAYS", "4")),
-        daily_target=int(os.getenv("FREE_FIXTURE_DAILY_TARGET", "30")),
+        daily_target=int(os.getenv("FREE_FIXTURE_DAILY_TARGET", "20")),
+        minimum_daily_target=int(os.getenv("FREE_FIXTURE_MIN_DAILY_TARGET", "15")),
+        stretch_daily_target=int(os.getenv("FREE_FIXTURE_STRETCH_DAILY_TARGET", "30")),
         max_highlights=int(os.getenv("FREE_FIXTURE_MAX_HIGHLIGHTS", "15")),
         max_age_hours=int(os.getenv("FREE_FIXTURE_WINDOW_MAX_AGE_HOURS", "24")),
         snapshot_limit=int(os.getenv("FREE_FIXTURE_WINDOW_SNAPSHOT_LIMIT", "5")),
