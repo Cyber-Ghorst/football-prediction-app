@@ -14,13 +14,19 @@ from typing import Any, Mapping
 from psycopg.types.json import Jsonb
 
 from football_repository import ensure_football_repository
-from provider_data_storage import _connect, load_provider_observation_snapshots
+from provider_data_storage import _connect
+import provider_data_storage
 from provider_entity_crosswalk import load_provider_entity_links
 
 SUPPORTED_PROVIDERS = {
     "openligadb", "openfootball", "open_matchday",
     "livescore_football", "bzzoiro",
 }
+
+
+def load_provider_observation_snapshots(*args: Any, **kwargs: Any) -> list[dict[str, Any]]:
+    """Resolve the snapshot loader lazily after provider storage has finished importing."""
+    return provider_data_storage.load_provider_observation_snapshots(*args, **kwargs)
 PROMOTION_TABLES_SQL = """
 CREATE TABLE IF NOT EXISTS football_fixture_sources (
     source_link_id TEXT PRIMARY KEY,
