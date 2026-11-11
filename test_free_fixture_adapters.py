@@ -176,6 +176,23 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         client.close()
 
 
+    def test_bzzoiro_event_detail_uses_exact_event_id_and_token(self):
+        client = BzzoiroAdapter(token="secret")
+        client._get_json = Mock(return_value={"data": {
+            "id": 99, "status": "finished",
+        }})
+        event = client.event("99")
+        self.assertEqual(event["id"], 99)
+        self.assertEqual(
+            client._get_json.call_args.args[0],
+            f"{BzzoiroAdapter.BASE_URL}99/",
+        )
+        self.assertEqual(
+            client._get_json.call_args.kwargs["headers"]["Authorization"],
+            "Token secret",
+        )
+        client.close()
+
     def test_livescore_event_requires_timezone_and_home_away_competitors(self):
         event = {
             "id": "event-1",
