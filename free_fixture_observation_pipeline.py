@@ -10,10 +10,10 @@ from free_fixture_adapters import (
     OpenFootballAdapter,
     OpenLigaDBAdapter,
     OpenMatchdayAdapter,
-    normalize_livescore_football_events,
+    TheSportsDBAdapter,
+    normalize_thesportsdb_events,
 )
 from free_fixture_observation_store import archive_future_fixture_observations
-from livescore_football import LiveScoreFootballClient
 
 
 def _close_owned(client: Any, owned: bool) -> None:
@@ -159,50 +159,6 @@ def collect_openmatchday_observations(
     return _archive(
         database_url, "open_matchday",
         {"datasets": [dict(dataset) for dataset in datasets]},
-        rows, errors, successful,
-    )
-
-
-def collect_livescore_observations(
-    database_url: str,
-    league_slugs: list[str],
-    *,
-    date_from: str,
-    date_to: str,
-    client: LiveScoreFootballClient | None = None,
-    request_delay_seconds: float = 0.0,
-) -> dict[str, Any]:
-    """Collect scheduled LiveScoreFootball events for explicitly supplied leagues."""
-    if not league_slugs or not date_from or not date_to:
-        raise ValueError("League slugs and an explicit date range are required.")
-    owned = client is None
-    api = client or LiveScoreFootballClient()
-    rows: list[dict[str, Any]] = []
-    errors: list[dict[str, str]] = []
-    successful = 0
-    try:
-        for slug in league_slugs:
-            try:
-                events = api.fixtures(
-                    slug, status="scheduled", date_from=date_from, date_to=date_to
-                )
-                source_url = (
-                    f"{api.base_url}/get/soccer/{quote(str(slug), safe='')}/fixtures"
-                )
-                rows.extend(normalize_livescore_football_events(
-                    events, league_key=str(slug), source_url=source_url
-                ))
-                successful += 1
-            except Exception as exc:
-                errors.append({"scope": str(slug), "error": str(exc)[:300]})
-            if request_delay_seconds > 0:
-                time.sleep(min(float(request_delay_seconds), 5.0))
-    finally:
-        _close_owned(api, owned)
-    return _archive(
-        database_url, "livescore_football",
-        {"league_slugs": list(league_slugs), "date_from": date_from,
-         "date_to": date_to, "status": "scheduled"},
         rows, errors, successful,
     )
 
