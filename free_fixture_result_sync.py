@@ -209,7 +209,6 @@ def verify_bzzoiro_final_score(
 
 
 def _source_metadata(database_url: str, provider: str, fixture_id: str) -> dict[str, Any] | None:
-    _ensure_promotion_tables(database_url)
     with _connect(database_url) as connection:
         with connection.cursor() as cursor:
             cursor.execute(
@@ -266,6 +265,9 @@ def sync_free_source_results(
     if not provider_database_url:
         report["status"] = "skipped_provider_database_not_configured"
         return report, []
+    if isinstance(limit, bool) or not isinstance(limit, int) or not 1 <= limit <= 50:
+        raise ValueError("limit must be an integer between 1 and 50.")
+    _ensure_promotion_tables(provider_database_url)
     candidates = _free_candidates(records, current)
     report["candidate_fixtures"] = len(candidates)
     report["limit_reached"] = len(candidates) > limit
