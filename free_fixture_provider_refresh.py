@@ -49,8 +49,8 @@ def refresh_free_fixture_sources(
     highlightly_use_allowed: bool = False,
     api_ninjas_token: str | None = None,
     api_ninjas_noncommercial_confirmed: bool = False,
-    max_openligadb_scopes: int = 55,
-    max_livescore_leagues: int = 30,
+    max_openligadb_scopes: int = 80,
+    max_livescore_leagues: int = 40,
 ) -> dict[str, Any]:
     """Discover current provider scopes, collect schedules and archive observations."""
     if not database_url:
@@ -218,8 +218,8 @@ def main() -> int:
     token = os.getenv("BZZOIRO_API_TOKEN", "")
     highlightly_token = os.getenv("HIGHLIGHTLY_API_KEY") or os.getenv("API_FOOTBALL_KEY")
     api_ninjas_token = os.getenv("API_NINJAS_API_KEY") or os.getenv("API_NINJAS_KEY")
-    max_openligadb = int(os.getenv("FREE_FIXTURE_OPENLIGADB_MAX_SCOPES", "55"))
-    max_livescore = int(os.getenv("FREE_FIXTURE_LIVESCORE_MAX_LEAGUES", "30"))
+    max_openligadb = int(os.getenv("FREE_FIXTURE_OPENLIGADB_MAX_SCOPES", "80"))
+    max_livescore = int(os.getenv("FREE_FIXTURE_LIVESCORE_MAX_LEAGUES", "40"))
     enabled = lambda name: str(os.getenv(name, "")).strip().casefold() in {"1", "true", "yes", "on"}
     highlightly_use_allowed = (
         enabled("FREE_FIXTURE_TERMS_ACK_HIGHLIGHTLY")

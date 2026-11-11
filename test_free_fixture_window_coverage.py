@@ -72,10 +72,14 @@ class FreeFixtureWindowCoverageTests(unittest.TestCase):
         self.assertFalse(report["target_met"])
         self.assertFalse(report["stretch_target_met"])
         self.assertEqual(report["max_highlights"], 15)
-        self.assertEqual(report["calendar_days_in_window"], 5)
+        self.assertEqual(report["calendar_days_in_window"], 6)
         self.assertEqual(report["target_days_in_window"], 4)
-        self.assertNotIn("2026-11-15", report["daily_target_shortfalls_utc"])
-        self.assertEqual(report["partial_boundary_days_utc"], {"2026-11-15": 0})
+        self.assertIn("2026-11-15", report["daily_target_shortfalls_utc"])
+        self.assertNotIn("2026-11-11", report["daily_target_shortfalls_utc"])
+        self.assertNotIn("2026-11-16", report["daily_target_shortfalls_utc"])
+        self.assertEqual(report["partial_boundary_days_utc"], {
+            "2026-11-11": 0, "2026-11-16": 0,
+        })
         self.assertEqual(report["canonical_fixture_writes"], 0)
         self.assertEqual(report["temporary_fixture_staging_writes"], 0)
         self.assertEqual(report["prediction_ledger_writes"], 0)
