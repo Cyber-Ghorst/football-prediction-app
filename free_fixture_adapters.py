@@ -405,6 +405,23 @@ class BzzoiroAdapter(_HttpAdapter):
         if not self.endpoint.startswith("https://sports.bzzoiro.com/"):
             raise FreeFixtureProviderError("BZZOIRO_FIXTURES_URL must use the documented BSD API host.")
 
+    def event(self, event_id: str | int) -> dict[str, Any]:
+        """Fetch one event detail for post-match verification."""
+        identifier = str(event_id or "").strip()
+        if not identifier or not identifier.isdigit():
+            raise ValueError("Bzzoiro event ID must be numeric.")
+        headers = {"Authorization": f"Token {self.token}"}
+        payload = self._get_json(
+            f"{self.endpoint.rstrip('/')}/{quote(identifier, safe='')}/",
+            headers=headers,
+        )
+        if not isinstance(payload, dict):
+            raise FreeFixtureProviderError("Bzzoiro event detail returned an unexpected schema.")
+        event = payload.get("event") or payload.get("result") or payload
+        if not isinstance(event, dict):
+            raise FreeFixtureProviderError("Bzzoiro event detail has no event object.")
+        return event
+
     def upcoming(self, *, params: dict[str, Any] | None = None,
                  max_pages: int = 20) -> list[dict[str, Any]]:
         query = {"status": "upcoming", "limit": 200, "offset": 0, **(params or {})}
