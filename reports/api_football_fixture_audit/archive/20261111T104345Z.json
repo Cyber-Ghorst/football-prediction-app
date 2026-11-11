@@ -1,0 +1,67 @@
+{
+  "competition_counts": {},
+  "daily_fixture_counts_utc": {
+    "2026-11-11": 0,
+    "2026-11-12": 0,
+    "2026-11-13": 0,
+    "2026-11-14": 0,
+    "2026-11-15": 0,
+    "2026-11-16": 0,
+    "2026-11-17": 0,
+    "2026-11-18": 0
+  },
+  "daily_target": 90,
+  "daily_target_shortfalls_utc": {
+    "2026-11-11": 90,
+    "2026-11-12": 90,
+    "2026-11-13": 90,
+    "2026-11-14": 90,
+    "2026-11-15": 90,
+    "2026-11-16": 90,
+    "2026-11-17": 90
+  },
+  "date_query_errors": {
+    "2026-11-11": "API-Football rejected endpoint 'fixtures': {'page': 'The Page field do not exist.'}"
+  },
+  "duplicate_fixture_ids": 0,
+  "errors": [
+    "2026-11-11: API-Football rejected endpoint 'fixtures': {'page': 'The Page field do not exist.'}"
+  ],
+  "future_fixture_count": 0,
+  "generated_at_utc": "2026-11-11T10:43:45.474546+00:00",
+  "page_caps_by_date": {
+    "2026-11-11": 20
+  },
+  "partial_boundary_days_utc": [
+    "2026-11-18"
+  ],
+  "prediction_ready_fixture_count": 0,
+  "provider": "api_football_v3",
+  "rejected_fixture_counts": {},
+  "requests_limit_daily": 100,
+  "requests_made": 1,
+  "requests_remaining_before": 96,
+  "requests_used_before": 4,
+  "sample_fixtures": [],
+  "status": "error",
+  "subscription_plan": "Free",
+  "target_dates_utc": [
+    "2026-11-11",
+    "2026-11-12",
+    "2026-11-13",
+    "2026-11-14",
+    "2026-11-15",
+    "2026-11-16",
+    "2026-11-17"
+  ],
+  "target_met": false,
+  "target_shortfall_total": 630,
+  "window_days": 7,
+  "window_end_utc": "2026-11-18T10:43:45.474546+00:00",
+  "window_start_utc": "2026-11-11T10:43:45.474546+00:00",
+  "writes": {
+    "canonical_fixture_writes": 0,
+    "prediction_ledger_writes": 0,
+    "temporary_fixture_inserts": 0
+  }
+}
