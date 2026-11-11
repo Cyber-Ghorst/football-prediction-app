@@ -114,7 +114,7 @@ def refresh_free_fixture_sources(
         slugs = _rotate_batch(all_slugs, max_livescore_leagues, batch_slot)
         results["livescore_football"] = collect_livescore_observations(
             database_url, slugs, date_from=date_from, date_to=date_to,
-            client=livescore_client, request_delay_seconds=0.15,
+            client=livescore_client, request_delay_seconds=0.5,
         ) if slugs else {
             "provider": "livescore_football", "archived": False,
             "observation_count": 0, "eligible_for_review_count": 0,
