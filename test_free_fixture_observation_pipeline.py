@@ -3,10 +3,10 @@ from unittest.mock import Mock, patch
 
 from free_fixture_observation_pipeline import (
     collect_bzzoiro_observations,
-    collect_livescore_observations,
     collect_openfootball_observations,
     collect_openligadb_observations,
     collect_openmatchday_observations,
+    collect_thesportsdb_observations,
 )
 
 
@@ -70,31 +70,33 @@ class FreeFixtureObservationPipelineTests(unittest.TestCase):
         self.assertEqual(archive.call_args.kwargs["observations"][0]["eligible_for_review"], False)
 
     @patch("free_fixture_observation_pipeline.archive_future_fixture_observations")
-    def test_livescore_normalizes_scheduled_events_before_archiving(self, archive):
-        archive.return_value = {"snapshot_id": "snapshot-4"}
-        client = Mock()
-        client.base_url = "https://worldcup26.ir"
-        client.fixtures.return_value = [{
-            "id": "event-9",
-            "date": "2026-11-20T19:00:00+00:00",
-            "status": {"type": {"name": "STATUS_SCHEDULED"}},
-            "season": {"id": "season-26"},
-            "competitions": [{"id": "league-1", "competitors": [
-                {"homeAway": "home", "team": {"id": "1", "displayName": "Home FC"}},
-                {"homeAway": "away", "team": {"id": "2", "displayName": "Away FC"}},
-            ]}],
-        }]
-        result = collect_livescore_observations(
-            "provider-db", ["league-1"], date_from="2026-11-11", date_to="2026-11-18",
-            client=client,
-        )
-        client.fixtures.assert_called_once_with(
-            "league-1", status="scheduled", date_from="2026-11-11", date_to="2026-11-18"
-        )
-        self.assertEqual(result["eligible_for_review_count"], 1)
-        self.assertEqual(archive.call_args.kwargs["observations"][0]["provider_fixture_id"], "event-9")
-
     @patch("free_fixture_observation_pipeline.archive_future_fixture_observations")
+    def test_thesportsdb_requires_terms_acknowledgement_and_archives_next_events(self, archive):
+        archive.return_value = {"snapshot_id": "snapshot-tsdb"}
+        client = Mock()
+        client.leagues_by_country.return_value = [{
+            "idLeague": "4328", "strLeague": "Premier League", "strCountry": "England"
+        }]
+        client.events_next_league.return_value = [{
+            "idEvent": "event-1", "strTimestamp": "2026-11-20T19:00:00Z",
+            "strStatus": "Not Started", "strSeason": "2026-2027",
+            "idHomeTeam": "1", "strHomeTeam": "Home FC",
+            "idAwayTeam": "2", "strAwayTeam": "Away FC",
+        }]
+        with self.assertRaisesRegex(ValueError, "terms acknowledgement"):
+            collect_thesportsdb_observations(
+                "provider-db", country="England", client=client,
+            )
+        result = collect_thesportsdb_observations(
+            "provider-db", country="England", client=client,
+            terms_acknowledged=True, request_delay_seconds=0,
+        )
+        self.assertEqual(result["snapshot_id"], "snapshot-tsdb")
+        client.leagues_by_country.assert_called_with("England", sport="Soccer")
+        client.events_next_league.assert_called_with("4328")
+        self.assertEqual(archive.call_args.args[1], "thesportsdb")
+        self.assertEqual(archive.call_args.args[2]["country"], "England")
+
     def test_bzzoiro_requires_credentials_but_fails_closed_without_them(self, archive):
         result = collect_bzzoiro_observations("provider-db")
         self.assertFalse(result["archived"])
