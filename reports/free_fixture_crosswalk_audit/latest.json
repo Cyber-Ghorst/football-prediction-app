@@ -1,7 +1,7 @@
 {
   "automatic_mapping_approvals": 0,
   "canonical_fixture_writes": 0,
-  "generated_at_utc": "2026-11-11T14:19:29.637856+00:00",
+  "generated_at_utc": "2026-11-11T19:17:35.698431+00:00",
   "prediction_ledger_writes": 0,
   "providers": {
     "api_ninjas": {
@@ -907,21 +907,6 @@
               "entity_type": "team",
               "match_method": null,
               "provider": "livescore_football",
-              "provider_country": "Spain",
-              "provider_entity_id": "21291",
-              "provider_name": "Calvo Sotelo",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": null,
-              "provider": "livescore_football",
               "provider_country": "England",
               "provider_entity_id": "322",
               "provider_name": "Carlisle United",
@@ -1000,6 +985,21 @@
               "provider_country": "Spain",
               "provider_entity_id": "85",
               "provider_name": "Celta Vigo",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "Brazil",
+              "provider_entity_id": "9318",
+              "provider_name": "Chapecoense",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
@@ -2139,6 +2139,21 @@
               "status": "candidate_requires_manual_approval"
             },
             {
+              "canonical_entity_id": "sportmonks:15",
+              "canonical_name": "Aston Villa",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openligadb",
+              "provider_country": "England",
+              "provider_entity_id": "438",
+              "provider_name": "Aston Villa",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
               "canonical_entity_id": "sportmonks:13258",
               "canonical_name": "Athletic Club",
               "canonical_parent_id": null,
@@ -2274,6 +2289,21 @@
               "status": "candidate_requires_manual_approval"
             },
             {
+              "canonical_entity_id": "sportmonks:9",
+              "canonical_name": "Manchester City",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openligadb",
+              "provider_country": "England",
+              "provider_entity_id": "4244",
+              "provider_name": "Manchester City",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
               "canonical_entity_id": "sportmonks:63",
               "canonical_name": "Nottingham Forest",
               "canonical_parent_id": null,
@@ -2313,51 +2343,6 @@
               "provider_country": "Spain",
               "provider_entity_id": "1802",
               "provider_name": "Rayo Vallecano",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
-            },
-            {
-              "canonical_entity_id": "sportmonks:485",
-              "canonical_name": "Real Betis",
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "openligadb",
-              "provider_country": "Spain",
-              "provider_entity_id": "1804",
-              "provider_name": "Real Betis",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
-            },
-            {
-              "canonical_entity_id": "sportmonks:3468",
-              "canonical_name": "Real Madrid",
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "openligadb",
-              "provider_country": "Spain",
-              "provider_entity_id": "1133",
-              "provider_name": "Real Madrid",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
-            },
-            {
-              "canonical_entity_id": "sportmonks:594",
-              "canonical_name": "Real Sociedad",
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "openligadb",
-              "provider_country": "Spain",
-              "provider_entity_id": "1275",
-              "provider_name": "Real Sociedad",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
@@ -2755,10 +2740,10 @@
             }
           ],
           "candidates_truncated": true,
-          "manual_review_candidate_count": 17,
+          "manual_review_candidate_count": 16,
           "status_counts": {
-            "candidate_requires_manual_approval": 17,
-            "no_exact_contextual_match": 425
+            "candidate_requires_manual_approval": 16,
+            "no_exact_contextual_match": 426
           }
         }
       },
