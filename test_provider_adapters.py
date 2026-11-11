@@ -50,6 +50,25 @@ class ProviderAdapterTests(unittest.TestCase):
         })
         client.close()
 
+    def test_api_football_fixtures_between_uses_date_range_and_pagination(self):
+        client = APIFootballClient(api_key="test-only")
+        client._request = Mock(return_value=[{"fixture": {"id": 1}}])
+        client.last_paging = {"current": 1, "total": 1}
+        rows = client.fixtures_between("2026-11-11", "2026-11-17", timezone="UTC")
+        self.assertEqual(rows, [{"fixture": {"id": 1}}])
+        self.assertEqual(client._request.call_args.args[1], {
+            "from": "2026-11-11", "to": "2026-11-17",
+            "timezone": "UTC", "page": 1,
+        })
+        client.close()
+
+    def test_api_football_fixtures_between_rejects_reversed_dates(self):
+        client = APIFootballClient(api_key="test-only")
+        with self.assertRaisesRegex(ValueError, "earlier"):
+            client.fixtures_between("2026-11-18", "2026-11-17")
+        client.close()
+
+
     def test_api_football_fixtures_by_date_rejects_missing_pagination(self):
         client = APIFootballClient(api_key="test-only")
         client._request = Mock(return_value=[{"fixture": {"id": 1}}])
