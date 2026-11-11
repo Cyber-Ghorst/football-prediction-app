@@ -3,6 +3,23 @@ import unittest
 
 
 class StreamlitStartupImportContractTests(unittest.TestCase):
+    def test_optional_fixture_promotion_writer_is_imported_lazily(self):
+        from pathlib import Path
+
+        source = Path(__file__).with_name("app.py").read_text(encoding="utf-8")
+        self.assertIn(
+            "from temporary_fixture_store import search_temporary_upcoming_fixtures",
+            source,
+        )
+        self.assertNotIn(
+            "from temporary_fixture_store import (\\n        add_temporary_upcoming_fixtures",
+            source,
+        )
+        self.assertIn(
+            "from temporary_fixture_store import add_temporary_upcoming_fixtures",
+            source,
+        )
+
     def test_new_provider_and_fixture_workflow_imports_resolve(self):
         from temporary_fixture_store import (
             add_temporary_upcoming_fixtures,
