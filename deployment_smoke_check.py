@@ -55,6 +55,27 @@ APP_MODULES = (
 )
 
 APP_SYMBOLS = {
+    "free_fixture_adapters": ("BzzoiroAdapter", "OpenLigaDBAdapter", "OpenFootballAdapter", "OpenMatchdayAdapter"),
+    "livescore_football": ("LiveScoreFootballClient", "LiveScoreFootballError"),
+    "provider_config": ("provider_readiness",),
+    "prediction_evaluation": (
+        "build_availability_snapshot", "build_prediction_record",
+        "evaluate_prediction_ledger", "evaluate_tipmaster_benchmark",
+        "merge_prediction_records",
+    ),
+    "prediction_storage": ("load_prediction_ledger", "save_prediction_records"),
+    "prediction_results": (
+        "verified_final_score", "group_completed_fixture_candidates",
+        "automatic_result_check_due",
+    ),
+    "provider_data_storage": (
+        "check_provider_storage_connection", "verify_provider_storage_round_trip",
+        "build_provider_cache_key", "load_provider_snapshot", "save_provider_snapshot",
+        "save_provider_snapshot_and_record_run", "record_provider_collection_run",
+        "save_provider_reliability_snapshot", "load_provider_reliability_history",
+        "save_conflict_resolution_audit", "load_conflict_resolution_audit",
+        "save_discovered_competition_registry", "load_competition_registry",
+    ),
     "temporary_fixture_store": (
         "add_temporary_upcoming_fixtures",
         "search_temporary_upcoming_fixtures",
