@@ -1,7 +1,7 @@
 {
   "automatic_mapping_approvals": 0,
   "canonical_fixture_writes": 0,
-  "generated_at_utc": "2026-11-11T09:55:51.462947+00:00",
+  "generated_at_utc": "2026-11-11T10:01:59.381822+00:00",
   "prediction_ledger_writes": 0,
   "providers": {
     "api_ninjas": {
@@ -1461,6 +1461,66 @@
           "candidate_count": 2427,
           "candidates": [
             {
+              "canonical_entity_id": "sportmonks:3169",
+              "canonical_name": "Albacete",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "615206",
+              "provider_name": "Albacete",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:618",
+              "canonical_name": "Almer\u00eda",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "616057",
+              "provider_name": "Almer\u00eda",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:8366",
+              "canonical_name": "Burgos",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "8153364",
+              "provider_name": "Burgos",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:6827",
+              "canonical_name": "C\u00e1diz",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "616908",
+              "provider_name": "Cadiz",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:10008",
+              "canonical_name": "Castell\u00f3n",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "4471938",
+              "provider_name": "Castell\u00f3n",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
               "canonical_entity_id": "sportmonks:36",
               "canonical_name": "Celta de Vigo",
               "entity_type": "team",
@@ -1469,6 +1529,18 @@
               "provider_country": "Spain",
               "provider_entity_id": "458622",
               "provider_name": "Celta de Vigo",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:931",
+              "canonical_name": "C\u00f3rdoba",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "607547",
+              "provider_name": "Cordoba",
               "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
               "status": "candidate_requires_manual_approval"
             },
@@ -1485,6 +1557,30 @@
               "status": "candidate_requires_manual_approval"
             },
             {
+              "canonical_entity_id": "sportmonks:1888",
+              "canonical_name": "Eldense",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "8248676",
+              "provider_name": "Eldense",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:238115",
+              "canonical_name": "FC Andorra",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "6942391",
+              "provider_name": "FC Andorra",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
               "canonical_entity_id": "sportmonks:231",
               "canonical_name": "Girona",
               "entity_type": "team",
@@ -1493,6 +1589,42 @@
               "provider_country": "Spain",
               "provider_entity_id": "466281",
               "provider_name": "Girona",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:103",
+              "canonical_name": "Granada",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "18738102",
+              "provider_name": "Granada",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:2921",
+              "canonical_name": "Las Palmas",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "455218",
+              "provider_name": "Las Palmas",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:844",
+              "canonical_name": "Legan\u00e9s",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "457771",
+              "provider_name": "Leganes",
               "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
               "status": "candidate_requires_manual_approval"
             },
@@ -1529,6 +1661,42 @@
               "provider_country": "Spain",
               "provider_entity_id": "462877",
               "provider_name": "Real Betis",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:758",
+              "canonical_name": "Sabadell",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "8164427",
+              "provider_name": "Sabadell",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:344",
+              "canonical_name": "Sporting Gij\u00f3n",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "622865",
+              "provider_name": "Sporting Gij\u00f3n",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:1012",
+              "canonical_name": "Tenerife",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "612653",
+              "provider_name": "Tenerife",
               "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
               "status": "candidate_requires_manual_approval"
             },
@@ -1834,10 +2002,10 @@
             }
           ],
           "candidates_truncated": true,
-          "manual_review_candidate_count": 6,
+          "manual_review_candidate_count": 20,
           "status_counts": {
-            "candidate_requires_manual_approval": 6,
-            "no_exact_contextual_match": 2421
+            "candidate_requires_manual_approval": 20,
+            "no_exact_contextual_match": 2407
           }
         }
       },
@@ -2001,6 +2169,18 @@
           "candidate_count": 80,
           "candidates": [
             {
+              "canonical_entity_id": "sportmonks:3169",
+              "canonical_name": "Albacete",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "livescore_football",
+              "provider_country": "Spain",
+              "provider_entity_id": "2737",
+              "provider_name": "Albacete",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
               "canonical_entity_id": "sportmonks:528",
               "canonical_name": "Espanyol",
               "entity_type": "team",
@@ -2073,6 +2253,18 @@
               "status": "candidate_requires_manual_approval"
             },
             {
+              "canonical_entity_id": "sportmonks:1012",
+              "canonical_name": "Tenerife",
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "livescore_football",
+              "provider_country": "Spain",
+              "provider_entity_id": "131393",
+              "provider_name": "Tenerife",
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
               "canonical_entity_id": "sportmonks:214",
               "canonical_name": "Valencia",
               "entity_type": "team",
@@ -2141,18 +2333,6 @@
               "provider_country": "Spain",
               "provider_entity_id": "21378",
               "provider_name": "Alav\u00e9s",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "team",
-              "match_method": null,
-              "provider": "livescore_football",
-              "provider_country": "Spain",
-              "provider_entity_id": "2737",
-              "provider_name": "Albacete",
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
               "status": "no_exact_contextual_match"
             },
@@ -2383,13 +2563,25 @@
               "provider_name": "Chapecoense",
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
               "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "320",
+              "provider_name": "Cheltenham Town",
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
             }
           ],
           "candidates_truncated": true,
-          "manual_review_candidate_count": 7,
+          "manual_review_candidate_count": 9,
           "status_counts": {
-            "candidate_requires_manual_approval": 7,
-            "no_exact_contextual_match": 73
+            "candidate_requires_manual_approval": 9,
+            "no_exact_contextual_match": 71
           }
         }
       },
@@ -3466,7 +3658,7 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 11215,
+      "observation_count": 11742,
       "snapshot_count": 3,
       "source_entity_counts": {
         "leagues": 32,
