@@ -1,7 +1,10 @@
 import unittest
 from datetime import datetime, timedelta, timezone
 
-from free_fixture_canonical_promotion import assess_free_fixture_observation
+from free_fixture_canonical_promotion import (
+    SUPPORTED_PROVIDERS,
+    assess_free_fixture_observation,
+)
 
 
 NOW = datetime(2026, 11, 11, 2, 0, tzinfo=timezone.utc)
@@ -63,6 +66,31 @@ class FreeFixtureCanonicalPromotionAssessmentTests(unittest.TestCase):
         self.assertEqual(result["fixture_id"], "openligadb:42")
         self.assertEqual(result["canonical"]["league_id"], "sportmonks:10")
         self.assertEqual(result["canonical"]["home_team"], "Home FC")
+
+    def test_highlightly_and_api_ninjas_can_promote_only_with_explicit_sportmonks_links(self):
+        for provider in ("highlightly", "api_ninjas"):
+            self.assertIn(provider, SUPPORTED_PROVIDERS)
+            observation = {
+                **OBSERVATION,
+                "status": "Not started" if provider == "highlightly" else "scheduled",
+            }
+            result = assess_free_fixture_observation(
+                provider, observation,
+                snapshot_id="snapshot-1",
+                snapshot_retrieved_at="2026-11-11T01:56:00Z",
+                league_links={"league-1": "sportmonks:10"},
+                season_links={"season-1": "sportmonks:20"},
+                team_links={"home-1": "sportmonks:30", "away-1": "sportmonks:40"},
+                canonical_entities=canonical_entities(),
+                now=NOW,
+                licence_acknowledged=True,
+            )
+            self.assertEqual(result["decision"], "ready_for_promotion")
+            self.assertTrue(all(
+                str(value).startswith("sportmonks:")
+                for key, value in result["canonical"].items()
+                if key.endswith("_id")
+            ))
 
     def test_missing_any_entity_link_blocks_promotion(self):
         result = assess_free_fixture_observation(
