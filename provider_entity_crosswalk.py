@@ -72,6 +72,12 @@ def _display_value(value: Any) -> str:
     return str(value or "").strip()
 
 
+# Stable provider-ID aliases are explicit review hints, never automatic links.
+CURATED_PROVIDER_LEAGUE_NAME_ALIASES = {
+    ("openligadb", "4936"): "La Liga",  # OpenLigaDB "LaLiga EA Sports"
+}
+
+
 def build_entity_crosswalk_candidates(
     provider: str,
     entity_type: str,
@@ -121,6 +127,7 @@ def build_entity_crosswalk_candidates(
             "canonical_name": None,
             "status": "unmatched",
             "reason": "",
+            "match_method": None,
         }
         if source_id is None or not source_name:
             output.append({**base, "status": "invalid_source_identity",
@@ -131,7 +138,13 @@ def build_entity_crosswalk_candidates(
                            "reason": "A verified provider-competition to canonical-competition link is required first."})
             continue
 
-        source_key = _candidate_name_key(provider_name, entity_type, source_name)
+        curated_alias = (
+            CURATED_PROVIDER_LEAGUE_NAME_ALIASES.get((provider_name, str(source_id)))
+            if entity_type == "league" else None
+        )
+        source_key = _candidate_name_key(
+            provider_name, entity_type, curated_alias or source_name
+        )
         matches = []
         for target in canonical:
             if entity_type == "league":
@@ -168,7 +181,17 @@ def build_entity_crosswalk_candidates(
                 **base, "canonical_entity_id": matches[0][0],
                 "canonical_name": matches[0][1],
                 "status": "candidate_requires_manual_approval",
-                "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+                "match_method": (
+                    "curated_provider_id_alias" if curated_alias
+                    else "exact_name_and_country_or_parent"
+                ),
+                "reason": (
+                    "Curated stable provider-ID alias and exact country context match; "
+                    "explicit review is still mandatory."
+                    if curated_alias else
+                    "Exact normalized name and required country/parent context match; "
+                    "explicit review is still mandatory."
+                ),
             })
         elif len(matches) > 1:
             output.append({

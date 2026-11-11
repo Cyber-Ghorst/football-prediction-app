@@ -74,6 +74,44 @@ class ProviderEntityCrosswalkTests(unittest.TestCase):
         self.assertEqual(len(cursor.executed), 1)
         self.assertEqual(cursor.executed[0][1], ("highlightly",))
 
+    def test_openligadb_laliga_stable_id_alias_is_only_a_manual_candidate(self):
+        source = [{
+            "provider_competition_id": "4936",
+            "competition_name": "LaLiga EA Sports",
+            "country": "Spain",
+        }]
+        canonical = [{
+            "league_id": "sportmonks:564",
+            "name": "La Liga",
+            "country": "Spain",
+        }]
+        result = build_entity_crosswalk_candidates(
+            "openligadb", "league", source, canonical,
+        )[0]
+        self.assertEqual(result["status"], "candidate_requires_manual_approval")
+        self.assertEqual(result["canonical_entity_id"], "sportmonks:564")
+        self.assertEqual(result["match_method"], "curated_provider_id_alias")
+        self.assertIn("explicit review is still mandatory", result["reason"])
+
+    def test_openligadb_laliga_alias_requires_known_id_and_exact_country(self):
+        canonical = [{
+            "league_id": "sportmonks:564",
+            "name": "La Liga",
+            "country": "Spain",
+        }]
+        unknown_id = build_entity_crosswalk_candidates(
+            "openligadb", "league",
+            [{"provider_competition_id": "9999", "competition_name": "LaLiga EA Sports", "country": "Spain"}],
+            canonical,
+        )[0]
+        wrong_country = build_entity_crosswalk_candidates(
+            "openligadb", "league",
+            [{"provider_competition_id": "4936", "competition_name": "LaLiga EA Sports", "country": "Portugal"}],
+            canonical,
+        )[0]
+        self.assertEqual(unknown_id["status"], "no_exact_contextual_match")
+        self.assertEqual(wrong_country["status"], "no_exact_contextual_match")
+
     def test_name_normalization_removes_accents_and_punctuation(self):
         self.assertEqual(normalize_entity_name("Atlético-Madrid"), "atletico madrid")
         self.assertEqual(normalize_entity_name("A&B FC"), "a and b fc")
