@@ -346,7 +346,7 @@ class OpenFootballAdapter(_StaticDatasetAdapter):
             zone = timezone.utc
         else:
             offset = re.fullmatch(
-                r"(?:UTC|GMT)?([+-])(\\d{1,2})(?::?(\\d{2}))?",
+                r"(?:UTC|GMT)?([+-])(\d{1,2})(?::?(\d{2}))?",
                 zone_text, flags=re.IGNORECASE,
             )
             if offset:
