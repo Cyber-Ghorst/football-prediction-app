@@ -1251,7 +1251,10 @@ with st.sidebar:
                         "provider_entity_id": candidate.get("provider_entity_id") or "",
                         "provider_name": candidate.get("provider_name") or "",
                         "provider_country": candidate.get("provider_country") or "",
+                        "provider_parent_id": candidate.get("provider_parent_id") or "",
+                        "provider_parent_name": candidate.get("provider_parent_name") or "",
                         "suggested_canonical_id": candidate.get("canonical_entity_id") or "",
+                        "canonical_parent_id": candidate.get("canonical_parent_id") or "",
                         "canonical_entity_id": candidate.get("canonical_entity_id") or "",
                         "status": candidate.get("status") or "",
                         "reason": candidate.get("reason") or "",
@@ -1266,7 +1269,8 @@ with st.sidebar:
                     num_rows="fixed",
                     disabled=[
                         "provider_entity_id", "provider_name", "provider_country",
-                        "suggested_canonical_id", "status", "reason",
+                        "provider_parent_id", "provider_parent_name",
+                        "suggested_canonical_id", "canonical_parent_id", "status", "reason",
                     ],
                     column_config={
                         "canonical_entity_id": st.column_config.SelectboxColumn(
