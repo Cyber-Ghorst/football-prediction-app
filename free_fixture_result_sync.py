@@ -294,6 +294,39 @@ def verify_bzzoiro_final_score(
     return _integer_score(full_time.get("home"), full_time.get("away"))
 
 
+def _record_has_canonical_ids(record: Mapping[str, Any]) -> bool:
+    return any(str(record.get(key) or "").strip() for key in (
+        "league_id", "season_id", "home_team_id", "away_team_id"
+    ))
+
+
+def _crosswalk_matches_record(
+    record: Mapping[str, Any],
+    source_observation: Mapping[str, Any],
+    entity_links: Mapping[str, Mapping[str, str]],
+) -> bool:
+    expected = {
+        "league_id": entity_links.get("league", {}).get(
+            str(source_observation.get("competition_key") or "")
+        ),
+        "season_id": entity_links.get("season", {}).get(
+            str(source_observation.get("season_key") or "")
+        ),
+        "home_team_id": entity_links.get("team", {}).get(
+            str(source_observation.get("home_team_key") or "")
+        ),
+        "away_team_id": entity_links.get("team", {}).get(
+            str(source_observation.get("away_team_key") or "")
+        ),
+    }
+    if not all(expected.values()):
+        return False
+    return all(
+        str(record.get(key) or "") == str(value)
+        for key, value in expected.items()
+    )
+
+
 def _source_metadata(database_url: str, provider: str, fixture_id: str) -> dict[str, Any] | None:
     with _connect(database_url) as connection:
         with connection.cursor() as cursor:
@@ -364,6 +397,7 @@ def sync_free_source_results(
     updated_rows: list[dict[str, Any]] = []
     openligadb_cache: dict[tuple[str, int], list[dict[str, Any]]] = {}
     livescore_cache: dict[tuple[str, str, str], list[dict[str, Any]]] = {}
+    entity_link_cache: dict[str, dict[str, dict[str, str]]] = {}
 
     for group in candidates[:max(1, int(limit))]:
         representative = group[0]
@@ -381,6 +415,33 @@ def sync_free_source_results(
             source_url = str(metadata.get("source_url") or "")
             raw_observation = metadata.get("raw_payload")
             raw_observation = raw_observation if isinstance(raw_observation, Mapping) else {}
+            if _record_has_canonical_ids(representative):
+                if not all(str(representative.get(key) or "").strip() for key in (
+                    "league_id", "season_id", "home_team_id", "away_team_id"
+                )):
+                    item["reason"] = "prediction_record_has_incomplete_canonical_entity_ids"
+                    report["fixtures_without_verified_score"] += 1
+                    report["fixture_results"].append(item)
+                    continue
+                if provider not in entity_link_cache:
+                    entity_link_cache[provider] = {
+                        "league": load_provider_entity_links(
+                            provider_database_url, provider=provider, entity_type="league"
+                        ),
+                        "season": load_provider_entity_links(
+                            provider_database_url, provider=provider, entity_type="season"
+                        ),
+                        "team": load_provider_entity_links(
+                            provider_database_url, provider=provider, entity_type="team"
+                        ),
+                    }
+                if not _crosswalk_matches_record(
+                    representative, raw_observation, entity_link_cache[provider]
+                ):
+                    item["reason"] = "provider_crosswalk_does_not_match_saved_prediction_identity"
+                    report["fixtures_without_verified_score"] += 1
+                    report["fixture_results"].append(item)
+                    continue
             score = None
 
             if provider == "openligadb":
@@ -402,6 +463,7 @@ def sync_free_source_results(
                         score = verify_openligadb_final_score(
                             representative, observation["raw_payload"],
                             provider_fixture_id=source_id, now=current,
+                            source_observation=raw_observation,
                         )
                     if score is None:
                         item["reason"] = "openligadb_final_score_not_verified"
@@ -432,6 +494,7 @@ def sync_free_source_results(
                         score = verify_livescore_final_score(
                             representative, event,
                             provider_fixture_id=source_id, now=current,
+                            source_observation=raw_observation,
                         )
                     if score is None:
                         item["reason"] = "livescore_final_90_minute_score_not_verified"
@@ -461,6 +524,7 @@ def sync_free_source_results(
                         score = verify_openmatchday_final_score(
                             representative, result_row,
                             provider_fixture_id=source_id, now=current,
+                            source_observation=raw_observation,
                         )
                     if score is None:
                         item["reason"] = "open_matchday_full_time_score_not_verified"
@@ -469,6 +533,7 @@ def sync_free_source_results(
                     event = client.event(source_id)
                 score = verify_bzzoiro_final_score(
                     representative, event, provider_fixture_id=source_id, now=current,
+                    source_observation=raw_observation,
                 )
                 if score is None:
                     item["reason"] = "bzzoiro_final_90_minute_score_not_verified"
