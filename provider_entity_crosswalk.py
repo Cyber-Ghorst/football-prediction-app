@@ -35,7 +35,7 @@ def normalize_entity_name(value: Any) -> str:
 
 def _season_start_year(value: Any) -> int | None:
     """Extract a season's first four-digit year for parent-scoped season review."""
-    match = re.search(r"(?<!\\d)(20\\d{2})(?!\\d)", str(value or ""))
+    match = re.search(r"(?<!\d)(20\d{2})(?!\d)", str(value or ""))
     return int(match.group(1)) if match else None
 
 
