@@ -4,10 +4,12 @@ from unittest.mock import patch, Mock
 
 from free_fixture_result_sync import (
     sync_free_source_results,
+    _crosswalk_matches_record,
     verify_bzzoiro_final_score,
     verify_livescore_final_score,
     verify_openligadb_final_score,
     verify_openmatchday_final_score,
+    verify_openfootball_final_score,
 )
 
 
@@ -26,6 +28,31 @@ RECORD = {
 
 
 class FreeFixtureResultVerificationTests(unittest.TestCase):
+    def test_saved_prediction_identity_must_match_all_four_provider_crosswalks(self):
+        record = {
+            "league_id": "sportmonks:10",
+            "season_id": "sportmonks:20",
+            "home_team_id": "sportmonks:30",
+            "away_team_id": "sportmonks:40",
+        }
+        source = {
+            "competition_key": "league-1",
+            "season_key": "season-1",
+            "home_team_key": "home-1",
+            "away_team_key": "away-1",
+        }
+        links = {
+            "league": {"league-1": "sportmonks:10"},
+            "season": {"season-1": "sportmonks:20"},
+            "team": {"home-1": "sportmonks:30", "away-1": "sportmonks:40"},
+        }
+        self.assertTrue(_crosswalk_matches_record(record, source, links))
+        wrong = {
+            **links,
+            "team": {"home-1": "sportmonks:30", "away-1": "sportmonks:999"},
+        }
+        self.assertFalse(_crosswalk_matches_record(record, source, wrong))
+
     def test_openligadb_requires_exact_finished_match_and_full_time_score(self):
         match = {
             "matchID": 42,
@@ -100,6 +127,58 @@ class FreeFixtureResultVerificationTests(unittest.TestCase):
             record, aet, provider_fixture_id="event-1", now=NOW
         ))
 
+    def test_openfootball_requires_explicit_kickoff_and_full_time_score(self):
+        record = {
+            **RECORD,
+            "fixture_provider": "openfootball",
+            "fixture_id": "openfootball:openfootball:dataset-42",
+            "home_team": "Arsenal",
+            "away_team": "Coventry",
+            "kickoff_at": "2026-11-10T18:00:00Z",
+            "season": "2026",
+        }
+        source = {
+            "home_team_name": "Arsenal FC",
+            "away_team_name": "Coventry City FC",
+            "competition_name": "Premier League",
+            "season_name": "2026-27",
+        }
+        observation = {
+            "provider_fixture_id": "openfootball:dataset-42",
+            "competition_key": "en.1",
+            "competition_name": "Premier League",
+            "season_key": "2026-27",
+            "season_name": "2026-27",
+            "home_team_name": "Arsenal FC",
+            "away_team_name": "Coventry City FC",
+            "kickoff_utc": "2026-11-10T18:00:00Z",
+            "raw_payload": {"score": {"ht": [1, 0], "ft": [2, 1]}},
+        }
+        self.assertEqual(
+            verify_openfootball_final_score(
+                record, observation,
+                provider_fixture_id="openfootball:dataset-42",
+                now=NOW, source_observation=source,
+            ),
+            (2, 1),
+        )
+        naive = {**observation, "kickoff_utc": None}
+        self.assertIsNone(verify_openfootball_final_score(
+            record, naive,
+            provider_fixture_id="openfootball:dataset-42",
+            now=NOW, source_observation=source,
+        ))
+        cup = {
+            **observation,
+            "competition_key": "eng.cup",
+            "competition_name": "FA Cup",
+        }
+        self.assertIsNone(verify_openfootball_final_score(
+            record, cup,
+            provider_fixture_id="openfootball:dataset-42",
+            now=NOW, source_observation={**source, "competition_name": "FA Cup"},
+        ))
+
     def test_openmatchday_uses_results_csv_and_exact_deterministic_fixture_identity(self):
         record = {
             **RECORD,
@@ -136,6 +215,53 @@ class FreeFixtureResultVerificationTests(unittest.TestCase):
             record, cup, provider_fixture_id="open_matchday:dataset-42",
             now=datetime(2026, 11, 22, 12, 0, tzinfo=timezone.utc)
         ))
+
+    @patch("free_fixture_result_sync._source_metadata")
+    @patch("free_fixture_result_sync.OpenFootballAdapter")
+    @patch("free_fixture_result_sync._ensure_promotion_tables")
+    def test_openfootball_result_sync_refetches_exact_season_file(
+        self, ensure_tables, adapter_cls, source
+    ):
+        record = {
+            **RECORD,
+            "fixture_provider": "openfootball",
+            "fixture_id": "openfootball:openfootball:dataset-42",
+            "home_team": "Arsenal",
+            "away_team": "Coventry",
+            "kickoff_at": "2026-11-10T18:00:00Z",
+            "season": "2026",
+        }
+        source.return_value = {
+            "source_url": "https://raw.githubusercontent.com/openfootball/football.json/master/2026-27/en.1.json",
+            "raw_payload": {
+                "competition_name": "Premier League",
+                "season_name": "2026-27",
+                "home_team_name": "Arsenal FC",
+                "away_team_name": "Coventry City FC",
+            },
+            "canonical_fixture_id": record["fixture_id"],
+        }
+        adapter = adapter_cls.return_value.__enter__.return_value
+        adapter.season.return_value = [{
+            "provider_fixture_id": "openfootball:dataset-42",
+            "competition_key": "en.1",
+            "competition_name": "Premier League",
+            "season_key": "2026-27",
+            "season_name": "2026-27",
+            "home_team_name": "Arsenal FC",
+            "away_team_name": "Coventry City FC",
+            "kickoff_utc": "2026-11-10T18:00:00Z",
+            "raw_payload": {"score": {"ht": [1, 0], "ft": [2, 1]}},
+        }]
+        records = [record]
+        report, updated = sync_free_source_results(
+            records, provider_database_url="provider-db", now=NOW,
+        )
+        self.assertEqual(report["records_updated"], 1)
+        self.assertEqual(updated[0]["actual_home_goals"], 2)
+        adapter.season.assert_called_once_with(
+            "2026-27/en.1.json", competition="Premier League"
+        )
 
     @patch("free_fixture_result_sync._source_metadata")
     @patch("free_fixture_result_sync.OpenMatchdayAdapter")
@@ -199,6 +325,46 @@ class FreeFixtureResultVerificationTests(unittest.TestCase):
             record, {**event, "scores": {"ht": {"home": 1, "away": 0}}},
             provider_fixture_id="42", now=NOW,
         ))
+
+    @patch("free_fixture_result_sync._source_metadata")
+    @patch("free_fixture_result_sync.load_provider_entity_links")
+    @patch("free_fixture_result_sync._ensure_promotion_tables")
+    def test_result_sync_blocks_when_saved_prediction_crosswalk_has_changed(
+        self, ensure_tables, links, source
+    ):
+        record = {
+            **RECORD,
+            "fixture_provider": "openligadb",
+            "fixture_id": "openligadb:42",
+            "league_id": "sportmonks:10",
+            "season_id": "sportmonks:20",
+            "home_team_id": "sportmonks:30",
+            "away_team_id": "sportmonks:40",
+        }
+        source.return_value = {
+            "source_url": "https://api.openligadb.de/getmatchdata/bl1/2026",
+            "raw_payload": {
+                "competition_key": "bl1", "season_key": "2026",
+                "home_team_key": "home-1", "away_team_key": "away-1",
+            },
+            "canonical_fixture_id": "openligadb:42",
+        }
+        links.side_effect = [
+            {"bl1": "sportmonks:10"},
+            {"2026": "sportmonks:20"},
+            {"home-1": "sportmonks:30", "away-1": "sportmonks:999"},
+        ]
+        with patch("free_fixture_result_sync.OpenLigaDBAdapter") as adapter:
+            report, updated = sync_free_source_results(
+                [record], provider_database_url="provider-db", now=NOW,
+            )
+        self.assertEqual(updated, [])
+        self.assertEqual(report["fixtures_without_verified_score"], 1)
+        self.assertEqual(
+            report["fixture_results"][0]["reason"],
+            "provider_crosswalk_does_not_match_saved_prediction_identity",
+        )
+        adapter.assert_not_called()
 
     @patch("free_fixture_result_sync._source_metadata")
     @patch("free_fixture_result_sync.OpenLigaDBAdapter")

@@ -343,6 +343,18 @@ class PredictionEvaluationTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self._record(probabilities={"home_win": float("nan"), "draw": 25, "away_win": 15})
 
+    def test_prediction_record_persists_optional_canonical_entity_ids(self):
+        row = self._record(
+            league_id="sportmonks:8",
+            season_id="sportmonks:2026",
+            home_team_id="sportmonks:1",
+            away_team_id="sportmonks:2",
+        )
+        self.assertEqual(row["league_id"], "sportmonks:8")
+        self.assertEqual(row["season_id"], "sportmonks:2026")
+        self.assertEqual(row["home_team_id"], "sportmonks:1")
+        self.assertEqual(row["away_team_id"], "sportmonks:2")
+
     def test_outcome_and_merge(self):
         self.assertEqual(outcome_from_score(1, 1), "draw")
         first = self._record()

@@ -3931,6 +3931,16 @@ try:
             fixture_provider=(
                 selected_fixture_provider or "sportmonks"
             ) if prediction_fixture else "",
+            league_id=f"sportmonks:{league_id}" if sportmonks_mode and league_id else "",
+            season_id=f"sportmonks:{selected_season_id}" if sportmonks_mode and selected_season_id else "",
+            home_team_id=(
+                f"sportmonks:{team_map[home_name]['id']}"
+                if sportmonks_mode and home_name in team_map else ""
+            ),
+            away_team_id=(
+                f"sportmonks:{team_map[away_name]['id']}"
+                if sportmonks_mode and away_name in team_map else ""
+            ),
             opta_probabilities=opta_values,
             opta_source_url=opta_source_url.strip() if opta_values else "",
             opta_captured_at=datetime.now(timezone.utc).isoformat() if opta_values else "",
