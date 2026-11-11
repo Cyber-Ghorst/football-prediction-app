@@ -100,7 +100,7 @@ def run_automatic_fixture_promotion(
                 provider=provider,
                 promote=True,
                 now=current,
-                snapshot_limit=100,
+                snapshot_limit=3,
                 max_age_hours=24,
                 window_days=7,
                 licence_acknowledged=True,

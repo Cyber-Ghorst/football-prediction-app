@@ -90,6 +90,7 @@ class AutomaticFixturePromotionTests(unittest.TestCase):
             {"fixture_id": "openligadb:1"}, {"fixture_id": "openligadb:2"},
         ])
         self.assertEqual(promote.call_args.kwargs["licence_acknowledged"], True)
+        self.assertEqual(promote.call_args.kwargs["snapshot_limit"], 3)
 
     def test_neon_failure_is_reported_without_losing_canonical_write_count(self):
         promote = Mock(return_value={

@@ -43,7 +43,7 @@ class FreeFixtureCrosswalkAuditTests(unittest.TestCase):
         ))
         self.assertEqual(
             [call.kwargs["snapshot_limit"] for call in builder.call_args_list],
-            [5] * len(PROVIDERS),
+            [3] * len(PROVIDERS),
         )
 
     @patch("free_fixture_crosswalk_audit.load_canonical_crosswalk_catalogue")
