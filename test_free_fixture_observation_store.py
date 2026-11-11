@@ -39,6 +39,19 @@ class FreeFixtureObservationStoreTests(unittest.TestCase):
         self.assertEqual(kwargs["source_ids"], ["openligadb:1", "openligadb:2"])
         self.assertEqual(kwargs["payload"]["canonical_fixture_writes"], 0)
 
+    @patch("free_fixture_observation_store.save_provider_snapshot_and_record_run")
+    def test_thesportsdb_is_an_approved_observation_provider(self, save):
+        save.return_value = {"snapshot_id": "snapshot-tsdb", "run_id": "run-tsdb"}
+        row = self.observation(
+            provider="thesportsdb", fixture_id="thesportsdb:event-1",
+        )
+        result = archive_future_fixture_observations(
+            "postgresql://provider-db", provider="thesportsdb",
+            request_params={"country": "England"}, observations=[row],
+        )
+        self.assertEqual(result["snapshot_id"], "snapshot-tsdb")
+        self.assertEqual(result["provider"], "thesportsdb")
+
     def test_rejects_provider_mismatch_and_missing_source_id(self):
         with self.assertRaisesRegex(ValueError, "does not match"):
             archive_future_fixture_observations(
