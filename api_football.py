@@ -112,98 +112,19 @@ class APIFootballClient:
         self,
         fixture_date: str,
         timezone: str = "UTC",
-        max_pages: int = 20,
     ) -> list[dict[str, Any]]:
-        """Return a complete date-scoped fixture collection using API-Football pagination."""
+        """Return all fixtures for one date; API-Football v3 does not accept a page parameter."""
         from datetime import date
 
         try:
             normalized_date = date.fromisoformat(str(fixture_date)).isoformat()
         except ValueError as exc:
             raise ValueError("fixture_date must be YYYY-MM-DD.") from exc
-        if not 1 <= int(max_pages) <= 20:
-            raise ValueError("max_pages must be between 1 and 20.")
 
-        rows: list[dict[str, Any]] = []
-        self.last_fixture_request_count = 0
-        for page in range(1, int(max_pages) + 1):
-            self.last_fixture_request_count += 1
-            page_rows = self._request(
-                "fixtures",
-                {"date": normalized_date, "timezone": timezone, "page": page},
-            )
-            paging = self.last_paging or {}
-            if not page_rows:
-                total_pages = int(paging.get("total") or page)
-                if page > 1 or total_pages > page:
-                    raise APIFootballError(
-                        "API-Football returned an empty page despite reporting additional pagination."
-                    )
-                return rows
-            if not paging:
-                raise APIFootballError(
-                    "API-Football fixture pagination metadata is missing; refusing a potentially incomplete date."
-                )
-            current_page = int(paging.get("current") or page)
-            total_pages = int(paging.get("total") or current_page)
-            if current_page != page or total_pages < current_page:
-                raise APIFootballError("API-Football fixture pagination metadata is inconsistent.")
-            rows.extend(page_rows)
-            if current_page >= total_pages:
-                return rows
-        raise APIFootballError(
-            "API-Football fixture date exceeded the safe pagination limit; no partial date was accepted."
-        )
-
-    def fixtures_between(
-        self,
-        start_date: str,
-        end_date: str,
-        timezone: str = "UTC",
-        max_pages: int = 20,
-    ) -> list[dict[str, Any]]:
-        """Return a complete date-range fixture collection using API-Football pagination."""
-        from datetime import date
-
-        try:
-            start = date.fromisoformat(str(start_date)).isoformat()
-            end = date.fromisoformat(str(end_date)).isoformat()
-        except ValueError as exc:
-            raise ValueError("start_date and end_date must be YYYY-MM-DD.") from exc
-        if end < start:
-            raise ValueError("end_date cannot be earlier than start_date.")
-        if not 1 <= int(max_pages) <= 20:
-            raise ValueError("max_pages must be between 1 and 20.")
-
-        rows: list[dict[str, Any]] = []
-        self.last_fixture_request_count = 0
-        for page in range(1, int(max_pages) + 1):
-            self.last_fixture_request_count += 1
-            page_rows = self._request(
-                "fixtures",
-                {"from": start, "to": end, "timezone": timezone, "page": page},
-            )
-            paging = self.last_paging or {}
-            if not page_rows:
-                total_pages = int(paging.get("total") or page)
-                if page > 1 or total_pages > page:
-                    raise APIFootballError(
-                        "API-Football returned an empty page despite reporting additional pagination."
-                    )
-                return rows
-            if not paging:
-                raise APIFootballError(
-                    "API-Football fixture pagination metadata is missing; refusing a potentially incomplete date range."
-                )
-            current_page = int(paging.get("current") or page)
-            total_pages = int(paging.get("total") or current_page)
-            if current_page != page or total_pages < current_page:
-                raise APIFootballError("API-Football fixture pagination metadata is inconsistent.")
-            rows.extend(page_rows)
-            if current_page >= total_pages:
-                return rows
-        raise APIFootballError(
-            "API-Football fixture range exceeded the safe pagination limit; no partial range was accepted."
+        self.last_fixture_request_count = 1
+        return self._request(
+            "fixtures",
+            {"date": normalized_date, "timezone": timezone},
         )
 
     def teams(self, league_id: int, season: int) -> list[dict[str, Any]]:
