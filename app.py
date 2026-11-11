@@ -1062,7 +1062,7 @@ with st.sidebar:
         )
         stage_provider = st.selectbox(
             "Free fixture source",
-            ["openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro"],
+            ["openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro", "highlightly", "api_ninjas"],
             key="free_fixture_stage_provider",
         )
         bzzoiro_configured = bool(st.secrets.get("BZZOIRO_API_TOKEN", "")) if stage_provider == "bzzoiro" else False
@@ -1197,7 +1197,7 @@ with st.sidebar:
         )
         crosswalk_provider = st.selectbox(
             "Provider observations to review",
-            ["openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro"],
+            ["openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro", "highlightly", "api_ninjas"],
             key="free_fixture_crosswalk_provider",
         )
         build_crosswalk_review = st.button(
@@ -1325,7 +1325,7 @@ with st.expander("Validate and publish approved free-source fixtures", expanded=
     )
     promotion_provider = st.selectbox(
         "Provider to validate",
-        ["openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro"],
+        ["openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro", "highlightly", "api_ninjas"],
         key="free_fixture_promotion_provider",
     )
     promotion_licence_ack = st.checkbox(
@@ -1334,11 +1334,16 @@ with st.expander("Validate and publish approved free-source fixtures", expanded=
         key="free_fixture_promotion_licence_ack",
     )
     promotion_noncommercial_ack = False
-    if promotion_provider == "open_matchday":
+    if promotion_provider in {"open_matchday", "api_ninjas"}:
+        noncommercial_label = (
+            "I confirm the app and this use are non-commercial, as required by Open Matchday's licence."
+            if promotion_provider == "open_matchday"
+            else "I confirm the app and this use are non-commercial, as required by API Ninjas' free plan."
+        )
         promotion_noncommercial_ack = st.checkbox(
-            "I confirm the app and this use are non-commercial, as required by Open Matchday's licence.",
+            noncommercial_label,
             value=False,
-            key="free_fixture_promotion_openmatchday_ack",
+            key="free_fixture_promotion_noncommercial_ack",
         )
     preview_promotion = st.button(
         "Preview promotion eligibility",
@@ -1353,7 +1358,7 @@ with st.expander("Validate and publish approved free-source fixtures", expanded=
             not bool(PROVIDER_DATABASE_URL)
             or not bool(DATABASE_URL)
             or not promotion_licence_ack
-            or (promotion_provider == "open_matchday" and not promotion_noncommercial_ack)
+            or (promotion_provider in {"open_matchday", "api_ninjas"} and not promotion_noncommercial_ack)
         ),
         key="free_fixture_promotion_execute",
     )
@@ -1368,6 +1373,7 @@ with st.expander("Validate and publish approved free-source fixtures", expanded=
                     promote=bool(execute_promotion),
                     licence_acknowledged=bool(promotion_licence_ack),
                     open_matchday_noncommercial_confirmed=bool(promotion_noncommercial_ack),
+                    api_ninjas_noncommercial_confirmed=bool(promotion_noncommercial_ack),
                     snapshot_limit=100,
                     max_age_hours=24,
                     window_days=7,
@@ -1378,7 +1384,7 @@ with st.expander("Validate and publish approved free-source fixtures", expanded=
                     row for row in (promotion_report.get("staging_fixtures") or [])
                     if row.get("source_provider") in {
                         "openligadb", "openfootball", "open_matchday",
-                        "livescore_football", "bzzoiro",
+                        "livescore_football", "bzzoiro", "highlightly", "api_ninjas",
                     }
                 ]
                 if staged_rows:
