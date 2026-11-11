@@ -270,7 +270,7 @@ class OpenLigaDBAdapter(_HttpAdapter):
                 licence="OpenLigaDB public API; reuse terms require separate review",
                 fixture_id=row.get("matchID") or row.get("MatchID"),
                 competition=(row.get("leagueId") or row.get("LeagueId") or row.get("leagueShortcut") or row.get("LeagueShortcut") or league_shortcut),
-                competition_name=(row.get("leagueName") or row.get("LeagueName") or league_shortcut),
+                competition_name=_normalise_openligadb_competition_name(row.get("leagueName") or row.get("LeagueName") or league_shortcut),
                 season=(row.get("leagueSeason") or row.get("LeagueSeason") or season),
                 season_name=str(row.get("leagueSeason") or row.get("LeagueSeason") or season),
                 home=team1, away=team2,
