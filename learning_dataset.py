@@ -15,12 +15,15 @@ from pathlib import Path
 from typing import Any, Iterable, Mapping
 
 from prediction_evaluation import (
+    FREE_FIXTURE_RESULT_PROVIDERS,
     _fixture_identity,
     _parse_datetime,
     _valid_probabilities,
     _verified_actual_score,
     outcome_from_score,
 )
+
+SUPPORTED_LEARNING_FIXTURE_PROVIDERS = frozenset({"sportmonks"}) | FREE_FIXTURE_RESULT_PROVIDERS
 
 DATASET_SCHEMA_VERSION = "football-learning-dataset-v1"
 FEATURE_SCHEMA_VERSION = "prediction-features-v1"
@@ -91,7 +94,7 @@ def _load_feature_snapshot(row: Mapping[str, Any]) -> tuple[dict[str, Any] | Non
 
 
 def _eligible_row(row: Mapping[str, Any]) -> tuple[dict[str, Any] | None, str | None]:
-    if str(row.get("fixture_provider") or "").strip().casefold() != "sportmonks":
+    if str(row.get("fixture_provider") or "").strip().casefold() not in SUPPORTED_LEARNING_FIXTURE_PROVIDERS:
         return None, "unsupported_fixture_provider"
     if not str(row.get("fixture_id") or "").strip():
         return None, "missing_fixture_id"
@@ -144,7 +147,9 @@ def build_learning_dataset(
     """Build a reproducible fixture-deduplicated dataset with chronological splits.
 
     The latest valid pre-kickoff snapshot for each independently verified
-    Sportmonks fixture is retained. Conflicting verified scores fail closed.
+    canonical fixture from a supported provider is retained. Free-source
+    results require the exact provider-scoped 90-minute verification trail.
+    Conflicting verified scores fail closed.
     Splits are ordered by kickoff time: 70% train, 15% validation, 15% test.
     """
     if not isinstance(minimum_experiment_fixtures, int) or minimum_experiment_fixtures < 1:

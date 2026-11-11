@@ -66,6 +66,65 @@ class LearningDatasetTests(unittest.TestCase):
         self.assertFalse(dataset["sample_gate"]["offline_experiment_allowed"])
         self.assertFalse(dataset["sample_gate"]["production_promotion_permitted"])
 
+    def test_exactly_verified_free_provider_fixture_is_eligible_for_learning(self):
+        row = self._record(fixture_id="openligadb:123")
+        row.update({
+            "fixture_provider": "openligadb",
+            "league_id": "sportmonks:8",
+            "season_id": "sportmonks:2026:28083",
+            "home_team_id": "sportmonks:home",
+            "away_team_id": "sportmonks:away",
+            "actual_result_provider": "openligadb",
+            "actual_result_fixture_id": "123",
+            "actual_result_verification": (
+                "exact_provider_fixture_team_competition_season_and_90_minute_score"
+            ),
+        })
+        dataset = build_learning_dataset([row])
+        self.assertEqual(dataset["audit"]["unique_verified_fixtures"], 1)
+        self.assertEqual(dataset["rows"][0]["fixture_identity"].split(":")[0], "canonical")
+
+    def test_same_canonical_fixture_from_different_providers_is_deduplicated(self):
+        sportmonks = self._record(fixture_id="19722039", record_id="sportmonks-row")
+        free_source = self._record(fixture_id="openligadb:123", record_id="openligadb-row")
+        canonical = {
+            "league_id": "sportmonks:8",
+            "season_id": "sportmonks:2026:28083",
+            "home_team_id": "sportmonks:home",
+            "away_team_id": "sportmonks:away",
+        }
+        sportmonks.update(canonical)
+        free_source.update({
+            **canonical,
+            "fixture_provider": "openligadb",
+            "actual_result_provider": "openligadb",
+            "actual_result_fixture_id": "123",
+            "actual_result_verification": (
+                "exact_provider_fixture_team_competition_season_and_90_minute_score"
+            ),
+        })
+        dataset = build_learning_dataset([sportmonks, free_source])
+        self.assertEqual(dataset["audit"]["eligible_records_before_deduplication"], 2)
+        self.assertEqual(dataset["audit"]["unique_verified_fixtures"], 1)
+        self.assertEqual(dataset["audit"]["duplicate_fixture_records_excluded"], 1)
+
+    def test_free_provider_result_verification_rejects_wrong_source_id(self):
+        row = self._record(fixture_id="openligadb:123")
+        row.update({
+            "fixture_provider": "openligadb",
+            "actual_result_provider": "openligadb",
+            "actual_result_fixture_id": "different-id",
+            "actual_result_verification": (
+                "exact_provider_fixture_team_competition_season_and_90_minute_score"
+            ),
+        })
+        dataset = build_learning_dataset([row])
+        self.assertEqual(dataset["audit"]["unique_verified_fixtures"], 0)
+        self.assertIn(
+            "result_not_independently_verified",
+            dataset["audit"]["excluded_reasons"],
+        )
+
     def test_snapshot_must_be_at_or_before_prediction_and_before_kickoff(self):
         row = self._record(snapshot_at="2026-11-07T10:01:00+00:00")
         dataset = build_learning_dataset([row])
