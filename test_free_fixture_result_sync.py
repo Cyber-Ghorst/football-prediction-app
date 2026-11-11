@@ -9,6 +9,7 @@ from free_fixture_result_sync import (
     verify_livescore_final_score,
     verify_openligadb_final_score,
     verify_openmatchday_final_score,
+    verify_openfootball_final_score,
 )
 
 
@@ -124,6 +125,58 @@ class FreeFixtureResultVerificationTests(unittest.TestCase):
         }
         self.assertIsNone(verify_livescore_final_score(
             record, aet, provider_fixture_id="event-1", now=NOW
+        ))
+
+    def test_openfootball_requires_explicit_kickoff_and_full_time_score(self):
+        record = {
+            **RECORD,
+            "fixture_provider": "openfootball",
+            "fixture_id": "openfootball:openfootball:dataset-42",
+            "home_team": "Arsenal",
+            "away_team": "Coventry",
+            "kickoff_at": "2026-11-10T18:00:00Z",
+            "season": "2026",
+        }
+        source = {
+            "home_team_name": "Arsenal FC",
+            "away_team_name": "Coventry City FC",
+            "competition_name": "Premier League",
+            "season_name": "2026-27",
+        }
+        observation = {
+            "provider_fixture_id": "openfootball:dataset-42",
+            "competition_key": "en.1",
+            "competition_name": "Premier League",
+            "season_key": "2026-27",
+            "season_name": "2026-27",
+            "home_team_name": "Arsenal FC",
+            "away_team_name": "Coventry City FC",
+            "kickoff_utc": "2026-11-10T18:00:00Z",
+            "raw_payload": {"score": {"ht": [1, 0], "ft": [2, 1]}},
+        }
+        self.assertEqual(
+            verify_openfootball_final_score(
+                record, observation,
+                provider_fixture_id="openfootball:dataset-42",
+                now=NOW, source_observation=source,
+            ),
+            (2, 1),
+        )
+        naive = {**observation, "kickoff_utc": None}
+        self.assertIsNone(verify_openfootball_final_score(
+            record, naive,
+            provider_fixture_id="openfootball:dataset-42",
+            now=NOW, source_observation=source,
+        ))
+        cup = {
+            **observation,
+            "competition_key": "eng.cup",
+            "competition_name": "FA Cup",
+        }
+        self.assertIsNone(verify_openfootball_final_score(
+            record, cup,
+            provider_fixture_id="openfootball:dataset-42",
+            now=NOW, source_observation={**source, "competition_name": "FA Cup"},
         ))
 
     def test_openmatchday_uses_results_csv_and_exact_deterministic_fixture_identity(self):
