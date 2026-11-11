@@ -127,7 +127,7 @@ jobs:
             git push origin HEAD:main
           fi
 
-      - name: Build and archive seven-day cross-provider fixture coverage report
+      - name: Build and archive four-day cross-provider fixture coverage report
         continue-on-error: true
         env:
           PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
