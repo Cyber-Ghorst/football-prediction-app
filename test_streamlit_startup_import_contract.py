@@ -9,6 +9,14 @@ class StreamlitStartupImportContractTests(unittest.TestCase):
         source = Path(__file__).with_name("app.py").read_text(encoding="utf-8")
         self.assertIn("Deployment build: startup-import compatibility 2026-11-11", source)
 
+    def test_grouped_crosswalk_loader_is_defined_before_repository_imports(self):
+        from pathlib import Path
+
+        source = Path(__file__).with_name("provider_entity_crosswalk.py").read_text(encoding="utf-8")
+        loader = source.index("def load_provider_entity_links_by_type(")
+        repository_import = source.index("from football_repository import ensure_football_repository")
+        self.assertLess(loader, repository_import)
+
     def test_optional_fixture_promotion_writer_is_imported_lazily(self):
         from pathlib import Path
 
