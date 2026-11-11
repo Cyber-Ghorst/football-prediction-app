@@ -1,7 +1,7 @@
 {
   "automatic_mapping_approvals": 0,
   "canonical_fixture_writes": 0,
-  "generated_at_utc": "2026-11-11T21:03:58.658618+00:00",
+  "generated_at_utc": "2026-11-11T21:12:51.668919+00:00",
   "prediction_ledger_writes": 0,
   "providers": {
     "api_ninjas": {
@@ -1171,8 +1171,8 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 4000,
-      "snapshot_count": 1,
+      "observation_count": 12000,
+      "snapshot_count": 3,
       "source_entity_counts": {
         "leagues": 41,
         "seasons": 41,
