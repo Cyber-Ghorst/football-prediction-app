@@ -15,7 +15,7 @@ from provider_data_storage import _connect
 
 SUPPORTED_PROVIDERS = {
     "openligadb", "openfootball", "open_matchday",
-    "livescore_football", "bzzoiro",
+    "thesportsdb", "bzzoiro",
 }
 ENTITY_TABLES = {
     "league": ("football_leagues", "league_id"),
