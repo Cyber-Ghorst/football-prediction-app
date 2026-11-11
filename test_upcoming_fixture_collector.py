@@ -133,16 +133,22 @@ class UpcomingFixtureCollectorTests(unittest.TestCase):
         self.assertEqual(result["fixtures_found"], DAILY_FIXTURE_TARGET * 8)
         self.assertTrue(result["target_met"])
         self.assertEqual(result["target_shortfall"], 0)
-        self.assertEqual(result["days_meeting_target"], 8)
+        self.assertEqual(result["days_meeting_target"], 7)
         self.assertEqual(result["competitions_found"], 3)
         self.assertTrue(all(
             count == DAILY_FIXTURE_TARGET
             for count in result["daily_fixture_counts_utc"].values()
         ))
+        self.assertEqual(result["days_in_window"], 7)
+        self.assertEqual(result["calendar_dates_in_window"], 8)
+        self.assertEqual(result["partial_boundary_days_utc"], {
+            "2026-11-18": DAILY_FIXTURE_TARGET
+        })
+        self.assertNotIn("2026-11-18", result["daily_target_shortfalls_utc"])
 
         short = normalize_upcoming_fixtures(rows[:12], now=NOW)
         self.assertFalse(short["target_met"])
-        self.assertEqual(short["target_shortfall"], 708)
+        self.assertEqual(short["target_shortfall"], 618)
         self.assertEqual(short["fixtures_found"], 12)
 
     def test_highlights_major_leagues_before_earlier_lower_tier_fixtures(self):
