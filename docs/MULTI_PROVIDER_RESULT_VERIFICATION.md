@@ -6,9 +6,10 @@ The scheduled result synchronizer now supports promoted fixtures from OpenLigaDB
 
 - The prediction ledger must contain a provider-scoped fixture ID and a past, timezone-aware kickoff.
 - The CockroachDB football_fixture_sources provenance link must exist for the exact provider fixture ID.
-- The source API response must identify the exact fixture ID, home and away teams, competition, season and a completed match.
+- New prediction records retain canonical league, season, home-team and away-team IDs in their JSON payload (no SQL ledger schema change). The result synchronizer confirms the provider's currently approved crosswalk still resolves all four source entity keys to those exact saved IDs.
+- The source API response must identify the exact fixture ID, home and away teams, competition, season and a completed match. Provider-side names are checked against the archived source observation; canonical IDs are checked against the prediction record.
 - The source must provide an unambiguous regulation-time/full-time score. Ambiguous extra-time, penalty-shootout or incomplete score payloads are not written.
-- Existing manual or previously stored scores are never overwritten.
+- Legacy prediction rows without canonical ID fields retain the prior exact-name verification path. Existing manual or previously stored scores are never overwritten.
 
 OpenLigaDB results are selected from the explicit full-time result type, not by array position. LiveScoreFootball requires a completed event with an explicit full-time detail and rejects extra-time/penalty detail. Bzzoiro requires a finished event and an explicit full-time score object; it does not infer a score from commentary or a score string.
 
