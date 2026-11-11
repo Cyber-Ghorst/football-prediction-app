@@ -198,7 +198,11 @@ def sync_completed_results(
                         continue
                     # group_completed_fixture_candidates excludes all rows with
                     # existing scores; this guard protects against future callers.
-                    if row.get("actual_home_goals") not in (None, "") or row.get("actual_away_goals") not in (None, ""):
+                    if (
+                        row.get("actual_home_goals") not in (None, "")
+                        or row.get("actual_away_goals") not in (None, "")
+                        or row.get("actual_result") not in (None, "")
+                    ):
                         continue
                     home_goals, away_goals = score
                     row["actual_home_goals"] = home_goals
