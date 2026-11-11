@@ -284,142 +284,165 @@ def review_and_promote_free_fixture_observations(
         }
 
     promoted = duplicate = conflicts = blocked = 0
-    staging_fixtures: list[dict[str, Any]] = []
+    staging_by_fixture: dict[str, dict[str, Any]] = {}
     with _connect(database_url) as connection:
         with connection.cursor() as cursor:
-            for row in assessments:
-                source_id = row["provider_fixture_id"]
-                if row["decision"] != "ready_for_promotion":
-                    blocked += 1
-                    continue
-                canonical = row["canonical"]
-                fixture_id = row["fixture_id"]
-                kickoff = canonical["starting_at"]
-                observation = observation_by_key.get((row["snapshot_id"], source_id), {})
-                cursor.execute(
-                    """SELECT fixture_id, season_id, league_id, home_team_id, away_team_id, starting_at, source_provider
-                       FROM football_fixtures WHERE fixture_id = %s""",
-                    (fixture_id,),
-                )
-                same_source = cursor.fetchone()
-                if same_source:
-                    same_identity = (
-                        str(same_source[1]) == canonical["season_id"]
-                        and str(same_source[2]) == canonical["league_id"]
-                        and str(same_source[3]) == canonical["home_team_id"]
-                        and str(same_source[4]) == canonical["away_team_id"]
-                        and _datetime(same_source[5]) == kickoff
-                    )
-                    if not same_identity:
-                        row.update(decision="conflict_source_fixture_id_reused",
-                                   reason="The provider fixture ID already exists with a different canonical identity.")
-                        conflicts += 1
-                        continue
-                    canonical_fixture_id = fixture_id
-                    duplicate += 1
-                    fixture_source_provider = str(same_source[6] or provider_name)
-                else:
-                    cursor.execute(
-                        """SELECT fixture_id, starting_at, source_provider FROM football_fixtures
-                           WHERE season_id = %s AND league_id = %s
-                             AND home_team_id = %s AND away_team_id = %s
-                             AND starting_at BETWEEN %s AND %s
-                           ORDER BY starting_at""",
-                        (canonical["season_id"], canonical["league_id"],
-                         canonical["home_team_id"], canonical["away_team_id"],
-                         kickoff - timedelta(hours=12), kickoff + timedelta(hours=12)),
-                    )
-                    nearby = cursor.fetchall()
-                    exact = next((item for item in nearby if _datetime(item[1]) == kickoff), None)
-                    if exact:
-                        canonical_fixture_id = str(exact[0])
-                        fixture_source_provider = str(exact[2] or provider_name)
-                        duplicate += 1
-                    elif nearby:
-                        row.update(decision="conflict_kickoff_disagreement",
-                                   reason="A canonical fixture with the same competition, season and teams has a different kickoff within 12 hours.")
-                        conflicts += 1
-                        continue
-                    else:
-                        canonical_fixture_id = fixture_id
-                        fixture_source_provider = provider_name
-                        raw_payload = {
-                            "source_provider": provider_name,
-                            "provider_fixture_id": source_id,
-                            "snapshot_id": row["snapshot_id"],
-                            "source_url": next((
-                                observation.get("source_url") for snapshot in snapshots
-                                if str(snapshot.get("snapshot_id") or "") == row["snapshot_id"]
-                                for observation in (snapshot.get("payload") or {}).get("observations", [])
-                                if str(observation.get("provider_fixture_id") or "") == source_id
-                            ), None),
-                            "licence": next((
-                                observation.get("licence") for snapshot in snapshots
-                                if str(snapshot.get("snapshot_id") or "") == row["snapshot_id"]
-                                for observation in (snapshot.get("payload") or {}).get("observations", [])
-                                if str(observation.get("provider_fixture_id") or "") == source_id
-                            ), None),
-                            "kickoff_utc": kickoff.isoformat(),
-                            "source_fixture_id": source_id,
-                        }
-                        cursor.execute(
-                            """INSERT INTO football_fixtures (
-                                   fixture_id, season_id, league_id, home_team_id, away_team_id,
-                                   starting_at, status, home_goals, away_goals, venue,
-                                   source_provider, provider_updated_at, raw_payload
-                               ) VALUES (%s, %s, %s, %s, %s, %s, 'scheduled', NULL, NULL, %s, %s, %s, %s)""",
-                            (fixture_id, canonical["season_id"], canonical["league_id"],
-                             canonical["home_team_id"], canonical["away_team_id"],
-                             kickoff, canonical.get("venue"), provider_name,
-                             _datetime(next((
-                                 observation.get("fetched_at") for snapshot in snapshots
-                                 if str(snapshot.get("snapshot_id") or "") == row["snapshot_id"]
-                                 for observation in (snapshot.get("payload") or {}).get("observations", [])
-                                 if str(observation.get("provider_fixture_id") or "") == source_id
-                             ), None)), Jsonb(raw_payload)),
-                        )
-                        promoted += 1
-
-                cursor.execute(
-                    """SELECT fixture_id FROM football_fixture_sources
-                       WHERE provider = %s AND provider_fixture_id = %s""",
-                    (provider_name, source_id),
-                )
-                existing_source_link = cursor.fetchone()
-                if existing_source_link and str(existing_source_link[0]) != canonical_fixture_id:
-                    row.update(decision="conflict_provider_provenance_reassigned",
-                               reason="This provider fixture ID is already linked to a different canonical fixture.")
-                    conflicts += 1
-                    continue
-                cursor.execute(
-                    """INSERT INTO football_fixture_sources (
-                           source_link_id, provider, provider_fixture_id, fixture_id,
-                           snapshot_id, source_url, licence, observed_at, raw_payload
-                       ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-                       ON CONFLICT (provider, provider_fixture_id) DO NOTHING""",
-                    (str(uuid.uuid4()), provider_name, source_id, canonical_fixture_id,
-                     row["snapshot_id"], observation.get("source_url"), observation.get("licence"),
-                     _datetime(observation.get("fetched_at")), Jsonb(dict(observation))),
-                )
+            def record_audit(row: Mapping[str, Any], decision: str, reason: str,
+                             canonical_fixture_id: str | None = None) -> None:
                 cursor.execute(
                     """INSERT INTO free_fixture_promotion_audit (
                            audit_id, provider, provider_fixture_id, snapshot_id,
                            decision, reason, canonical_fixture_id
                        ) VALUES (%s, %s, %s, %s, %s, %s, %s)
                        ON CONFLICT (provider, provider_fixture_id, snapshot_id) DO NOTHING""",
-                    (str(uuid.uuid4()), provider_name, source_id, row["snapshot_id"],
-                     "duplicate_exact" if canonical_fixture_id != fixture_id else "promoted",
-                     "Linked to exact canonical fixture identity." if canonical_fixture_id != fixture_id
-                     else "Inserted canonical fixture with explicit source crosswalks.",
-                     canonical_fixture_id),
+                    (str(uuid.uuid4()), provider_name, row.get("provider_fixture_id") or "",
+                     row.get("snapshot_id") or "", decision, reason, canonical_fixture_id),
                 )
-                row.update(
-                    decision="duplicate_exact" if canonical_fixture_id != fixture_id or fixture_source_provider != provider_name else "promoted",
-                    reason="Linked to exact canonical fixture identity." if canonical_fixture_id != fixture_id or fixture_source_provider != provider_name
-                    else "Inserted canonical fixture with explicit source crosswalks.",
-                    canonical_fixture_id=canonical_fixture_id,
+
+            for row in assessments:
+                source_id = row["provider_fixture_id"]
+                observation = observation_by_key.get((row["snapshot_id"], source_id), {})
+                if row["decision"] != "ready_for_promotion":
+                    blocked += 1
+                    record_audit(row, "blocked", row["reason"])
+                    continue
+
+                canonical = row["canonical"]
+                source_fixture_id = row["fixture_id"]
+                kickoff = canonical["starting_at"]
+                cursor.execute(
+                    """SELECT fixture_id FROM football_fixture_sources
+                       WHERE provider = %s AND provider_fixture_id = %s""",
+                    (provider_name, source_id),
                 )
-                staging_fixtures.append({
+                existing_provenance = cursor.fetchone()
+                was_duplicate = False
+
+                if existing_provenance:
+                    canonical_fixture_id = str(existing_provenance[0])
+                    cursor.execute(
+                        """SELECT fixture_id, season_id, league_id, home_team_id,
+                                  away_team_id, starting_at, source_provider
+                           FROM football_fixtures WHERE fixture_id = %s""",
+                        (canonical_fixture_id,),
+                    )
+                    existing_fixture = cursor.fetchone()
+                    if not existing_fixture:
+                        row.update(decision="conflict_missing_linked_fixture",
+                                   reason="Existing source provenance points to a missing canonical fixture.")
+                        conflicts += 1
+                        record_audit(row, row["decision"], row["reason"])
+                        continue
+                    same_identity = (
+                        str(existing_fixture[1]) == canonical["season_id"]
+                        and str(existing_fixture[2]) == canonical["league_id"]
+                        and str(existing_fixture[3]) == canonical["home_team_id"]
+                        and str(existing_fixture[4]) == canonical["away_team_id"]
+                        and _datetime(existing_fixture[5]) == kickoff
+                    )
+                    if not same_identity:
+                        row.update(decision="conflict_provider_provenance_reassigned",
+                                   reason="The provider fixture ID is already linked to a different canonical identity.")
+                        conflicts += 1
+                        record_audit(row, row["decision"], row["reason"])
+                        continue
+                    fixture_source_provider = str(existing_fixture[6] or provider_name)
+                    was_duplicate = True
+                else:
+                    cursor.execute(
+                        """SELECT fixture_id, season_id, league_id, home_team_id,
+                                  away_team_id, starting_at, source_provider
+                           FROM football_fixtures WHERE fixture_id = %s""",
+                        (source_fixture_id,),
+                    )
+                    same_source = cursor.fetchone()
+                    if same_source:
+                        same_identity = (
+                            str(same_source[1]) == canonical["season_id"]
+                            and str(same_source[2]) == canonical["league_id"]
+                            and str(same_source[3]) == canonical["home_team_id"]
+                            and str(same_source[4]) == canonical["away_team_id"]
+                            and _datetime(same_source[5]) == kickoff
+                        )
+                        if not same_identity:
+                            row.update(decision="conflict_source_fixture_id_reused",
+                                       reason="The provider fixture ID already exists with a different canonical identity.")
+                            conflicts += 1
+                            record_audit(row, row["decision"], row["reason"])
+                            continue
+                        canonical_fixture_id = source_fixture_id
+                        fixture_source_provider = str(same_source[6] or provider_name)
+                        was_duplicate = True
+                    else:
+                        cursor.execute(
+                            """SELECT fixture_id, starting_at, source_provider
+                               FROM football_fixtures
+                               WHERE season_id = %s AND league_id = %s
+                                 AND home_team_id = %s AND away_team_id = %s
+                                 AND starting_at BETWEEN %s AND %s
+                               ORDER BY starting_at""",
+                            (canonical["season_id"], canonical["league_id"],
+                             canonical["home_team_id"], canonical["away_team_id"],
+                             kickoff - timedelta(hours=12), kickoff + timedelta(hours=12)),
+                        )
+                        nearby = cursor.fetchall()
+                        exact = next((item for item in nearby if _datetime(item[1]) == kickoff), None)
+                        if exact:
+                            canonical_fixture_id = str(exact[0])
+                            fixture_source_provider = str(exact[2] or provider_name)
+                            was_duplicate = True
+                        elif nearby:
+                            row.update(decision="conflict_kickoff_disagreement",
+                                       reason="A canonical fixture with the same competition, season and teams has a different kickoff within 12 hours.")
+                            conflicts += 1
+                            record_audit(row, row["decision"], row["reason"])
+                            continue
+                        else:
+                            canonical_fixture_id = source_fixture_id
+                            fixture_source_provider = provider_name
+                            raw_payload = {
+                                "source_provider": provider_name,
+                                "provider_fixture_id": source_id,
+                                "snapshot_id": row["snapshot_id"],
+                                "source_url": observation.get("source_url"),
+                                "licence": observation.get("licence"),
+                                "kickoff_utc": kickoff.isoformat(),
+                                "source_fixture_observation": dict(observation),
+                            }
+                            cursor.execute(
+                                """INSERT INTO football_fixtures (
+                                       fixture_id, season_id, league_id, home_team_id, away_team_id,
+                                       starting_at, status, home_goals, away_goals, venue,
+                                       source_provider, provider_updated_at, raw_payload
+                                   ) VALUES (%s, %s, %s, %s, %s, %s, 'scheduled', NULL, NULL, %s, %s, %s, %s)""",
+                                (source_fixture_id, canonical["season_id"], canonical["league_id"],
+                                 canonical["home_team_id"], canonical["away_team_id"],
+                                 kickoff, canonical.get("venue"), provider_name,
+                                 _datetime(observation.get("fetched_at")), Jsonb(raw_payload)),
+                            )
+                            promoted += 1
+
+                    cursor.execute(
+                        """INSERT INTO football_fixture_sources (
+                               source_link_id, provider, provider_fixture_id, fixture_id,
+                               snapshot_id, source_url, licence, observed_at, raw_payload
+                           ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                           ON CONFLICT (provider, provider_fixture_id) DO NOTHING""",
+                        (str(uuid.uuid4()), provider_name, source_id, canonical_fixture_id,
+                         row["snapshot_id"], observation.get("source_url"), observation.get("licence"),
+                         _datetime(observation.get("fetched_at")), Jsonb(dict(observation))),
+                    )
+
+                decision = "duplicate_exact" if was_duplicate else "promoted"
+                reason = (
+                    "Linked to an existing exact canonical fixture identity."
+                    if was_duplicate else
+                    "Inserted canonical fixture with explicit source crosswalks."
+                )
+                record_audit(row, decision, reason, canonical_fixture_id)
+                row.update(decision=decision, reason=reason,
+                           canonical_fixture_id=canonical_fixture_id)
+                staging_by_fixture[canonical_fixture_id] = {
                     "fixture_id": canonical_fixture_id,
                     "league_id": canonical["league_id"],
                     "season_id": canonical["season_id"],
@@ -437,6 +460,7 @@ def review_and_promote_free_fixture_observations(
                     "provider_fixture_id": source_id,
                 })
 
+    staging_fixtures = list(staging_by_fixture.values())
     return {
         "provider": provider_name,
         "mode": "promote",
