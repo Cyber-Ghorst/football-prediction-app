@@ -54,8 +54,17 @@ class ProviderObservationSnapshotLoadingTests(unittest.TestCase):
         ensure.assert_called_once_with("provider-db")
         self.assertEqual(result[0]["snapshot_id"], "snapshot-1")
         self.assertEqual(result[0]["provider"], "openligadb")
-        self.assertEqual(cursor.params, ("future_fixture_observations", "openligadb", "openligadb", 25))
+        self.assertEqual(cursor.params, ("future_fixture_observations", "openligadb", 25))
         self.assertIn("ORDER BY retrieved_at DESC", cursor.sql)
+
+    def test_loads_all_providers_without_nullable_parameter_predicate(self):
+        cursor = FakeCursor([])
+        with patch("provider_data_storage.ensure_provider_storage"), \\
+             patch("provider_data_storage._connect", return_value=FakeConnection(cursor)):
+            result = load_provider_observation_snapshots("provider-db", limit=10)
+        self.assertEqual(result, [])
+        self.assertEqual(cursor.params, ("future_fixture_observations", 10))
+        self.assertNotIn("IS NULL", cursor.sql)
 
     def test_rejects_invalid_provider_and_limit(self):
         with self.assertRaisesRegex(ValueError, "Unsupported"):
