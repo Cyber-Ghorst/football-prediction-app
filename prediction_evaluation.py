@@ -377,6 +377,7 @@ def _score_records(records: Iterable[Mapping[str, Any]], prefix: str) -> dict[st
 
 FREE_FIXTURE_RESULT_PROVIDERS = frozenset({
     "openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro",
+    "highlightly", "api_ninjas",
 })
 
 
