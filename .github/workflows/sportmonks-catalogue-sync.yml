@@ -1,6 +1,13 @@
 name: Sportmonks canonical catalogue sync
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "sportmonks_catalogue_sync.py"
+      - "football_repository.py"
+      - "sportmonks.py"
+      - ".github/workflows/sportmonks-catalogue-sync.yml"
   workflow_dispatch:
     inputs:
       target_year:
