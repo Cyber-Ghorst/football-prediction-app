@@ -305,6 +305,38 @@ class PredictionEvaluationTests(unittest.TestCase):
             audit["records_total"],
         )
 
+    def test_exact_free_provider_score_is_included_in_prediction_evaluation(self):
+        row = self._record(fixture_id="openligadb:123", fixture_provider="openligadb")
+        row.update(
+            actual_home_goals="2",
+            actual_away_goals="0",
+            actual_result_provider="openligadb",
+            actual_result_fixture_id="123",
+            actual_result_verified_at="2026-11-07T14:00:00+00:00",
+            actual_result_verification=(
+                "exact_provider_fixture_team_competition_season_and_90_minute_score"
+            ),
+        )
+        report = evaluate_prediction_ledger([row])
+        self.assertEqual(report["completed_pre_match_predictions"], 1)
+        self.assertEqual(report["model"]["matches"], 1)
+
+    def test_free_provider_score_with_wrong_source_provider_is_rejected(self):
+        row = self._record(fixture_id="openligadb:123", fixture_provider="openligadb")
+        row.update(
+            actual_home_goals="2",
+            actual_away_goals="0",
+            actual_result_provider="livescore_football",
+            actual_result_fixture_id="123",
+            actual_result_verified_at="2026-11-07T14:00:00+00:00",
+            actual_result_verification=(
+                "exact_provider_fixture_team_competition_season_and_90_minute_score"
+            ),
+        )
+        report = evaluate_prediction_ledger([row])
+        self.assertEqual(report["completed_pre_match_predictions"], 0)
+        self.assertEqual(report["unverified_score_records"], 1)
+
     def test_manual_or_unverified_scores_are_not_included_in_metrics(self):
         row = self._record()
         row.update(actual_home_goals="2", actual_away_goals="0")
