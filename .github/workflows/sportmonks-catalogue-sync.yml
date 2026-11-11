@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - "sportmonks_catalogue_sync.py"
+      - "sportmonks.py"
+      - "football_repository.py"
       - ".github/workflows/sportmonks-catalogue-sync.yml"
   workflow_dispatch:
     inputs:
