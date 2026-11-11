@@ -1,6 +1,6 @@
 {
   "report_name": "streamlit_runtime_logs",
-  "generated_at_utc": "2026-11-11T02:33:44.520162+00:00",
+  "generated_at_utc": "2026-11-11T02:33:49.125341+00:00",
   "event": "streamlit_application_error",
   "traceback": "Traceback (most recent call last):\n  File \"/mount/src/football-prediction-app/app.py\", line 97, in <module>\n    from temporary_fixture_store import (\n    ...<2 lines>...\n    )\nImportError: cannot import name 'add_temporary_upcoming_fixtures' from 'temporary_fixture_store' (/mount/src/football-prediction-app/temporary_fixture_store.py). Did you mean: 'sync_temporary_upcoming_fixtures'?\n",
   "sensitive_data_policy": "Secrets and credential patterns are redacted; no prediction ledger or user data is included."
