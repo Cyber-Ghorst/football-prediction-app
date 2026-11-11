@@ -42,7 +42,7 @@ def build_crosswalk_audit(database_url: str) -> dict[str, Any]:
     for provider in PROVIDERS:
         try:
             report = build_provider_crosswalk_review_report(
-                database_url, provider=provider, snapshot_limit=5,
+                database_url, provider=provider, snapshot_limit=3,
                 canonical_catalogue=canonical_catalogue,
             )
             categories = {}
