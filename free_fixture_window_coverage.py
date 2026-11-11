@@ -90,6 +90,7 @@ def build_window_coverage_report(
     max_age_hours: int = 24,
     highlightly_use_allowed: bool = False,
     api_ninjas_noncommercial_confirmed: bool = False,
+    open_matchday_noncommercial_confirmed: bool = False,
 ) -> dict[str, Any]:
     current = _utc_datetime(now or datetime.now(timezone.utc))
     if current is None:
@@ -123,6 +124,10 @@ def build_window_coverage_report(
             excluded_provider_snapshot_counts[provider] = len(snapshots)
             continue
         if provider == "api_ninjas" and not api_ninjas_noncommercial_confirmed:
+            provider_snapshot_counts[provider] = 0
+            excluded_provider_snapshot_counts[provider] = len(snapshots)
+            continue
+        if provider == "open_matchday" and not open_matchday_noncommercial_confirmed:
             provider_snapshot_counts[provider] = 0
             excluded_provider_snapshot_counts[provider] = len(snapshots)
             continue
@@ -257,6 +262,7 @@ def build_window_coverage_report(
             provider for provider, allowed in (
                 ("highlightly", highlightly_use_allowed),
                 ("api_ninjas", api_ninjas_noncommercial_confirmed),
+                ("open_matchday", open_matchday_noncommercial_confirmed),
             ) if not allowed
         ],
         "source_observations_loaded": source_observation_count,
@@ -300,6 +306,7 @@ def build_free_fixture_window_coverage(
     snapshot_limit: int = 5,
     highlightly_use_allowed: bool = False,
     api_ninjas_noncommercial_confirmed: bool = False,
+    open_matchday_noncommercial_confirmed: bool = False,
 ) -> dict[str, Any]:
     if not database_url:
         raise ValueError("PROVIDER_DATABASE_URL is required.")
@@ -308,6 +315,8 @@ def build_free_fixture_window_coverage(
         if provider == "highlightly" and not highlightly_use_allowed:
             snapshots_by_provider[provider] = []
         elif provider == "api_ninjas" and not api_ninjas_noncommercial_confirmed:
+            snapshots_by_provider[provider] = []
+        elif provider == "open_matchday" and not open_matchday_noncommercial_confirmed:
             snapshots_by_provider[provider] = []
         else:
             snapshots_by_provider[provider] = load_provider_observation_snapshots(
@@ -319,6 +328,7 @@ def build_free_fixture_window_coverage(
         max_age_hours=max_age_hours,
         highlightly_use_allowed=highlightly_use_allowed,
         api_ninjas_noncommercial_confirmed=api_ninjas_noncommercial_confirmed,
+        open_matchday_noncommercial_confirmed=open_matchday_noncommercial_confirmed,
     )
 
 
@@ -338,6 +348,10 @@ def main() -> int:
         api_ninjas_noncommercial_confirmed=(
             os.getenv("FREE_FIXTURE_TERMS_ACK_API_NINJAS", "").casefold() in {"1", "true", "yes", "on"}
             and os.getenv("FREE_FIXTURE_NONCOMMERCIAL_ACK_API_NINJAS", "").casefold() in {"1", "true", "yes", "on"}
+        ),
+        open_matchday_noncommercial_confirmed=(
+            os.getenv("FREE_FIXTURE_TERMS_ACK_OPEN_MATCHDAY", "").casefold() in {"1", "true", "yes", "on"}
+            and os.getenv("FREE_FIXTURE_NONCOMMERCIAL_ACK_OPEN_MATCHDAY", "").casefold() in {"1", "true", "yes", "on"}
         ),
     )
     print(json.dumps(report, default=str, sort_keys=True))
