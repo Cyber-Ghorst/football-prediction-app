@@ -51,11 +51,23 @@ def build_crosswalk_audit(database_url: str) -> dict[str, Any]:
                     str(row.get("status") or "unknown")
                     for row in candidates if isinstance(row, dict)
                 )
+                manual_review_candidates = [
+                    row for row in candidates
+                    if row.get("status") == "candidate_requires_manual_approval"
+                ]
+                unmatched_candidates = [
+                    row for row in candidates
+                    if row.get("status") != "candidate_requires_manual_approval"
+                ]
                 categories[category] = {
                     "candidate_count": len(candidates),
+                    "manual_review_candidate_count": len(manual_review_candidates),
                     "status_counts": dict(sorted(status_counts.items())),
-                    "candidates": candidates[:CANDIDATE_SAMPLE_LIMIT],
-                    "candidates_truncated": len(candidates) > CANDIDATE_SAMPLE_LIMIT,
+                    "candidates": [
+                        *manual_review_candidates,
+                        *unmatched_candidates[:CANDIDATE_SAMPLE_LIMIT],
+                    ],
+                    "candidates_truncated": len(unmatched_candidates) > CANDIDATE_SAMPLE_LIMIT,
                 }
             results[provider] = {
                 "status": "ok",
