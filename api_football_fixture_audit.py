@@ -16,7 +16,7 @@ from typing import Any, Callable
 from api_football import APIFootballClient, APIFootballError
 
 
-SCHEDULED_STATUSES = {"NS", "TBD", "PST"}
+SCHEDULED_STATUSES = {"NS", "PST"}
 
 
 def _utc_datetime(value: Any) -> datetime | None:
@@ -150,6 +150,9 @@ def build_api_football_fixture_audit(
                     continue
                 if kickoff < current or kickoff > window_end:
                     rejected["outside_rolling_window"] += 1
+                    continue
+                if status == "TBD":
+                    rejected["kickoff_time_not_confirmed"] += 1
                     continue
                 if status not in SCHEDULED_STATUSES:
                     rejected["not_scheduled"] += 1
