@@ -1218,8 +1218,13 @@ with st.sidebar:
             "Exact matches are suggestions only; every saved link requires an explicit selection and reason."
         )
         crosswalk_providers = [
-            "openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro",
+            "openligadb", "openfootball", "livescore_football", "bzzoiro",
         ]
+        if (
+            _setting_enabled("FREE_FIXTURE_TERMS_ACK_OPEN_MATCHDAY")
+            and _setting_enabled("FREE_FIXTURE_NONCOMMERCIAL_ACK_OPEN_MATCHDAY")
+        ):
+            crosswalk_providers.append("open_matchday")
         if (
             _setting_enabled("FREE_FIXTURE_TERMS_ACK_HIGHLIGHTLY")
             and _setting_enabled("HIGHLIGHTLY_NON_BETTING_USE_CONFIRMED")
@@ -1367,8 +1372,13 @@ with st.expander("Validate and publish approved free-source fixtures", expanded=
         "canonical entities can be promoted. Conflicts are held for review."
     )
     promotion_providers = [
-        "openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro",
+        "openligadb", "openfootball", "livescore_football", "bzzoiro",
     ]
+    if (
+        _setting_enabled("FREE_FIXTURE_TERMS_ACK_OPEN_MATCHDAY")
+        and _setting_enabled("FREE_FIXTURE_NONCOMMERCIAL_ACK_OPEN_MATCHDAY")
+    ):
+        promotion_providers.append("open_matchday")
     if (
         _setting_enabled("FREE_FIXTURE_TERMS_ACK_HIGHLIGHTLY")
         and _setting_enabled("HIGHLIGHTLY_NON_BETTING_USE_CONFIRMED")
