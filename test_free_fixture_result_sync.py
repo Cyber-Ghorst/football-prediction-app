@@ -4,6 +4,7 @@ from unittest.mock import patch, Mock
 
 from free_fixture_result_sync import (
     sync_free_source_results,
+    _crosswalk_matches_record,
     verify_bzzoiro_final_score,
     verify_livescore_final_score,
     verify_openligadb_final_score,
@@ -26,6 +27,31 @@ RECORD = {
 
 
 class FreeFixtureResultVerificationTests(unittest.TestCase):
+    def test_saved_prediction_identity_must_match_all_four_provider_crosswalks(self):
+        record = {
+            "league_id": "sportmonks:10",
+            "season_id": "sportmonks:20",
+            "home_team_id": "sportmonks:30",
+            "away_team_id": "sportmonks:40",
+        }
+        source = {
+            "competition_key": "league-1",
+            "season_key": "season-1",
+            "home_team_key": "home-1",
+            "away_team_key": "away-1",
+        }
+        links = {
+            "league": {"league-1": "sportmonks:10"},
+            "season": {"season-1": "sportmonks:20"},
+            "team": {"home-1": "sportmonks:30", "away-1": "sportmonks:40"},
+        }
+        self.assertTrue(_crosswalk_matches_record(record, source, links))
+        wrong = {
+            **links,
+            "team": {"home-1": "sportmonks:30", "away-1": "sportmonks:999"},
+        }
+        self.assertFalse(_crosswalk_matches_record(record, source, wrong))
+
     def test_openligadb_requires_exact_finished_match_and_full_time_score(self):
         match = {
             "matchID": 42,
