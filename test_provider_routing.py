@@ -54,7 +54,7 @@ class ProviderRoutingTests(unittest.TestCase):
         registry = default_provider_registry()
         self.assertEqual(
             set(FREE_FIXTURE_CANDIDATES),
-            {"openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro"},
+            {"openligadb", "openfootball", "open_matchday", "thesportsdb", "bzzoiro"},
         )
         self.assertNotIn("worldcup26", FREE_FIXTURE_CANDIDATES)
         self.assertNotIn("livescore_football", registry.primary_sources("future_fixtures"))
