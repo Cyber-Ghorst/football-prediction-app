@@ -1325,7 +1325,7 @@ with st.expander("Validate and publish approved free-source fixtures", expanded=
     )
     promotion_provider = st.selectbox(
         "Provider to validate",
-        ["openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro"],
+        ["openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro", "highlightly", "api_ninjas"],
         key="free_fixture_promotion_provider",
     )
     promotion_licence_ack = st.checkbox(
