@@ -49,6 +49,7 @@ APP_MODULES = (
     "free_fixture_canonical_promotion",
     "free_fixture_provider_refresh",
     "free_fixture_crosswalk_audit",
+    "sportmonks_catalogue_sync",
     "learning_dataset",
     "learning_experiments",
     "learning_readiness_audit",
@@ -91,6 +92,7 @@ APP_SYMBOLS = {
         "save_explicit_provider_entity_links",
         "load_provider_entity_links",
         "extract_provider_entities_from_observations",
+        "load_provider_entity_links_by_type",
     ),
     "provider_crosswalk_review_report": ("build_provider_crosswalk_review_report",),
     "free_fixture_result_sync": ("sync_free_source_results",),
@@ -100,6 +102,7 @@ APP_SYMBOLS = {
     "learning_dataset": ("build_learning_dataset",),
     "learning_experiments": ("run_offline_experiments",),
     "learning_readiness_audit": ("build_learning_readiness_audit",),
+    "sportmonks_catalogue_sync": ("select_current_seasons", "sync_sportmonks_catalogue"),
 }
 
 
