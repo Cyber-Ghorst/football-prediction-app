@@ -2,7 +2,7 @@ import unittest
 from datetime import datetime, timezone
 from unittest.mock import Mock, patch
 
-from free_fixture_provider_refresh import _rotate_batch, refresh_free_fixture_sources
+from free_fixture_provider_refresh import _rotate_batch, main, refresh_free_fixture_sources
 
 
 class FreeFixtureProviderRefreshTests(unittest.TestCase):
@@ -104,6 +104,16 @@ class FreeFixtureProviderRefreshTests(unittest.TestCase):
         self.assertIn("will not use its data to support betting", report["providers"]["highlightly"]["skipped"])
         self.assertIn("non-commercial-use confirmation", report["providers"]["api_ninjas"]["skipped"])
 
+
+    @patch.dict("os.environ", {"PROVIDER_DATABASE_URL": "provider-db"}, clear=True)
+    @patch("free_fixture_provider_refresh.refresh_free_fixture_sources")
+    def test_main_defaults_openligadb_batch_to_55(self, refresh):
+        from contextlib import redirect_stdout
+        import io
+        refresh.return_value = {"providers": {}}
+        with redirect_stdout(io.StringIO()):
+            main()
+        self.assertEqual(refresh.call_args.kwargs["max_openligadb_scopes"], 55)
 
     def test_rotation_covers_different_league_batches(self):
         items = list(range(10))
