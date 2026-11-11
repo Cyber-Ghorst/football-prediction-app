@@ -125,24 +125,43 @@ def build_api_football_fixture_audit(
                 report["errors"].append("API-Football daily request quota is exhausted.")
                 return report
 
-            quota_page_cap = (
-                min(int(max_pages), remaining)
-                if remaining is not None else int(max_pages)
-            )
-            if quota_page_cap < 1:
-                report["status"] = "quota_exhausted"
-                report["errors"].append("No API-Football fixture requests remain in the daily quota.")
-                return report
-            report["max_pages_allowed_by_quota"] = quota_page_cap
-            rows = client.fixtures_between(
-                first_date.isoformat(),
-                last_date.isoformat(),
-                timezone="UTC",
-                max_pages=quota_page_cap,
-            )
-            report["requests_made"] = int(
-                getattr(client, "last_fixture_request_count", 0) or 0
-            )
+            report["page_caps_by_date"] = {}
+            report["date_query_errors"] = {}
+            rows = []
+            for date_index, day in enumerate(calendar_dates):
+                requests_used = int(report["requests_made"])
+                remaining_for_calls = (
+                    max(0, remaining - requests_used)
+                    if remaining is not None else None
+                )
+                dates_left = len(calendar_dates) - date_index
+                if remaining_for_calls is not None and remaining_for_calls < dates_left:
+                    report["status"] = "partial_quota" if rows else "quota_insufficient"
+                    report["errors"].append(
+                        "Remaining API-Football quota could not cover at least one page for every requested UTC date."
+                    )
+                    break
+                page_cap = (
+                    min(int(max_pages), max(1, remaining_for_calls - dates_left + 1))
+                    if remaining_for_calls is not None else int(max_pages)
+                )
+                report["page_caps_by_date"][day] = page_cap
+                try:
+                    date_rows = client.fixtures_by_date(
+                        day, timezone="UTC", max_pages=page_cap,
+                    )
+                except APIFootballError as exc:
+                    report["requests_made"] += int(
+                        getattr(client, "last_fixture_request_count", 0) or 0
+                    )
+                    report["date_query_errors"][day] = str(exc)
+                    report["errors"].append(f"{day}: {exc}")
+                    report["status"] = "partial_error" if rows else "error"
+                    break
+                report["requests_made"] += int(
+                    getattr(client, "last_fixture_request_count", 0) or 0
+                )
+                rows.extend(date_rows)
 
             for row in rows:
                 fixture = row.get("fixture") or {}
@@ -223,9 +242,12 @@ def build_api_football_fixture_audit(
         report["rejected_fixture_counts"] = dict(rejected)
         report["competition_counts"] = dict(competition_counts)
         report["sample_fixtures"] = samples
-        report["status"] = (
-            "ok" if report["prediction_ready_fixture_count"] else "no_future_fixtures"
-        )
+        if report["status"] not in {"partial_quota", "quota_insufficient", "partial_error", "error"}:
+            report["status"] = (
+                "ok" if report["prediction_ready_fixture_count"] else "no_future_fixtures"
+            )
+        elif report["prediction_ready_fixture_count"] and report["status"] == "error":
+            report["status"] = "partial_error"
     return report
 
 
