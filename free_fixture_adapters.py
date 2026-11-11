@@ -77,8 +77,8 @@ def _text(value: Any) -> str:
 
 def _normalise_openligadb_competition_name(value: Any) -> str:
     name = _text(value)
-    name = re.sub(r"\\s*\\((?:Herren|Men)\\)$", "", name, flags=re.IGNORECASE).strip()
-    name = re.sub(r"\\s+20\\d{2}(?:\\s*/\\s*(?:20)?\\d{2})?$", "", name).strip()
+    name = re.sub(r"\s*\((?:Herren|Men)\)$", "", name, flags=re.IGNORECASE).strip()
+    name = re.sub(r"\s+20\d{2}(?:\s*/\s*(?:20)?\d{2})?$", "", name).strip()
     aliases = {
         "1. Fußball-Bundesliga": "Bundesliga",
         "1. Fussball-Bundesliga": "Bundesliga",
@@ -396,7 +396,12 @@ class OpenFootballAdapter(_StaticDatasetAdapter):
             date_value = str(row.get("date") or "")
             time_value = str(row.get("time") or "")
             kickoff = self._kickoff(date_value, time_value, row)
-            code = season_file.rsplit("/", 1)[-1].removesuffix(".json").split(".", 1)[0]
+            filename = season_file.rsplit("/", 1)[-1].removesuffix(".json")
+            code = next(
+                (key.split(".", 1)[0] for key, name in self.COMPETITION_NAMES.items()
+                 if name == competition and filename == key),
+                filename.split(".", 1)[0],
+            )
             country = self.COUNTRY_NAMES.get(code)
             raw_row = dict(row)
             if country:
