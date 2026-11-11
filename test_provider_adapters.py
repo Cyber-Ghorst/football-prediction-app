@@ -236,6 +236,27 @@ class ProviderAdapterTests(unittest.TestCase):
             client.available_seasons()
         client.close()
 
+    def test_sportmonks_teams_by_season_probes_full_pages_without_metadata(self):
+        client = SportmonksClient(api_token="test-only")
+        client._get = Mock(side_effect=[
+            {"data": [{"id": i} for i in range(50)]},
+            {"data": [{"id": i} for i in range(50, 62)]},
+        ])
+        rows = client.teams_by_season(28020)
+        self.assertEqual(len(rows), 62)
+        self.assertEqual(client._get.call_count, 2)
+        self.assertEqual(client._get.call_args_list[1].args[1]["page"], 2)
+        client.close()
+
+    def test_sportmonks_teams_by_season_rejects_repeated_full_page(self):
+        page = {"data": [{"id": i} for i in range(50)]}
+        client = SportmonksClient(api_token="test-only")
+        client._get = Mock(side_effect=[page, page])
+        with self.assertRaisesRegex(SportmonksError, "repeated page"):
+            client.teams_by_season(28020)
+        client.close()
+
+
     def test_sportmonks_auth_error_does_not_expose_token(self):
         client = SportmonksClient(api_token="secret-token")
         response = Mock()
