@@ -24,7 +24,7 @@ PROVIDERS = (
     "highlightly",
     "api_ninjas",
 )
-SCHEDULED_STATUSES = {"scheduled", "upcoming", "not started", "ns", "fixture"}
+SCHEDULED_STATUSES = {"scheduled", "upcoming", "not started", "notstarted", "ns", "fixture"}
 
 
 def _utc_datetime(value: Any) -> datetime | None:
