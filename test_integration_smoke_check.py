@@ -63,7 +63,7 @@ class APIFootballAccountProbeTests(unittest.TestCase):
         }
         client.leagues.return_value = [{"league": {"id": 1}}, {"league": {"id": 2}}]
 
-        result = api_football_account_probe(client)
+        result = api_football_account_probe(client, data_use_allowed=True)
 
         self.assertEqual(result["leagues_returned"], 2)
         self.assertEqual(result["subscription_plan"], "Pro")
@@ -73,6 +73,23 @@ class APIFootballAccountProbeTests(unittest.TestCase):
         self.assertTrue(result["status_endpoint_quota_exempt"])
         self.assertNotIn("email", str(result))
         self.assertNotIn("Private", str(result))
+        client.close.assert_called_once()
+
+    def test_status_only_probe_does_not_request_league_catalogue_without_rights_ack(self):
+        client = Mock()
+        client.status.return_value = {
+            "response": {
+                "subscription": {"plan": "Free", "active": True},
+                "requests": {"current": 3, "limit_day": 100},
+            }
+        }
+        result = api_football_account_probe(client, data_use_allowed=False)
+        self.assertIsNone(result["leagues_returned"])
+        self.assertEqual(
+            result["league_catalogue_probe_status"],
+            "skipped_data_use_not_confirmed",
+        )
+        client.leagues.assert_not_called()
         client.close.assert_called_once()
 
 
