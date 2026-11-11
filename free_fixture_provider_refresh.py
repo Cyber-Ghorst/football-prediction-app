@@ -53,7 +53,7 @@ def refresh_free_fixture_sources(
     if now.tzinfo is None:
         now = now.replace(tzinfo=timezone.utc)
     now = now.astimezone(timezone.utc)
-    current_year = now.year
+    season_start_year = now.year if now.month >= 7 else now.year - 1
     date_from = now.date().isoformat()
     date_to = (now.date() + timedelta(days=7)).isoformat()
     batch_slot = int(now.timestamp() // (6 * 60 * 60))
@@ -65,7 +65,7 @@ def refresh_free_fixture_sources(
     try:
         with OpenLigaDBAdapter() as client:
             all_scopes = client.discover_scopes(
-                [current_year, current_year + 1],
+                [season_start_year, season_start_year + 1],
                 max_scopes=1000,
             )
             scopes = _rotate_batch(all_scopes, max_openligadb_scopes, batch_slot)
@@ -82,7 +82,7 @@ def refresh_free_fixture_sources(
     # football.json's current-season directory is public. Dataset filenames
     # are discovered rather than hard-coded; timezone-less kickoff rows remain
     # excluded by the adapter.
-    season_dir = f"{current_year}-{str((current_year + 1) % 100).zfill(2)}"
+    season_dir = f"{season_start_year}-{str((season_start_year + 1) % 100).zfill(2)}"
     try:
         with OpenFootballAdapter() as client:
             datasets = client.discover_season_files(season_dir)
