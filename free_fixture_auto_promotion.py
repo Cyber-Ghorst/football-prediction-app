@@ -110,7 +110,7 @@ def run_automatic_fixture_promotion(
                 now=current,
                 snapshot_limit=3,
                 max_age_hours=24,
-                window_days=7,
+                window_days=4,
                 licence_acknowledged=True,
                 open_matchday_noncommercial_confirmed=(
                     provider == "open_matchday" and _enabled(settings, noncommercial_key)
