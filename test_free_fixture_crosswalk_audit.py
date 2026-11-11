@@ -46,6 +46,24 @@ class FreeFixtureCrosswalkAuditTests(unittest.TestCase):
             [5] * len(PROVIDERS),
         )
 
+    @patch("free_fixture_crosswalk_audit.load_canonical_crosswalk_catalogue")
+    @patch("free_fixture_crosswalk_audit.build_provider_crosswalk_review_report")
+    def test_limits_candidate_samples_without_losing_total_counts(self, builder, catalogue):
+        catalogue.return_value = {"leagues": [], "seasons": [], "teams": []}
+        builder.return_value = {
+            "snapshot_count": 1, "observation_count": 50,
+            "source_entity_counts": {}, "existing_link_counts": {},
+            "candidates": {"teams": [
+                {"provider_entity_id": str(index), "status": "no_exact_contextual_match"}
+                for index in range(60)
+            ]},
+        }
+        report = build_crosswalk_audit("provider-db")
+        teams = report["providers"]["openligadb"]["categories"]["teams"]
+        self.assertEqual(teams["candidate_count"], 60)
+        self.assertEqual(len(teams["candidates"]), 25)
+        self.assertTrue(teams["candidates_truncated"])
+
     @patch("free_fixture_crosswalk_audit.load_canonical_crosswalk_catalogue", return_value={"leagues": [], "seasons": [], "teams": []})
     @patch("free_fixture_crosswalk_audit.build_provider_crosswalk_review_report")
     def test_isolates_provider_failure_without_losing_other_reports(self, builder, catalogue):

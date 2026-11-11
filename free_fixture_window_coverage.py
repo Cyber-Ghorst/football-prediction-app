@@ -107,6 +107,11 @@ def build_window_coverage_report(
     source_observation_count = 0
     stale_snapshot_count = 0
     rejected_observation_counts: Counter[str] = Counter()
+    rejected_by_provider: dict[str, Counter[str]] = {provider: Counter() for provider in PROVIDERS}
+
+    def reject(provider: str, reason: str) -> None:
+        rejected_observation_counts[reason] += 1
+        rejected_by_provider[provider][reason] += 1
 
     for provider in PROVIDERS:
         snapshots = list(snapshots_by_provider.get(provider) or [])
@@ -126,34 +131,35 @@ def build_window_coverage_report(
             for observation in _observation_rows(snapshot):
                 source_observation_count += 1
                 if observation.get("eligible_for_review") is not True:
-                    rejected_observation_counts[str(
+                    reject(provider, str(
                         observation.get("exclusion_reason") or "not_eligible_for_review"
-                    )] += 1
+                    ))
                     continue
                 fixture_id = str(observation.get("provider_fixture_id") or "").strip()
                 if not fixture_id:
-                    rejected_observation_counts["missing_provider_fixture_id"] += 1
+                    reject(provider, "missing_provider_fixture_id")
                     continue
                 status = str(observation.get("status") or "").strip().casefold().replace("_", " ")
                 if status not in SCHEDULED_STATUSES:
-                    rejected_observation_counts["not_scheduled"] += 1
+                    reject(provider, "not_scheduled")
                     continue
                 kickoff = _utc_datetime(observation.get("kickoff_utc"))
                 fetched = _utc_datetime(observation.get("fetched_at"))
                 if kickoff is None or fetched is None:
-                    rejected_observation_counts["missing_timezone_aware_timestamp"] += 1
+                    reject(provider, "missing_timezone_aware_timestamp")
                     continue
                 if fetched > current + timedelta(minutes=5):
-                    rejected_observation_counts["future_provider_timestamp"] += 1
+                    reject(provider, "future_provider_timestamp")
                     continue
                 if kickoff <= current or kickoff > window_end:
+                    reject(provider, "kickoff_outside_window")
                     continue
                 home = str(observation.get("home_team_name") or "").strip()
                 away = str(observation.get("away_team_name") or "").strip()
                 competition = str(observation.get("competition_name") or "").strip()
                 season = str(observation.get("season_name") or observation.get("season_key") or "").strip()
                 if not all((home, away, competition, season)):
-                    rejected_observation_counts["missing_fixture_identity"] += 1
+                    reject(provider, "missing_fixture_identity")
                     continue
                 record = {
                     "provider": provider,
@@ -231,6 +237,10 @@ def build_window_coverage_report(
         "exact_identity_duplicates_removed": cross_provider_duplicates,
         "stale_snapshots_skipped": stale_snapshot_count,
         "rejected_observation_counts": dict(rejected_observation_counts),
+        "rejected_observation_counts_by_provider": {
+            provider: dict(counts) for provider, counts in rejected_by_provider.items()
+            if counts
+        },
         "daily_unique_fixture_counts_utc": daily_counts,
         "daily_counts_by_provider_utc": daily_by_provider,
         "daily_target_shortfalls_utc": shortfalls,

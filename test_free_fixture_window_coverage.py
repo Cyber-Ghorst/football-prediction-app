@@ -90,6 +90,25 @@ class FreeFixtureWindowCoverageTests(unittest.TestCase):
         )
         self.assertEqual(report["unique_fixtures_in_window"], 0)
 
+    def test_rejection_counts_are_attributed_to_each_provider(self):
+        snapshots = {
+            "api_ninjas": [snapshot("api_ninjas", [
+                observation("api_ninjas", "ninjas:naive", kickoff="2026-11-12T15:00:00"),
+            ])],
+            "highlightly": [snapshot("highlightly", [
+                observation("highlightly", "hl:bad-status", status="in_play"),
+            ])],
+        }
+        report = build_window_coverage_report(snapshots, now=NOW)
+        self.assertEqual(
+            report["rejected_observation_counts_by_provider"]["api_ninjas"]["missing_timezone_aware_timestamp"],
+            1,
+        )
+        self.assertEqual(
+            report["rejected_observation_counts_by_provider"]["highlightly"]["not_scheduled"],
+            1,
+        )
+
     def test_future_dated_snapshot_is_rejected(self):
         snapshots = {
             "highlightly": [snapshot(

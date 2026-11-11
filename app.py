@@ -105,7 +105,6 @@ try:
         collect_bzzoiro_observations,
     )
     from provider_entity_crosswalk import save_explicit_provider_entity_links
-    from provider_crosswalk_review_report import build_provider_crosswalk_review_report
     from free_fixture_result_sync import sync_free_source_results
     from free_fixture_canonical_promotion import review_and_promote_free_fixture_observations
     from livescore_football import LiveScoreFootballClient, LiveScoreFootballError
@@ -1207,6 +1206,8 @@ with st.sidebar:
         )
         if build_crosswalk_review:
             try:
+                # Keep optional crosswalk tooling out of the application startup path.
+                from provider_crosswalk_review_report import build_provider_crosswalk_review_report
                 for entity_type in ("leagues", "seasons", "teams"):
                     st.session_state.pop(
                         f"free_fixture_crosswalk_editor_{crosswalk_provider}_{entity_type}", None

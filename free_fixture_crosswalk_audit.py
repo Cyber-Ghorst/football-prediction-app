@@ -13,6 +13,8 @@ from provider_crosswalk_review_report import (
     load_canonical_crosswalk_catalogue,
 )
 
+CANDIDATE_SAMPLE_LIMIT = 25
+
 PROVIDERS = (
     "openligadb", "openfootball", "open_matchday",
     "livescore_football", "bzzoiro", "highlightly", "api_ninjas",
@@ -52,7 +54,8 @@ def build_crosswalk_audit(database_url: str) -> dict[str, Any]:
                 categories[category] = {
                     "candidate_count": len(candidates),
                     "status_counts": dict(sorted(status_counts.items())),
-                    "candidates": candidates,
+                    "candidates": candidates[:CANDIDATE_SAMPLE_LIMIT],
+                    "candidates_truncated": len(candidates) > CANDIDATE_SAMPLE_LIMIT,
                 }
             results[provider] = {
                 "status": "ok",
