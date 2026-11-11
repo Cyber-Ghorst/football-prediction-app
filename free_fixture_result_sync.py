@@ -6,14 +6,18 @@ import re
 from typing import Any, Mapping
 from urllib.parse import urlparse
 
-from free_fixture_adapters import BzzoiroAdapter, OpenLigaDBAdapter, OpenMatchdayAdapter
+from free_fixture_adapters import (
+    BzzoiroAdapter, OpenFootballAdapter, OpenLigaDBAdapter, OpenMatchdayAdapter,
+)
 from livescore_football import LiveScoreFootballClient
 from provider_data_storage import _connect
 from provider_entity_crosswalk import load_provider_entity_links
 from free_fixture_canonical_promotion import _ensure_promotion_tables
 
 
-SUPPORTED_RESULT_PROVIDERS = {"openligadb", "open_matchday", "livescore_football", "bzzoiro"}
+SUPPORTED_RESULT_PROVIDERS = {
+    "openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro",
+}
 
 
 def _normalise(value: Any) -> str:
@@ -185,6 +189,62 @@ def verify_livescore_final_score(
     if kickoff is None or kickoff > now:
         return None
     return _integer_score(sides["home"].get("score"), sides["away"].get("score"))
+
+
+def verify_openfootball_final_score(
+    record: Mapping[str, Any],
+    observation: Mapping[str, Any],
+    *,
+    provider_fixture_id: str,
+    now: datetime,
+    source_observation: Mapping[str, Any] | None = None,
+) -> tuple[int, int] | None:
+    """Use only explicit football.json FT scores for the exact scheduled dataset row."""
+    if str(observation.get("provider_fixture_id") or "") != str(provider_fixture_id):
+        return None
+    source_observation = source_observation or {}
+    expected_home = source_observation.get("home_team_name") or record.get("home_team")
+    expected_away = source_observation.get("away_team_name") or record.get("away_team")
+    expected_competition = source_observation.get("competition_name") or record.get("competition")
+    expected_season = _season_year(
+        source_observation.get("season_name") or source_observation.get("season_key")
+    ) or str(record.get("season") or "")[:4]
+    if _normalise(observation.get("home_team_name")) != _normalise(expected_home):
+        return None
+    if _normalise(observation.get("away_team_name")) != _normalise(expected_away):
+        return None
+    if _normalise(observation.get("competition_name")) != _normalise(expected_competition):
+        return None
+    if _season_year(observation.get("season_name") or observation.get("season_key")) != expected_season:
+        return None
+    kickoff = _timestamp(observation.get("kickoff_utc"))
+    recorded_kickoff = _timestamp(record.get("kickoff_at"))
+    if kickoff is None or recorded_kickoff is None or kickoff > now:
+        return None
+    if abs((kickoff - recorded_kickoff).total_seconds()) > 300:
+        return None
+
+    competition_key = str(observation.get("competition_key") or "").casefold()
+    competition_name = str(observation.get("competition_name") or "").casefold()
+    if "cup" in competition_key or "cup" in competition_name or "pokal" in competition_name:
+        return None
+    raw = observation.get("raw_payload")
+    if not isinstance(raw, Mapping):
+        return None
+    status = str(raw.get("status") or "").casefold()
+    if status and status not in {"finished", "complete", "completed", "ft", "full time"}:
+        return None
+    score = raw.get("score")
+    if not isinstance(score, Mapping):
+        return None
+    if any(score.get(key) not in (None, "", [], {}) for key in (
+        "et", "extra_time", "aet", "pens", "penalties", "penalty_shootout"
+    )):
+        return None
+    full_time = score.get("ft") or score.get("full_time") or score.get("fullTime")
+    if not isinstance(full_time, (list, tuple)) or len(full_time) != 2:
+        return None
+    return _integer_score(full_time[0], full_time[1])
 
 
 def verify_openmatchday_final_score(
@@ -498,6 +558,31 @@ def sync_free_source_results(
                         )
                     if score is None:
                         item["reason"] = "livescore_final_90_minute_score_not_verified"
+            elif provider == "openfootball":
+                source_path = urlparse(source_url).path
+                match = re.search(r"/master/(20\\d{2}-\\d{2}/[^/]+\\.json)$", source_path)
+                if not match:
+                    item["reason"] = "openfootball_season_dataset_url_unavailable"
+                else:
+                    season_file = match.group(1)
+                    competition = str(
+                        raw_observation.get("competition_name")
+                        or representative.get("competition") or ""
+                    )
+                    with OpenFootballAdapter() as client:
+                        result_rows = client.season(season_file, competition=competition)
+                    result_row = next((
+                        row for row in result_rows
+                        if str(row.get("provider_fixture_id")) == source_id
+                    ), None)
+                    if result_row:
+                        score = verify_openfootball_final_score(
+                            representative, result_row,
+                            provider_fixture_id=source_id, now=current,
+                            source_observation=raw_observation,
+                        )
+                    if score is None:
+                        item["reason"] = "openfootball_full_time_score_not_verified"
             elif provider == "open_matchday":
                 source_path = urlparse(source_url).path
                 if "/fixtures_" not in source_path or not source_path.endswith(".csv"):
