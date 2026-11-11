@@ -56,8 +56,23 @@ jobs:
           test -n "$DATABASE_URL" || { echo "::error::DATABASE_URL (Neon) secret is missing."; exit 1; }
           test -f root.crt || { echo "::error::CockroachDB root.crt is missing."; exit 1; }
 
-      - name: Collect and upsert rolling seven-day fixture window
-        run: python upcoming_fixture_collector.py
+      - name: Collect, upsert and archive rolling seven-day fixture report
+        run: |
+          set -euo pipefail
+          mkdir -p reports/upcoming_fixture_collection/archive
+          stamp="$(date -u +%Y%m%dT%H%M%SZ)"
+          report="reports/upcoming_fixture_collection/archive/${stamp}.json"
+          python upcoming_fixture_collector.py | tee "$report"
+          python -m json.tool "$report" >/dev/null
+          cp "$report" reports/upcoming_fixture_collection/latest.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/upcoming_fixture_collection
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive upcoming fixture collection report ${stamp}"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
 
       - name: Refresh free-source fixture observations (staging only)
         continue-on-error: true
