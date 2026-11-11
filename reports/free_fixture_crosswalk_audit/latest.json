@@ -1,7 +1,7 @@
 {
   "automatic_mapping_approvals": 0,
   "canonical_fixture_writes": 0,
-  "generated_at_utc": "2026-11-11T08:15:59.309019+00:00",
+  "generated_at_utc": "2026-11-11T08:24:45.605695+00:00",
   "prediction_ledger_writes": 0,
   "providers": {
     "bzzoiro": {
@@ -1298,7 +1298,7 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 202,
+      "observation_count": 204,
       "snapshot_count": 5,
       "source_entity_counts": {
         "leagues": 42,
@@ -1458,8 +1458,8 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 29160,
-      "snapshot_count": 10,
+      "observation_count": 14580,
+      "snapshot_count": 5,
       "source_entity_counts": {
         "leagues": 8,
         "seasons": 1,
@@ -1470,18 +1470,8 @@
     "openligadb": {
       "categories": {
         "leagues": {
-          "candidate_count": 37,
+          "candidate_count": 32,
           "candidates": [
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "openligadb",
-              "provider_entity_id": "5972",
-              "provider_name": "1. Frauen Fu\u00dfballbundesliga 2025/2026",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
             {
               "canonical_entity_id": null,
               "canonical_name": null,
@@ -1489,16 +1479,6 @@
               "provider": "openligadb",
               "provider_entity_id": "4937",
               "provider_name": "1. Fu\u00dfball-Bundesliga 2026/2027",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "openligadb",
-              "provider_entity_id": "5958",
-              "provider_name": "2. Bundesliga 2026/27 (Herren)",
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
               "status": "no_exact_contextual_match"
             },
@@ -1519,26 +1499,6 @@
               "provider": "openligadb",
               "provider_entity_id": "4939",
               "provider_name": "3. Liga 2026/2027",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "openligadb",
-              "provider_entity_id": "5960",
-              "provider_name": "BLClaude",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "openligadb",
-              "provider_entity_id": "5957",
-              "provider_name": "Bundesliga",
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
               "status": "no_exact_contextual_match"
             },
@@ -1619,16 +1579,6 @@
               "provider": "openligadb",
               "provider_entity_id": "6020",
               "provider_name": "DFB-Pokal Frauen 2026/2027",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "league",
-              "provider": "openligadb",
-              "provider_entity_id": "5959",
-              "provider_name": "Empty Stands Spendenliga 2026/2027 (https://emptystands.me/aktivismus/spendenliga)",
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
               "status": "no_exact_contextual_match"
             },
@@ -1844,7 +1794,7 @@
             }
           ],
           "status_counts": {
-            "no_exact_contextual_match": 37
+            "no_exact_contextual_match": 32
           }
         },
         "seasons": {
@@ -1866,7 +1816,7 @@
           }
         },
         "teams": {
-          "candidate_count": 442,
+          "candidate_count": 434,
           "candidates": [
             {
               "canonical_entity_id": null,
@@ -2103,16 +2053,6 @@
               "canonical_name": null,
               "entity_type": "team",
               "provider": "openligadb",
-              "provider_entity_id": "5736",
-              "provider_name": "1. SC G\u00f6ttingen 05",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "team",
-              "provider": "openligadb",
               "provider_entity_id": "8922",
               "provider_name": "1. Spvg. Solingen Wald 03",
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
@@ -2195,26 +2135,6 @@
               "provider": "openligadb",
               "provider_entity_id": "844",
               "provider_name": "Algerien",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "team",
-              "provider": "openligadb",
-              "provider_entity_id": "2164",
-              "provider_name": "Altona 93",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "team",
-              "provider": "openligadb",
-              "provider_entity_id": "7043",
-              "provider_name": "Altona 93 Frauen",
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
               "status": "no_exact_contextual_match"
             },
@@ -2933,16 +2853,6 @@
               "canonical_name": null,
               "entity_type": "team",
               "provider": "openligadb",
-              "provider_entity_id": "8937",
-              "provider_name": "Eiserne Kirsch Kolonne",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "team",
-              "provider": "openligadb",
               "provider_entity_id": "2533",
               "provider_name": "Elche CF",
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
@@ -2965,16 +2875,6 @@
               "provider": "openligadb",
               "provider_entity_id": "6155",
               "provider_name": "Elfenbeink\u00fcste",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "team",
-              "provider": "openligadb",
-              "provider_entity_id": "6923",
-              "provider_name": "Empty Stands Dummy Team",
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
               "status": "no_exact_contextual_match"
             },
@@ -3285,16 +3185,6 @@
               "provider": "openligadb",
               "provider_entity_id": "375",
               "provider_name": "FC Porto",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "team",
-              "provider": "openligadb",
-              "provider_entity_id": "176",
-              "provider_name": "FC Rot-Wei\u00df Erfurt",
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
               "status": "no_exact_contextual_match"
             },
@@ -5663,16 +5553,6 @@
               "canonical_name": null,
               "entity_type": "team",
               "provider": "openligadb",
-              "provider_entity_id": "6064",
-              "provider_name": "TSG 1899 Hoffenheim Frauen",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "team",
-              "provider": "openligadb",
               "provider_entity_id": "2396",
               "provider_name": "TSG 1899 Hoffenheim II",
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
@@ -6193,16 +6073,6 @@
               "canonical_name": null,
               "entity_type": "team",
               "provider": "openligadb",
-              "provider_entity_id": "137",
-              "provider_name": "Wuppertaler SV",
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "entity_type": "team",
-              "provider": "openligadb",
               "provider_entity_id": "8928",
               "provider_name": "Wuppertaler SV",
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
@@ -6290,7 +6160,7 @@
             }
           ],
           "status_counts": {
-            "no_exact_contextual_match": 442
+            "no_exact_contextual_match": 434
           }
         }
       },
@@ -6299,12 +6169,12 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 41036,
-      "snapshot_count": 10,
+      "observation_count": 19570,
+      "snapshot_count": 5,
       "source_entity_counts": {
-        "leagues": 37,
+        "leagues": 32,
         "seasons": 1,
-        "teams": 442
+        "teams": 434
       },
       "status": "ok"
     }
