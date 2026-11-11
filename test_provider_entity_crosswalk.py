@@ -91,7 +91,7 @@ class ProviderEntityCrosswalkTests(unittest.TestCase):
         self.assertEqual(result["status"], "candidate_requires_manual_approval")
         self.assertEqual(result["canonical_entity_id"], "sportmonks:564")
         self.assertEqual(result["match_method"], "curated_provider_id_alias")
-        self.assertIn("manual review", result["reason"])
+        self.assertIn("explicit review is still mandatory", result["reason"])
 
     def test_openligadb_laliga_alias_requires_known_id_and_exact_country(self):
         canonical = [{
@@ -109,8 +109,8 @@ class ProviderEntityCrosswalkTests(unittest.TestCase):
             [{"provider_competition_id": "4936", "competition_name": "LaLiga EA Sports", "country": "Portugal"}],
             canonical,
         )[0]
-        self.assertEqual(unknown_id["status"], "unmatched")
-        self.assertEqual(wrong_country["status"], "unmatched")
+        self.assertEqual(unknown_id["status"], "no_exact_contextual_match")
+        self.assertEqual(wrong_country["status"], "no_exact_contextual_match")
 
     def test_name_normalization_removes_accents_and_punctuation(self):
         self.assertEqual(normalize_entity_name("Atlético-Madrid"), "atletico madrid")
