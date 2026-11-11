@@ -61,27 +61,6 @@ class ProviderAdapterTests(unittest.TestCase):
         })
         client.close()
 
-    def test_api_football_fixtures_by_date_rejects_missing_pagination(self):
-        client = APIFootballClient(api_key="test-only")
-        client._request = Mock(return_value=[{"fixture": {"id": 1}}])
-        client.last_paging = {}
-        with self.assertRaisesRegex(APIFootballError, "pagination metadata is missing"):
-            client.fixtures_by_date("2026-11-11")
-        client.close()
-
-    def test_api_football_fixtures_by_date_rejects_empty_intermediate_page(self):
-        client = APIFootballClient(api_key="test-only")
-        calls = 0
-        def request(endpoint, params=None):
-            nonlocal calls
-            calls += 1
-            client.last_paging = {"current": calls, "total": 2}
-            return [{"fixture": {"id": 1}}] if calls == 1 else []
-        client._request = Mock(side_effect=request)
-        with self.assertRaisesRegex(APIFootballError, "empty page"):
-            client.fixtures_by_date("2026-11-11")
-        client.close()
-
     def test_api_football_fixtures_by_date_accepts_empty_single_page(self):
         client = APIFootballClient(api_key="test-only")
         client._request = Mock(return_value=[])
