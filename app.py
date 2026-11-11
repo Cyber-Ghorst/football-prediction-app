@@ -94,10 +94,7 @@ try:
     from provider_core import normalize_team_name
     from engine import predict_match, build_prediction_feature_snapshot, WEIGHTS, most_likely_outcome
     from tvd import run_tvd
-    from temporary_fixture_store import (
-        add_temporary_upcoming_fixtures,
-        search_temporary_upcoming_fixtures,
-    )
+    from temporary_fixture_store import search_temporary_upcoming_fixtures
     from provider_config import provider_readiness
     from free_fixture_adapters import BzzoiroAdapter
     from free_fixture_observation_pipeline import (
@@ -1385,6 +1382,10 @@ with st.expander("Validate and publish approved free-source fixtures", expanded=
                 ]
                 if staged_rows:
                     try:
+                        # Import the additive promotion writer only when requested.
+                        # A stale deployment missing this optional helper must not
+                        # prevent the core fixture search and prediction app from starting.
+                        from temporary_fixture_store import add_temporary_upcoming_fixtures
                         neon_stage_result = add_temporary_upcoming_fixtures(
                             DATABASE_URL, staged_rows
                         )
