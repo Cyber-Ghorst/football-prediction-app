@@ -119,22 +119,52 @@ class SportmonksClient:
                 return [rows]
         return []
 
-    def _all_pages(self, path: str, **params: Any) -> list[dict[str, Any]]:
-        """Read a complete paginated collection or fail rather than use a partial season."""
+    def _all_pages(
+        self,
+        path: str,
+        *,
+        probe_missing_pagination: bool = False,
+        **params: Any,
+    ) -> list[dict[str, Any]]:
+        """Read a complete paginated collection or fail rather than use a partial season.
+
+        A small number of Sportmonks collection endpoints omit pagination metadata
+        even when a page is full. Callers may opt into a fail-closed page probe:
+        request the next page until it is empty/short, rejecting repeated pages.
+        """
         rows: list[dict[str, Any]] = []
+        seen_page_signatures: set[tuple[str, ...]] = set()
         page = 1
         max_pages = 20
+        per_page = min(int(params.get("per_page", 50)), 50)
         while page <= max_pages:
-            query = {**params, "per_page": min(int(params.get("per_page", 50)), 50), "page": page}
+            query = {**params, "per_page": per_page, "page": page}
             payload = self._get(path, query)
-            rows.extend(self._rows(payload))
+            page_rows = self._rows(payload)
+            signature = tuple(
+                str(row.get("id")) if row.get("id") is not None else repr(row)
+                for row in page_rows
+            )
+            if signature and signature in seen_page_signatures:
+                raise SportmonksError(
+                    "Sportmonks returned a repeated page; refusing a potentially incomplete dataset."
+                )
+            if signature:
+                seen_page_signatures.add(signature)
             pagination = payload.get("pagination") or {}
             has_more = pagination.get("has_more")
             if has_more is None:
-                # Some responses omit pagination when the collection fits one page.
-                if len(self._rows(payload)) < query["per_page"]:
+                if len(page_rows) < per_page:
+                    rows.extend(page_rows)
                     return rows
-                raise SportmonksError("Sportmonks pagination metadata is missing; refusing a potentially incomplete dataset.")
+                if not probe_missing_pagination:
+                    raise SportmonksError(
+                        "Sportmonks pagination metadata is missing; refusing a potentially incomplete dataset."
+                    )
+                rows.extend(page_rows)
+                page += 1
+                continue
+            rows.extend(page_rows)
             if not has_more:
                 return rows
             page += 1
@@ -147,7 +177,7 @@ class SportmonksClient:
         return self._all_pages("leagues", **params)
 
     def teams_by_season(self, season_id: int | str, **params: Any) -> list[dict[str, Any]]:
-        return self._all_pages(f"teams/seasons/{season_id}", **params)
+        return self._all_pages(f"teams/seasons/{season_id}", probe_missing_pagination=True, **params)
 
     def standings_by_season(self, season_id: int | str, **params: Any) -> list[dict[str, Any]]:
         return self._all_pages(f"standings/seasons/{season_id}", **params)
