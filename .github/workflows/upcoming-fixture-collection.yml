@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "free_fixture_provider_refresh.py"
+      - "free_fixture_crosswalk_audit.py"
       - "free_fixture_adapters.py"
       - "free_fixture_observation_pipeline.py"
       - ".github/workflows/upcoming-fixture-collection.yml"
@@ -70,6 +71,26 @@ jobs:
           git add reports/free_fixture_provider_refresh
           if ! git diff --cached --quiet; then
             git commit -m "Archive free fixture provider refresh report ${stamp}"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+
+      - name: Generate and archive provider crosswalk progress report
+        continue-on-error: true
+        env:
+          PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
+        run: |
+          set -euo pipefail
+          mkdir -p reports/free_fixture_crosswalk_audit/archive
+          stamp="$(date -u +%Y%m%dT%H%M%SZ)"
+          python free_fixture_crosswalk_audit.py
+          python -m json.tool reports/free_fixture_crosswalk_audit/latest.json >/dev/null
+          cp reports/free_fixture_crosswalk_audit/latest.json "reports/free_fixture_crosswalk_audit/archive/${stamp}.json"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/free_fixture_crosswalk_audit
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive free fixture crosswalk audit ${stamp}"
             git pull --rebase origin main
             git push origin HEAD:main
           fi
