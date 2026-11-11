@@ -13,6 +13,10 @@ except Exception:
 """
         self.assertTrue(has_eager_crosswalk_review_import(source))
 
+    def test_direct_module_level_import_is_rejected(self):
+        source = "from provider_crosswalk_review_report import build_provider_crosswalk_review_report"
+        self.assertTrue(has_eager_crosswalk_review_import(source))
+
     def test_conditional_ui_import_is_not_classified_as_startup_import(self):
         source = """
 if user_clicked_review:
