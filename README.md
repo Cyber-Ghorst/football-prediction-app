@@ -51,9 +51,9 @@ Provider health, account quota, competition coverage, and source-data freshness 
 
 See MULTI_SOURCE_API_ARCHITECTURE.md for provider responsibilities, reconciliation rules and remaining integration work.
 
-## LiveScoreFootball read-only source
+## WorldCup26 historical source (LiveScoreFootball fork)
 
-The project includes a read-only adapter for the public [LiveScoreFootball API](https://github.com/rezarahiminia/livescoreFootball), hosted at https://worldcup26.ir. Its documented public endpoints currently require no API key. Set LIVESCORE_FOOTBALL_BASE_URL only when using a different compatible deployment. The API reads stored MongoDB snapshots fed by a separate listener, so it is not a guaranteed real-time feed. The public catalogue currently reports 33 active competitions across multiple countries; the exact per-competition catalogue and coverage must be read at runtime. A competition is eligible for a cross-provider mapping only when its name and country match exactly, it is active, it reports stored data, and its season matches. The adapter is implemented but is not yet enabled as an automatic Layer 2 fallback. See MULTI_SOURCE_API_ARCHITECTURE.md.
+The current worldcup26.ir service is a FIFA World Cup 2026 dataset (48 teams, 104 matches), not a broad multi-league fixture source. The tournament ended on 19 July 2026. The generic /get/soccer/{league}/fixtures path used by the former adapter returned HTTP 400 in the live audit. The documented /get/games endpoint is historical World Cup data and requires JWT authentication. LiveScoreFootball has therefore been removed from future-fixture discovery and scheduled polling. Its only retained role is a possible historical World Cup results/group-standings source, pending a correct authenticated adapter. See MULTI_SOURCE_API_ARCHITECTURE.md.
 
 ## Canonical provider reconciliation
 
