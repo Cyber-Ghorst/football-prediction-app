@@ -564,3 +564,8 @@ All eight implementation objectives are complete when this milestone is merged. 
 ## Highlightly permitted-use control
 
 Highlightly's optional corroboration, statistics, lineup and player-enrichment paths are disabled unless both `FREE_FIXTURE_TERMS_ACK_HIGHLIGHTLY` and `HIGHLIGHTLY_NON_BETTING_USE_CONFIRMED` are explicitly configured. The latter must only be enabled when the application will not use Highlightly data to operate, facilitate or support betting or wagering. The Streamlit UI, scheduled collection, catalogue audit, integration smoke check, promotion and result-verification paths all enforce this control.
+
+
+## API-Football future-fixture use gate
+
+API-Football's account-status endpoint may be used for plan/quota diagnostics, but future fixture and league-catalogue queries are disabled unless `APISPORTS_DATA_USE_ALLOWED_CONFIRMED` is explicitly set. This acknowledgement means the app's intended use has been reviewed against API-SPORTS terms and any rights-holder licensing obligations applicable to betting-platform use. No future-fixture production routing is enabled by the audit.
