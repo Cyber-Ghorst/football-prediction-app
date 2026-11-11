@@ -21,7 +21,10 @@ PROVIDERS = (
 )
 
 
-def build_crosswalk_audit(database_url: str) -> dict[str, Any]:
+def build_crosswalk_audit(
+    database_url: str, *, highlightly_use_allowed: bool = False,
+    api_ninjas_noncommercial_confirmed: bool = False,
+) -> dict[str, Any]:
     if not database_url:
         raise ValueError("PROVIDER_DATABASE_URL is required.")
     results: dict[str, Any] = {}
@@ -40,6 +43,18 @@ def build_crosswalk_audit(database_url: str) -> dict[str, Any]:
             "prediction_ledger_writes": 0,
         }
     for provider in PROVIDERS:
+        if provider == "highlightly" and not highlightly_use_allowed:
+            results[provider] = {
+                "status": "skipped",
+                "reason": "Highlightly terms acknowledgement and non-betting-use confirmation are required.",
+            }
+            continue
+        if provider == "api_ninjas" and not api_ninjas_noncommercial_confirmed:
+            results[provider] = {
+                "status": "skipped",
+                "reason": "API Ninjas free-plan non-commercial-use confirmation is required.",
+            }
+            continue
         try:
             report = build_provider_crosswalk_review_report(
                 database_url, provider=provider, snapshot_limit=3,
@@ -93,7 +108,18 @@ def build_crosswalk_audit(database_url: str) -> dict[str, Any]:
 
 
 def main() -> int:
-    report = build_crosswalk_audit(os.getenv("PROVIDER_DATABASE_URL", ""))
+    enabled = lambda name: os.getenv(name, "").strip().casefold() in {"1", "true", "yes", "on"}
+    report = build_crosswalk_audit(
+        os.getenv("PROVIDER_DATABASE_URL", ""),
+        highlightly_use_allowed=(
+            enabled("FREE_FIXTURE_TERMS_ACK_HIGHLIGHTLY")
+            and enabled("HIGHLIGHTLY_NON_BETTING_USE_CONFIRMED")
+        ),
+        api_ninjas_noncommercial_confirmed=(
+            enabled("FREE_FIXTURE_TERMS_ACK_API_NINJAS")
+            and enabled("FREE_FIXTURE_NONCOMMERCIAL_ACK_API_NINJAS")
+        ),
+    )
     output = Path(os.getenv(
         "FREE_FIXTURE_CROSSWALK_AUDIT_PATH",
         "reports/free_fixture_crosswalk_audit/latest.json",
