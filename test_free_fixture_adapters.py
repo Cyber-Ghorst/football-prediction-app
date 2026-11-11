@@ -130,18 +130,23 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         self.assertIsNone(row["kickoff_utc"])
         client.close()
 
-    def test_openmatchday_fixed_offset_time_is_not_guessed(self):
+    def test_openmatchday_fixed_cet_minus_one_time_is_converted_to_utc(self):
         client = OpenMatchdayAdapter()
+        match_date = (NOW + timedelta(days=2)).date()
         client._get_text = Mock(return_value=(
             "gw,date,time,home,away\n"
-            f"11,{(NOW + timedelta(days=2)).date().isoformat()},19:00,Home FC,Away FC\n"
+            f"11,{match_date.isoformat()},19:00,Home FC,Away FC\n"
         ))
         row = client.season_csv(
-            "https://raw.githubusercontent.com/oladeeayo/open-matchday/main/data/ENG_1_premier-league/fixtures_2627.csv",
+            "https://raw.githubusercontent.com/oladeeayo/open-matchday/master/data/ENG_1_premier-league/fixtures_2627.csv",
             competition="League", season="2627",
         )[0]
-        self.assertFalse(row["eligible_for_review"])
-        self.assertEqual(row["exclusion_reason"], "kickoff_missing_timezone_or_precision")
+        expected = datetime.combine(
+            match_date, datetime.min.time().replace(hour=19),
+            tzinfo=timezone(timedelta(hours=1)),
+        ).astimezone(timezone.utc)
+        self.assertTrue(row["eligible_for_review"])
+        self.assertEqual(row["kickoff_utc"], expected.isoformat().replace("+00:00", "Z"))
         self.assertEqual(row["competition_key"], "ENG_1_premier-league")
         self.assertEqual(row["season_key"], "2627")
         self.assertIn("non-commercial-only", row["licence"])
