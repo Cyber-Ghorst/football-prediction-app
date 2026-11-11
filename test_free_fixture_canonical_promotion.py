@@ -53,6 +53,7 @@ class FreeFixtureCanonicalPromotionAssessmentTests(unittest.TestCase):
             team_links={"home-1": "sportmonks:30", "away-1": "sportmonks:40"},
             canonical_entities=canonical_entities(),
             now=NOW,
+            licence_acknowledged=True,
             **kwargs,
         )
 
@@ -71,6 +72,7 @@ class FreeFixtureCanonicalPromotionAssessmentTests(unittest.TestCase):
             season_links={"season-1": "sportmonks:20"},
             team_links={"home-1": "sportmonks:30"},
             canonical_entities=canonical_entities(), now=NOW,
+            licence_acknowledged=True,
         )
         self.assertEqual(result["decision"], "blocked")
         self.assertIn("missing_explicit_crosswalk", result["reason"])
@@ -102,6 +104,7 @@ class FreeFixtureCanonicalPromotionAssessmentTests(unittest.TestCase):
             season_links={"season-1": "sportmonks:20"},
             team_links={"home-1": "sportmonks:30", "away-1": "sportmonks:40"},
             canonical_entities=entities, now=NOW,
+            licence_acknowledged=True,
         )
         self.assertEqual(result["reason"], "canonical_season_belongs_to_a_different_competition")
 
@@ -113,6 +116,7 @@ class FreeFixtureCanonicalPromotionAssessmentTests(unittest.TestCase):
             season_links={"season-1": "sportmonks:20"},
             team_links={"home-1": "sportmonks:30", "away-1": "sportmonks:40"},
             canonical_entities=canonical_entities(), now=NOW,
+            licence_acknowledged=True,
         )
         self.assertEqual(result["reason"], "canonical_target_is_not_a_sportmonks_entity")
 
