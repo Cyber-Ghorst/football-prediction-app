@@ -1,5 +1,6 @@
 import unittest
 from datetime import datetime, timezone
+from unittest.mock import patch
 
 from sportmonks import SportmonksError
 from sync_prediction_results import sync_completed_results
