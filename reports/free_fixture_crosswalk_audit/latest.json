@@ -1,7 +1,7 @@
 {
   "automatic_mapping_approvals": 0,
   "canonical_fixture_writes": 0,
-  "generated_at_utc": "2026-11-11T08:32:23.703288+00:00",
+  "generated_at_utc": "2026-11-11T08:40:53.772290+00:00",
   "prediction_ledger_writes": 0,
   "providers": {
     "bzzoiro": {
@@ -1520,7 +1520,7 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 206,
+      "observation_count": 208,
       "snapshot_count": 5,
       "source_entity_counts": {
         "leagues": 51,
