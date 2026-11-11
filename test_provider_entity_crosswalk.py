@@ -201,5 +201,31 @@ class ProviderEntityCrosswalkTests(unittest.TestCase):
         self.assertFalse(any("INSERT INTO provider_entity_links" in sql for sql, _ in cursor.executed))
 
 
+    def test_highlightly_and_api_ninjas_entities_retain_country_context(self):
+        highlightly = extract_provider_entities_from_observations("highlightly", [{
+            "competition_key": "8", "competition_name": "Premier League",
+            "season_key": "2026", "season_name": "2026",
+            "home_team_key": "10", "home_team_name": "Arsenal",
+            "away_team_key": "20", "away_team_name": "Chelsea",
+            "raw_payload": {
+                "country": {"code": "GB", "name": "England"},
+                "league": {"id": 8, "name": "Premier League", "season": 2026},
+            },
+        }])
+        ninjas = extract_provider_entities_from_observations("api_ninjas", [{
+            "competition_key": "epl", "competition_name": "Premier League",
+            "season_key": "2026", "season_name": "2026-27",
+            "home_team_key": "soccer-arsenal", "home_team_name": "Arsenal",
+            "away_team_key": "soccer-chelsea", "away_team_name": "Chelsea",
+            "raw_payload": {
+                "country": "England",
+                "league": {"id": "epl", "name": "Premier League", "country": "England"},
+            },
+        }])
+        self.assertEqual(highlightly["leagues"][0]["country"], "England")
+        self.assertEqual(highlightly["teams"][0]["country"], "England")
+        self.assertEqual(ninjas["leagues"][0]["country"], "England")
+        self.assertEqual(ninjas["teams"][0]["country"], "England")
+
 if __name__ == "__main__":
     unittest.main()

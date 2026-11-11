@@ -44,6 +44,8 @@ class FreeFixtureProviderRefreshTests(unittest.TestCase):
         self.assertTrue(report["providers"]["livescore_football"]["archived"])
         self.assertTrue(report["providers"]["bzzoiro"]["archived"])
         self.assertIn("non-commercial-only", report["providers"]["open_matchday"]["skipped"])
+        self.assertIn("not configured", report["providers"]["highlightly"]["skipped"])
+        self.assertIn("not configured", report["providers"]["api_ninjas"]["skipped"])
         self.assertEqual(report["canonical_fixture_writes"], 0)
         self.assertEqual(report["prediction_ledger_writes"], 0)
         collect_livescore.assert_called_once()
@@ -89,6 +91,39 @@ class FreeFixtureProviderRefreshTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "PROVIDER_DATABASE_URL"):
             refresh_free_fixture_sources("")
 
+
+    def test_highlightly_and_api_ninjas_use_configured_tokens(self):
+        from unittest.mock import patch
+
+        with patch("free_fixture_provider_refresh.OpenLigaDBAdapter") as openliga_cls, \
+             patch("free_fixture_provider_refresh.OpenFootballAdapter") as openfootball_cls, \
+             patch("free_fixture_provider_refresh.LiveScoreFootballClient") as livescore_cls, \
+             patch("free_fixture_provider_refresh.collect_highlightly_observations") as collect_highlightly, \
+             patch("free_fixture_provider_refresh.collect_api_ninjas_observations") as collect_ninjas:
+            openliga_cls.return_value.__enter__.return_value.discover_scopes.return_value = []
+            openfootball_cls.return_value.__enter__.return_value.discover_season_files.return_value = []
+            livescore_cls.return_value.leagues.return_value = []
+            collect_highlightly.return_value = {"provider": "highlightly", "archived": True}
+            collect_ninjas.return_value = {"provider": "api_ninjas", "archived": True}
+
+            report = refresh_free_fixture_sources(
+                "provider-db",
+                today=datetime(2026, 11, 11, tzinfo=timezone.utc),
+                highlightly_token="highlightly-test-key",
+                api_ninjas_token="api-ninjas-test-key",
+            )
+
+        collect_highlightly.assert_called_once_with(
+            "provider-db", date_from="2026-11-11", days=7,
+            api_key="highlightly-test-key",
+        )
+        collect_ninjas.assert_called_once_with(
+            "provider-db", season=2026, api_key="api-ninjas-test-key",
+        )
+        self.assertTrue(report["providers"]["highlightly"]["archived"])
+        self.assertTrue(report["providers"]["api_ninjas"]["archived"])
+        self.assertEqual(report["canonical_fixture_writes"], 0)
+        self.assertEqual(report["prediction_ledger_writes"], 0)
 
 if __name__ == "__main__":
     unittest.main()

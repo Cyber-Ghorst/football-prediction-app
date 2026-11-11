@@ -1,4 +1,4 @@
-"""Read-only adapters for the five selected free future-fixture sources.
+"""Read-only adapters for selected future-fixture observation sources.
 
 These adapters produce source observations only. They do not write canonical
 fixtures or activate provider routing. Every result must pass the application's
@@ -602,6 +602,137 @@ def normalize_livescore_football_events(
     return output
 
 
+API_NINJAS_FREE_LEAGUES = (
+    "epl", "laliga", "bundesliga", "seriea", "ligue1", "ucl", "uel", "mls",
+)
+
+API_NINJAS_LEAGUE_NAMES = {
+    "epl": "Premier League", "laliga": "La Liga", "bundesliga": "Bundesliga",
+    "seriea": "Serie A", "ligue1": "Ligue 1", "ucl": "Champions League",
+    "uel": "Europa League", "mls": "MLS",
+}
+
+API_NINJAS_LEAGUE_COUNTRIES = {
+    "epl": "England", "laliga": "Spain", "bundesliga": "Germany",
+    "seriea": "Italy", "ligue1": "France", "ucl": "Europe",
+    "uel": "Europe", "mls": "United States and Canada",
+}
+
+
+def _require_stable_provider_identity(
+    observation: dict[str, Any],
+    *,
+    fixture_id: Any,
+    home_id: Any,
+    away_id: Any,
+) -> dict[str, Any]:
+    """Fail closed when a provider omits its documented stable match/team IDs."""
+    if fixture_id is None or not str(fixture_id).strip():
+        observation["eligible_for_review"] = False
+        observation["exclusion_reason"] = "missing_stable_fixture_id"
+    elif home_id is None or away_id is None:
+        observation["eligible_for_review"] = False
+        observation["exclusion_reason"] = "missing_stable_team_ids"
+    return observation
+
+
+def normalize_highlightly_matches(
+    rows: Iterable[Mapping[str, Any]],
+    *,
+    fetched_at: datetime | None = None,
+    source_url: str = "https://soccer.highlightly.net/matches",
+) -> list[dict[str, Any]]:
+    """Normalize Highlightly scheduled matches with explicit IDs and UTC kickoffs."""
+    fetched = fetched_at or _utc_now()
+    output = []
+    for row in rows:
+        if not isinstance(row, Mapping):
+            continue
+        league = row.get("league") if isinstance(row.get("league"), Mapping) else {}
+        home = row.get("homeTeam") if isinstance(row.get("homeTeam"), Mapping) else {}
+        away = row.get("awayTeam") if isinstance(row.get("awayTeam"), Mapping) else {}
+        state = row.get("state") if isinstance(row.get("state"), Mapping) else {}
+        fixture_id = row.get("id") or row.get("matchId")
+        home_id = home.get("id")
+        away_id = away.get("id")
+        season = league.get("season") or row.get("season")
+        output.append(_require_stable_provider_identity(
+            _observation(
+                "highlightly", dict(row), fetched_at=fetched, source_url=source_url,
+                licence="Highlightly API; subscription plan, reuse and commercial terms require review",
+                fixture_id=fixture_id,
+                competition=league.get("id") or row.get("leagueId"),
+                competition_name=league.get("name") or row.get("leagueName"),
+                season=season,
+                season_name=str(season) if season is not None else None,
+                home=home, away=away, home_id=home_id, away_id=away_id,
+                kickoff=row.get("date") or row.get("startTime"),
+                status=state.get("description") or row.get("status") or "unknown",
+            ).to_dict(),
+            fixture_id=fixture_id, home_id=home_id, away_id=away_id,
+        ))
+    return output
+
+
+def normalize_api_ninjas_matches(
+    rows: Iterable[Mapping[str, Any]],
+    *,
+    league: str,
+    season: int | str,
+    fetched_at: datetime | None = None,
+    source_url: str = "https://api.api-ninjas.com/v1/soccermatches",
+) -> list[dict[str, Any]]:
+    """Normalize API Ninjas scheduled matches using its stable game/team IDs."""
+    league_key = str(league or "").strip().casefold()
+    league_name = API_NINJAS_LEAGUE_NAMES.get(league_key, league_key)
+    country = API_NINJAS_LEAGUE_COUNTRIES.get(league_key)
+    fetched = fetched_at or _utc_now()
+    output = []
+    for row in rows:
+        if not isinstance(row, Mapping):
+            continue
+        home = row.get("home_team") if isinstance(row.get("home_team"), Mapping) else {}
+        away = row.get("away_team") if isinstance(row.get("away_team"), Mapping) else {}
+        fixture_id = row.get("game_id") or row.get("fixture_id") or row.get("id")
+        home_id = home.get("team_id") or home.get("id")
+        away_id = away.get("team_id") or away.get("id")
+        raw_row = dict(row)
+        if country and not raw_row.get("country"):
+            raw_row["country"] = country
+        raw_row["league"] = {
+            "id": league_key,
+            "name": league_name,
+            "country": country,
+        }
+        row_season = row.get("season") or season
+        observation = _require_stable_provider_identity(
+            _observation(
+                "api_ninjas", raw_row, fetched_at=fetched, source_url=source_url,
+                licence="API Ninjas; free plan is non-commercial and current-season only",
+                fixture_id=fixture_id,
+                competition=league_key,
+                competition_name=league_name,
+                season=row_season,
+                season_name=row.get("season_label") or str(row_season),
+                home=home or row.get("home_team_name"),
+                away=away or row.get("away_team_name"),
+                home_id=home_id, away_id=away_id,
+                kickoff=row.get("start_time"),
+                status=row.get("status") or "unknown",
+            ).to_dict(),
+            fixture_id=fixture_id, home_id=home_id, away_id=away_id,
+        )
+        row_league = _text(row.get("league")).casefold()
+        if row_league and row_league != league_key:
+            observation["eligible_for_review"] = False
+            observation["exclusion_reason"] = "competition_scope_mismatch"
+        if row.get("season") is not None and str(row.get("season")) != str(season):
+            observation["eligible_for_review"] = False
+            observation["exclusion_reason"] = "season_scope_mismatch"
+        output.append(observation)
+    return output
+
+
 def eligible_observations(rows: Iterable[Mapping[str, Any]]) -> list[dict[str, Any]]:
     """Return only timestamped scheduled observations for later canonical review."""
     return [dict(row) for row in rows if row.get("eligible_for_review") is True]
@@ -615,4 +746,6 @@ def adapter_capabilities() -> dict[str, dict[str, Any]]:
         "open_matchday": {"implemented": True, "live_verified": False, "route_enabled": False},
         "livescore_football": {"implemented": True, "live_verified": False, "route_enabled": False},
         "bzzoiro": {"implemented": True, "live_verified": False, "route_enabled": False},
+        "highlightly": {"implemented": True, "live_verified": False, "route_enabled": False},
+        "api_ninjas": {"implemented": True, "live_verified": False, "route_enabled": False},
     }

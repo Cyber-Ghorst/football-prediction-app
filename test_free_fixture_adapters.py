@@ -9,6 +9,8 @@ from free_fixture_adapters import (
     OpenMatchdayAdapter,
     eligible_observations,
     normalize_livescore_football_events,
+    normalize_highlightly_matches,
+    normalize_api_ninjas_matches,
 )
 
 
@@ -345,6 +347,92 @@ class FreeFixtureAdapterTests(unittest.TestCase):
             {"eligible_for_review": False, "provider_fixture_id": "b"},
         ]
         self.assertEqual(eligible_observations(rows), [rows[0]])
+
+
+    def test_highlightly_scheduled_match_requires_stable_ids_and_timezone(self):
+        kickoff = (NOW + timedelta(days=1)).isoformat().replace("+00:00", "Z")
+        row = {
+            "id": 12345,
+            "date": kickoff,
+            "country": {"code": "GB", "name": "England"},
+            "homeTeam": {"id": 10, "name": "Arsenal", "type": "club"},
+            "awayTeam": {"id": 20, "name": "Chelsea", "type": "club"},
+            "league": {"id": 8, "season": 2026, "name": "Premier League"},
+            "state": {"description": "Not started"},
+        }
+        result = normalize_highlightly_matches([row], fetched_at=NOW)[0]
+        self.assertEqual(result["provider"], "highlightly")
+        self.assertEqual(result["provider_fixture_id"], "12345")
+        self.assertEqual(result["home_team_key"], "10")
+        self.assertEqual(result["away_team_key"], "20")
+        self.assertEqual(result["competition_name"], "Premier League")
+        self.assertEqual(result["season_key"], "2026")
+        self.assertTrue(result["eligible_for_review"])
+        self.assertEqual(result["raw_payload"]["country"]["name"], "England")
+
+    def test_highlightly_rejects_missing_stable_team_ids(self):
+        kickoff = (NOW + timedelta(days=1)).isoformat().replace("+00:00", "Z")
+        row = {
+            "id": 12345, "date": kickoff,
+            "homeTeam": {"name": "Arsenal"}, "awayTeam": {"name": "Chelsea"},
+            "league": {"id": 8, "season": 2026, "name": "Premier League"},
+            "state": {"description": "Not started"},
+        }
+        result = normalize_highlightly_matches([row], fetched_at=NOW)[0]
+        self.assertFalse(result["eligible_for_review"])
+        self.assertEqual(result["exclusion_reason"], "missing_stable_team_ids")
+
+    def test_api_ninjas_scheduled_match_uses_stable_game_and_team_ids(self):
+        kickoff = (NOW + timedelta(days=1)).isoformat().replace("+00:00", "Z")
+        row = {
+            "game_id": "epl-20261112-ars-che",
+            "league": "epl",
+            "season": 2026,
+            "season_label": "2026-27",
+            "start_time": kickoff,
+            "status": "scheduled",
+            "home_team": {"team_id": "soccer-arsenal", "name": "Arsenal"},
+            "away_team": {"team_id": "soccer-chelsea", "name": "Chelsea"},
+        }
+        result = normalize_api_ninjas_matches(
+            [row], league="epl", season=2026, fetched_at=NOW
+        )[0]
+        self.assertEqual(result["provider"], "api_ninjas")
+        self.assertEqual(result["provider_fixture_id"], "epl-20261112-ars-che")
+        self.assertEqual(result["home_team_key"], "soccer-arsenal")
+        self.assertEqual(result["away_team_key"], "soccer-chelsea")
+        self.assertEqual(result["competition_name"], "Premier League")
+        self.assertEqual(result["season_name"], "2026-27")
+        self.assertTrue(result["eligible_for_review"])
+        self.assertEqual(result["raw_payload"]["country"], "England")
+
+    def test_api_ninjas_rejects_competition_or_season_scope_mismatch(self):
+        kickoff = (NOW + timedelta(days=1)).isoformat().replace("+00:00", "Z")
+        row = {
+            "game_id": "laliga-game-1", "league": "laliga", "season": 2025,
+            "start_time": kickoff, "status": "scheduled",
+            "home_team": {"team_id": "home-1", "name": "Home FC"},
+            "away_team": {"team_id": "away-1", "name": "Away FC"},
+        }
+        result = normalize_api_ninjas_matches(
+            [row], league="epl", season=2026, fetched_at=NOW
+        )[0]
+        self.assertFalse(result["eligible_for_review"])
+        self.assertEqual(result["exclusion_reason"], "season_scope_mismatch")
+
+    def test_api_ninjas_rejects_missing_provider_fixture_id(self):
+        kickoff = (NOW + timedelta(days=1)).isoformat().replace("+00:00", "Z")
+        row = {
+            "league": "epl", "season": 2026, "start_time": kickoff,
+            "status": "scheduled",
+            "home_team": {"team_id": "soccer-arsenal", "name": "Arsenal"},
+            "away_team": {"team_id": "soccer-chelsea", "name": "Chelsea"},
+        }
+        result = normalize_api_ninjas_matches(
+            [row], league="epl", season=2026, fetched_at=NOW
+        )[0]
+        self.assertFalse(result["eligible_for_review"])
+        self.assertEqual(result["exclusion_reason"], "missing_stable_fixture_id")
 
 
 if __name__ == "__main__":

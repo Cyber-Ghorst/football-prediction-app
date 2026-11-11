@@ -12,7 +12,7 @@ from provider_crosswalk_review_report import build_provider_crosswalk_review_rep
 
 PROVIDERS = (
     "openligadb", "openfootball", "open_matchday",
-    "livescore_football", "bzzoiro",
+    "livescore_football", "bzzoiro", "highlightly", "api_ninjas",
 )
 
 

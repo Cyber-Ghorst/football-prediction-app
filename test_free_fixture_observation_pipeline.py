@@ -1,8 +1,11 @@
 import unittest
+from datetime import datetime, timedelta, timezone
 from unittest.mock import Mock, patch
 
 from free_fixture_observation_pipeline import (
     collect_bzzoiro_observations,
+    collect_highlightly_observations,
+    collect_api_ninjas_observations,
     collect_livescore_observations,
     collect_openfootball_observations,
     collect_openligadb_observations,
@@ -154,6 +157,63 @@ class FreeFixtureObservationPipelineTests(unittest.TestCase):
         self.assertEqual(len(result["errors"]), 1)
         archive.assert_not_called()
 
+
+    @patch("free_fixture_observation_pipeline.archive_future_fixture_observations")
+    def test_highlightly_collects_each_utc_day_and_archives_observations(self, archive):
+        archive.return_value = {"snapshot_id": "highlightly-snapshot"}
+        client = Mock()
+        client.base_url = "https://soccer.highlightly.net"
+        client.last_metadata = {}
+        kickoff = (datetime.now(timezone.utc) + timedelta(days=2)).isoformat().replace("+00:00", "Z")
+        client.matches.return_value = [{
+            "id": 1001, "date": kickoff,
+            "country": {"code": "GB", "name": "England"},
+            "homeTeam": {"id": 1, "name": "Home FC"},
+            "awayTeam": {"id": 2, "name": "Away FC"},
+            "league": {"id": 8, "season": 2026, "name": "Premier League"},
+            "state": {"description": "Not started"},
+        }]
+        result = collect_highlightly_observations(
+            "provider-db", date_from=datetime.now(timezone.utc).date().isoformat(),
+            days=2, client=client,
+        )
+        self.assertEqual(client.matches.call_count, 2)
+        self.assertEqual(result["provider"], "highlightly")
+        self.assertEqual(result["observation_count"], 2)
+        self.assertTrue(result["archived"])
+        self.assertEqual(archive.call_args.kwargs["provider"], "highlightly")
+        self.assertEqual(archive.call_args.kwargs["observations"][0]["provider_fixture_id"], "1001")
+
+    @patch("free_fixture_observation_pipeline.archive_future_fixture_observations")
+    def test_api_ninjas_collects_only_documented_free_leagues(self, archive):
+        archive.return_value = {"snapshot_id": "ninjas-snapshot"}
+        client = Mock()
+        kickoff = (datetime.now(timezone.utc) + timedelta(days=1)).isoformat().replace("+00:00", "Z")
+        client.matches.side_effect = [[{
+            "game_id": "epl-game-1", "league": "epl", "season": 2026,
+            "start_time": kickoff, "status": "scheduled",
+            "home_team": {"team_id": "home-1", "name": "Home FC"},
+            "away_team": {"team_id": "away-1", "name": "Away FC"},
+        }], []]
+        result = collect_api_ninjas_observations(
+            "provider-db", season=2026, leagues=["epl", "laliga"], client=client,
+        )
+        self.assertEqual(client.matches.call_count, 2)
+        self.assertEqual(client.matches.call_args_list[0].kwargs["league"], "epl")
+        self.assertEqual(client.matches.call_args_list[0].kwargs["status"], "scheduled")
+        self.assertEqual(result["provider"], "api_ninjas")
+        self.assertEqual(result["observation_count"], 1)
+        self.assertTrue(result["archived"])
+        self.assertEqual(archive.call_args.kwargs["provider"], "api_ninjas")
+
+    def test_api_ninjas_collector_rejects_leagues_outside_free_tier(self):
+        client = Mock()
+        result = collect_api_ninjas_observations(
+            "provider-db", season=2026, leagues=["championship"], client=client,
+        )
+        self.assertFalse(result["archived"])
+        self.assertIn("outside the documented free-tier", result["errors"][0]["error"])
+        client.matches.assert_not_called()
 
 if __name__ == "__main__":
     unittest.main()
