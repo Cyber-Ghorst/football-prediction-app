@@ -163,6 +163,64 @@ def collect_openmatchday_observations(
     )
 
 
+def collect_thesportsdb_observations(
+    database_url: str,
+    *,
+    country: str,
+    max_leagues: int = 10,
+    terms_acknowledged: bool = False,
+    client: TheSportsDBAdapter | None = None,
+    request_delay_seconds: float = 2.2,
+) -> dict[str, Any]:
+    """Stage the next event from selected leagues using TheSportsDB's free v1 API."""
+    if not terms_acknowledged:
+        raise ValueError(
+            "TheSportsDB free API is for development use; app-store publication requires a paid subscription."
+        )
+    country_value = str(country or "").strip()
+    if not country_value:
+        raise ValueError("A country is required for TheSportsDB league discovery.")
+    if isinstance(max_leagues, bool) or not isinstance(max_leagues, int) or not 1 <= max_leagues <= 10:
+        raise ValueError("TheSportsDB free-tier staging is limited to 1-10 leagues per country.")
+    owned = client is None
+    api = client or TheSportsDBAdapter()
+    rows: list[dict[str, Any]] = []
+    errors: list[dict[str, str]] = []
+    successful = 0
+    league_ids = []
+    try:
+        leagues = api.leagues_by_country(country_value, sport="Soccer")
+        for league in leagues[:max_leagues]:
+            league_id = league.get("idLeague") or league.get("id")
+            if not league_id:
+                errors.append({"scope": str(league.get("strLeague") or "unknown"), "error": "Missing provider league ID."})
+                continue
+            league_ids.append(str(league_id))
+            try:
+                events = api.events_next_league(league_id)
+                rows.extend(normalize_thesportsdb_events(events, league=league))
+                successful += 1
+            except Exception as exc:
+                errors.append({"scope": str(league_id), "error": str(exc)[:300]})
+            if request_delay_seconds > 0:
+                time.sleep(min(float(request_delay_seconds), 5.0))
+    except Exception as exc:
+        errors.append({"scope": country_value, "error": str(exc)[:300]})
+    finally:
+        _close_owned(api, owned)
+    return _archive(
+        database_url, "thesportsdb",
+        {
+            "country": country_value,
+            "sport": "Soccer",
+            "league_ids": league_ids,
+            "max_leagues": max_leagues,
+            "terms_acknowledged": True,
+        },
+        rows, errors, successful,
+    )
+
+
 def collect_bzzoiro_observations(
     database_url: str,
     *,
