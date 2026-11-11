@@ -345,6 +345,10 @@ class ProviderStorageTests(unittest.TestCase):
         self.assertEqual(loaded[0]["identity_key"], "sportmonks|8|28083")
         self.assertFalse(loaded[0]["prediction_ready"])
 
+    def test_competition_registry_can_load_all_providers_without_nullable_filter(self):
+        loaded = storage.load_competition_registry("postgresql://example")
+        self.assertEqual(loaded, [])
+
     def test_competition_registry_rejects_invalid_identity_or_readiness(self):
         with self.assertRaises(ValueError):
             storage.save_discovered_competition_registry("postgresql://example", records=[{"provider": "sportmonks"}])
