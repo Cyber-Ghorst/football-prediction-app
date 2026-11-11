@@ -208,6 +208,23 @@ class _HttpAdapter:
         self.close()
 
 
+# OpenLigaDB's documented League schema does not include country. Use only
+# verified, stable league IDs here; unknown IDs deliberately remain unmapped.
+OPENLIGADB_COUNTRY_BY_LEAGUE_ID = {
+    "4937": "Germany",   # Bundesliga
+    "4938": "Germany",   # 2. Bundesliga
+    "4939": "Germany",   # 3. Liga
+    "4945": "Germany",   # DFB-Pokal
+    "4936": "Spain",     # LaLiga EA Sports
+    "5996": "England",   # Premier League
+    "4946": "Europe",    # UEFA Champions League
+    "5997": "Europe",    # UEFA Champions League (duplicate catalogue entry)
+    "6000": "Europe",    # Europa League
+    "6015": "Europe",    # Conference League
+    "5978": "Europe",    # Nations League A
+}
+
+
 class OpenLigaDBAdapter(_HttpAdapter):
     """OpenLigaDB season endpoint; competition shortcut and season are explicit."""
     provider = "openligadb"
@@ -240,7 +257,11 @@ class OpenLigaDBAdapter(_HttpAdapter):
                     "season": int(league_season),
                     "provider_competition_id": league.get("leagueId"),
                     "competition_name": league.get("leagueName") or shortcut,
-                    "country": league.get("leagueCountry") or league.get("country") or league.get("countryName"),
+                    "country": (
+                        league.get("leagueCountry") or league.get("country")
+                        or league.get("countryName")
+                        or OPENLIGADB_COUNTRY_BY_LEAGUE_ID.get(str(league.get("leagueId") or ""))
+                    ),
                     "country_code": league.get("countryCode") or league.get("country_code"),
                 }
         return list(scopes.values())[:max(1, int(max_scopes))]
@@ -274,6 +295,10 @@ class OpenLigaDBAdapter(_HttpAdapter):
                 metadata.get("country") or metadata.get("leagueCountry")
                 or metadata.get("country_name") or row.get("leagueCountry")
                 or row.get("LeagueCountry")
+                or OPENLIGADB_COUNTRY_BY_LEAGUE_ID.get(str(
+                    metadata.get("provider_competition_id")
+                    or row.get("leagueId") or row.get("LeagueId") or ""
+                ))
             ) or None
             competition_id = (
                 row.get("leagueId") or row.get("LeagueId")
