@@ -88,23 +88,40 @@ class UpcomingFixtureCollectorTests(unittest.TestCase):
         self.assertEqual([row["id"] for row in result["fixtures"]], ["1", "2"])
         self.assertEqual(result["excluded"]["duplicate_fixture_id"], 1)
 
-    def test_reports_90_fixture_target_without_fabricating_rows(self):
-        rows = [
-            fixture(index + 1, NOW + timedelta(minutes=index + 1),
-                    league_id=8 + index % 3)
-            for index in range(DAILY_FIXTURE_TARGET)
-        ]
+    def test_reports_90_fixture_target_per_calendar_day_without_fabricating_rows(self):
+        rows = []
+        fixture_id = 1
+        for day_offset in range(8):
+            kickoff_day = (NOW + timedelta(days=day_offset)).replace(
+                hour=12, minute=0, second=0, microsecond=0
+            )
+            for index in range(DAILY_FIXTURE_TARGET):
+                # The final UTC date is only partially inside the rolling
+                # window, so keep its rows at the exact inclusive end instant.
+                kickoff = (
+                    kickoff_day
+                    if day_offset == 7
+                    else kickoff_day + timedelta(minutes=index + 1)
+                )
+                rows.append(fixture(
+                    fixture_id, kickoff, league_id=8 + index % 3,
+                ))
+                fixture_id += 1
         result = normalize_upcoming_fixtures(rows, now=NOW)
-        self.assertEqual(result["fixtures_found"], DAILY_FIXTURE_TARGET)
+        self.assertEqual(result["fixtures_found"], DAILY_FIXTURE_TARGET * 8)
         self.assertTrue(result["target_met"])
         self.assertEqual(result["target_shortfall"], 0)
+        self.assertEqual(result["days_meeting_target"], 8)
         self.assertEqual(result["competitions_found"], 3)
+        self.assertTrue(all(
+            count == DAILY_FIXTURE_TARGET
+            for count in result["daily_fixture_counts_utc"].values()
+        ))
 
         short = normalize_upcoming_fixtures(rows[:12], now=NOW)
         self.assertFalse(short["target_met"])
-        self.assertEqual(short["target_shortfall"], 78)
+        self.assertEqual(short["target_shortfall"], 708)
         self.assertEqual(short["fixtures_found"], 12)
-
 
     def test_highlights_major_leagues_before_earlier_lower_tier_fixtures(self):
         major_earlier = fixture(1, NOW + timedelta(hours=2), league_id=8)
