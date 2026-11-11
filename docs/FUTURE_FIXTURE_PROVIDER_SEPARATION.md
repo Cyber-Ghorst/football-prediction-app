@@ -20,7 +20,7 @@ Future-fixture discovery is its own domain: `future_fixtures`. It must not be in
 | Provider | Correct responsibility | Future-fixture discovery status |
 |---|---|---|
 | Sportmonks | Current-season football data and existing rolling-window scheduled-fixture collector | Implemented current primary, subject to account/competition validation |
-| OpenLigaDB | Free public fixture discovery candidate, strongest German coverage | Registered but disabled; adapter/live coverage not yet verified |
+| OpenLigaDB | Free public fixture discovery candidate, strongest German coverage | Read-only future-schedule adapter verified; disabled pending country-aware crosswalk review, licence review and promotion gates |
 | OpenFootball | CC0 public JSON schedule dataset | Registered but disabled; freshness and timezone must be verified |
 | Open Matchday | Non-commercial CSV schedule dataset | Registered but disabled; commercial use prohibited absent written permission; fixed CET-1 timestamp needs correction/validation |
 | WorldCup26 label | Not a separate provider; the `worldcup26.ir` host is the public service used by the LiveScoreFootball adapter | Do not register or count this as a second provider |
@@ -39,7 +39,7 @@ This is a capability audit, not production activation. Public documentation esta
 
 | Unique candidate | Public evidence of upcoming fixtures | Remaining activation blocker |
 |---|---|---|
-| OpenLigaDB | The public API documents season-wide match data via `GET /getmatchdata/{leagueShortcut}/{leagueSeason}`; no key is required. | The endpoint is season-wide, so the adapter must prove it returns future scheduled rows with stable match IDs and timezone-aware kickoff timestamps for each supported league. |
+| OpenLigaDB | The public API documents season-wide match data via `GET /getmatchdata/{leagueShortcut}/{leagueSeason}`; no key is required. | The documented League schema has no country field. The adapter adds country only for a curated set of verified stable league IDs; unknown IDs remain country-unmapped. Continue requiring live scheduled rows, stable IDs, timezone-aware kickoff timestamps and manual canonical review. |
 | OpenFootball | The public-domain football.json repository contains current-season 2026/27 schedules and its generated latest-season mirror refreshes daily. | Some entries are date-only and time fields do not establish a timezone. Exclude those rows; use only events with reliable kickoff precision and a verified timezone. Upstream source data is not guaranteed to update daily. |
 | Open Matchday | Its repository publishes separate `fixtures_<season>.csv` files and reports upcoming fixtures with a daily build. | Non-commercial-only use and the fixed CET-1 time convention must be resolved. Keep disabled for commercial use and reject ambiguous kickoff conversion. |
 | LiveScoreFootball (`worldcup26.ir`) | Its documented fixtures endpoint accepts scheduled status and date filters; the existing adapter parses event IDs and paginated events. | The service is backed by an external database writer. Verify current per-competition sync freshness, exact season/team crosswalks and precise timezone-aware kickoff values before enabling. |

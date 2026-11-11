@@ -32,8 +32,8 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         client = OpenLigaDBAdapter()
         client._get_json = Mock(side_effect=[
             [
-                {"leagueId": 1, "leagueName": "Bundesliga", "leagueShortcut": "bl1", "leagueSeason": "2026",
-                 "leagueCountry": "Germany", "sport": {"sportName": "Fußball"}},
+                {"leagueId": 4937, "leagueName": "Bundesliga", "leagueShortcut": "bl1", "leagueSeason": "2026",
+                 "sport": {"sportName": "Fußball"}},
                 {"leagueId": 2, "leagueName": "2. Bundesliga", "leagueShortcut": "bl2", "leagueSeason": "2026",
                  "sport": {"sportName": "Football"}},
                 {"leagueId": 9, "leagueName": "Handball", "leagueShortcut": "hand1", "leagueSeason": "2026",
@@ -50,6 +50,18 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         self.assertEqual(scopes[0]["season"], 2026)
         self.assertEqual(scopes[0]["country"], "Germany")
         self.assertEqual(scopes[2]["season"], 2027)
+        client.close()
+
+    def test_openligadb_unknown_league_id_keeps_country_unmapped(self):
+        client = OpenLigaDBAdapter()
+        client._get_json = Mock(return_value=[{
+            "leagueId": 999999, "leagueName": "Uncatalogued Competition",
+            "leagueShortcut": "unknown", "leagueSeason": "2026",
+            "sport": {"sportName": "Football"},
+        }])
+        scopes = client.discover_scopes([2026])
+        self.assertEqual(len(scopes), 1)
+        self.assertIsNone(scopes[0]["country"])
         client.close()
 
     def test_openfootball_discovers_json_files_for_season(self):
@@ -91,15 +103,15 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         result = client.matches(
             "bl1", 2026,
             league_metadata={
-                "country": "Germany", "competition_name": "Bundesliga",
-                "provider_competition_id": 1, "season": 2026,
+                "competition_name": "Bundesliga",
+                "provider_competition_id": 4937, "season": 2026,
             },
         )
         self.assertEqual(len(result), 1)
         self.assertTrue(result[0]["eligible_for_review"])
         self.assertEqual(result[0]["provider_fixture_id"], "42")
         self.assertEqual(result[0]["home_team_key"], "1")
-        self.assertEqual(result[0]["competition_key"], "1")
+        self.assertEqual(result[0]["competition_key"], "4937")
         self.assertEqual(result[0]["competition_name"], "Bundesliga")
         self.assertEqual(result[0]["raw_payload"]["country"], "Germany")
         self.assertEqual(result[0]["raw_payload"]["leagueCountry"], "Germany")
