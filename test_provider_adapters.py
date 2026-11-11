@@ -20,6 +20,25 @@ class ProviderAdapterTests(unittest.TestCase):
         self.assertEqual(client.session.headers["x-apisports-key"], "test-only")
         client.close()
 
+    def test_api_football_api_error_includes_safe_provider_detail(self):
+        client = APIFootballClient(api_key="secret-do-not-print")
+        response = Mock()
+        response.status_code = 200
+        response.json.return_value = {
+            "errors": {
+                "date": "Invalid date parameter",
+                "key": "secret-do-not-print",
+            },
+            "response": [],
+        }
+        response.raise_for_status.return_value = None
+        client.session.get = Mock(return_value=response)
+        with self.assertRaises(APIFootballError) as raised:
+            client.leagues(2026)
+        self.assertIn("Invalid date parameter", str(raised.exception))
+        self.assertNotIn("secret-do-not-print", str(raised.exception))
+        client.close()
+
     def test_api_football_does_not_expose_authentication_material(self):
         client = APIFootballClient(api_key="secret-do-not-print")
         response = Mock()
