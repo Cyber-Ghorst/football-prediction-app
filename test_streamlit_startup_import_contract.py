@@ -20,6 +20,19 @@ class StreamlitStartupImportContractTests(unittest.TestCase):
             source,
         )
 
+    def test_optional_crosswalk_review_module_is_imported_only_on_demand(self):
+        from pathlib import Path
+
+        source = Path(__file__).with_name("app.py").read_text(encoding="utf-8")
+        self.assertNotIn(
+            "\\n    from provider_crosswalk_review_report import build_provider_crosswalk_review_report",
+            source,
+        )
+        self.assertIn(
+            "                from provider_crosswalk_review_report import build_provider_crosswalk_review_report",
+            source,
+        )
+
     def test_new_provider_and_fixture_workflow_imports_resolve(self):
         from temporary_fixture_store import (
             add_temporary_upcoming_fixtures,
