@@ -37,6 +37,17 @@ The seven registered future-fixture candidates are OpenLigaDB, OpenFootball, Ope
 
 This is a capability audit, not production activation. Public documentation establishes that the sources can expose upcoming schedules, but the application must still pass its own live-response and canonical-identity gates.
 
+### Latest authenticated account audit — 2026-11-11 12:25 UTC
+
+These are catalogue-access results, not approved fixture routes:
+
+- **Sportmonks:** five accessible catalogue leagues: Premier League (ID 8, England), FA Cup (24, England), Serie A (384, Italy), La Liga (564, Spain) and La Liga 2 (567, Spain). Each has three seasons in the catalogue. Country probes for Germany, France, World and International returned zero leagues; Bundesliga, Ligue 1 and World Cup name/ID probes returned no usable match. Do not invent mappings or treat an HTTP 200 response containing an API-level error as access.
+- **LiveScoreFootball:** 35 competitions listed, all 35 marked available and fresh, spanning 17 countries. This is broader than the earlier nine-league sample, but it does not itself prove 35 competitions have future fixtures or canonical identity matches. Keep the provider disabled for prediction staging until per-competition competition, season, team and fixture mappings are verified.
+- **Highlightly:** live catalogue probing was skipped because terms acknowledgement and non-betting-use confirmation are not configured. Do not enable its scheduled-fixture route until the required use conditions are explicitly confirmed.
+- **Current coverage baseline:** the 2026-11-11 seven-day free-source audit found 104 unique future fixtures across the window, against a target of 630 (90 per day). No day met the target. The separate Sportmonks rolling collector imported 11 fixtures, all from La Liga 2. These figures are observations from the audit window, not guarantees of future coverage.
+
+The immediate reconciliation priority is to map LiveScoreFootball's fresh competition catalogue only against the five actually accessible Sportmonks leagues, then verify season/team/fixture identities. Unmatched competitions remain visible as unmapped; do not widen canonical data or relax exact-context checks to inflate coverage.
+
 | Unique candidate | Public evidence of upcoming fixtures | Remaining activation blocker |
 |---|---|---|
 | OpenLigaDB | The public API documents season-wide match data via `GET /getmatchdata/{leagueShortcut}/{leagueSeason}`; no key is required. | The documented League schema has no country field. The adapter adds country only for a curated set of verified stable league IDs; unknown IDs remain country-unmapped. OpenLigaDB league ID `4936` (`LaLiga EA Sports`) has a curated alias to the canonical `La Liga` name, but still produces only a manual-review candidate and requires exact Spain country context. Continue requiring live scheduled rows, stable IDs, timezone-aware kickoff timestamps and manual canonical review. |
