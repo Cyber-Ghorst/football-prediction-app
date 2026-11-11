@@ -1,7 +1,12 @@
 from datetime import datetime, timedelta, timezone
 import unittest
+from unittest.mock import patch
 
-from free_fixture_window_coverage import build_window_coverage_report
+from free_fixture_window_coverage import (
+    PROVIDERS,
+    build_free_fixture_window_coverage,
+    build_window_coverage_report,
+)
 
 
 NOW = datetime(2026, 11, 11, 0, 0, tzinfo=timezone.utc)
@@ -106,6 +111,17 @@ class FreeFixtureWindowCoverageTests(unittest.TestCase):
         }
         report = build_window_coverage_report(snapshots, now=NOW)
         self.assertEqual(report["source_observations_loaded"], 2)
+        self.assertEqual(report["unique_fixtures_in_window"], 0)
+
+    @patch("free_fixture_window_coverage.load_provider_observation_snapshots", return_value=[])
+    def test_loads_recent_snapshots_for_every_approved_provider(self, load):
+        report = build_free_fixture_window_coverage("provider-db", now=NOW)
+        self.assertEqual(load.call_count, len(PROVIDERS))
+        self.assertEqual(
+            {call.kwargs["provider"] for call in load.call_args_list},
+            set(PROVIDERS),
+        )
+        self.assertTrue(all(call.kwargs["limit"] == 5 for call in load.call_args_list))
         self.assertEqual(report["unique_fixtures_in_window"], 0)
 
     def test_requires_timezone_aware_now(self):
