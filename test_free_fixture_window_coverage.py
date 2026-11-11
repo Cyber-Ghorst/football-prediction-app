@@ -66,7 +66,11 @@ class FreeFixtureWindowCoverageTests(unittest.TestCase):
         self.assertEqual(report["daily_counts_by_provider_utc"]["highlightly"]["2026-11-12"], 1)
         self.assertEqual(report["daily_counts_by_provider_utc"]["api_ninjas"]["2026-11-12"], 1)
         self.assertEqual(report["target_shortfall_total"], 6)
+        self.assertEqual(report["minimum_target_shortfall_total"], 0)
+        self.assertEqual(report["stretch_target_shortfall_total"], 12)
+        self.assertTrue(report["minimum_target_met"])
         self.assertFalse(report["target_met"])
+        self.assertFalse(report["stretch_target_met"])
         self.assertEqual(report["max_highlights"], 15)
         self.assertEqual(report["calendar_days_in_window"], 5)
         self.assertEqual(report["target_days_in_window"], 4)
@@ -176,7 +180,9 @@ class FreeFixtureWindowCoverageTests(unittest.TestCase):
         with patch("free_fixture_window_coverage.load_provider_observation_snapshots", return_value=[]):
             report = build_free_fixture_window_coverage("provider-db", now=NOW)
         self.assertEqual(report["window_days"], 4)
-        self.assertEqual(report["daily_target"], 30)
+        self.assertEqual(report["daily_target"], 20)
+        self.assertEqual(report["minimum_daily_target"], 15)
+        self.assertEqual(report["stretch_daily_target"], 30)
         self.assertEqual(report["max_highlights"], 15)
 
     def test_requires_timezone_aware_now(self):
