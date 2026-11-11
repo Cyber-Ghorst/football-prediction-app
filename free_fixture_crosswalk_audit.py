@@ -23,7 +23,7 @@ def build_crosswalk_audit(database_url: str) -> dict[str, Any]:
     for provider in PROVIDERS:
         try:
             report = build_provider_crosswalk_review_report(
-                database_url, provider=provider, snapshot_limit=100,
+                database_url, provider=provider, snapshot_limit=5,
             )
             categories = {}
             for category, candidates in report.get("candidates", {}).items():

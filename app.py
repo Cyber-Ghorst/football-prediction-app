@@ -1215,7 +1215,7 @@ with st.sidebar:
                     ensure_football_repository(PROVIDER_DATABASE_URL)
                     st.session_state["free_fixture_crosswalk_review_report"] = (
                         build_provider_crosswalk_review_report(
-                            PROVIDER_DATABASE_URL, provider=crosswalk_provider, snapshot_limit=100
+                            PROVIDER_DATABASE_URL, provider=crosswalk_provider, snapshot_limit=10
                         )
                     )
                 st.success("Crosswalk review report is ready.")

@@ -34,6 +34,10 @@ class FreeFixtureCrosswalkAuditTests(unittest.TestCase):
         self.assertEqual(report["canonical_fixture_writes"], 0)
         self.assertEqual(report["prediction_ledger_writes"], 0)
         self.assertEqual(builder.call_count, len(PROVIDERS))
+        self.assertEqual(
+            [call.kwargs["snapshot_limit"] for call in builder.call_args_list],
+            [5] * len(PROVIDERS),
+        )
 
     @patch("free_fixture_crosswalk_audit.build_provider_crosswalk_review_report")
     def test_isolates_provider_failure_without_losing_other_reports(self, builder):
