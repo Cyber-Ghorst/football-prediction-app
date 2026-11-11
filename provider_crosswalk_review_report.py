@@ -1,7 +1,7 @@
 """Build read-only provider entity crosswalk review reports from archived fixtures."""
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Mapping
 
 from football_repository import (
     get_repository_leagues,
