@@ -12,9 +12,9 @@ The builder converts prediction-ledger records into a deterministic, fixture-ded
 
 A row is accepted only when all of the following are true:
 
-- It has a stable prediction record ID and a Sportmonks fixture ID.
+- It has a stable prediction record ID and a fixture ID from Sportmonks or one of the five supported free fixture providers.
 - The prediction timestamp is valid and strictly before kickoff.
-- The result has the exact independently verified Sportmonks verification marker, provider, matching fixture ID, valid verification timestamp, and a valid non-negative integer final score.
+- The result has the exact independently verified provider-specific verification marker, matching result provider and source fixture ID, valid verification timestamp, and a valid non-negative integer final 90-minute score. Free-source fixture IDs must match the ledger's provider-namespaced ID.
 - The versioned feature snapshot is valid JSON with schema `prediction-features-v1`.
 - The snapshot timestamp is valid, no later than the prediction timestamp, and strictly before kickoff.
 - Both team feature objects and the calculated feature object are present.
@@ -24,7 +24,8 @@ The builder recomputes eligibility from timestamps and verification fields. It d
 
 ## Deduplication and conflicts
 
-- Only one row is retained per provider fixture identity.
+- When canonical league, season, home-team and away-team IDs are present, one row is retained per canonical fixture identity across providers.
+- Otherwise, one row is retained per provider-scoped fixture identity.
 - The latest eligible pre-kickoff forecast is selected.
 - If timestamps tie, the lexicographically smallest stable record ID wins.
 - If independently verified rows for one fixture disagree on the final score, the entire fixture is excluded.
@@ -73,4 +74,4 @@ The input can be a JSON list of ledger records or an object containing a `record
 
 ## Current data limitation
 
-The existing audit observed only one independently verified completed fixture in the archived report, and older forecasts do not have prediction-time feature snapshots. Those records are correctly excluded. The builder will therefore likely export an empty or very small dataset until new snapshot-bearing forecasts accumulate independently verified results.
+The latest live audit found 74 ledger records but zero rows currently pass all learning gates: 65 lack a valid result-verification timestamp, four are not pre-kickoff predictions, four use unsupported fixture providers in the prior implementation, and one lacks a feature snapshot. The free-provider verification path is now supported, but only exact source-ID/team/competition/season/90-minute-score verification is accepted. The offline experiment remains blocked until at least 30 unique canonical fixtures have eligible pre-kickoff snapshots and verified results.
