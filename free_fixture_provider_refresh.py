@@ -101,7 +101,7 @@ def refresh_free_fixture_sources(
     livescore_client = None
     try:
         livescore_client = LiveScoreFootballClient()
-        league_rows = livescore_client.leagues(kind="club", available=True)
+        league_rows = livescore_client.leagues(kind="all", available=True)
         slugs = []
         if isinstance(league_rows, list):
             for row in league_rows:
