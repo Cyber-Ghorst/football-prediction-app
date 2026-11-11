@@ -99,7 +99,7 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         self.assertTrue(result[0]["eligible_for_review"])
         self.assertEqual(result[0]["provider_fixture_id"], "42")
         self.assertEqual(result[0]["home_team_key"], "1")
-        self.assertEqual(result[0]["competition_key"], "bl1")
+        self.assertEqual(result[0]["competition_key"], "1")
         self.assertEqual(result[0]["competition_name"], "Bundesliga")
         self.assertEqual(result[0]["raw_payload"]["country"], "Germany")
         self.assertEqual(result[0]["raw_payload"]["leagueCountry"], "Germany")
