@@ -32,6 +32,8 @@ class APIFootballClient:
             raise APIFootballError("API-Football v3 key missing. Configure APISPORTS_API_KEY in Streamlit Secrets.")
         self.timeout = timeout
         self.session = requests.Session()
+        self.last_paging: dict[str, Any] = {}
+        self.last_fixture_request_count = 0
         self.session.headers.update({"x-apisports-key": self.api_key, "Accept": "application/json"})
 
     def _request(self, endpoint: str, params: dict[str, Any] | None = None) -> list[dict[str, Any]]:
@@ -57,6 +59,7 @@ class APIFootballClient:
             raise APIFootballError("API-Football returned an unexpected response.")
         if payload.get("errors"):
             raise APIFootballError("API-Football rejected the request; check endpoint parameters, coverage and account quota.")
+        self.last_paging = payload.get("paging") or {}
         rows = payload.get("response", [])
         if not isinstance(rows, list):
             raise APIFootballError("API-Football response had an unexpected schema.")
@@ -87,6 +90,53 @@ class APIFootballClient:
 
     def leagues(self, season: int | None = None) -> list[dict[str, Any]]:
         return self._request("leagues", {"season": season} if season is not None else {})
+
+    def fixtures_by_date(
+        self,
+        fixture_date: str,
+        timezone: str = "UTC",
+        max_pages: int = 20,
+    ) -> list[dict[str, Any]]:
+        """Return a complete date-scoped fixture collection using API-Football pagination."""
+        from datetime import date
+
+        try:
+            normalized_date = date.fromisoformat(str(fixture_date)).isoformat()
+        except ValueError as exc:
+            raise ValueError("fixture_date must be YYYY-MM-DD.") from exc
+        if not 1 <= int(max_pages) <= 20:
+            raise ValueError("max_pages must be between 1 and 20.")
+
+        rows: list[dict[str, Any]] = []
+        self.last_fixture_request_count = 0
+        for page in range(1, int(max_pages) + 1):
+            page_rows = self._request(
+                "fixtures",
+                {"date": normalized_date, "timezone": timezone, "page": page},
+            )
+            self.last_fixture_request_count += 1
+            paging = self.last_paging or {}
+            if not page_rows:
+                total_pages = int(paging.get("total") or page)
+                if total_pages > page:
+                    raise APIFootballError(
+                        "API-Football returned an empty page before the reported final page."
+                    )
+                return rows
+            if not paging:
+                raise APIFootballError(
+                    "API-Football fixture pagination metadata is missing; refusing a potentially incomplete date."
+                )
+            current_page = int(paging.get("current") or page)
+            total_pages = int(paging.get("total") or current_page)
+            if current_page != page or total_pages < current_page:
+                raise APIFootballError("API-Football fixture pagination metadata is inconsistent.")
+            rows.extend(page_rows)
+            if current_page >= total_pages:
+                return rows
+        raise APIFootballError(
+            "API-Football fixture date exceeded the safe pagination limit; no partial date was accepted."
+        )
 
     def teams(self, league_id: int, season: int) -> list[dict[str, Any]]:
         return self._request("teams", {"league": league_id, "season": season})
