@@ -290,6 +290,24 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         client.close()
 
 
+    def test_bzzoiro_accepts_documented_notstarted_status_alias(self):
+        client = BzzoiroAdapter(token="secret")
+        client._get_json = Mock(return_value={"results": [{
+            "id": 101,
+            "league_id": 10,
+            "season_id": 2026,
+            "home_team": {"id": 1, "name": "Home FC"},
+            "away_team": {"id": 2, "name": "Away FC"},
+            "event_date": (NOW + timedelta(days=1)).isoformat(),
+            "status": "notstarted",
+        }]})
+        row = client.upcoming()[0]
+        self.assertTrue(row["eligible_for_review"])
+        self.assertEqual(row["status"], "notstarted")
+        self.assertIsNone(row["exclusion_reason"])
+        client.close()
+
+
     def test_bzzoiro_event_detail_uses_exact_event_id_and_token(self):
         client = BzzoiroAdapter(token="secret")
         client._get_json = Mock(return_value={"data": {
