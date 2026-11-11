@@ -2749,8 +2749,18 @@ try:
 
                 # Ledger identity uses the closest exact pairing in this season,
                 # including live/completed fixtures. Lineup enrichment stays upcoming-only.
-                if selected_discovered_fixture_id:
+                if selected_discovered_fixture_id and selected_fixture_provider == "sportmonks":
                     prediction_fixture = selected_match_fixture
+                elif selected_discovered_fixture_id:
+                    # Keep the selected source's fixture identity in the ledger.
+                    # A corroborating Sportmonks event is used only for optional
+                    # match-detail enrichment and is never substituted as the pick.
+                    prediction_fixture = {
+                        "id": selected_discovered_fixture_id,
+                        "starting_at": selected_fixture_row.get("starting_at"),
+                        "status": selected_fixture_row.get("status") or "scheduled",
+                        "source_provider": selected_fixture_provider,
+                    }
                 else:
                     prediction_fixture = find_exact_match_fixture(
                         fixtures,
@@ -3871,11 +3881,11 @@ try:
             opta_values = {"home_win": opta_home, "draw": opta_draw, "away_win": opta_away}
         player_snapshot = player_report if isinstance(player_report, dict) else None
         availability_snapshot = None
-        if sportmonks_mode and prediction_fixture:
+        if sportmonks_mode and selected_match_fixture:
             availability_snapshot = build_availability_snapshot(
                 home_profile=home,
                 away_profile=away,
-                fixture_id=prediction_fixture.get("id"),
+                fixture_id=selected_match_fixture.get("id"),
                 season_id=int(selected_season_id),
                 home_team_id=int(team_map[home_name]["id"]),
                 away_team_id=int(team_map[away_name]["id"]),
@@ -3896,7 +3906,9 @@ try:
             predicted_at=prediction_captured_at,
             kickoff_at=(prediction_fixture or {}).get("starting_at") or (prediction_fixture or {}).get("starting_at_at") or (datetime.fromtimestamp(int(prediction_fixture["starting_at_timestamp"]), timezone.utc).isoformat() if prediction_fixture and prediction_fixture.get("starting_at_timestamp") else None),
             fixture_id=(prediction_fixture or {}).get("id"),
-            fixture_provider="sportmonks" if prediction_fixture else "",
+            fixture_provider=(
+                selected_fixture_provider or "sportmonks"
+            ) if prediction_fixture else "",
             opta_probabilities=opta_values,
             opta_source_url=opta_source_url.strip() if opta_values else "",
             opta_captured_at=datetime.now(timezone.utc).isoformat() if opta_values else "",
