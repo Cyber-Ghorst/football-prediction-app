@@ -120,6 +120,12 @@ def has_eager_crosswalk_review_import(source: str) -> bool:
     """Detect the startup-time import pattern that previously broke Streamlit boot."""
     tree = ast.parse(source)
     for node in tree.body:
+        if isinstance(node, ast.ImportFrom) and node.module == "provider_crosswalk_review_report":
+            return True
+        if isinstance(node, ast.Import) and any(
+            alias.name == "provider_crosswalk_review_report" for alias in node.names
+        ):
+            return True
         if isinstance(node, ast.Try):
             for child in ast.walk(node):
                 if isinstance(child, ast.ImportFrom) and child.module == "provider_crosswalk_review_report":
