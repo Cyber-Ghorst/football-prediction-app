@@ -176,7 +176,7 @@ class FreeFixtureWindowCoverageTests(unittest.TestCase):
         with patch("free_fixture_window_coverage.load_provider_observation_snapshots", return_value=[]):
             report = build_free_fixture_window_coverage("provider-db", now=NOW)
         self.assertEqual(report["window_days"], 4)
-        self.assertEqual(report["daily_target"], 50)
+        self.assertEqual(report["daily_target"], 30)
         self.assertEqual(report["max_highlights"], 15)
 
     def test_requires_timezone_aware_now(self):
