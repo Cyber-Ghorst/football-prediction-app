@@ -8,12 +8,17 @@ from football_repository import (
     get_repository_seasons,
     get_repository_teams,
 )
-from provider_data_storage import load_provider_observation_snapshots
+import provider_data_storage
 from provider_entity_crosswalk import (
     build_entity_crosswalk_candidates,
     extract_provider_entities_from_observations,
     load_provider_entity_links,
 )
+
+
+def load_provider_observation_snapshots(*args: Any, **kwargs: Any) -> list[dict[str, Any]]:
+    """Resolve the snapshot loader lazily after provider storage has finished importing."""
+    return provider_data_storage.load_provider_observation_snapshots(*args, **kwargs)
 
 
 def load_canonical_crosswalk_catalogue(database_url: str) -> dict[str, list[dict[str, Any]]]:
