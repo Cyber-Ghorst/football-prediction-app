@@ -24,6 +24,7 @@ PROVIDERS = (
 def build_crosswalk_audit(
     database_url: str, *, highlightly_use_allowed: bool = False,
     api_ninjas_noncommercial_confirmed: bool = False,
+    open_matchday_noncommercial_confirmed: bool = False,
 ) -> dict[str, Any]:
     if not database_url:
         raise ValueError("PROVIDER_DATABASE_URL is required.")
@@ -53,6 +54,12 @@ def build_crosswalk_audit(
             results[provider] = {
                 "status": "skipped",
                 "reason": "API Ninjas free-plan non-commercial-use confirmation is required.",
+            }
+            continue
+        if provider == "open_matchday" and not open_matchday_noncommercial_confirmed:
+            results[provider] = {
+                "status": "skipped",
+                "reason": "Open Matchday non-commercial-use confirmation is required.",
             }
             continue
         try:
@@ -118,6 +125,10 @@ def main() -> int:
         api_ninjas_noncommercial_confirmed=(
             enabled("FREE_FIXTURE_TERMS_ACK_API_NINJAS")
             and enabled("FREE_FIXTURE_NONCOMMERCIAL_ACK_API_NINJAS")
+        ),
+        open_matchday_noncommercial_confirmed=(
+            enabled("FREE_FIXTURE_TERMS_ACK_OPEN_MATCHDAY")
+            and enabled("FREE_FIXTURE_NONCOMMERCIAL_ACK_OPEN_MATCHDAY")
         ),
     )
     output = Path(os.getenv(
