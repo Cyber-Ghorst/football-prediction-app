@@ -21,8 +21,7 @@ and is not changed.
   upstream licence is non-commercial-only. The manual Streamlit staging form
   requires an explicit licence acknowledgement.
 
-The OpenLigaDB and LiveScoreFootball batches rotate every six-hour run so the
-same first leagues are not permanently favored. Provider errors are recorded
+The OpenLigaDB batches rotate every six-hour run so the same first leagues are not permanently favored. Provider errors are recorded
 in the run output and do not fail the primary Sportmonks collection step.
 
 ## Safety
