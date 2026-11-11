@@ -2233,6 +2233,8 @@ try:
         st.warning("The selected provider returned fewer than two teams for this competition and season.")
         st.stop()
     selected_discovered_fixture_id = None
+    selected_fixture_provider = None
+    selected_fixture_row = None
     if sportmonks_mode:
         st.subheader("Search upcoming fixtures")
         st.caption(
@@ -2317,6 +2319,9 @@ try:
         )
         selected_fixture_row = fixture_options[selected_fixture_label]
         selected_discovered_fixture_id = str(selected_fixture_row["fixture_id"])
+        selected_fixture_provider = str(
+            selected_fixture_row.get("source_provider") or "sportmonks"
+        ).strip().casefold()
         # Resolve the exact competition-season from the selected staged fixture,
         # rather than relying on the unrelated catalogue defaults above.
         try:
@@ -2334,6 +2339,16 @@ try:
             for row in team_rows
             if row.get("id") is not None and row.get("name")
         }
+        selected_competition_name = str(selected_fixture_row.get("competition") or "Unknown competition")
+        selected_country_value = str(selected_fixture_row.get("country") or "")
+        selected_league = (
+            f"{selected_competition_name} — {selected_country_value}"
+            if selected_country_value else selected_competition_name
+        )
+        season_label = str(selected_fixture_row.get("season_name") or "").strip()
+        season_start_year = season_label[:4]
+        if season_start_year.isdigit():
+            season = int(season_start_year)
         selected_home_provider_id = str(selected_fixture_row["home_team_id"]).rsplit(":", 1)[-1]
         selected_away_provider_id = str(selected_fixture_row["away_team_id"]).rsplit(":", 1)[-1]
         home_name = next(
@@ -2494,13 +2509,10 @@ try:
                     season_id=int(selected_season_id),
                 )
                 selected_match_fixture = selected_match_diagnostic["fixture"]
-                if selected_discovered_fixture_id:
+                if selected_discovered_fixture_id and selected_fixture_provider == "sportmonks":
                     expected_fixture_id = selected_discovered_fixture_id.rsplit(":", 1)[-1]
                     selected_match_fixture = next(
-                        (
-                            row for row in fixtures
-                            if str(row.get("id")) == expected_fixture_id
-                        ),
+                        (row for row in fixtures if str(row.get("id")) == expected_fixture_id),
                         None,
                     )
                     if (
@@ -2513,7 +2525,7 @@ try:
                         ) is None
                     ):
                         st.error(
-                            "The selected fixture is not present with the same exact "
+                            "The selected Sportmonks fixture is not present with the same exact "
                             "home/away teams and season in the live Sportmonks response. "
                             "Refresh automatic collection before predicting; the app will "
                             "not silently substitute another match."
@@ -2521,6 +2533,44 @@ try:
                         st.stop()
                     selected_match_diagnostic["selected_fixture_id"] = selected_discovered_fixture_id
                     selected_match_diagnostic["selected_fixture_exact_match"] = True
+                elif selected_discovered_fixture_id:
+                    # Free-source fixture IDs are not Sportmonks event IDs. Use
+                    # Sportmonks only as optional match-detail corroboration:
+                    # exact canonical teams/season plus kickoff within five minutes.
+                    corroborating_fixture = find_exact_match_fixture(
+                        fixtures,
+                        home_team_id=int(team_map[home_name]["id"]),
+                        away_team_id=int(team_map[away_name]["id"]),
+                        season_id=int(selected_season_id),
+                    )
+                    selected_kickoff = pd.to_datetime(
+                        selected_fixture_row.get("starting_at"), utc=True, errors="coerce"
+                    )
+                    corroborating_kickoff = pd.to_datetime(
+                        (corroborating_fixture or {}).get("starting_at"),
+                        utc=True, errors="coerce",
+                    )
+                    kickoff_matches = (
+                        not pd.isna(selected_kickoff)
+                        and not pd.isna(corroborating_kickoff)
+                        and abs((selected_kickoff - corroborating_kickoff).total_seconds()) <= 300
+                    )
+                    selected_match_fixture = corroborating_fixture if kickoff_matches else None
+                    selected_match_diagnostic = {
+                        "verified": bool(kickoff_matches),
+                        "selected_fixture_id": selected_discovered_fixture_id,
+                        "selected_fixture_provider": selected_fixture_provider,
+                        "canonical_team_season_match": bool(corroborating_fixture),
+                        "sportmonks_kickoff_corroborated_within_5_minutes": bool(kickoff_matches),
+                        "sportmonks_fixture_id": (
+                            str(corroborating_fixture.get("id")) if kickoff_matches else None
+                        ),
+                        "note": (
+                            "Sportmonks corroborated the selected fixture; its match detail may enrich lineups and player availability."
+                            if kickoff_matches else
+                            "No exact Sportmonks kickoff corroboration was found. The selected provider fixture remains authoritative; Sportmonks lineup and player-availability enrichment will be unavailable."
+                        ),
+                    }
                 with st.expander(
                     "Exact fixture verification diagnostics",
                     expanded=not selected_match_diagnostic["verified"],
