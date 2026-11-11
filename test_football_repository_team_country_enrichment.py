@@ -1,4 +1,5 @@
 import unittest
+from types import SimpleNamespace
 from contextlib import contextmanager
 from unittest.mock import patch
 
@@ -9,6 +10,13 @@ class FakeCursor:
     def __init__(self):
         self.sql = ""
         self.params = None
+        self.description = [
+            SimpleNamespace(name=name)
+            for name in (
+                "team_id", "name", "short_name", "country",
+                "source_provider", "provider_updated_at", "collected_at",
+            )
+        ]
 
     def execute(self, sql, params=None):
         self.sql = sql
