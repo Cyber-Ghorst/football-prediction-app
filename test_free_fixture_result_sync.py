@@ -45,7 +45,7 @@ class FreeFixtureResultVerificationTests(unittest.TestCase):
         }
         links = {
             "league": {"league-1": "sportmonks:10"},
-            "season": {"season-1": "sportmonks:20"},
+            "season": {"league-1::season-1": "sportmonks:20"},
             "team": {"home-1": "sportmonks:30", "away-1": "sportmonks:40"},
         }
         self.assertTrue(_crosswalk_matches_record(record, source, links))
@@ -353,7 +353,7 @@ class FreeFixtureResultVerificationTests(unittest.TestCase):
         }
         links.side_effect = [
             {"bl1": "sportmonks:10"},
-            {"2026": "sportmonks:20"},
+            {"bl1::2026": "sportmonks:20"},
             {"home-1": "sportmonks:30", "away-1": "sportmonks:999"},
         ]
         with patch("free_fixture_result_sync.OpenLigaDBAdapter") as adapter:
