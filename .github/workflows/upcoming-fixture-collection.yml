@@ -31,6 +31,8 @@ jobs:
       PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       BZZOIRO_API_TOKEN: ${{ secrets.BZZOIRO_API_TOKEN }}
+      HIGHLIGHTLY_API_KEY: ${{ secrets.HIGHLIGHTLY_API_KEY }}
+      API_NINJAS_API_KEY: ${{ secrets.API_NINJAS_API_KEY }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -60,6 +62,8 @@ jobs:
         env:
           PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
           BZZOIRO_API_TOKEN: ${{ secrets.BZZOIRO_API_TOKEN }}
+          HIGHLIGHTLY_API_KEY: ${{ secrets.HIGHLIGHTLY_API_KEY }}
+          API_NINJAS_API_KEY: ${{ secrets.API_NINJAS_API_KEY }}
         run: |
           set -euo pipefail
           mkdir -p reports/free_fixture_provider_refresh/archive
