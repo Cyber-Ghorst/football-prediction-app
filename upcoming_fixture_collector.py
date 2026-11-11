@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import json
 import os
+import sys
 from datetime import datetime, timedelta, timezone
 from typing import Any, Mapping
 
@@ -399,6 +400,7 @@ def main() -> int:
             f"{result['target_shortfall']} more are needed to reach the daily target of "
             f"{DAILY_FIXTURE_TARGET}. No fixtures were fabricated and the seven-day window "
             "was not extended.",
+            file=sys.stderr,
             flush=True,
         )
     return 0
