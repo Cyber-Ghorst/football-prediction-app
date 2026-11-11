@@ -1,11 +1,32 @@
 import unittest
 from unittest.mock import patch
 
+import provider_crosswalk_review_report as review_report
 from provider_crosswalk_review_report import build_provider_crosswalk_review_report
 
 
 class ProviderCrosswalkReviewReportTests(unittest.TestCase):
-    @patch("provider_crosswalk_review_report.load_provider_entity_links_by_type")
+    @patch("provider_crosswalk_review_report.provider_entity_crosswalk.load_provider_entity_links")
+    def test_falls_back_to_legacy_link_loader_for_older_deployments(self, loader):
+        loader.side_effect = [
+            {"league-1": "sportmonks:8"},
+            {"season-1": "sportmonks:2026"},
+            {"team-1": "sportmonks:1"},
+        ]
+        with patch.object(
+            review_report.provider_entity_crosswalk,
+            "load_provider_entity_links_by_type",
+            None,
+        ):
+            result = review_report._load_provider_links_by_type(
+                "provider-db", provider="highlightly",
+            )
+        self.assertEqual(result["league"], {"league-1": "sportmonks:8"})
+        self.assertEqual(result["season"], {"season-1": "sportmonks:2026"})
+        self.assertEqual(result["team"], {"team-1": "sportmonks:1"})
+        self.assertEqual(loader.call_count, 3)
+
+    @patch("provider_crosswalk_review_report._load_provider_links_by_type")
     @patch("provider_crosswalk_review_report.get_repository_teams")
     @patch("provider_crosswalk_review_report.get_repository_seasons")
     @patch("provider_crosswalk_review_report.get_repository_leagues")
@@ -77,7 +98,7 @@ class ProviderCrosswalkReviewReportTests(unittest.TestCase):
             "teams": [{"team_id": "sportmonks:1", "name": "Arsenal", "country": "England"}],
         }
         with patch("provider_crosswalk_review_report.load_provider_observation_snapshots", return_value=[]), \
-             patch("provider_crosswalk_review_report.load_provider_entity_links_by_type", return_value={}):
+             patch("provider_crosswalk_review_report._load_provider_links_by_type", return_value={}):
             report = build_provider_crosswalk_review_report(
                 "provider-db", provider="highlightly",
                 canonical_catalogue=catalogue,
@@ -91,7 +112,7 @@ class ProviderCrosswalkReviewReportTests(unittest.TestCase):
     @patch("provider_crosswalk_review_report.get_repository_teams", return_value=[])
     @patch("provider_crosswalk_review_report.get_repository_seasons", return_value=[])
     @patch("provider_crosswalk_review_report.get_repository_leagues", return_value=[])
-    @patch("provider_crosswalk_review_report.load_provider_entity_links_by_type", return_value={"league": {}, "season": {}, "team": {}})
+    @patch("provider_crosswalk_review_report._load_provider_links_by_type", return_value={"league": {}, "season": {}, "team": {}})
     def test_empty_archive_returns_empty_review_report(
         self, links, leagues, seasons, teams, snapshots
     ):

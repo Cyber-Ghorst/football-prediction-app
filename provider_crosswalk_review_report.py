@@ -9,16 +9,31 @@ from football_repository import (
     get_repository_teams,
 )
 import provider_data_storage
+import provider_entity_crosswalk
 from provider_entity_crosswalk import (
     build_entity_crosswalk_candidates,
     extract_provider_entities_from_observations,
-    load_provider_entity_links_by_type,
 )
 
 
 def load_provider_observation_snapshots(*args: Any, **kwargs: Any) -> list[dict[str, Any]]:
     """Resolve the snapshot loader lazily after provider storage has finished importing."""
     return provider_data_storage.load_provider_observation_snapshots(*args, **kwargs)
+
+
+def _load_provider_links_by_type(database_url: str, *, provider: str) -> dict[str, dict[str, str]]:
+    """Use the grouped loader when available; fall back for older app deployments."""
+    grouped_loader = getattr(
+        provider_entity_crosswalk, "load_provider_entity_links_by_type", None
+    )
+    if callable(grouped_loader):
+        return grouped_loader(database_url, provider=provider)
+    return {
+        entity_type: provider_entity_crosswalk.load_provider_entity_links(
+            database_url, provider=provider, entity_type=entity_type
+        )
+        for entity_type in ("league", "season", "team")
+    }
 
 
 def load_canonical_crosswalk_catalogue(database_url: str) -> dict[str, list[dict[str, Any]]]:
@@ -62,7 +77,7 @@ def build_provider_crosswalk_review_report(
     league_candidates = build_entity_crosswalk_candidates(
         provider_name, "league", source["leagues"], canonical_leagues
     )
-    existing_links = load_provider_entity_links_by_type(
+    existing_links = _load_provider_links_by_type(
         database_url, provider=provider_name
     )
     existing_league_links = existing_links.get("league", {})
