@@ -23,7 +23,7 @@ This version retains the Layer 1 weighted prediction model and `tvd.py` Tactical
 SPORTMONKS_API_TOKEN = "YOUR_SPORTMONKS_TOKEN"  # current seasons 2025+
 APISPORTS_API_KEY = "YOUR_API_SPORTS_KEY"        # historical seasons 2022–2024
 API_NINJAS_API_KEY = "YOUR_API_NINJAS_KEY"       # optional corroboration
-HIGHLIGHTLY_API_KEY = "YOUR_HIGHLIGHTLY_KEY"     # optional corroboration/enrichment
+HIGHLIGHTLY_API_KEY = "YOUR_HIGHLIGHTLY_KEY"     # optional; requires terms + non-betting-use acknowledgement
 ```
 
 Never commit or paste provider keys into public code or chat.
