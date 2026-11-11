@@ -41,6 +41,7 @@ PROVIDER_ACKS = {
     "highlightly": {
         "enabled": "FREE_FIXTURE_AUTO_PROMOTE_HIGHLIGHTLY",
         "terms": "FREE_FIXTURE_TERMS_ACK_HIGHLIGHTLY",
+        "non_betting": "HIGHLIGHTLY_NON_BETTING_USE_CONFIRMED",
     },
     "api_ninjas": {
         "enabled": "FREE_FIXTURE_AUTO_PROMOTE_API_NINJAS",
@@ -90,6 +91,13 @@ def run_automatic_fixture_promotion(
         if noncommercial_key and not _enabled(settings, noncommercial_key):
             results[provider] = {"status": "skipped", "reason": "noncommercial_use_not_confirmed"}
             continue
+        non_betting_key = keys.get("non_betting")
+        if non_betting_key and not _enabled(settings, non_betting_key):
+            results[provider] = {
+                "status": "skipped",
+                "reason": "highlightly_non_betting_use_not_confirmed",
+            }
+            continue
         if not provider_database_url or not temporary_database_url:
             results[provider] = {"status": "error", "reason": "required_database_url_missing"}
             continue
@@ -109,6 +117,9 @@ def run_automatic_fixture_promotion(
                 ),
                 api_ninjas_noncommercial_confirmed=(
                     provider == "api_ninjas" and _enabled(settings, noncommercial_key)
+                ),
+                highlightly_non_betting_confirmed=(
+                    provider == "highlightly" and _enabled(settings, non_betting_key)
                 ),
             )
             provider_writes = int(promotion.get("canonical_fixture_writes") or 0)
