@@ -123,6 +123,17 @@ def assess_free_fixture_observation(
     if now - retrieved > timedelta(hours=max_age_hours):
         result["reason"] = "stale_observation_snapshot"
         return result
+    if provider == "livescore_football":
+        source_sync = _datetime(observation.get("source_sync_at"))
+        if source_sync is None:
+            result["reason"] = "missing_upstream_competition_sync_timestamp"
+            return result
+        if source_sync > now + timedelta(minutes=5):
+            result["reason"] = "upstream_competition_sync_timestamp_is_in_the_future"
+            return result
+        if now - source_sync > timedelta(hours=max_age_hours):
+            result["reason"] = "stale_upstream_competition_data"
+            return result
     if kickoff is None:
         result["reason"] = "kickoff_missing_timezone_or_precision"
         return result
