@@ -705,7 +705,7 @@ def normalize_api_ninjas_matches(
             "country": country,
         }
         row_season = row.get("season") or season
-        output.append(_require_stable_provider_identity(
+        observation = _require_stable_provider_identity(
             _observation(
                 "api_ninjas", raw_row, fetched_at=fetched, source_url=source_url,
                 licence="API Ninjas; free plan is non-commercial and current-season only",
@@ -721,7 +721,15 @@ def normalize_api_ninjas_matches(
                 status=row.get("status") or "unknown",
             ).to_dict(),
             fixture_id=fixture_id, home_id=home_id, away_id=away_id,
-        ))
+        )
+        row_league = _text(row.get("league")).casefold()
+        if row_league and row_league != league_key:
+            observation["eligible_for_review"] = False
+            observation["exclusion_reason"] = "competition_scope_mismatch"
+        if row.get("season") is not None and str(row.get("season")) != str(season):
+            observation["eligible_for_review"] = False
+            observation["exclusion_reason"] = "season_scope_mismatch"
+        output.append(observation)
     return output
 
 
