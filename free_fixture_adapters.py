@@ -417,7 +417,7 @@ class BzzoiroAdapter(_HttpAdapter):
         )
         if not isinstance(payload, dict):
             raise FreeFixtureProviderError("Bzzoiro event detail returned an unexpected schema.")
-        event = payload.get("event") or payload.get("result") or payload
+        event = payload.get("event") or payload.get("result") or payload.get("data") or payload
         if not isinstance(event, dict):
             raise FreeFixtureProviderError("Bzzoiro event detail has no event object.")
         return event
