@@ -17,6 +17,7 @@ from free_fixture_canonical_promotion import _ensure_promotion_tables
 
 SUPPORTED_RESULT_PROVIDERS = {
     "openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro",
+    "highlightly", "api_ninjas",
 }
 
 
@@ -354,6 +355,108 @@ def verify_bzzoiro_final_score(
     return _integer_score(full_time.get("home"), full_time.get("away"))
 
 
+def verify_highlightly_final_score(
+    record: Mapping[str, Any],
+    match: Mapping[str, Any],
+    *,
+    provider_fixture_id: str,
+    now: datetime,
+    source_observation: Mapping[str, Any] | None = None,
+) -> tuple[int, int] | None:
+    """Accept only an exact Highlightly match completed in regulation time."""
+    if str(match.get("id") or match.get("matchId") or "") != str(provider_fixture_id):
+        return None
+    state = match.get("state") if isinstance(match.get("state"), Mapping) else {}
+    if str(state.get("description") or "").strip().casefold() != "finished":
+        return None
+    source_observation = source_observation or {}
+    home = match.get("homeTeam") if isinstance(match.get("homeTeam"), Mapping) else {}
+    away = match.get("awayTeam") if isinstance(match.get("awayTeam"), Mapping) else {}
+    league = match.get("league") if isinstance(match.get("league"), Mapping) else {}
+    if str(home.get("id") or "") != str(source_observation.get("home_team_key") or ""):
+        return None
+    if str(away.get("id") or "") != str(source_observation.get("away_team_key") or ""):
+        return None
+    if str(league.get("id") or "") != str(source_observation.get("competition_key") or ""):
+        return None
+    if _normalise(league.get("name")) != _normalise(
+        source_observation.get("competition_name") or record.get("competition")
+    ):
+        return None
+    source_season = _season_year(
+        source_observation.get("season_name") or source_observation.get("season_key")
+    ) or str(record.get("season") or "")[:4]
+    if not source_season or _season_year(league.get("season")) != source_season:
+        return None
+    if _normalise(home.get("name")) != _normalise(
+        source_observation.get("home_team_name") or record.get("home_team")
+    ):
+        return None
+    if _normalise(away.get("name")) != _normalise(
+        source_observation.get("away_team_name") or record.get("away_team")
+    ):
+        return None
+    kickoff = _timestamp(match.get("date"))
+    recorded_kickoff = _timestamp(record.get("kickoff_at"))
+    if kickoff is None or recorded_kickoff is None or kickoff > now:
+        return None
+    if abs((kickoff - recorded_kickoff).total_seconds()) > 300:
+        return None
+    score_state = state.get("score") if isinstance(state.get("score"), Mapping) else {}
+    current_score = str(score_state.get("current") or "")
+    score_match = re.fullmatch(r"\\s*(\\d+)\\s*-\\s*(\\d+)\\s*", current_score)
+    if not score_match:
+        return None
+    return _integer_score(score_match.group(1), score_match.group(2))
+
+
+def verify_api_ninjas_final_score(
+    record: Mapping[str, Any],
+    match: Mapping[str, Any],
+    *,
+    provider_fixture_id: str,
+    now: datetime,
+    source_observation: Mapping[str, Any] | None = None,
+) -> tuple[int, int] | None:
+    """Accept only an exact API Ninjas fixture with an explicit regulation result."""
+    fixture_id = match.get("game_id") or match.get("fixture_id") or match.get("id")
+    if str(fixture_id or "") != str(provider_fixture_id):
+        return None
+    if str(match.get("status") or "").strip().casefold() != "final":
+        return None
+    if str(match.get("decided_in") or "").strip().casefold() != "regulation":
+        return None
+    source_observation = source_observation or {}
+    home = match.get("home_team") if isinstance(match.get("home_team"), Mapping) else {}
+    away = match.get("away_team") if isinstance(match.get("away_team"), Mapping) else {}
+    if str(home.get("team_id") or "") != str(source_observation.get("home_team_key") or ""):
+        return None
+    if str(away.get("team_id") or "") != str(source_observation.get("away_team_key") or ""):
+        return None
+    if str(match.get("league") or "") != str(source_observation.get("competition_key") or ""):
+        return None
+    if _season_year(match.get("season")) != (
+        _season_year(source_observation.get("season_name") or source_observation.get("season_key"))
+        or str(record.get("season") or "")[:4]
+    ):
+        return None
+    if _normalise(home.get("name")) != _normalise(
+        source_observation.get("home_team_name") or record.get("home_team")
+    ):
+        return None
+    if _normalise(away.get("name")) != _normalise(
+        source_observation.get("away_team_name") or record.get("away_team")
+    ):
+        return None
+    kickoff = _timestamp(match.get("start_time"))
+    recorded_kickoff = _timestamp(record.get("kickoff_at"))
+    if kickoff is None or recorded_kickoff is None or kickoff > now:
+        return None
+    if abs((kickoff - recorded_kickoff).total_seconds()) > 300:
+        return None
+    return _integer_score(match.get("home_score"), match.get("away_score"))
+
+
 def _record_has_canonical_ids(record: Mapping[str, Any]) -> bool:
     return any(str(record.get(key) or "").strip() for key in (
         "league_id", "season_id", "home_team_id", "away_team_id"
@@ -430,7 +533,7 @@ def sync_free_source_results(
     limit: int = 10,
     bzzoiro_token: str | None = None,
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
-    """Verify and fill blank ledger scores for OpenLigaDB, LiveScoreFootball and Bzzoiro."""
+    """Verify blank ledger scores using exact provider-scoped final results."""
     current = now or datetime.now(timezone.utc)
     if current.tzinfo is None:
         current = current.replace(tzinfo=timezone.utc)
@@ -613,6 +716,28 @@ def sync_free_source_results(
                         )
                     if score is None:
                         item["reason"] = "open_matchday_full_time_score_not_verified"
+            elif provider == "highlightly":
+                from highlightly import HighlightlyClient
+                with HighlightlyClient() as client:
+                    match = client.match(source_id)
+                if match:
+                    score = verify_highlightly_final_score(
+                        representative, match, provider_fixture_id=source_id,
+                        now=current, source_observation=raw_observation,
+                    )
+                if score is None:
+                    item["reason"] = "highlightly_regulation_final_score_not_verified"
+            elif provider == "api_ninjas":
+                from api_ninjas import APINinjasClient
+                with APINinjasClient() as client:
+                    match = client.match_details(source_id)
+                if match:
+                    score = verify_api_ninjas_final_score(
+                        representative, match, provider_fixture_id=source_id,
+                        now=current, source_observation=raw_observation,
+                    )
+                if score is None:
+                    item["reason"] = "api_ninjas_regulation_final_score_not_verified"
             elif provider == "bzzoiro":
                 with BzzoiroAdapter(token=bzzoiro_token) as client:
                     event = client.event(source_id)
