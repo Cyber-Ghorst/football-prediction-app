@@ -125,7 +125,7 @@ def _observation(
     if status_text.startswith("status "):
         status_text = status_text.removeprefix("status ").strip()
     scheduled = status_text in {
-        "scheduled", "not started", "not-started", "ns", "upcoming", "fixture"
+        "scheduled", "not started", "not-started", "notstarted", "ns", "upcoming", "fixture"
     }
     reason = None
     if not home_name or not away_name or home_name.casefold() == away_name.casefold():
