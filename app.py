@@ -495,6 +495,14 @@ def _sync_completed_sportmonks_results():
                 _setting_enabled("FREE_FIXTURE_TERMS_ACK_HIGHLIGHTLY")
                 and _setting_enabled("HIGHLIGHTLY_NON_BETTING_USE_CONFIRMED")
             ),
+            api_ninjas_noncommercial_confirmed=(
+                _setting_enabled("FREE_FIXTURE_TERMS_ACK_API_NINJAS")
+                and _setting_enabled("FREE_FIXTURE_NONCOMMERCIAL_ACK_API_NINJAS")
+            ),
+            open_matchday_noncommercial_confirmed=(
+                _setting_enabled("FREE_FIXTURE_TERMS_ACK_OPEN_MATCHDAY")
+                and _setting_enabled("FREE_FIXTURE_NONCOMMERCIAL_ACK_OPEN_MATCHDAY")
+            ),
         )
         updated += len(free_source_updated)
         checked += int(free_source_report.get("fixtures_checked") or 0)
