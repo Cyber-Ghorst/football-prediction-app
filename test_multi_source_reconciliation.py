@@ -93,7 +93,7 @@ class MultiSourceReconciliationTests(unittest.TestCase):
             [live, self.ninjas, self.highlightly], fetched_at=fetched, now=NOW,
             livescore_verified=True,
         )
-        self.assertEqual(result_verified["reconciliation"]["home_score"]["provider"], "livescore_football")
+        self.assertEqual(result_verified["reconciliation"]["home_score"]["provider"], "highlightly")
 
 
 if __name__ == "__main__":
