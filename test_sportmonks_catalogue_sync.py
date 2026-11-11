@@ -1,7 +1,11 @@
+import json
+import os
 import unittest
-from unittest.mock import MagicMock
+from contextlib import redirect_stderr, redirect_stdout
+from io import StringIO
+from unittest.mock import MagicMock, patch
 
-from sportmonks_catalogue_sync import select_current_seasons, sync_sportmonks_catalogue
+from sportmonks_catalogue_sync import main, select_current_seasons, sync_sportmonks_catalogue
 
 
 class SportmonksCatalogueSelectionTests(unittest.TestCase):
@@ -79,6 +83,36 @@ class SportmonksCatalogueSyncTests(unittest.TestCase):
         importer.assert_not_called()
         self.assertEqual(report["seasons_imported"], 0)
         self.assertFalse(report["success"])
+
+
+class SportmonksCatalogueMainOutputTests(unittest.TestCase):
+    def test_main_keeps_progress_logs_off_machine_readable_stdout(self):
+        report = {
+            "report_name": "sportmonks_canonical_catalogue_sync",
+            "seasons_imported": 1,
+            "success": True,
+        }
+
+        def fake_sync(*_args, **_kwargs):
+            print("repository import progress")
+            return report
+
+        stdout = StringIO()
+        stderr = StringIO()
+        with patch.dict(os.environ, {
+            "PROVIDER_DATABASE_URL": "provider-db",
+            "SPORTMONKS_CATALOGUE_YEAR": "2026",
+            "SPORTMONKS_CATALOGUE_MAX_SEASONS": "2",
+        }):
+            with patch("sportmonks_catalogue_sync.sync_sportmonks_catalogue", side_effect=fake_sync):
+                with redirect_stdout(stdout), redirect_stderr(stderr):
+                    exit_code = main()
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(json.loads(stdout.getvalue()), report)
+        self.assertIn("repository import progress", stderr.getvalue())
+
+
 
 
 if __name__ == "__main__":
