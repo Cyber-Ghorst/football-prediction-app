@@ -129,6 +129,112 @@ def sync_temporary_upcoming_fixtures(
     }
 
 
+
+def add_temporary_upcoming_fixtures(
+    database_url: str,
+    fixtures: list[dict[str, Any]],
+) -> dict[str, int]:
+    """Add canonicalized non-Sportmonks fixtures without deleting or overwriting active rows.
+
+    Unlike sync_temporary_upcoming_fixtures, this is an additive operation. It
+    is intended for fixtures already promoted through explicit entity
+    crosswalks in CockroachDB. Existing fixture IDs are accepted only when
+    their full canonical identity and kickoff are identical.
+    """
+    if not database_url:
+        raise ValueError("DATABASE_URL is required for temporary fixture staging.")
+    if not isinstance(fixtures, list):
+        raise ValueError("fixtures must be a list.")
+
+    prepared = []
+    allowed_providers = {
+        "openligadb", "openfootball", "open_matchday",
+        "livescore_football", "bzzoiro",
+    }
+    for fixture in fixtures:
+        if not isinstance(fixture, dict):
+            raise ValueError("Every canonical staged fixture must be an object.")
+        provider = str(fixture.get("source_provider") or "").strip().casefold()
+        fixture_id = str(fixture.get("fixture_id") or "").strip()
+        if provider not in allowed_providers or not fixture_id.startswith(f"{provider}:"):
+            raise ValueError("Fixture must have a supported provider-scoped fixture ID.")
+        league_id = str(fixture.get("league_id") or "")
+        season_id = str(fixture.get("season_id") or "")
+        home_id = str(fixture.get("home_team_id") or "")
+        away_id = str(fixture.get("away_team_id") or "")
+        if not all(value.startswith("sportmonks:") for value in (league_id, season_id, home_id, away_id)):
+            raise ValueError("Canonical competition, season and team IDs must use Sportmonks identity links.")
+        kickoff = fixture.get("starting_at")
+        if isinstance(kickoff, str):
+            from datetime import datetime
+            try:
+                kickoff = datetime.fromisoformat(kickoff.replace("Z", "+00:00"))
+            except ValueError as exc:
+                raise ValueError("Kickoff must be a timezone-aware timestamp.") from exc
+        if not hasattr(kickoff, "tzinfo") or kickoff.tzinfo is None or kickoff.utcoffset() is None:
+            raise ValueError("Kickoff must be a timezone-aware timestamp.")
+        if str(fixture.get("status") or "").casefold() not in {"scheduled", "upcoming", "not started", "ns"}:
+            raise ValueError("Only scheduled fixtures may enter the active catalogue.")
+        names = (
+            str(fixture.get("home_team") or "").strip(),
+            str(fixture.get("away_team") or "").strip(),
+            str(fixture.get("competition") or "").strip(),
+        )
+        if not all(names) or names[0].casefold() == names[1].casefold():
+            raise ValueError("Distinct home/away teams and a competition name are required.")
+        payload = dict(fixture)
+        payload["source_provider"] = provider
+        payload["provider_updated_at"] = (
+            fixture.get("provider_updated_at").isoformat()
+            if hasattr(fixture.get("provider_updated_at"), "isoformat")
+            else fixture.get("provider_updated_at")
+        )
+        prepared.append((
+            fixture_id, league_id, season_id, kickoff, "scheduled",
+            home_id, away_id, names[0], names[1], names[2],
+            fixture.get("country"), Jsonb(json.loads(json.dumps(payload, default=str))),
+        ))
+
+    inserted = existing = 0
+    with psycopg.connect(database_url, connect_timeout=10) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(CREATE_TABLE_SQL)
+            for row in prepared:
+                cursor.execute(
+                    """INSERT INTO upcoming_fixture_staging (
+                           fixture_id, league_id, season_id, starting_at, status,
+                           home_team_id, away_team_id, home_team, away_team,
+                           competition, country, payload, collected_at
+                       ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NOW())
+                       ON CONFLICT (fixture_id) DO NOTHING""",
+                    row,
+                )
+                if cursor.rowcount:
+                    inserted += 1
+                    continue
+                cursor.execute(
+                    """SELECT league_id, season_id, starting_at, status,
+                              home_team_id, away_team_id, home_team, away_team, competition
+                       FROM upcoming_fixture_staging WHERE fixture_id = %s""",
+                    (row[0],),
+                )
+                current = cursor.fetchone()
+                expected = (row[1], row[2], row[3], row[4], row[5], row[6],
+                            row[7], row[8], row[9])
+                if current is None or tuple(current) != expected:
+                    raise ValueError(
+                        f"Existing staged fixture {row[0]} has a conflicting canonical identity or kickoff."
+                    )
+                existing += 1
+
+    return {
+        "fixtures_inserted": inserted,
+        "fixtures_already_present": existing,
+        "fixtures_removed": 0,
+        "prediction_ledger_modified": 0,
+    }
+
+
 def search_temporary_upcoming_fixtures(
     database_url: str,
     *,
@@ -178,8 +284,9 @@ def search_temporary_upcoming_fixtures(
                 f"""
                 SELECT fixture_id, season_id, league_id, home_team_id, away_team_id,
                        home_team, away_team, competition, country, starting_at,
-                       status, payload->>'venue' AS venue, 'sportmonks' AS source_provider,
-                       payload->>'updated_at' AS provider_updated_at
+                       status, payload->>'venue' AS venue,
+                       COALESCE(payload->>'source_provider', 'sportmonks') AS source_provider,
+                       COALESCE(payload->>'provider_updated_at', payload->>'updated_at') AS provider_updated_at
                 FROM upcoming_fixture_staging
                 WHERE {" AND ".join(clauses)}
                 ORDER BY starting_at ASC, fixture_id ASC
