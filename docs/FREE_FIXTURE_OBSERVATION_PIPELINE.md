@@ -14,7 +14,7 @@ snapshot archive. It is a staging workflow, not a production fixture collector.
 - collect_livescore_observations(database_url, league_slugs, date_from, date_to, client=None)
   - requests scheduled events for the explicit league slugs and date window.
 - collect_bzzoiro_observations(database_url, params=None, client=None)
-  - requires BZZOIRO_API_TOKEN; forces status=upcoming.
+  - requires BZZOIRO_API_TOKEN; forces status=upcoming and accepts documented date_from/date_to window filters.
 - collect_highlightly_observations(database_url, date_from, days=7, client=None)
   - queries each UTC date separately, follows limit/offset pagination and keeps only explicit `Not started` rows with stable match/team IDs.
 - collect_api_ninjas_observations(database_url, season, leagues=None, client=None)
