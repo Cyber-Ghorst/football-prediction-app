@@ -1,6 +1,6 @@
-"""Append-only archive for normalized free future-fixture observations.
+"""Append-only archive for normalized provider observations.
 
-This is a staging store only. It never writes canonical fixtures or prediction
+Future-discovery providers use the future_fixture_observations resource; football-data.org uses a separate independent_data_observations resource. This store never writes canonical fixtures or prediction
 ledger rows and never changes the active provider routing.
 """
 from __future__ import annotations
