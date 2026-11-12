@@ -93,6 +93,9 @@ FREE_FIXTURE_CANDIDATES = (
 
 DEFAULT_PROVIDER_ASSIGNMENTS = (
     ProviderAssignment("sportmonks", "fixtures", "primary", 10),
+    # football-data.org is an independent observation/corroboration provider,
+    # not a source used to populate the upcoming-fixture discovery catalogue.
+    ProviderAssignment("football_data_org", "independent_data", "co_primary", 20),
     ProviderAssignment("livescore_football", "future_fixtures", "primary", 10),
     ProviderAssignment("openligadb", "future_fixtures", "co_primary", 20),
     ProviderAssignment("sportmonks", "results", "primary", 10),
