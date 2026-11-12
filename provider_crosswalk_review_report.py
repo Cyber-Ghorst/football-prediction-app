@@ -112,6 +112,8 @@ def build_provider_crosswalk_review_report(
             "seasons": len(source["seasons"]),
             "teams": len(source["teams"]),
         },
+        # Retained for the cross-provider catalogue audit; this is read-only.
+        "source_entities": source,
         "existing_link_counts": {
             "leagues": len(existing_league_links),
             "seasons": len(existing_season_links),

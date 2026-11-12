@@ -8,6 +8,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from provider_independent_competition_catalogue import (
+    build_provider_independent_competition_catalogue,
+)
 from provider_crosswalk_review_report import (
     build_provider_crosswalk_review_report,
     load_canonical_crosswalk_catalogue,
@@ -29,6 +32,7 @@ def build_crosswalk_audit(
     if not database_url:
         raise ValueError("PROVIDER_DATABASE_URL is required.")
     results: dict[str, Any] = {}
+    source_leagues_by_provider: dict[str, list[dict[str, Any]]] = {}
     try:
         canonical_catalogue = load_canonical_crosswalk_catalogue(database_url)
     except Exception as exc:
@@ -66,6 +70,9 @@ def build_crosswalk_audit(
             report = build_provider_crosswalk_review_report(
                 database_url, provider=provider, snapshot_limit=3,
                 canonical_catalogue=canonical_catalogue,
+            )
+            source_leagues_by_provider[provider] = list(
+                report.get("source_entities", {}).get("leagues", [])
             )
             categories = {}
             for category, candidates in report.get("candidates", {}).items():
@@ -108,6 +115,9 @@ def build_crosswalk_audit(
         "report_name": "free_fixture_crosswalk_audit",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "providers": results,
+        "provider_independent_catalogue": build_provider_independent_competition_catalogue(
+            source_leagues_by_provider
+        ),
         "automatic_mapping_approvals": 0,
         "canonical_fixture_writes": 0,
         "prediction_ledger_writes": 0,
@@ -149,6 +159,11 @@ def main() -> int:
                 "existing_link_counts": data.get("existing_link_counts", {}),
             }
             for provider, data in report["providers"].items()
+        },
+        "provider_independent_catalogue": {
+            "competition_count": report.get("provider_independent_catalogue", {}).get("competition_count", 0),
+            "corroborated_competition_count": report.get("provider_independent_catalogue", {}).get("corroborated_competition_count", 0),
+            "country_unscoped_source_count": report.get("provider_independent_catalogue", {}).get("country_unscoped_source_count", 0),
         },
         "automatic_mapping_approvals": 0,
         "canonical_fixture_writes": 0,
