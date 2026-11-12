@@ -52,6 +52,9 @@ class FreeFixtureProviderRefreshTests(unittest.TestCase):
         self.assertEqual(collect_livescore.call_args.kwargs["date_from"], "2026-11-11")
         self.assertEqual(collect_livescore.call_args.kwargs["date_to"], "2026-11-18")
         self.assertEqual(collect_bzz.call_args.kwargs["client"], bzz)
+        self.assertEqual(collect_bzz.call_args.kwargs["params"], {
+            "date_from": "2026-11-11", "date_to": "2026-11-18",
+        })
 
     @patch("free_fixture_provider_refresh.collect_bzzoiro_observations")
     @patch("free_fixture_provider_refresh.BzzoiroAdapter")
