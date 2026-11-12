@@ -1,7 +1,7 @@
 {
   "automatic_mapping_approvals": 0,
   "canonical_fixture_writes": 0,
-  "generated_at_utc": "2026-11-12T18:28:11.867527+00:00",
+  "generated_at_utc": "2026-11-12T18:30:37.027770+00:00",
   "prediction_ledger_writes": 0,
   "provider_independent_catalogue": {
     "automatic_mapping_approvals": 0,
@@ -1316,7 +1316,7 @@
           {
             "competition_name": "Spanish Copa de la Reina",
             "country": "Spain",
-            "observation_count": 9,
+            "observation_count": 8,
             "provider": "livescore_football",
             "provider_competition_id": "20381"
           }
@@ -1341,7 +1341,7 @@
           {
             "competition_name": "Spanish Copa del Rey",
             "country": "Spain",
-            "observation_count": 14,
+            "observation_count": 11,
             "provider": "livescore_football",
             "provider_competition_id": "3951"
           }
@@ -1543,7 +1543,7 @@
       {
         "competition_name": "Eredivisie",
         "country": null,
-        "observation_count": 594,
+        "observation_count": 756,
         "provider": "openligadb",
         "provider_competition_id": "6027"
       },
@@ -4185,7 +4185,7 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 137,
+      "observation_count": 133,
       "snapshot_count": 3,
       "source_entity_counts": {
         "leagues": 11,
@@ -5305,21 +5305,6 @@
               "status": "candidate_requires_manual_approval"
             },
             {
-              "canonical_entity_id": "sportmonks:15",
-              "canonical_name": "Aston Villa",
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "openligadb",
-              "provider_country": "England",
-              "provider_entity_id": "438",
-              "provider_name": "Aston Villa",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
-            },
-            {
               "canonical_entity_id": "sportmonks:78",
               "canonical_name": "Brighton & Hove Albion",
               "canonical_parent_id": null,
@@ -5419,21 +5404,6 @@
               "provider_country": "England",
               "provider_entity_id": "8792",
               "provider_name": "Leeds United",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
-            },
-            {
-              "canonical_entity_id": "sportmonks:9",
-              "canonical_name": "Manchester City",
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "openligadb",
-              "provider_country": "England",
-              "provider_entity_id": "4244",
-              "provider_name": "Manchester City",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
@@ -5876,10 +5846,10 @@
             }
           ],
           "candidates_truncated": true,
-          "manual_review_candidate_count": 14,
+          "manual_review_candidate_count": 12,
           "status_counts": {
-            "candidate_requires_manual_approval": 14,
-            "no_exact_contextual_match": 442
+            "candidate_requires_manual_approval": 12,
+            "no_exact_contextual_match": 444
           }
         }
       },
@@ -5888,7 +5858,7 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 14409,
+      "observation_count": 14571,
       "snapshot_count": 3,
       "source_entity_counts": {
         "leagues": 38,
