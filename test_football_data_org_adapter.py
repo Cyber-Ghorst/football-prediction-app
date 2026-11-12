@@ -19,7 +19,6 @@ class FootballDataOrgAdapterTests(unittest.TestCase):
                 "status": status,
                 "competition": {
                     "id": 2021, "name": "Premier League", "code": "PL",
-                    "area": {"id": 2072, "name": "England", "code": "ENG"},
                 },
                 "season": {
                     "id": 2283, "startDate": "2026-08-01",
@@ -39,7 +38,13 @@ class FootballDataOrgAdapterTests(unittest.TestCase):
 
     def test_matches_normalizes_ids_names_and_utc_kickoff(self):
         client = FootballDataOrgAdapter(token="test-token")
-        client._get_json = Mock(return_value=self.make_payload())
+        client._get_json = Mock(side_effect=[
+            self.make_payload(),
+            {"competitions": [{
+                "id": 2021, "name": "Premier League", "code": "PL",
+                "area": {"id": 2072, "name": "England", "code": "ENG"},
+            }]},
+        ])
         rows = client.matches("2026-11-12", "2026-11-20", competitions=["PL"])
         self.assertEqual(len(rows), 1)
         row = rows[0]
@@ -57,7 +62,11 @@ class FootballDataOrgAdapterTests(unittest.TestCase):
         self.assertEqual(row["status"], "scheduled")
         self.assertEqual(row["raw_payload"]["status"], "TIMED")
         self.assertEqual(row["raw_payload"]["competition"]["area"]["name"], "England")
-        params = client._get_json.call_args.args[1]
+        self.assertEqual(
+            row["raw_payload"]["_adapter_enrichment"]["competition_area"]["source_endpoint"],
+            "https://api.football-data.org/v4/competitions",
+        )
+        params = client._get_json.call_args_list[0].args[1]
         self.assertEqual(params["competitions"], "PL")
         self.assertNotIn("status", params)
         client.close()
@@ -84,8 +93,9 @@ class FootballDataOrgAdapterTests(unittest.TestCase):
         client = FootballDataOrgAdapter(token="test-token")
         client._get_json = Mock(return_value=self.make_payload())
         client.matches("2026-11-12", "2026-11-20", max_pages=3, page_size=10)
-        self.assertEqual(client._get_json.call_count, 1)
-        self.assertEqual(client._get_json.call_args.args[1]["page"], 1)
+        self.assertEqual(client._get_json.call_count, 2)
+        self.assertEqual(client._get_json.call_args_list[0].args[1]["page"], 1)
+        self.assertEqual(client._get_json.call_args_list[1].args[0], "competitions")
         client.close()
 
     def test_competition_catalogue_requires_expected_shape(self):
