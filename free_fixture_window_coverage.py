@@ -1,4 +1,4 @@
-"""Four-day coverage audit across archived future-fixture providers.
+"""Seven-day coverage audit across archived future-fixture providers.
 
 This report measures potential fixture supply only. It does not approve
 crosswalks, write canonical fixtures, stage fixtures for prediction, or touch
@@ -84,7 +84,7 @@ def build_window_coverage_report(
     snapshots_by_provider: Mapping[str, list[Mapping[str, Any]]],
     *,
     now: datetime | None = None,
-    window_days: int = 4,
+    window_days: int = 7,
     daily_target: int = 20,
     minimum_daily_target: int = 10,
     stretch_daily_target: int = 30,
@@ -330,7 +330,7 @@ def build_free_fixture_window_coverage(
     database_url: str,
     *,
     now: datetime | None = None,
-    window_days: int = 4,
+    window_days: int = 7,
     daily_target: int = 20,
     minimum_daily_target: int = 10,
     stretch_daily_target: int = 30,
@@ -370,7 +370,7 @@ def main() -> int:
     database_url = os.getenv("PROVIDER_DATABASE_URL") or os.getenv("COCKROACHDB_URL")
     report = build_free_fixture_window_coverage(
         database_url or "",
-        window_days=int(os.getenv("FREE_FIXTURE_WINDOW_DAYS", "4")),
+        window_days=int(os.getenv("FREE_FIXTURE_WINDOW_DAYS", "7")),
         daily_target=int(os.getenv("FREE_FIXTURE_DAILY_TARGET", "20")),
         minimum_daily_target=int(os.getenv("FREE_FIXTURE_MIN_DAILY_TARGET", "10")),
         stretch_daily_target=int(os.getenv("FREE_FIXTURE_STRETCH_DAILY_TARGET", "30")),
