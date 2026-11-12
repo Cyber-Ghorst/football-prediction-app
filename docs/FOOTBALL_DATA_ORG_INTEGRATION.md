@@ -2,7 +2,8 @@
 
 ## Decision
 
-football-data.org is integrated as a separate observation provider. Sportmonks
+football-data.org belongs to the independent data-provider group, separate from
+the future-fixture discovery group and separate from Sportmonks. Sportmonks
 continues to operate independently. Neither adapter consumes the other's
 response, IDs, catalogue or credentials. The integration does not change the
 prediction model or authorize automatic canonical promotion.
@@ -19,12 +20,13 @@ prediction model or authorize automatic canonical promotion.
   football-data.org identities. No numeric ID is compared across providers.
 - `TIMED` and `SCHEDULED` are normalized as scheduled; only offset-aware
   `utcDate` values strictly in the future are eligible for review.
-- Observations are archived in the provider observation store. This is not a
+- Observations are archived in the independent provider observation stream. They
+  are available for crosswalk review and corroboration only; this is not a
   canonical fixture write and does not make a fixture prediction-ready.
 
 ## Independence and safeguards
 
-Sportmonks remains an independently collected source. Each provider's request
+Sportmonks remains an independently collected source in its own provider group. football-data.org is assigned to `independent_data`; it is excluded from `future_fixtures` discovery and must not be counted toward fixture-discovery coverage. Each provider's request
 success, observation count, eligible count, coverage, freshness and identity
 mapping must be measured separately. Reconciliation happens only after both
 providers have produced normalized observations. Disagreements retain source
