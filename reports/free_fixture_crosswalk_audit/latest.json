@@ -1,7 +1,7 @@
 {
   "automatic_mapping_approvals": 0,
   "canonical_fixture_writes": 0,
-  "generated_at_utc": "2026-11-12T17:26:48.375761+00:00",
+  "generated_at_utc": "2026-11-12T17:53:33.979443+00:00",
   "prediction_ledger_writes": 0,
   "provider_independent_catalogue": {
     "automatic_mapping_approvals": 0,
@@ -73,7 +73,7 @@
         "status": "eligible_for_manual_canonical_seed_review"
       }
     ],
-    "competition_count": 54,
+    "competition_count": 55,
     "competitions": [
       {
         "canonical_mapping_created": false,
@@ -171,6 +171,31 @@
             "observation_count": 6,
             "provider": "livescore_football",
             "provider_competition_id": "630"
+          }
+        ],
+        "status": "single_provider_only"
+      },
+      {
+        "canonical_mapping_created": false,
+        "competition_names": [
+          "Campeonato Brasileiro S\u00e9rie A"
+        ],
+        "countries": [
+          "Brazil"
+        ],
+        "normalized_country": "brazil",
+        "normalized_name": "campeonato brasileiro serie a",
+        "provider_count": 1,
+        "providers": [
+          "football_data_org"
+        ],
+        "sources": [
+          {
+            "competition_name": "Campeonato Brasileiro S\u00e9rie A",
+            "country": "Brazil",
+            "observation_count": 18,
+            "provider": "football_data_org",
+            "provider_competition_id": "2013"
           }
         ],
         "status": "single_provider_only"
@@ -1316,7 +1341,7 @@
           {
             "competition_name": "Spanish Copa del Rey",
             "country": "Spain",
-            "observation_count": 15,
+            "observation_count": 14,
             "provider": "livescore_football",
             "provider_competition_id": "3951"
           }
@@ -1450,15 +1475,8 @@
       }
     ],
     "corroborated_competition_count": 2,
-    "country_unscoped_source_count": 28,
+    "country_unscoped_source_count": 27,
     "country_unscoped_sources": [
-      {
-        "competition_name": "Campeonato Brasileiro S\u00e9rie A",
-        "country": null,
-        "observation_count": 18,
-        "provider": "football_data_org",
-        "provider_competition_id": "2013"
-      },
       {
         "competition_name": "1. Frauen Fu\u00dfballbundesliga",
         "country": null,
@@ -1525,7 +1543,7 @@
       {
         "competition_name": "Eredivisie",
         "country": null,
-        "observation_count": 432,
+        "observation_count": 594,
         "provider": "openligadb",
         "provider_competition_id": "6027"
       },
@@ -1652,7 +1670,7 @@
     "method": "exact_normalized_competition_name_and_country",
     "provider_count": 5,
     "provider_links_created": 0,
-    "single_provider_competition_count": 52
+    "single_provider_competition_count": 53
   },
   "providers": {
     "api_ninjas": {
@@ -2964,7 +2982,7 @@
               "entity_type": "league",
               "match_method": null,
               "provider": "football_data_org",
-              "provider_country": "",
+              "provider_country": "Brazil",
               "provider_entity_id": "2013",
               "provider_name": "Campeonato Brasileiro S\u00e9rie A",
               "provider_parent_id": null,
@@ -3014,7 +3032,7 @@
               "entity_type": "team",
               "match_method": null,
               "provider": "football_data_org",
-              "provider_country": "",
+              "provider_country": "Brazil",
               "provider_entity_id": "1766",
               "provider_name": "CA Mineiro",
               "provider_parent_id": null,
@@ -3029,7 +3047,7 @@
               "entity_type": "team",
               "match_method": null,
               "provider": "football_data_org",
-              "provider_country": "",
+              "provider_country": "Brazil",
               "provider_entity_id": "1768",
               "provider_name": "CA Paranaense",
               "provider_parent_id": null,
@@ -3044,7 +3062,7 @@
               "entity_type": "team",
               "match_method": null,
               "provider": "football_data_org",
-              "provider_country": "",
+              "provider_country": "Brazil",
               "provider_entity_id": "1772",
               "provider_name": "Chapecoense AF",
               "provider_parent_id": null,
@@ -3059,7 +3077,7 @@
               "entity_type": "team",
               "match_method": null,
               "provider": "football_data_org",
-              "provider_country": "",
+              "provider_country": "Brazil",
               "provider_entity_id": "4287",
               "provider_name": "Clube do Remo",
               "provider_parent_id": null,
@@ -3074,7 +3092,7 @@
               "entity_type": "team",
               "match_method": null,
               "provider": "football_data_org",
-              "provider_country": "",
+              "provider_country": "Brazil",
               "provider_entity_id": "4241",
               "provider_name": "Coritiba FBC",
               "provider_parent_id": null,
@@ -3089,7 +3107,7 @@
               "entity_type": "team",
               "match_method": null,
               "provider": "football_data_org",
-              "provider_country": "",
+              "provider_country": "Brazil",
               "provider_entity_id": "1783",
               "provider_name": "CR Flamengo",
               "provider_parent_id": null,
@@ -3104,7 +3122,7 @@
               "entity_type": "team",
               "match_method": null,
               "provider": "football_data_org",
-              "provider_country": "",
+              "provider_country": "Brazil",
               "provider_entity_id": "1780",
               "provider_name": "CR Vasco da Gama",
               "provider_parent_id": null,
@@ -3119,7 +3137,7 @@
               "entity_type": "team",
               "match_method": null,
               "provider": "football_data_org",
-              "provider_country": "",
+              "provider_country": "Brazil",
               "provider_entity_id": "1771",
               "provider_name": "Cruzeiro EC",
               "provider_parent_id": null,
@@ -3134,7 +3152,7 @@
               "entity_type": "team",
               "match_method": null,
               "provider": "football_data_org",
-              "provider_country": "",
+              "provider_country": "Brazil",
               "provider_entity_id": "4364",
               "provider_name": "Mirassol FC",
               "provider_parent_id": null,
@@ -3149,7 +3167,7 @@
               "entity_type": "team",
               "match_method": null,
               "provider": "football_data_org",
-              "provider_country": "",
+              "provider_country": "Brazil",
               "provider_entity_id": "6685",
               "provider_name": "Santos FC",
               "provider_parent_id": null,
@@ -3164,7 +3182,7 @@
               "entity_type": "team",
               "match_method": null,
               "provider": "football_data_org",
-              "provider_country": "",
+              "provider_country": "Brazil",
               "provider_entity_id": "1769",
               "provider_name": "SE Palmeiras",
               "provider_parent_id": null,
@@ -4167,7 +4185,7 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 138,
+      "observation_count": 137,
       "snapshot_count": 3,
       "source_entity_counts": {
         "leagues": 11,
@@ -5870,7 +5888,7 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 14247,
+      "observation_count": 14409,
       "snapshot_count": 3,
       "source_entity_counts": {
         "leagues": 38,
