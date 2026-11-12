@@ -8,7 +8,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from provider_independent_competition_catalogue import (\n    build_provider_independent_competition_catalogue,\n)\nfrom provider_crosswalk_review_report import (
+from provider_independent_competition_catalogue import (
+    build_provider_independent_competition_catalogue,
+)
+from provider_crosswalk_review_report import (
     build_provider_crosswalk_review_report,
     load_canonical_crosswalk_catalogue,
 )
