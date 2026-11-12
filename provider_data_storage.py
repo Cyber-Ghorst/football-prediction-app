@@ -266,7 +266,7 @@ def load_provider_observation_snapshots(
     provider_name = str(provider).strip().lower() if provider else None
     if provider_name and provider_name not in {
         "openligadb", "openfootball", "open_matchday", "livescore_football",
-        "bzzoiro", "highlightly", "api_ninjas"
+        "bzzoiro", "highlightly", "api_ninjas", "football_data_org"
     }:
         raise ValueError("Unsupported future-fixture provider.")
     ensure_provider_storage(database_url)
