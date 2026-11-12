@@ -50,6 +50,7 @@ from provider_data_storage import _connect
 SUPPORTED_PROVIDERS = {
     "openligadb", "openfootball", "open_matchday",
     "livescore_football", "bzzoiro", "highlightly", "api_ninjas",
+    "football_data_org",
 }
 ENTITY_TABLES = {
     "league": ("football_leagues", "league_id"),
@@ -405,15 +406,30 @@ def _country_from_payload(raw: Mapping[str, Any], team_key: str | None = None) -
     country = _display_value(_value(raw, "country", "leagueCountry", "league_country"))
     if country:
         return country
+    # football-data.org nests country context under competition.area and
+    # homeTeam/awayTeam.area rather than a top-level country field.
+    competition = raw.get("competition") if isinstance(raw.get("competition"), Mapping) else {}
+    area = competition.get("area") if isinstance(competition.get("area"), Mapping) else {}
+    country = _display_value(_value(area, "name", "country", "country_name"))
+    if country:
+        return country
     league = raw.get("league") if isinstance(raw.get("league"), Mapping) else {}
     country = _display_value(_value(league, "country", "country_name"))
     if country:
         return country
     if team_key:
         side = "team1" if team_key == "home" else "team2"
-        team = raw.get(side) or raw.get(side.title()) or raw.get(f"{team_key}_team") or {}
+        modern_side = "homeTeam" if team_key == "home" else "awayTeam"
+        team = (
+            raw.get(modern_side) or raw.get(side) or raw.get(side.title())
+            or raw.get(f"{team_key}_team") or {}
+        )
         if isinstance(team, Mapping):
-            return _display_value(_value(team, "country", "teamCountry", "country_name")) or None
+            country = _display_value(_value(team, "country", "teamCountry", "country_name"))
+            if country:
+                return country
+            team_area = team.get("area") if isinstance(team.get("area"), Mapping) else {}
+            return _display_value(_value(team_area, "name", "country", "country_name")) or None
         competitions = raw.get("competitions") or []
         if competitions and isinstance(competitions[0], Mapping):
             for competitor in competitions[0].get("competitors") or []:
