@@ -318,6 +318,26 @@ class ProviderEntityCrosswalkTests(unittest.TestCase):
         self.assertEqual(home["country"], "Germany")
         self.assertEqual(home["observation_count"], 2)
 
+    def test_numeric_provider_league_id_is_not_used_as_display_name(self):
+        entities = extract_provider_entities_from_observations("bzzoiro", [{
+            "competition_key": "101", "competition_name": None,
+            "season_key": "2026", "season_name": "2026",
+            "home_team_key": "h1", "home_team_name": "Home FC",
+            "away_team_key": "a1", "away_team_name": "Away FC",
+            "raw_payload": {"league": 101},
+        }])
+        self.assertEqual(entities["leagues"], [])
+
+    def test_numeric_league_name_is_rejected_from_crosswalk_candidates(self):
+        row = build_entity_crosswalk_candidates(
+            "bzzoiro", "league",
+            [{"id": "101", "name": "101"}],
+            [{"league_id": "canonical:101", "name": "101", "country": "England"}],
+        )[0]
+        self.assertEqual(row["status"], "invalid_source_identity")
+        self.assertIsNone(row["canonical_entity_id"])
+        self.assertIn("Numeric provider league ID", row["reason"])
+
     def test_reused_season_ids_are_scoped_to_their_provider_competition(self):
         observations = [
             {
