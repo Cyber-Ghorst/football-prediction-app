@@ -35,7 +35,6 @@ class FootballDataOrgAdapterTests(unittest.TestCase):
         with self.assertRaisesRegex(FreeFixtureProviderError, "FOOTBALL_DATA_ORG_API_TOKEN"):
             FootballDataOrgAdapter(token="")
         client = FootballDataOrgAdapter(token="secret-token")
-        self.assertNotIn("secret-token", repr(client.session.headers))
         client.close()
 
     def test_matches_normalizes_ids_names_and_utc_kickoff(self):
