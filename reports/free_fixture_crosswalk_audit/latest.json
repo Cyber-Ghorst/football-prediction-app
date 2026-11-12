@@ -1,7 +1,7 @@
 {
   "automatic_mapping_approvals": 0,
   "canonical_fixture_writes": 0,
-  "generated_at_utc": "2026-11-12T07:17:41.045699+00:00",
+  "generated_at_utc": "2026-11-12T07:56:28.039297+00:00",
   "prediction_ledger_writes": 0,
   "providers": {
     "api_ninjas": {
@@ -25,8 +25,8 @@
               "provider_name": "1",
               "provider_parent_id": null,
               "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
+              "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review.",
+              "status": "invalid_source_identity"
             },
             {
               "canonical_entity_id": null,
@@ -40,8 +40,8 @@
               "provider_name": "10",
               "provider_parent_id": null,
               "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
+              "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review.",
+              "status": "invalid_source_identity"
             },
             {
               "canonical_entity_id": null,
@@ -55,8 +55,8 @@
               "provider_name": "100",
               "provider_parent_id": null,
               "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
+              "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review.",
+              "status": "invalid_source_identity"
             },
             {
               "canonical_entity_id": null,
@@ -70,8 +70,8 @@
               "provider_name": "101",
               "provider_parent_id": null,
               "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
+              "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review.",
+              "status": "invalid_source_identity"
             },
             {
               "canonical_entity_id": null,
@@ -85,8 +85,8 @@
               "provider_name": "102",
               "provider_parent_id": null,
               "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
+              "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review.",
+              "status": "invalid_source_identity"
             },
             {
               "canonical_entity_id": null,
@@ -100,8 +100,8 @@
               "provider_name": "103",
               "provider_parent_id": null,
               "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
+              "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review.",
+              "status": "invalid_source_identity"
             },
             {
               "canonical_entity_id": null,
@@ -115,8 +115,8 @@
               "provider_name": "104",
               "provider_parent_id": null,
               "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
+              "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review.",
+              "status": "invalid_source_identity"
             },
             {
               "canonical_entity_id": null,
@@ -130,8 +130,8 @@
               "provider_name": "105",
               "provider_parent_id": null,
               "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
+              "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review.",
+              "status": "invalid_source_identity"
             },
             {
               "canonical_entity_id": null,
@@ -145,8 +145,8 @@
               "provider_name": "107",
               "provider_parent_id": null,
               "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
+              "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review.",
+              "status": "invalid_source_identity"
             },
             {
               "canonical_entity_id": null,
@@ -160,8 +160,8 @@
               "provider_name": "108",
               "provider_parent_id": null,
               "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
+              "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review.",
+              "status": "invalid_source_identity"
             },
             {
               "canonical_entity_id": null,
@@ -175,8 +175,8 @@
               "provider_name": "109",
               "provider_parent_id": null,
               "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
+              "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review.",
+              "status": "invalid_source_identity"
             },
             {
               "canonical_entity_id": null,
@@ -190,8 +190,8 @@
               "provider_name": "11",
               "provider_parent_id": null,
               "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
+              "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review.",
+              "status": "invalid_source_identity"
             },
             {
               "canonical_entity_id": null,
@@ -205,8 +205,8 @@
               "provider_name": "12",
               "provider_parent_id": null,
               "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
+              "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review.",
+              "status": "invalid_source_identity"
             },
             {
               "canonical_entity_id": null,
@@ -220,8 +220,8 @@
               "provider_name": "13",
               "provider_parent_id": null,
               "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
+              "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review.",
+              "status": "invalid_source_identity"
             },
             {
               "canonical_entity_id": null,
@@ -235,8 +235,8 @@
               "provider_name": "14",
               "provider_parent_id": null,
               "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
+              "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review.",
+              "status": "invalid_source_identity"
             },
             {
               "canonical_entity_id": null,
@@ -250,8 +250,8 @@
               "provider_name": "17",
               "provider_parent_id": null,
               "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
+              "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review.",
+              "status": "invalid_source_identity"
             },
             {
               "canonical_entity_id": null,
@@ -265,8 +265,8 @@
               "provider_name": "2",
               "provider_parent_id": null,
               "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
+              "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review.",
+              "status": "invalid_source_identity"
             },
             {
               "canonical_entity_id": null,
@@ -280,8 +280,8 @@
               "provider_name": "22",
               "provider_parent_id": null,
               "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
+              "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review.",
+              "status": "invalid_source_identity"
             },
             {
               "canonical_entity_id": null,
@@ -295,8 +295,8 @@
               "provider_name": "23",
               "provider_parent_id": null,
               "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
+              "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review.",
+              "status": "invalid_source_identity"
             },
             {
               "canonical_entity_id": null,
@@ -310,8 +310,8 @@
               "provider_name": "24",
               "provider_parent_id": null,
               "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
+              "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review.",
+              "status": "invalid_source_identity"
             },
             {
               "canonical_entity_id": null,
@@ -325,8 +325,8 @@
               "provider_name": "25",
               "provider_parent_id": null,
               "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
+              "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review.",
+              "status": "invalid_source_identity"
             },
             {
               "canonical_entity_id": null,
@@ -340,8 +340,8 @@
               "provider_name": "28",
               "provider_parent_id": null,
               "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
+              "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review.",
+              "status": "invalid_source_identity"
             },
             {
               "canonical_entity_id": null,
@@ -355,8 +355,8 @@
               "provider_name": "3",
               "provider_parent_id": null,
               "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
+              "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review.",
+              "status": "invalid_source_identity"
             },
             {
               "canonical_entity_id": null,
@@ -370,8 +370,8 @@
               "provider_name": "36",
               "provider_parent_id": null,
               "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
+              "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review.",
+              "status": "invalid_source_identity"
             },
             {
               "canonical_entity_id": null,
@@ -385,14 +385,14 @@
               "provider_name": "38",
               "provider_parent_id": null,
               "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
+              "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review.",
+              "status": "invalid_source_identity"
             }
           ],
           "candidates_truncated": true,
           "manual_review_candidate_count": 0,
           "status_counts": {
-            "no_exact_contextual_match": 42
+            "invalid_source_identity": 42
           }
         },
         "seasons": {
@@ -3826,7 +3826,7 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 13869,
+      "observation_count": 13941,
       "snapshot_count": 3,
       "source_entity_counts": {
         "leagues": 38,
