@@ -31,7 +31,7 @@ class FootballDataOrgAdapterTests(unittest.TestCase):
             "resultSet": {"count": 1},
         }
 
-    def test_token_is_required_and_never_in_error_text(self):
+    def test_token_is_required(self):
         with self.assertRaisesRegex(FreeFixtureProviderError, "FOOTBALL_DATA_ORG_API_TOKEN"):
             FootballDataOrgAdapter(token="")
         client = FootballDataOrgAdapter(token="secret-token")
