@@ -14,7 +14,7 @@ prediction model or authorize automatic canonical promotion.
   `FOOTBALL_DATA_ORG_TOKEN` is accepted).
 - Catalogue: `GET /competitions`; fixture collection:
   `GET /matches` with bounded `dateFrom`, `dateTo`, optional competition
-  codes, scheduled statuses and bounded page pagination.
+  codes and bounded page pagination. Scheduled statuses are filtered locally so the adapter does not rely on undocumented multi-status query syntax.
 - Provider competition, season, fixture and team IDs remain namespaced as
   football-data.org identities. No numeric ID is compared across providers.
 - `TIMED` and `SCHEDULED` are normalized as scheduled; only offset-aware
