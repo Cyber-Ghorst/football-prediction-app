@@ -180,6 +180,54 @@ class FootballDataOrgAdapter:
                 isinstance(total, int) and page * page_size >= total
             ):
                 break
+        # Match payloads do not consistently include competition.area. When
+        # scheduled observations need country context, enrich them from the
+        # provider's own /competitions catalogue. The original match fields are
+        # retained and the added area is explicitly marked as adapter metadata.
+        needs_area = [
+            item for item in output
+            if item.get("eligible_for_review") is True
+            and isinstance(item.get("raw_payload"), dict)
+            and not (
+                isinstance(item["raw_payload"].get("competition"), Mapping)
+                and isinstance(item["raw_payload"]["competition"].get("area"), Mapping)
+            )
+        ]
+        if needs_area:
+            try:
+                catalogue = self.competitions()
+            except FreeFixtureProviderError:
+                catalogue = []
+            by_id_or_code: dict[str, Mapping[str, Any]] = {}
+            for item in catalogue:
+                if not isinstance(item, Mapping):
+                    continue
+                for key in (item.get("id"), item.get("code")):
+                    if key is not None:
+                        by_id_or_code[str(key)] = item
+            for observation in needs_area:
+                raw = observation["raw_payload"]
+                competition = raw.get("competition")
+                if not isinstance(competition, Mapping):
+                    continue
+                metadata = (
+                    by_id_or_code.get(str(competition.get("id") or ""))
+                    or by_id_or_code.get(str(competition.get("code") or ""))
+                )
+                area = metadata.get("area") if isinstance(metadata, Mapping) else None
+                if not isinstance(area, Mapping) or not area.get("name"):
+                    continue
+                enriched_competition = dict(competition)
+                enriched_competition["area"] = dict(area)
+                raw["competition"] = enriched_competition
+                raw["_adapter_enrichment"] = {
+                    "competition_area": {
+                        "source_endpoint": f"{self.base_url}/competitions",
+                        "provider_competition_id": metadata.get("id"),
+                        "area_id": area.get("id"),
+                        "area_name": area.get("name"),
+                    }
+                }
         return output
 
     def close(self) -> None:
