@@ -71,6 +71,13 @@ PROVIDER_ROLES: dict[str, dict[str, Any]] = {
         "domains": ("future_fixtures", "results", "standings", "statistics", "lineups", "odds", "predictions"),
         "limitation": "Football free tier advertises 60+ competitions and 7,500 requests/day; requires BZZOIRO_API_TOKEN. Terms permit app display and derived prediction outputs but prohibit raw-data redistribution as a standalone feed/database/API. Future-fixture route remains disabled pending live validation.",
     },
+    "football_data_org": {
+        "display_name": "football-data.org v4",
+        "rank": 11,
+        "role": "Independent fixtures, results and competition/team catalogue provider",
+        "domains": ("future_fixtures", "fixtures", "results", "standings", "teams", "competitions"),
+        "limitation": "Requires FOOTBALL_DATA_ORG_API_TOKEN; account-plan competition coverage, rate limits, current-season access, freshness and canonical crosswalks must be verified before routing or promotion.",
+    },
     "openscores": {
         "display_name": "OpenScores",
         "rank": 10,
@@ -103,6 +110,7 @@ def provider_readiness() -> list[dict[str, Any]]:
         "open_matchday": False,
         "bzzoiro": _secret_present("BZZOIRO_API_TOKEN"),
         "openscores": _secret_present("OPENSCORES_API_KEY"),
+        "football_data_org": _secret_present("FOOTBALL_DATA_ORG_API_TOKEN", ("FOOTBALL_DATA_ORG_TOKEN",)),
     }
     integration = {
         "api_football": "historical Layer 2 path active for supported seasons; account status/quota diagnostic available",
@@ -115,6 +123,7 @@ def provider_readiness() -> list[dict[str, Any]]:
         "open_matchday": "read-only CSV adapter implemented; fixed CET-1 timestamps are rejected without a verified timezone; non-commercial rights and route activation remain pending",
         "bzzoiro": "read-only API adapter implemented; requires BZZOIRO_API_TOKEN and uses documented v2 events endpoint; live coverage, licence and canonical crosswalk remain pending",
         "openscores": "read-only historical/result observations for mapping and audit; not a future-fixture source; not enabled for production prediction inputs",
+        "football_data_org": "independent football-data.org v4 adapter and read-only observation collector implemented; authenticated live coverage, competition/country/season/team crosswalks, freshness and database round-trip remain pending; no canonical promotion",
     }
     credential_names = {
         "api_football": "APISPORTS_API_KEY",
@@ -127,12 +136,13 @@ def provider_readiness() -> list[dict[str, Any]]:
         "open_matchday": "none required",
         "bzzoiro": "BZZOIRO_API_TOKEN",
         "openscores": "OPENSCORES_API_KEY",
+        "football_data_org": "FOOTBALL_DATA_ORG_API_TOKEN",
     }
     rows = []
     for key in (
         "sportmonks", "highlightly", "api_football", "api_ninjas",
         "livescore_football", "openligadb", "openfootball",
-        "open_matchday", "bzzoiro", "openscores",
+        "open_matchday", "bzzoiro", "openscores", "football_data_org",
     ):
         role = PROVIDER_ROLES[key]
         rows.append({
@@ -144,10 +154,10 @@ def provider_readiness() -> list[dict[str, Any]]:
             "limitation": role["limitation"],
             "adapter": "implemented" if key in {
                 "sportmonks", "highlightly", "api_football", "api_ninjas",
-                "livescore_football", "openligadb", "openfootball", "open_matchday", "bzzoiro", "openscores",
+                "livescore_football", "openligadb", "openfootball", "open_matchday", "bzzoiro", "openscores", "football_data_org",
             } else "candidate_only_not_implemented",
             "credential_configured": configured[key],
-            "credential_required": key in {"sportmonks", "highlightly", "api_football", "api_ninjas", "bzzoiro", "openscores"},
+            "credential_required": key in {"sportmonks", "highlightly", "api_football", "api_ninjas", "bzzoiro", "openscores", "football_data_org"},
             "app_integration": integration[key],
             "credential_name": credential_names[key],
         })
