@@ -95,7 +95,7 @@ def _competition_display_name(row: Mapping[str, Any], league: Mapping[str, Any])
                 or candidate.get("title")
             )
         value = _text(candidate)
-        if value and not re.fullmatch(r"\\d+", value):
+        if value and not re.fullmatch(r"\d+", value):
             return value
     return None
 
