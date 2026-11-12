@@ -42,7 +42,7 @@ def collect_football_data_org_observations(
             "competitions": list(competitions or []),
             "max_pages": max_pages,
             "page_size": page_size,
-            "status": "SCHEDULED,TIMED",
+            "local_status_filter": ["SCHEDULED", "TIMED"],
         },
         rows,
         errors,
