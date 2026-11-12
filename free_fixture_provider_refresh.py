@@ -135,16 +135,22 @@ def refresh_free_fixture_sources(
         if livescore_client is not None:
             livescore_client.close()
 
-    # Bzzoiro's v2 upcoming endpoint returns all accessible competitions via
-    # pagination. The token is passed only to the client, never to snapshot metadata.
+    # Bzzoiro's v2 events endpoint supports inclusive UTC date filters.
+    # Bound collection to the same seven-day discovery window as other sources.
+    # The token is passed only to the client, never to snapshot metadata.
     try:
         if bzzoiro_token:
             with BzzoiroAdapter(token=bzzoiro_token) as client:
                 results["bzzoiro"] = collect_bzzoiro_observations(
-                    database_url, client=client, max_pages=20,
+                    database_url,
+                    params={"date_from": date_from, "date_to": date_to},
+                    client=client, max_pages=20,
                 )
         else:
-            results["bzzoiro"] = collect_bzzoiro_observations(database_url, max_pages=20)
+            results["bzzoiro"] = collect_bzzoiro_observations(
+                database_url, params={"date_from": date_from, "date_to": date_to},
+                max_pages=20,
+            )
     except Exception as exc:
         results["bzzoiro"] = _error("bzzoiro", exc)
 
