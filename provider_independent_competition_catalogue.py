@@ -98,6 +98,30 @@ def build_provider_independent_competition_catalogue(
         row["provider"], row["competition_name"].casefold(),
         row["provider_competition_id"],
     ))
+    # Only exact name+country consensus from at least two distinct providers
+    # may enter the manual canonical-seed review queue. This is still report-only.
+    seed_review_candidates = [
+        {
+            "competition_name": row["competition_names"][0],
+            "country": row["countries"][0],
+            "normalized_name": row["normalized_name"],
+            "normalized_country": row["normalized_country"],
+            "provider_count": row["provider_count"],
+            "providers": row["providers"],
+            "sources": row["sources"],
+            "status": "eligible_for_manual_canonical_seed_review",
+            "canonical_record_created": False,
+            "provider_links_created": False,
+            "automatic_approval": False,
+            "review_requirement": (
+                "Verify competition identity, competition type, and active season "
+                "before any canonical catalogue entry or provider link is created."
+            ),
+        }
+        for row in entries
+        if row["status"] == "corroborated_multi_provider"
+    ]
+
     return {
         "method": "exact_normalized_competition_name_and_country",
         "provider_count": len([p for p in provider_entities if str(p).strip()]),
@@ -110,6 +134,8 @@ def build_provider_independent_competition_catalogue(
         ),
         "country_unscoped_source_count": len(unscoped),
         "competitions": entries,
+        "canonical_seed_review_candidate_count": len(seed_review_candidates),
+        "canonical_seed_review_candidates": seed_review_candidates,
         "country_unscoped_sources": unscoped,
         "canonical_rows_created": 0,
         "provider_links_created": 0,
