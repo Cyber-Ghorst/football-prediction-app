@@ -85,3 +85,10 @@ A selected fixture must have a provider-scoped stable ID, future timezone-aware 
 Fixture selection is the trigger for prediction. Background fixture collection must never create predictions for every fixture automatically. Prediction storage and post-match evaluation remain tied to the selected fixture identity.
 
 No change in this provider-routing work authorizes changes to the model weights, TVD, tactical recency, canonical fixture repository or prediction-ledger behavior.
+
+## Independent data providers (not discovery sources)
+
+- `football_data_org` is assigned to the separate `independent_data` provider category.
+- Its own authenticated observation refresh may collect provider match and competition/team metadata for independent corroboration and crosswalk review.
+- It is not a member of `FREE_FIXTURE_CANDIDATES`, is not routed to `future_fixtures`, and its observations do not count toward future-fixture coverage totals.
+- Sportmonks remains independently active in its existing data-provider role; neither provider may overwrite the other's observations or canonical data.
