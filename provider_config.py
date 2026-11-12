@@ -123,7 +123,7 @@ def provider_readiness() -> list[dict[str, Any]]:
         "open_matchday": "read-only CSV adapter implemented; fixed CET-1 timestamps are rejected without a verified timezone; non-commercial rights and route activation remain pending",
         "bzzoiro": "read-only API adapter implemented; requires BZZOIRO_API_TOKEN and uses documented v2 events endpoint; live coverage, licence and canonical crosswalk remain pending",
         "openscores": "read-only historical/result observations for mapping and audit; not a future-fixture source; not enabled for production prediction inputs",
-        "football_data_org": "independent football-data.org v4 adapter and read-only observation collector implemented; authenticated live coverage, competition/country/season/team crosswalks, freshness and database round-trip remain pending; no canonical promotion",
+        "football_data_org": "independent football-data.org v4 adapter, read-only observation collector and scheduled staging refresh implemented; authenticated live coverage, competition/country/season/team crosswalks, freshness and database round-trip remain pending; no canonical promotion",
     }
     credential_names = {
         "api_football": "APISPORTS_API_KEY",
