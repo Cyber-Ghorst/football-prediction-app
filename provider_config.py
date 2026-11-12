@@ -74,8 +74,8 @@ PROVIDER_ROLES: dict[str, dict[str, Any]] = {
     "football_data_org": {
         "display_name": "football-data.org v4",
         "rank": 11,
-        "role": "Independent fixtures, results and competition/team catalogue provider",
-        "domains": ("future_fixtures", "fixtures", "results", "standings", "teams", "competitions"),
+        "role": "Independent fixture discovery and competition/team catalogue provider",
+        "domains": ("future_fixtures", "fixtures", "teams", "competitions"),
         "limitation": "Requires FOOTBALL_DATA_ORG_API_TOKEN; account-plan competition coverage, rate limits, current-season access, freshness and canonical crosswalks must be verified before routing or promotion.",
     },
     "openscores": {
