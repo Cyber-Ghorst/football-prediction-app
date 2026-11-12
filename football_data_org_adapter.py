@@ -129,7 +129,6 @@ class FootballDataOrgAdapter:
         params: dict[str, Any] = {
             "dateFrom": start,
             "dateTo": end,
-            "status": "SCHEDULED,TIMED",
             "limit": page_size,
         }
         if selected:
@@ -149,7 +148,6 @@ class FootballDataOrgAdapter:
                 if not isinstance(row, Mapping):
                     continue
                 competition = row.get("competition") if isinstance(row.get("competition"), Mapping) else {}
-                area = competition.get("area") if isinstance(competition.get("area"), Mapping) else {}
                 season = row.get("season") if isinstance(row.get("season"), Mapping) else {}
                 home = row.get("homeTeam") if isinstance(row.get("homeTeam"), Mapping) else {}
                 away = row.get("awayTeam") if isinstance(row.get("awayTeam"), Mapping) else {}
@@ -157,7 +155,7 @@ class FootballDataOrgAdapter:
                 # football-data.org uses TIMED as a scheduled fixture with a
                 # confirmed kickoff; preserve the original value in raw_payload.
                 normalized_status = "scheduled" if status in {"SCHEDULED", "TIMED"} else status.lower()
-                season_key = season.get("id") or season.get("startDate") or season.get("currentMatchday")
+                season_key = season.get("id") or season.get("startDate")
                 output.append(_observation(
                     self.provider,
                     dict(row),
