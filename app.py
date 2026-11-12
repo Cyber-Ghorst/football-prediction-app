@@ -1245,6 +1245,7 @@ with st.sidebar:
         )
         crosswalk_providers = [
             "openligadb", "openfootball", "livescore_football", "bzzoiro",
+            "football_data_org",
         ]
         if (
             _setting_enabled("FREE_FIXTURE_TERMS_ACK_OPEN_MATCHDAY")

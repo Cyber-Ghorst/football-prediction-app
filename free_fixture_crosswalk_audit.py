@@ -21,6 +21,7 @@ CANDIDATE_SAMPLE_LIMIT = 25
 PROVIDERS = (
     "openligadb", "openfootball", "open_matchday",
     "livescore_football", "bzzoiro", "highlightly", "api_ninjas",
+    "football_data_org",
 )
 
 
