@@ -1,7 +1,7 @@
 {
   "automatic_mapping_approvals": 0,
   "canonical_fixture_writes": 0,
-  "generated_at_utc": "2026-11-11T21:46:28.900990+00:00",
+  "generated_at_utc": "2026-11-12T07:17:41.045699+00:00",
   "prediction_ledger_writes": 0,
   "providers": {
     "api_ninjas": {
@@ -11,7 +11,7 @@
     "bzzoiro": {
       "categories": {
         "leagues": {
-          "candidate_count": 41,
+          "candidate_count": 42,
           "candidates": [
             {
               "canonical_entity_id": null,
@@ -392,11 +392,11 @@
           "candidates_truncated": true,
           "manual_review_candidate_count": 0,
           "status_counts": {
-            "no_exact_contextual_match": 41
+            "no_exact_contextual_match": 42
           }
         },
         "seasons": {
-          "candidate_count": 41,
+          "candidate_count": 42,
           "candidates": [
             {
               "canonical_entity_id": null,
@@ -410,6 +410,21 @@
               "provider_name": "1058",
               "provider_parent_id": "1",
               "provider_parent_name": "1",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "bzzoiro",
+              "provider_country": null,
+              "provider_entity_id": "68::1080",
+              "provider_name": "1080",
+              "provider_parent_id": "68",
+              "provider_parent_name": "68",
               "reason": "A verified provider-competition to canonical-competition link is required first.",
               "status": "parent_competition_unmapped"
             },
@@ -757,31 +772,16 @@
               "provider_parent_name": "89",
               "reason": "A verified provider-competition to canonical-competition link is required first.",
               "status": "parent_competition_unmapped"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "season",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": null,
-              "provider_entity_id": "28::1901",
-              "provider_name": "1901",
-              "provider_parent_id": "28",
-              "provider_parent_name": "28",
-              "reason": "A verified provider-competition to canonical-competition link is required first.",
-              "status": "parent_competition_unmapped"
             }
           ],
           "candidates_truncated": true,
           "manual_review_candidate_count": 0,
           "status_counts": {
-            "parent_competition_unmapped": 41
+            "parent_competition_unmapped": 42
           }
         },
         "teams": {
-          "candidate_count": 777,
+          "candidate_count": 801,
           "candidates": [
             {
               "canonical_entity_id": null,
@@ -1162,7 +1162,7 @@
           "candidates_truncated": true,
           "manual_review_candidate_count": 0,
           "status_counts": {
-            "no_exact_contextual_match": 777
+            "no_exact_contextual_match": 801
           }
         }
       },
@@ -1174,9 +1174,9 @@
       "observation_count": 12000,
       "snapshot_count": 3,
       "source_entity_counts": {
-        "leagues": 41,
-        "seasons": 41,
-        "teams": 777
+        "leagues": 42,
+        "seasons": 42,
+        "teams": 801
       },
       "status": "ok"
     },
@@ -2454,7 +2454,7 @@
     "openligadb": {
       "categories": {
         "leagues": {
-          "candidate_count": 37,
+          "candidate_count": 38,
           "candidates": [
             {
               "canonical_entity_id": "sportmonks:564",
@@ -2703,6 +2703,21 @@
               "entity_type": "league",
               "match_method": null,
               "provider": "openligadb",
+              "provider_country": "",
+              "provider_entity_id": "6027",
+              "provider_name": "Eredivisie",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "openligadb",
               "provider_country": "Europe",
               "provider_entity_id": "6000",
               "provider_name": "Europa League",
@@ -2845,32 +2860,17 @@
               "provider_parent_name": null,
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
               "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "league",
-              "match_method": null,
-              "provider": "openligadb",
-              "provider_country": "",
-              "provider_entity_id": "6016",
-              "provider_name": "Oberliga Niederrhein",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
             }
           ],
           "candidates_truncated": true,
           "manual_review_candidate_count": 2,
           "status_counts": {
             "candidate_requires_manual_approval": 2,
-            "no_exact_contextual_match": 35
+            "no_exact_contextual_match": 36
           }
         },
         "seasons": {
-          "candidate_count": 37,
+          "candidate_count": 38,
           "candidates": [
             {
               "canonical_entity_id": null,
@@ -3251,11 +3251,11 @@
           "candidates_truncated": true,
           "manual_review_candidate_count": 0,
           "status_counts": {
-            "parent_competition_unmapped": 37
+            "parent_competition_unmapped": 38
           }
         },
         "teams": {
-          "candidate_count": 442,
+          "candidate_count": 456,
           "candidates": [
             {
               "canonical_entity_id": "sportmonks:52",
@@ -3267,36 +3267,6 @@
               "provider_country": "England",
               "provider_entity_id": "2942",
               "provider_name": "AFC Bournemouth",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
-            },
-            {
-              "canonical_entity_id": "sportmonks:15",
-              "canonical_name": "Aston Villa",
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "openligadb",
-              "provider_country": "England",
-              "provider_entity_id": "438",
-              "provider_name": "Aston Villa",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
-            },
-            {
-              "canonical_entity_id": "sportmonks:13258",
-              "canonical_name": "Athletic Club",
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "openligadb",
-              "provider_country": "Spain",
-              "provider_entity_id": "1135",
-              "provider_name": "Athletic Club",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
@@ -3363,21 +3333,6 @@
               "status": "candidate_requires_manual_approval"
             },
             {
-              "canonical_entity_id": "sportmonks:83",
-              "canonical_name": "FC Barcelona",
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "openligadb",
-              "provider_country": "Spain",
-              "provider_entity_id": "356",
-              "provider_name": "FC Barcelona",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
-            },
-            {
               "canonical_entity_id": "sportmonks:22",
               "canonical_name": "Hull City",
               "canonical_parent_id": null,
@@ -3417,21 +3372,6 @@
               "provider_country": "England",
               "provider_entity_id": "8792",
               "provider_name": "Leeds United",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
-            },
-            {
-              "canonical_entity_id": "sportmonks:9",
-              "canonical_name": "Manchester City",
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "openligadb",
-              "provider_country": "England",
-              "provider_entity_id": "4244",
-              "provider_name": "Manchester City",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
@@ -3874,10 +3814,10 @@
             }
           ],
           "candidates_truncated": true,
-          "manual_review_candidate_count": 16,
+          "manual_review_candidate_count": 12,
           "status_counts": {
-            "candidate_requires_manual_approval": 16,
-            "no_exact_contextual_match": 426
+            "candidate_requires_manual_approval": 12,
+            "no_exact_contextual_match": 444
           }
         }
       },
@@ -3886,12 +3826,12 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 13815,
+      "observation_count": 13869,
       "snapshot_count": 3,
       "source_entity_counts": {
-        "leagues": 37,
-        "seasons": 37,
-        "teams": 442
+        "leagues": 38,
+        "seasons": 38,
+        "teams": 456
       },
       "status": "ok"
     }
