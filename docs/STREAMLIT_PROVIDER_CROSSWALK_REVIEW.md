@@ -1,7 +1,9 @@
 # Streamlit provider crosswalk review
 
 The Provider Readiness expander now includes a free-fixture entity crosswalk
-review tool.
+review tool for OpenLigaDB, OpenFootball, LiveScoreFootball, Bzzoiro and
+football-data.org (with restricted providers shown only after their required
+terms acknowledgements).
 
 1. Ensure PROVIDER_DATABASE_URL is configured and the provider observation
    archive has at least one batch for the selected source.
