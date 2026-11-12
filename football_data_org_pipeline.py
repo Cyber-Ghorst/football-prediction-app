@@ -16,10 +16,11 @@ def collect_football_data_org_observations(
     client: FootballDataOrgAdapter | None = None,
     max_pages: int = 5,
     page_size: int = 100,
+    api_token: str | None = None,
 ) -> dict[str, Any]:
     """Fetch and archive football-data.org observations independently."""
     owned = client is None
-    api = client or FootballDataOrgAdapter()
+    api = client or FootballDataOrgAdapter(token=api_token)
     rows: list[dict[str, Any]] = []
     errors: list[dict[str, str]] = []
     successful = 0
