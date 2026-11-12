@@ -110,7 +110,7 @@ def provider_readiness() -> list[dict[str, Any]]:
         "open_matchday": False,
         "bzzoiro": _secret_present("BZZOIRO_API_TOKEN"),
         "openscores": _secret_present("OPENSCORES_API_KEY"),
-        "football_data_org": _secret_present("FOOTBALL_DATA_ORG_API_TOKEN", ("FOOTBALL_DATA_ORG_TOKEN",)),
+        "football_data_org": _secret_present("FOOTBALL_DATA_ORG_API_TOKEN", ("FOOTBALL_DATA_ORG_TOKEN", "FOOTBALL_DATA_API_KEY")),
     }
     integration = {
         "api_football": "historical Layer 2 path active for supported seasons; account status/quota diagnostic available",
