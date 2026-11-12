@@ -1,7 +1,7 @@
 {
   "automatic_mapping_approvals": 0,
   "canonical_fixture_writes": 0,
-  "generated_at_utc": "2026-11-12T16:39:39.893185+00:00",
+  "generated_at_utc": "2026-11-12T16:56:23.494072+00:00",
   "prediction_ledger_writes": 0,
   "provider_independent_catalogue": {
     "automatic_mapping_approvals": 0,
@@ -1441,7 +1441,7 @@
           {
             "competition_name": "Club Friendlies",
             "country": "World",
-            "observation_count": 111,
+            "observation_count": 112,
             "provider": "bzzoiro",
             "provider_competition_id": "79"
           }
@@ -2425,7 +2425,7 @@
           }
         },
         "teams": {
-          "candidate_count": 689,
+          "candidate_count": 691,
           "candidates": [
             {
               "canonical_entity_id": "sportmonks:13258",
@@ -2927,7 +2927,7 @@
           "manual_review_candidate_count": 8,
           "status_counts": {
             "candidate_requires_manual_approval": 8,
-            "no_exact_contextual_match": 681
+            "no_exact_contextual_match": 683
           }
         }
       },
@@ -2936,12 +2936,12 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 1236,
+      "observation_count": 1237,
       "snapshot_count": 3,
       "source_entity_counts": {
         "leagues": 27,
         "seasons": 27,
-        "teams": 689
+        "teams": 691
       },
       "status": "ok"
     },
