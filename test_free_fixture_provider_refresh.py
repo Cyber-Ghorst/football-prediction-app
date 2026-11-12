@@ -81,7 +81,11 @@ class FreeFixtureProviderRefreshTests(unittest.TestCase):
             "provider-db", today=datetime(2026, 11, 11, tzinfo=timezone.utc),
         )
         self.assertFalse(report["providers"]["bzzoiro"]["archived"])
-        collect_bzz.assert_called_once_with("provider-db", max_pages=20)
+        collect_bzz.assert_called_once_with(
+            "provider-db",
+            params={"date_from": "2026-11-11", "date_to": "2026-11-18"},
+            max_pages=20,
+        )
         bzz_cls.assert_not_called()
 
     def test_terms_acknowledgements_are_required_before_restricted_provider_collection(self):
