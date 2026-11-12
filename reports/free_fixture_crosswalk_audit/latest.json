@@ -1,7 +1,7 @@
 {
   "automatic_mapping_approvals": 0,
   "canonical_fixture_writes": 0,
-  "generated_at_utc": "2026-11-12T17:10:18.537623+00:00",
+  "generated_at_utc": "2026-11-12T17:26:48.375761+00:00",
   "prediction_ledger_writes": 0,
   "provider_independent_catalogue": {
     "automatic_mapping_approvals": 0,
@@ -1441,7 +1441,7 @@
           {
             "competition_name": "Club Friendlies",
             "country": "World",
-            "observation_count": 113,
+            "observation_count": 114,
             "provider": "bzzoiro",
             "provider_competition_id": "79"
           }
@@ -1450,8 +1450,15 @@
       }
     ],
     "corroborated_competition_count": 2,
-    "country_unscoped_source_count": 27,
+    "country_unscoped_source_count": 28,
     "country_unscoped_sources": [
+      {
+        "competition_name": "Campeonato Brasileiro S\u00e9rie A",
+        "country": null,
+        "observation_count": 18,
+        "provider": "football_data_org",
+        "provider_competition_id": "2013"
+      },
       {
         "competition_name": "1. Frauen Fu\u00dfballbundesliga",
         "country": null,
@@ -1643,7 +1650,7 @@
       }
     ],
     "method": "exact_normalized_competition_name_and_country",
-    "provider_count": 4,
+    "provider_count": 5,
     "provider_links_created": 0,
     "single_provider_competition_count": 52
   },
@@ -2936,7 +2943,7 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 1238,
+      "observation_count": 1239,
       "snapshot_count": 3,
       "source_entity_counts": {
         "leagues": 27,
@@ -2946,8 +2953,246 @@
       "status": "ok"
     },
     "football_data_org": {
-      "error_type": "ValueError",
-      "status": "error"
+      "categories": {
+        "leagues": {
+          "candidate_count": 1,
+          "candidates": [
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "football_data_org",
+              "provider_country": "",
+              "provider_entity_id": "2013",
+              "provider_name": "Campeonato Brasileiro S\u00e9rie A",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            }
+          ],
+          "candidates_truncated": false,
+          "manual_review_candidate_count": 0,
+          "status_counts": {
+            "no_exact_contextual_match": 1
+          }
+        },
+        "seasons": {
+          "candidate_count": 1,
+          "candidates": [
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "football_data_org",
+              "provider_country": null,
+              "provider_entity_id": "2013::2474",
+              "provider_name": "2026-01-28",
+              "provider_parent_id": "2013",
+              "provider_parent_name": "Campeonato Brasileiro S\u00e9rie A",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            }
+          ],
+          "candidates_truncated": false,
+          "manual_review_candidate_count": 0,
+          "status_counts": {
+            "parent_competition_unmapped": 1
+          }
+        },
+        "teams": {
+          "candidate_count": 11,
+          "candidates": [
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "football_data_org",
+              "provider_country": "",
+              "provider_entity_id": "1766",
+              "provider_name": "CA Mineiro",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "football_data_org",
+              "provider_country": "",
+              "provider_entity_id": "1768",
+              "provider_name": "CA Paranaense",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "football_data_org",
+              "provider_country": "",
+              "provider_entity_id": "1772",
+              "provider_name": "Chapecoense AF",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "football_data_org",
+              "provider_country": "",
+              "provider_entity_id": "4287",
+              "provider_name": "Clube do Remo",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "football_data_org",
+              "provider_country": "",
+              "provider_entity_id": "4241",
+              "provider_name": "Coritiba FBC",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "football_data_org",
+              "provider_country": "",
+              "provider_entity_id": "1783",
+              "provider_name": "CR Flamengo",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "football_data_org",
+              "provider_country": "",
+              "provider_entity_id": "1780",
+              "provider_name": "CR Vasco da Gama",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "football_data_org",
+              "provider_country": "",
+              "provider_entity_id": "1771",
+              "provider_name": "Cruzeiro EC",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "football_data_org",
+              "provider_country": "",
+              "provider_entity_id": "4364",
+              "provider_name": "Mirassol FC",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "football_data_org",
+              "provider_country": "",
+              "provider_entity_id": "6685",
+              "provider_name": "Santos FC",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "football_data_org",
+              "provider_country": "",
+              "provider_entity_id": "1769",
+              "provider_name": "SE Palmeiras",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            }
+          ],
+          "candidates_truncated": false,
+          "manual_review_candidate_count": 0,
+          "status_counts": {
+            "no_exact_contextual_match": 11
+          }
+        }
+      },
+      "existing_link_counts": {
+        "leagues": 0,
+        "seasons": 0,
+        "teams": 0
+      },
+      "observation_count": 18,
+      "snapshot_count": 3,
+      "source_entity_counts": {
+        "leagues": 1,
+        "seasons": 1,
+        "teams": 11
+      },
+      "status": "ok"
     },
     "highlightly": {
       "reason": "Highlightly terms acknowledgement and non-betting-use confirmation are required.",
