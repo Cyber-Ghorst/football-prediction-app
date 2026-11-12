@@ -236,6 +236,23 @@ class ProviderStorageTests(unittest.TestCase):
         self.assertEqual(self.connection.snapshots, [])
         self.assertEqual(self.connection.runs[0][6], 429)
 
+    def test_load_observation_snapshots_accepts_football_data_org(self):
+        row = (
+            "snapshot-1", "football_data_org", "future_fixture_observations",
+            {}, [], {"provider": "football_data_org", "observations": []},
+            datetime.now(timezone.utc), None, "a" * 64,
+        )
+        self.connection.latest = [row]
+        with patch.object(storage, "ensure_provider_storage"), patch.object(
+            storage, "_connect", return_value=self.connection
+        ):
+            snapshots = storage.load_provider_observation_snapshots(
+                "postgresql://example", provider="football_data_org", limit=3
+            )
+        self.assertEqual(len(snapshots), 1)
+        self.assertEqual(snapshots[0]["provider"], "football_data_org")
+        self.assertEqual(snapshots[0]["snapshot_id"], "snapshot-1")
+
     def test_load_fresh_and_stale_snapshots_use_separate_queries(self):
         fresh_row = ("fresh", "sportmonks", "fixtures", {}, [], {"data": []}, None, None, "a" * 64)
         stale_row = ("stale", "sportmonks", "fixtures", {}, [], {"data": [1]}, None, "b" * 64)
