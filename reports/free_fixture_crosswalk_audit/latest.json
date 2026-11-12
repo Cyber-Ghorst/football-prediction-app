@@ -1,7 +1,7 @@
 {
   "automatic_mapping_approvals": 0,
   "canonical_fixture_writes": 0,
-  "generated_at_utc": "2026-11-12T07:56:28.039297+00:00",
+  "generated_at_utc": "2026-11-12T08:17:00.795421+00:00",
   "prediction_ledger_writes": 0,
   "providers": {
     "api_ninjas": {
@@ -11,7 +11,7 @@
     "bzzoiro": {
       "categories": {
         "leagues": {
-          "candidate_count": 42,
+          "candidate_count": 41,
           "candidates": [
             {
               "canonical_entity_id": null,
@@ -158,21 +158,6 @@
               "provider_country": "",
               "provider_entity_id": "108",
               "provider_name": "108",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review.",
-              "status": "invalid_source_identity"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "league",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": "",
-              "provider_entity_id": "109",
-              "provider_name": "109",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review.",
@@ -387,16 +372,31 @@
               "provider_parent_name": null,
               "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review.",
               "status": "invalid_source_identity"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "bzzoiro",
+              "provider_country": "",
+              "provider_entity_id": "4",
+              "provider_name": "4",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review.",
+              "status": "invalid_source_identity"
             }
           ],
           "candidates_truncated": true,
           "manual_review_candidate_count": 0,
           "status_counts": {
-            "invalid_source_identity": 42
+            "invalid_source_identity": 41
           }
         },
         "seasons": {
-          "candidate_count": 42,
+          "candidate_count": 54,
           "candidates": [
             {
               "canonical_entity_id": null,
@@ -526,6 +526,21 @@
               "match_method": null,
               "provider": "bzzoiro",
               "provider_country": null,
+              "provider_entity_id": "19::1309",
+              "provider_name": "1309",
+              "provider_parent_id": "19",
+              "provider_parent_name": "",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "bzzoiro",
+              "provider_country": null,
               "provider_entity_id": "2::1310",
               "provider_name": "1310",
               "provider_parent_id": "2",
@@ -575,6 +590,21 @@
               "provider_name": "1327",
               "provider_parent_id": "14",
               "provider_parent_name": "14",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "bzzoiro",
+              "provider_country": null,
+              "provider_entity_id": "31::133",
+              "provider_name": "133",
+              "provider_parent_id": "31",
+              "provider_parent_name": "",
               "reason": "A verified provider-competition to canonical-competition link is required first.",
               "status": "parent_competition_unmapped"
             },
@@ -646,6 +676,36 @@
               "match_method": null,
               "provider": "bzzoiro",
               "provider_country": null,
+              "provider_entity_id": "64::1430",
+              "provider_name": "1430",
+              "provider_parent_id": "64",
+              "provider_parent_name": "",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "bzzoiro",
+              "provider_country": null,
+              "provider_entity_id": "57::1435",
+              "provider_name": "1435",
+              "provider_parent_id": "57",
+              "provider_parent_name": "",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "bzzoiro",
+              "provider_country": null,
               "provider_entity_id": "49::1518",
               "provider_name": "1518",
               "provider_parent_id": "49",
@@ -676,100 +736,40 @@
               "match_method": null,
               "provider": "bzzoiro",
               "provider_country": null,
+              "provider_entity_id": "72::1540",
+              "provider_name": "1540",
+              "provider_parent_id": "72",
+              "provider_parent_name": "",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "bzzoiro",
+              "provider_country": null,
+              "provider_entity_id": "79::1552",
+              "provider_name": "1552",
+              "provider_parent_id": "79",
+              "provider_parent_name": "",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "bzzoiro",
+              "provider_country": null,
               "provider_entity_id": "24::1569",
               "provider_name": "1569",
               "provider_parent_id": "24",
               "provider_parent_name": "24",
-              "reason": "A verified provider-competition to canonical-competition link is required first.",
-              "status": "parent_competition_unmapped"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "season",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": null,
-              "provider_entity_id": "84::1612",
-              "provider_name": "1612",
-              "provider_parent_id": "84",
-              "provider_parent_name": "84",
-              "reason": "A verified provider-competition to canonical-competition link is required first.",
-              "status": "parent_competition_unmapped"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "season",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": null,
-              "provider_entity_id": "17::1631",
-              "provider_name": "1631",
-              "provider_parent_id": "17",
-              "provider_parent_name": "17",
-              "reason": "A verified provider-competition to canonical-competition link is required first.",
-              "status": "parent_competition_unmapped"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "season",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": null,
-              "provider_entity_id": "86::1655",
-              "provider_name": "1655",
-              "provider_parent_id": "86",
-              "provider_parent_name": "86",
-              "reason": "A verified provider-competition to canonical-competition link is required first.",
-              "status": "parent_competition_unmapped"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "season",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": null,
-              "provider_entity_id": "87::1674",
-              "provider_name": "1674",
-              "provider_parent_id": "87",
-              "provider_parent_name": "87",
-              "reason": "A verified provider-competition to canonical-competition link is required first.",
-              "status": "parent_competition_unmapped"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "season",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": null,
-              "provider_entity_id": "88::1693",
-              "provider_name": "1693",
-              "provider_parent_id": "88",
-              "provider_parent_name": "88",
-              "reason": "A verified provider-competition to canonical-competition link is required first.",
-              "status": "parent_competition_unmapped"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "season",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": null,
-              "provider_entity_id": "89::1848",
-              "provider_name": "1848",
-              "provider_parent_id": "89",
-              "provider_parent_name": "89",
               "reason": "A verified provider-competition to canonical-competition link is required first.",
               "status": "parent_competition_unmapped"
             }
@@ -777,11 +777,11 @@
           "candidates_truncated": true,
           "manual_review_candidate_count": 0,
           "status_counts": {
-            "parent_competition_unmapped": 42
+            "parent_competition_unmapped": 54
           }
         },
         "teams": {
-          "candidate_count": 801,
+          "candidate_count": 1158,
           "candidates": [
             {
               "canonical_entity_id": null,
@@ -1162,7 +1162,7 @@
           "candidates_truncated": true,
           "manual_review_candidate_count": 0,
           "status_counts": {
-            "no_exact_contextual_match": 801
+            "no_exact_contextual_match": 1158
           }
         }
       },
@@ -1171,12 +1171,12 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 12000,
+      "observation_count": 8404,
       "snapshot_count": 3,
       "source_entity_counts": {
-        "leagues": 42,
-        "seasons": 42,
-        "teams": 801
+        "leagues": 41,
+        "seasons": 54,
+        "teams": 1158
       },
       "status": "ok"
     },
@@ -3826,7 +3826,7 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 13941,
+      "observation_count": 14033,
       "snapshot_count": 3,
       "source_entity_counts": {
         "leagues": 38,
