@@ -278,7 +278,9 @@ class FreeFixtureAdapterTests(unittest.TestCase):
             "event_date": (NOW + timedelta(days=1)).isoformat(),
             "status": "upcoming",
         }]})
-        row = client.upcoming()[0]
+        row = client.upcoming(params={
+            "date_from": "2026-11-12", "date_to": "2026-11-19",
+        })[0]
         self.assertTrue(row["eligible_for_review"])
         self.assertEqual(row["provider_fixture_id"], "99")
         self.assertEqual(row["competition_key"], "10")
@@ -287,6 +289,8 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         self.assertEqual(client._get_json.call_args.kwargs["headers"]["Authorization"], "Token secret")
         self.assertEqual(client._get_json.call_args.args[0], BzzoiroAdapter.BASE_URL)
         self.assertEqual(client._get_json.call_args.kwargs["params"]["status"], "upcoming")
+        self.assertEqual(client._get_json.call_args.kwargs["params"]["date_from"], "2026-11-12")
+        self.assertEqual(client._get_json.call_args.kwargs["params"]["date_to"], "2026-11-19")
         client.close()
 
 

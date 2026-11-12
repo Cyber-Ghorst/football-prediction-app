@@ -52,6 +52,9 @@ class FreeFixtureProviderRefreshTests(unittest.TestCase):
         self.assertEqual(collect_livescore.call_args.kwargs["date_from"], "2026-11-11")
         self.assertEqual(collect_livescore.call_args.kwargs["date_to"], "2026-11-18")
         self.assertEqual(collect_bzz.call_args.kwargs["client"], bzz)
+        self.assertEqual(collect_bzz.call_args.kwargs["params"], {
+            "date_from": "2026-11-11", "date_to": "2026-11-18",
+        })
 
     @patch("free_fixture_provider_refresh.collect_bzzoiro_observations")
     @patch("free_fixture_provider_refresh.BzzoiroAdapter")
@@ -78,7 +81,11 @@ class FreeFixtureProviderRefreshTests(unittest.TestCase):
             "provider-db", today=datetime(2026, 11, 11, tzinfo=timezone.utc),
         )
         self.assertFalse(report["providers"]["bzzoiro"]["archived"])
-        collect_bzz.assert_called_once_with("provider-db", max_pages=20)
+        collect_bzz.assert_called_once_with(
+            "provider-db",
+            params={"date_from": "2026-11-11", "date_to": "2026-11-18"},
+            max_pages=20,
+        )
         bzz_cls.assert_not_called()
 
     def test_terms_acknowledgements_are_required_before_restricted_provider_collection(self):
