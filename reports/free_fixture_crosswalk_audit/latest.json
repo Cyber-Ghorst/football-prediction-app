@@ -1,7 +1,7 @@
 {
   "automatic_mapping_approvals": 0,
   "canonical_fixture_writes": 0,
-  "generated_at_utc": "2026-11-12T18:30:37.027770+00:00",
+  "generated_at_utc": "2026-11-12T20:00:26.083230+00:00",
   "prediction_ledger_writes": 0,
   "provider_independent_catalogue": {
     "automatic_mapping_approvals": 0,
@@ -1316,7 +1316,7 @@
           {
             "competition_name": "Spanish Copa de la Reina",
             "country": "Spain",
-            "observation_count": 8,
+            "observation_count": 6,
             "provider": "livescore_football",
             "provider_competition_id": "20381"
           }
@@ -1341,7 +1341,7 @@
           {
             "competition_name": "Spanish Copa del Rey",
             "country": "Spain",
-            "observation_count": 11,
+            "observation_count": 8,
             "provider": "livescore_football",
             "provider_competition_id": "3951"
           }
@@ -1543,7 +1543,7 @@
       {
         "competition_name": "Eredivisie",
         "country": null,
-        "observation_count": 756,
+        "observation_count": 918,
         "provider": "openligadb",
         "provider_competition_id": "6027"
       },
@@ -3569,7 +3569,7 @@
           }
         },
         "teams": {
-          "candidate_count": 92,
+          "candidate_count": 90,
           "candidates": [
             {
               "canonical_entity_id": "sportmonks:78",
@@ -3879,21 +3879,6 @@
               "match_method": null,
               "provider": "livescore_football",
               "provider_country": "Spain",
-              "provider_entity_id": "2737",
-              "provider_name": "Albacete",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": null,
-              "provider": "livescore_football",
-              "provider_country": "Spain",
               "provider_entity_id": "6827",
               "provider_name": "Alcoyano",
               "provider_parent_id": null,
@@ -4170,13 +4155,28 @@
               "provider_parent_name": null,
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
               "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "320",
+              "provider_name": "Cheltenham Town",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
             }
           ],
           "candidates_truncated": true,
           "manual_review_candidate_count": 15,
           "status_counts": {
             "candidate_requires_manual_approval": 15,
-            "no_exact_contextual_match": 77
+            "no_exact_contextual_match": 75
           }
         }
       },
@@ -4185,12 +4185,12 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 133,
+      "observation_count": 128,
       "snapshot_count": 3,
       "source_entity_counts": {
         "leagues": 11,
         "seasons": 11,
-        "teams": 92
+        "teams": 90
       },
       "status": "ok"
     },
@@ -5858,7 +5858,7 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 14571,
+      "observation_count": 14733,
       "snapshot_count": 3,
       "source_entity_counts": {
         "leagues": 38,
