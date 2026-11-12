@@ -1,0 +1,84 @@
+name: Independent data-provider refresh
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "independent_provider_refresh.py"
+      - "football_data_org_pipeline.py"
+      - "football_data_org_adapter.py"
+      - "provider_config.py"
+      - "provider_routing.py"
+      - "provider_data_storage.py"
+      - "free_fixture_observation_store.py"
+      - "free_fixture_crosswalk_audit.py"
+      - "test_independent_provider_refresh.py"
+      - "test_provider_routing.py"
+      - "docs/FOOTBALL_DATA_ORG_INTEGRATION.md"
+      - ".github/workflows/independent-data-provider-refresh.yml"
+  workflow_dispatch:
+  schedule:
+    - cron: "41 */6 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: independent-data-provider-refresh
+
+jobs:
+  refresh:
+    name: Refresh independent provider observations
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
+      FOOTBALL_DATA_ORG_API_TOKEN: ${{ secrets.FOOTBALL_DATA_API_KEY || secrets.FOOTBALL_DATA_ORG_API_TOKEN || secrets.FOOTBALL_DATA_ORG_TOKEN }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Validate provider storage
+        run: |
+          test -n "$PROVIDER_DATABASE_URL" || { echo "::error::PROVIDER_DATABASE_URL secret is missing."; exit 1; }
+          test -f root.crt || { echo "::error::CockroachDB root.crt is missing."; exit 1; }
+      - name: Collect independent provider observations (no canonical writes)
+        run: |
+          set -euo pipefail
+          mkdir -p reports/independent_provider_refresh/archive
+          stamp="$(date -u +%Y%m%dT%H%M%SZ)"
+          python independent_provider_refresh.py | tee "reports/independent_provider_refresh/archive/${stamp}.json"
+          python -m json.tool "reports/independent_provider_refresh/archive/${stamp}.json" >/dev/null
+          cp "reports/independent_provider_refresh/archive/${stamp}.json" reports/independent_provider_refresh/latest.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/independent_provider_refresh
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive independent provider refresh report ${stamp}"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+      - name: Refresh provider crosswalk review report
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          mkdir -p reports/free_fixture_crosswalk_audit/archive
+          stamp="$(date -u +%Y%m%dT%H%M%SZ)"
+          python free_fixture_crosswalk_audit.py
+          python -m json.tool reports/free_fixture_crosswalk_audit/latest.json >/dev/null
+          cp reports/free_fixture_crosswalk_audit/latest.json "reports/free_fixture_crosswalk_audit/archive/${stamp}.json"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/free_fixture_crosswalk_audit
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive independent provider crosswalk review ${stamp}"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
