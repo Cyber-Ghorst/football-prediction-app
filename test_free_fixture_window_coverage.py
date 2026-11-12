@@ -78,7 +78,7 @@ class FreeFixtureWindowCoverageTests(unittest.TestCase):
         self.assertNotIn("2026-11-11", report["daily_target_shortfalls_utc"])
         self.assertNotIn("2026-11-20", report["daily_target_shortfalls_utc"])
         self.assertEqual(report["partial_boundary_days_utc"], {
-            "2026-11-11": 0, "2026-11-20": 0,
+            "2026-11-11": 0, "2026-11-19": 0,
         })
         self.assertEqual(report["canonical_fixture_writes"], 0)
         self.assertEqual(report["temporary_fixture_staging_writes"], 0)
