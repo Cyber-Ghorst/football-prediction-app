@@ -118,7 +118,9 @@ def _observation(
 ) -> FixtureObservation:
     home_name, away_name = _text(home), _text(away)
     competition_key, season_key = _text(competition), _text(season)
-    competition_display = _text(competition_name) or competition_key
+    competition_display = _text(competition_name) or (
+        competition_key if not re.fullmatch(r"\d+", competition_key) else ""
+    )
     season_display = _text(season_name) or season_key
     parsed = _parse_aware_datetime(kickoff)
     status_text = _text(status).casefold().replace("_", " ")
