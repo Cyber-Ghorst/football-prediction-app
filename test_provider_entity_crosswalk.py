@@ -318,6 +318,32 @@ class ProviderEntityCrosswalkTests(unittest.TestCase):
         self.assertEqual(home["country"], "Germany")
         self.assertEqual(home["observation_count"], 2)
 
+    def test_football_data_org_extracts_competition_and_team_country_context(self):
+        entities = extract_provider_entities_from_observations("football_data_org", [{
+            "competition_key": "PL",
+            "competition_name": "Premier League",
+            "season_key": "2026-08-01",
+            "season_name": "2026-08-01",
+            "home_team_key": "57",
+            "home_team_name": "Arsenal FC",
+            "away_team_key": "61",
+            "away_team_name": "Chelsea FC",
+            "raw_payload": {
+                "competition": {"id": 2021, "name": "Premier League",
+                                "area": {"id": 2072, "name": "England"}},
+                "homeTeam": {"id": 57, "name": "Arsenal FC",
+                             "area": {"id": 2072, "name": "England"}},
+                "awayTeam": {"id": 61, "name": "Chelsea FC",
+                             "area": {"id": 2072, "name": "England"}},
+            },
+        }])
+        self.assertEqual(entities["leagues"][0]["country"], "England")
+        self.assertEqual(
+            {row["country"] for row in entities["teams"]},
+            {"England"},
+        )
+        self.assertEqual(entities["leagues"][0]["id"], "PL")
+
     def test_numeric_provider_league_id_is_not_used_as_display_name(self):
         entities = extract_provider_entities_from_observations("bzzoiro", [{
             "competition_key": "101", "competition_name": None,
