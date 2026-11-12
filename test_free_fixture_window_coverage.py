@@ -71,7 +71,7 @@ class FreeFixtureWindowCoverageTests(unittest.TestCase):
         self.assertFalse(report["minimum_target_met"])
         self.assertFalse(report["target_met"])
         self.assertFalse(report["stretch_target_met"])
-        self.assertEqual(report["max_highlights"], 15)
+        self.assertIsNone(report["max_highlights"])
         self.assertEqual(report["calendar_days_in_window"], 9)
         self.assertEqual(report["target_days_in_window"], 7)
         self.assertIn("2026-11-15", report["daily_target_shortfalls_utc"])
@@ -202,7 +202,7 @@ class FreeFixtureWindowCoverageTests(unittest.TestCase):
         self.assertEqual(report["daily_target"], 20)
         self.assertEqual(report["minimum_daily_target"], 10)
         self.assertEqual(report["stretch_daily_target"], 30)
-        self.assertEqual(report["max_highlights"], 15)
+        self.assertIsNone(report["max_highlights"])
 
     def test_requires_timezone_aware_now(self):
         with self.assertRaises(ValueError):
