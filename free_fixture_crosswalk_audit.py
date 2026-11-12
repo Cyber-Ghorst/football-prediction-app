@@ -115,6 +115,9 @@ def build_crosswalk_audit(
         "report_name": "free_fixture_crosswalk_audit",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "providers": results,
+        "provider_independent_catalogue": build_provider_independent_competition_catalogue(
+            source_leagues_by_provider
+        ),
         "automatic_mapping_approvals": 0,
         "canonical_fixture_writes": 0,
         "prediction_ledger_writes": 0,
@@ -156,6 +159,11 @@ def main() -> int:
                 "existing_link_counts": data.get("existing_link_counts", {}),
             }
             for provider, data in report["providers"].items()
+        },
+        "provider_independent_catalogue": {
+            "competition_count": report.get("provider_independent_catalogue", {}).get("competition_count", 0),
+            "corroborated_competition_count": report.get("provider_independent_catalogue", {}).get("corroborated_competition_count", 0),
+            "country_unscoped_source_count": report.get("provider_independent_catalogue", {}).get("country_unscoped_source_count", 0),
         },
         "automatic_mapping_approvals": 0,
         "canonical_fixture_writes": 0,
