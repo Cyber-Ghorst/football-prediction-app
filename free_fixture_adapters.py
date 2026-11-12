@@ -75,6 +75,31 @@ def _text(value: Any) -> str:
     return str(value).strip() if value is not None else ""
 
 
+def _competition_display_name(row: Mapping[str, Any], league: Mapping[str, Any]) -> str | None:
+    """Read human-readable competition labels across documented payload variants."""
+    candidates = (
+        league.get("name"), league.get("league_name"), league.get("leagueName"),
+        league.get("competition_name"), league.get("competitionName"),
+        league.get("display_name"), league.get("title"),
+        row.get("league_name"), row.get("leagueName"),
+        row.get("competition_name"), row.get("competitionName"),
+        row.get("tournament_name"), row.get("tournamentName"),
+        row.get("competition"), row.get("tournament"),
+    )
+    for candidate in candidates:
+        if isinstance(candidate, Mapping):
+            candidate = (
+                candidate.get("name") or candidate.get("league_name")
+                or candidate.get("leagueName") or candidate.get("competition_name")
+                or candidate.get("competitionName") or candidate.get("display_name")
+                or candidate.get("title")
+            )
+        value = _text(candidate)
+        if value and not re.fullmatch(r"\d+", value):
+            return value
+    return None
+
+
 def _normalise_openligadb_competition_name(value: Any) -> str:
     name = _text(value)
     name = re.sub(r"\s*\((?:Herren|Men)\)$", "", name, flags=re.IGNORECASE).strip()
@@ -577,7 +602,7 @@ class BzzoiroAdapter(_HttpAdapter):
                     licence="Bzzoiro API licence; app display/derived outputs only, no raw-feed redistribution",
                     fixture_id=row.get("id") or row.get("event_id") or row.get("fixture_id"),
                     competition=row.get("league_id") or league.get("id") or row.get("competition_id"),
-                    competition_name=league.get("name") or row.get("competition") or row.get("league_name"),
+                    competition_name=_competition_display_name(row, league),
                     season=row.get("season_id") or season.get("id") or row.get("season"),
                     season_name=season.get("name") or season.get("year") or row.get("season_name") or row.get("season_id"),
                     home=home, away=away,
