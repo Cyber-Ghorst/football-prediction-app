@@ -109,11 +109,11 @@ jobs:
             git push origin HEAD:main
           fi
 
-      - name: Build and archive four-day cross-provider fixture coverage report
+      - name: Build and archive seven-day cross-provider fixture coverage report
         continue-on-error: true
         env:
           PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
-          FREE_FIXTURE_WINDOW_DAYS: "4"
+          FREE_FIXTURE_WINDOW_DAYS: "7"
           FREE_FIXTURE_DAILY_TARGET: "20"
           FREE_FIXTURE_MIN_DAILY_TARGET: "10"
           FREE_FIXTURE_STRETCH_DAILY_TARGET: "30"
@@ -131,7 +131,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add reports/free_fixture_window_coverage
           if ! git diff --cached --quiet; then
-            git commit -m "Archive four-day provider fixture coverage report ${stamp}"
+            git commit -m "Archive seven-day provider fixture coverage report ${stamp}"
             git pull --rebase origin main
             git push origin HEAD:main
           fi
