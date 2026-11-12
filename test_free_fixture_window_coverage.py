@@ -195,10 +195,10 @@ class FreeFixtureWindowCoverageTests(unittest.TestCase):
             {"highlightly", "api_ninjas", "open_matchday"},
         )
 
-    def test_loader_defaults_match_four_day_target_and_highlight_cap(self):
+    def test_loader_defaults_match_seven_day_target_and_highlight_cap(self):
         with patch("free_fixture_window_coverage.load_provider_observation_snapshots", return_value=[]):
             report = build_free_fixture_window_coverage("provider-db", now=NOW)
-        self.assertEqual(report["window_days"], 4)
+        self.assertEqual(report["window_days"], 7)
         self.assertEqual(report["daily_target"], 20)
         self.assertEqual(report["minimum_daily_target"], 10)
         self.assertEqual(report["stretch_daily_target"], 30)
