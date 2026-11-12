@@ -53,6 +53,33 @@ class ProviderIndependentCompetitionCatalogueTests(unittest.TestCase):
         self.assertEqual(report["country_unscoped_source_count"], 2)
         self.assertEqual(len(report["country_unscoped_sources"]), 2)
 
+    def test_only_multi_provider_exact_consensus_enters_manual_seed_review(self):
+        report = build_provider_independent_competition_catalogue({
+            "openfootball": [
+                {"id": "en.1", "name": "Premier League", "country": "England"},
+                {"id": "de.1", "name": "Bundesliga", "country": "Germany"},
+            ],
+            "openligadb": [
+                {"id": "5996", "name": "Premier League", "country": "England"},
+                {"id": "4937", "name": "Bundesliga", "country": "Germany"},
+            ],
+            "bzzoiro": [
+                {"id": "91", "name": "National League", "country": "England"},
+            ],
+        })
+        candidates = report["canonical_seed_review_candidates"]
+        self.assertEqual(report["canonical_seed_review_candidate_count"], 2)
+        self.assertEqual(
+            {row["competition_name"] for row in candidates},
+            {"Premier League", "Bundesliga"},
+        )
+        for candidate in candidates:
+            self.assertEqual(candidate["status"], "eligible_for_manual_canonical_seed_review")
+            self.assertFalse(candidate["canonical_record_created"])
+            self.assertFalse(candidate["provider_links_created"])
+            self.assertFalse(candidate["automatic_approval"])
+            self.assertEqual(candidate["provider_count"], 2)
+
     def test_duplicate_entities_from_one_provider_do_not_fake_consensus(self):
         report = build_provider_independent_competition_catalogue({
             "bzzoiro": [
