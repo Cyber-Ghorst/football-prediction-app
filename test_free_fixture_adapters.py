@@ -287,10 +287,13 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         self.assertEqual(row["season_key"], "2026")
         self.assertNotIn("secret", str(row))
         self.assertEqual(client._get_json.call_args.kwargs["headers"]["Authorization"], "Token secret")
-        self.assertEqual(client._get_json.call_args.args[0], BzzoiroAdapter.BASE_URL)
-        self.assertEqual(client._get_json.call_args.kwargs["params"]["status"], "upcoming")
-        self.assertEqual(client._get_json.call_args.kwargs["params"]["date_from"], "2026-11-12")
-        self.assertEqual(client._get_json.call_args.kwargs["params"]["date_to"], "2026-11-19")
+        event_call = next(
+            call for call in client._get_json.call_args_list
+            if call.args[0] == BzzoiroAdapter.BASE_URL
+        )
+        self.assertEqual(event_call.kwargs["params"]["status"], "upcoming")
+        self.assertEqual(event_call.kwargs["params"]["date_from"], "2026-11-12")
+        self.assertEqual(event_call.kwargs["params"]["date_to"], "2026-11-19")
         client.close()
 
 
@@ -327,6 +330,36 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         self.assertIsNone(rows[2]["competition_name"])
         self.assertTrue(all(row["eligible_for_review"] for row in rows))
         client.close()
+
+    def test_bzzoiro_resolves_missing_league_identity_from_official_catalogue(self):
+        client = BzzoiroAdapter(token="secret")
+        kickoff = (NOW + timedelta(days=1)).isoformat()
+        event_payload = {"results": [{
+            "id": 301, "league_id": 14, "season_id": 1327,
+            "home_team": {"id": 1, "name": "Home FC"},
+            "away_team": {"id": 2, "name": "Away FC"},
+            "event_date": kickoff, "status": "upcoming",
+        }]}
+        league_payload = {"results": [{
+            "id": 14, "name": "Pro League", "country": "Belgium",
+            "current_season": {"id": 1327, "name": "2026"},
+        }]}
+        client._get_json = Mock(side_effect=[event_payload, league_payload])
+
+        row = client.upcoming()[0]
+
+        self.assertEqual(row["competition_name"], "Pro League")
+        self.assertEqual(row["season_name"], "2026")
+        self.assertEqual(row["raw_payload"]["league"]["country"], "Belgium")
+        self.assertTrue(row["eligible_for_review"])
+        catalogue_call = client._get_json.call_args_list[1]
+        self.assertEqual(
+            catalogue_call.args[0],
+            "https://sports.bzzoiro.com/api/v2/leagues/",
+        )
+        self.assertEqual(catalogue_call.kwargs["params"]["limit"], 200)
+        client.close()
+
 
     def test_bzzoiro_accepts_documented_notstarted_status_alias(self):
         client = BzzoiroAdapter(token="secret")

@@ -579,6 +579,26 @@ class BzzoiroAdapter(_HttpAdapter):
             raise FreeFixtureProviderError("Bzzoiro event detail has no event object.")
         return event
 
+    def leagues(self, *, max_pages: int = 10) -> list[dict[str, Any]]:
+        """Fetch the documented league catalogue for verified names and countries."""
+        query = {"limit": 200, "offset": 0}
+        headers = {"Authorization": f"Token {self.token}"}
+        output: list[dict[str, Any]] = []
+        for _ in range(max(1, int(max_pages))):
+            payload = self._get_json(
+                "https://sports.bzzoiro.com/api/v2/leagues/",
+                params=query,
+                headers=headers,
+            )
+            rows = payload.get("results") if isinstance(payload, dict) else None
+            if not isinstance(rows, list):
+                raise FreeFixtureProviderError("Bzzoiro league catalogue has no results array.")
+            output.extend(row for row in rows if isinstance(row, dict))
+            if not payload.get("next") or not rows:
+                break
+            query["offset"] = int(query["offset"]) + len(rows)
+        return output
+
     def upcoming(self, *, params: dict[str, Any] | None = None,
                  max_pages: int = 20) -> list[dict[str, Any]]:
         query = {"status": "upcoming", "limit": 200, "offset": 0, **(params or {})}
@@ -614,6 +634,39 @@ class BzzoiroAdapter(_HttpAdapter):
             if not payload.get("next") or not rows:
                 break
             query["offset"] = int(query.get("offset", 0)) + len(rows)
+
+        # Event list responses may expose only league_id. Resolve those IDs against
+        # the provider's documented league catalogue; never infer names from IDs.
+        if any(not item.get("competition_name") for item in output):
+            try:
+                catalogue = self.leagues()
+            except Exception:
+                catalogue = []
+            by_id = {
+                str(item.get("id")): item for item in catalogue
+                if item.get("id") is not None and item.get("name")
+            }
+            for item in output:
+                if item.get("competition_name"):
+                    continue
+                metadata = by_id.get(str(item.get("competition_key") or ""))
+                if not metadata:
+                    continue
+                item["competition_name"] = _text(metadata.get("name")) or None
+                raw = item.get("raw_payload")
+                if isinstance(raw, dict):
+                    raw["league"] = {
+                        **(raw.get("league") if isinstance(raw.get("league"), dict) else {}),
+                        **metadata,
+                    }
+                    current_season = metadata.get("current_season")
+                    if isinstance(current_season, Mapping):
+                        raw["season"] = dict(current_season)
+                        if str(current_season.get("id") or "") == str(item.get("season_key") or ""):
+                            item["season_name"] = (
+                                current_season.get("name") or current_season.get("year")
+                                or item.get("season_name")
+                            )
         return output
 
 
