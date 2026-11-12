@@ -121,6 +121,11 @@ def _display_value(value: Any) -> str:
     return str(value or "").strip()
 
 
+def _is_numeric_identifier_name(value: Any) -> bool:
+    """Reject provider IDs accidentally presented as human-readable league names."""
+    return bool(re.fullmatch(r"\d+", _display_value(value)))
+
+
 # Stable provider-ID aliases are explicit review hints, never automatic links.
 CURATED_PROVIDER_LEAGUE_NAME_ALIASES = {
     ("openligadb", "4936"): "La Liga",  # OpenLigaDB "LaLiga EA Sports"
@@ -186,6 +191,10 @@ def build_entity_crosswalk_candidates(
         if source_id is None or not source_name:
             output.append({**base, "status": "invalid_source_identity",
                            "reason": "Provider entity ID and name are both required."})
+            continue
+        if entity_type == "league" and _is_numeric_identifier_name(source_name):
+            output.append({**base, "status": "invalid_source_identity",
+                           "reason": "Numeric provider league ID is not a verified display name; retrieve the provider's actual league name before crosswalk review."})
             continue
         if entity_type == "season" and source_parent is None:
             output.append({**base, "status": "parent_competition_unmapped",
@@ -454,7 +463,9 @@ def extract_provider_entities_from_observations(
         raw = observation.get("raw_payload")
         raw = raw if isinstance(raw, Mapping) else {}
         competition_id = observation.get("competition_key")
-        competition_name = observation.get("competition_name") or competition_id
+        # Never turn a numeric provider ID into a display name. Missing league
+        # names stay absent and cannot enter crosswalk review as false candidates.
+        competition_name = observation.get("competition_name")
         country = _display_value(observation.get("country")) or _country_from_payload(raw)
         add("leagues", competition_id, competition_name, country=country)
         season_id = observation.get("season_key")
