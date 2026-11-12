@@ -58,6 +58,8 @@ class FreeFixtureObservationStoreTests(unittest.TestCase):
             self.assertEqual(result["eligible_for_review_count"], 1)
             self.assertEqual(result["canonical_fixture_writes"], 0)
             self.assertEqual(result["prediction_ledger_writes"], 0)
+            expected_resource = "independent_data_observations" if provider == "football_data_org" else "future_fixture_observations"
+            self.assertEqual(save.call_args.kwargs["resource_type"], expected_resource)
         self.assertEqual(save.call_count, 3)
 
     def test_rejects_provider_mismatch_and_missing_source_id(self):
