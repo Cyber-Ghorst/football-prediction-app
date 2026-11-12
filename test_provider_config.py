@@ -67,7 +67,10 @@ class ProviderRoleConfigTests(unittest.TestCase):
         self.assertEqual(rows["bzzoiro"]["credential_name"], "BZZOIRO_API_TOKEN")
         self.assertEqual(rows["openscores"]["role"], "Read-only historical result observations and entity-mapping audit; not a future-fixture source")
         self.assertEqual(rows["openscores"]["credential_name"], "OPENSCORES_API_KEY")
-        self.assertIn("not a future-fixture source", rows["openscores"]["app_integration"])\n        self.assertEqual(rows["football_data_org"]["adapter"], "implemented")\n        self.assertTrue(rows["football_data_org"]["credential_required"])\n        self.assertEqual(rows["football_data_org"]["credential_name"], "FOOTBALL_DATA_ORG_API_TOKEN")
+        self.assertIn("not a future-fixture source", rows["openscores"]["app_integration"])
+        self.assertEqual(rows["football_data_org"]["adapter"], "implemented")
+        self.assertTrue(rows["football_data_org"]["credential_required"])
+        self.assertEqual(rows["football_data_org"]["credential_name"], "FOOTBALL_DATA_ORG_API_TOKEN")
 
 
 if __name__ == '__main__':
