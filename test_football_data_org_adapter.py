@@ -59,7 +59,7 @@ class FootballDataOrgAdapterTests(unittest.TestCase):
         self.assertEqual(row["raw_payload"]["competition"]["area"]["name"], "England")
         params = client._get_json.call_args.args[1]
         self.assertEqual(params["competitions"], "PL")
-        self.assertEqual(params["status"], "SCHEDULED,TIMED")
+        self.assertNotIn("status", params)
         client.close()
 
     def test_non_scheduled_status_is_excluded(self):
