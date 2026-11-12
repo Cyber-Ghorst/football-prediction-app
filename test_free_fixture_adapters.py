@@ -294,6 +294,40 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         client.close()
 
 
+    def test_bzzoiro_extracts_competition_names_from_payload_variants(self):
+        client = BzzoiroAdapter(token="secret")
+        kickoff = (NOW + timedelta(days=1)).isoformat()
+        client._get_json = Mock(return_value={"results": [
+            {
+                "id": 201, "league_id": 10, "leagueName": "Premier League",
+                "season_id": 2026,
+                "home_team": {"id": 1, "name": "Home FC"},
+                "away_team": {"id": 2, "name": "Away FC"},
+                "event_date": kickoff, "status": "upcoming",
+            },
+            {
+                "id": 202, "league_id": 11,
+                "competition": {"id": 11, "competitionName": "La Liga"},
+                "season_id": 2026,
+                "home_team": {"id": 3, "name": "Home Two"},
+                "away_team": {"id": 4, "name": "Away Two"},
+                "event_date": kickoff, "status": "upcoming",
+            },
+            {
+                "id": 203, "league_id": 12, "competition": 12,
+                "season_id": 2026,
+                "home_team": {"id": 5, "name": "Home Three"},
+                "away_team": {"id": 6, "name": "Away Three"},
+                "event_date": kickoff, "status": "upcoming",
+            },
+        ]})
+        rows = client.upcoming()
+        self.assertEqual(rows[0]["competition_name"], "Premier League")
+        self.assertEqual(rows[1]["competition_name"], "La Liga")
+        self.assertIsNone(rows[2]["competition_name"])
+        self.assertTrue(all(row["eligible_for_review"] for row in rows))
+        client.close()
+
     def test_bzzoiro_accepts_documented_notstarted_status_alias(self):
         client = BzzoiroAdapter(token="secret")
         client._get_json = Mock(return_value={"results": [{
