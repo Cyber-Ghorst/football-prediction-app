@@ -258,7 +258,7 @@ def load_provider_observation_snapshots(
     provider: str | None = None,
     limit: int = 100,
 ) -> list[dict[str, Any]]:
-    """Load recent archived future-fixture observation batches for crosswalk review."""
+    """Load recent provider observation batches for crosswalk review, including independent data sources."""
     if not database_url:
         raise ValueError("PROVIDER_DATABASE_URL is required.")
     if isinstance(limit, bool) or not isinstance(limit, int) or not 1 <= limit <= 1000:
