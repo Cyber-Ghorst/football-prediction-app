@@ -1,7 +1,7 @@
 {
   "automatic_mapping_approvals": 0,
   "canonical_fixture_writes": 0,
-  "generated_at_utc": "2026-11-12T16:56:23.494072+00:00",
+  "generated_at_utc": "2026-11-12T17:10:18.537623+00:00",
   "prediction_ledger_writes": 0,
   "provider_independent_catalogue": {
     "automatic_mapping_approvals": 0,
@@ -1441,7 +1441,7 @@
           {
             "competition_name": "Club Friendlies",
             "country": "World",
-            "observation_count": 112,
+            "observation_count": 113,
             "provider": "bzzoiro",
             "provider_competition_id": "79"
           }
@@ -2936,7 +2936,7 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 1237,
+      "observation_count": 1238,
       "snapshot_count": 3,
       "source_entity_counts": {
         "leagues": 27,
@@ -2944,6 +2944,10 @@
         "teams": 691
       },
       "status": "ok"
+    },
+    "football_data_org": {
+      "error_type": "ValueError",
+      "status": "error"
     },
     "highlightly": {
       "reason": "Highlightly terms acknowledgement and non-betting-use confirmation are required.",
