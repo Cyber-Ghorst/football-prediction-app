@@ -287,6 +287,8 @@ class FreeFixtureAdapterTests(unittest.TestCase):
         self.assertEqual(client._get_json.call_args.kwargs["headers"]["Authorization"], "Token secret")
         self.assertEqual(client._get_json.call_args.args[0], BzzoiroAdapter.BASE_URL)
         self.assertEqual(client._get_json.call_args.kwargs["params"]["status"], "upcoming")
+        self.assertEqual(client._get_json.call_args.kwargs["params"]["date_from"], "2026-11-12")
+        self.assertEqual(client._get_json.call_args.kwargs["params"]["date_to"], "2026-11-19")
         client.close()
 
 
