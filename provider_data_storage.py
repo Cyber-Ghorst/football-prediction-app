@@ -272,7 +272,19 @@ def load_provider_observation_snapshots(
     ensure_provider_storage(database_url)
     with _connect(database_url) as connection:
         with connection.cursor() as cursor:
-            if provider_name:
+            if provider_name == "football_data_org":
+                cursor.execute(
+                    """SELECT snapshot_id, provider, resource_type, request_params,
+                              source_ids, payload, retrieved_at, expires_at, payload_sha256
+                       FROM provider_api_snapshots
+                       WHERE provider = %s
+                         AND resource_type IN (%s, %s)
+                       ORDER BY retrieved_at DESC, snapshot_id DESC
+                       LIMIT %s""",
+                    (provider_name, "future_fixture_observations",
+                     "independent_data_observations", limit),
+                )
+            elif provider_name:
                 cursor.execute(
                     """SELECT snapshot_id, provider, resource_type, request_params,
                               source_ids, payload, retrieved_at, expires_at, payload_sha256
