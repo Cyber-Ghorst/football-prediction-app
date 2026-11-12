@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from provider_crosswalk_review_report import (
+from provider_independent_competition_catalogue import (\n    build_provider_independent_competition_catalogue,\n)\nfrom provider_crosswalk_review_report import (
     build_provider_crosswalk_review_report,
     load_canonical_crosswalk_catalogue,
 )
@@ -28,7 +28,7 @@ def build_crosswalk_audit(
 ) -> dict[str, Any]:
     if not database_url:
         raise ValueError("PROVIDER_DATABASE_URL is required.")
-    results: dict[str, Any] = {}
+    results: dict[str, Any] = {}\n    source_leagues_by_provider: dict[str, list[dict[str, Any]]] = {}
     try:
         canonical_catalogue = load_canonical_crosswalk_catalogue(database_url)
     except Exception as exc:
@@ -67,7 +67,7 @@ def build_crosswalk_audit(
                 database_url, provider=provider, snapshot_limit=3,
                 canonical_catalogue=canonical_catalogue,
             )
-            categories = {}
+            source_leagues_by_provider[provider] = list(\n                report.get("source_entities", {}).get("leagues", [])\n            )\n            categories = {}
             for category, candidates in report.get("candidates", {}).items():
                 status_counts = Counter(
                     str(row.get("status") or "unknown")
