@@ -14,9 +14,6 @@ on:
       - "provider_entity_crosswalk.py"
       - "provider_data_storage.py"
       - "free_fixture_adapters.py"
-      - "football_data_org_adapter.py"
-      - "football_data_org_pipeline.py"
-      - "test_football_data_org_adapter.py"
       - "test_free_fixture_provider_refresh.py"
       - "free_fixture_observation_pipeline.py"
       - "free_fixture_canonical_promotion.py"
@@ -50,7 +47,6 @@ jobs:
       PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       BZZOIRO_API_TOKEN: ${{ secrets.BZZOIRO_API_TOKEN }}
-      FOOTBALL_DATA_ORG_API_TOKEN: ${{ secrets.FOOTBALL_DATA_API_KEY || secrets.FOOTBALL_DATA_ORG_API_TOKEN || secrets.FOOTBALL_DATA_ORG_TOKEN }}
       HIGHLIGHTLY_API_KEY: ${{ secrets.HIGHLIGHTLY_API_KEY }}
       API_NINJAS_API_KEY: ${{ secrets.API_NINJAS_API_KEY }}
       FREE_FIXTURE_NONCOMMERCIAL_ACK_API_NINJAS: ${{ secrets.FREE_FIXTURE_NONCOMMERCIAL_ACK_API_NINJAS }}
@@ -96,7 +92,6 @@ jobs:
         env:
           PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
           BZZOIRO_API_TOKEN: ${{ secrets.BZZOIRO_API_TOKEN }}
-          FOOTBALL_DATA_ORG_API_TOKEN: ${{ secrets.FOOTBALL_DATA_API_KEY || secrets.FOOTBALL_DATA_ORG_API_TOKEN || secrets.FOOTBALL_DATA_ORG_TOKEN }}
           HIGHLIGHTLY_API_KEY: ${{ secrets.HIGHLIGHTLY_API_KEY }}
           API_NINJAS_API_KEY: ${{ secrets.API_NINJAS_API_KEY }}
         run: |

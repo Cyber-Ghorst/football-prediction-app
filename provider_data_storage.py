@@ -258,7 +258,7 @@ def load_provider_observation_snapshots(
     provider: str | None = None,
     limit: int = 100,
 ) -> list[dict[str, Any]]:
-    """Load recent archived future-fixture observation batches for crosswalk review."""
+    """Load recent provider observation batches for crosswalk review, including independent data sources."""
     if not database_url:
         raise ValueError("PROVIDER_DATABASE_URL is required.")
     if isinstance(limit, bool) or not isinstance(limit, int) or not 1 <= limit <= 1000:
@@ -272,7 +272,19 @@ def load_provider_observation_snapshots(
     ensure_provider_storage(database_url)
     with _connect(database_url) as connection:
         with connection.cursor() as cursor:
-            if provider_name:
+            if provider_name == "football_data_org":
+                cursor.execute(
+                    """SELECT snapshot_id, provider, resource_type, request_params,
+                              source_ids, payload, retrieved_at, expires_at, payload_sha256
+                       FROM provider_api_snapshots
+                       WHERE provider = %s
+                         AND resource_type IN (%s, %s)
+                       ORDER BY retrieved_at DESC, snapshot_id DESC
+                       LIMIT %s""",
+                    (provider_name, "future_fixture_observations",
+                     "independent_data_observations", limit),
+                )
+            elif provider_name:
                 cursor.execute(
                     """SELECT snapshot_id, provider, resource_type, request_params,
                               source_ids, payload, retrieved_at, expires_at, payload_sha256

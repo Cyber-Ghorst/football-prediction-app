@@ -28,8 +28,10 @@ class ProviderRoleConfigTests(unittest.TestCase):
         }
         self.assertEqual(
             future,
-            {"sportmonks", "openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro", "football_data_org"},
+            {"sportmonks", "openligadb", "openfootball", "open_matchday", "livescore_football", "bzzoiro"},
         )
+        self.assertNotIn("future_fixtures", PROVIDER_ROLES["football_data_org"]["domains"])
+        self.assertIn("independent_data", PROVIDER_ROLES["football_data_org"]["domains"])
         self.assertNotIn("future_fixtures", PROVIDER_ROLES["openscores"]["domains"])
         self.assertNotIn("fixtures", PROVIDER_ROLES["openscores"]["domains"])
         self.assertNotIn("future_fixtures", PROVIDER_ROLES["highlightly"]["domains"])
@@ -69,6 +71,7 @@ class ProviderRoleConfigTests(unittest.TestCase):
         self.assertEqual(rows["openscores"]["credential_name"], "OPENSCORES_API_KEY")
         self.assertIn("not a future-fixture source", rows["openscores"]["app_integration"])
         self.assertEqual(rows["football_data_org"]["adapter"], "implemented")
+        self.assertIn("not a future-fixture discovery source", rows["football_data_org"]["app_integration"])
         self.assertTrue(rows["football_data_org"]["credential_required"])
         self.assertEqual(rows["football_data_org"]["credential_name"], "FOOTBALL_DATA_ORG_API_TOKEN")
 

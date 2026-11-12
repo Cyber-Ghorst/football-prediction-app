@@ -46,7 +46,6 @@ class FreeFixtureProviderRefreshTests(unittest.TestCase):
         self.assertIn("non-commercial-only", report["providers"]["open_matchday"]["skipped"])
         self.assertIn("not configured", report["providers"]["highlightly"]["skipped"])
         self.assertIn("not configured", report["providers"]["api_ninjas"]["skipped"])
-        self.assertIn("not configured", report["providers"]["football_data_org"]["skipped"])
         self.assertEqual(report["canonical_fixture_writes"], 0)
         self.assertEqual(report["prediction_ledger_writes"], 0)
         collect_livescore.assert_called_once()
@@ -157,27 +156,6 @@ class FreeFixtureProviderRefreshTests(unittest.TestCase):
         self.assertEqual(collect_openliga.call_args.kwargs["request_delay_seconds"], 1.05)
         self.assertTrue(report["providers"]["openligadb"]["archived"])
 
-
-    @patch("free_fixture_provider_refresh.collect_football_data_org_observations")
-    def test_football_data_org_collection_runs_independently_when_token_is_configured(self, collect):
-        collect.return_value = {
-            "provider": "football_data_org", "archived": True,
-            "observation_count": 12, "eligible_for_review_count": 10,
-        }
-        report = refresh_free_fixture_sources(
-            "provider-db",
-            today=datetime(2026, 11, 11, tzinfo=timezone.utc),
-            football_data_org_token="football-data-test-token",
-        )
-        collect.assert_called_once_with(
-            "provider-db",
-            date_from="2026-11-11",
-            date_to="2026-11-18",
-            api_token="football-data-test-token",
-        )
-        self.assertTrue(report["providers"]["football_data_org"]["archived"])
-        self.assertEqual(report["canonical_fixture_writes"], 0)
-        self.assertEqual(report["prediction_ledger_writes"], 0)
 
     def test_requires_provider_database_url(self):
         with self.assertRaisesRegex(ValueError, "PROVIDER_DATABASE_URL"):

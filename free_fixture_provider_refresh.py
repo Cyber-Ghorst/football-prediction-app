@@ -19,7 +19,6 @@ from free_fixture_observation_pipeline import (
     collect_openfootball_observations,
     collect_openligadb_observations,
 )
-from football_data_org_pipeline import collect_football_data_org_observations
 from livescore_football import LiveScoreFootballClient
 
 
@@ -50,7 +49,6 @@ def refresh_free_fixture_sources(
     highlightly_use_allowed: bool = False,
     api_ninjas_token: str | None = None,
     api_ninjas_noncommercial_confirmed: bool = False,
-    football_data_org_token: str | None = None,
     max_openligadb_scopes: int = 80,
     max_livescore_leagues: int = 40,
 ) -> dict[str, Any]:
@@ -200,25 +198,6 @@ def refresh_free_fixture_sources(
             "errors": [],
         }
 
-    # football-data.org is collected independently from Sportmonks and the
-    # other providers. Its observations remain staging-only until exact
-    # cross-provider mappings, freshness and persistence checks are approved.
-    if football_data_org_token:
-        try:
-            results["football_data_org"] = collect_football_data_org_observations(
-                database_url, date_from=date_from, date_to=date_to,
-                api_token=football_data_org_token,
-            )
-        except Exception as exc:
-            results["football_data_org"] = _error("football_data_org", exc)
-    else:
-        results["football_data_org"] = {
-            "provider": "football_data_org", "archived": False,
-            "observation_count": 0, "eligible_for_review_count": 0,
-            "skipped": "FOOTBALL_DATA_ORG_API_TOKEN is not configured",
-            "errors": [],
-        }
-
     # Open Matchday is intentionally excluded from unattended refresh because
     # its upstream licence is non-commercial-only. The manual UI requires an
     # explicit acknowledgement before any collection.
@@ -245,7 +224,6 @@ def main() -> int:
     token = os.getenv("BZZOIRO_API_TOKEN", "")
     highlightly_token = os.getenv("HIGHLIGHTLY_API_KEY") or os.getenv("API_FOOTBALL_KEY")
     api_ninjas_token = os.getenv("API_NINJAS_API_KEY") or os.getenv("API_NINJAS_KEY")
-    football_data_org_token = os.getenv("FOOTBALL_DATA_ORG_API_TOKEN") or os.getenv("FOOTBALL_DATA_ORG_TOKEN")
     max_openligadb = int(os.getenv("FREE_FIXTURE_OPENLIGADB_MAX_SCOPES", "80"))
     max_livescore = int(os.getenv("FREE_FIXTURE_LIVESCORE_MAX_LEAGUES", "40"))
     enabled = lambda name: str(os.getenv(name, "")).strip().casefold() in {"1", "true", "yes", "on"}
@@ -264,7 +242,6 @@ def main() -> int:
         highlightly_use_allowed=highlightly_use_allowed,
         api_ninjas_token=api_ninjas_token or None,
         api_ninjas_noncommercial_confirmed=api_ninjas_noncommercial_confirmed,
-        football_data_org_token=football_data_org_token or None,
         max_openligadb_scopes=max_openligadb,
         max_livescore_leagues=max_livescore,
     )

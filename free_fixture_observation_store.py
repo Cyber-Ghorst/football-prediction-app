@@ -1,6 +1,6 @@
-"""Append-only archive for normalized free future-fixture observations.
+"""Append-only archive for normalized provider observations.
 
-This is a staging store only. It never writes canonical fixtures or prediction
+Future-discovery providers use the future_fixture_observations resource; football-data.org uses a separate independent_data_observations resource. This store never writes canonical fixtures or prediction
 ledger rows and never changes the active provider routing.
 """
 from __future__ import annotations
@@ -54,7 +54,7 @@ def archive_future_fixture_observations(
     """Persist one immutable provider observation batch without canonical writes."""
     provider_name = str(provider or "").strip().casefold()
     if provider_name not in ALLOWED_PROVIDERS:
-        raise ValueError("provider is not an approved free future-fixture candidate.")
+        raise ValueError("provider is not an approved observation source.")
     if not database_url:
         raise ValueError("PROVIDER_DATABASE_URL is required.")
     if not isinstance(observations, list):
@@ -91,11 +91,16 @@ def archive_future_fixture_observations(
         "canonical_fixture_writes": 0,
         "prediction_ledger_writes": 0,
     }
-    cache_key = build_provider_cache_key(provider_name, RESOURCE_TYPE, params)
+    resource_type = (
+        "independent_data_observations"
+        if provider_name == "football_data_org"
+        else RESOURCE_TYPE
+    )
+    cache_key = build_provider_cache_key(provider_name, resource_type, params)
     result = save_provider_snapshot_and_record_run(
         database_url,
         provider=provider_name,
-        resource_type=RESOURCE_TYPE,
+        resource_type=resource_type,
         cache_key=cache_key,
         request_params=params,
         payload=payload,
@@ -107,7 +112,7 @@ def archive_future_fixture_observations(
     return {
         **result,
         "provider": provider_name,
-        "resource_type": RESOURCE_TYPE,
+        "resource_type": resource_type,
         "cache_key": cache_key,
         "observation_count": len(safe_rows),
         "eligible_for_review_count": eligible_count,

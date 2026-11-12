@@ -79,6 +79,12 @@ class ProviderRoutingTests(unittest.TestCase):
                          ["api_football"])
         self.assertEqual(registry.primary_sources("fixtures"), ["sportmonks"])
 
+    def test_football_data_org_is_in_independent_data_not_future_discovery(self):
+        registry = default_provider_registry()
+        self.assertIn("football_data_org", registry.primary_sources("independent_data"))
+        self.assertNotIn("football_data_org", registry.primary_sources("future_fixtures"))
+        self.assertEqual(registry.primary_sources("fixtures"), ["sportmonks"])
+
     def test_duplicate_assignment_is_rejected(self):
         with self.assertRaises(ValueError):
             ProviderRegistry([

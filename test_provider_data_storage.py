@@ -238,7 +238,7 @@ class ProviderStorageTests(unittest.TestCase):
 
     def test_load_observation_snapshots_accepts_football_data_org(self):
         row = (
-            "snapshot-1", "football_data_org", "future_fixture_observations",
+            "snapshot-1", "football_data_org", "independent_data_observations",
             {}, [], {"provider": "football_data_org", "observations": []},
             datetime.now(timezone.utc), None, "a" * 64,
         )

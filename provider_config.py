@@ -74,8 +74,8 @@ PROVIDER_ROLES: dict[str, dict[str, Any]] = {
     "football_data_org": {
         "display_name": "football-data.org v4",
         "rank": 11,
-        "role": "Independent fixture discovery and competition/team catalogue provider",
-        "domains": ("future_fixtures", "fixtures", "teams", "competitions"),
+        "role": "Independent current-season data provider and competition/team catalogue source",
+        "domains": ("independent_data", "fixtures", "teams", "competitions"),
         "limitation": "Requires FOOTBALL_DATA_ORG_API_TOKEN; account-plan competition coverage, rate limits, current-season access, freshness and canonical crosswalks must be verified before routing or promotion.",
     },
     "openscores": {
@@ -123,7 +123,7 @@ def provider_readiness() -> list[dict[str, Any]]:
         "open_matchday": "read-only CSV adapter implemented; fixed CET-1 timestamps are rejected without a verified timezone; non-commercial rights and route activation remain pending",
         "bzzoiro": "read-only API adapter implemented; requires BZZOIRO_API_TOKEN and uses documented v2 events endpoint; live coverage, licence and canonical crosswalk remain pending",
         "openscores": "read-only historical/result observations for mapping and audit; not a future-fixture source; not enabled for production prediction inputs",
-        "football_data_org": "independent football-data.org v4 adapter, read-only observation collector and scheduled staging refresh implemented; authenticated live coverage, competition/country/season/team crosswalks, freshness and database round-trip remain pending; no canonical promotion",
+        "football_data_org": "independent football-data.org v4 adapter and separate read-only provider refresh implemented; it is not a future-fixture discovery source. Authenticated coverage, competition/country/season/team crosswalks, freshness and database round-trip remain review-gated; no canonical promotion",
     }
     credential_names = {
         "api_football": "APISPORTS_API_KEY",
