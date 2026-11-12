@@ -163,6 +163,7 @@ def main() -> int:
         "provider_independent_catalogue": {
             "competition_count": report.get("provider_independent_catalogue", {}).get("competition_count", 0),
             "corroborated_competition_count": report.get("provider_independent_catalogue", {}).get("corroborated_competition_count", 0),
+            "canonical_seed_review_candidate_count": report.get("provider_independent_catalogue", {}).get("canonical_seed_review_candidate_count", 0),
             "country_unscoped_source_count": report.get("provider_independent_catalogue", {}).get("country_unscoped_source_count", 0),
         },
         "automatic_mapping_approvals": 0,
