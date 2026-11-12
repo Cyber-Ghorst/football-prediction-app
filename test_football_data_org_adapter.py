@@ -66,7 +66,7 @@ class FootballDataOrgAdapterTests(unittest.TestCase):
             row["raw_payload"]["_adapter_enrichment"]["competition_area"]["source_endpoint"],
             "https://api.football-data.org/v4/competitions",
         )
-        params = client._get_json.call_args.args[1]
+        params = client._get_json.call_args_list[0].args[1]
         self.assertEqual(params["competitions"], "PL")
         self.assertNotIn("status", params)
         client.close()
