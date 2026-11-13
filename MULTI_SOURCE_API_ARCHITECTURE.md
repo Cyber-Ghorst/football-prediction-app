@@ -22,11 +22,15 @@ Tactical sub-weights remain: playing style 6%, defensive structure 7%, attacking
 
 Future-fixture discovery is a separate domain (`future_fixtures`) and is not
 synonymous with generic fixture details or historical fixture retrieval.
-Sportmonks is currently the only wired scheduled-fixture collector. OpenLigaDB,
-OpenFootball, Open Matchday, LiveScoreFootball, Bzzoiro, Highlightly and API
-Ninjas are registered as disabled future-fixture candidates pending live
-account coverage, adapter, identity, timestamp, licence and persistence
-validation. OpenScores is read-only result-observation and entity-audit data
+Scheduled-fixture observations are collected by the six-hourly free-source
+refresh for LiveScoreFootball, OpenLigaDB, OpenFootball and Bzzoiro; their
+records remain staged in the provider-observation archive until source-specific
+identity, timestamp, coverage, licence and promotion checks pass. Highlightly
+and API Ninjas also have scheduled-observation collectors, but those collectors
+remain gated by credentials plus separate terms and permitted-use acknowledgements.
+Sportmonks remains active for current-season match data and its existing
+fixture-detail workflows; do not confuse that role with the staged discovery
+archive. OpenScores is read-only result-observation and entity-audit data
 only; it is not a future-fixture provider. Highlightly and API Ninjas also
 retain their existing enrichment/corroboration roles; API-Football remains
 historical-only for the configured account seasons.
@@ -96,20 +100,15 @@ These priorities are selection order, not automatic permission to substitute. A 
 - **Reconciliation foundation:** canonical normalizers and field-level conflict/provenance logic exist. The next integration milestone is to fetch records from each provider, apply validated crosswalks and timestamps, reconcile them, and surface provenance/conflicts in Streamlit.
 - **No model changes:** no provider issue authorizes changes to prediction weights, TVD rules, or 60/40 recency weighting. Missing data remains unknown; disagreements remain visible and are never averaged.
 
-## Repository audit: blockers to fix before enabling the providers
+## Current integration boundaries
 
-The current repository has a provider contract mismatch:
-
-1. `app.py` consumes API-Football v3 nested response objects (`league`, `team`, `fixture`), but the current `api_football.py` is an API Ninjas client returning API Ninjas-shaped records.
-2. `app.py` expects league objects with `league.id` and `league.name`; the current API Ninjas league catalog exposes top-level `id` and `name`.
-3. `app.py` expects team objects with `team.id` and `team.name`; API Ninjas club rows expose `team_id` and `name`.
-4. `data_layer2.py` calls `last_fixtures(team_id, season, last=10)`, but the current API Ninjas method accepts a different signature and does not accept that `last` keyword.
-5. `data_layer2.py` expects API-Football fixture nesting (`fixture`, `teams`, `goals`), which API Ninjas does not return.
-6. `app.py` passes raw standings rows to `collect_team_profile`, while Layer 2 treats standings as a dictionary keyed by numeric team ID.
-7. `data_layer2.py` treats `next_fixture` as a list, while the current API Ninjas client returns one dictionary or `None`.
-8. API Ninjas explicitly returns no fixture statistics, injuries or lineups in the current client. These fields must be sourced from another configured provider or remain unknown.
-
-These are integration-contract defects, not reasons to alter the prediction weights or TVD.
+The earlier API-Football/API Ninjas response-shape mismatch has been resolved:
+- `api_football.py` is the dedicated API-Football v3 client; `api_ninjas.py` is a separate API Ninjas client.
+- `highlightly.py` is a separate Highlightly adapter. Neither adapter is implicitly enabled by its module or credential alone.
+- The Streamlit Layer 2 flow retains its existing primary-provider path and optional exact-fixture fallbacks. API Ninjas does not provide match statistics, injuries or lineups; unsupported fields remain unknown.
+- The scheduled free-fixture refresh archives eligible Highlightly and API Ninjas upcoming-match observations into the CockroachDB provider-observation store only when the API key and both provider-specific acknowledgements are present.
+- Refresh reports expose credential-presence and acknowledgement booleans, never secret values. Staged observations do not write canonical fixtures or prediction-ledger records and do not activate either provider in the future-fixture routing registry.
+- Live API success, plan coverage, per-competition identity mapping, timestamp freshness and a database read-back audit are still required before either provider can be considered validated for production routing.
 
 ## Secrets and configuration
 
