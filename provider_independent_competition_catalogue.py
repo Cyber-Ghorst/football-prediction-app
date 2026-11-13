@@ -9,6 +9,7 @@ import re
 from typing import Any, Iterable, Mapping
 
 from provider_entity_crosswalk import normalize_entity_name
+from provider_neutral_identity import canonical_competition_key
 
 
 def _country_key(value: Any) -> str:
@@ -78,6 +79,41 @@ def _competition_type_evidence(sources: list[dict[str, Any]]) -> dict[str, Any]:
     else:
         status = "single_provider_type_evidence"
     return {"status": status, "values": values}
+
+
+def _identity_candidate(
+    competition_name: str,
+    country: str,
+    type_evidence: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Generate a review-only key only when type is corroborated by providers."""
+    if type_evidence.get("status") != "corroborated_same_type":
+        return {
+            "identity_candidate_key": None,
+            "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
+        }
+    values = type_evidence.get("values") or []
+    normalized_types = {
+        str(value.get("normalized_value") or "")
+        for value in values if isinstance(value, Mapping)
+    }
+    if len(normalized_types) != 1 or not next(iter(normalized_types), ""):
+        return {
+            "identity_candidate_key": None,
+            "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
+        }
+    competition_type = next(iter(normalized_types))
+    try:
+        key = canonical_competition_key(competition_name, country, competition_type)
+    except ValueError:
+        return {
+            "identity_candidate_key": None,
+            "identity_candidate_key_status": "blocked_missing_identity_dimension",
+        }
+    return {
+        "identity_candidate_key": key,
+        "identity_candidate_key_status": "generated_for_manual_review_only",
+    }
 
 
 def _season_consensus(sources: list[dict[str, Any]]) -> dict[str, Any]:
@@ -172,16 +208,23 @@ def build_provider_independent_competition_catalogue(
             key=lambda row: (row["provider"], row["competition_name"].casefold(),
                              row["provider_competition_id"]),
         )
+        competition_names = sorted(entry["competition_names"], key=str.casefold)
+        countries = sorted(entry["countries"], key=str.casefold)
+        type_evidence = _competition_type_evidence(sources)
+        identity_candidate = _identity_candidate(
+            competition_names[0], entry["normalized_country"], type_evidence
+        )
         entries.append({
             "normalized_name": entry["normalized_name"],
             "normalized_country": entry["normalized_country"],
-            "competition_names": sorted(entry["competition_names"], key=str.casefold),
-            "countries": sorted(entry["countries"], key=str.casefold),
+            "competition_names": competition_names,
+            "countries": countries,
             "provider_count": len(providers),
             "providers": providers,
             "sources": sources,
             "season_evidence": _season_consensus(sources),
-            "competition_type_evidence": _competition_type_evidence(sources),
+            "competition_type_evidence": type_evidence,
+            **identity_candidate,
             "status": "corroborated_multi_provider" if len(providers) >= 2 else "single_provider_only",
             "canonical_mapping_created": False,
         })
@@ -203,6 +246,8 @@ def build_provider_independent_competition_catalogue(
             "sources": row["sources"],
             "season_evidence": row["season_evidence"],
             "competition_type_evidence": row["competition_type_evidence"],
+            "identity_candidate_key": row["identity_candidate_key"],
+            "identity_candidate_key_status": row["identity_candidate_key_status"],
             "status": "eligible_for_manual_canonical_seed_review",
             "canonical_record_created": False,
             "provider_links_created": False,
