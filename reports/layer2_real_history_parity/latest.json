@@ -1,7 +1,7 @@
 {
   "audit_mode": "read_only",
   "database_writes": false,
-  "generated_at": "2026-11-13T19:45:40.022324+00:00",
+  "generated_at": "2026-11-13T19:48:40.941642+00:00",
   "interpretation": "Compare exact common fixture identities and shared values. Provider-specific coverage, provenance, tactical calculations and missing fields are reported, not forced equal or imputed. This audit does not authorize live-route promotion.",
   "live_prediction_route_modified": false,
   "prediction_engine_modified": false,
@@ -429,6 +429,11 @@
           "matched": 10,
           "mismatched_fixture_ids": []
         },
+        "opponent_strength": {
+          "compared": 10,
+          "matched": 10,
+          "mismatched_fixture_ids": []
+        },
         "venue": {
           "compared": 10,
           "matched": 10,
@@ -472,7 +477,7 @@
         "matches_with_any_statistics": 10,
         "matches_with_complete_core_statistics": 0,
         "normalized_statistics_rows": 8430,
-        "opponent_strength_matches": 0,
+        "opponent_strength_matches": 10,
         "provider": "sportmonks",
         "repository_fixture_payloads": 380,
         "repository_fixture_rows": 380,
@@ -1204,6 +1209,11 @@
           "matched": 10,
           "mismatched_fixture_ids": []
         },
+        "opponent_strength": {
+          "compared": 10,
+          "matched": 10,
+          "mismatched_fixture_ids": []
+        },
         "venue": {
           "compared": 10,
           "matched": 10,
@@ -1247,7 +1257,7 @@
         "matches_with_any_statistics": 10,
         "matches_with_complete_core_statistics": 1,
         "normalized_statistics_rows": 8430,
-        "opponent_strength_matches": 0,
+        "opponent_strength_matches": 10,
         "provider": "sportmonks",
         "repository_fixture_payloads": 380,
         "repository_fixture_rows": 380,
@@ -1979,6 +1989,11 @@
           "matched": 10,
           "mismatched_fixture_ids": []
         },
+        "opponent_strength": {
+          "compared": 10,
+          "matched": 10,
+          "mismatched_fixture_ids": []
+        },
         "venue": {
           "compared": 10,
           "matched": 10,
@@ -2022,7 +2037,7 @@
         "matches_with_any_statistics": 10,
         "matches_with_complete_core_statistics": 0,
         "normalized_statistics_rows": 8430,
-        "opponent_strength_matches": 0,
+        "opponent_strength_matches": 10,
         "provider": "sportmonks",
         "repository_fixture_payloads": 380,
         "repository_fixture_rows": 380,
@@ -2754,6 +2769,11 @@
           "matched": 10,
           "mismatched_fixture_ids": []
         },
+        "opponent_strength": {
+          "compared": 10,
+          "matched": 10,
+          "mismatched_fixture_ids": []
+        },
         "venue": {
           "compared": 10,
           "matched": 10,
@@ -2797,7 +2817,7 @@
         "matches_with_any_statistics": 10,
         "matches_with_complete_core_statistics": 0,
         "normalized_statistics_rows": 8430,
-        "opponent_strength_matches": 0,
+        "opponent_strength_matches": 10,
         "provider": "sportmonks",
         "repository_fixture_payloads": 380,
         "repository_fixture_rows": 380,
@@ -3529,6 +3549,11 @@
           "matched": 10,
           "mismatched_fixture_ids": []
         },
+        "opponent_strength": {
+          "compared": 10,
+          "matched": 10,
+          "mismatched_fixture_ids": []
+        },
         "venue": {
           "compared": 10,
           "matched": 10,
@@ -3572,7 +3597,7 @@
         "matches_with_any_statistics": 10,
         "matches_with_complete_core_statistics": 0,
         "normalized_statistics_rows": 8430,
-        "opponent_strength_matches": 0,
+        "opponent_strength_matches": 10,
         "provider": "sportmonks",
         "repository_fixture_payloads": 380,
         "repository_fixture_rows": 380,
@@ -4304,6 +4329,11 @@
           "matched": 10,
           "mismatched_fixture_ids": []
         },
+        "opponent_strength": {
+          "compared": 10,
+          "matched": 10,
+          "mismatched_fixture_ids": []
+        },
         "venue": {
           "compared": 10,
           "matched": 10,
@@ -4347,7 +4377,7 @@
         "matches_with_any_statistics": 10,
         "matches_with_complete_core_statistics": 1,
         "normalized_statistics_rows": 8430,
-        "opponent_strength_matches": 0,
+        "opponent_strength_matches": 10,
         "provider": "sportmonks",
         "repository_fixture_payloads": 380,
         "repository_fixture_rows": 380,
@@ -5079,6 +5109,11 @@
           "matched": 10,
           "mismatched_fixture_ids": []
         },
+        "opponent_strength": {
+          "compared": 10,
+          "matched": 10,
+          "mismatched_fixture_ids": []
+        },
         "venue": {
           "compared": 10,
           "matched": 10,
@@ -5122,7 +5157,7 @@
         "matches_with_any_statistics": 10,
         "matches_with_complete_core_statistics": 1,
         "normalized_statistics_rows": 8430,
-        "opponent_strength_matches": 0,
+        "opponent_strength_matches": 10,
         "provider": "sportmonks",
         "repository_fixture_payloads": 380,
         "repository_fixture_rows": 380,
@@ -5854,6 +5889,11 @@
           "matched": 10,
           "mismatched_fixture_ids": []
         },
+        "opponent_strength": {
+          "compared": 10,
+          "matched": 10,
+          "mismatched_fixture_ids": []
+        },
         "venue": {
           "compared": 10,
           "matched": 10,
@@ -5897,7 +5937,7 @@
         "matches_with_any_statistics": 10,
         "matches_with_complete_core_statistics": 0,
         "normalized_statistics_rows": 8430,
-        "opponent_strength_matches": 0,
+        "opponent_strength_matches": 10,
         "provider": "sportmonks",
         "repository_fixture_payloads": 380,
         "repository_fixture_rows": 380,
@@ -6629,6 +6669,11 @@
           "matched": 10,
           "mismatched_fixture_ids": []
         },
+        "opponent_strength": {
+          "compared": 10,
+          "matched": 10,
+          "mismatched_fixture_ids": []
+        },
         "venue": {
           "compared": 10,
           "matched": 10,
@@ -6672,7 +6717,7 @@
         "matches_with_any_statistics": 10,
         "matches_with_complete_core_statistics": 0,
         "normalized_statistics_rows": 8430,
-        "opponent_strength_matches": 0,
+        "opponent_strength_matches": 10,
         "provider": "sportmonks",
         "repository_fixture_payloads": 380,
         "repository_fixture_rows": 380,
@@ -7404,6 +7449,11 @@
           "matched": 10,
           "mismatched_fixture_ids": []
         },
+        "opponent_strength": {
+          "compared": 10,
+          "matched": 10,
+          "mismatched_fixture_ids": []
+        },
         "venue": {
           "compared": 10,
           "matched": 10,
@@ -7447,7 +7497,7 @@
         "matches_with_any_statistics": 10,
         "matches_with_complete_core_statistics": 0,
         "normalized_statistics_rows": 8430,
-        "opponent_strength_matches": 0,
+        "opponent_strength_matches": 10,
         "provider": "sportmonks",
         "repository_fixture_payloads": 380,
         "repository_fixture_rows": 380,
@@ -8179,6 +8229,11 @@
           "matched": 10,
           "mismatched_fixture_ids": []
         },
+        "opponent_strength": {
+          "compared": 10,
+          "matched": 10,
+          "mismatched_fixture_ids": []
+        },
         "venue": {
           "compared": 10,
           "matched": 10,
@@ -8222,7 +8277,7 @@
         "matches_with_any_statistics": 10,
         "matches_with_complete_core_statistics": 0,
         "normalized_statistics_rows": 8430,
-        "opponent_strength_matches": 0,
+        "opponent_strength_matches": 10,
         "provider": "sportmonks",
         "repository_fixture_payloads": 380,
         "repository_fixture_rows": 380,
@@ -8954,6 +9009,11 @@
           "matched": 10,
           "mismatched_fixture_ids": []
         },
+        "opponent_strength": {
+          "compared": 10,
+          "matched": 10,
+          "mismatched_fixture_ids": []
+        },
         "venue": {
           "compared": 10,
           "matched": 10,
@@ -8997,7 +9057,7 @@
         "matches_with_any_statistics": 10,
         "matches_with_complete_core_statistics": 0,
         "normalized_statistics_rows": 8430,
-        "opponent_strength_matches": 0,
+        "opponent_strength_matches": 10,
         "provider": "sportmonks",
         "repository_fixture_payloads": 380,
         "repository_fixture_rows": 380,
@@ -9729,6 +9789,11 @@
           "matched": 10,
           "mismatched_fixture_ids": []
         },
+        "opponent_strength": {
+          "compared": 10,
+          "matched": 10,
+          "mismatched_fixture_ids": []
+        },
         "venue": {
           "compared": 10,
           "matched": 10,
@@ -9772,7 +9837,7 @@
         "matches_with_any_statistics": 10,
         "matches_with_complete_core_statistics": 0,
         "normalized_statistics_rows": 8430,
-        "opponent_strength_matches": 0,
+        "opponent_strength_matches": 10,
         "provider": "sportmonks",
         "repository_fixture_payloads": 380,
         "repository_fixture_rows": 380,
@@ -10504,6 +10569,11 @@
           "matched": 10,
           "mismatched_fixture_ids": []
         },
+        "opponent_strength": {
+          "compared": 10,
+          "matched": 10,
+          "mismatched_fixture_ids": []
+        },
         "venue": {
           "compared": 10,
           "matched": 10,
@@ -10547,7 +10617,7 @@
         "matches_with_any_statistics": 10,
         "matches_with_complete_core_statistics": 1,
         "normalized_statistics_rows": 8430,
-        "opponent_strength_matches": 0,
+        "opponent_strength_matches": 10,
         "provider": "sportmonks",
         "repository_fixture_payloads": 380,
         "repository_fixture_rows": 380,
@@ -11279,6 +11349,11 @@
           "matched": 10,
           "mismatched_fixture_ids": []
         },
+        "opponent_strength": {
+          "compared": 10,
+          "matched": 10,
+          "mismatched_fixture_ids": []
+        },
         "venue": {
           "compared": 10,
           "matched": 10,
@@ -11322,7 +11397,7 @@
         "matches_with_any_statistics": 10,
         "matches_with_complete_core_statistics": 0,
         "normalized_statistics_rows": 8430,
-        "opponent_strength_matches": 0,
+        "opponent_strength_matches": 10,
         "provider": "sportmonks",
         "repository_fixture_payloads": 380,
         "repository_fixture_rows": 380,
@@ -12054,6 +12129,11 @@
           "matched": 10,
           "mismatched_fixture_ids": []
         },
+        "opponent_strength": {
+          "compared": 10,
+          "matched": 10,
+          "mismatched_fixture_ids": []
+        },
         "venue": {
           "compared": 10,
           "matched": 10,
@@ -12097,7 +12177,7 @@
         "matches_with_any_statistics": 10,
         "matches_with_complete_core_statistics": 0,
         "normalized_statistics_rows": 8430,
-        "opponent_strength_matches": 0,
+        "opponent_strength_matches": 10,
         "provider": "sportmonks",
         "repository_fixture_payloads": 380,
         "repository_fixture_rows": 380,
@@ -12829,6 +12909,11 @@
           "matched": 10,
           "mismatched_fixture_ids": []
         },
+        "opponent_strength": {
+          "compared": 10,
+          "matched": 10,
+          "mismatched_fixture_ids": []
+        },
         "venue": {
           "compared": 10,
           "matched": 10,
@@ -12872,7 +12957,7 @@
         "matches_with_any_statistics": 10,
         "matches_with_complete_core_statistics": 0,
         "normalized_statistics_rows": 8430,
-        "opponent_strength_matches": 0,
+        "opponent_strength_matches": 10,
         "provider": "sportmonks",
         "repository_fixture_payloads": 380,
         "repository_fixture_rows": 380,
@@ -13604,6 +13689,11 @@
           "matched": 10,
           "mismatched_fixture_ids": []
         },
+        "opponent_strength": {
+          "compared": 10,
+          "matched": 10,
+          "mismatched_fixture_ids": []
+        },
         "venue": {
           "compared": 10,
           "matched": 10,
@@ -13647,7 +13737,7 @@
         "matches_with_any_statistics": 10,
         "matches_with_complete_core_statistics": 0,
         "normalized_statistics_rows": 8430,
-        "opponent_strength_matches": 0,
+        "opponent_strength_matches": 10,
         "provider": "sportmonks",
         "repository_fixture_payloads": 380,
         "repository_fixture_rows": 380,
@@ -14379,6 +14469,11 @@
           "matched": 10,
           "mismatched_fixture_ids": []
         },
+        "opponent_strength": {
+          "compared": 10,
+          "matched": 10,
+          "mismatched_fixture_ids": []
+        },
         "venue": {
           "compared": 10,
           "matched": 10,
@@ -14422,7 +14517,7 @@
         "matches_with_any_statistics": 10,
         "matches_with_complete_core_statistics": 0,
         "normalized_statistics_rows": 8430,
-        "opponent_strength_matches": 0,
+        "opponent_strength_matches": 10,
         "provider": "sportmonks",
         "repository_fixture_payloads": 380,
         "repository_fixture_rows": 380,
@@ -15154,6 +15249,11 @@
           "matched": 10,
           "mismatched_fixture_ids": []
         },
+        "opponent_strength": {
+          "compared": 10,
+          "matched": 10,
+          "mismatched_fixture_ids": []
+        },
         "venue": {
           "compared": 10,
           "matched": 10,
@@ -15197,7 +15297,7 @@
         "matches_with_any_statistics": 10,
         "matches_with_complete_core_statistics": 0,
         "normalized_statistics_rows": 8430,
-        "opponent_strength_matches": 0,
+        "opponent_strength_matches": 10,
         "provider": "sportmonks",
         "repository_fixture_payloads": 380,
         "repository_fixture_rows": 380,
@@ -15520,8 +15620,8 @@
   ],
   "totals": {
     "common_fixtures": 200,
-    "shared_match_field_matches": 1000,
-    "shared_match_fields_compared": 1000,
+    "shared_match_field_matches": 1200,
+    "shared_match_fields_compared": 1200,
     "shared_statistic_values_compared": 2760,
     "shared_statistic_values_matched": 2760,
     "teams_compared": 20,
