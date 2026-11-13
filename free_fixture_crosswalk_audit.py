@@ -75,6 +75,9 @@ def build_crosswalk_audit(
             source_leagues_by_provider[provider] = list(
                 report.get("source_entities", {}).get("leagues", [])
             )
+            source_seasons_by_provider[provider] = list(
+                report.get("source_entities", {}).get("seasons", [])
+            )
             categories = {}
             for category, candidates in report.get("candidates", {}).items():
                 status_counts = Counter(
@@ -117,7 +120,7 @@ def build_crosswalk_audit(
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "providers": results,
         "provider_independent_catalogue": build_provider_independent_competition_catalogue(
-            source_leagues_by_provider
+            source_leagues_by_provider, source_seasons_by_provider
         ),
         "automatic_mapping_approvals": 0,
         "canonical_fixture_writes": 0,
