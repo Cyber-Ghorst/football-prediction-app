@@ -889,14 +889,13 @@ def search_upcoming_repository_fixtures(
     window_days: int = 7,
     limit: int = 300,
 ) -> list[dict[str, Any]]:
-    """Search stored Sportmonks fixtures within a strict rolling 1–7 day window."""
+    """Search stored canonical fixtures from any approved provider within 1–7 days."""
     if not database_url:
         raise ValueError("PROVIDER_DATABASE_URL is required.")
     if isinstance(window_days, bool) or not isinstance(window_days, int) or not 1 <= window_days <= 7:
         raise ValueError("window_days must be an integer from 1 through 7.")
     safe_limit = max(1, min(int(limit), 500))
     clauses = [
-        "f.source_provider = 'sportmonks'",
         "f.starting_at > NOW()",
         f"f.starting_at <= NOW() + INTERVAL '{window_days} days'",
         "LOWER(COALESCE(f.status, '')) IN "
