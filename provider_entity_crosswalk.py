@@ -402,6 +402,22 @@ def save_explicit_provider_entity_links(
     return saved
 
 
+def _competition_type_from_payload(raw: Mapping[str, Any]) -> str | None:
+    """Read an explicit provider competition-type field; never infer league/cup."""
+    for parent_name in ("competition", "league", "tournament"):
+        parent = raw.get(parent_name)
+        if isinstance(parent, Mapping):
+            value = _display_value(_value(
+                parent, "type", "competitionType", "competition_type",
+                "typeName", "type_name", "format",
+            ))
+            if value:
+                return value
+    return _display_value(_value(
+        raw, "competition_type", "competitionType", "tournament_type"
+    )) or None
+
+
 def _country_from_payload(raw: Mapping[str, Any], team_key: str | None = None) -> str | None:
     country = _display_value(_value(raw, "country", "leagueCountry", "league_country"))
     if country:
@@ -483,7 +499,7 @@ def extract_provider_entities_from_observations(
         # names stay absent and cannot enter crosswalk review as false candidates.
         competition_name = observation.get("competition_name")
         country = _display_value(observation.get("country")) or _country_from_payload(raw)
-        add("leagues", competition_id, competition_name, country=country)
+        add(\n            "leagues", competition_id, competition_name, country=country,\n            competition_type=_competition_type_from_payload(raw),\n        )
         season_id = observation.get("season_key")
         season_name = observation.get("season_name") or season_id
         season_link_id = provider_season_entity_id(competition_id, season_id)
