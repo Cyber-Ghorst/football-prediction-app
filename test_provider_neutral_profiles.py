@@ -349,5 +349,26 @@ class ProviderNeutralProfileTests(unittest.TestCase):
         )
 
 
+    def test_data_quality_exposes_complete_history_diagnostics_without_metric_key_collision(self):
+        fixture = _fixture("fixture:1")
+        profile = build_provider_neutral_team_profile(
+            {"team_id": "canonical:home", "name": "Home FC"},
+            [fixture], season_id="canonical:season",
+        )
+        quality = profile["data_quality"]
+        history = profile["history_collection_diagnostics"]
+        for key in (
+            "fixtures_scanned", "same_season_fixtures", "team_fixtures",
+            "completed_fixtures", "history_order", "duplicate_fixture_id_count",
+            "duplicate_fixture_fingerprint_count", "team_fixture_accounting_status",
+            "history_integrity_status",
+        ):
+            self.assertIn(key, quality)
+            self.assertEqual(quality[key], history[key])
+        self.assertEqual(quality["statistics_coverage_by_metric"],
+                         history["statistics_coverage_by_metric"])
+        self.assertIn("tactical_statistics_coverage_by_metric", quality)
+
+
 if __name__ == "__main__":
     unittest.main()

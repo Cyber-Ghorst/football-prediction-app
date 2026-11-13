@@ -447,10 +447,12 @@ def build_provider_neutral_team_profile(
             "team_fixture_accounting_status": history_diagnostics["team_fixture_accounting_status"],
             "tactical_evidence_source": "canonical_repository_season_statistics",
             "tactical_evidence_dimensions_available": tactical_evidence.get("evidence_metadata", {}).get("available_dimensions", 0),
-            "statistics_coverage_by_metric": {
+            "tactical_statistics_coverage_by_metric": {
                 name: sum(name in (match.get("statistics") or {}) for match in recent)
                 for name in tactics.get("available_metrics", {})
             },
+            **history_diagnostics,
+            "statistics_coverage_by_metric": core_coverage,
             "excluded": excluded,
         },
     }
