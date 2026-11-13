@@ -30,7 +30,11 @@ class ProviderNeutralProfileTests(unittest.TestCase):
         self.assertEqual(profile["id"], "canonical:home")
         self.assertEqual(profile["matches"][0]["goals_for"], 2)
         self.assertEqual(profile["matches"][0]["goals_against"], 1)
-        self.assertIsNone(profile["matches"][0]["opponent_strength"])
+        self.assertEqual(profile["matches"][0]["opponent_strength"], 50.0)
+        self.assertEqual(
+            profile["data_quality"]["opponent_strength_source"],
+            "derived_from_completed_canonical_season_fixtures",
+        )
         self.assertIsNone(profile["player_availability"])
         self.assertFalse(profile["lineups"]["lineups_available"])
         self.assertEqual(profile["data_quality"]["provider"], "canonical_repository")
