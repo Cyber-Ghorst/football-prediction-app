@@ -249,6 +249,9 @@ def build_provider_neutral_team_profile(
             "opponent_statistics_invalid_rows": invalid_statistics_by_fixture_team.get((fixture_id, opponent_id), []),
             "opponent_statistics_unmapped_rows": unmapped_statistics_by_fixture_team.get((fixture_id, opponent_id), []),
             "source_provider": fixture.get("source_provider"),
+            "collection_fetched_at": fixture.get("collection_fetched_at"),
+            "repository_collected_at": fixture.get("repository_collected_at"),
+            "provider_updated_at": fixture.get("provider_updated_at"),
         })
 
     matches.sort(key=lambda row: row["date"], reverse=True)
@@ -269,6 +272,29 @@ def build_provider_neutral_team_profile(
         duplicate_issue or excluded["invalid_kickoff"] or excluded["invalid_score"]
         or team_fixture_accounting_gap
     )
+    def latest_timestamp(field: str) -> str | None:
+        values = [_utc_datetime(match.get(field)) for match in recent if match.get(field)]
+        values = [value for value in values if value is not None]
+        return max(values).isoformat() if values else None
+
+    core_coverage = {
+        row["statistic"]: row["fixtures_available"]
+        for row in statistics_coverage["metrics"]
+    }
+    matches_with_any_statistics = sum(bool(match.get("statistics")) for match in recent)
+    matches_with_complete_core_statistics = sum(
+        all(
+            any((match.get("statistics") or {}).get(name) is not None for name in aliases)
+            for _label, _group, aliases in __import__("statistics_coverage").CORE_STATISTICS
+        )
+        for match in recent
+    )
+    core_observation_target = len(recent) * statistics_coverage["core_metrics_total"]
+    core_observations = sum(core_coverage.values())
+    core_completeness_pct = (
+        round(core_observations / core_observation_target * 100, 1)
+        if core_observation_target else 0.0
+    )
     history_diagnostics = {
         **history,
         "excluded_wrong_season": excluded["wrong_season"],
@@ -286,6 +312,14 @@ def build_provider_neutral_team_profile(
         "team_fixture_accounting_gap": team_fixture_accounting_gap,
         "team_fixture_accounting_status": "balanced" if team_fixture_accounting_gap == 0 else "unbalanced",
         "history_integrity_status": "issues_detected" if integrity_issue else "ok",
+        "history_collection_fetched_at": latest_timestamp("collection_fetched_at"),
+        "history_repository_collected_at": latest_timestamp("repository_collected_at"),
+        "history_provider_updated_at": latest_timestamp("provider_updated_at"),
+        "statistics_core_metrics": list(core_coverage),
+        "statistics_coverage_by_metric": core_coverage,
+        "matches_with_any_statistics": matches_with_any_statistics,
+        "matches_with_complete_core_statistics": matches_with_complete_core_statistics,
+        "core_statistics_completeness_pct": core_completeness_pct,
     }
     return {
         "id": team_id,
@@ -318,10 +352,20 @@ def build_provider_neutral_team_profile(
             "provider": "canonical_repository",
             "season_id": canonical_season_id,
             "matches_scanned": len(fixtures or []),
+            "fixtures_scanned": len(fixtures or []),
             "matches_returned": len(recent),
             "goals_complete": len(recent) >= 5,
             "opponent_strength_matches": sum(m.get("opponent_strength") is not None for m in recent),
-            "statistics_matches": sum(bool(m.get("statistics")) for m in recent),
+            "statistics_matches": matches_with_any_statistics,
+            "statistics_observations": sum(len(m.get("statistics_provenance") or []) for m in recent),
+            "statistics_raw_observations": None,
+            "statistics_raw_observations_available": False,
+            "statistics_unmapped_observations": sum(len(m.get("statistics_unmapped_rows") or []) for m in recent),
+            "statistics_conflicts": sum(len(m.get("statistics_conflicts") or []) for m in recent),
+            "statistics_invalid_values": sum(len(m.get("statistics_invalid_rows") or []) for m in recent),
+            "matches_with_complete_core_statistics": matches_with_complete_core_statistics,
+            "core_statistics_completeness_pct": core_completeness_pct,
+            "statistics_coverage_by_metric": core_coverage,
             "statistics_conflict_count": sum(len(m.get("statistics_conflicts") or []) for m in recent),
             "opponent_statistics_conflict_count": sum(len(m.get("opponent_statistics_conflicts") or []) for m in recent),
             "statistics_invalid_value_count": sum(len(m.get("statistics_invalid_rows") or []) for m in recent),
