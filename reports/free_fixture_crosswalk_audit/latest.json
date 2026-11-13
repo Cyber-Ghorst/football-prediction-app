@@ -1,7 +1,7 @@
 {
   "automatic_mapping_approvals": 0,
   "canonical_fixture_writes": 0,
-  "generated_at_utc": "2026-11-13T15:41:29.480863+00:00",
+  "generated_at_utc": "2026-11-13T17:16:20.653178+00:00",
   "prediction_ledger_writes": 0,
   "provider_independent_catalogue": {
     "automatic_mapping_approvals": 0,
@@ -581,7 +581,7 @@
           },
           "season_records": [
             {
-              "observation_count": 260,
+              "observation_count": 262,
               "provider": "bzzoiro",
               "provider_season_id": "44::2240",
               "season_name": "Coupe de France 26/27",
@@ -605,12 +605,12 @@
             "competition_name": "Coupe de France",
             "competition_type": null,
             "country": "France",
-            "observation_count": 260,
+            "observation_count": 262,
             "provider": "bzzoiro",
             "provider_competition_id": "44",
             "seasons": [
               {
-                "observation_count": 260,
+                "observation_count": 262,
                 "provider": "bzzoiro",
                 "provider_season_id": "44::2240",
                 "season_name": "Coupe de France 26/27",
@@ -7991,7 +7991,7 @@
           },
           "season_records": [
             {
-              "observation_count": 260,
+              "observation_count": 262,
               "provider": "bzzoiro",
               "provider_season_id": "44::2240",
               "season_name": "Coupe de France 26/27",
@@ -8015,12 +8015,12 @@
             "competition_name": "Coupe de France",
             "competition_type": null,
             "country": "France",
-            "observation_count": 260,
+            "observation_count": 262,
             "provider": "bzzoiro",
             "provider_competition_id": "44",
             "seasons": [
               {
-                "observation_count": 260,
+                "observation_count": 262,
                 "provider": "bzzoiro",
                 "provider_season_id": "44::2240",
                 "season_name": "Coupe de France 26/27",
@@ -17936,7 +17936,7 @@
           },
           "season_records": [
             {
-              "observation_count": 86,
+              "observation_count": 87,
               "provider": "bzzoiro",
               "provider_season_id": "79::1552",
               "season_name": "Club Friendly Games 2026",
@@ -17953,12 +17953,12 @@
             "competition_name": "Club Friendlies",
             "competition_type": null,
             "country": "World",
-            "observation_count": 86,
+            "observation_count": 87,
             "provider": "bzzoiro",
             "provider_competition_id": "79",
             "seasons": [
               {
-                "observation_count": 86,
+                "observation_count": 87,
                 "provider": "bzzoiro",
                 "provider_season_id": "79::1552",
                 "season_name": "Club Friendly Games 2026",
@@ -20296,7 +20296,7 @@
           }
         },
         "teams": {
-          "candidate_count": 762,
+          "candidate_count": 764,
           "candidates": [
             {
               "canonical_entity_id": "sportmonks:618",
@@ -20978,7 +20978,7 @@
           "manual_review_candidate_count": 20,
           "status_counts": {
             "candidate_requires_manual_approval": 20,
-            "no_exact_contextual_match": 742
+            "no_exact_contextual_match": 744
           }
         }
       },
@@ -20987,12 +20987,12 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 1351,
+      "observation_count": 1354,
       "snapshot_count": 3,
       "source_entity_counts": {
         "leagues": 51,
         "seasons": 48,
-        "teams": 762
+        "teams": 764
       },
       "status": "ok"
     },
