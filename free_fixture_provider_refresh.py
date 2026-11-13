@@ -47,8 +47,11 @@ def refresh_free_fixture_sources(
     bzzoiro_token: str | None = None,
     highlightly_token: str | None = None,
     highlightly_use_allowed: bool = False,
+    highlightly_terms_acknowledged: bool = False,
+    highlightly_non_betting_confirmed: bool = False,
     api_ninjas_token: str | None = None,
     api_ninjas_noncommercial_confirmed: bool = False,
+    api_ninjas_terms_acknowledged: bool = False,
     max_openligadb_scopes: int = 80,
     max_livescore_leagues: int = 40,
 ) -> dict[str, Any]:
@@ -156,7 +159,18 @@ def refresh_free_fixture_sources(
 
     # Highlightly documents scheduled matches with stable IDs and UTC dates.
     # Query each UTC day separately and retain all observations for review only.
-    if highlightly_token and highlightly_use_allowed:
+    # Keep the legal-terms acknowledgement distinct from the non-betting-use
+    # confirmation so the archived readiness report identifies the exact gate.
+    highlightly_terms_ok = bool(highlightly_terms_acknowledged or highlightly_use_allowed)
+    highlightly_usage_ok = bool(highlightly_non_betting_confirmed or highlightly_use_allowed)
+    highlightly_ready = highlightly_terms_ok and highlightly_usage_ok
+    highlightly_readiness = {
+        "credential_configured": bool(highlightly_token),
+        "terms_acknowledged": highlightly_terms_ok,
+        "non_betting_use_confirmed": highlightly_usage_ok,
+        "collection_enabled": bool(highlightly_token and highlightly_ready),
+    }
+    if highlightly_token and highlightly_ready:
         try:
             results["highlightly"] = collect_highlightly_observations(
                 database_url, date_from=date_from, days=7,
@@ -165,20 +179,37 @@ def refresh_free_fixture_sources(
         except Exception as exc:
             results["highlightly"] = _error("highlightly", exc)
     else:
+        missing = []
+        if not highlightly_token:
+            missing.append("HIGHLIGHTLY_API_KEY is not configured")
+        if not highlightly_terms_ok:
+            missing.append("provider terms acknowledgement is missing")
+        if not highlightly_usage_ok:
+            missing.append("non-betting-use confirmation is missing")
         results["highlightly"] = {
             "provider": "highlightly", "archived": False,
             "observation_count": 0, "eligible_for_review_count": 0,
-            "skipped": (
-                "Highlightly collection requires terms acknowledgement and confirmation "
-                "that this app will not use its data to support betting or wagering."
-                if highlightly_token else "HIGHLIGHTLY_API_KEY is not configured"
-            ),
+            "readiness": highlightly_readiness,
+            "skipped": "; ".join(missing),
             "errors": [],
         }
+    if "highlightly" in results:
+        results["highlightly"].setdefault("readiness", highlightly_readiness)
 
     # API Ninjas' documented free tier covers eight current-season leagues.
     # Restrict discovery to those leagues and keep the result read-only.
-    if api_ninjas_token and api_ninjas_noncommercial_confirmed:
+    # Terms acknowledgement and non-commercial-use confirmation are separate
+    # gates; report both without exposing credential values.
+    api_ninjas_terms_ok = bool(api_ninjas_terms_acknowledged)
+    api_ninjas_usage_ok = bool(api_ninjas_noncommercial_confirmed)
+    api_ninjas_ready = api_ninjas_terms_ok and api_ninjas_usage_ok
+    api_ninjas_readiness = {
+        "credential_configured": bool(api_ninjas_token),
+        "terms_acknowledged": api_ninjas_terms_ok,
+        "noncommercial_use_confirmed": api_ninjas_usage_ok,
+        "collection_enabled": bool(api_ninjas_token and api_ninjas_ready),
+    }
+    if api_ninjas_token and api_ninjas_ready:
         try:
             results["api_ninjas"] = collect_api_ninjas_observations(
                 database_url, season=season_start_year,
@@ -187,16 +218,22 @@ def refresh_free_fixture_sources(
         except Exception as exc:
             results["api_ninjas"] = _error("api_ninjas", exc)
     else:
+        missing = []
+        if not api_ninjas_token:
+            missing.append("API_NINJAS_API_KEY is not configured")
+        if not api_ninjas_terms_ok:
+            missing.append("provider terms acknowledgement is missing")
+        if not api_ninjas_usage_ok:
+            missing.append("non-commercial-use confirmation is missing")
         results["api_ninjas"] = {
             "provider": "api_ninjas", "archived": False,
             "observation_count": 0, "eligible_for_review_count": 0,
-            "skipped": (
-                "API Ninjas free-plan collection requires terms acknowledgement and "
-                "explicit non-commercial-use confirmation."
-                if api_ninjas_token else "API_NINJAS_API_KEY is not configured"
-            ),
+            "readiness": api_ninjas_readiness,
+            "skipped": "; ".join(missing),
             "errors": [],
         }
+    if "api_ninjas" in results:
+        results["api_ninjas"].setdefault("readiness", api_ninjas_readiness)
 
     # Open Matchday is intentionally excluded from unattended refresh because
     # its upstream licence is non-commercial-only. The manual UI requires an
@@ -227,20 +264,18 @@ def main() -> int:
     max_openligadb = int(os.getenv("FREE_FIXTURE_OPENLIGADB_MAX_SCOPES", "80"))
     max_livescore = int(os.getenv("FREE_FIXTURE_LIVESCORE_MAX_LEAGUES", "40"))
     enabled = lambda name: str(os.getenv(name, "")).strip().casefold() in {"1", "true", "yes", "on"}
-    highlightly_use_allowed = (
-        enabled("FREE_FIXTURE_TERMS_ACK_HIGHLIGHTLY")
-        and enabled("HIGHLIGHTLY_NON_BETTING_USE_CONFIRMED")
-    )
-    api_ninjas_noncommercial_confirmed = (
-        enabled("FREE_FIXTURE_TERMS_ACK_API_NINJAS")
-        and enabled("FREE_FIXTURE_NONCOMMERCIAL_ACK_API_NINJAS")
-    )
+    highlightly_terms_acknowledged = enabled("FREE_FIXTURE_TERMS_ACK_HIGHLIGHTLY")
+    highlightly_non_betting_confirmed = enabled("HIGHLIGHTLY_NON_BETTING_USE_CONFIRMED")
+    api_ninjas_terms_acknowledged = enabled("FREE_FIXTURE_TERMS_ACK_API_NINJAS")
+    api_ninjas_noncommercial_confirmed = enabled("FREE_FIXTURE_NONCOMMERCIAL_ACK_API_NINJAS")
     report = refresh_free_fixture_sources(
         database_url,
         bzzoiro_token=token or None,
         highlightly_token=highlightly_token or None,
-        highlightly_use_allowed=highlightly_use_allowed,
+        highlightly_terms_acknowledged=highlightly_terms_acknowledged,
+        highlightly_non_betting_confirmed=highlightly_non_betting_confirmed,
         api_ninjas_token=api_ninjas_token or None,
+        api_ninjas_terms_acknowledged=api_ninjas_terms_acknowledged,
         api_ninjas_noncommercial_confirmed=api_ninjas_noncommercial_confirmed,
         max_openligadb_scopes=max_openligadb,
         max_livescore_leagues=max_livescore,
