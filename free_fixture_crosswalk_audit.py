@@ -151,8 +151,7 @@ def main() -> int:
         "reports/free_fixture_crosswalk_audit/latest.json",
     ))
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(report, indent=2, sort_keys=True, default=str) + "
-")
+    output.write_text(json.dumps(report, indent=2, sort_keys=True, default=str) + "\n")
     print(json.dumps({
         "report_name": report["report_name"],
         "output": str(output),
