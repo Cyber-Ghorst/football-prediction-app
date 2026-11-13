@@ -114,9 +114,11 @@ class FreeFixtureProviderRefreshTests(unittest.TestCase):
 
 
     def test_readiness_report_identifies_each_missing_acknowledgement_without_exposing_keys(self):
-        with patch("free_fixture_provider_refresh.OpenLigaDBAdapter") as openliga_cls, \\
-             patch("free_fixture_provider_refresh.OpenFootballAdapter") as openfootball_cls, \\
-             patch("free_fixture_provider_refresh.LiveScoreFootballClient") as livescore_cls:
+        with (
+            patch("free_fixture_provider_refresh.OpenLigaDBAdapter") as openliga_cls,
+            patch("free_fixture_provider_refresh.OpenFootballAdapter") as openfootball_cls,
+            patch("free_fixture_provider_refresh.LiveScoreFootballClient") as livescore_cls,
+        ):
             openliga_cls.return_value.__enter__.return_value.discover_scopes.return_value = []
             openfootball_cls.return_value.__enter__.return_value.discover_season_files.return_value = []
             livescore_cls.return_value.leagues.return_value = []
