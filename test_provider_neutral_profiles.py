@@ -1,7 +1,10 @@
 from datetime import datetime, timedelta, timezone
 import unittest
 
-from provider_neutral_profiles import build_provider_neutral_team_profile
+from provider_neutral_profiles import (
+    build_provider_neutral_team_profile,
+    build_repository_team_profiles,
+)
 
 
 def _fixture(fixture_id, team_id="canonical:home", opponent_id="canonical:away",
@@ -62,9 +65,49 @@ class ProviderNeutralProfileTests(unittest.TestCase):
                  "provider": "highlightly"},
             ],
         )
-        self.assertEqual(
-            profile["matches"][0]["statistics"], {"Ball Possession": 57}
+        self.assertEqual(profile["matches"][0]["statistics"], {"Ball Possession": 57})
+
+    def test_conflicting_provider_statistics_are_not_silently_overwritten(self):
+        profile = build_provider_neutral_team_profile(
+            {"team_id": "canonical:home", "name": "Home FC"},
+            [_fixture("fixture:1")],
+            season_id="canonical:season",
+            statistics=[
+                {"fixture_id": "fixture:1", "team_id": "canonical:home",
+                 "statistic_type": "Ball Possession", "statistic_value": 57,
+                 "source_provider": "highlightly"},
+                {"fixture_id": "fixture:1", "team_id": "canonical:home",
+                 "statistic_type": "Ball Possession", "statistic_value": 59,
+                 "source_provider": "livescore_football"},
+            ],
         )
+        self.assertNotIn("Ball Possession", profile["matches"][0]["statistics"])
+        self.assertEqual(profile["matches"][0]["statistics_conflicts"], ["Ball Possession"])
+        self.assertEqual(profile["data_quality"]["statistics_conflict_count"], 1)
+
+    def test_builds_multiple_profiles_from_one_canonical_snapshot(self):
+        snapshot = {
+            "season_id": "canonical:season",
+            "teams": [
+                {"team_id": "canonical:home", "name": "Home FC"},
+                {"team_id": "canonical:away", "name": "Away FC"},
+            ],
+            "fixtures": [_fixture("fixture:1")],
+            "statistics": [],
+        }
+        profiles = build_repository_team_profiles(
+            snapshot, ["canonical:home", "canonical:away"], "canonical:season"
+        )
+        self.assertEqual(set(profiles), {"canonical:home", "canonical:away"})
+        self.assertEqual(profiles["canonical:away"]["matches"][0]["goals_for"], 1)
+        self.assertEqual(profiles["canonical:away"]["matches"][0]["venue"], "away")
+
+    def test_rejects_snapshot_from_a_different_canonical_season(self):
+        with self.assertRaisesRegex(ValueError, "season"):
+            build_repository_team_profiles(
+                {"season_id": "season:wrong", "teams": [], "fixtures": [], "statistics": []},
+                ["canonical:home"], "canonical:season",
+            )
 
 
 if __name__ == "__main__":
