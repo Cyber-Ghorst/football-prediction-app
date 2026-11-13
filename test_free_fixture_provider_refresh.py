@@ -92,9 +92,11 @@ class FreeFixtureProviderRefreshTests(unittest.TestCase):
     def test_terms_acknowledgements_are_required_before_restricted_provider_collection(self):
         from unittest.mock import patch
 
-        with patch("free_fixture_provider_refresh.OpenLigaDBAdapter") as openliga_cls, \
-             patch("free_fixture_provider_refresh.OpenFootballAdapter") as openfootball_cls, \
-             patch("free_fixture_provider_refresh.LiveScoreFootballClient") as livescore_cls:
+        with (
+            patch("free_fixture_provider_refresh.OpenLigaDBAdapter") as openliga_cls,
+            patch("free_fixture_provider_refresh.OpenFootballAdapter") as openfootball_cls,
+            patch("free_fixture_provider_refresh.LiveScoreFootballClient") as livescore_cls,
+        ):
             openliga_cls.return_value.__enter__.return_value.discover_scopes.return_value = []
             openfootball_cls.return_value.__enter__.return_value.discover_season_files.return_value = []
             livescore_cls.return_value.leagues.return_value = []
