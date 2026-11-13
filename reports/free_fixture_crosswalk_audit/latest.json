@@ -1,12 +1,12 @@
 {
   "automatic_mapping_approvals": 0,
   "canonical_fixture_writes": 0,
-  "generated_at_utc": "2026-11-12T23:55:41.725212+00:00",
+  "generated_at_utc": "2026-11-13T06:53:10.969780+00:00",
   "prediction_ledger_writes": 0,
   "provider_independent_catalogue": {
     "automatic_mapping_approvals": 0,
     "canonical_rows_created": 0,
-    "canonical_seed_review_candidate_count": 2,
+    "canonical_seed_review_candidate_count": 7,
     "canonical_seed_review_candidates": [
       {
         "automatic_approval": false,
@@ -43,18 +43,90 @@
       {
         "automatic_approval": false,
         "canonical_record_created": false,
+        "competition_name": "Ligue 1",
+        "country": "France",
+        "normalized_country": "france",
+        "normalized_name": "ligue 1",
+        "provider_count": 2,
+        "provider_links_created": false,
+        "providers": [
+          "bzzoiro",
+          "openfootball"
+        ],
+        "review_requirement": "Verify competition identity, competition type, and active season before any canonical catalogue entry or provider link is created.",
+        "sources": [
+          {
+            "competition_name": "Ligue 1",
+            "country": "France",
+            "observation_count": 1,
+            "provider": "bzzoiro",
+            "provider_competition_id": "6"
+          },
+          {
+            "competition_name": "Ligue 1",
+            "country": "France",
+            "observation_count": 918,
+            "provider": "openfootball",
+            "provider_competition_id": "fr.1"
+          }
+        ],
+        "status": "eligible_for_manual_canonical_seed_review"
+      },
+      {
+        "automatic_approval": false,
+        "canonical_record_created": false,
+        "competition_name": "2. Bundesliga",
+        "country": "Germany",
+        "normalized_country": "germany",
+        "normalized_name": "2 bundesliga",
+        "provider_count": 2,
+        "provider_links_created": false,
+        "providers": [
+          "bzzoiro",
+          "openligadb"
+        ],
+        "review_requirement": "Verify competition identity, competition type, and active season before any canonical catalogue entry or provider link is created.",
+        "sources": [
+          {
+            "competition_name": "2. Bundesliga",
+            "country": "Germany",
+            "observation_count": 2,
+            "provider": "bzzoiro",
+            "provider_competition_id": "94"
+          },
+          {
+            "competition_name": "2. Bundesliga",
+            "country": "Germany",
+            "observation_count": 918,
+            "provider": "openligadb",
+            "provider_competition_id": "4938"
+          }
+        ],
+        "status": "eligible_for_manual_canonical_seed_review"
+      },
+      {
+        "automatic_approval": false,
+        "canonical_record_created": false,
         "competition_name": "Bundesliga",
         "country": "Germany",
         "normalized_country": "germany",
         "normalized_name": "bundesliga",
-        "provider_count": 2,
+        "provider_count": 3,
         "provider_links_created": false,
         "providers": [
+          "bzzoiro",
           "openfootball",
           "openligadb"
         ],
         "review_requirement": "Verify competition identity, competition type, and active season before any canonical catalogue entry or provider link is created.",
         "sources": [
+          {
+            "competition_name": "Bundesliga",
+            "country": "Germany",
+            "observation_count": 1,
+            "provider": "bzzoiro",
+            "provider_competition_id": "5"
+          },
           {
             "competition_name": "Bundesliga",
             "country": "Germany",
@@ -71,9 +143,105 @@
           }
         ],
         "status": "eligible_for_manual_canonical_seed_review"
+      },
+      {
+        "automatic_approval": false,
+        "canonical_record_created": false,
+        "competition_name": "Saudi Pro League",
+        "country": "Saudi Arabia",
+        "normalized_country": "saudi arabia",
+        "normalized_name": "saudi pro league",
+        "provider_count": 2,
+        "provider_links_created": false,
+        "providers": [
+          "bzzoiro",
+          "livescore_football"
+        ],
+        "review_requirement": "Verify competition identity, competition type, and active season before any canonical catalogue entry or provider link is created.",
+        "sources": [
+          {
+            "competition_name": "Saudi Pro League",
+            "country": "Saudi Arabia",
+            "observation_count": 10,
+            "provider": "bzzoiro",
+            "provider_competition_id": "17"
+          },
+          {
+            "competition_name": "Saudi Pro League",
+            "country": "Saudi Arabia",
+            "observation_count": 1,
+            "provider": "livescore_football",
+            "provider_competition_id": "21231"
+          }
+        ],
+        "status": "eligible_for_manual_canonical_seed_review"
+      },
+      {
+        "automatic_approval": false,
+        "canonical_record_created": false,
+        "competition_name": "La Liga",
+        "country": "Spain",
+        "normalized_country": "spain",
+        "normalized_name": "la liga",
+        "provider_count": 2,
+        "provider_links_created": false,
+        "providers": [
+          "bzzoiro",
+          "openfootball"
+        ],
+        "review_requirement": "Verify competition identity, competition type, and active season before any canonical catalogue entry or provider link is created.",
+        "sources": [
+          {
+            "competition_name": "La Liga",
+            "country": "Spain",
+            "observation_count": 1,
+            "provider": "bzzoiro",
+            "provider_competition_id": "3"
+          },
+          {
+            "competition_name": "La Liga",
+            "country": "Spain",
+            "observation_count": 1140,
+            "provider": "openfootball",
+            "provider_competition_id": "es.1"
+          }
+        ],
+        "status": "eligible_for_manual_canonical_seed_review"
+      },
+      {
+        "automatic_approval": false,
+        "canonical_record_created": false,
+        "competition_name": "MLS",
+        "country": "United States",
+        "normalized_country": "united states",
+        "normalized_name": "mls",
+        "provider_count": 2,
+        "provider_links_created": false,
+        "providers": [
+          "bzzoiro",
+          "livescore_football"
+        ],
+        "review_requirement": "Verify competition identity, competition type, and active season before any canonical catalogue entry or provider link is created.",
+        "sources": [
+          {
+            "competition_name": "MLS",
+            "country": "USA",
+            "observation_count": 2,
+            "provider": "bzzoiro",
+            "provider_competition_id": "18"
+          },
+          {
+            "competition_name": "MLS",
+            "country": "United States",
+            "observation_count": 2,
+            "provider": "livescore_football",
+            "provider_competition_id": "770"
+          }
+        ],
+        "status": "eligible_for_manual_canonical_seed_review"
       }
     ],
-    "competition_count": 55,
+    "competition_count": 75,
     "competitions": [
       {
         "canonical_mapping_created": false,
@@ -93,9 +261,109 @@
           {
             "competition_name": "Girabola",
             "country": "Angola",
-            "observation_count": 3,
+            "observation_count": 4,
             "provider": "bzzoiro",
             "provider_competition_id": "98"
+          }
+        ],
+        "status": "single_provider_only"
+      },
+      {
+        "canonical_mapping_created": false,
+        "competition_names": [
+          "Liga Profesional de F\u00fatbol"
+        ],
+        "countries": [
+          "Argentina"
+        ],
+        "normalized_country": "argentina",
+        "normalized_name": "liga profesional de futbol",
+        "provider_count": 1,
+        "providers": [
+          "bzzoiro"
+        ],
+        "sources": [
+          {
+            "competition_name": "Liga Profesional de F\u00fatbol",
+            "country": "Argentina",
+            "observation_count": 1,
+            "provider": "bzzoiro",
+            "provider_competition_id": "85"
+          }
+        ],
+        "status": "single_provider_only"
+      },
+      {
+        "canonical_mapping_created": false,
+        "competition_names": [
+          "A-League Men"
+        ],
+        "countries": [
+          "Australia"
+        ],
+        "normalized_country": "australia",
+        "normalized_name": "a league men",
+        "provider_count": 1,
+        "providers": [
+          "bzzoiro"
+        ],
+        "sources": [
+          {
+            "competition_name": "A-League Men",
+            "country": "Australia",
+            "observation_count": 1,
+            "provider": "bzzoiro",
+            "provider_competition_id": "104"
+          }
+        ],
+        "status": "single_provider_only"
+      },
+      {
+        "canonical_mapping_created": false,
+        "competition_names": [
+          "Challenger Pro League"
+        ],
+        "countries": [
+          "Belgium"
+        ],
+        "normalized_country": "belgium",
+        "normalized_name": "challenger pro league",
+        "provider_count": 1,
+        "providers": [
+          "bzzoiro"
+        ],
+        "sources": [
+          {
+            "competition_name": "Challenger Pro League",
+            "country": "Belgium",
+            "observation_count": 2,
+            "provider": "bzzoiro",
+            "provider_competition_id": "97"
+          }
+        ],
+        "status": "single_provider_only"
+      },
+      {
+        "canonical_mapping_created": false,
+        "competition_names": [
+          "Pro League"
+        ],
+        "countries": [
+          "Belgium"
+        ],
+        "normalized_country": "belgium",
+        "normalized_name": "pro league",
+        "provider_count": 1,
+        "providers": [
+          "bzzoiro"
+        ],
+        "sources": [
+          {
+            "competition_name": "Pro League",
+            "country": "Belgium",
+            "observation_count": 1,
+            "provider": "bzzoiro",
+            "provider_competition_id": "14"
           }
         ],
         "status": "single_provider_only"
@@ -118,7 +386,7 @@
           {
             "competition_name": "Brasileir\u00e3o Serie A",
             "country": "Brazil",
-            "observation_count": 30,
+            "observation_count": 31,
             "provider": "bzzoiro",
             "provider_competition_id": "9"
           }
@@ -143,7 +411,7 @@
           {
             "competition_name": "Brasileir\u00e3o Serie B",
             "country": "Brazil",
-            "observation_count": 27,
+            "observation_count": 25,
             "provider": "bzzoiro",
             "provider_competition_id": "34"
           }
@@ -203,6 +471,56 @@
       {
         "canonical_mapping_created": false,
         "competition_names": [
+          "Parva Liga"
+        ],
+        "countries": [
+          "Bulgaria"
+        ],
+        "normalized_country": "bulgaria",
+        "normalized_name": "parva liga",
+        "provider_count": 1,
+        "providers": [
+          "bzzoiro"
+        ],
+        "sources": [
+          {
+            "competition_name": "Parva Liga",
+            "country": "Bulgaria",
+            "observation_count": 1,
+            "provider": "bzzoiro",
+            "provider_competition_id": "22"
+          }
+        ],
+        "status": "single_provider_only"
+      },
+      {
+        "canonical_mapping_created": false,
+        "competition_names": [
+          "Liga de Primera"
+        ],
+        "countries": [
+          "Chile"
+        ],
+        "normalized_country": "chile",
+        "normalized_name": "liga de primera",
+        "provider_count": 1,
+        "providers": [
+          "bzzoiro"
+        ],
+        "sources": [
+          {
+            "competition_name": "Liga de Primera",
+            "country": "Chile",
+            "observation_count": 2,
+            "provider": "bzzoiro",
+            "provider_competition_id": "111"
+          }
+        ],
+        "status": "single_provider_only"
+      },
+      {
+        "canonical_mapping_created": false,
+        "competition_names": [
           "Categor\u00eda Primera A"
         ],
         "countries": [
@@ -218,7 +536,7 @@
           {
             "competition_name": "Categor\u00eda Primera A",
             "country": "Colombia",
-            "observation_count": 42,
+            "observation_count": 37,
             "provider": "bzzoiro",
             "provider_competition_id": "80"
           }
@@ -246,6 +564,56 @@
             "observation_count": 6,
             "provider": "bzzoiro",
             "provider_competition_id": "81"
+          }
+        ],
+        "status": "single_provider_only"
+      },
+      {
+        "canonical_mapping_created": false,
+        "competition_names": [
+          "Danish Superliga"
+        ],
+        "countries": [
+          "Denmark"
+        ],
+        "normalized_country": "denmark",
+        "normalized_name": "danish superliga",
+        "provider_count": 1,
+        "providers": [
+          "bzzoiro"
+        ],
+        "sources": [
+          {
+            "competition_name": "Danish Superliga",
+            "country": "Denmark",
+            "observation_count": 1,
+            "provider": "bzzoiro",
+            "provider_competition_id": "84"
+          }
+        ],
+        "status": "single_provider_only"
+      },
+      {
+        "canonical_mapping_created": false,
+        "competition_names": [
+          "LigaPro Serie A"
+        ],
+        "countries": [
+          "Ecuador"
+        ],
+        "normalized_country": "ecuador",
+        "normalized_name": "ligapro serie a",
+        "provider_count": 1,
+        "providers": [
+          "bzzoiro"
+        ],
+        "sources": [
+          {
+            "competition_name": "LigaPro Serie A",
+            "country": "Ecuador",
+            "observation_count": 1,
+            "provider": "bzzoiro",
+            "provider_competition_id": "112"
           }
         ],
         "status": "single_provider_only"
@@ -418,7 +786,7 @@
           {
             "competition_name": "League One",
             "country": "England",
-            "observation_count": 36,
+            "observation_count": 37,
             "provider": "bzzoiro",
             "provider_competition_id": "86"
           }
@@ -468,7 +836,7 @@
           {
             "competition_name": "National League",
             "country": "England",
-            "observation_count": 36,
+            "observation_count": 37,
             "provider": "bzzoiro",
             "provider_competition_id": "91"
           }
@@ -633,7 +1001,7 @@
           {
             "competition_name": "UEFA Nations League",
             "country": "Europe",
-            "observation_count": 156,
+            "observation_count": 148,
             "provider": "bzzoiro",
             "provider_competition_id": "64"
           }
@@ -658,7 +1026,7 @@
           {
             "competition_name": "Coupe de France",
             "country": "France",
-            "observation_count": 261,
+            "observation_count": 260,
             "provider": "bzzoiro",
             "provider_competition_id": "44"
           }
@@ -675,17 +1043,50 @@
         ],
         "normalized_country": "france",
         "normalized_name": "ligue 1",
-        "provider_count": 1,
+        "provider_count": 2,
         "providers": [
+          "bzzoiro",
           "openfootball"
         ],
         "sources": [
           {
             "competition_name": "Ligue 1",
             "country": "France",
+            "observation_count": 1,
+            "provider": "bzzoiro",
+            "provider_competition_id": "6"
+          },
+          {
+            "competition_name": "Ligue 1",
+            "country": "France",
             "observation_count": 918,
             "provider": "openfootball",
             "provider_competition_id": "fr.1"
+          }
+        ],
+        "status": "corroborated_multi_provider"
+      },
+      {
+        "canonical_mapping_created": false,
+        "competition_names": [
+          "Ligue 2"
+        ],
+        "countries": [
+          "France"
+        ],
+        "normalized_country": "france",
+        "normalized_name": "ligue 2",
+        "provider_count": 1,
+        "providers": [
+          "bzzoiro"
+        ],
+        "sources": [
+          {
+            "competition_name": "Ligue 2",
+            "country": "France",
+            "observation_count": 6,
+            "provider": "bzzoiro",
+            "provider_competition_id": "89"
           }
         ],
         "status": "single_provider_only"
@@ -725,11 +1126,19 @@
         ],
         "normalized_country": "germany",
         "normalized_name": "2 bundesliga",
-        "provider_count": 1,
+        "provider_count": 2,
         "providers": [
+          "bzzoiro",
           "openligadb"
         ],
         "sources": [
+          {
+            "competition_name": "2. Bundesliga",
+            "country": "Germany",
+            "observation_count": 2,
+            "provider": "bzzoiro",
+            "provider_competition_id": "94"
+          },
           {
             "competition_name": "2. Bundesliga",
             "country": "Germany",
@@ -738,7 +1147,7 @@
             "provider_competition_id": "4938"
           }
         ],
-        "status": "single_provider_only"
+        "status": "corroborated_multi_provider"
       },
       {
         "canonical_mapping_created": false,
@@ -775,12 +1184,20 @@
         ],
         "normalized_country": "germany",
         "normalized_name": "bundesliga",
-        "provider_count": 2,
+        "provider_count": 3,
         "providers": [
+          "bzzoiro",
           "openfootball",
           "openligadb"
         ],
         "sources": [
+          {
+            "competition_name": "Bundesliga",
+            "country": "Germany",
+            "observation_count": 1,
+            "provider": "bzzoiro",
+            "provider_competition_id": "5"
+          },
           {
             "competition_name": "Bundesliga",
             "country": "Germany",
@@ -841,7 +1258,7 @@
           {
             "competition_name": "International Friendly Games",
             "country": "International",
-            "observation_count": 111,
+            "observation_count": 106,
             "provider": "bzzoiro",
             "provider_competition_id": "31"
           }
@@ -876,6 +1293,31 @@
       {
         "canonical_mapping_created": false,
         "competition_names": [
+          "Serie B"
+        ],
+        "countries": [
+          "Italy"
+        ],
+        "normalized_country": "italy",
+        "normalized_name": "serie b",
+        "provider_count": 1,
+        "providers": [
+          "bzzoiro"
+        ],
+        "sources": [
+          {
+            "competition_name": "Serie B",
+            "country": "Italy",
+            "observation_count": 1,
+            "provider": "bzzoiro",
+            "provider_competition_id": "100"
+          }
+        ],
+        "status": "single_provider_only"
+      },
+      {
+        "canonical_mapping_created": false,
+        "competition_names": [
           "Serie C, Girone A"
         ],
         "countries": [
@@ -891,7 +1333,7 @@
           {
             "competition_name": "Serie C, Girone A",
             "country": "Italy",
-            "observation_count": 30,
+            "observation_count": 31,
             "provider": "bzzoiro",
             "provider_competition_id": "101"
           }
@@ -941,9 +1383,34 @@
           {
             "competition_name": "Serie C, Girone C",
             "country": "Italy",
-            "observation_count": 30,
+            "observation_count": 31,
             "provider": "bzzoiro",
             "provider_competition_id": "102"
+          }
+        ],
+        "status": "single_provider_only"
+      },
+      {
+        "canonical_mapping_created": false,
+        "competition_names": [
+          "J1 League"
+        ],
+        "countries": [
+          "Japan"
+        ],
+        "normalized_country": "japan",
+        "normalized_name": "j1 league",
+        "provider_count": 1,
+        "providers": [
+          "bzzoiro"
+        ],
+        "sources": [
+          {
+            "competition_name": "J1 League",
+            "country": "Japan",
+            "observation_count": 3,
+            "provider": "bzzoiro",
+            "provider_competition_id": "49"
           }
         ],
         "status": "single_provider_only"
@@ -1016,7 +1483,7 @@
           {
             "competition_name": "Eerste Divisie",
             "country": "Netherlands",
-            "observation_count": 24,
+            "observation_count": 33,
             "provider": "bzzoiro",
             "provider_competition_id": "108"
           }
@@ -1091,9 +1558,84 @@
           {
             "competition_name": "CONCACAF Nations League",
             "country": "North America",
-            "observation_count": 96,
+            "observation_count": 91,
             "provider": "bzzoiro",
             "provider_competition_id": "65"
+          }
+        ],
+        "status": "single_provider_only"
+      },
+      {
+        "canonical_mapping_created": false,
+        "competition_names": [
+          "Eliteserien"
+        ],
+        "countries": [
+          "Norway"
+        ],
+        "normalized_country": "norway",
+        "normalized_name": "eliteserien",
+        "provider_count": 1,
+        "providers": [
+          "bzzoiro"
+        ],
+        "sources": [
+          {
+            "competition_name": "Eliteserien",
+            "country": "Norway",
+            "observation_count": 1,
+            "provider": "bzzoiro",
+            "provider_competition_id": "54"
+          }
+        ],
+        "status": "single_provider_only"
+      },
+      {
+        "canonical_mapping_created": false,
+        "competition_names": [
+          "Liga 1"
+        ],
+        "countries": [
+          "Peru"
+        ],
+        "normalized_country": "peru",
+        "normalized_name": "liga 1",
+        "provider_count": 1,
+        "providers": [
+          "bzzoiro"
+        ],
+        "sources": [
+          {
+            "competition_name": "Liga 1",
+            "country": "Peru",
+            "observation_count": 11,
+            "provider": "bzzoiro",
+            "provider_competition_id": "113"
+          }
+        ],
+        "status": "single_provider_only"
+      },
+      {
+        "canonical_mapping_created": false,
+        "competition_names": [
+          "Ekstraklasa"
+        ],
+        "countries": [
+          "Poland"
+        ],
+        "normalized_country": "poland",
+        "normalized_name": "ekstraklasa",
+        "provider_count": 1,
+        "providers": [
+          "bzzoiro"
+        ],
+        "sources": [
+          {
+            "competition_name": "Ekstraklasa",
+            "country": "Poland",
+            "observation_count": 2,
+            "provider": "bzzoiro",
+            "provider_competition_id": "25"
           }
         ],
         "status": "single_provider_only"
@@ -1176,6 +1718,89 @@
       {
         "canonical_mapping_created": false,
         "competition_names": [
+          "Ta\u00e7a de Portugal"
+        ],
+        "countries": [
+          "Portugal"
+        ],
+        "normalized_country": "portugal",
+        "normalized_name": "taca de portugal",
+        "provider_count": 1,
+        "providers": [
+          "bzzoiro"
+        ],
+        "sources": [
+          {
+            "competition_name": "Ta\u00e7a de Portugal",
+            "country": "Portugal",
+            "observation_count": 1,
+            "provider": "bzzoiro",
+            "provider_competition_id": "92"
+          }
+        ],
+        "status": "single_provider_only"
+      },
+      {
+        "canonical_mapping_created": false,
+        "competition_names": [
+          "Superliga"
+        ],
+        "countries": [
+          "Romania"
+        ],
+        "normalized_country": "romania",
+        "normalized_name": "superliga",
+        "provider_count": 1,
+        "providers": [
+          "bzzoiro"
+        ],
+        "sources": [
+          {
+            "competition_name": "Superliga",
+            "country": "Romania",
+            "observation_count": 2,
+            "provider": "bzzoiro",
+            "provider_competition_id": "23"
+          }
+        ],
+        "status": "single_provider_only"
+      },
+      {
+        "canonical_mapping_created": false,
+        "competition_names": [
+          "Saudi Pro League"
+        ],
+        "countries": [
+          "Saudi Arabia"
+        ],
+        "normalized_country": "saudi arabia",
+        "normalized_name": "saudi pro league",
+        "provider_count": 2,
+        "providers": [
+          "bzzoiro",
+          "livescore_football"
+        ],
+        "sources": [
+          {
+            "competition_name": "Saudi Pro League",
+            "country": "Saudi Arabia",
+            "observation_count": 10,
+            "provider": "bzzoiro",
+            "provider_competition_id": "17"
+          },
+          {
+            "competition_name": "Saudi Pro League",
+            "country": "Saudi Arabia",
+            "observation_count": 1,
+            "provider": "livescore_football",
+            "provider_competition_id": "21231"
+          }
+        ],
+        "status": "corroborated_multi_provider"
+      },
+      {
+        "canonical_mapping_created": false,
+        "competition_names": [
           "Copa del Rey"
         ],
         "countries": [
@@ -1191,7 +1816,7 @@
           {
             "competition_name": "Copa del Rey",
             "country": "Spain",
-            "observation_count": 30,
+            "observation_count": 27,
             "provider": "bzzoiro",
             "provider_competition_id": "41"
           }
@@ -1208,11 +1833,19 @@
         ],
         "normalized_country": "spain",
         "normalized_name": "la liga",
-        "provider_count": 1,
+        "provider_count": 2,
         "providers": [
+          "bzzoiro",
           "openfootball"
         ],
         "sources": [
+          {
+            "competition_name": "La Liga",
+            "country": "Spain",
+            "observation_count": 1,
+            "provider": "bzzoiro",
+            "provider_competition_id": "3"
+          },
           {
             "competition_name": "La Liga",
             "country": "Spain",
@@ -1221,7 +1854,7 @@
             "provider_competition_id": "es.1"
           }
         ],
-        "status": "single_provider_only"
+        "status": "corroborated_multi_provider"
       },
       {
         "canonical_mapping_created": false,
@@ -1291,7 +1924,7 @@
           {
             "competition_name": "Segunda Divisi\u00f3n",
             "country": "Spain",
-            "observation_count": 33,
+            "observation_count": 34,
             "provider": "bzzoiro",
             "provider_competition_id": "38"
           }
@@ -1316,7 +1949,7 @@
           {
             "competition_name": "Spanish Copa de la Reina",
             "country": "Spain",
-            "observation_count": 6,
+            "observation_count": 4,
             "provider": "livescore_football",
             "provider_competition_id": "20381"
           }
@@ -1341,7 +1974,7 @@
           {
             "competition_name": "Spanish Copa del Rey",
             "country": "Spain",
-            "observation_count": 8,
+            "observation_count": 6,
             "provider": "livescore_football",
             "provider_competition_id": "3951"
           }
@@ -1397,6 +2030,90 @@
           }
         ],
         "status": "single_provider_only"
+      },
+      {
+        "canonical_mapping_created": false,
+        "competition_names": [
+          "Tunisian Ligue Professionnelle 1"
+        ],
+        "countries": [
+          "Tunisia"
+        ],
+        "normalized_country": "tunisia",
+        "normalized_name": "tunisian ligue professionnelle 1",
+        "provider_count": 1,
+        "providers": [
+          "bzzoiro"
+        ],
+        "sources": [
+          {
+            "competition_name": "Tunisian Ligue Professionnelle 1",
+            "country": "Tunisia",
+            "observation_count": 3,
+            "provider": "bzzoiro",
+            "provider_competition_id": "47"
+          }
+        ],
+        "status": "single_provider_only"
+      },
+      {
+        "canonical_mapping_created": false,
+        "competition_names": [
+          "Trendyol 1. Lig"
+        ],
+        "countries": [
+          "Turkey"
+        ],
+        "normalized_country": "turkey",
+        "normalized_name": "trendyol 1 lig",
+        "provider_count": 1,
+        "providers": [
+          "bzzoiro"
+        ],
+        "sources": [
+          {
+            "competition_name": "Trendyol 1. Lig",
+            "country": "Turkey",
+            "observation_count": 1,
+            "provider": "bzzoiro",
+            "provider_competition_id": "107"
+          }
+        ],
+        "status": "single_provider_only"
+      },
+      {
+        "canonical_mapping_created": false,
+        "competition_names": [
+          "MLS"
+        ],
+        "countries": [
+          "United States",
+          "USA"
+        ],
+        "normalized_country": "united states",
+        "normalized_name": "mls",
+        "provider_count": 2,
+        "providers": [
+          "bzzoiro",
+          "livescore_football"
+        ],
+        "sources": [
+          {
+            "competition_name": "MLS",
+            "country": "USA",
+            "observation_count": 2,
+            "provider": "bzzoiro",
+            "provider_competition_id": "18"
+          },
+          {
+            "competition_name": "MLS",
+            "country": "United States",
+            "observation_count": 2,
+            "provider": "livescore_football",
+            "provider_competition_id": "770"
+          }
+        ],
+        "status": "corroborated_multi_provider"
       },
       {
         "canonical_mapping_created": false,
@@ -1466,7 +2183,7 @@
           {
             "competition_name": "Club Friendlies",
             "country": "World",
-            "observation_count": 114,
+            "observation_count": 99,
             "provider": "bzzoiro",
             "provider_competition_id": "79"
           }
@@ -1474,7 +2191,7 @@
         "status": "single_provider_only"
       }
     ],
-    "corroborated_competition_count": 2,
+    "corroborated_competition_count": 7,
     "country_unscoped_source_count": 27,
     "country_unscoped_sources": [
       {
@@ -1670,7 +2387,7 @@
     "method": "exact_normalized_competition_name_and_country",
     "provider_count": 5,
     "provider_links_created": 0,
-    "single_provider_competition_count": 53
+    "single_provider_competition_count": 68
   },
   "providers": {
     "api_ninjas": {
@@ -1680,8 +2397,53 @@
     "bzzoiro": {
       "categories": {
         "leagues": {
-          "candidate_count": 27,
+          "candidate_count": 51,
           "candidates": [
+            {
+              "canonical_entity_id": "sportmonks:564",
+              "canonical_name": "La Liga",
+              "canonical_parent_id": null,
+              "entity_type": "league",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "bzzoiro",
+              "provider_country": "Spain",
+              "provider_entity_id": "3",
+              "provider_name": "La Liga",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "bzzoiro",
+              "provider_country": "Germany",
+              "provider_entity_id": "94",
+              "provider_name": "2. Bundesliga",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "bzzoiro",
+              "provider_country": "Australia",
+              "provider_entity_id": "104",
+              "provider_name": "A-League Men",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
             {
               "canonical_entity_id": null,
               "canonical_name": null,
@@ -1719,6 +2481,21 @@
               "entity_type": "league",
               "match_method": null,
               "provider": "bzzoiro",
+              "provider_country": "Germany",
+              "provider_entity_id": "5",
+              "provider_name": "Bundesliga",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "bzzoiro",
               "provider_country": "Portugal",
               "provider_entity_id": "95",
               "provider_name": "Campeonato de Portugal",
@@ -1737,6 +2514,21 @@
               "provider_country": "Colombia",
               "provider_entity_id": "80",
               "provider_name": "Categor\u00eda Primera A",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "bzzoiro",
+              "provider_country": "Belgium",
+              "provider_entity_id": "97",
+              "provider_name": "Challenger Pro League",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
@@ -1824,9 +2616,54 @@
               "entity_type": "league",
               "match_method": null,
               "provider": "bzzoiro",
+              "provider_country": "Denmark",
+              "provider_entity_id": "84",
+              "provider_name": "Danish Superliga",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "bzzoiro",
               "provider_country": "Netherlands",
               "provider_entity_id": "108",
               "provider_name": "Eerste Divisie",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "bzzoiro",
+              "provider_country": "Poland",
+              "provider_entity_id": "25",
+              "provider_name": "Ekstraklasa",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "bzzoiro",
+              "provider_country": "Norway",
+              "provider_entity_id": "54",
+              "provider_name": "Eliteserien",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
@@ -1869,6 +2706,21 @@
               "entity_type": "league",
               "match_method": null,
               "provider": "bzzoiro",
+              "provider_country": "Japan",
+              "provider_entity_id": "49",
+              "provider_name": "J1 League",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "bzzoiro",
               "provider_country": "England",
               "provider_entity_id": "86",
               "provider_name": "League One",
@@ -1899,6 +2751,36 @@
               "entity_type": "league",
               "match_method": null,
               "provider": "bzzoiro",
+              "provider_country": "Peru",
+              "provider_entity_id": "113",
+              "provider_name": "Liga 1",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "bzzoiro",
+              "provider_country": "Chile",
+              "provider_entity_id": "111",
+              "provider_name": "Liga de Primera",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "bzzoiro",
               "provider_country": "Spain",
               "provider_entity_id": "36",
               "provider_name": "Liga F",
@@ -1906,167 +2788,63 @@
               "provider_parent_name": null,
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
               "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "league",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": "Mexico",
-              "provider_entity_id": "19",
-              "provider_name": "Liga MX Apertura",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "league",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": "Portugal",
-              "provider_entity_id": "88",
-              "provider_name": "Liga Portugal 2",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "league",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": "France",
-              "provider_entity_id": "105",
-              "provider_name": "Ligue 3",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "league",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": "England",
-              "provider_entity_id": "91",
-              "provider_name": "National League",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "league",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": "Nigeria",
-              "provider_entity_id": "28",
-              "provider_name": "Nigeria Premier Football League",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "league",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": "USA",
-              "provider_entity_id": "72",
-              "provider_name": "NWSL",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "league",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": "Spain",
-              "provider_entity_id": "38",
-              "provider_name": "Segunda Divisi\u00f3n",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "league",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": "Italy",
-              "provider_entity_id": "101",
-              "provider_name": "Serie C, Girone A",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "league",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": "Italy",
-              "provider_entity_id": "103",
-              "provider_name": "Serie C, Girone B",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "league",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": "Italy",
-              "provider_entity_id": "102",
-              "provider_name": "Serie C, Girone C",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
             }
           ],
           "candidates_truncated": true,
-          "manual_review_candidate_count": 0,
+          "manual_review_candidate_count": 1,
           "status_counts": {
-            "no_exact_contextual_match": 27
+            "candidate_requires_manual_approval": 1,
+            "no_exact_contextual_match": 50
           }
         },
         "seasons": {
-          "candidate_count": 27,
+          "candidate_count": 48,
           "candidates": [
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "bzzoiro",
+              "provider_country": null,
+              "provider_entity_id": "107::2201",
+              "provider_name": "1. Lig 26/27",
+              "provider_parent_id": "107",
+              "provider_parent_name": "Trendyol 1. Lig",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "bzzoiro",
+              "provider_country": null,
+              "provider_entity_id": "94::1967",
+              "provider_name": "2. Bundesliga 26/27",
+              "provider_parent_id": "94",
+              "provider_parent_name": "2. Bundesliga",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "bzzoiro",
+              "provider_country": null,
+              "provider_entity_id": "104::2144",
+              "provider_name": "A-League 26/27",
+              "provider_parent_id": "104",
+              "provider_parent_name": "A-League Men",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            },
             {
               "canonical_entity_id": null,
               "canonical_name": null,
@@ -2105,10 +2883,40 @@
               "match_method": null,
               "provider": "bzzoiro",
               "provider_country": null,
+              "provider_entity_id": "5::1091",
+              "provider_name": "Bundesliga 26/27",
+              "provider_parent_id": "5",
+              "provider_parent_name": "Bundesliga",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "bzzoiro",
+              "provider_country": null,
               "provider_entity_id": "95::1986",
               "provider_name": "Campeonato de Portugal 26/27",
               "provider_parent_id": "95",
               "provider_parent_name": "Campeonato de Portugal",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "bzzoiro",
+              "provider_country": null,
+              "provider_entity_id": "97::2018",
+              "provider_name": "Challenger Pro League 26/27",
+              "provider_parent_id": "97",
+              "provider_parent_name": "Challenger Pro League",
               "reason": "A verified provider-competition to canonical-competition link is required first.",
               "status": "parent_competition_unmapped"
             },
@@ -2210,6 +3018,36 @@
               "match_method": null,
               "provider": "bzzoiro",
               "provider_country": null,
+              "provider_entity_id": "25::1229",
+              "provider_name": "Ekstraklasa 26/27",
+              "provider_parent_id": "25",
+              "provider_parent_name": "Ekstraklasa",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "bzzoiro",
+              "provider_country": null,
+              "provider_entity_id": "54::1230",
+              "provider_name": "Eliteserien 2026",
+              "provider_parent_id": "54",
+              "provider_parent_name": "Eliteserien",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "bzzoiro",
+              "provider_country": null,
               "provider_entity_id": "98::2037",
               "provider_name": "Girabola 26/27",
               "provider_parent_id": "98",
@@ -2240,10 +3078,40 @@
               "match_method": null,
               "provider": "bzzoiro",
               "provider_country": null,
+              "provider_entity_id": "49::1518",
+              "provider_name": "J1 League 26/27",
+              "provider_parent_id": "49",
+              "provider_parent_name": "J1 League",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "bzzoiro",
+              "provider_country": null,
               "provider_entity_id": "38::1356",
               "provider_name": "LaLiga 2 26/27",
               "provider_parent_id": "38",
               "provider_parent_name": "Segunda Divisi\u00f3n",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "bzzoiro",
+              "provider_country": null,
+              "provider_entity_id": "3::1307",
+              "provider_name": "LaLiga 26/27",
+              "provider_parent_id": "3",
+              "provider_parent_name": "La Liga",
               "reason": "A verified provider-competition to canonical-competition link is required first.",
               "status": "parent_competition_unmapped"
             },
@@ -2306,152 +3174,32 @@
               "provider_parent_name": "Liga MX Apertura",
               "reason": "A verified provider-competition to canonical-competition link is required first.",
               "status": "parent_competition_unmapped"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "season",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": null,
-              "provider_entity_id": "88::1693",
-              "provider_name": "Liga Portugal 2 26/27",
-              "provider_parent_id": "88",
-              "provider_parent_name": "Liga Portugal 2",
-              "reason": "A verified provider-competition to canonical-competition link is required first.",
-              "status": "parent_competition_unmapped"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "season",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": null,
-              "provider_entity_id": "105::2163",
-              "provider_name": "Ligue 3 26/27",
-              "provider_parent_id": "105",
-              "provider_parent_name": "Ligue 3",
-              "reason": "A verified provider-competition to canonical-competition link is required first.",
-              "status": "parent_competition_unmapped"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "season",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": null,
-              "provider_entity_id": "91::1903",
-              "provider_name": "National League 26/27",
-              "provider_parent_id": "91",
-              "provider_parent_name": "National League",
-              "reason": "A verified provider-competition to canonical-competition link is required first.",
-              "status": "parent_competition_unmapped"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "season",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": null,
-              "provider_entity_id": "72::1540",
-              "provider_name": "National Womens Soccer League 2026",
-              "provider_parent_id": "72",
-              "provider_parent_name": "NWSL",
-              "reason": "A verified provider-competition to canonical-competition link is required first.",
-              "status": "parent_competition_unmapped"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "season",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": null,
-              "provider_entity_id": "28::1901",
-              "provider_name": "Premier League 26/27",
-              "provider_parent_id": "28",
-              "provider_parent_name": "Nigeria Premier Football League",
-              "reason": "A verified provider-competition to canonical-competition link is required first.",
-              "status": "parent_competition_unmapped"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "season",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": null,
-              "provider_entity_id": "36::1308",
-              "provider_name": "Primera Division Women 26/27",
-              "provider_parent_id": "36",
-              "provider_parent_name": "Liga F",
-              "reason": "A verified provider-competition to canonical-competition link is required first.",
-              "status": "parent_competition_unmapped"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "season",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": null,
-              "provider_entity_id": "101::2103",
-              "provider_name": "Serie C, Group A 26/27",
-              "provider_parent_id": "101",
-              "provider_parent_name": "Serie C, Girone A",
-              "reason": "A verified provider-competition to canonical-competition link is required first.",
-              "status": "parent_competition_unmapped"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "season",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": null,
-              "provider_entity_id": "103::2130",
-              "provider_name": "Serie C, Group B 26/27",
-              "provider_parent_id": "103",
-              "provider_parent_name": "Serie C, Girone B",
-              "reason": "A verified provider-competition to canonical-competition link is required first.",
-              "status": "parent_competition_unmapped"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "season",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": null,
-              "provider_entity_id": "102::2116",
-              "provider_name": "Serie C, Group C 26/27",
-              "provider_parent_id": "102",
-              "provider_parent_name": "Serie C, Girone C",
-              "reason": "A verified provider-competition to canonical-competition link is required first.",
-              "status": "parent_competition_unmapped"
             }
           ],
           "candidates_truncated": true,
           "manual_review_candidate_count": 0,
           "status_counts": {
-            "parent_competition_unmapped": 27
+            "parent_competition_unmapped": 48
           }
         },
         "teams": {
-          "candidate_count": 691,
+          "candidate_count": 797,
           "candidates": [
+            {
+              "canonical_entity_id": "sportmonks:13258",
+              "canonical_name": "Athletic Club",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "bzzoiro",
+              "provider_country": "Spain",
+              "provider_entity_id": "51",
+              "provider_name": "Athletic Club",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
             {
               "canonical_entity_id": "sportmonks:13258",
               "canonical_name": "Athletic Club",
@@ -2477,6 +3225,36 @@
               "provider_country": "Spain",
               "provider_entity_id": "3884",
               "provider_name": "Deportivo Alav\u00e9s",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:528",
+              "canonical_name": "Espanyol",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "bzzoiro",
+              "provider_country": "Spain",
+              "provider_entity_id": "53",
+              "provider_name": "Espanyol",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:1123",
+              "canonical_name": "Hellas Verona",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "bzzoiro",
+              "provider_country": "Italy",
+              "provider_entity_id": "76",
+              "provider_name": "Hellas Verona",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
@@ -2579,6 +3357,51 @@
               "entity_type": "team",
               "match_method": null,
               "provider": "bzzoiro",
+              "provider_country": "Germany",
+              "provider_entity_id": "81",
+              "provider_name": "1. FC Heidenheim",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "bzzoiro",
+              "provider_country": "Germany",
+              "provider_entity_id": "94",
+              "provider_name": "1. FC K\u00f6ln",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "bzzoiro",
+              "provider_country": "Germany",
+              "provider_entity_id": "1838",
+              "provider_name": "1. FC Magdeburg",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "bzzoiro",
               "provider_country": "World",
               "provider_entity_id": "83",
               "provider_name": "1. FC Union Berlin",
@@ -2597,6 +3420,21 @@
               "provider_country": "Portugal",
               "provider_entity_id": "3239",
               "provider_name": "1\u00ba Dezembro",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "bzzoiro",
+              "provider_country": "Saudi Arabia",
+              "provider_entity_id": "2415",
+              "provider_name": "Abha",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
@@ -2654,6 +3492,21 @@
               "entity_type": "team",
               "match_method": null,
               "provider": "bzzoiro",
+              "provider_country": "Peru",
+              "provider_entity_id": "4578",
+              "provider_name": "ACD Juan Pablo II",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "bzzoiro",
               "provider_country": "Spain",
               "provider_entity_id": "1458",
               "provider_name": "AD Ceuta",
@@ -2669,9 +3522,39 @@
               "entity_type": "team",
               "match_method": null,
               "provider": "bzzoiro",
+              "provider_country": "Australia",
+              "provider_entity_id": "7810",
+              "provider_name": "Adelaide United",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "bzzoiro",
               "provider_country": "France",
               "provider_entity_id": "5768",
               "provider_name": "AF Virois",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "bzzoiro",
+              "provider_country": "World",
+              "provider_entity_id": "6294",
+              "provider_name": "AFC Eskilstuna",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
@@ -2714,9 +3597,9 @@
               "entity_type": "team",
               "match_method": null,
               "provider": "bzzoiro",
-              "provider_country": "Spain",
-              "provider_entity_id": "1395",
-              "provider_name": "Albacete Balompi\u00e9",
+              "provider_country": "Denmark",
+              "provider_entity_id": "2372",
+              "provider_name": "AGF",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
@@ -2729,9 +3612,9 @@
               "entity_type": "team",
               "match_method": null,
               "provider": "bzzoiro",
-              "provider_country": "Europe",
-              "provider_entity_id": "724",
-              "provider_name": "Albania",
+              "provider_country": "Saudi Arabia",
+              "provider_entity_id": "4909",
+              "provider_name": "Al Faisaly",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
@@ -2744,9 +3627,9 @@
               "entity_type": "team",
               "match_method": null,
               "provider": "bzzoiro",
-              "provider_country": "Italy",
-              "provider_entity_id": "4807",
-              "provider_name": "AlbinoLeffe",
+              "provider_country": "Saudi Arabia",
+              "provider_entity_id": "258",
+              "provider_name": "Al-Ahli",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
@@ -2759,9 +3642,9 @@
               "entity_type": "team",
               "match_method": null,
               "provider": "bzzoiro",
-              "provider_country": "Italy",
-              "provider_entity_id": "4727",
-              "provider_name": "Alcione Milano",
+              "provider_country": "Saudi Arabia",
+              "provider_entity_id": "260",
+              "provider_name": "Al-Ettifaq",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
@@ -2774,9 +3657,9 @@
               "entity_type": "team",
               "match_method": null,
               "provider": "bzzoiro",
-              "provider_country": "England",
-              "provider_entity_id": "1883",
-              "provider_name": "Aldershot Town",
+              "provider_country": "Saudi Arabia",
+              "provider_entity_id": "268",
+              "provider_name": "Al-Fateh",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
@@ -2789,9 +3672,9 @@
               "entity_type": "team",
               "match_method": null,
               "provider": "bzzoiro",
-              "provider_country": "Colombia",
-              "provider_entity_id": "4783",
-              "provider_name": "Alianza Valledupar FC",
+              "provider_country": "Saudi Arabia",
+              "provider_entity_id": "269",
+              "provider_name": "Al-Fayha",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
@@ -2804,9 +3687,9 @@
               "entity_type": "team",
               "match_method": null,
               "provider": "bzzoiro",
-              "provider_country": "Netherlands",
-              "provider_entity_id": "1325",
-              "provider_name": "Almere City FC",
+              "provider_country": "Saudi Arabia",
+              "provider_entity_id": "257",
+              "provider_name": "Al-Hazem",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
@@ -2819,9 +3702,9 @@
               "entity_type": "team",
               "match_method": null,
               "provider": "bzzoiro",
-              "provider_country": "Spain",
-              "provider_entity_id": "1264",
-              "provider_name": "Almer\u00eda",
+              "provider_country": "Saudi Arabia",
+              "provider_entity_id": "262",
+              "provider_name": "Al-Hilal",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
@@ -2834,114 +3717,9 @@
               "entity_type": "team",
               "match_method": null,
               "provider": "bzzoiro",
-              "provider_country": "England",
-              "provider_entity_id": "1896",
-              "provider_name": "Altrincham FC",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": "Portugal",
-              "provider_entity_id": "4829",
-              "provider_name": "Amarante FC",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": "France",
-              "provider_entity_id": "1307",
-              "provider_name": "Amiens SC",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": "France",
-              "provider_entity_id": "6216",
-              "provider_name": "Amneville",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": "Colombia",
-              "provider_entity_id": "753",
-              "provider_name": "Am\u00e9rica de Cali",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": "Brazil",
-              "provider_entity_id": "838",
-              "provider_name": "Am\u00e9rica Mineiro",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": "International",
-              "provider_entity_id": "701",
-              "provider_name": "Andorra",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": null,
-              "provider": "bzzoiro",
-              "provider_country": "France",
-              "provider_entity_id": "1750",
-              "provider_name": "Angoul\u00eame Charente FC",
+              "provider_country": "Saudi Arabia",
+              "provider_entity_id": "271",
+              "provider_name": "Al-Ittihad",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
@@ -2949,10 +3727,10 @@
             }
           ],
           "candidates_truncated": true,
-          "manual_review_candidate_count": 8,
+          "manual_review_candidate_count": 11,
           "status_counts": {
-            "candidate_requires_manual_approval": 8,
-            "no_exact_contextual_match": 683
+            "candidate_requires_manual_approval": 11,
+            "no_exact_contextual_match": 786
           }
         }
       },
@@ -2961,12 +3739,12 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 1239,
+      "observation_count": 1269,
       "snapshot_count": 3,
       "source_entity_counts": {
-        "leagues": 27,
-        "seasons": 27,
-        "teams": 691
+        "leagues": 51,
+        "seasons": 48,
+        "teams": 797
       },
       "status": "ok"
     },
@@ -3219,7 +3997,7 @@
     "livescore_football": {
       "categories": {
         "leagues": {
-          "candidate_count": 11,
+          "candidate_count": 13,
           "candidates": [
             {
               "canonical_entity_id": null,
@@ -3333,6 +4111,36 @@
               "entity_type": "league",
               "match_method": null,
               "provider": "livescore_football",
+              "provider_country": "United States",
+              "provider_entity_id": "770",
+              "provider_name": "MLS",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "Saudi Arabia",
+              "provider_entity_id": "21231",
+              "provider_name": "Saudi Pro League",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "league",
+              "match_method": null,
+              "provider": "livescore_football",
               "provider_country": "Spain",
               "provider_entity_id": "20381",
               "provider_name": "Spanish Copa de la Reina",
@@ -3390,11 +4198,11 @@
           "candidates_truncated": false,
           "manual_review_candidate_count": 0,
           "status_counts": {
-            "no_exact_contextual_match": 11
+            "no_exact_contextual_match": 13
           }
         },
         "seasons": {
-          "candidate_count": 11,
+          "candidate_count": 13,
           "candidates": [
             {
               "canonical_entity_id": null,
@@ -3438,6 +4246,21 @@
               "provider_name": "2026",
               "provider_parent_id": "20956",
               "provider_parent_name": "Spanish Liga F",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": null,
+              "provider_entity_id": "21231::2026",
+              "provider_name": "2026",
+              "provider_parent_id": "21231",
+              "provider_parent_name": "Saudi Pro League",
               "reason": "A verified provider-competition to canonical-competition link is required first.",
               "status": "parent_competition_unmapped"
             },
@@ -3554,6 +4377,21 @@
               "match_method": null,
               "provider": "livescore_football",
               "provider_country": null,
+              "provider_entity_id": "770::2026",
+              "provider_name": "2026",
+              "provider_parent_id": "770",
+              "provider_parent_name": "MLS",
+              "reason": "A verified provider-competition to canonical-competition link is required first.",
+              "status": "parent_competition_unmapped"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "season",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": null,
               "provider_entity_id": "8097::2026",
               "provider_name": "2026",
               "provider_parent_id": "8097",
@@ -3565,7 +4403,7 @@
           "candidates_truncated": false,
           "manual_review_candidate_count": 0,
           "status_counts": {
-            "parent_competition_unmapped": 11
+            "parent_competition_unmapped": 13
           }
         },
         "teams": {
@@ -3647,21 +4485,6 @@
               "status": "candidate_requires_manual_approval"
             },
             {
-              "canonical_entity_id": "sportmonks:3457",
-              "canonical_name": "Levante",
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "livescore_football",
-              "provider_country": "Spain",
-              "provider_entity_id": "1538",
-              "provider_name": "Levante",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
-            },
-            {
               "canonical_entity_id": "sportmonks:8",
               "canonical_name": "Liverpool",
               "canonical_parent_id": null,
@@ -3716,36 +4539,6 @@
               "provider_country": "England",
               "provider_entity_id": "20061",
               "provider_name": "Manchester United",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
-            },
-            {
-              "canonical_entity_id": "sportmonks:459",
-              "canonical_name": "Osasuna",
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "livescore_football",
-              "provider_country": "Spain",
-              "provider_entity_id": "21151",
-              "provider_name": "Osasuna",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
-            },
-            {
-              "canonical_entity_id": "sportmonks:485",
-              "canonical_name": "Real Betis",
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "livescore_football",
-              "provider_country": "Spain",
-              "provider_entity_id": "244",
-              "provider_name": "Real Betis",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
@@ -3851,6 +4644,36 @@
               "provider_country": "England",
               "provider_entity_id": "3802",
               "provider_name": "AFC Wimbledon",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "Saudi Arabia",
+              "provider_entity_id": "8346",
+              "provider_name": "Al Ahli",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "Saudi Arabia",
+              "provider_entity_id": "817",
+              "provider_name": "Al Nassr",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
@@ -4074,38 +4897,8 @@
               "match_method": null,
               "provider": "livescore_football",
               "provider_country": "Spain",
-              "provider_entity_id": "19288",
-              "provider_name": "CD Artistico Navalcarnero",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": null,
-              "provider": "livescore_football",
-              "provider_country": "Spain",
               "provider_entity_id": "133287",
               "provider_name": "CD Samper",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": null,
-              "provider": "livescore_football",
-              "provider_country": "Spain",
-              "provider_entity_id": "133837",
-              "provider_name": "CD Tarancon",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
@@ -4173,10 +4966,10 @@
             }
           ],
           "candidates_truncated": true,
-          "manual_review_candidate_count": 15,
+          "manual_review_candidate_count": 12,
           "status_counts": {
-            "candidate_requires_manual_approval": 15,
-            "no_exact_contextual_match": 75
+            "candidate_requires_manual_approval": 12,
+            "no_exact_contextual_match": 78
           }
         }
       },
@@ -4185,11 +4978,11 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 128,
+      "observation_count": 127,
       "snapshot_count": 3,
       "source_entity_counts": {
-        "leagues": 11,
-        "seasons": 11,
+        "leagues": 13,
+        "seasons": 13,
         "teams": 90
       },
       "status": "ok"
@@ -5455,6 +6248,51 @@
               "status": "candidate_requires_manual_approval"
             },
             {
+              "canonical_entity_id": "sportmonks:485",
+              "canonical_name": "Real Betis",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openligadb",
+              "provider_country": "Spain",
+              "provider_entity_id": "1804",
+              "provider_name": "Real Betis",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:3468",
+              "canonical_name": "Real Madrid",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openligadb",
+              "provider_country": "Spain",
+              "provider_entity_id": "1133",
+              "provider_name": "Real Madrid",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:594",
+              "canonical_name": "Real Sociedad",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openligadb",
+              "provider_country": "Spain",
+              "provider_entity_id": "1275",
+              "provider_name": "Real Sociedad",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
               "canonical_entity_id": "sportmonks:3",
               "canonical_name": "Sunderland",
               "canonical_parent_id": null,
@@ -5846,10 +6684,10 @@
             }
           ],
           "candidates_truncated": true,
-          "manual_review_candidate_count": 12,
+          "manual_review_candidate_count": 15,
           "status_counts": {
-            "candidate_requires_manual_approval": 12,
-            "no_exact_contextual_match": 444
+            "candidate_requires_manual_approval": 15,
+            "no_exact_contextual_match": 441
           }
         }
       },
