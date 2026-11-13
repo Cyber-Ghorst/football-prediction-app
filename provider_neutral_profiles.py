@@ -11,6 +11,7 @@ from typing import Any
 from form_analyzer import analyze_form, venue_rating
 from tactical_indicators import analyze_tactics
 from tactical_evidence import build_league_reference_statistics, build_tactical_evidence_profile
+from statistics_coverage import build_provider_neutral_statistics_coverage
 
 
 _COMPLETED = {"finished", "complete", "completed", "ft", "full time", "5"}
@@ -257,6 +258,7 @@ def build_provider_neutral_team_profile(
     tactical_evidence = build_tactical_evidence_profile(
         recent, league_reference, team.get("name") or f"Team {team_id}"
     )
+    statistics_coverage = build_provider_neutral_statistics_coverage(recent)
     team_fixture_accounting_gap = (
         history["team_fixtures"] - history["completed_fixtures"] - excluded["not_completed"]
     )
@@ -300,6 +302,7 @@ def build_provider_neutral_team_profile(
         "form_summary": form,
         "tactical_summary": tactics,
         "tactical_evidence": tactical_evidence,
+        "statistics_coverage": statistics_coverage,
         "history_collection_diagnostics": history_diagnostics,
         "availability": {
             "injury_data_available": False, "reported_injuries": None,
