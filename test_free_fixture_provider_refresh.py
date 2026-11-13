@@ -96,6 +96,8 @@ class FreeFixtureProviderRefreshTests(unittest.TestCase):
             patch("free_fixture_provider_refresh.OpenLigaDBAdapter") as openliga_cls,
             patch("free_fixture_provider_refresh.OpenFootballAdapter") as openfootball_cls,
             patch("free_fixture_provider_refresh.LiveScoreFootballClient") as livescore_cls,
+            patch("free_fixture_provider_refresh.collect_highlightly_observations") as collect_highlightly,
+            patch("free_fixture_provider_refresh.collect_api_ninjas_observations") as collect_ninjas,
         ):
             openliga_cls.return_value.__enter__.return_value.discover_scopes.return_value = []
             openfootball_cls.return_value.__enter__.return_value.discover_season_files.return_value = []
@@ -109,8 +111,8 @@ class FreeFixtureProviderRefreshTests(unittest.TestCase):
 
         collect_highlightly.assert_not_called()
         collect_ninjas.assert_not_called()
-        self.assertIn("will not use its data to support betting", report["providers"]["highlightly"]["skipped"])
-        self.assertIn("non-commercial-use confirmation", report["providers"]["api_ninjas"]["skipped"])
+        self.assertIn("non-betting-use confirmation is missing", report["providers"]["highlightly"]["skipped"])
+        self.assertIn("non-commercial-use confirmation is missing", report["providers"]["api_ninjas"]["skipped"])
 
 
     def test_readiness_report_identifies_each_missing_acknowledgement_without_exposing_keys(self):
@@ -216,6 +218,7 @@ class FreeFixtureProviderRefreshTests(unittest.TestCase):
                 highlightly_token="highlightly-test-key",
                 highlightly_use_allowed=True,
                 api_ninjas_token="api-ninjas-test-key",
+                api_ninjas_terms_acknowledged=True,
                 api_ninjas_noncommercial_confirmed=True,
             )
 
