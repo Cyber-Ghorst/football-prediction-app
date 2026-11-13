@@ -11,7 +11,10 @@ from datetime import datetime, timezone
 from form_analyzer import analyze_form, venue_rating
 from tactical_indicators import analyze_tactics
 from tactical_evidence import build_league_reference_statistics, build_tactical_evidence_profile
-from statistics_coverage import CORE_STATISTICS as _CORE_STATISTICS
+from statistics_coverage import (
+    CORE_STATISTICS as _CORE_STATISTICS,
+    build_statistics_coverage,
+)
 
 
 _COMPLETED = {
@@ -701,6 +704,7 @@ def collect_sportmonks_team_profile(
         "form_summary": form,
         "tactical_summary": tactics,
         "tactical_evidence": tactical_evidence,
+        "statistics_coverage": build_statistics_coverage(recent),
         "availability": {
             "injury_data_available": False,
             "reported_injuries": None,
