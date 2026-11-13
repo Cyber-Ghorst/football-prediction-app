@@ -24,6 +24,7 @@ def _country_key(value: Any) -> str:
 
 
 def _season_years(*values: Any) -> list[int]:
+    """Extract years only from human-readable season labels, never provider IDs."""
     years = set()
     for value in values:
         for match in re.findall(r"(?<!\d)(20\d{2})(?!\d)", str(value or "")):
@@ -49,7 +50,9 @@ def _season_evidence(
             "provider": provider,
             "provider_season_id": season_id or None,
             "season_name": name or None,
-            "start_years": _season_years(name, season_id),
+            # Provider season IDs are opaque identifiers. Numeric IDs such as
+            # "2037" must never be mistaken for calendar season years.
+            "start_years": _season_years(name),
             "observation_count": int(season.get("observation_count") or 0),
         })
     return sorted(rows, key=lambda row: (row["season_name"] or "", row["provider_season_id"] or ""))
