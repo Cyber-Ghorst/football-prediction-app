@@ -199,5 +199,47 @@ class ProviderNeutralProfileTests(unittest.TestCase):
         self.assertEqual(diagnostics["team_fixture_accounting_status"], "balanced")
 
 
+
+    def test_provider_neutral_coverage_reports_eight_core_metrics_and_tactical_outputs(self):
+        from statistics_coverage import build_provider_neutral_statistics_coverage
+        match = {
+            "fixture_id": "fixture:1",
+            "statistics": {
+                "Ball Possession": 57, "Passes %": 82, "Total Shots": 12,
+                "Shots on Target": 4, "Tackles": 9, "Interceptions": 6,
+                "Blocked Shots": 2, "Corner Kicks": 5, "Counter Attacks": 3,
+            },
+            "opponent_statistics": {"Counter Attacks": 2},
+            "statistics_provenance": [{"provider": "highlightly"}],
+            "statistics_invalid_rows": [], "statistics_unmapped_rows": [],
+            "statistics_conflicts": [], "opponent_statistics_conflicts": [],
+        }
+        report = build_provider_neutral_statistics_coverage([match])
+        self.assertEqual(report["core_metrics_total"], 8)
+        self.assertEqual(report["core_metrics_complete"], 8)
+        self.assertEqual(report["fixtures_checked"], 1)
+        counter = next(row for row in report["tactical_evidence_metrics"] if row["statistic"] == "Counter Attacks")
+        self.assertEqual(counter["team_output_fixtures"], 1)
+        self.assertEqual(counter["opponent_output_fixtures"], 1)
+        self.assertTrue(report["no_imputation"])
+
+    def test_provider_neutral_coverage_separates_invalid_conflicting_and_missing(self):
+        from statistics_coverage import build_provider_neutral_statistics_coverage
+        report = build_provider_neutral_statistics_coverage([{
+            "fixture_id": "fixture:1", "statistics": {}, "opponent_statistics": {},
+            "statistics_invalid_rows": [{"statistic_type": "Ball Possession"}],
+            "statistics_unmapped_rows": [{"raw_type": "Unknown Metric"}],
+            "statistics_conflicts": ["Passes %"],
+            "opponent_statistics_conflicts": [],
+        }])
+        by_name = {row["statistic"]: row for row in report["metrics"]}
+        self.assertEqual(by_name["Ball Possession"]["status"], "invalid")
+        self.assertEqual(by_name["Passes %"]["status"], "conflicted")
+        self.assertEqual(by_name["Total Shots"]["status"], "missing")
+        self.assertEqual(report["invalid_observations"], 1)
+        self.assertEqual(report["unmapped_observations"], 1)
+        self.assertEqual(report["conflict_count"], 1)
+
+
 if __name__ == "__main__":
     unittest.main()
