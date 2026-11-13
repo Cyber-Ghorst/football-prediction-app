@@ -199,9 +199,6 @@ class ProviderNeutralProfileTests(unittest.TestCase):
         self.assertEqual(diagnostics["team_fixture_accounting_status"], "balanced")
 
 
-if __name__ == "__main__":
-    unittest.main()
-
 
     def test_provider_neutral_coverage_reports_eight_core_metrics_and_tactical_outputs(self):
         from statistics_coverage import build_provider_neutral_statistics_coverage
@@ -242,3 +239,7 @@ if __name__ == "__main__":
         self.assertEqual(report["invalid_observations"], 1)
         self.assertEqual(report["unmapped_observations"], 1)
         self.assertEqual(report["conflict_count"], 1)
+
+
+if __name__ == "__main__":
+    unittest.main()
