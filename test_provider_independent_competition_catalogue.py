@@ -115,6 +115,42 @@ class ProviderIndependentCompetitionCatalogueTests(unittest.TestCase):
         self.assertFalse(candidate["automatic_approval"])
         self.assertEqual(candidate["canonical_record_created"], False)
 
+    def test_numeric_provider_season_id_is_not_mistaken_for_a_calendar_year(self):
+        report = build_provider_independent_competition_catalogue(
+            {
+                "bzzoiro": [{"id": "98", "name": "Girabola", "country": "Angola"}],
+            },
+            {
+                "bzzoiro": [{
+                    "id": "98::2037", "name": "Girabola 26/27",
+                    "provider_competition_id": "98",
+                }],
+            },
+        )
+        season = report["competitions"][0]["sources"][0]["seasons"][0]
+        self.assertEqual(season["provider_season_id"], "98::2037")
+        self.assertEqual(season["season_name"], "Girabola 26/27")
+        self.assertEqual(season["start_years"], [])
+        self.assertEqual(
+            report["competitions"][0]["season_evidence"]["status"],
+            "insufficient_provider_season_evidence",
+        )
+
+    def test_calendar_year_in_season_label_is_still_extracted(self):
+        report = build_provider_independent_competition_catalogue(
+            {
+                "provider_a": [{"id": "1", "name": "Premier League", "country": "England"}],
+            },
+            {
+                "provider_a": [{
+                    "id": "1::opaque", "name": "2026-27",
+                    "provider_competition_id": "1",
+                }],
+            },
+        )
+        season = report["competitions"][0]["sources"][0]["seasons"][0]
+        self.assertEqual(season["start_years"], [2026])
+
     def test_competition_type_conflict_is_exposed_and_missing_type_stays_unknown(self):
         conflict = build_provider_independent_competition_catalogue({
             "provider_a": [{
