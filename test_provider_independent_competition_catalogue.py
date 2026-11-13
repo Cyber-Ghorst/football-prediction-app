@@ -151,6 +151,58 @@ class ProviderIndependentCompetitionCatalogueTests(unittest.TestCase):
         season = report["competitions"][0]["sources"][0]["seasons"][0]
         self.assertEqual(season["start_years"], [2026])
 
+    def test_corroborated_type_generates_provider_neutral_review_key(self):
+        report = build_provider_independent_competition_catalogue({
+            "openfootball": [{
+                "id": "en.1", "name": "Premier League", "country": "England",
+                "competition_type": "League",
+            }],
+            "openligadb": [{
+                "id": "5996", "name": "Premier League", "country": "England",
+                "competition_type": "LEAGUE",
+            }],
+        })
+        item = report["competitions"][0]
+        candidate = report["canonical_seed_review_candidates"][0]
+        self.assertTrue(item["identity_candidate_key"].startswith("competition_v1_"))
+        self.assertEqual(
+            item["identity_candidate_key_status"],
+            "generated_for_manual_review_only",
+        )
+        self.assertEqual(
+            candidate["identity_candidate_key"], item["identity_candidate_key"]
+        )
+        self.assertFalse(candidate["canonical_record_created"])
+        self.assertFalse(candidate["provider_links_created"])
+        self.assertFalse(candidate["automatic_approval"])
+
+    def test_identity_candidate_key_is_blocked_without_corroborated_type(self):
+        missing_type = build_provider_independent_competition_catalogue({
+            "provider_a": [{
+                "id": "1", "name": "Premier League", "country": "England",
+                "competition_type": "League",
+            }],
+            "provider_b": [{
+                "id": "2", "name": "Premier League", "country": "England",
+            }],
+        })["competitions"][0]
+        conflicting_type = build_provider_independent_competition_catalogue({
+            "provider_a": [{
+                "id": "1", "name": "Premier League", "country": "England",
+                "competition_type": "League",
+            }],
+            "provider_b": [{
+                "id": "2", "name": "Premier League", "country": "England",
+                "competition_type": "Cup",
+            }],
+        })["competitions"][0]
+        for item in (missing_type, conflicting_type):
+            self.assertIsNone(item["identity_candidate_key"])
+            self.assertEqual(
+                item["identity_candidate_key_status"],
+                "blocked_without_corroborated_competition_type",
+            )
+
     def test_competition_type_conflict_is_exposed_and_missing_type_stays_unknown(self):
         conflict = build_provider_independent_competition_catalogue({
             "provider_a": [{
