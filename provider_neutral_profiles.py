@@ -310,7 +310,9 @@ def build_provider_neutral_team_profile(
             "opponent_statistics_unmapped_rows": unmapped_statistics_by_fixture_team.get((fixture_id, opponent_id), []),
             "source_provider": fixture.get("source_provider"),
             "collection_fetched_at": fixture.get("collection_fetched_at"),
-            "repository_collected_at": fixture.get("repository_collected_at"),
+            "repository_collected_at": (
+                fixture.get("repository_collected_at") or fixture.get("collected_at")
+            ),
             "provider_updated_at": fixture.get("provider_updated_at"),
         })
 
