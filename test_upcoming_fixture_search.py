@@ -54,7 +54,7 @@ class UpcomingFixtureSearchTests(unittest.TestCase):
     def test_search_uses_seven_day_window_and_exact_competition(self):
         cursor = FakeCursor([
             (
-                "competition_v1_example", "season_v1_example", "team_v1_home0",
+                "fixture_v1_example", "season_v1_example", "competition_v1_example",
                 "team_v1_home", "team_v1_away", "Arsenal", "Chelsea",
                 "Premier League", "England", None, "Not Started", None,
                 "openligadb", None,
