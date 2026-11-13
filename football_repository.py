@@ -1549,6 +1549,146 @@ def save_sportmonks_fixture_statistics(
     }
 
 
+def save_normalized_fixture_statistics(
+    database_url: str,
+    *,
+    provider: str,
+    statistics: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Persist provider-adapter-normalized statistics against canonical fixtures.
+
+    Adapters must resolve provider fixture/team identifiers to canonical IDs
+    before calling this function. Raw provider statistic IDs and payloads remain
+    attached to each row; no cross-provider values are combined.
+    """
+    import uuid
+
+    provider_name = str(provider or "").strip().casefold()
+    if not provider_name:
+        raise ValueError("provider is required.")
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+    if not isinstance(statistics, list):
+        raise TypeError("statistics must be a list.")
+
+    normalized: list[tuple[int, dict[str, Any]]] = []
+    fixture_ids: set[str] = set()
+    skipped: list[dict[str, str]] = []
+    for index, row in enumerate(statistics):
+        if not isinstance(row, dict):
+            skipped.append({"index": str(index), "reason": "invalid_statistic_row"})
+            continue
+        fixture_id = str(row.get("fixture_id") or "").strip()
+        statistic_type = str(row.get("statistic_type") or "").strip()
+        if not fixture_id or not statistic_type:
+            skipped.append({"index": str(index), "reason": "missing_canonical_fixture_or_statistic_type"})
+            continue
+        if row.get("statistic_value") is None:
+            skipped.append({"index": str(index), "reason": "missing_statistic_value"})
+            continue
+        team_id = row.get("team_id")
+        normalized.append((index, row))
+        fixture_ids.add(fixture_id)
+
+    if not normalized:
+        return {
+            "provider": provider_name,
+            "statistics_received": len(statistics),
+            "statistics_rows_prepared": 0,
+            "statistics_rows_written": 0,
+            "skipped": skipped,
+            "canonical_fixture_writes": 0,
+            "prediction_engine_modified": False,
+            "neon_prediction_ledger_modified": False,
+        }
+
+    prepared: list[tuple[Any, ...]] = []
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT fixture_id, home_team_id, away_team_id
+                FROM football_fixtures
+                WHERE fixture_id = ANY(%s)
+                """,
+                (sorted(fixture_ids),),
+            )
+            fixture_participants = {
+                str(fixture_id): {str(home_id), str(away_id)}
+                for fixture_id, home_id, away_id in cursor.fetchall()
+            }
+
+            for index, row in normalized:
+                fixture_id = str(row["fixture_id"]).strip()
+                if fixture_id not in fixture_participants:
+                    skipped.append({"index": str(index), "reason": "canonical_fixture_not_found"})
+                    continue
+                team_id = row.get("team_id")
+                if team_id is not None and str(team_id) not in fixture_participants[fixture_id]:
+                    skipped.append({"index": str(index), "reason": "team_not_a_fixture_participant"})
+                    continue
+
+                statistic_type = str(row["statistic_type"]).strip()
+                external_id = row.get("provider_statistic_id")
+                stable_identity = (
+                    f"external:{external_id}" if external_id is not None
+                    else f"row:{team_id}:{statistic_type}:{index}"
+                )
+                statistic_id = str(uuid.uuid5(
+                    uuid.NAMESPACE_URL,
+                    f"provider-statistic:v1:{provider_name}:{fixture_id}:{stable_identity}",
+                ))
+                raw_payload = row.get("raw_payload")
+                if not isinstance(raw_payload, dict):
+                    raw_payload = {"value": raw_payload}
+                prepared.append((
+                    statistic_id,
+                    fixture_id,
+                    str(team_id) if team_id is not None else None,
+                    statistic_type,
+                    Jsonb(row["statistic_value"]),
+                    provider_name,
+                    str(external_id) if external_id is not None else None,
+                    row.get("provider_updated_at"),
+                    Jsonb(raw_payload),
+                ))
+
+            if prepared:
+                _execute_batched_upsert(
+                    cursor,
+                    table="football_fixture_statistics",
+                    columns=(
+                        "statistic_id", "fixture_id", "team_id", "statistic_type",
+                        "statistic_value", "source_provider", "provider_statistic_id",
+                        "provider_updated_at", "raw_payload",
+                    ),
+                    rows=prepared,
+                    conflict_sql="""
+                        ON CONFLICT (statistic_id) DO UPDATE SET
+                            fixture_id = excluded.fixture_id,
+                            team_id = excluded.team_id,
+                            statistic_type = excluded.statistic_type,
+                            statistic_value = excluded.statistic_value,
+                            source_provider = excluded.source_provider,
+                            provider_statistic_id = excluded.provider_statistic_id,
+                            provider_updated_at = excluded.provider_updated_at,
+                            collected_at = NOW(), raw_payload = excluded.raw_payload
+                    """,
+                    batch_size=100,
+                )
+
+    return {
+        "provider": provider_name,
+        "statistics_received": len(statistics),
+        "statistics_rows_prepared": len(prepared),
+        "statistics_rows_written": len(prepared),
+        "skipped": skipped,
+        "canonical_fixture_writes": 0,
+        "prediction_engine_modified": False,
+        "neon_prediction_ledger_modified": False,
+    }
+
+
 def diagnose_fixture_statistics_coverage(database_url: str) -> dict[str, Any]:
     """Explain fixture-statistics gaps by completion state and stored provider payload."""
     if not database_url:
