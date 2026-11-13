@@ -137,17 +137,22 @@ class ProviderNeutralProfileTests(unittest.TestCase):
         self.assertIsNone(profile["player_availability"])
         self.assertFalse(profile["lineups"]["lineups_available"])
 
-    def test_exposes_history_diagnostics_without_claiming_duplicate_audit(self):
+    def test_checks_duplicate_ids_and_duplicate_fixture_fingerprints(self):
+        first = _fixture("fixture:1", days_ago=2)
+        duplicate_id = dict(first)
+        duplicate_fingerprint = dict(first, fixture_id="fixture:2")
         profile = build_provider_neutral_team_profile(
             {"team_id": "canonical:home", "name": "Home FC"},
-            [_fixture("fixture:1")],
+            [first, duplicate_id, duplicate_fingerprint],
             season_id="canonical:season",
         )
         diagnostics = profile["history_collection_diagnostics"]
-        self.assertEqual(diagnostics["fixtures_with_valid_scores"], 1)
-        self.assertEqual(diagnostics["history_order"], "newest_first_by_parsed_utc_kickoff")
-        self.assertFalse(diagnostics["duplicate_fixture_ids_checked"])
-        self.assertEqual(diagnostics["history_integrity_status"], "review_required")
+        self.assertEqual(len(profile["matches"]), 1)
+        self.assertEqual(diagnostics["duplicate_fixture_id_count"], 1)
+        self.assertEqual(diagnostics["duplicate_fixture_fingerprint_count"], 1)
+        self.assertTrue(diagnostics["duplicate_fixture_ids_checked"])
+        self.assertEqual(diagnostics["history_integrity_status"], "issues_detected")
+        self.assertEqual(diagnostics["team_fixture_accounting_status"], "balanced")
 
 
 if __name__ == "__main__":
