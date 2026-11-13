@@ -33,7 +33,7 @@ def build_crosswalk_audit(
     if not database_url:
         raise ValueError("PROVIDER_DATABASE_URL is required.")
     results: dict[str, Any] = {}
-    source_leagues_by_provider: dict[str, list[dict[str, Any]]] = {}
+    source_leagues_by_provider: dict[str, list[dict[str, Any]]] = {}\n    source_seasons_by_provider: dict[str, list[dict[str, Any]]] = {}
     try:
         canonical_catalogue = load_canonical_crosswalk_catalogue(database_url)
     except Exception as exc:
