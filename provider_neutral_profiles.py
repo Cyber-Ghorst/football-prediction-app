@@ -11,7 +11,7 @@ from typing import Any
 from form_analyzer import analyze_form, venue_rating
 from tactical_indicators import analyze_tactics
 from tactical_evidence import build_league_reference_statistics, build_tactical_evidence_profile
-from statistics_coverage import build_provider_neutral_statistics_coverage
+from statistics_coverage import CORE_STATISTICS, build_provider_neutral_statistics_coverage
 
 
 _COMPLETED = {"finished", "complete", "completed", "ft", "full time", "5"}
@@ -285,7 +285,7 @@ def build_provider_neutral_team_profile(
     matches_with_complete_core_statistics = sum(
         all(
             any((match.get("statistics") or {}).get(name) is not None for name in aliases)
-            for _label, _group, aliases in __import__("statistics_coverage").CORE_STATISTICS
+            for _label, _group, aliases in CORE_STATISTICS
         )
         for match in recent
     )
