@@ -30,7 +30,9 @@ class ProviderNeutralProfileTests(unittest.TestCase):
         self.assertEqual(profile["id"], "canonical:home")
         self.assertEqual(profile["matches"][0]["goals_for"], 2)
         self.assertEqual(profile["matches"][0]["goals_against"], 1)
-        self.assertIsNone(profile["matches"][0]["opponent_strength"])
+        self.assertEqual(profile["matches"][0]["opponent_strength"], 50.0)
+        self.assertEqual(profile["data_quality"]["opponent_strength_source"],
+                         "derived_from_completed_canonical_season_fixtures")
         self.assertIsNone(profile["player_availability"])
         self.assertFalse(profile["lineups"]["lineups_available"])
         self.assertEqual(profile["data_quality"]["provider"], "canonical_repository")
@@ -302,6 +304,36 @@ class ProviderNeutralProfileTests(unittest.TestCase):
         for _raw_type, value, canonical in aliases:
             self.assertEqual(observed[canonical], float(value))
         self.assertEqual(profile["matches"][0]["statistics_unmapped_rows"], [])
+
+
+    def test_derives_opponent_strength_from_canonical_completed_season_results(self):
+        fixtures = [
+            _fixture("home-beats-a", team_id="canonical:home", opponent_id="canonical:a",
+                     days_ago=3, home_goals=2, away_goals=0),
+            _fixture("b-beats-a", team_id="canonical:b", opponent_id="canonical:a",
+                     days_ago=2, home_goals=3, away_goals=0),
+            _fixture("home-beats-b", team_id="canonical:home", opponent_id="canonical:b",
+                     days_ago=1, home_goals=1, away_goals=0),
+        ]
+        profile = build_provider_neutral_team_profile(
+            {"team_id": "canonical:home", "name": "Home FC"},
+            fixtures, season_id="canonical:season",
+        )
+        strengths = {m["opponent_id"]: m["opponent_strength"] for m in profile["matches"]}
+        self.assertGreater(strengths["canonical:b"], strengths["canonical:a"])
+        self.assertAlmostEqual(strengths["canonical:b"], 66.667, places=2)
+        self.assertAlmostEqual(strengths["canonical:a"], 33.333, places=2)
+        self.assertEqual(profile["data_quality"]["opponent_strength_teams_in_standings"], 3)
+
+    def test_explicit_canonical_opponent_strength_map_takes_precedence(self):
+        profile = build_provider_neutral_team_profile(
+            {"team_id": "canonical:home", "name": "Home FC"},
+            [_fixture("fixture:1")], season_id="canonical:season",
+            opponent_strength={"canonical:away": 88.0},
+        )
+        self.assertEqual(profile["matches"][0]["opponent_strength"], 88.0)
+        self.assertEqual(profile["data_quality"]["opponent_strength_source"],
+                         "supplied_canonical_strength_map")
 
 
 if __name__ == "__main__":

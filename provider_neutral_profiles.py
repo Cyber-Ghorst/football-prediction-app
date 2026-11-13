@@ -77,6 +77,59 @@ def _same_statistic_value(left: Any, right: Any) -> bool:
         return left == right
 
 
+def _canonical_standings_strength(fixtures: list[dict[str, Any]], season_id: str) -> dict[str, float]:
+    """Derive rank-based strength from verified completed canonical season results."""
+    now = datetime.now(timezone.utc)
+    table: dict[str, dict[str, int]] = {}
+    seen_ids: set[str] = set()
+    seen_fingerprints: set[tuple[str, str, str, str]] = set()
+    for fixture in fixtures or []:
+        if str(fixture.get("season_id") or "").strip() != season_id:
+            continue
+        fixture_id = str(fixture.get("fixture_id") or "").strip()
+        home_id = str(fixture.get("home_team_id") or "").strip()
+        away_id = str(fixture.get("away_team_id") or "").strip()
+        if not fixture_id or not home_id or not away_id or home_id == away_id or fixture_id in seen_ids:
+            continue
+        seen_ids.add(fixture_id)
+        if str(fixture.get("status") or "").strip().casefold() not in _COMPLETED:
+            continue
+        kickoff = _utc_datetime(fixture.get("starting_at"))
+        if kickoff is None or kickoff >= now:
+            continue
+        fingerprint = (season_id, kickoff.isoformat(), home_id, away_id)
+        if fingerprint in seen_fingerprints:
+            continue
+        seen_fingerprints.add(fingerprint)
+        hg = _non_negative_score(fixture.get("home_goals"))
+        ag = _non_negative_score(fixture.get("away_goals"))
+        if hg is None or ag is None:
+            continue
+        for team_id in (home_id, away_id):
+            table.setdefault(team_id, {"points": 0, "gd": 0, "gf": 0, "wins": 0})
+        home, away = table[home_id], table[away_id]
+        home["gf"] += hg
+        away["gf"] += ag
+        home["gd"] += hg - ag
+        away["gd"] += ag - hg
+        if hg > ag:
+            home["points"] += 3
+            home["wins"] += 1
+        elif ag > hg:
+            away["points"] += 3
+            away["wins"] += 1
+        else:
+            home["points"] += 1
+            away["points"] += 1
+    ordered = sorted(table, key=lambda team_id: (
+        -table[team_id]["points"], -table[team_id]["gd"],
+        -table[team_id]["gf"], -table[team_id]["wins"], team_id
+    ))
+    count = len(ordered)
+    return {team_id: round((count - rank + 1) / count * 100, 3)
+            for rank, team_id in enumerate(ordered, 1)} if count else {}
+
+
 def build_provider_neutral_team_profile(
     team: dict[str, Any],
     fixtures: list[dict[str, Any]],
@@ -94,6 +147,8 @@ def build_provider_neutral_team_profile(
     if not canonical_season_id:
         raise ValueError("A canonical season_id is required.")
     safe_limit = max(1, min(int(limit), 10))
+    derived_strength = _canonical_standings_strength(fixtures, canonical_season_id)
+    effective_strength = opponent_strength if opponent_strength is not None else derived_strength
 
     # Resolve each fixture/team/metric independently so opponent statistics
     # can support tactical evidence. Conflicts are excluded, never averaged.
@@ -243,7 +298,7 @@ def build_provider_neutral_team_profile(
             "opponent_name": fixture.get("away_team" if is_home else "home_team"),
             "goals_for": home_goals if is_home else away_goals,
             "goals_against": away_goals if is_home else home_goals,
-            "opponent_strength": (opponent_strength or {}).get(opponent_id),
+            "opponent_strength": (effective_strength or {}).get(opponent_id),
             "statistics": stats_by_fixture_team.get((fixture_id, team_id), {}),
             "opponent_statistics": stats_by_fixture_team.get((fixture_id, opponent_id), {}),
             "statistics_provenance": provenance_by_fixture_team.get((fixture_id, team_id), []),
@@ -361,6 +416,12 @@ def build_provider_neutral_team_profile(
             "matches_returned": len(recent),
             "goals_complete": len(recent) >= 5,
             "opponent_strength_matches": sum(m.get("opponent_strength") is not None for m in recent),
+            "opponent_strength_source": (
+                "supplied_canonical_strength_map" if opponent_strength is not None
+                else "derived_from_completed_canonical_season_fixtures"
+            ),
+            "opponent_strength_teams_in_standings": len(effective_strength or {}),
+            "opponent_strength_method": "rank by points, goal difference, goals scored, wins; deterministic canonical team ID tiebreak",
             "statistics_matches": matches_with_any_statistics,
             "statistics_observations": sum(len(m.get("statistics_provenance") or []) for m in recent),
             "statistics_raw_observations": None,
