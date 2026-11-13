@@ -370,5 +370,28 @@ class ProviderNeutralProfileTests(unittest.TestCase):
         self.assertIn("tactical_statistics_coverage_by_metric", quality)
 
 
+    def test_partial_opponent_strength_map_falls_back_to_derived_standings(self):
+        fixtures = [
+            _fixture("home-beats-a", team_id="canonical:home", opponent_id="canonical:a",
+                     days_ago=3, home_goals=2, away_goals=0),
+            _fixture("b-beats-a", team_id="canonical:b", opponent_id="canonical:a",
+                     days_ago=2, home_goals=3, away_goals=0),
+            _fixture("home-beats-b", team_id="canonical:home", opponent_id="canonical:b",
+                     days_ago=1, home_goals=1, away_goals=0),
+        ]
+        profile = build_provider_neutral_team_profile(
+            {"team_id": "canonical:home", "name": "Home FC"},
+            fixtures, season_id="canonical:season",
+            opponent_strength={"canonical:b": 90.0},
+        )
+        strengths = {m["opponent_id"]: m["opponent_strength"] for m in profile["matches"]}
+        self.assertEqual(strengths["canonical:b"], 90.0)
+        self.assertAlmostEqual(strengths["canonical:a"], 33.333, places=2)
+        self.assertEqual(
+            profile["data_quality"]["opponent_strength_source"],
+            "supplied_canonical_strength_map_with_derived_fallback",
+        )
+
+
 if __name__ == "__main__":
     unittest.main()

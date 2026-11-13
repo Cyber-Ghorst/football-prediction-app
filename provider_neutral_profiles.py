@@ -148,7 +148,16 @@ def build_provider_neutral_team_profile(
         raise ValueError("A canonical season_id is required.")
     safe_limit = max(1, min(int(limit), 10))
     derived_strength = _canonical_standings_strength(fixtures, canonical_season_id)
-    effective_strength = opponent_strength if opponent_strength is not None else derived_strength
+    supplied_strength = opponent_strength or {}
+    # Explicit values take precedence, but a partial map must not erase
+    # standings-derived strength for opponents it does not contain.
+    effective_strength = {**derived_strength, **supplied_strength}
+    if opponent_strength is None:
+        opponent_strength_source = "derived_from_completed_canonical_season_fixtures"
+    elif all(other_id == team_id or other_id in supplied_strength for other_id in derived_strength):
+        opponent_strength_source = "supplied_canonical_strength_map"
+    else:
+        opponent_strength_source = "supplied_canonical_strength_map_with_derived_fallback"
 
     # Resolve each fixture/team/metric independently so opponent statistics
     # can support tactical evidence. Conflicts are excluded, never averaged.
@@ -418,10 +427,7 @@ def build_provider_neutral_team_profile(
             "matches_returned": len(recent),
             "goals_complete": len(recent) >= 5,
             "opponent_strength_matches": sum(m.get("opponent_strength") is not None for m in recent),
-            "opponent_strength_source": (
-                "supplied_canonical_strength_map" if opponent_strength is not None
-                else "derived_from_completed_canonical_season_fixtures"
-            ),
+            "opponent_strength_source": opponent_strength_source,
             "opponent_strength_teams_in_standings": len(effective_strength or {}),
             "opponent_strength_method": "rank by points, goal difference, goals scored, wins; deterministic canonical team ID tiebreak",
             "statistics_matches": matches_with_any_statistics,
