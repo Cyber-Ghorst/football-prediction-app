@@ -43,6 +43,30 @@ def _non_negative_score(value: Any) -> int | None:
     return number
 
 
+def _normalize_statistic_value(statistic_type: str, value: Any) -> float | None:
+    """Accept finite non-negative numeric observations and valid percentages only."""
+    import math
+
+    if isinstance(value, bool) or value is None:
+        return None
+    text = str(value).strip().replace(",", "")
+    had_percent_sign = text.endswith("%")
+    if had_percent_sign:
+        text = text[:-1].strip()
+    try:
+        number = float(text)
+    except (TypeError, ValueError, OverflowError):
+        return None
+    if not math.isfinite(number) or number < 0:
+        return None
+    if statistic_type in {"Ball Possession", "Passes %"}:
+        if not had_percent_sign and 0 < number <= 1:
+            number *= 100
+        if number > 100:
+            return None
+    return round(number, 3)
+
+
 def _same_statistic_value(left: Any, right: Any) -> bool:
     try:
         return float(str(left).replace("%", "").replace(",", "")) == float(
@@ -88,6 +112,8 @@ def build_provider_neutral_team_profile(
         "counter attacks": "Counter Attacks", "counter-attacks": "Counter Attacks",
     }
     candidates: dict[tuple[str, str, str], list[dict[str, Any]]] = {}
+    invalid_statistics_by_fixture_team: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    unmapped_statistics_by_fixture_team: dict[tuple[str, str], list[dict[str, Any]]] = {}
     for row in statistics or []:
         if not isinstance(row, dict):
             continue
@@ -96,16 +122,43 @@ def build_provider_neutral_team_profile(
         raw_type = str(row.get("statistic_type") or "").strip()
         value = row.get("statistic_value")
         statistic_type = aliases.get(raw_type.casefold(), raw_type)
-        if fixture_id and statistic_team_id and statistic_type and value is not None:
-            candidates.setdefault((fixture_id, statistic_team_id, statistic_type), []).append(row)
+        key = (fixture_id, statistic_team_id)
+        if not fixture_id or not statistic_team_id or not raw_type:
+            continue
+        if statistic_type not in set(aliases.values()):
+            unmapped_statistics_by_fixture_team.setdefault(key, []).append({
+                "raw_type": raw_type, "raw_value": value,
+                "provider": row.get("provider") or row.get("source_provider"),
+                "status": "unmapped",
+            })
+            continue
+        normalized_value = _normalize_statistic_value(statistic_type, value)
+        if normalized_value is None:
+            invalid_statistics_by_fixture_team.setdefault(key, []).append({
+                "statistic_type": statistic_type, "raw_type": raw_type,
+                "raw_value": value,
+                "provider": row.get("provider") or row.get("source_provider"),
+                "status": "invalid",
+            })
+            continue
+        candidates.setdefault((fixture_id, statistic_team_id, statistic_type), []).append({
+            **row, "_normalized_value": normalized_value,
+        })
 
     stats_by_fixture_team: dict[tuple[str, str], dict[str, Any]] = {}
     provenance_by_fixture_team: dict[tuple[str, str], list[dict[str, Any]]] = {}
     conflicts_by_fixture_team: dict[tuple[str, str], list[str]] = {}
     league_reference_rows: list[dict[str, Any]] = []
     for (fixture_id, statistic_team_id, statistic_type), rows in candidates.items():
-        values = [row.get("statistic_value") for row in rows]
+        values = [row.get("_normalized_value") for row in rows]
         if any(not _same_statistic_value(values[0], value) for value in values[1:]):
+            conflicts_by_fixture_team.setdefault((fixture_id, statistic_team_id), []).append(statistic_type)
+            continue
+        # A metric with both valid and invalid observations is ambiguous; exclude it.
+        if (fixture_id, statistic_team_id) in invalid_statistics_by_fixture_team and any(
+            row.get("statistic_type") == statistic_type
+            for row in invalid_statistics_by_fixture_team[(fixture_id, statistic_team_id)]
+        ):
             conflicts_by_fixture_team.setdefault((fixture_id, statistic_team_id), []).append(statistic_type)
             continue
         key = (fixture_id, statistic_team_id)
@@ -114,6 +167,7 @@ def build_provider_neutral_team_profile(
             "provider": row.get("provider") or row.get("source_provider"),
             "provider_statistic_id": row.get("provider_statistic_id"),
             "statistic_type": statistic_type,
+            "normalized_value": row.get("_normalized_value"),
         } for row in rows)
         league_reference_rows.append({statistic_type: values[0]})
     league_reference = build_league_reference_statistics(league_reference_rows)
@@ -189,7 +243,10 @@ def build_provider_neutral_team_profile(
             "statistics_provenance": provenance_by_fixture_team.get((fixture_id, team_id), []),
             "statistics_conflicts": conflicts_by_fixture_team.get((fixture_id, team_id), []),
             "opponent_statistics_conflicts": conflicts_by_fixture_team.get((fixture_id, opponent_id), []),
-            "statistics_invalid_rows": [],
+            "statistics_invalid_rows": invalid_statistics_by_fixture_team.get((fixture_id, team_id), []),
+            "statistics_unmapped_rows": unmapped_statistics_by_fixture_team.get((fixture_id, team_id), []),
+            "opponent_statistics_invalid_rows": invalid_statistics_by_fixture_team.get((fixture_id, opponent_id), []),
+            "opponent_statistics_unmapped_rows": unmapped_statistics_by_fixture_team.get((fixture_id, opponent_id), []),
             "source_provider": fixture.get("source_provider"),
         })
 
@@ -264,6 +321,9 @@ def build_provider_neutral_team_profile(
             "statistics_matches": sum(bool(m.get("statistics")) for m in recent),
             "statistics_conflict_count": sum(len(m.get("statistics_conflicts") or []) for m in recent),
             "opponent_statistics_conflict_count": sum(len(m.get("opponent_statistics_conflicts") or []) for m in recent),
+            "statistics_invalid_value_count": sum(len(m.get("statistics_invalid_rows") or []) for m in recent),
+            "statistics_unmapped_observation_count": sum(len(m.get("statistics_unmapped_rows") or []) for m in recent),
+            "opponent_statistics_invalid_value_count": sum(len(m.get("opponent_statistics_invalid_rows") or []) for m in recent),
             "history_shortfall": max(0, 10 - len(recent)),
             "history_integrity_status": history_diagnostics["history_integrity_status"],
             "history_duplicate_check_performed": True,
