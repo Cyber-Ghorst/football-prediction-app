@@ -74,12 +74,12 @@ def normalize_entity_name(value: Any) -> str:
     text = "".join(character for character in text if not unicodedata.combining(character))
     text = text.casefold().replace("&", " and ")
     text = re.sub(r"[^a-z0-9]+", " ", text)
-    return re.sub(r"\s+", " ", text).strip()
+    return re.sub(r"\\s+", " ", text).strip()
 
 
 def _season_start_year(value: Any) -> int | None:
     """Extract a season's first four-digit year for parent-scoped season review."""
-    match = re.search(r"(?<!\d)(20\d{2})(?!\d)", str(value or ""))
+    match = re.search(r"(?<!\\d)(20\\d{2})(?!\\d)", str(value or ""))
     return int(match.group(1)) if match else None
 
 
@@ -99,8 +99,8 @@ def _country_key(value: Any) -> str:
 def _candidate_name_key(provider: str, entity_type: str, value: Any) -> str:
     key = normalize_entity_name(value)
     if provider == "openligadb" and entity_type == "league":
-        key = re.sub(r"\s+herren$", "", key).strip()
-        key = re.sub(r"\s+20\d{2}\s+(?:20)?\d{2}$", "", key).strip()
+        key = re.sub(r"\\s+herren$", "", key).strip()
+        key = re.sub(r"\\s+20\\d{2}\\s+(?:20)?\\d{2}$", "", key).strip()
         aliases = {
             "1 fussball bundesliga": "bundesliga",
             "2 fussball bundesliga": "2 bundesliga",
@@ -124,7 +124,7 @@ def _display_value(value: Any) -> str:
 
 def _is_numeric_identifier_name(value: Any) -> bool:
     """Reject provider IDs accidentally presented as human-readable league names."""
-    return bool(re.fullmatch(r"\d+", _display_value(value)))
+    return bool(re.fullmatch(r"\\d+", _display_value(value)))
 
 
 # Stable provider-ID aliases are explicit review hints, never automatic links.
@@ -499,7 +499,10 @@ def extract_provider_entities_from_observations(
         # names stay absent and cannot enter crosswalk review as false candidates.
         competition_name = observation.get("competition_name")
         country = _display_value(observation.get("country")) or _country_from_payload(raw)
-        add(\n            "leagues", competition_id, competition_name, country=country,\n            competition_type=_competition_type_from_payload(raw),\n        )
+        add(
+            "leagues", competition_id, competition_name, country=country,
+            competition_type=_competition_type_from_payload(raw),
+        )
         season_id = observation.get("season_key")
         season_name = observation.get("season_name") or season_id
         season_link_id = provider_season_entity_id(competition_id, season_id)
