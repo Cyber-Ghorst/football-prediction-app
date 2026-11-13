@@ -110,5 +110,45 @@ class ProviderNeutralProfileTests(unittest.TestCase):
             )
 
 
+    def test_includes_tvd_evidence_and_opponent_statistics_without_imputation(self):
+        profile = build_provider_neutral_team_profile(
+            {"team_id": "canonical:home", "name": "Home FC"},
+            [_fixture("fixture:1")],
+            season_id="canonical:season",
+            statistics=[
+                {"fixture_id": "fixture:1", "team_id": "canonical:home",
+                 "statistic_type": "Ball Possession", "statistic_value": 57,
+                 "provider": "highlightly"},
+                {"fixture_id": "fixture:1", "team_id": "canonical:away",
+                 "statistic_type": "Ball Possession", "statistic_value": 43,
+                 "provider": "highlightly"},
+            ],
+        )
+        self.assertEqual(profile["matches"][0]["opponent_statistics"]["Ball Possession"], 43)
+        self.assertIsInstance(profile["tactical_evidence"], dict)
+        self.assertIn("weapons", profile["tactical_evidence"])
+        self.assertIn("vulnerabilities", profile["tactical_evidence"])
+        self.assertEqual(
+            profile["tactical_evidence"]["evidence_metadata"]["latest_five_weight"], 0.60
+        )
+        self.assertEqual(
+            profile["tactical_evidence"]["evidence_metadata"]["previous_five_weight"], 0.40
+        )
+        self.assertIsNone(profile["player_availability"])
+        self.assertFalse(profile["lineups"]["lineups_available"])
+
+    def test_exposes_history_diagnostics_without_claiming_duplicate_audit(self):
+        profile = build_provider_neutral_team_profile(
+            {"team_id": "canonical:home", "name": "Home FC"},
+            [_fixture("fixture:1")],
+            season_id="canonical:season",
+        )
+        diagnostics = profile["history_collection_diagnostics"]
+        self.assertEqual(diagnostics["fixtures_with_valid_scores"], 1)
+        self.assertEqual(diagnostics["history_order"], "newest_first_by_parsed_utc_kickoff")
+        self.assertFalse(diagnostics["duplicate_fixture_ids_checked"])
+        self.assertEqual(diagnostics["history_integrity_status"], "review_required")
+
+
 if __name__ == "__main__":
     unittest.main()
