@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from football_repository import get_repository_seasons, get_repository_season_snapshot
-from provider_neutral_profiles import build_repository_team_profiles
+from provider_neutral_profiles import build_repository_team_profiles, _canonical_standings_strength
 from sportmonks_layer2 import collect_repository_team_profiles
 
 
@@ -58,6 +58,7 @@ def _compare_team(team_id: str, team_name: str, sport: dict, neutral: dict) -> d
         "opponent": lambda a, b: _id(a.get("opponent_id")) == _id(b.get("opponent_id")),
         "goals_for": lambda a, b: _same_number(a.get("goals_for"), b.get("goals_for")),
         "goals_against": lambda a, b: _same_number(a.get("goals_against"), b.get("goals_against")),
+        "opponent_strength": lambda a, b: _same_number(a.get("opponent_strength"), b.get("opponent_strength")),
     }
     checks = {name: {"compared": 0, "matched": 0, "mismatched_fixture_ids": []} for name in field_checks}
     statistic_checks = {"compared": 0, "matched": 0, "mismatched": []}
@@ -137,21 +138,28 @@ def main() -> int:
     team_ids = sorted(team_rows)
     if not team_ids:
         raise SystemExit("The selected season snapshot contains no teams.")
+    canonical_snapshot = {
+        "season_id": str(selected["season_id"]),
+        "teams": snapshot.get("teams") or [],
+        "fixtures": snapshot.get("fixtures") or [],
+        "statistics": snapshot.get("statistics") or [],
+    }
+    derived_strength = _canonical_standings_strength(
+        canonical_snapshot["fixtures"], str(selected["season_id"])
+    )
+    ranked_strength_ids = sorted(
+        derived_strength, key=lambda value: (-derived_strength[value], value)
+    )
+    standings = [
+        {"participant_id": _id(team_id), "position": position}
+        for position, team_id in enumerate(ranked_strength_ids, start=1)
+    ]
     sport_profiles = collect_repository_team_profiles(
-        database_url, team_ids, str(selected["season_id"]), season_snapshot={
-            "season_id": str(selected["season_id"]),
-            "teams": snapshot.get("teams") or [],
-            "fixtures": snapshot.get("fixtures") or [],
-            "statistics": snapshot.get("statistics") or [],
-        },
+        database_url, team_ids, str(selected["season_id"]),
+        standings=standings, season_snapshot=canonical_snapshot,
     )
     neutral_profiles = build_repository_team_profiles(
-        {
-            "season_id": str(selected["season_id"]),
-            "teams": snapshot.get("teams") or [],
-            "fixtures": snapshot.get("fixtures") or [],
-            "statistics": snapshot.get("statistics") or [],
-        },
+        canonical_snapshot,
         team_ids,
         str(selected["season_id"]),
     )
