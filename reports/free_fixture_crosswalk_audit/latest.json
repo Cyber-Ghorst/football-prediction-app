@@ -1,7 +1,7 @@
 {
   "automatic_mapping_approvals": 0,
   "canonical_fixture_writes": 0,
-  "generated_at_utc": "2026-11-13T15:11:30.049748+00:00",
+  "generated_at_utc": "2026-11-13T15:41:29.480863+00:00",
   "prediction_ledger_writes": 0,
   "provider_independent_catalogue": {
     "automatic_mapping_approvals": 0,
@@ -17,6 +17,8 @@
           "values": []
         },
         "country": "Angola",
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "angola",
         "normalized_name": "girabola",
         "provider_count": 2,
@@ -103,6 +105,8 @@
           "values": []
         },
         "country": "Colombia",
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "colombia",
         "normalized_name": "copa colombia",
         "provider_count": 2,
@@ -197,6 +201,8 @@
           "values": []
         },
         "country": "England",
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "england",
         "normalized_name": "league one",
         "provider_count": 2,
@@ -283,6 +289,8 @@
           "values": []
         },
         "country": "England",
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "england",
         "normalized_name": "league two",
         "provider_count": 2,
@@ -369,6 +377,8 @@
           "values": []
         },
         "country": "England",
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "england",
         "normalized_name": "national league",
         "provider_count": 2,
@@ -455,6 +465,8 @@
           "values": []
         },
         "country": "England",
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "england",
         "normalized_name": "premier league",
         "provider_count": 2,
@@ -549,6 +561,8 @@
           "values": []
         },
         "country": "France",
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "france",
         "normalized_name": "coupe de france",
         "provider_count": 2,
@@ -567,7 +581,7 @@
           },
           "season_records": [
             {
-              "observation_count": 259,
+              "observation_count": 260,
               "provider": "bzzoiro",
               "provider_season_id": "44::2240",
               "season_name": "Coupe de France 26/27",
@@ -591,12 +605,12 @@
             "competition_name": "Coupe de France",
             "competition_type": null,
             "country": "France",
-            "observation_count": 259,
+            "observation_count": 260,
             "provider": "bzzoiro",
             "provider_competition_id": "44",
             "seasons": [
               {
-                "observation_count": 259,
+                "observation_count": 260,
                 "provider": "bzzoiro",
                 "provider_season_id": "44::2240",
                 "season_name": "Coupe de France 26/27",
@@ -635,6 +649,8 @@
           "values": []
         },
         "country": "France",
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "france",
         "normalized_name": "ligue 1",
         "provider_count": 2,
@@ -721,6 +737,8 @@
           "values": []
         },
         "country": "Germany",
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "germany",
         "normalized_name": "2 bundesliga",
         "provider_count": 2,
@@ -807,6 +825,8 @@
           "values": []
         },
         "country": "Germany",
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "germany",
         "normalized_name": "bundesliga",
         "provider_count": 3,
@@ -927,6 +947,8 @@
           "values": []
         },
         "country": "Netherlands",
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "netherlands",
         "normalized_name": "eerste divisie",
         "provider_count": 2,
@@ -1013,6 +1035,8 @@
           "values": []
         },
         "country": "Portugal",
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "portugal",
         "normalized_name": "liga portugal 2",
         "provider_count": 2,
@@ -1099,6 +1123,8 @@
           "values": []
         },
         "country": "Saudi Arabia",
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "saudi arabia",
         "normalized_name": "saudi pro league",
         "provider_count": 2,
@@ -1185,6 +1211,8 @@
           "values": []
         },
         "country": "Spain",
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "spain",
         "normalized_name": "copa del rey",
         "provider_count": 2,
@@ -1271,6 +1299,8 @@
           "values": []
         },
         "country": "Spain",
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "spain",
         "normalized_name": "la liga",
         "provider_count": 2,
@@ -1357,6 +1387,8 @@
           "values": []
         },
         "country": "Spain",
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "spain",
         "normalized_name": "segunda division",
         "provider_count": 2,
@@ -1443,6 +1475,8 @@
           "values": []
         },
         "country": "United States",
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "united states",
         "normalized_name": "mls",
         "provider_count": 2,
@@ -1537,6 +1571,8 @@
           "values": []
         },
         "country": "USA",
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "united states",
         "normalized_name": "usl championship",
         "provider_count": 2,
@@ -1637,6 +1673,8 @@
         "countries": [
           "Albania"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "albania",
         "normalized_name": "cup",
         "provider_count": 1,
@@ -1698,6 +1736,8 @@
         "countries": [
           "Algeria"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "algeria",
         "normalized_name": "ligue 1",
         "provider_count": 1,
@@ -1759,6 +1799,8 @@
         "countries": [
           "Angola"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "angola",
         "normalized_name": "girabola",
         "provider_count": 2,
@@ -1846,6 +1888,8 @@
         "countries": [
           "Argentina"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "argentina",
         "normalized_name": "copa argentina",
         "provider_count": 1,
@@ -1907,6 +1951,8 @@
         "countries": [
           "Argentina"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "argentina",
         "normalized_name": "liga profesional de futbol",
         "provider_count": 1,
@@ -1968,6 +2014,8 @@
         "countries": [
           "Argentina"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "argentina",
         "normalized_name": "primera c",
         "provider_count": 1,
@@ -2029,6 +2077,8 @@
         "countries": [
           "Argentina"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "argentina",
         "normalized_name": "primera nacional",
         "provider_count": 1,
@@ -2090,6 +2140,8 @@
         "countries": [
           "Argentina"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "argentina",
         "normalized_name": "super copa",
         "provider_count": 1,
@@ -2151,6 +2203,8 @@
         "countries": [
           "Argentina"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "argentina",
         "normalized_name": "torneo federal a",
         "provider_count": 1,
@@ -2212,6 +2266,8 @@
         "countries": [
           "Armenia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "armenia",
         "normalized_name": "first league",
         "provider_count": 1,
@@ -2273,6 +2329,8 @@
         "countries": [
           "Aruba"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "aruba",
         "normalized_name": "division di honor",
         "provider_count": 1,
@@ -2334,6 +2392,8 @@
         "countries": [
           "Australia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "australia",
         "normalized_name": "a league men",
         "provider_count": 1,
@@ -2389,6 +2449,8 @@
         "countries": [
           "Australia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "australia",
         "normalized_name": "australian championship",
         "provider_count": 1,
@@ -2450,6 +2512,8 @@
         "countries": [
           "Australia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "australia",
         "normalized_name": "w league",
         "provider_count": 1,
@@ -2511,6 +2575,8 @@
         "countries": [
           "Austria"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "austria",
         "normalized_name": "frauenliga",
         "provider_count": 1,
@@ -2572,6 +2638,8 @@
         "countries": [
           "Belarus"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "belarus",
         "normalized_name": "belarus cup",
         "provider_count": 1,
@@ -2633,6 +2701,8 @@
         "countries": [
           "Belarus"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "belarus",
         "normalized_name": "pershaya liga",
         "provider_count": 1,
@@ -2694,6 +2764,8 @@
         "countries": [
           "Belgium"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "belgium",
         "normalized_name": "challenger pro league",
         "provider_count": 1,
@@ -2749,6 +2821,8 @@
         "countries": [
           "Belgium"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "belgium",
         "normalized_name": "pro league",
         "provider_count": 1,
@@ -2804,6 +2878,8 @@
         "countries": [
           "Belgium"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "belgium",
         "normalized_name": "super league women",
         "provider_count": 1,
@@ -2865,6 +2941,8 @@
         "countries": [
           "Benin"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "benin",
         "normalized_name": "championnat national",
         "provider_count": 1,
@@ -2926,6 +3004,8 @@
         "countries": [
           "Bolivia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "bolivia",
         "normalized_name": "copa de la division profesional",
         "provider_count": 1,
@@ -2987,6 +3067,8 @@
         "countries": [
           "Bolivia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "bolivia",
         "normalized_name": "nacional b",
         "provider_count": 1,
@@ -3048,6 +3130,8 @@
         "countries": [
           "Bosnia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "bosnia",
         "normalized_name": "1st league fbih",
         "provider_count": 1,
@@ -3109,6 +3193,8 @@
         "countries": [
           "Bosnia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "bosnia",
         "normalized_name": "1st league rs",
         "provider_count": 1,
@@ -3170,6 +3256,8 @@
         "countries": [
           "Brazil"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "brazil",
         "normalized_name": "brasileirao serie a",
         "provider_count": 1,
@@ -3231,6 +3319,8 @@
         "countries": [
           "Brazil"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "brazil",
         "normalized_name": "brasileirao serie b",
         "provider_count": 1,
@@ -3292,6 +3382,8 @@
         "countries": [
           "Brazil"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "brazil",
         "normalized_name": "brazilian serie a",
         "provider_count": 1,
@@ -3359,6 +3451,8 @@
         "countries": [
           "Brazil"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "brazil",
         "normalized_name": "campeonato brasileiro serie a",
         "provider_count": 1,
@@ -3420,6 +3514,8 @@
         "countries": [
           "Brazil"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "brazil",
         "normalized_name": "carioca 2",
         "provider_count": 1,
@@ -3481,6 +3577,8 @@
         "countries": [
           "Brazil"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "brazil",
         "normalized_name": "carioca b2",
         "provider_count": 1,
@@ -3542,6 +3640,8 @@
         "countries": [
           "Brazil"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "brazil",
         "normalized_name": "carioca u20",
         "provider_count": 1,
@@ -3603,6 +3703,8 @@
         "countries": [
           "Brazil"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "brazil",
         "normalized_name": "copa do brasil u20",
         "provider_count": 1,
@@ -3664,6 +3766,8 @@
         "countries": [
           "Brazil"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "brazil",
         "normalized_name": "copa fares lopes",
         "provider_count": 1,
@@ -3725,6 +3829,8 @@
         "countries": [
           "Brazil"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "brazil",
         "normalized_name": "copa santa catarina",
         "provider_count": 1,
@@ -3786,6 +3892,8 @@
         "countries": [
           "Brazil"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "brazil",
         "normalized_name": "gaucho 3",
         "provider_count": 1,
@@ -3847,6 +3955,8 @@
         "countries": [
           "Brazil"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "brazil",
         "normalized_name": "goiano 3",
         "provider_count": 1,
@@ -3908,6 +4018,8 @@
         "countries": [
           "Brazil"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "brazil",
         "normalized_name": "kings cup",
         "provider_count": 1,
@@ -3969,6 +4081,8 @@
         "countries": [
           "Brazil"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "brazil",
         "normalized_name": "mineiro 3",
         "provider_count": 1,
@@ -4030,6 +4144,8 @@
         "countries": [
           "Brazil"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "brazil",
         "normalized_name": "paraense u20",
         "provider_count": 1,
@@ -4091,6 +4207,8 @@
         "countries": [
           "Brazil"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "brazil",
         "normalized_name": "paulista u20",
         "provider_count": 1,
@@ -4152,6 +4270,8 @@
         "countries": [
           "Brazil"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "brazil",
         "normalized_name": "pernambucano 1",
         "provider_count": 1,
@@ -4213,6 +4333,8 @@
         "countries": [
           "Brazil"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "brazil",
         "normalized_name": "pernambucano u20",
         "provider_count": 1,
@@ -4274,6 +4396,8 @@
         "countries": [
           "Brazil"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "brazil",
         "normalized_name": "sergipano 2",
         "provider_count": 1,
@@ -4335,6 +4459,8 @@
         "countries": [
           "Brazil"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "brazil",
         "normalized_name": "serie a",
         "provider_count": 1,
@@ -4396,6 +4522,8 @@
         "countries": [
           "Brazil"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "brazil",
         "normalized_name": "serie b",
         "provider_count": 1,
@@ -4457,6 +4585,8 @@
         "countries": [
           "Bulgaria"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "bulgaria",
         "normalized_name": "parva liga",
         "provider_count": 1,
@@ -4512,6 +4642,8 @@
         "countries": [
           "Bulgaria"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "bulgaria",
         "normalized_name": "second league",
         "provider_count": 1,
@@ -4573,6 +4705,8 @@
         "countries": [
           "Burkina Faso"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "burkina faso",
         "normalized_name": "ligue 1",
         "provider_count": 1,
@@ -4634,6 +4768,8 @@
         "countries": [
           "Burundi"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "burundi",
         "normalized_name": "ligue a",
         "provider_count": 1,
@@ -4695,6 +4831,8 @@
         "countries": [
           "Cameroon"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "cameroon",
         "normalized_name": "elite one",
         "provider_count": 1,
@@ -4756,6 +4894,8 @@
         "countries": [
           "Cameroon"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "cameroon",
         "normalized_name": "elite two",
         "provider_count": 1,
@@ -4817,6 +4957,8 @@
         "countries": [
           "Chile"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "chile",
         "normalized_name": "copa de la liga",
         "provider_count": 1,
@@ -4878,6 +5020,8 @@
         "countries": [
           "Chile"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "chile",
         "normalized_name": "liga de primera",
         "provider_count": 1,
@@ -4917,6 +5061,8 @@
         "countries": [
           "Chile"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "chile",
         "normalized_name": "primera b",
         "provider_count": 1,
@@ -4978,6 +5124,8 @@
         "countries": [
           "Chile"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "chile",
         "normalized_name": "segunda division",
         "provider_count": 1,
@@ -5039,6 +5187,8 @@
         "countries": [
           "China"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "china",
         "normalized_name": "league one",
         "provider_count": 1,
@@ -5100,6 +5250,8 @@
         "countries": [
           "Colombia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "colombia",
         "normalized_name": "categoria primera a",
         "provider_count": 1,
@@ -5161,6 +5313,8 @@
         "countries": [
           "Colombia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "colombia",
         "normalized_name": "copa colombia",
         "provider_count": 2,
@@ -5256,6 +5410,8 @@
         "countries": [
           "Colombia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "colombia",
         "normalized_name": "primera a",
         "provider_count": 1,
@@ -5317,6 +5473,8 @@
         "countries": [
           "Colombia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "colombia",
         "normalized_name": "primera b",
         "provider_count": 1,
@@ -5378,6 +5536,8 @@
         "countries": [
           "Congo DR"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "congo dr",
         "normalized_name": "ligue 1",
         "provider_count": 1,
@@ -5439,6 +5599,8 @@
         "countries": [
           "Costa Rica"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "costa rica",
         "normalized_name": "liga de ascenso",
         "provider_count": 1,
@@ -5500,6 +5662,8 @@
         "countries": [
           "Croatia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "croatia",
         "normalized_name": "cup",
         "provider_count": 1,
@@ -5561,6 +5725,8 @@
         "countries": [
           "Croatia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "croatia",
         "normalized_name": "second nl",
         "provider_count": 1,
@@ -5622,6 +5788,8 @@
         "countries": [
           "Czech Republic"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "czech republic",
         "normalized_name": "1 liga women",
         "provider_count": 1,
@@ -5683,6 +5851,8 @@
         "countries": [
           "Czech Republic"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "czech republic",
         "normalized_name": "cup",
         "provider_count": 1,
@@ -5744,6 +5914,8 @@
         "countries": [
           "Czech Republic"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "czech republic",
         "normalized_name": "fnl",
         "provider_count": 1,
@@ -5805,6 +5977,8 @@
         "countries": [
           "Denmark"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "denmark",
         "normalized_name": "1st division",
         "provider_count": 1,
@@ -5866,6 +6040,8 @@
         "countries": [
           "Denmark"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "denmark",
         "normalized_name": "2nd division group 1",
         "provider_count": 1,
@@ -5927,6 +6103,8 @@
         "countries": [
           "Denmark"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "denmark",
         "normalized_name": "b liga women",
         "provider_count": 1,
@@ -5988,6 +6166,8 @@
         "countries": [
           "Denmark"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "denmark",
         "normalized_name": "danish superliga",
         "provider_count": 1,
@@ -6043,6 +6223,8 @@
         "countries": [
           "Denmark"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "denmark",
         "normalized_name": "kvindeliga",
         "provider_count": 1,
@@ -6104,6 +6286,8 @@
         "countries": [
           "Ecuador"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "ecuador",
         "normalized_name": "ligapro serie a",
         "provider_count": 1,
@@ -6143,6 +6327,8 @@
         "countries": [
           "El Salvador"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "el salvador",
         "normalized_name": "primera division",
         "provider_count": 1,
@@ -6204,6 +6390,8 @@
         "countries": [
           "England"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "england",
         "normalized_name": "championship",
         "provider_count": 1,
@@ -6265,6 +6453,8 @@
         "countries": [
           "England"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "england",
         "normalized_name": "efl trophy",
         "provider_count": 1,
@@ -6326,6 +6516,8 @@
         "countries": [
           "England"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "england",
         "normalized_name": "english league one",
         "provider_count": 1,
@@ -6387,6 +6579,8 @@
         "countries": [
           "England"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "england",
         "normalized_name": "english league two",
         "provider_count": 1,
@@ -6448,6 +6642,8 @@
         "countries": [
           "England"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "england",
         "normalized_name": "english national league",
         "provider_count": 1,
@@ -6509,6 +6705,8 @@
         "countries": [
           "England"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "england",
         "normalized_name": "english women s fa cup",
         "provider_count": 1,
@@ -6570,6 +6768,8 @@
         "countries": [
           "England"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "england",
         "normalized_name": "english women s super league",
         "provider_count": 1,
@@ -6631,6 +6831,8 @@
         "countries": [
           "England"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "england",
         "normalized_name": "fa trophy",
         "provider_count": 1,
@@ -6692,6 +6894,8 @@
         "countries": [
           "England"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "england",
         "normalized_name": "fa women s cup",
         "provider_count": 1,
@@ -6753,6 +6957,8 @@
         "countries": [
           "England"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "england",
         "normalized_name": "fa wsl",
         "provider_count": 1,
@@ -6814,6 +7020,8 @@
         "countries": [
           "England"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "england",
         "normalized_name": "league one",
         "provider_count": 2,
@@ -6901,6 +7109,8 @@
         "countries": [
           "England"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "england",
         "normalized_name": "league two",
         "provider_count": 2,
@@ -6988,6 +7198,8 @@
         "countries": [
           "England"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "england",
         "normalized_name": "national league",
         "provider_count": 2,
@@ -7075,6 +7287,8 @@
         "countries": [
           "England"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "england",
         "normalized_name": "premier league",
         "provider_count": 2,
@@ -7170,6 +7384,8 @@
         "countries": [
           "England"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "england",
         "normalized_name": "premier league cup",
         "provider_count": 1,
@@ -7231,6 +7447,8 @@
         "countries": [
           "England"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "england",
         "normalized_name": "professional development league",
         "provider_count": 1,
@@ -7292,6 +7510,8 @@
         "countries": [
           "England"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "england",
         "normalized_name": "women s championship",
         "provider_count": 1,
@@ -7353,6 +7573,8 @@
         "countries": [
           "England"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "england",
         "normalized_name": "wsl cup",
         "provider_count": 1,
@@ -7414,6 +7636,8 @@
         "countries": [
           "Europe"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "europe",
         "normalized_name": "conference league",
         "provider_count": 1,
@@ -7475,6 +7699,8 @@
         "countries": [
           "Europe"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "europe",
         "normalized_name": "europa league",
         "provider_count": 1,
@@ -7536,6 +7762,8 @@
         "countries": [
           "Europe"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "europe",
         "normalized_name": "nations league a",
         "provider_count": 1,
@@ -7597,6 +7825,8 @@
         "countries": [
           "Europe"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "europe",
         "normalized_name": "uefa champions league",
         "provider_count": 1,
@@ -7686,6 +7916,8 @@
         "countries": [
           "Europe"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "europe",
         "normalized_name": "uefa nations league",
         "provider_count": 1,
@@ -7741,6 +7973,8 @@
         "countries": [
           "France"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "france",
         "normalized_name": "coupe de france",
         "provider_count": 2,
@@ -7757,7 +7991,7 @@
           },
           "season_records": [
             {
-              "observation_count": 259,
+              "observation_count": 260,
               "provider": "bzzoiro",
               "provider_season_id": "44::2240",
               "season_name": "Coupe de France 26/27",
@@ -7781,12 +8015,12 @@
             "competition_name": "Coupe de France",
             "competition_type": null,
             "country": "France",
-            "observation_count": 259,
+            "observation_count": 260,
             "provider": "bzzoiro",
             "provider_competition_id": "44",
             "seasons": [
               {
-                "observation_count": 259,
+                "observation_count": 260,
                 "provider": "bzzoiro",
                 "provider_season_id": "44::2240",
                 "season_name": "Coupe de France 26/27",
@@ -7828,6 +8062,8 @@
         "countries": [
           "France"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "france",
         "normalized_name": "feminine division 1",
         "provider_count": 1,
@@ -7889,6 +8125,8 @@
         "countries": [
           "France"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "france",
         "normalized_name": "ligue 1",
         "provider_count": 2,
@@ -7976,6 +8214,8 @@
         "countries": [
           "France"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "france",
         "normalized_name": "ligue 2",
         "provider_count": 1,
@@ -8031,6 +8271,8 @@
         "countries": [
           "France"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "france",
         "normalized_name": "ligue 3",
         "provider_count": 1,
@@ -8086,6 +8328,8 @@
         "countries": [
           "Georgia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "georgia",
         "normalized_name": "erovnuli liga",
         "provider_count": 1,
@@ -8147,6 +8391,8 @@
         "countries": [
           "Germany"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "germany",
         "normalized_name": "2 bundesliga",
         "provider_count": 2,
@@ -8234,6 +8480,8 @@
         "countries": [
           "Germany"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "germany",
         "normalized_name": "2 frauen bundesliga",
         "provider_count": 1,
@@ -8295,6 +8543,8 @@
         "countries": [
           "Germany"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "germany",
         "normalized_name": "3 liga",
         "provider_count": 1,
@@ -8356,6 +8606,8 @@
         "countries": [
           "Germany"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "germany",
         "normalized_name": "bundesliga",
         "provider_count": 3,
@@ -8477,6 +8729,8 @@
         "countries": [
           "Germany"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "germany",
         "normalized_name": "dfb pokal",
         "provider_count": 1,
@@ -8538,6 +8792,8 @@
         "countries": [
           "Germany"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "germany",
         "normalized_name": "frauen bundesliga",
         "provider_count": 1,
@@ -8599,6 +8855,8 @@
         "countries": [
           "Germany"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "germany",
         "normalized_name": "oberliga bremen",
         "provider_count": 1,
@@ -8660,6 +8918,8 @@
         "countries": [
           "Ghana"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "ghana",
         "normalized_name": "division one league",
         "provider_count": 1,
@@ -8721,6 +8981,8 @@
         "countries": [
           "Ghana"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "ghana",
         "normalized_name": "premier league",
         "provider_count": 1,
@@ -8782,6 +9044,8 @@
         "countries": [
           "Greece"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "greece",
         "normalized_name": "super league 2",
         "provider_count": 1,
@@ -8843,6 +9107,8 @@
         "countries": [
           "Guatemala"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "guatemala",
         "normalized_name": "liga nacional",
         "provider_count": 1,
@@ -8904,6 +9170,8 @@
         "countries": [
           "Hong Kong"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "hong kong",
         "normalized_name": "league cup",
         "provider_count": 1,
@@ -8965,6 +9233,8 @@
         "countries": [
           "India"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "india",
         "normalized_name": "i league",
         "provider_count": 1,
@@ -9026,6 +9296,8 @@
         "countries": [
           "International"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "international",
         "normalized_name": "international friendly games",
         "provider_count": 1,
@@ -9087,6 +9359,8 @@
         "countries": [
           "Iran"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "iran",
         "normalized_name": "azadegan league",
         "provider_count": 1,
@@ -9148,6 +9422,8 @@
         "countries": [
           "Iran"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "iran",
         "normalized_name": "persian gulf pro league",
         "provider_count": 1,
@@ -9209,6 +9485,8 @@
         "countries": [
           "Iraq"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "iraq",
         "normalized_name": "iraqi league",
         "provider_count": 1,
@@ -9270,6 +9548,8 @@
         "countries": [
           "Italy"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "italy",
         "normalized_name": "serie a",
         "provider_count": 1,
@@ -9331,6 +9611,8 @@
         "countries": [
           "Italy"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "italy",
         "normalized_name": "serie a women",
         "provider_count": 1,
@@ -9392,6 +9674,8 @@
         "countries": [
           "Italy"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "italy",
         "normalized_name": "serie b",
         "provider_count": 1,
@@ -9447,6 +9731,8 @@
         "countries": [
           "Italy"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "italy",
         "normalized_name": "serie c girone a",
         "provider_count": 1,
@@ -9502,6 +9788,8 @@
         "countries": [
           "Italy"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "italy",
         "normalized_name": "serie c girone b",
         "provider_count": 1,
@@ -9557,6 +9845,8 @@
         "countries": [
           "Italy"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "italy",
         "normalized_name": "serie c girone c",
         "provider_count": 1,
@@ -9612,6 +9902,8 @@
         "countries": [
           "Jamaica"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "jamaica",
         "normalized_name": "premier league",
         "provider_count": 1,
@@ -9673,6 +9965,8 @@
         "countries": [
           "Japan"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "japan",
         "normalized_name": "j league cup",
         "provider_count": 1,
@@ -9734,6 +10028,8 @@
         "countries": [
           "Japan"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "japan",
         "normalized_name": "j1 league",
         "provider_count": 1,
@@ -9789,6 +10085,8 @@
         "countries": [
           "Japan"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "japan",
         "normalized_name": "j2 league",
         "provider_count": 1,
@@ -9850,6 +10148,8 @@
         "countries": [
           "Japan"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "japan",
         "normalized_name": "we league",
         "provider_count": 1,
@@ -9911,6 +10211,8 @@
         "countries": [
           "Jordan"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "jordan",
         "normalized_name": "cup",
         "provider_count": 1,
@@ -9972,6 +10274,8 @@
         "countries": [
           "Kenya"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "kenya",
         "normalized_name": "fkf premier league",
         "provider_count": 1,
@@ -10033,6 +10337,8 @@
         "countries": [
           "Kosovo"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "kosovo",
         "normalized_name": "liga e pare",
         "provider_count": 1,
@@ -10094,6 +10400,8 @@
         "countries": [
           "Kuwait"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "kuwait",
         "normalized_name": "division 1",
         "provider_count": 1,
@@ -10155,6 +10463,8 @@
         "countries": [
           "Laos"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "laos",
         "normalized_name": "lao league",
         "provider_count": 1,
@@ -10216,6 +10526,8 @@
         "countries": [
           "Latvia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "latvia",
         "normalized_name": "virsliga",
         "provider_count": 1,
@@ -10277,6 +10589,8 @@
         "countries": [
           "Lebanon"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "lebanon",
         "normalized_name": "premier league",
         "provider_count": 1,
@@ -10338,6 +10652,8 @@
         "countries": [
           "Liberia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "liberia",
         "normalized_name": "lfa first division",
         "provider_count": 1,
@@ -10399,6 +10715,8 @@
         "countries": [
           "Lithuania"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "lithuania",
         "normalized_name": "1 lyga",
         "provider_count": 1,
@@ -10460,6 +10778,8 @@
         "countries": [
           "Mali"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "mali",
         "normalized_name": "premiere division",
         "provider_count": 1,
@@ -10521,6 +10841,8 @@
         "countries": [
           "Mexico"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "mexico",
         "normalized_name": "liga de expansion mx",
         "provider_count": 1,
@@ -10582,6 +10904,8 @@
         "countries": [
           "Mexico"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "mexico",
         "normalized_name": "liga mx",
         "provider_count": 1,
@@ -10643,6 +10967,8 @@
         "countries": [
           "Mexico"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "mexico",
         "normalized_name": "liga mx apertura",
         "provider_count": 1,
@@ -10704,6 +11030,8 @@
         "countries": [
           "Mexico"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "mexico",
         "normalized_name": "liga mx femenil",
         "provider_count": 1,
@@ -10765,6 +11093,8 @@
         "countries": [
           "Mexico"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "mexico",
         "normalized_name": "liga premier serie a",
         "provider_count": 1,
@@ -10826,6 +11156,8 @@
         "countries": [
           "Mexico"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "mexico",
         "normalized_name": "liga premier serie b",
         "provider_count": 1,
@@ -10887,6 +11219,8 @@
         "countries": [
           "Mexico"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "mexico",
         "normalized_name": "mexican liga bbva mx",
         "provider_count": 1,
@@ -10948,6 +11282,8 @@
         "countries": [
           "Mexico"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "mexico",
         "normalized_name": "primera premier",
         "provider_count": 1,
@@ -11009,6 +11345,8 @@
         "countries": [
           "Mongolia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "mongolia",
         "normalized_name": "premier league",
         "provider_count": 1,
@@ -11070,6 +11408,8 @@
         "countries": [
           "Montenegro"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "montenegro",
         "normalized_name": "first league",
         "provider_count": 1,
@@ -11131,6 +11471,8 @@
         "countries": [
           "Montenegro"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "montenegro",
         "normalized_name": "second league",
         "provider_count": 1,
@@ -11192,6 +11534,8 @@
         "countries": [
           "Morocco"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "morocco",
         "normalized_name": "botola 2",
         "provider_count": 1,
@@ -11253,6 +11597,8 @@
         "countries": [
           "Netherlands"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "netherlands",
         "normalized_name": "eerste divisie",
         "provider_count": 2,
@@ -11340,6 +11686,8 @@
         "countries": [
           "Netherlands"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "netherlands",
         "normalized_name": "eredivisie",
         "provider_count": 1,
@@ -11401,6 +11749,8 @@
         "countries": [
           "Netherlands"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "netherlands",
         "normalized_name": "eredivisie women",
         "provider_count": 1,
@@ -11462,6 +11812,8 @@
         "countries": [
           "Netherlands"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "netherlands",
         "normalized_name": "tweede divisie",
         "provider_count": 1,
@@ -11523,6 +11875,8 @@
         "countries": [
           "Nigeria"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "nigeria",
         "normalized_name": "nigeria premier football league",
         "provider_count": 1,
@@ -11578,6 +11932,8 @@
         "countries": [
           "Nigeria"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "nigeria",
         "normalized_name": "npfl",
         "provider_count": 1,
@@ -11639,6 +11995,8 @@
         "countries": [
           "North America"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "north america",
         "normalized_name": "concacaf nations league",
         "provider_count": 1,
@@ -11694,6 +12052,8 @@
         "countries": [
           "Northern Ireland"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "northern ireland",
         "normalized_name": "championship",
         "provider_count": 1,
@@ -11755,6 +12115,8 @@
         "countries": [
           "Northern Ireland"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "northern ireland",
         "normalized_name": "premiership",
         "provider_count": 1,
@@ -11816,6 +12178,8 @@
         "countries": [
           "Norway"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "norway",
         "normalized_name": "1 divisjon kvinner",
         "provider_count": 1,
@@ -11877,6 +12241,8 @@
         "countries": [
           "Norway"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "norway",
         "normalized_name": "eliteserien",
         "provider_count": 1,
@@ -11938,6 +12304,8 @@
         "countries": [
           "Norway"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "norway",
         "normalized_name": "first division",
         "provider_count": 1,
@@ -11999,6 +12367,8 @@
         "countries": [
           "Norway"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "norway",
         "normalized_name": "toppserien",
         "provider_count": 1,
@@ -12060,6 +12430,8 @@
         "countries": [
           "Oman"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "oman",
         "normalized_name": "fa cup",
         "provider_count": 1,
@@ -12121,6 +12493,8 @@
         "countries": [
           "Panama"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "panama",
         "normalized_name": "liga panamena de futbol",
         "provider_count": 1,
@@ -12182,6 +12556,8 @@
         "countries": [
           "Paraguay"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "paraguay",
         "normalized_name": "copa paraguay",
         "provider_count": 1,
@@ -12243,6 +12619,8 @@
         "countries": [
           "Peru"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "peru",
         "normalized_name": "copa de la liga",
         "provider_count": 1,
@@ -12304,6 +12682,8 @@
         "countries": [
           "Peru"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "peru",
         "normalized_name": "copa peru",
         "provider_count": 1,
@@ -12365,6 +12745,8 @@
         "countries": [
           "Peru"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "peru",
         "normalized_name": "liga 1",
         "provider_count": 1,
@@ -12404,6 +12786,8 @@
         "countries": [
           "Peru"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "peru",
         "normalized_name": "liga women",
         "provider_count": 1,
@@ -12465,6 +12849,8 @@
         "countries": [
           "Peru"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "peru",
         "normalized_name": "primera division",
         "provider_count": 1,
@@ -12526,6 +12912,8 @@
         "countries": [
           "Peru"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "peru",
         "normalized_name": "segunda division",
         "provider_count": 1,
@@ -12587,6 +12975,8 @@
         "countries": [
           "Poland"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "poland",
         "normalized_name": "central youth league",
         "provider_count": 1,
@@ -12648,6 +13038,8 @@
         "countries": [
           "Poland"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "poland",
         "normalized_name": "ekstraklasa",
         "provider_count": 1,
@@ -12703,6 +13095,8 @@
         "countries": [
           "Poland"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "poland",
         "normalized_name": "ekstraliga women",
         "provider_count": 1,
@@ -12764,6 +13158,8 @@
         "countries": [
           "Portugal"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "portugal",
         "normalized_name": "campeonato de portugal",
         "provider_count": 1,
@@ -12819,6 +13215,8 @@
         "countries": [
           "Portugal"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "portugal",
         "normalized_name": "liga portugal 2",
         "provider_count": 2,
@@ -12906,6 +13304,8 @@
         "countries": [
           "Portugal"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "portugal",
         "normalized_name": "primeira liga",
         "provider_count": 1,
@@ -12967,6 +13367,8 @@
         "countries": [
           "Portugal"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "portugal",
         "normalized_name": "taca de portugal",
         "provider_count": 1,
@@ -13022,6 +13424,8 @@
         "countries": [
           "Qatar"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "qatar",
         "normalized_name": "second division",
         "provider_count": 1,
@@ -13083,6 +13487,8 @@
         "countries": [
           "Romania"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "romania",
         "normalized_name": "liga 1 feminin",
         "provider_count": 1,
@@ -13144,6 +13550,8 @@
         "countries": [
           "Romania"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "romania",
         "normalized_name": "superliga",
         "provider_count": 1,
@@ -13199,6 +13607,8 @@
         "countries": [
           "Russia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "russia",
         "normalized_name": "first league",
         "provider_count": 1,
@@ -13260,6 +13670,8 @@
         "countries": [
           "Russia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "russia",
         "normalized_name": "vysshaya liga women",
         "provider_count": 1,
@@ -13321,6 +13733,8 @@
         "countries": [
           "Saudi Arabia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "saudi arabia",
         "normalized_name": "division 2",
         "provider_count": 1,
@@ -13382,6 +13796,8 @@
         "countries": [
           "Saudi Arabia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "saudi arabia",
         "normalized_name": "first division league fdl",
         "provider_count": 1,
@@ -13443,6 +13859,8 @@
         "countries": [
           "Saudi Arabia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "saudi arabia",
         "normalized_name": "saudi pro league",
         "provider_count": 2,
@@ -13530,6 +13948,8 @@
         "countries": [
           "Scotland"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "scotland",
         "normalized_name": "championship",
         "provider_count": 1,
@@ -13591,6 +14011,8 @@
         "countries": [
           "Scotland"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "scotland",
         "normalized_name": "league one",
         "provider_count": 1,
@@ -13652,6 +14074,8 @@
         "countries": [
           "Scotland"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "scotland",
         "normalized_name": "league two",
         "provider_count": 1,
@@ -13713,6 +14137,8 @@
         "countries": [
           "Serbia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "serbia",
         "normalized_name": "cup",
         "provider_count": 1,
@@ -13774,6 +14200,8 @@
         "countries": [
           "Serbia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "serbia",
         "normalized_name": "prva liga",
         "provider_count": 1,
@@ -13835,6 +14263,8 @@
         "countries": [
           "Slovakia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "slovakia",
         "normalized_name": "2 liga",
         "provider_count": 1,
@@ -13896,6 +14326,8 @@
         "countries": [
           "Slovakia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "slovakia",
         "normalized_name": "cup",
         "provider_count": 1,
@@ -13957,6 +14389,8 @@
         "countries": [
           "Slovakia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "slovakia",
         "normalized_name": "i liga women",
         "provider_count": 1,
@@ -14018,6 +14452,8 @@
         "countries": [
           "Slovenia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "slovenia",
         "normalized_name": "2 snl",
         "provider_count": 1,
@@ -14079,6 +14515,8 @@
         "countries": [
           "Slovenia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "slovenia",
         "normalized_name": "3 snl east",
         "provider_count": 1,
@@ -14140,6 +14578,8 @@
         "countries": [
           "Slovenia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "slovenia",
         "normalized_name": "cup",
         "provider_count": 1,
@@ -14201,6 +14641,8 @@
         "countries": [
           "South Africa"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "south africa",
         "normalized_name": "diski challenge",
         "provider_count": 1,
@@ -14262,6 +14704,8 @@
         "countries": [
           "South Korea"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "south korea",
         "normalized_name": "wk league",
         "provider_count": 1,
@@ -14323,6 +14767,8 @@
         "countries": [
           "Spain"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "spain",
         "normalized_name": "copa de la reina",
         "provider_count": 1,
@@ -14384,6 +14830,8 @@
         "countries": [
           "Spain"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "spain",
         "normalized_name": "copa del rey",
         "provider_count": 2,
@@ -14471,6 +14919,8 @@
         "countries": [
           "Spain"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "spain",
         "normalized_name": "copa federacion",
         "provider_count": 1,
@@ -14532,6 +14982,8 @@
         "countries": [
           "Spain"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "spain",
         "normalized_name": "la liga",
         "provider_count": 2,
@@ -14619,6 +15071,8 @@
         "countries": [
           "Spain"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "spain",
         "normalized_name": "laliga ea sports",
         "provider_count": 1,
@@ -14680,6 +15134,8 @@
         "countries": [
           "Spain"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "spain",
         "normalized_name": "liga f",
         "provider_count": 1,
@@ -14735,6 +15191,8 @@
         "countries": [
           "Spain"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "spain",
         "normalized_name": "primera division femenina",
         "provider_count": 1,
@@ -14796,6 +15254,8 @@
         "countries": [
           "Spain"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "spain",
         "normalized_name": "segunda division",
         "provider_count": 2,
@@ -14883,6 +15343,8 @@
         "countries": [
           "Spain"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "spain",
         "normalized_name": "spanish copa de la reina",
         "provider_count": 1,
@@ -14944,6 +15406,8 @@
         "countries": [
           "Spain"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "spain",
         "normalized_name": "spanish copa del rey",
         "provider_count": 1,
@@ -15005,6 +15469,8 @@
         "countries": [
           "Spain"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "spain",
         "normalized_name": "spanish laliga 2",
         "provider_count": 1,
@@ -15066,6 +15532,8 @@
         "countries": [
           "Spain"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "spain",
         "normalized_name": "spanish liga f",
         "provider_count": 1,
@@ -15127,6 +15595,8 @@
         "countries": [
           "Sweden"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "sweden",
         "normalized_name": "damallsvenskan",
         "provider_count": 1,
@@ -15188,6 +15658,8 @@
         "countries": [
           "Sweden"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "sweden",
         "normalized_name": "elitettan",
         "provider_count": 1,
@@ -15249,6 +15721,8 @@
         "countries": [
           "Switzerland"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "switzerland",
         "normalized_name": "1 liga promotion",
         "provider_count": 1,
@@ -15310,6 +15784,8 @@
         "countries": [
           "Switzerland"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "switzerland",
         "normalized_name": "nationalliga a women",
         "provider_count": 1,
@@ -15371,6 +15847,8 @@
         "countries": [
           "Syria"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "syria",
         "normalized_name": "premier league",
         "provider_count": 1,
@@ -15432,6 +15910,8 @@
         "countries": [
           "Tunisia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "tunisia",
         "normalized_name": "ligue 2",
         "provider_count": 1,
@@ -15493,6 +15973,8 @@
         "countries": [
           "Tunisia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "tunisia",
         "normalized_name": "tunisian ligue professionnelle 1",
         "provider_count": 1,
@@ -15548,6 +16030,8 @@
         "countries": [
           "Turkey"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "turkey",
         "normalized_name": "2 lig",
         "provider_count": 1,
@@ -15609,6 +16093,8 @@
         "countries": [
           "Turkey"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "turkey",
         "normalized_name": "trendyol 1 lig",
         "provider_count": 1,
@@ -15664,6 +16150,8 @@
         "countries": [
           "Turkey"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "turkey",
         "normalized_name": "u19 league",
         "provider_count": 1,
@@ -15725,6 +16213,8 @@
         "countries": [
           "Turkmenistan"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "turkmenistan",
         "normalized_name": "yokary liga",
         "provider_count": 1,
@@ -15786,6 +16276,8 @@
         "countries": [
           "Uganda"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "uganda",
         "normalized_name": "premier league",
         "provider_count": 1,
@@ -15847,6 +16339,8 @@
         "countries": [
           "Ukraine"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "ukraine",
         "normalized_name": "druha liga",
         "provider_count": 1,
@@ -15908,6 +16402,8 @@
         "countries": [
           "Ukraine"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "ukraine",
         "normalized_name": "persha liga",
         "provider_count": 1,
@@ -15969,6 +16465,8 @@
         "countries": [
           "United Arab Emirates"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "united arab emirates",
         "normalized_name": "league cup",
         "provider_count": 1,
@@ -16030,6 +16528,8 @@
         "countries": [
           "United Arab Emirates"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "united arab emirates",
         "normalized_name": "pro league",
         "provider_count": 1,
@@ -16092,6 +16592,8 @@
           "United States",
           "USA"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "united states",
         "normalized_name": "mls",
         "provider_count": 2,
@@ -16187,6 +16689,8 @@
         "countries": [
           "USA"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "united states",
         "normalized_name": "nwsl",
         "provider_count": 1,
@@ -16248,6 +16752,8 @@
         "countries": [
           "USA"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "united states",
         "normalized_name": "nwsl women",
         "provider_count": 1,
@@ -16309,6 +16815,8 @@
         "countries": [
           "USA"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "united states",
         "normalized_name": "usl championship",
         "provider_count": 2,
@@ -16404,6 +16912,8 @@
         "countries": [
           "USA"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "united states",
         "normalized_name": "usl league one",
         "provider_count": 1,
@@ -16465,6 +16975,8 @@
         "countries": [
           "USA"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "united states",
         "normalized_name": "usl super league",
         "provider_count": 1,
@@ -16526,6 +17038,8 @@
         "countries": [
           "Uruguay"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "uruguay",
         "normalized_name": "copa uruguay",
         "provider_count": 1,
@@ -16587,6 +17101,8 @@
         "countries": [
           "Uruguay"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "uruguay",
         "normalized_name": "primera division apertura",
         "provider_count": 1,
@@ -16648,6 +17164,8 @@
         "countries": [
           "Uruguay"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "uruguay",
         "normalized_name": "segunda division",
         "provider_count": 1,
@@ -16709,6 +17227,8 @@
         "countries": [
           "Uzbekistan"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "uzbekistan",
         "normalized_name": "super league",
         "provider_count": 1,
@@ -16770,6 +17290,8 @@
         "countries": [
           "Venezuela"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "venezuela",
         "normalized_name": "copa venezuela",
         "provider_count": 1,
@@ -16831,6 +17353,8 @@
         "countries": [
           "Venezuela"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "venezuela",
         "normalized_name": "segunda division",
         "provider_count": 1,
@@ -16892,6 +17416,8 @@
         "countries": [
           "Wales"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "wales",
         "normalized_name": "faw championship",
         "provider_count": 1,
@@ -16953,6 +17479,8 @@
         "countries": [
           "Wales"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "wales",
         "normalized_name": "welsh cup",
         "provider_count": 1,
@@ -17014,6 +17542,8 @@
         "countries": [
           "World"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "world",
         "normalized_name": "afc u17 asian cup",
         "provider_count": 1,
@@ -17075,6 +17605,8 @@
         "countries": [
           "World"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "world",
         "normalized_name": "africa cup of nations qualification",
         "provider_count": 1,
@@ -17136,6 +17668,8 @@
         "countries": [
           "World"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "world",
         "normalized_name": "asean club championship",
         "provider_count": 1,
@@ -17197,6 +17731,8 @@
         "countries": [
           "World"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "world",
         "normalized_name": "birinci d st",
         "provider_count": 1,
@@ -17258,6 +17794,8 @@
         "countries": [
           "World"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "world",
         "normalized_name": "caf u23 cup of nations",
         "provider_count": 1,
@@ -17319,6 +17857,8 @@
         "countries": [
           "World"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "world",
         "normalized_name": "caf women s champions league",
         "provider_count": 1,
@@ -17380,6 +17920,8 @@
         "countries": [
           "World"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "world",
         "normalized_name": "club friendlies",
         "provider_count": 1,
@@ -17394,7 +17936,7 @@
           },
           "season_records": [
             {
-              "observation_count": 85,
+              "observation_count": 86,
               "provider": "bzzoiro",
               "provider_season_id": "79::1552",
               "season_name": "Club Friendly Games 2026",
@@ -17411,12 +17953,12 @@
             "competition_name": "Club Friendlies",
             "competition_type": null,
             "country": "World",
-            "observation_count": 85,
+            "observation_count": 86,
             "provider": "bzzoiro",
             "provider_competition_id": "79",
             "seasons": [
               {
-                "observation_count": 85,
+                "observation_count": 86,
                 "provider": "bzzoiro",
                 "provider_season_id": "79::1552",
                 "season_name": "Club Friendly Games 2026",
@@ -17441,6 +17983,8 @@
         "countries": [
           "World"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "world",
         "normalized_name": "concacaf nations league",
         "provider_count": 1,
@@ -17502,6 +18046,8 @@
         "countries": [
           "World"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "world",
         "normalized_name": "eerste divisie",
         "provider_count": 1,
@@ -17563,6 +18109,8 @@
         "countries": [
           "World"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "world",
         "normalized_name": "friendlies",
         "provider_count": 1,
@@ -17624,6 +18172,8 @@
         "countries": [
           "World"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "world",
         "normalized_name": "friendlies clubs",
         "provider_count": 1,
@@ -17685,6 +18235,8 @@
         "countries": [
           "World"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "world",
         "normalized_name": "premier division",
         "provider_count": 1,
@@ -17746,6 +18298,8 @@
         "countries": [
           "World"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "world",
         "normalized_name": "premier league international cup",
         "provider_count": 1,
@@ -17807,6 +18361,8 @@
         "countries": [
           "World"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "world",
         "normalized_name": "saff championship",
         "provider_count": 1,
@@ -17868,6 +18424,8 @@
         "countries": [
           "World"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "world",
         "normalized_name": "u20 elite league",
         "provider_count": 1,
@@ -17929,6 +18487,8 @@
         "countries": [
           "World"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "world",
         "normalized_name": "uefa champions league women",
         "provider_count": 1,
@@ -17990,6 +18550,8 @@
         "countries": [
           "World"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "world",
         "normalized_name": "uefa nations league",
         "provider_count": 1,
@@ -18051,6 +18613,8 @@
         "countries": [
           "World"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "world",
         "normalized_name": "uefa u17 championship qualification",
         "provider_count": 1,
@@ -18112,6 +18676,8 @@
         "countries": [
           "World"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "world",
         "normalized_name": "uefa u19 championship qualification",
         "provider_count": 1,
@@ -18173,6 +18739,8 @@
         "countries": [
           "World"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "world",
         "normalized_name": "uefa u21 championship qualification",
         "provider_count": 1,
@@ -18234,6 +18802,8 @@
         "countries": [
           "World"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "world",
         "normalized_name": "uefa women s champions league",
         "provider_count": 1,
@@ -18295,6 +18865,8 @@
         "countries": [
           "World"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "world",
         "normalized_name": "world cup u17",
         "provider_count": 1,
@@ -18356,6 +18928,8 @@
         "countries": [
           "Zambia"
         ],
+        "identity_candidate_key": null,
+        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
         "normalized_country": "zambia",
         "normalized_name": "super league",
         "provider_count": 1,
@@ -19725,6 +20299,21 @@
           "candidate_count": 762,
           "candidates": [
             {
+              "canonical_entity_id": "sportmonks:618",
+              "canonical_name": "Almer\u00eda",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "bzzoiro",
+              "provider_country": "Spain",
+              "provider_entity_id": "1264",
+              "provider_name": "Almer\u00eda",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
               "canonical_entity_id": "sportmonks:13258",
               "canonical_name": "Athletic Club",
               "canonical_parent_id": null,
@@ -19749,6 +20338,51 @@
               "provider_country": "Spain",
               "provider_entity_id": "911",
               "provider_name": "Athletic Club",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:384",
+              "canonical_name": "Celta Fortuna",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "bzzoiro",
+              "provider_country": "Spain",
+              "provider_entity_id": "3883",
+              "provider_name": "Celta Fortuna",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:6827",
+              "canonical_name": "C\u00e1diz",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "bzzoiro",
+              "provider_country": "Spain",
+              "provider_entity_id": "1270",
+              "provider_name": "C\u00e1diz",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:931",
+              "canonical_name": "C\u00f3rdoba",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "bzzoiro",
+              "provider_country": "Spain",
+              "provider_entity_id": "1265",
+              "provider_name": "C\u00f3rdoba",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
@@ -19785,6 +20419,36 @@
               "status": "candidate_requires_manual_approval"
             },
             {
+              "canonical_entity_id": "sportmonks:238115",
+              "canonical_name": "FC Andorra",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "bzzoiro",
+              "provider_country": "Spain",
+              "provider_entity_id": "1460",
+              "provider_name": "FC Andorra",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:103",
+              "canonical_name": "Granada",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "bzzoiro",
+              "provider_country": "Spain",
+              "provider_entity_id": "1261",
+              "provider_name": "Granada",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
               "canonical_entity_id": "sportmonks:1123",
               "canonical_name": "Hellas Verona",
               "canonical_parent_id": null,
@@ -19794,6 +20458,21 @@
               "provider_country": "Italy",
               "provider_entity_id": "76",
               "provider_name": "Hellas Verona",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:844",
+              "canonical_name": "Legan\u00e9s",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "bzzoiro",
+              "provider_country": "Spain",
+              "provider_entity_id": "1268",
+              "provider_name": "Legan\u00e9s",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
@@ -19854,6 +20533,51 @@
               "provider_country": "Spain",
               "provider_entity_id": "924",
               "provider_name": "Real Sociedad",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:361",
+              "canonical_name": "Real Valladolid",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "bzzoiro",
+              "provider_country": "Spain",
+              "provider_entity_id": "1263",
+              "provider_name": "Real Valladolid",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:60",
+              "canonical_name": "SD Eibar",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "bzzoiro",
+              "provider_country": "Spain",
+              "provider_entity_id": "921",
+              "provider_name": "SD Eibar",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:344",
+              "canonical_name": "Sporting Gij\u00f3n",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "bzzoiro",
+              "provider_country": "Spain",
+              "provider_entity_id": "1267",
+              "provider_name": "Sporting Gij\u00f3n",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
@@ -20251,10 +20975,10 @@
             }
           ],
           "candidates_truncated": true,
-          "manual_review_candidate_count": 10,
+          "manual_review_candidate_count": 20,
           "status_counts": {
-            "candidate_requires_manual_approval": 10,
-            "no_exact_contextual_match": 752
+            "candidate_requires_manual_approval": 20,
+            "no_exact_contextual_match": 742
           }
         }
       },
@@ -20263,7 +20987,7 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 1349,
+      "observation_count": 1351,
       "snapshot_count": 3,
       "source_entity_counts": {
         "leagues": 51,
@@ -21395,6 +22119,81 @@
           "candidate_count": 2703,
           "candidates": [
             {
+              "canonical_entity_id": "sportmonks:3169",
+              "canonical_name": "Albacete",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "615206",
+              "provider_name": "Albacete",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:618",
+              "canonical_name": "Almer\u00eda",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "616057",
+              "provider_name": "Almer\u00eda",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:8366",
+              "canonical_name": "Burgos",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "8153364",
+              "provider_name": "Burgos",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:6827",
+              "canonical_name": "C\u00e1diz",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "616908",
+              "provider_name": "Cadiz",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:10008",
+              "canonical_name": "Castell\u00f3n",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "4471938",
+              "provider_name": "Castell\u00f3n",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
               "canonical_entity_id": "sportmonks:36",
               "canonical_name": "Celta de Vigo",
               "canonical_parent_id": null,
@@ -21404,6 +22203,21 @@
               "provider_country": "Spain",
               "provider_entity_id": "458622",
               "provider_name": "Celta de Vigo",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:931",
+              "canonical_name": "C\u00f3rdoba",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "607547",
+              "provider_name": "Cordoba",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
@@ -21425,6 +22239,36 @@
               "status": "candidate_requires_manual_approval"
             },
             {
+              "canonical_entity_id": "sportmonks:1888",
+              "canonical_name": "Eldense",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "8248676",
+              "provider_name": "Eldense",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:238115",
+              "canonical_name": "FC Andorra",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "6942391",
+              "provider_name": "FC Andorra",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
               "canonical_entity_id": "sportmonks:231",
               "canonical_name": "Girona",
               "canonical_parent_id": null,
@@ -21434,6 +22278,51 @@
               "provider_country": "Spain",
               "provider_entity_id": "466281",
               "provider_name": "Girona",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:103",
+              "canonical_name": "Granada",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "18738102",
+              "provider_name": "Granada",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:2921",
+              "canonical_name": "Las Palmas",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "455218",
+              "provider_name": "Las Palmas",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:844",
+              "canonical_name": "Legan\u00e9s",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "457771",
+              "provider_name": "Leganes",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
@@ -21479,6 +22368,51 @@
               "provider_country": "Spain",
               "provider_entity_id": "462877",
               "provider_name": "Real Betis",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:758",
+              "canonical_name": "Sabadell",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "8164427",
+              "provider_name": "Sabadell",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:344",
+              "canonical_name": "Sporting Gij\u00f3n",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "622865",
+              "provider_name": "Sporting Gij\u00f3n",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:1012",
+              "canonical_name": "Tenerife",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "highlightly",
+              "provider_country": "Spain",
+              "provider_entity_id": "612653",
+              "provider_name": "Tenerife",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
@@ -21861,10 +22795,10 @@
             }
           ],
           "candidates_truncated": true,
-          "manual_review_candidate_count": 6,
+          "manual_review_candidate_count": 20,
           "status_counts": {
-            "candidate_requires_manual_approval": 6,
-            "no_exact_contextual_match": 2697
+            "candidate_requires_manual_approval": 20,
+            "no_exact_contextual_match": 2683
           }
         }
       },
@@ -21887,6 +22821,21 @@
         "leagues": {
           "candidate_count": 13,
           "candidates": [
+            {
+              "canonical_entity_id": "sportmonks:567",
+              "canonical_name": "La Liga 2",
+              "canonical_parent_id": null,
+              "entity_type": "league",
+              "match_method": "curated_provider_id_alias",
+              "provider": "livescore_football",
+              "provider_country": "Spain",
+              "provider_entity_id": "3921",
+              "provider_name": "Spanish LALIGA 2",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Curated stable provider-ID alias and exact country context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
             {
               "canonical_entity_id": null,
               "canonical_name": null,
@@ -22060,21 +23009,6 @@
               "match_method": null,
               "provider": "livescore_football",
               "provider_country": "Spain",
-              "provider_entity_id": "3921",
-              "provider_name": "Spanish LALIGA 2",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "league",
-              "match_method": null,
-              "provider": "livescore_football",
-              "provider_country": "Spain",
               "provider_entity_id": "20956",
               "provider_name": "Spanish Liga F",
               "provider_parent_id": null,
@@ -22084,9 +23018,10 @@
             }
           ],
           "candidates_truncated": false,
-          "manual_review_candidate_count": 0,
+          "manual_review_candidate_count": 1,
           "status_counts": {
-            "no_exact_contextual_match": 13
+            "candidate_requires_manual_approval": 1,
+            "no_exact_contextual_match": 12
           }
         },
         "seasons": {
@@ -22313,6 +23248,21 @@
               "status": "candidate_requires_manual_approval"
             },
             {
+              "canonical_entity_id": "sportmonks:8366",
+              "canonical_name": "Burgos",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "livescore_football",
+              "provider_country": "Spain",
+              "provider_entity_id": "12597",
+              "provider_name": "Burgos",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
               "canonical_entity_id": "sportmonks:18",
               "canonical_name": "Chelsea",
               "canonical_parent_id": null,
@@ -22367,6 +23317,21 @@
               "provider_country": "England",
               "provider_entity_id": "19972",
               "provider_name": "Everton",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:844",
+              "canonical_name": "Legan\u00e9s",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "livescore_football",
+              "provider_country": "Spain",
+              "provider_entity_id": "17534",
+              "provider_name": "Legan\u00e9s",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
@@ -22442,6 +23407,21 @@
               "provider_country": "Spain",
               "provider_entity_id": "21128",
               "provider_name": "Real Madrid",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:1012",
+              "canonical_name": "Tenerife",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "livescore_football",
+              "provider_country": "Spain",
+              "provider_entity_id": "131393",
+              "provider_name": "Tenerife",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
@@ -22739,21 +23719,6 @@
               "entity_type": "team",
               "match_method": null,
               "provider": "livescore_football",
-              "provider_country": "Spain",
-              "provider_entity_id": "12597",
-              "provider_name": "Burgos",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": null,
-              "provider": "livescore_football",
               "provider_country": "England",
               "provider_entity_id": "2567",
               "provider_name": "Burton Albion",
@@ -22851,13 +23816,28 @@
               "provider_parent_name": null,
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
               "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "livescore_football",
+              "provider_country": "England",
+              "provider_entity_id": "339",
+              "provider_name": "Colchester United",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
             }
           ],
           "candidates_truncated": true,
-          "manual_review_candidate_count": 12,
+          "manual_review_candidate_count": 15,
           "status_counts": {
-            "candidate_requires_manual_approval": 12,
-            "no_exact_contextual_match": 76
+            "candidate_requires_manual_approval": 15,
+            "no_exact_contextual_match": 73
           }
         }
       },
