@@ -1,7 +1,7 @@
 {
   "automatic_mapping_approvals": 0,
   "canonical_fixture_writes": 0,
-  "generated_at_utc": "2026-11-13T17:16:20.653178+00:00",
+  "generated_at_utc": "2026-11-13T19:49:34.955019+00:00",
   "prediction_ledger_writes": 0,
   "provider_independent_catalogue": {
     "automatic_mapping_approvals": 0,
@@ -581,7 +581,7 @@
           },
           "season_records": [
             {
-              "observation_count": 262,
+              "observation_count": 263,
               "provider": "bzzoiro",
               "provider_season_id": "44::2240",
               "season_name": "Coupe de France 26/27",
@@ -605,12 +605,12 @@
             "competition_name": "Coupe de France",
             "competition_type": null,
             "country": "France",
-            "observation_count": 262,
+            "observation_count": 263,
             "provider": "bzzoiro",
             "provider_competition_id": "44",
             "seasons": [
               {
-                "observation_count": 262,
+                "observation_count": 263,
                 "provider": "bzzoiro",
                 "provider_season_id": "44::2240",
                 "season_name": "Coupe de France 26/27",
@@ -7991,7 +7991,7 @@
           },
           "season_records": [
             {
-              "observation_count": 262,
+              "observation_count": 263,
               "provider": "bzzoiro",
               "provider_season_id": "44::2240",
               "season_name": "Coupe de France 26/27",
@@ -8015,12 +8015,12 @@
             "competition_name": "Coupe de France",
             "competition_type": null,
             "country": "France",
-            "observation_count": 262,
+            "observation_count": 263,
             "provider": "bzzoiro",
             "provider_competition_id": "44",
             "seasons": [
               {
-                "observation_count": 262,
+                "observation_count": 263,
                 "provider": "bzzoiro",
                 "provider_season_id": "44::2240",
                 "season_name": "Coupe de France 26/27",
@@ -15485,7 +15485,7 @@
           },
           "season_records": [
             {
-              "observation_count": 3,
+              "observation_count": 2,
               "provider": "livescore_football",
               "provider_season_id": "3921::2026",
               "season_name": "2026",
@@ -15502,12 +15502,12 @@
             "competition_name": "Spanish LALIGA 2",
             "competition_type": null,
             "country": "Spain",
-            "observation_count": 3,
+            "observation_count": 2,
             "provider": "livescore_football",
             "provider_competition_id": "3921",
             "seasons": [
               {
-                "observation_count": 3,
+                "observation_count": 2,
                 "provider": "livescore_football",
                 "provider_season_id": "3921::2026",
                 "season_name": "2026",
@@ -17936,7 +17936,7 @@
           },
           "season_records": [
             {
-              "observation_count": 87,
+              "observation_count": 90,
               "provider": "bzzoiro",
               "provider_season_id": "79::1552",
               "season_name": "Club Friendly Games 2026",
@@ -17953,12 +17953,12 @@
             "competition_name": "Club Friendlies",
             "competition_type": null,
             "country": "World",
-            "observation_count": 87,
+            "observation_count": 90,
             "provider": "bzzoiro",
             "provider_competition_id": "79",
             "seasons": [
               {
-                "observation_count": 87,
+                "observation_count": 90,
                 "provider": "bzzoiro",
                 "provider_season_id": "79::1552",
                 "season_name": "Club Friendly Games 2026",
@@ -20296,7 +20296,7 @@
           }
         },
         "teams": {
-          "candidate_count": 764,
+          "candidate_count": 768,
           "candidates": [
             {
               "canonical_entity_id": "sportmonks:618",
@@ -20978,7 +20978,7 @@
           "manual_review_candidate_count": 20,
           "status_counts": {
             "candidate_requires_manual_approval": 20,
-            "no_exact_contextual_match": 744
+            "no_exact_contextual_match": 748
           }
         }
       },
@@ -20987,12 +20987,12 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 1354,
+      "observation_count": 1358,
       "snapshot_count": 3,
       "source_entity_counts": {
         "leagues": 51,
         "seasons": 48,
-        "teams": 764
+        "teams": 768
       },
       "status": "ok"
     },
@@ -23846,7 +23846,7 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 132,
+      "observation_count": 131,
       "snapshot_count": 3,
       "source_entity_counts": {
         "leagues": 13,
@@ -24966,21 +24966,6 @@
               "status": "candidate_requires_manual_approval"
             },
             {
-              "canonical_entity_id": "sportmonks:15",
-              "canonical_name": "Aston Villa",
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "openligadb",
-              "provider_country": "England",
-              "provider_entity_id": "438",
-              "provider_name": "Aston Villa",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
-            },
-            {
               "canonical_entity_id": "sportmonks:78",
               "canonical_name": "Brighton & Hove Albion",
               "canonical_parent_id": null,
@@ -25086,21 +25071,6 @@
               "status": "candidate_requires_manual_approval"
             },
             {
-              "canonical_entity_id": "sportmonks:9",
-              "canonical_name": "Manchester City",
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "openligadb",
-              "provider_country": "England",
-              "provider_entity_id": "4244",
-              "provider_name": "Manchester City",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
-            },
-            {
               "canonical_entity_id": "sportmonks:63",
               "canonical_name": "Nottingham Forest",
               "canonical_parent_id": null,
@@ -25140,6 +25110,51 @@
               "provider_country": "Spain",
               "provider_entity_id": "1802",
               "provider_name": "Rayo Vallecano",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:485",
+              "canonical_name": "Real Betis",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openligadb",
+              "provider_country": "Spain",
+              "provider_entity_id": "1804",
+              "provider_name": "Real Betis",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:3468",
+              "canonical_name": "Real Madrid",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openligadb",
+              "provider_country": "Spain",
+              "provider_entity_id": "1133",
+              "provider_name": "Real Madrid",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
+              "status": "candidate_requires_manual_approval"
+            },
+            {
+              "canonical_entity_id": "sportmonks:594",
+              "canonical_name": "Real Sociedad",
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": "exact_name_and_country_or_parent",
+              "provider": "openligadb",
+              "provider_country": "Spain",
+              "provider_entity_id": "1275",
+              "provider_name": "Real Sociedad",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
@@ -25537,10 +25552,10 @@
             }
           ],
           "candidates_truncated": true,
-          "manual_review_candidate_count": 14,
+          "manual_review_candidate_count": 15,
           "status_counts": {
-            "candidate_requires_manual_approval": 14,
-            "no_exact_contextual_match": 442
+            "candidate_requires_manual_approval": 15,
+            "no_exact_contextual_match": 441
           }
         }
       },
