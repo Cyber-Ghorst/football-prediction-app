@@ -1,7 +1,7 @@
 {
   "automatic_mapping_approvals": 0,
   "canonical_fixture_writes": 0,
-  "generated_at_utc": "2026-11-13T06:53:10.969780+00:00",
+  "generated_at_utc": "2026-11-13T07:20:47.990234+00:00",
   "prediction_ledger_writes": 0,
   "provider_independent_catalogue": {
     "automatic_mapping_approvals": 0,
@@ -461,7 +461,7 @@
           {
             "competition_name": "Campeonato Brasileiro S\u00e9rie A",
             "country": "Brazil",
-            "observation_count": 18,
+            "observation_count": 22,
             "provider": "football_data_org",
             "provider_competition_id": "2013"
           }
@@ -3801,8 +3801,23 @@
           }
         },
         "teams": {
-          "candidate_count": 11,
+          "candidate_count": 18,
           "candidates": [
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "football_data_org",
+              "provider_country": "Brazil",
+              "provider_entity_id": "1770",
+              "provider_name": "Botafogo FR",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
             {
               "canonical_entity_id": null,
               "canonical_name": null,
@@ -3931,8 +3946,68 @@
               "match_method": null,
               "provider": "football_data_org",
               "provider_country": "Brazil",
+              "provider_entity_id": "1777",
+              "provider_name": "EC Bahia",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "football_data_org",
+              "provider_country": "Brazil",
+              "provider_entity_id": "1782",
+              "provider_name": "EC Vit\u00f3ria",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "football_data_org",
+              "provider_country": "Brazil",
+              "provider_entity_id": "1767",
+              "provider_name": "Gr\u00eamio FBPA",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "football_data_org",
+              "provider_country": "Brazil",
               "provider_entity_id": "4364",
               "provider_name": "Mirassol FC",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "football_data_org",
+              "provider_country": "Brazil",
+              "provider_entity_id": "4286",
+              "provider_name": "RB Bragantino",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
@@ -3961,6 +4036,36 @@
               "match_method": null,
               "provider": "football_data_org",
               "provider_country": "Brazil",
+              "provider_entity_id": "1779",
+              "provider_name": "SC Corinthians Paulista",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "football_data_org",
+              "provider_country": "Brazil",
+              "provider_entity_id": "6684",
+              "provider_name": "SC Internacional",
+              "provider_parent_id": null,
+              "provider_parent_name": null,
+              "reason": "No exact name plus country/parent-context match; no link is proposed.",
+              "status": "no_exact_contextual_match"
+            },
+            {
+              "canonical_entity_id": null,
+              "canonical_name": null,
+              "canonical_parent_id": null,
+              "entity_type": "team",
+              "match_method": null,
+              "provider": "football_data_org",
+              "provider_country": "Brazil",
               "provider_entity_id": "1769",
               "provider_name": "SE Palmeiras",
               "provider_parent_id": null,
@@ -3972,7 +4077,7 @@
           "candidates_truncated": false,
           "manual_review_candidate_count": 0,
           "status_counts": {
-            "no_exact_contextual_match": 11
+            "no_exact_contextual_match": 18
           }
         }
       },
@@ -3981,12 +4086,12 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 18,
+      "observation_count": 22,
       "snapshot_count": 3,
       "source_entity_counts": {
         "leagues": 1,
         "seasons": 1,
-        "teams": 11
+        "teams": 18
       },
       "status": "ok"
     },
