@@ -241,5 +241,41 @@ class ProviderNeutralProfileTests(unittest.TestCase):
         self.assertEqual(report["conflict_count"], 1)
 
 
+    def test_profile_exposes_layer2_freshness_and_statistics_accounting_contract(self):
+        fixture = _fixture("fixture:1")
+        fixture.update({
+            "collection_fetched_at": "2026-11-12T10:00:00Z",
+            "repository_collected_at": "2026-11-12T10:01:00Z",
+            "provider_updated_at": "2026-11-12T09:59:00Z",
+        })
+        statistics = [
+            {"fixture_id": "fixture:1", "team_id": "canonical:home",
+             "statistic_type": "Ball Possession", "statistic_value": 57,
+             "provider": "highlightly"},
+            {"fixture_id": "fixture:1", "team_id": "canonical:home",
+             "statistic_type": "Unknown Metric", "statistic_value": 3,
+             "provider": "highlightly"},
+        ]
+        profile = build_provider_neutral_team_profile(
+            {"team_id": "canonical:home", "name": "Home FC"},
+            [fixture], season_id="canonical:season", statistics=statistics,
+        )
+        quality = profile["data_quality"]
+        history = profile["history_collection_diagnostics"]
+        self.assertEqual(quality["fixtures_scanned"], 1)
+        self.assertEqual(quality["matches_returned"], 1)
+        self.assertEqual(quality["statistics_observations"], 1)
+        self.assertIsNone(quality["statistics_raw_observations"])
+        self.assertFalse(quality["statistics_raw_observations_available"])
+        self.assertEqual(quality["statistics_unmapped_observations"], 1)
+        self.assertIn("core_statistics_completeness_pct", quality)
+        self.assertIn("statistics_coverage_by_metric", quality)
+        self.assertEqual(history["history_collection_fetched_at"], "2026-11-12T10:00:00+00:00")
+        self.assertEqual(history["history_repository_collected_at"], "2026-11-12T10:01:00+00:00")
+        self.assertEqual(history["history_provider_updated_at"], "2026-11-12T09:59:00+00:00")
+        self.assertEqual(history["matches_with_any_statistics"], 1)
+        self.assertEqual(history["matches_with_complete_core_statistics"], 0)
+
+
 if __name__ == "__main__":
     unittest.main()
