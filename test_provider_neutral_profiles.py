@@ -336,5 +336,18 @@ class ProviderNeutralProfileTests(unittest.TestCase):
                          "supplied_canonical_strength_map")
 
 
+    def test_maps_repository_collected_at_into_history_freshness(self):
+        fixture = _fixture("fixture:1")
+        fixture["collected_at"] = "2026-11-12T11:22:00Z"
+        profile = build_provider_neutral_team_profile(
+            {"team_id": "canonical:home", "name": "Home FC"},
+            [fixture], season_id="canonical:season",
+        )
+        self.assertEqual(
+            profile["history_collection_diagnostics"]["history_repository_collected_at"],
+            "2026-11-12T11:22:00+00:00",
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
