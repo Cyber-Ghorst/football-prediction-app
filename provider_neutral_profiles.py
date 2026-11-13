@@ -154,7 +154,7 @@ def build_provider_neutral_team_profile(
     effective_strength = {**derived_strength, **supplied_strength}
     if opponent_strength is None:
         opponent_strength_source = "derived_from_completed_canonical_season_fixtures"
-    elif all(team_id in supplied_strength for team_id in derived_strength):
+    elif all(other_id == team_id or other_id in supplied_strength for other_id in derived_strength):
         opponent_strength_source = "supplied_canonical_strength_map"
     else:
         opponent_strength_source = "supplied_canonical_strength_map_with_derived_fallback"
