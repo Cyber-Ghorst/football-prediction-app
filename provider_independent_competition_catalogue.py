@@ -26,7 +26,7 @@ def _country_key(value: Any) -> str:
 def _season_years(*values: Any) -> list[int]:
     years = set()
     for value in values:
-        for match in re.findall(r"(?<!\\d)(20\\d{2})(?!\\d)", str(value or "")):
+        for match in re.findall(r"(?<!\d)(20\d{2})(?!\d)", str(value or "")):
             years.add(int(match))
     return sorted(years)
 
