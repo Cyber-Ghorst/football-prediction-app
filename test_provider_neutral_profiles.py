@@ -67,6 +67,50 @@ class ProviderNeutralProfileTests(unittest.TestCase):
         )
         self.assertEqual(profile["matches"][0]["statistics"], {"Ball Possession": 57})
 
+    def test_rejects_invalid_and_unmapped_statistics_without_imputation(self):
+        profile = build_provider_neutral_team_profile(
+            {"team_id": "canonical:home", "name": "Home FC"},
+            [_fixture("fixture:1")],
+            season_id="canonical:season",
+            statistics=[
+                {"fixture_id": "fixture:1", "team_id": "canonical:home",
+                 "statistic_type": "Ball Possession", "statistic_value": 130,
+                 "provider": "highlightly"},
+                {"fixture_id": "fixture:1", "team_id": "canonical:home",
+                 "statistic_type": "Pass Accuracy", "statistic_value": -4,
+                 "provider": "highlightly"},
+                {"fixture_id": "fixture:1", "team_id": "canonical:home",
+                 "statistic_type": "Unknown Metric", "statistic_value": 12,
+                 "provider": "highlightly"},
+                {"fixture_id": "fixture:1", "team_id": "canonical:home",
+                 "statistic_type": "Total Shots", "statistic_value": "not numeric",
+                 "provider": "highlightly"},
+            ],
+        )
+        match = profile["matches"][0]
+        self.assertEqual(match["statistics"], {})
+        self.assertEqual(len(match["statistics_invalid_rows"]), 3)
+        self.assertEqual(len(match["statistics_unmapped_rows"]), 1)
+        self.assertEqual(profile["data_quality"]["statistics_invalid_value_count"], 3)
+        self.assertEqual(profile["data_quality"]["statistics_unmapped_observation_count"], 1)
+
+    def test_normalizes_percentage_and_fractional_statistics(self):
+        profile = build_provider_neutral_team_profile(
+            {"team_id": "canonical:home", "name": "Home FC"},
+            [_fixture("fixture:1")],
+            season_id="canonical:season",
+            statistics=[
+                {"fixture_id": "fixture:1", "team_id": "canonical:home",
+                 "statistic_type": "Ball Possession", "statistic_value": "0.57",
+                 "provider": "highlightly"},
+                {"fixture_id": "fixture:1", "team_id": "canonical:home",
+                 "statistic_type": "Total Shots", "statistic_value": "14",
+                 "provider": "highlightly"},
+            ],
+        )
+        self.assertEqual(profile["matches"][0]["statistics"]["Ball Possession"], 57.0)
+        self.assertEqual(profile["matches"][0]["statistics"]["Total Shots"], 14.0)
+
     def test_conflicting_provider_statistics_are_not_silently_overwritten(self):
         profile = build_provider_neutral_team_profile(
             {"team_id": "canonical:home", "name": "Home FC"},
