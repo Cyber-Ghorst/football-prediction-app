@@ -25,9 +25,8 @@ class ProviderNeutralIdentityTests(unittest.TestCase):
 
     def test_accents_and_ampersands_normalize_consistently(self):
         self.assertEqual(
-            canonical_competition_key("Copa del Rey", "España", "Cup"),
-            canonical_competition_key("Copa del Rey", "Spain", "Cup")
-            if False else canonical_competition_key("Copa del Rey", "España", "Cup"),
+            canonical_competition_key("Copa del Réy", "Spain", "Cup"),
+            canonical_competition_key("Copa del Rey", "Spain", "Cup"),
         )
         self.assertEqual(
             canonical_competition_key("A&B Cup", "France", "Cup"),
