@@ -94,9 +94,7 @@ class FreeFixtureProviderRefreshTests(unittest.TestCase):
 
         with patch("free_fixture_provider_refresh.OpenLigaDBAdapter") as openliga_cls, \
              patch("free_fixture_provider_refresh.OpenFootballAdapter") as openfootball_cls, \
-             patch("free_fixture_provider_refresh.LiveScoreFootballClient") as livescore_cls, \
-             patch("free_fixture_provider_refresh.collect_highlightly_observations") as collect_highlightly, \
-             patch("free_fixture_provider_refresh.collect_api_ninjas_observations") as collect_ninjas:
+             patch("free_fixture_provider_refresh.LiveScoreFootballClient") as livescore_cls:
             openliga_cls.return_value.__enter__.return_value.discover_scopes.return_value = []
             openfootball_cls.return_value.__enter__.return_value.discover_season_files.return_value = []
             livescore_cls.return_value.leagues.return_value = []
