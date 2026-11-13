@@ -121,29 +121,58 @@ def build_provider_neutral_team_profile(
     matches: list[dict[str, Any]] = []
     excluded = {"wrong_season": 0, "not_completed": 0, "invalid_identity": 0,
                 "invalid_kickoff": 0, "invalid_score": 0}
+    history = {
+        "fixtures_scanned": len(fixtures or []), "same_season_fixtures": 0,
+        "season_eligible_fixtures": 0, "fixtures_missing_season_id": 0,
+        "team_fixtures": 0, "completed_fixtures": 0, "fixtures_with_valid_scores": 0,
+        "duplicate_fixture_ids": [], "duplicate_fixture_fingerprints": [],
+        "excluded_duplicate_fixture_id": 0, "excluded_duplicate_fingerprint": 0,
+    }
+    seen_fixture_ids: set[str] = set()
+    seen_fingerprints: set[tuple[str, str, str, str]] = set()
     for fixture in fixtures or []:
-        if str(fixture.get("season_id") or "") != canonical_season_id:
+        fixture_season_id = str(fixture.get("season_id") or "").strip()
+        if fixture_season_id != canonical_season_id:
             excluded["wrong_season"] += 1
             continue
-        status = str(fixture.get("status") or "").strip().casefold()
-        if status not in _COMPLETED:
-            excluded["not_completed"] += 1
-            continue
+        history["same_season_fixtures"] += 1
+        history["season_eligible_fixtures"] += 1
         fixture_id = str(fixture.get("fixture_id") or "").strip()
         home_id = str(fixture.get("home_team_id") or "").strip()
         away_id = str(fixture.get("away_team_id") or "").strip()
         if not fixture_id or not home_id or not away_id or home_id == away_id or team_id not in {home_id, away_id}:
             excluded["invalid_identity"] += 1
             continue
+        if fixture_id in seen_fixture_ids:
+            history["excluded_duplicate_fixture_id"] += 1
+            history["duplicate_fixture_ids"].append(fixture_id)
+            continue
+        seen_fixture_ids.add(fixture_id)
+        history["team_fixtures"] += 1
+        status = str(fixture.get("status") or "").strip().casefold()
+        if status not in _COMPLETED:
+            excluded["not_completed"] += 1
+            continue
+        history["completed_fixtures"] += 1
         kickoff = _utc_datetime(fixture.get("starting_at"))
         if kickoff is None or kickoff >= datetime.now(timezone.utc):
             excluded["invalid_kickoff"] += 1
             continue
+        fingerprint = (canonical_season_id, kickoff.isoformat(), home_id, away_id)
+        if fingerprint in seen_fingerprints:
+            history["excluded_duplicate_fingerprint"] += 1
+            history["duplicate_fixture_fingerprints"].append({
+                "season_id": canonical_season_id, "starting_at": kickoff.isoformat(),
+                "home_team_id": home_id, "away_team_id": away_id,
+            })
+            continue
+        seen_fingerprints.add(fingerprint)
         home_goals = _non_negative_score(fixture.get("home_goals"))
         away_goals = _non_negative_score(fixture.get("away_goals"))
         if home_goals is None or away_goals is None:
             excluded["invalid_score"] += 1
             continue
+        history["fixtures_with_valid_scores"] += 1
         is_home = team_id == home_id
         opponent_id = away_id if is_home else home_id
         matches.append({
@@ -171,29 +200,33 @@ def build_provider_neutral_team_profile(
     tactical_evidence = build_tactical_evidence_profile(
         recent, league_reference, team.get("name") or f"Team {team_id}"
     )
-    valid_completed = len(matches)
+    team_fixture_accounting_gap = (
+        history["team_fixtures"] - history["completed_fixtures"] - excluded["not_completed"]
+    )
+    duplicate_issue = bool(
+        history["duplicate_fixture_ids"] or history["duplicate_fixture_fingerprints"]
+    )
+    integrity_issue = bool(
+        duplicate_issue or excluded["invalid_kickoff"] or excluded["invalid_score"]
+        or team_fixture_accounting_gap
+    )
     history_diagnostics = {
-        "team_fixtures": sum(
-            str(row.get("home_team_id") or "") == team_id
-            or str(row.get("away_team_id") or "") == team_id
-            for row in fixtures or []
-        ),
-        "completed_fixtures": valid_completed,
-        "fixtures_with_valid_scores": valid_completed,
+        **history,
+        "excluded_wrong_season": excluded["wrong_season"],
         "excluded_not_completed": excluded["not_completed"],
         "excluded_invalid_identity": excluded["invalid_identity"],
         "excluded_invalid_kickoff": excluded["invalid_kickoff"],
         "excluded_invalid_scores": excluded["invalid_score"],
-        "excluded_duplicate_fixture_id": 0,
         "history_shortfall": max(0, 10 - len(recent)),
         "history_latest_match_at": recent[0]["date"] if recent else None,
         "history_oldest_match_at": recent[-1]["date"] if recent else None,
         "history_order": "newest_first_by_parsed_utc_kickoff",
-        "history_integrity_status": "review_required",
-        "team_fixture_accounting_status": "review_required",
-        "team_fixture_accounting_gap": None,
-        "duplicate_fixture_ids_checked": False,
-        "note": "Season snapshot screening; global duplicate-fingerprint audit is not performed by this builder.",
+        "duplicate_fixture_id_count": len(history["duplicate_fixture_ids"]),
+        "duplicate_fixture_fingerprint_count": len(history["duplicate_fixture_fingerprints"]),
+        "duplicate_fixture_ids_checked": True,
+        "team_fixture_accounting_gap": team_fixture_accounting_gap,
+        "team_fixture_accounting_status": "balanced" if team_fixture_accounting_gap == 0 else "unbalanced",
+        "history_integrity_status": "issues_detected" if integrity_issue else "ok",
     }
     return {
         "id": team_id,
@@ -233,7 +266,10 @@ def build_provider_neutral_team_profile(
             "opponent_statistics_conflict_count": sum(len(m.get("opponent_statistics_conflicts") or []) for m in recent),
             "history_shortfall": max(0, 10 - len(recent)),
             "history_integrity_status": history_diagnostics["history_integrity_status"],
-            "history_duplicate_check_performed": False,
+            "history_duplicate_check_performed": True,
+            "duplicate_fixture_id_count": history_diagnostics["duplicate_fixture_id_count"],
+            "duplicate_fixture_fingerprint_count": history_diagnostics["duplicate_fixture_fingerprint_count"],
+            "team_fixture_accounting_status": history_diagnostics["team_fixture_accounting_status"],
             "tactical_evidence_source": "canonical_repository_season_statistics",
             "tactical_evidence_dimensions_available": tactical_evidence.get("evidence_metadata", {}).get("available_dimensions", 0),
             "statistics_coverage_by_metric": {
