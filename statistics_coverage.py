@@ -180,3 +180,64 @@ def build_counter_attack_source_diagnostics(matches: list[dict[str, Any]]) -> di
             "whether an earlier collection step failed to retain it."
         ),
     }
+
+
+
+def build_provider_neutral_statistics_coverage(matches: list[dict[str, Any]]) -> dict[str, Any]:
+    """Report core and tactical coverage from normalized canonical profile matches."""
+    recent = list(matches[:10])
+    total = len(recent)
+    metrics = []
+    for label, group, canonical_names in CORE_STATISTICS:
+        available = invalid = conflicted = 0
+        for match in recent:
+            stats = match.get("statistics") or {}
+            if any(stats.get(name) is not None for name in canonical_names):
+                available += 1
+            invalid_names = {row.get("statistic_type") for row in (match.get("statistics_invalid_rows") or [])}
+            if invalid_names.intersection(canonical_names):
+                invalid += 1
+            if set(match.get("statistics_conflicts") or []).intersection(canonical_names):
+                conflicted += 1
+        metrics.append({
+            "group": group, "statistic": label,
+            "fixtures_available": available, "fixtures_checked": total,
+            "coverage_pct": round(available / total * 100, 1) if total else None,
+            "invalid_fixtures": invalid, "conflicted_fixtures": conflicted,
+            "status": ("available" if available == total and total else
+                       "partial" if available else "invalid" if invalid else
+                       "conflicted" if conflicted else "missing"),
+        })
+    tactical = []
+    for name in TACTICAL_EVIDENCE_STATISTICS:
+        team_count = sum((m.get("statistics") or {}).get(name) is not None for m in recent)
+        opponent_count = sum((m.get("opponent_statistics") or {}).get(name) is not None for m in recent)
+        tactical.append({
+            "statistic": name, "team_output_fixtures": team_count,
+            "opponent_output_fixtures": opponent_count, "fixtures_checked": total,
+            "team_coverage_pct": round(team_count / total * 100, 1) if total else None,
+            "opponent_coverage_pct": round(opponent_count / total * 100, 1) if total else None,
+        })
+    invalid_rows = [row for m in recent for row in (m.get("statistics_invalid_rows") or [])]
+    opponent_invalid = [row for m in recent for row in (m.get("opponent_statistics_invalid_rows") or [])]
+    unmapped_rows = [row for m in recent for row in (m.get("statistics_unmapped_rows") or [])]
+    opponent_unmapped = [row for m in recent for row in (m.get("opponent_statistics_unmapped_rows") or [])]
+    conflicts = sum(len(m.get("statistics_conflicts") or []) for m in recent)
+    opponent_conflicts = sum(len(m.get("opponent_statistics_conflicts") or []) for m in recent)
+    return {
+        "contract": "provider_neutral_canonical_profile",
+        "fixtures_checked": total,
+        "core_metrics_with_any_data": sum(row["fixtures_available"] > 0 for row in metrics),
+        "core_metrics_complete": sum(row["fixtures_available"] == total and total > 0 for row in metrics),
+        "core_metrics_total": len(CORE_STATISTICS),
+        "metrics": metrics, "tactical_evidence_metrics": tactical,
+        "invalid_observations": len(invalid_rows),
+        "opponent_invalid_observations": len(opponent_invalid),
+        "unmapped_observations": len(unmapped_rows),
+        "opponent_unmapped_observations": len(opponent_unmapped),
+        "conflict_count": conflicts, "opponent_conflict_count": opponent_conflicts,
+        "mapping_visibility": "available" if invalid_rows or unmapped_rows or any(
+            m.get("statistics_provenance") for m in recent
+        ) else "not supplied by this data path",
+        "no_imputation": True,
+    }
