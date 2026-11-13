@@ -92,6 +92,47 @@ class ProviderIndependentCompetitionCatalogueTests(unittest.TestCase):
         self.assertEqual(report["competitions"][0]["status"], "single_provider_only")
         self.assertEqual(len(report["competitions"][0]["sources"]), 2)
 
+    def test_season_alignment_is_evidence_only_and_not_an_identity_approval(self):
+        report = build_provider_independent_competition_catalogue(
+            {
+                "openfootball": [{"id": "en.1", "name": "Premier League", "country": "England"}],
+                "openligadb": [{"id": "5996", "name": "Premier League", "country": "England"}],
+            },
+            {
+                "openfootball": [{
+                    "id": "en.1::2026-27", "name": "2026-27",
+                    "provider_competition_id": "en.1",
+                }],
+                "openligadb": [{
+                    "id": "5996::2026", "name": "2026",
+                    "provider_competition_id": "5996",
+                }],
+            },
+        )
+        candidate = report["canonical_seed_review_candidates"][0]
+        self.assertEqual(candidate["season_evidence"]["status"], "cross_provider_start_year_overlap")
+        self.assertEqual(candidate["season_evidence"]["shared_start_years"], [2026])
+        self.assertFalse(candidate["automatic_approval"])
+        self.assertEqual(candidate["canonical_record_created"], False)
+
+    def test_competition_type_conflict_is_exposed_and_missing_type_stays_unknown(self):
+        conflict = build_provider_independent_competition_catalogue({
+            "provider_a": [{
+                "id": "1", "name": "Premier League", "country": "England",
+                "competition_type": "LEAGUE",
+            }],
+            "provider_b": [{
+                "id": "2", "name": "Premier League", "country": "England",
+                "competition_type": "CUP",
+            }],
+        })["competitions"][0]["competition_type_evidence"]
+        unknown = build_provider_independent_competition_catalogue({
+            "provider_a": [{"id": "1", "name": "Premier League", "country": "England"}],
+            "provider_b": [{"id": "2", "name": "Premier League", "country": "England"}],
+        })["competitions"][0]["competition_type_evidence"]
+        self.assertEqual(conflict["status"], "provider_type_conflict")
+        self.assertEqual(unknown["status"], "unknown_not_supplied")
+
 
 if __name__ == "__main__":
     unittest.main()

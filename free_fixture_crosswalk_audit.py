@@ -34,6 +34,7 @@ def build_crosswalk_audit(
         raise ValueError("PROVIDER_DATABASE_URL is required.")
     results: dict[str, Any] = {}
     source_leagues_by_provider: dict[str, list[dict[str, Any]]] = {}
+    source_seasons_by_provider: dict[str, list[dict[str, Any]]] = {}
     try:
         canonical_catalogue = load_canonical_crosswalk_catalogue(database_url)
     except Exception as exc:
@@ -74,6 +75,9 @@ def build_crosswalk_audit(
             )
             source_leagues_by_provider[provider] = list(
                 report.get("source_entities", {}).get("leagues", [])
+            )
+            source_seasons_by_provider[provider] = list(
+                report.get("source_entities", {}).get("seasons", [])
             )
             categories = {}
             for category, candidates in report.get("candidates", {}).items():
@@ -117,7 +121,7 @@ def build_crosswalk_audit(
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "providers": results,
         "provider_independent_catalogue": build_provider_independent_competition_catalogue(
-            source_leagues_by_provider
+            source_leagues_by_provider, source_seasons_by_provider
         ),
         "automatic_mapping_approvals": 0,
         "canonical_fixture_writes": 0,
