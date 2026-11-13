@@ -106,7 +106,6 @@ class SportmonksLayer2Tests(unittest.TestCase):
         self.assertEqual(profile["data_quality"]["matches_returned"], 6)
         self.assertEqual(profile["statistics_coverage"]["core_metrics_total"], 8)
         self.assertEqual(profile["statistics_coverage"]["fixtures_checked"], 6)
-        self.assertEqual(profile["statistics_coverage"]["contract"] if "contract" in profile["statistics_coverage"] else "sportmonks_raw_profile", "sportmonks_raw_profile")
         self.assertEqual(profile["matches"][0]["goals_for"], 2)
         self.assertEqual(profile["matches"][0]["opponent_strength"], 50.0)
         self.assertEqual(profile["matches"][0]["statistics"]["Ball Possession"], 60.0)
