@@ -277,5 +277,32 @@ class ProviderNeutralProfileTests(unittest.TestCase):
         self.assertEqual(history["matches_with_complete_core_statistics"], 0)
 
 
+    def test_accepts_layer2_statistic_aliases_across_providers(self):
+        aliases = [
+            ("Accurate Passes Percentage", 81, "Passes %"),
+            ("Pass Success Percentage", 81, "Passes %"),
+            ("Successful Passes Percentage", 81, "Passes %"),
+            ("Goal Attempts", 13, "Total Shots"),
+            ("Shots Off Target", 5, "Shots off Target"),
+            ("Shots Blocked", 2, "Blocked Shots"),
+        ]
+        rows = [
+            {"fixture_id": "fixture:1", "team_id": "canonical:home",
+             "statistic_type": raw_type, "statistic_value": value,
+             "provider": "independent_provider"}
+            for raw_type, value, _canonical in aliases
+        ]
+        profile = build_provider_neutral_team_profile(
+            {"team_id": "canonical:home", "name": "Home FC"},
+            [_fixture("fixture:1")],
+            season_id="canonical:season",
+            statistics=rows,
+        )
+        observed = profile["matches"][0]["statistics"]
+        for _raw_type, value, canonical in aliases:
+            self.assertEqual(observed[canonical], float(value))
+        self.assertEqual(profile["matches"][0]["statistics_unmapped_rows"], [])
+
+
 if __name__ == "__main__":
     unittest.main()
