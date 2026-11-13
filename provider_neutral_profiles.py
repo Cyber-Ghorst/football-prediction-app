@@ -10,6 +10,7 @@ from typing import Any
 
 from form_analyzer import analyze_form, venue_rating
 from tactical_indicators import analyze_tactics
+from tactical_evidence import build_league_reference_statistics, build_tactical_evidence_profile
 
 
 _COMPLETED = {"finished", "complete", "completed", "ft", "full time", "5"}
@@ -69,32 +70,53 @@ def build_provider_neutral_team_profile(
         raise ValueError("A canonical season_id is required.")
     safe_limit = max(1, min(int(limit), 10))
 
-    stat_candidates: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    # Resolve each fixture/team/metric independently so opponent statistics
+    # can support tactical evidence. Conflicts are excluded, never averaged.
+    aliases = {
+        "ball possession": "Ball Possession", "ball possession %": "Ball Possession",
+        "pass accuracy": "Passes %", "passes accuracy": "Passes %",
+        "passes %": "Passes %", "successful passes %": "Passes %",
+        "shots on goal": "Shots on Goal", "shots on target": "Shots on Target",
+        "total shots": "Total Shots", "shots total": "Total Shots",
+        "tackles": "Tackles", "interceptions": "Interceptions",
+        "blocked shots": "Blocked Shots", "corners": "Corner Kicks",
+        "corner kicks": "Corner Kicks", "accurate crosses": "Accurate Crosses",
+        "successful dribbles": "Successful Dribbles",
+        "successful headers": "Successful Headers",
+        "big chances created": "Big Chances Created", "key passes": "Key Passes",
+        "shots insidebox": "Shots Insidebox", "shots inside box": "Shots Insidebox",
+        "counter attacks": "Counter Attacks", "counter-attacks": "Counter Attacks",
+    }
+    candidates: dict[tuple[str, str, str], list[dict[str, Any]]] = {}
     for row in statistics or []:
         if not isinstance(row, dict):
             continue
         fixture_id = str(row.get("fixture_id") or "").strip()
         statistic_team_id = str(row.get("team_id") or "").strip()
-        statistic_type = str(row.get("statistic_type") or "").strip()
+        raw_type = str(row.get("statistic_type") or "").strip()
         value = row.get("statistic_value")
-        if fixture_id and statistic_team_id == team_id and statistic_type and value is not None:
-            stat_candidates.setdefault((fixture_id, statistic_type), []).append(row)
+        statistic_type = aliases.get(raw_type.casefold(), raw_type)
+        if fixture_id and statistic_team_id and statistic_type and value is not None:
+            candidates.setdefault((fixture_id, statistic_team_id, statistic_type), []).append(row)
 
-    stats_by_fixture: dict[str, dict[str, Any]] = {}
-    stats_provenance: dict[str, list[dict[str, Any]]] = {}
-    statistic_conflicts: dict[str, list[str]] = {}
-    for (fixture_id, statistic_type), candidates in stat_candidates.items():
-        values = [row.get("statistic_value") for row in candidates]
-        provenance = [{
+    stats_by_fixture_team: dict[tuple[str, str], dict[str, Any]] = {}
+    provenance_by_fixture_team: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    conflicts_by_fixture_team: dict[tuple[str, str], list[str]] = {}
+    league_reference_rows: list[dict[str, Any]] = []
+    for (fixture_id, statistic_team_id, statistic_type), rows in candidates.items():
+        values = [row.get("statistic_value") for row in rows]
+        if any(not _same_statistic_value(values[0], value) for value in values[1:]):
+            conflicts_by_fixture_team.setdefault((fixture_id, statistic_team_id), []).append(statistic_type)
+            continue
+        key = (fixture_id, statistic_team_id)
+        stats_by_fixture_team.setdefault(key, {})[statistic_type] = values[0]
+        provenance_by_fixture_team.setdefault(key, []).extend({
             "provider": row.get("provider") or row.get("source_provider"),
             "provider_statistic_id": row.get("provider_statistic_id"),
             "statistic_type": statistic_type,
-        } for row in candidates]
-        if any(not _same_statistic_value(values[0], value) for value in values[1:]):
-            statistic_conflicts.setdefault(fixture_id, []).append(statistic_type)
-            continue
-        stats_by_fixture.setdefault(fixture_id, {})[statistic_type] = values[0]
-        stats_provenance.setdefault(fixture_id, []).extend(provenance)
+        } for row in rows)
+        league_reference_rows.append({statistic_type: values[0]})
+    league_reference = build_league_reference_statistics(league_reference_rows)
 
     matches: list[dict[str, Any]] = []
     excluded = {"wrong_season": 0, "not_completed": 0, "invalid_identity": 0,
@@ -133,9 +155,12 @@ def build_provider_neutral_team_profile(
             "goals_for": home_goals if is_home else away_goals,
             "goals_against": away_goals if is_home else home_goals,
             "opponent_strength": (opponent_strength or {}).get(opponent_id),
-            "statistics": stats_by_fixture.get(fixture_id, {}),
-            "statistics_provenance": stats_provenance.get(fixture_id, []),
-            "statistics_conflicts": statistic_conflicts.get(fixture_id, []),
+            "statistics": stats_by_fixture_team.get((fixture_id, team_id), {}),
+            "opponent_statistics": stats_by_fixture_team.get((fixture_id, opponent_id), {}),
+            "statistics_provenance": provenance_by_fixture_team.get((fixture_id, team_id), []),
+            "statistics_conflicts": conflicts_by_fixture_team.get((fixture_id, team_id), []),
+            "opponent_statistics_conflicts": conflicts_by_fixture_team.get((fixture_id, opponent_id), []),
+            "statistics_invalid_rows": [],
             "source_provider": fixture.get("source_provider"),
         })
 
@@ -143,6 +168,33 @@ def build_provider_neutral_team_profile(
     recent = matches[:safe_limit]
     form = analyze_form(recent)
     tactics = analyze_tactics(recent)
+    tactical_evidence = build_tactical_evidence_profile(
+        recent, league_reference, team.get("name") or f"Team {team_id}"
+    )
+    valid_completed = len(matches)
+    history_diagnostics = {
+        "team_fixtures": sum(
+            str(row.get("home_team_id") or "") == team_id
+            or str(row.get("away_team_id") or "") == team_id
+            for row in fixtures or []
+        ),
+        "completed_fixtures": valid_completed,
+        "fixtures_with_valid_scores": valid_completed,
+        "excluded_not_completed": excluded["not_completed"],
+        "excluded_invalid_identity": excluded["invalid_identity"],
+        "excluded_invalid_kickoff": excluded["invalid_kickoff"],
+        "excluded_invalid_scores": excluded["invalid_score"],
+        "excluded_duplicate_fixture_id": 0,
+        "history_shortfall": max(0, 10 - len(recent)),
+        "history_latest_match_at": recent[0]["date"] if recent else None,
+        "history_oldest_match_at": recent[-1]["date"] if recent else None,
+        "history_order": "newest_first_by_parsed_utc_kickoff",
+        "history_integrity_status": "review_required",
+        "team_fixture_accounting_status": "review_required",
+        "team_fixture_accounting_gap": None,
+        "duplicate_fixture_ids_checked": False,
+        "note": "Season snapshot screening; global duplicate-fingerprint audit is not performed by this builder.",
+    }
     return {
         "id": team_id,
         "name": team.get("name") or f"Team {team_id}",
@@ -157,6 +209,8 @@ def build_provider_neutral_team_profile(
         "tactical_compatibility": None,
         "form_summary": form,
         "tactical_summary": tactics,
+        "tactical_evidence": tactical_evidence,
+        "history_collection_diagnostics": history_diagnostics,
         "availability": {
             "injury_data_available": False, "reported_injuries": None,
             "injuries": [], "player_availability": None,
@@ -176,7 +230,16 @@ def build_provider_neutral_team_profile(
             "opponent_strength_matches": sum(m.get("opponent_strength") is not None for m in recent),
             "statistics_matches": sum(bool(m.get("statistics")) for m in recent),
             "statistics_conflict_count": sum(len(m.get("statistics_conflicts") or []) for m in recent),
+            "opponent_statistics_conflict_count": sum(len(m.get("opponent_statistics_conflicts") or []) for m in recent),
             "history_shortfall": max(0, 10 - len(recent)),
+            "history_integrity_status": history_diagnostics["history_integrity_status"],
+            "history_duplicate_check_performed": False,
+            "tactical_evidence_source": "canonical_repository_season_statistics",
+            "tactical_evidence_dimensions_available": tactical_evidence.get("evidence_metadata", {}).get("available_dimensions", 0),
+            "statistics_coverage_by_metric": {
+                name: sum(name in (match.get("statistics") or {}) for match in recent)
+                for name in tactics.get("available_metrics", {})
+            },
             "excluded": excluded,
         },
     }
