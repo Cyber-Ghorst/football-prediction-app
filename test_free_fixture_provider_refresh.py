@@ -1,4 +1,5 @@
 import unittest
+import json
 from datetime import datetime, timezone
 from unittest.mock import Mock, patch
 
@@ -111,6 +112,37 @@ class FreeFixtureProviderRefreshTests(unittest.TestCase):
         self.assertIn("will not use its data to support betting", report["providers"]["highlightly"]["skipped"])
         self.assertIn("non-commercial-use confirmation", report["providers"]["api_ninjas"]["skipped"])
 
+
+    def test_readiness_report_identifies_each_missing_acknowledgement_without_exposing_keys(self):
+        with patch("free_fixture_provider_refresh.OpenLigaDBAdapter") as openliga_cls, \\
+             patch("free_fixture_provider_refresh.OpenFootballAdapter") as openfootball_cls, \\
+             patch("free_fixture_provider_refresh.LiveScoreFootballClient") as livescore_cls:
+            openliga_cls.return_value.__enter__.return_value.discover_scopes.return_value = []
+            openfootball_cls.return_value.__enter__.return_value.discover_season_files.return_value = []
+            livescore_cls.return_value.leagues.return_value = []
+            report = refresh_free_fixture_sources(
+                "provider-db",
+                today=datetime(2026, 11, 11, tzinfo=timezone.utc),
+                highlightly_token="do-not-report-this-key",
+                api_ninjas_token="also-do-not-report-this-key",
+                highlightly_terms_acknowledged=True,
+                highlightly_non_betting_confirmed=False,
+                api_ninjas_terms_acknowledged=False,
+                api_ninjas_noncommercial_confirmed=True,
+            )
+        highlightly = report["providers"]["highlightly"]
+        ninjas = report["providers"]["api_ninjas"]
+        self.assertTrue(highlightly["readiness"]["credential_configured"])
+        self.assertTrue(highlightly["readiness"]["terms_acknowledged"])
+        self.assertFalse(highlightly["readiness"]["non_betting_use_confirmed"])
+        self.assertFalse(highlightly["readiness"]["collection_enabled"])
+        self.assertIn("non-betting-use confirmation is missing", highlightly["skipped"])
+        self.assertFalse(ninjas["readiness"]["terms_acknowledged"])
+        self.assertTrue(ninjas["readiness"]["noncommercial_use_confirmed"])
+        self.assertIn("provider terms acknowledgement is missing", ninjas["skipped"])
+        serialized = json.dumps(report)
+        self.assertNotIn("do-not-report-this-key", serialized)
+        self.assertNotIn("also-do-not-report-this-key", serialized)
 
     @patch.dict("os.environ", {"PROVIDER_DATABASE_URL": "provider-db"}, clear=True)
     @patch("free_fixture_provider_refresh.refresh_free_fixture_sources")
