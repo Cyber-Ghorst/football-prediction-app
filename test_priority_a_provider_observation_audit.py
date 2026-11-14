@@ -169,3 +169,21 @@ def test_country_alias_usa_matches_united_states_without_rewriting_source_countr
 
 def test_priority_a_audit_uses_wider_read_only_snapshot_window():
     assert DEFAULT_SNAPSHOT_LIMIT == 20
+
+
+def test_local_date_and_team_candidate_is_reported_but_not_counted_as_exact_overlap():
+    local = _snapshot("openfootball", "en.1", "2026-27", "of-local")
+    local_row = local["payload"]["observations"][0]
+    local_row["kickoff_utc"] = None
+    local_row["eligible_for_review"] = False
+    local_row["raw_payload"] = {"date": "2026-11-20", "time": "19:00"}
+    utc = _snapshot("openligadb", "5996", "2026", "oldb-1")
+    utc["payload"]["observations"][0]["kickoff_utc"] = "2026-11-20T18:00:00Z"
+    report = build_priority_a_observation_audit(
+        _queue(), [local, utc], generated_at=datetime(2026, 11, 14, tzinfo=timezone.utc)
+    )
+    assert report["exact_overlap_count"] == 0
+    assert report["date_level_fixture_candidate_count"] == 1
+    candidate = report["date_level_fixture_candidates"][0]
+    assert candidate["status"] == "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    assert candidate["providers"] == ["openfootball", "openligadb"]

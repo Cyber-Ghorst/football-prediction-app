@@ -10,7 +10,7 @@ import json
 import os
 import re
 from collections import Counter, defaultdict
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
@@ -54,7 +54,7 @@ def _raw_kickoff_evidence(row: Mapping[str, Any]) -> tuple[str, str | None]:
     raw = raw if isinstance(raw, Mapping) else {}
     date_value = _text(raw.get("date") or raw.get("match_date"))
     time_value = _text(raw.get("time") or raw.get("kickoff"))
-    if date_value and not time_value and re.fullmatch(r"20\\d{2}-\\d{2}-\\d{2}", date_value):
+    if date_value and not time_value and re.fullmatch(r"20\d{2}-\d{2}-\d{2}", date_value):
         return "date_only", f"date={date_value}"
     if date_value and time_value:
         return "raw_date_time", f"date={date_value}; time={time_value}"
@@ -206,6 +206,21 @@ def build_priority_a_observation_audit(
     overlap: dict[tuple[str, str, str, str, str, str], set[str]] = defaultdict(set)
     source_snapshot_counts: Counter[tuple[str, str]] = Counter()
     total_observations = 0
+    priority_a_source_keys: set[tuple[str, str, str]] = set()
+    for queue_entry in queue.get("entries", []):
+        if not isinstance(queue_entry, Mapping) or queue_entry.get("priority") != "A":
+            continue
+        for source in queue_entry.get("source_records", []):
+            if not isinstance(source, Mapping):
+                continue
+            source_provider = _text(source.get("provider")).casefold()
+            source_comp = _text(source.get("provider_competition_id"))
+            for season in source.get("seasons", []) or []:
+                source_season = _text(season.get("provider_season_id"))
+                source_season_key = source_season.split("::", 1)[1] if "::" in source_season else ""
+                if source_provider and source_comp and source_season_key:
+                    priority_a_source_keys.add((source_provider, source_comp, source_season_key))
+    date_evidence: dict[tuple[str, str, str, str], dict[str, dict[str, dict[str, set[str]]]]] = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: {"examples": set()})))
 
     for snapshot in snapshots:
         provider = _text(snapshot.get("provider")).casefold()
@@ -292,6 +307,22 @@ def build_priority_a_observation_audit(
                 record["missing_country_observations"] += 1
             if not home or not away:
                 record["missing_team_name_observations"] += 1
+            if (provider, comp_id, season_id) in priority_a_source_keys and country and name and home and away:
+                raw_payload = row.get("raw_payload") if isinstance(row.get("raw_payload"), Mapping) else {}
+                source_date = _text(raw_payload.get("date") or raw_payload.get("match_date"))
+                source_time = _text(raw_payload.get("time") or raw_payload.get("kickoff"))
+                candidate_date = None
+                evidence_label = None
+                if source_date and re.fullmatch(r"20\\d{2}-\\d{2}-\\d{2}", source_date) and source_time:
+                    candidate_date = source_date
+                    evidence_label = f"source_local={source_date} {source_time}"
+                elif kickoff:
+                    candidate_date = kickoff[:10]
+                    evidence_label = f"source_utc={kickoff}"
+                if candidate_date:
+                    candidate_key = (_country_norm(country), _norm(name), _norm(home), _norm(away))
+                    if evidence_label:
+                        date_evidence[candidate_key][provider][candidate_date]["examples"].add(evidence_label)
             if eligible and kickoff and country and name and home and away:
                 signature = (
                     _norm(country), _norm(name), kickoff, _norm(home), _norm(away), "exact"
@@ -382,6 +413,36 @@ def build_priority_a_observation_audit(
             "identity_decision": "not_approved",
         })
 
+    date_candidate_rows = []
+    for (country_key, competition_key, home_key, away_key), providers_by_date in date_evidence.items():
+        provider_names = sorted(providers_by_date)
+        for left_index, left_provider in enumerate(provider_names):
+            for right_provider in provider_names[left_index + 1:]:
+                for left_day, left_info in providers_by_date[left_provider].items():
+                    try:
+                        left_date = date.fromisoformat(left_day)
+                    except ValueError:
+                        continue
+                    for right_day, right_info in providers_by_date[right_provider].items():
+                        try:
+                            right_date = date.fromisoformat(right_day)
+                        except ValueError:
+                            continue
+                        delta = abs((left_date - right_date).days)
+                        if delta > 1 or not (any(v.startswith("source_local=") for v in left_info["examples"]) or any(v.startswith("source_local=") for v in right_info["examples"])):
+                            continue
+                        date_candidate_rows.append({
+                            "country_key": country_key,
+                            "competition_key": competition_key,
+                            "home_team_key": home_key,
+                            "away_team_key": away_key,
+                            "providers": [left_provider, right_provider],
+                            "date_pairs": [f"{left_day} <> {right_day}"],
+                            "evidence_examples": sorted(left_info["examples"] | right_info["examples"])[:4],
+                            "maximum_date_difference_days": delta,
+                            "status": "date_and_team_candidate_only_not_exact_fixture_confirmation",
+                        })
+
     overlap_rows = [
         {
             "country_key": sig[0],
@@ -410,11 +471,15 @@ def build_priority_a_observation_audit(
         "entries": entries,
         "exact_cross_provider_fixture_overlaps": overlap_rows,
         "exact_overlap_count": len(overlap_rows),
+        "date_level_fixture_candidates": date_candidate_rows,
+        "date_level_fixture_candidate_count": len(date_candidate_rows),
         "interpretation": (
             "An exact team-pair and UTC-kickoff overlap is strong fixture-level corroboration, "
-            "but does not alone approve competition or season identity. Missing observations "
-            "in the selected recent snapshots mean not observed in this audit window, not that "
-            "the provider lacks the competition."
+            "but does not alone approve competition or season identity. Date-level candidates "
+            "match team pairs on dates within one day where at least one source has a local "
+            "date/time without timezone; they are manual-review leads only and never count as "
+            "exact overlaps. Missing observations in selected snapshots mean not observed in "
+            "this audit window, not that the provider lacks the competition."
         ),
         "safeguards": {
             "database_transaction_read_only": True,
