@@ -22,6 +22,7 @@ PROVIDERS = (
     "openligadb", "livescore_football",
 )
 RESOURCE_TYPES = ("future_fixture_observations", "independent_data_observations")
+DEFAULT_SNAPSHOT_LIMIT = 20
 QUEUE_PATH = Path("reports/provider_independent_catalogue/identity_review_queue.json")
 OUTPUT_PATH = Path("reports/provider_independent_catalogue/priority_a_provider_observation_audit/latest.json")
 
@@ -155,7 +156,7 @@ def _observations(snapshot: Mapping[str, Any]) -> list[dict[str, Any]]:
     return [row for row in rows if isinstance(row, dict)]
 
 
-def load_recent_snapshots(database_url: str, *, per_provider_limit: int = 5) -> list[dict[str, Any]]:
+def load_recent_snapshots(database_url: str, *, per_provider_limit: int = DEFAULT_SNAPSHOT_LIMIT) -> list[dict[str, Any]]:
     """Read recent source snapshots in a transaction explicitly marked READ ONLY."""
     if not database_url:
         raise ValueError("PROVIDER_DATABASE_URL is required.")
@@ -398,7 +399,7 @@ def build_priority_a_observation_audit(
         "report_name": "priority_a_provider_observation_audit",
         "generated_at_utc": current.astimezone(timezone.utc).isoformat(),
         "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
-        "snapshot_limit_per_provider_resource": 5,
+        "snapshot_limit_per_provider_resource": DEFAULT_SNAPSHOT_LIMIT,
         "providers_checked": list(PROVIDERS),
         "snapshot_counts_by_provider_resource": {
             f"{provider}:{resource}": count
