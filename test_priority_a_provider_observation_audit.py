@@ -1,6 +1,9 @@
 from datetime import datetime, timezone
 
-from priority_a_provider_observation_audit import build_priority_a_observation_audit
+from priority_a_provider_observation_audit import (
+    DEFAULT_SNAPSHOT_LIMIT,
+    build_priority_a_observation_audit,
+)
 
 
 def _queue():
@@ -162,3 +165,7 @@ def test_country_alias_usa_matches_united_states_without_rewriting_source_countr
     assert source["country_matches_queue"] is True
     assert source["countries"] == ["USA"]
     assert report["entries"][0]["identity_decision"] == "not_approved"
+
+
+def test_priority_a_audit_uses_wider_read_only_snapshot_window():
+    assert DEFAULT_SNAPSHOT_LIMIT == 20
