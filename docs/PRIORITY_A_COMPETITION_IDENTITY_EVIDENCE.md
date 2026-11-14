@@ -44,3 +44,31 @@ Official sources support the public competition identity and season context for 
 - Any mapping proposal remains subject to explicit human approval.
 
 Machine-readable evidence: `reports/provider_independent_catalogue/priority_a_external_evidence.json`.
+
+## Raw provider audit findings (14 November 2026)
+
+The read-only audit at [latest.json](../reports/provider_independent_catalogue/priority_a_provider_observation_audit/latest.json) examined 41,894 raw observations across the selected provider snapshots. It found 11 exact cross-provider fixture overlaps across the ten Priority A competition entries.
+
+| Competition | Exact fixture overlaps | Material provider-side finding |
+|---|---:|---|
+| Bundesliga | 6 | OpenFootball's 1,530 rows have local date/time values without timezone evidence and are not eligible for exact UTC matching; football-data.org's sampled row lacks country. |
+| Premier League | 1 | OpenFootball's 1,900 rows have local date/time without timezone evidence; no eligible exact UTC matches from that source. |
+| Ligue 1 | 0 | OpenFootball's 1,530 rows have local date/time without timezone evidence; the sampled football-data.org row lacks country. |
+| Championship | 0 | OpenFootball's 2,760 rows have local date/time without timezone evidence; no exact UTC cross-provider corroboration in this snapshot. |
+| 2. Bundesliga | 3 | Bzzoiro and OpenLigaDB provide timezone-aware fixture observations; season labels differ (2026/27 vs 2026). |
+| Serie A | 0 | OpenFootball's 1,900 rows have local date/time without timezone evidence; no eligible exact UTC corroboration from that source. |
+| Eredivisie | 0 | OpenFootball's 1,530 rows have local date/time without timezone evidence; no eligible exact UTC corroboration from that source. |
+| Saudi Pro League | 1 | Bzzoiro's snapshot contains 50 raw rows but only 5 eligible rows; LiveScoreFootball has 5 eligible rows. |
+| La Liga | 0 | OpenFootball's 1,900 rows have local date/time without timezone evidence; no eligible exact UTC corroboration from that source. |
+| MLS | 0 | Official league scope spans the United States and Canada, while one provider's observed country field says United States; provider geography needs reconciliation. |
+
+### Interpretation and action
+
+- An overlap count of zero means no exact match was found in this selected snapshot; it is not proof that the providers describe different competitions.
+- Local date/time values without an authoritative timezone must remain ineligible for exact UTC fixture matching. Do not assume the provider's local timezone.
+- The football-data.org country omissions and the MLS cross-border country-scope difference remain explicit evidence gaps.
+- Provider competition IDs and provider season IDs remain unverified even where external official competition identity is supported.
+- No canonical mappings, provider links, fixture writes, route changes or prediction eligibility are authorized by these findings.
+
+The machine-readable audit is the source of truth for per-provider row counts and kickoff-quality counters. This summary is a review aid, not a replacement for the raw audit report.
+
