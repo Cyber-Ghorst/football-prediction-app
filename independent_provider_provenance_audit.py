@@ -129,7 +129,7 @@ def main() -> int:
     output.mkdir(parents=True, exist_ok=True)
     target = output / "latest.json"
     target.write_text(
-        json.dumps(report, indent=2, sort_keys=True, default=str) + "\\n",
+        json.dumps(report, indent=2, sort_keys=True, default=str) + "\n",
         encoding="utf-8",
     )
     print(json.dumps({
