@@ -114,6 +114,13 @@ def _kickoff(value: Any) -> str | None:
     return parsed.astimezone(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
 
 
+def _kickoff_quality(value: Any) -> str:
+    """Classify kickoff evidence without silently treating naive times as UTC."""
+    if not isinstance(value, str) or not value.strip():
+        return "missing"
+    return "valid_timezone_aware" if _kickoff(value) else "invalid_or_timezone_naive"
+
+
 def _observations(snapshot: Mapping[str, Any]) -> list[dict[str, Any]]:
     payload = snapshot.get("payload")
     if not isinstance(payload, Mapping):
@@ -200,6 +207,12 @@ def build_priority_a_observation_audit(
                 "eligible_observations": 0,
                 "all_observations": 0,
                 "valid_utc_kickoffs": 0,
+                "missing_kickoffs": 0,
+                "invalid_or_timezone_naive_kickoffs": 0,
+                "kickoff_examples": set(),
+                "not_eligible_observations": 0,
+                "missing_country_observations": 0,
+                "missing_team_name_observations": 0,
                 "fixture_ids": set(),
                 "statuses": Counter(),
             })
@@ -209,7 +222,9 @@ def build_priority_a_observation_audit(
             country = _country(row)
             home = _text(row.get("home_team_name"))
             away = _text(row.get("away_team_name"))
-            kickoff = _kickoff(row.get("kickoff_utc"))
+            raw_kickoff = row.get("kickoff_utc")
+            kickoff = _kickoff(raw_kickoff)
+            kickoff_quality = _kickoff_quality(raw_kickoff)
             if name:
                 record["competition_names"].add(name)
             if season_name:
@@ -226,8 +241,20 @@ def build_priority_a_observation_audit(
             eligible = row.get("eligible_for_review") is True
             if eligible:
                 record["eligible_observations"] += 1
-            if kickoff:
+            if kickoff_quality == "valid_timezone_aware":
                 record["valid_utc_kickoffs"] += 1
+            elif kickoff_quality == "missing":
+                record["missing_kickoffs"] += 1
+            else:
+                record["invalid_or_timezone_naive_kickoffs"] += 1
+                if len(record["kickoff_examples"]) < 3:
+                    record["kickoff_examples"].add(_text(raw_kickoff)[:80])
+            if not eligible:
+                record["not_eligible_observations"] += 1
+            if not country:
+                record["missing_country_observations"] += 1
+            if not home or not away:
+                record["missing_team_name_observations"] += 1
             if eligible and kickoff and country and name and home and away:
                 signature = (
                     _norm(country), _norm(name), kickoff, _norm(home), _norm(away), "exact"
@@ -285,6 +312,12 @@ def build_priority_a_observation_audit(
                     "unique_teams_combined": len(record["home_teams"] | record["away_teams"]),
                     "unique_provider_fixture_ids": len(record["fixture_ids"]),
                     "valid_timezone_aware_kickoffs": record["valid_utc_kickoffs"],
+                    "missing_kickoffs": record["missing_kickoffs"],
+                    "invalid_or_timezone_naive_kickoffs": record["invalid_or_timezone_naive_kickoffs"],
+                    "kickoff_value_examples": sorted(record["kickoff_examples"]),
+                    "not_eligible_observations": record["not_eligible_observations"],
+                    "missing_country_observations": record["missing_country_observations"],
+                    "missing_team_name_observations": record["missing_team_name_observations"],
                     "competition_names": names,
                     "season_names": sorted(record["season_names"]),
                     "season_label_year_evidence": [
