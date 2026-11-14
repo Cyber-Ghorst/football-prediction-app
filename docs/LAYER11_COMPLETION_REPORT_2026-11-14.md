@@ -37,7 +37,7 @@ Machine-readable report: [free_fixture_crosswalk_audit/latest.json](../reports/f
 
 ## Priority A raw-observation validation
 
-The latest read-only Priority A audit was generated at **2026-11-14 15:58:08 UTC** and examined **41,894 raw observations** across the selected provider snapshots. It found **11 exact cross-provider fixture overlaps** across the ten Priority A entries.
+The latest read-only Priority A audit was generated at **2026-11-14 16:02:40 UTC** and examined **41,902 raw observations** across the selected provider snapshots. It found **11 exact cross-provider fixture overlaps** across the ten Priority A entries.
 
 Exact overlap is strong fixture-level corroboration, but it does not independently approve a competition or season mapping. OpenFootball's local date/time values without timezone evidence remain ineligible for exact UTC matching. The audit also retains the football-data.org missing-country observations and MLS's US/Canada scope distinction as evidence gaps.
 
