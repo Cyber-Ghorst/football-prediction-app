@@ -1330,7 +1330,7 @@
     }
   ],
   "exact_overlap_count": 11,
-  "generated_at_utc": "2026-11-14T15:28:05.948332+00:00",
+  "generated_at_utc": "2026-11-14T15:58:08.374038+00:00",
   "interpretation": "An exact team-pair and UTC-kickoff overlap is strong fixture-level corroboration, but does not alone approve competition or season identity. Missing observations in the selected recent snapshots mean not observed in this audit window, not that the provider lacks the competition.",
   "priority_a_entry_count": 10,
   "providers_checked": [
