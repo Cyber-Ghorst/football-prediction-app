@@ -1,0 +1,366 @@
+{
+  "archived_snapshot_providers": [
+    "api_ninjas",
+    "bzzoiro",
+    "football_data_org",
+    "highlightly",
+    "internal",
+    "livescore_football",
+    "openfootball",
+    "openligadb",
+    "sportmonks"
+  ],
+  "audit_mode": "read_only",
+  "canonical_fixture_providers": [
+    "sportmonks"
+  ],
+  "canonical_statistics_providers": [
+    "sportmonks"
+  ],
+  "database_writes": false,
+  "evidence": {
+    "approved_entity_links": [
+      {
+        "entity_type": "fixture",
+        "link_count": 150,
+        "provider": "openscores"
+      },
+      {
+        "entity_type": "league",
+        "link_count": 3,
+        "provider": "openscores"
+      },
+      {
+        "entity_type": "season",
+        "link_count": 3,
+        "provider": "openscores"
+      },
+      {
+        "entity_type": "team",
+        "link_count": 60,
+        "provider": "openscores"
+      },
+      {
+        "entity_type": "fixture",
+        "link_count": 1911,
+        "provider": "sportmonks"
+      },
+      {
+        "entity_type": "league",
+        "link_count": 4,
+        "provider": "sportmonks"
+      },
+      {
+        "entity_type": "season",
+        "link_count": 7,
+        "provider": "sportmonks"
+      },
+      {
+        "entity_type": "team",
+        "link_count": 88,
+        "provider": "sportmonks"
+      }
+    ],
+    "archived_provider_snapshots": [
+      {
+        "distinct_request_keys": 22,
+        "first_retrieved_at": "2026-11-09 08:14:05.590731+00:00",
+        "last_retrieved_at": "2026-11-10 07:32:53.688568+00:00",
+        "provider": "api_ninjas",
+        "resource_type": "_request_response",
+        "snapshot_rows": 54
+      },
+      {
+        "distinct_request_keys": 1,
+        "first_retrieved_at": "2026-11-11 08:50:37.061977+00:00",
+        "last_retrieved_at": "2026-11-11 10:26:09.223071+00:00",
+        "provider": "api_ninjas",
+        "resource_type": "future_fixture_observations",
+        "snapshot_rows": 11
+      },
+      {
+        "distinct_request_keys": 4,
+        "first_retrieved_at": "2026-11-11 21:01:56.436186+00:00",
+        "last_retrieved_at": "2026-11-14 06:28:06.642699+00:00",
+        "provider": "bzzoiro",
+        "resource_type": "future_fixture_observations",
+        "snapshot_rows": 30
+      },
+      {
+        "distinct_request_keys": 1,
+        "first_retrieved_at": "2026-11-12 16:37:19.705971+00:00",
+        "last_retrieved_at": "2026-11-12 17:51:19.410566+00:00",
+        "provider": "football_data_org",
+        "resource_type": "future_fixture_observations",
+        "snapshot_rows": 5
+      },
+      {
+        "distinct_request_keys": 3,
+        "first_retrieved_at": "2026-11-12 18:26:09.687887+00:00",
+        "last_retrieved_at": "2026-11-14 07:02:09.163014+00:00",
+        "provider": "football_data_org",
+        "resource_type": "independent_data_observations",
+        "snapshot_rows": 6
+      },
+      {
+        "distinct_request_keys": 6,
+        "first_retrieved_at": "2026-11-09 07:07:57.092926+00:00",
+        "last_retrieved_at": "2026-11-10 07:32:59.178918+00:00",
+        "provider": "highlightly",
+        "resource_type": "_get_response",
+        "snapshot_rows": 72
+      },
+      {
+        "distinct_request_keys": 2,
+        "first_retrieved_at": "2026-11-11 08:50:20.048980+00:00",
+        "last_retrieved_at": "2026-11-13 14:46:16.463677+00:00",
+        "provider": "highlightly",
+        "resource_type": "future_fixture_observations",
+        "snapshot_rows": 6
+      },
+      {
+        "distinct_request_keys": 1,
+        "first_retrieved_at": "2026-11-08 20:08:27.213775+00:00",
+        "last_retrieved_at": "2026-11-08 20:08:27.213775+00:00",
+        "provider": "internal",
+        "resource_type": "storage_diagnostic",
+        "snapshot_rows": 1
+      },
+      {
+        "distinct_request_keys": 62,
+        "first_retrieved_at": "2026-11-11 07:51:12.123144+00:00",
+        "last_retrieved_at": "2026-11-14 06:27:57.989759+00:00",
+        "provider": "livescore_football",
+        "resource_type": "future_fixture_observations",
+        "snapshot_rows": 62
+      },
+      {
+        "distinct_request_keys": 1,
+        "first_retrieved_at": "2026-11-11 00:06:35.450865+00:00",
+        "last_retrieved_at": "2026-11-14 06:27:29.289982+00:00",
+        "provider": "openfootball",
+        "resource_type": "future_fixture_observations",
+        "snapshot_rows": 67
+      },
+      {
+        "distinct_request_keys": 15,
+        "first_retrieved_at": "2026-11-11 00:06:22.814728+00:00",
+        "last_retrieved_at": "2026-11-14 06:27:17.321429+00:00",
+        "provider": "openligadb",
+        "resource_type": "future_fixture_observations",
+        "snapshot_rows": 67
+      },
+      {
+        "distinct_request_keys": 8,
+        "first_retrieved_at": "2026-11-09 17:43:04.748749+00:00",
+        "last_retrieved_at": "2026-11-10 08:02:19.815030+00:00",
+        "provider": "sportmonks",
+        "resource_type": "extended_squad_by_team",
+        "snapshot_rows": 14
+      },
+      {
+        "distinct_request_keys": 17,
+        "first_retrieved_at": "2026-11-09 05:24:24.828797+00:00",
+        "last_retrieved_at": "2026-11-10 08:02:20.150127+00:00",
+        "provider": "sportmonks",
+        "resource_type": "fixture_detail",
+        "snapshot_rows": 35
+      },
+      {
+        "distinct_request_keys": 26,
+        "first_retrieved_at": "2026-11-08 20:50:47.802596+00:00",
+        "last_retrieved_at": "2026-11-10 15:27:37.066031+00:00",
+        "provider": "sportmonks",
+        "resource_type": "fixtures",
+        "snapshot_rows": 46
+      },
+      {
+        "distinct_request_keys": 25,
+        "first_retrieved_at": "2026-11-09 07:08:22.590305+00:00",
+        "last_retrieved_at": "2026-11-09 20:58:18.364054+00:00",
+        "provider": "sportmonks",
+        "resource_type": "fixtures_between",
+        "snapshot_rows": 64
+      },
+      {
+        "distinct_request_keys": 1,
+        "first_retrieved_at": "2026-11-08 20:10:18.573115+00:00",
+        "last_retrieved_at": "2026-11-14 10:41:37.638040+00:00",
+        "provider": "sportmonks",
+        "resource_type": "leagues",
+        "snapshot_rows": 56
+      },
+      {
+        "distinct_request_keys": 1,
+        "first_retrieved_at": "2026-11-08 20:10:30.207161+00:00",
+        "last_retrieved_at": "2026-11-14 10:41:43.503402+00:00",
+        "provider": "sportmonks",
+        "resource_type": "seasons",
+        "snapshot_rows": 56
+      },
+      {
+        "distinct_request_keys": 2,
+        "first_retrieved_at": "2026-11-08 21:36:50.406088+00:00",
+        "last_retrieved_at": "2026-11-10 07:32:35.263587+00:00",
+        "provider": "sportmonks",
+        "resource_type": "standings",
+        "snapshot_rows": 22
+      },
+      {
+        "distinct_request_keys": 3,
+        "first_retrieved_at": "2026-11-08 20:10:42.100892+00:00",
+        "last_retrieved_at": "2026-11-14 10:42:05.222715+00:00",
+        "provider": "sportmonks",
+        "resource_type": "teams",
+        "snapshot_rows": 91
+      }
+    ],
+    "canonical_fixture_provenance": [
+      {
+        "completed_rows": 380,
+        "distinct_fixtures": 380,
+        "first_kickoff": "2025-08-23 16:30:00+00:00",
+        "fixture_rows": 380,
+        "last_kickoff": "2026-05-24 19:45:00+00:00",
+        "league_id": "sportmonks:384",
+        "season_id": "sportmonks:25533",
+        "source_provider": "sportmonks"
+      },
+      {
+        "completed_rows": 380,
+        "distinct_fixtures": 380,
+        "first_kickoff": "2025-08-15 19:00:00+00:00",
+        "fixture_rows": 380,
+        "last_kickoff": "2026-05-24 15:00:00+00:00",
+        "league_id": "sportmonks:8",
+        "season_id": "sportmonks:25583",
+        "source_provider": "sportmonks"
+      },
+      {
+        "completed_rows": 380,
+        "distinct_fixtures": 380,
+        "first_kickoff": "2025-08-15 17:00:00+00:00",
+        "fixture_rows": 380,
+        "last_kickoff": "2026-05-24 19:00:00+00:00",
+        "league_id": "sportmonks:564",
+        "season_id": "sportmonks:25659",
+        "source_provider": "sportmonks"
+      },
+      {
+        "completed_rows": 118,
+        "distinct_fixtures": 380,
+        "first_kickoff": "2026-08-15 17:30:00+00:00",
+        "fixture_rows": 380,
+        "last_kickoff": "2027-05-30 00:00:00+00:00",
+        "league_id": "sportmonks:564",
+        "season_id": "sportmonks:27965",
+        "source_provider": "sportmonks"
+      },
+      {
+        "completed_rows": 100,
+        "distinct_fixtures": 380,
+        "first_kickoff": "2026-08-21 19:00:00+00:00",
+        "fixture_rows": 380,
+        "last_kickoff": "2027-05-30 15:00:00+00:00",
+        "league_id": "sportmonks:8",
+        "season_id": "sportmonks:28083",
+        "source_provider": "sportmonks"
+      },
+      {
+        "completed_rows": 0,
+        "distinct_fixtures": 11,
+        "first_kickoff": "2026-11-13 19:30:00+00:00",
+        "fixture_rows": 11,
+        "last_kickoff": "2026-11-16 19:30:00+00:00",
+        "league_id": "sportmonks:567",
+        "season_id": "sportmonks:28479",
+        "source_provider": "sportmonks"
+      }
+    ],
+    "canonical_statistics_provenance": [
+      {
+        "first_collected_at": "2026-11-09 04:39:00.057790+00:00",
+        "fixtures_covered": 118,
+        "last_collected_at": "2026-11-09 04:54:30.024548+00:00",
+        "league_id": "sportmonks:564",
+        "season_id": "sportmonks:27965",
+        "source_provider": "sportmonks",
+        "statistic_rows": 9854,
+        "statistic_types": 47,
+        "teams_covered": 20
+      },
+      {
+        "first_collected_at": "2026-11-09 00:52:24.387506+00:00",
+        "fixtures_covered": 100,
+        "last_collected_at": "2026-11-09 00:52:24.387506+00:00",
+        "league_id": "sportmonks:8",
+        "season_id": "sportmonks:28083",
+        "source_provider": "sportmonks",
+        "statistic_rows": 8430,
+        "statistic_types": 46,
+        "teams_covered": 20
+      }
+    ],
+    "provider_sync_state": [
+      {
+        "last_succeeded_at": "2026-11-13 17:11:51.503763+00:00",
+        "provider": "sportmonks",
+        "records_received": "0",
+        "records_upserted": "0",
+        "resource_type": "fixture_statistics",
+        "state_rows": 1,
+        "status": "success"
+      },
+      {
+        "last_succeeded_at": "2026-11-13 17:11:51.503763+00:00",
+        "provider": "sportmonks",
+        "records_received": "0",
+        "records_upserted": "0",
+        "resource_type": "fixtures",
+        "state_rows": 1,
+        "status": "success"
+      },
+      {
+        "last_succeeded_at": "2026-11-13 17:11:51.503763+00:00",
+        "provider": "sportmonks",
+        "records_received": "1",
+        "records_upserted": "1",
+        "resource_type": "leagues",
+        "state_rows": 1,
+        "status": "success"
+      },
+      {
+        "last_succeeded_at": "2026-11-13 17:11:51.503763+00:00",
+        "provider": "sportmonks",
+        "records_received": "1",
+        "records_upserted": "1",
+        "resource_type": "seasons",
+        "state_rows": 1,
+        "status": "success"
+      },
+      {
+        "last_succeeded_at": "2026-11-13 17:11:51.503763+00:00",
+        "provider": "sportmonks",
+        "records_received": "20",
+        "records_upserted": "20",
+        "resource_type": "teams",
+        "state_rows": 1,
+        "status": "success"
+      },
+      {
+        "last_succeeded_at": "2026-11-11 14:03:05.931960+00:00",
+        "provider": "sportmonks",
+        "records_received": "11",
+        "records_upserted": "11",
+        "resource_type": "upcoming_fixtures",
+        "state_rows": 1,
+        "status": "success"
+      }
+    ]
+  },
+  "generated_at": "2026-11-14T10:43:26.765752+00:00",
+  "independent_canonical_fixture_provider_present": false,
+  "independent_canonical_statistics_provider_present": false,
+  "interpretation": "Provider presence is provenance inventory, not proof of independent fixture identity or data parity. Snapshot-only providers are not treated as canonical evidence. Crosswalks and conflicts require separate review; no identity mappings or values are inferred, averaged, or promoted.",
+  "report_version": 1
+}
