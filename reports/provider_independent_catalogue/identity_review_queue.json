@@ -1,0 +1,6552 @@
+{
+  "queue_name": "provider_independent_competition_identity_review",
+  "source_catalogue": "reports/provider_independent_catalogue/approved_scope.json",
+  "entry_count": 97,
+  "policy": "Triage order only. No competition type, canonical identity, provider link, season, team, fixture, or prediction eligibility is approved by this queue.",
+  "review_gates": [
+    "Verify competition exists and identify its actual type (league, cup, tournament, etc.).",
+    "Verify country/territory from source evidence; leave unknown when not supported.",
+    "Verify gender, age group, division/tier and senior/reserve scope where applicable.",
+    "Verify season boundaries and provider-specific season IDs independently.",
+    "Compare cross-provider names only after country and competition-type context is established.",
+    "Record decisions with provenance; do not merge similarly named competitions without evidence."
+  ],
+  "priority_bands": {
+    "A": "Multiple providers and country context available; manual identity review first.",
+    "B": "Single provider with country context; verify competition type and active status.",
+    "C": "Country missing or ambiguous; resolve source geography before identity review."
+  },
+  "entries": [
+    {
+      "review_order": 1,
+      "priority": "A",
+      "catalogue_entry_id": "observed_competition_045",
+      "display_names": [
+        "Bundesliga"
+      ],
+      "countries": [
+        "Germany"
+      ],
+      "providers": [
+        "bzzoiro",
+        "football_data_org",
+        "openfootball",
+        "openligadb"
+      ],
+      "provider_count": 4,
+      "source_records": [
+        {
+          "competition_name": "Bundesliga",
+          "competition_type": null,
+          "country": "Germany",
+          "observation_count": 9,
+          "provider": "bzzoiro",
+          "provider_competition_id": "5",
+          "seasons": [
+            {
+              "observation_count": 9,
+              "provider": "bzzoiro",
+              "provider_season_id": "5::1091",
+              "season_name": "Bundesliga 26/27",
+              "start_years": []
+            }
+          ]
+        },
+        {
+          "competition_name": "Bundesliga",
+          "competition_type": "LEAGUE",
+          "country": "Germany",
+          "observation_count": 1,
+          "provider": "football_data_org",
+          "provider_competition_id": "2002",
+          "seasons": [
+            {
+              "observation_count": 1,
+              "provider": "football_data_org",
+              "provider_season_id": "2002::2522",
+              "season_name": "2026-08-28",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        },
+        {
+          "competition_name": "Bundesliga",
+          "competition_type": null,
+          "country": "Germany",
+          "observation_count": 918,
+          "provider": "openfootball",
+          "provider_competition_id": "de.1",
+          "seasons": [
+            {
+              "observation_count": 918,
+              "provider": "openfootball",
+              "provider_season_id": "de.1::2026-27",
+              "season_name": "2026-27",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        },
+        {
+          "competition_name": "Bundesliga",
+          "competition_type": null,
+          "country": "Germany",
+          "observation_count": 918,
+          "provider": "openligadb",
+          "provider_competition_id": "4937",
+          "seasons": [
+            {
+              "observation_count": 918,
+              "provider": "openligadb",
+              "provider_season_id": "4937::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [],
+          "football_data_org": [
+            2026
+          ],
+          "openfootball": [
+            2026
+          ],
+          "openligadb": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 9,
+            "provider": "bzzoiro",
+            "provider_season_id": "5::1091",
+            "season_name": "Bundesliga 26/27",
+            "start_years": []
+          },
+          {
+            "observation_count": 1,
+            "provider": "football_data_org",
+            "provider_season_id": "2002::2522",
+            "season_name": "2026-08-28",
+            "start_years": [
+              2026
+            ]
+          },
+          {
+            "observation_count": 918,
+            "provider": "openfootball",
+            "provider_season_id": "de.1::2026-27",
+            "season_name": "2026-27",
+            "start_years": [
+              2026
+            ]
+          },
+          {
+            "observation_count": 918,
+            "provider": "openligadb",
+            "provider_season_id": "4937::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [
+          2026
+        ],
+        "status": "cross_provider_start_year_overlap"
+      },
+      "competition_type_evidence": {
+        "status": "single_provider_type_evidence",
+        "values": [
+          {
+            "normalized_value": "league",
+            "provider": "football_data_org",
+            "value": "LEAGUE"
+          }
+        ]
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 2,
+      "priority": "A",
+      "catalogue_entry_id": "observed_competition_032",
+      "display_names": [
+        "Premier League"
+      ],
+      "countries": [
+        "England"
+      ],
+      "providers": [
+        "bzzoiro",
+        "openfootball",
+        "openligadb"
+      ],
+      "provider_count": 3,
+      "source_records": [
+        {
+          "competition_name": "Premier League",
+          "competition_type": null,
+          "country": "England",
+          "observation_count": 7,
+          "provider": "bzzoiro",
+          "provider_competition_id": "1",
+          "seasons": [
+            {
+              "observation_count": 7,
+              "provider": "bzzoiro",
+              "provider_season_id": "1::1058",
+              "season_name": "Premier League 26/27",
+              "start_years": []
+            }
+          ]
+        },
+        {
+          "competition_name": "Premier League",
+          "competition_type": null,
+          "country": "England",
+          "observation_count": 1140,
+          "provider": "openfootball",
+          "provider_competition_id": "en.1",
+          "seasons": [
+            {
+              "observation_count": 1140,
+              "provider": "openfootball",
+              "provider_season_id": "en.1::2026-27",
+              "season_name": "2026-27",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        },
+        {
+          "competition_name": "Premier League",
+          "competition_type": null,
+          "country": "England",
+          "observation_count": 1140,
+          "provider": "openligadb",
+          "provider_competition_id": "5996",
+          "seasons": [
+            {
+              "observation_count": 1140,
+              "provider": "openligadb",
+              "provider_season_id": "5996::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [],
+          "openfootball": [
+            2026
+          ],
+          "openligadb": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 7,
+            "provider": "bzzoiro",
+            "provider_season_id": "1::1058",
+            "season_name": "Premier League 26/27",
+            "start_years": []
+          },
+          {
+            "observation_count": 1140,
+            "provider": "openfootball",
+            "provider_season_id": "en.1::2026-27",
+            "season_name": "2026-27",
+            "start_years": [
+              2026
+            ]
+          },
+          {
+            "observation_count": 1140,
+            "provider": "openligadb",
+            "provider_season_id": "5996::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [
+          2026
+        ],
+        "status": "cross_provider_start_year_overlap"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 3,
+      "priority": "A",
+      "catalogue_entry_id": "observed_competition_040",
+      "display_names": [
+        "Ligue 1"
+      ],
+      "countries": [
+        "France"
+      ],
+      "providers": [
+        "bzzoiro",
+        "football_data_org",
+        "openfootball"
+      ],
+      "provider_count": 3,
+      "source_records": [
+        {
+          "competition_name": "Ligue 1",
+          "competition_type": null,
+          "country": "France",
+          "observation_count": 8,
+          "provider": "bzzoiro",
+          "provider_competition_id": "6",
+          "seasons": [
+            {
+              "observation_count": 8,
+              "provider": "bzzoiro",
+              "provider_season_id": "6::1311",
+              "season_name": "Ligue 1 26/27",
+              "start_years": []
+            }
+          ]
+        },
+        {
+          "competition_name": "Ligue 1",
+          "competition_type": "LEAGUE",
+          "country": "France",
+          "observation_count": 1,
+          "provider": "football_data_org",
+          "provider_competition_id": "2015",
+          "seasons": [
+            {
+              "observation_count": 1,
+              "provider": "football_data_org",
+              "provider_season_id": "2015::2497",
+              "season_name": "2026-08-22",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        },
+        {
+          "competition_name": "Ligue 1",
+          "competition_type": null,
+          "country": "France",
+          "observation_count": 918,
+          "provider": "openfootball",
+          "provider_competition_id": "fr.1",
+          "seasons": [
+            {
+              "observation_count": 918,
+              "provider": "openfootball",
+              "provider_season_id": "fr.1::2026-27",
+              "season_name": "2026-27",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [],
+          "football_data_org": [
+            2026
+          ],
+          "openfootball": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 8,
+            "provider": "bzzoiro",
+            "provider_season_id": "6::1311",
+            "season_name": "Ligue 1 26/27",
+            "start_years": []
+          },
+          {
+            "observation_count": 1,
+            "provider": "football_data_org",
+            "provider_season_id": "2015::2497",
+            "season_name": "2026-08-22",
+            "start_years": [
+              2026
+            ]
+          },
+          {
+            "observation_count": 918,
+            "provider": "openfootball",
+            "provider_season_id": "fr.1::2026-27",
+            "season_name": "2026-27",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [
+          2026
+        ],
+        "status": "cross_provider_start_year_overlap"
+      },
+      "competition_type_evidence": {
+        "status": "single_provider_type_evidence",
+        "values": [
+          {
+            "normalized_value": "league",
+            "provider": "football_data_org",
+            "value": "LEAGUE"
+          }
+        ]
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 4,
+      "priority": "A",
+      "catalogue_entry_id": "observed_competition_020",
+      "display_names": [
+        "Championship"
+      ],
+      "countries": [
+        "England"
+      ],
+      "providers": [
+        "bzzoiro",
+        "openfootball"
+      ],
+      "provider_count": 2,
+      "source_records": [
+        {
+          "competition_name": "Championship",
+          "competition_type": null,
+          "country": "England",
+          "observation_count": 11,
+          "provider": "bzzoiro",
+          "provider_competition_id": "12",
+          "seasons": [
+            {
+              "observation_count": 11,
+              "provider": "bzzoiro",
+              "provider_season_id": "12::1111",
+              "season_name": "Championship 26/27",
+              "start_years": []
+            }
+          ]
+        },
+        {
+          "competition_name": "Championship",
+          "competition_type": null,
+          "country": "England",
+          "observation_count": 1656,
+          "provider": "openfootball",
+          "provider_competition_id": "en.2",
+          "seasons": [
+            {
+              "observation_count": 1656,
+              "provider": "openfootball",
+              "provider_season_id": "en.2::2026-27",
+              "season_name": "2026-27",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [],
+          "openfootball": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 11,
+            "provider": "bzzoiro",
+            "provider_season_id": "12::1111",
+            "season_name": "Championship 26/27",
+            "start_years": []
+          },
+          {
+            "observation_count": 1656,
+            "provider": "openfootball",
+            "provider_season_id": "en.2::2026-27",
+            "season_name": "2026-27",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 5,
+      "priority": "A",
+      "catalogue_entry_id": "observed_competition_043",
+      "display_names": [
+        "2. Bundesliga"
+      ],
+      "countries": [
+        "Germany"
+      ],
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ],
+      "provider_count": 2,
+      "source_records": [
+        {
+          "competition_name": "2. Bundesliga",
+          "competition_type": null,
+          "country": "Germany",
+          "observation_count": 10,
+          "provider": "bzzoiro",
+          "provider_competition_id": "94",
+          "seasons": [
+            {
+              "observation_count": 10,
+              "provider": "bzzoiro",
+              "provider_season_id": "94::1967",
+              "season_name": "2. Bundesliga 26/27",
+              "start_years": []
+            }
+          ]
+        },
+        {
+          "competition_name": "2. Bundesliga",
+          "competition_type": null,
+          "country": "Germany",
+          "observation_count": 918,
+          "provider": "openligadb",
+          "provider_competition_id": "4938",
+          "seasons": [
+            {
+              "observation_count": 918,
+              "provider": "openligadb",
+              "provider_season_id": "4938::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [],
+          "openligadb": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 10,
+            "provider": "bzzoiro",
+            "provider_season_id": "94::1967",
+            "season_name": "2. Bundesliga 26/27",
+            "start_years": []
+          },
+          {
+            "observation_count": 918,
+            "provider": "openligadb",
+            "provider_season_id": "4938::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 6,
+      "priority": "A",
+      "catalogue_entry_id": "observed_competition_050",
+      "display_names": [
+        "Serie A"
+      ],
+      "countries": [
+        "Italy"
+      ],
+      "providers": [
+        "bzzoiro",
+        "openfootball"
+      ],
+      "provider_count": 2,
+      "source_records": [
+        {
+          "competition_name": "Serie A",
+          "competition_type": null,
+          "country": "Italy",
+          "observation_count": 4,
+          "provider": "bzzoiro",
+          "provider_competition_id": "4",
+          "seasons": [
+            {
+              "observation_count": 4,
+              "provider": "bzzoiro",
+              "provider_season_id": "4::1375",
+              "season_name": "Serie A 26/27",
+              "start_years": []
+            }
+          ]
+        },
+        {
+          "competition_name": "Serie A",
+          "competition_type": null,
+          "country": "Italy",
+          "observation_count": 1140,
+          "provider": "openfootball",
+          "provider_competition_id": "it.1",
+          "seasons": [
+            {
+              "observation_count": 1140,
+              "provider": "openfootball",
+              "provider_season_id": "it.1::2026-27",
+              "season_name": "2026-27",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [],
+          "openfootball": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 4,
+            "provider": "bzzoiro",
+            "provider_season_id": "4::1375",
+            "season_name": "Serie A 26/27",
+            "start_years": []
+          },
+          {
+            "observation_count": 1140,
+            "provider": "openfootball",
+            "provider_season_id": "it.1::2026-27",
+            "season_name": "2026-27",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 7,
+      "priority": "A",
+      "catalogue_entry_id": "observed_competition_060",
+      "display_names": [
+        "Eredivisie"
+      ],
+      "countries": [
+        "Netherlands"
+      ],
+      "providers": [
+        "bzzoiro",
+        "openfootball"
+      ],
+      "provider_count": 2,
+      "source_records": [
+        {
+          "competition_name": "Eredivisie",
+          "competition_type": null,
+          "country": "Netherlands",
+          "observation_count": 5,
+          "provider": "bzzoiro",
+          "provider_competition_id": "10",
+          "seasons": [
+            {
+              "observation_count": 5,
+              "provider": "bzzoiro",
+              "provider_season_id": "10::1268",
+              "season_name": "Eredivisie 26/27",
+              "start_years": []
+            }
+          ]
+        },
+        {
+          "competition_name": "Eredivisie",
+          "competition_type": null,
+          "country": "Netherlands",
+          "observation_count": 918,
+          "provider": "openfootball",
+          "provider_competition_id": "nl.1",
+          "seasons": [
+            {
+              "observation_count": 918,
+              "provider": "openfootball",
+              "provider_season_id": "nl.1::2026-27",
+              "season_name": "2026-27",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [],
+          "openfootball": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 5,
+            "provider": "bzzoiro",
+            "provider_season_id": "10::1268",
+            "season_name": "Eredivisie 26/27",
+            "start_years": []
+          },
+          {
+            "observation_count": 918,
+            "provider": "openfootball",
+            "provider_season_id": "nl.1::2026-27",
+            "season_name": "2026-27",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 8,
+      "priority": "A",
+      "catalogue_entry_id": "observed_competition_072",
+      "display_names": [
+        "Saudi Pro League"
+      ],
+      "countries": [
+        "Saudi Arabia"
+      ],
+      "providers": [
+        "bzzoiro",
+        "livescore_football"
+      ],
+      "provider_count": 2,
+      "source_records": [
+        {
+          "competition_name": "Saudi Pro League",
+          "competition_type": null,
+          "country": "Saudi Arabia",
+          "observation_count": 30,
+          "provider": "bzzoiro",
+          "provider_competition_id": "17",
+          "seasons": [
+            {
+              "observation_count": 30,
+              "provider": "bzzoiro",
+              "provider_season_id": "17::1631",
+              "season_name": "Saudi Pro League 26/27",
+              "start_years": []
+            }
+          ]
+        },
+        {
+          "competition_name": "Saudi Pro League",
+          "competition_type": null,
+          "country": "Saudi Arabia",
+          "observation_count": 3,
+          "provider": "livescore_football",
+          "provider_competition_id": "21231",
+          "seasons": [
+            {
+              "observation_count": 3,
+              "provider": "livescore_football",
+              "provider_season_id": "21231::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [],
+          "livescore_football": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 30,
+            "provider": "bzzoiro",
+            "provider_season_id": "17::1631",
+            "season_name": "Saudi Pro League 26/27",
+            "start_years": []
+          },
+          {
+            "observation_count": 3,
+            "provider": "livescore_football",
+            "provider_season_id": "21231::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 9,
+      "priority": "A",
+      "catalogue_entry_id": "observed_competition_078",
+      "display_names": [
+        "La Liga"
+      ],
+      "countries": [
+        "Spain"
+      ],
+      "providers": [
+        "bzzoiro",
+        "openfootball"
+      ],
+      "provider_count": 2,
+      "source_records": [
+        {
+          "competition_name": "La Liga",
+          "competition_type": null,
+          "country": "Spain",
+          "observation_count": 7,
+          "provider": "bzzoiro",
+          "provider_competition_id": "3",
+          "seasons": [
+            {
+              "observation_count": 7,
+              "provider": "bzzoiro",
+              "provider_season_id": "3::1307",
+              "season_name": "LaLiga 26/27",
+              "start_years": []
+            }
+          ]
+        },
+        {
+          "competition_name": "La Liga",
+          "competition_type": null,
+          "country": "Spain",
+          "observation_count": 1140,
+          "provider": "openfootball",
+          "provider_competition_id": "es.1",
+          "seasons": [
+            {
+              "observation_count": 1140,
+              "provider": "openfootball",
+              "provider_season_id": "es.1::2026-27",
+              "season_name": "2026-27",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [],
+          "openfootball": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 7,
+            "provider": "bzzoiro",
+            "provider_season_id": "3::1307",
+            "season_name": "LaLiga 26/27",
+            "start_years": []
+          },
+          {
+            "observation_count": 1140,
+            "provider": "openfootball",
+            "provider_season_id": "es.1::2026-27",
+            "season_name": "2026-27",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 10,
+      "priority": "A",
+      "catalogue_entry_id": "observed_competition_094",
+      "display_names": [
+        "MLS"
+      ],
+      "countries": [
+        "United States",
+        "USA"
+      ],
+      "providers": [
+        "bzzoiro",
+        "livescore_football"
+      ],
+      "provider_count": 2,
+      "source_records": [
+        {
+          "competition_name": "MLS",
+          "competition_type": null,
+          "country": "USA",
+          "observation_count": 9,
+          "provider": "bzzoiro",
+          "provider_competition_id": "18",
+          "seasons": [
+            {
+              "observation_count": 9,
+              "provider": "bzzoiro",
+              "provider_season_id": "18::158",
+              "season_name": "MLS 2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        },
+        {
+          "competition_name": "MLS",
+          "competition_type": null,
+          "country": "United States",
+          "observation_count": 6,
+          "provider": "livescore_football",
+          "provider_competition_id": "770",
+          "seasons": [
+            {
+              "observation_count": 6,
+              "provider": "livescore_football",
+              "provider_season_id": "770::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [
+            2026
+          ],
+          "livescore_football": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 9,
+            "provider": "bzzoiro",
+            "provider_season_id": "18::158",
+            "season_name": "MLS 2026",
+            "start_years": [
+              2026
+            ]
+          },
+          {
+            "observation_count": 6,
+            "provider": "livescore_football",
+            "provider_season_id": "770::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [
+          2026
+        ],
+        "status": "cross_provider_start_year_overlap"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 11,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_001",
+      "display_names": [
+        "Girabola"
+      ],
+      "countries": [
+        "Angola"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Girabola",
+          "competition_type": null,
+          "country": "Angola",
+          "observation_count": 9,
+          "provider": "bzzoiro",
+          "provider_competition_id": "98",
+          "seasons": [
+            {
+              "observation_count": 9,
+              "provider": "bzzoiro",
+              "provider_season_id": "98::2037",
+              "season_name": "Girabola 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 9,
+            "provider": "bzzoiro",
+            "provider_season_id": "98::2037",
+            "season_name": "Girabola 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 12,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_002",
+      "display_names": [
+        "Argentine Liga Profesional de Fútbol"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "providers": [
+        "livescore_football"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Argentine Liga Profesional de Fútbol",
+          "competition_type": null,
+          "country": "Argentina",
+          "observation_count": 1,
+          "provider": "livescore_football",
+          "provider_competition_id": "745",
+          "seasons": [
+            {
+              "observation_count": 1,
+              "provider": "livescore_football",
+              "provider_season_id": "745::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "livescore_football": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 1,
+            "provider": "livescore_football",
+            "provider_season_id": "745::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 13,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_003",
+      "display_names": [
+        "Liga Profesional de Fútbol"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Liga Profesional de Fútbol",
+          "competition_type": null,
+          "country": "Argentina",
+          "observation_count": 3,
+          "provider": "bzzoiro",
+          "provider_competition_id": "85",
+          "seasons": [
+            {
+              "observation_count": 3,
+              "provider": "bzzoiro",
+              "provider_season_id": "85::1635",
+              "season_name": "Primera LPF 2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 3,
+            "provider": "bzzoiro",
+            "provider_season_id": "85::1635",
+            "season_name": "Primera LPF 2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 14,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_004",
+      "display_names": [
+        "A-League Men"
+      ],
+      "countries": [
+        "Australia"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "A-League Men",
+          "competition_type": null,
+          "country": "Australia",
+          "observation_count": 6,
+          "provider": "bzzoiro",
+          "provider_competition_id": "104",
+          "seasons": [
+            {
+              "observation_count": 6,
+              "provider": "bzzoiro",
+              "provider_season_id": "104::2144",
+              "season_name": "A-League 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 6,
+            "provider": "bzzoiro",
+            "provider_season_id": "104::2144",
+            "season_name": "A-League 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 15,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_005",
+      "display_names": [
+        "Austrian Bundesliga"
+      ],
+      "countries": [
+        "Austria"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Austrian Bundesliga",
+          "competition_type": null,
+          "country": "Austria",
+          "observation_count": 3,
+          "provider": "bzzoiro",
+          "provider_competition_id": "96",
+          "seasons": [
+            {
+              "observation_count": 3,
+              "provider": "bzzoiro",
+              "provider_season_id": "96::1999",
+              "season_name": "Bundesliga 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 3,
+            "provider": "bzzoiro",
+            "provider_season_id": "96::1999",
+            "season_name": "Bundesliga 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 16,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_006",
+      "display_names": [
+        "Belgian Pro League"
+      ],
+      "countries": [
+        "Belgium"
+      ],
+      "providers": [
+        "livescore_football"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Belgian Pro League",
+          "competition_type": null,
+          "country": "Belgium",
+          "observation_count": 1,
+          "provider": "livescore_football",
+          "provider_competition_id": "3901",
+          "seasons": [
+            {
+              "observation_count": 1,
+              "provider": "livescore_football",
+              "provider_season_id": "3901::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "livescore_football": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 1,
+            "provider": "livescore_football",
+            "provider_season_id": "3901::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 17,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_007",
+      "display_names": [
+        "Challenger Pro League"
+      ],
+      "countries": [
+        "Belgium"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Challenger Pro League",
+          "competition_type": null,
+          "country": "Belgium",
+          "observation_count": 9,
+          "provider": "bzzoiro",
+          "provider_competition_id": "97",
+          "seasons": [
+            {
+              "observation_count": 9,
+              "provider": "bzzoiro",
+              "provider_season_id": "97::2018",
+              "season_name": "Challenger Pro League 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 9,
+            "provider": "bzzoiro",
+            "provider_season_id": "97::2018",
+            "season_name": "Challenger Pro League 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 18,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_008",
+      "display_names": [
+        "Pro League"
+      ],
+      "countries": [
+        "Belgium"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Pro League",
+          "competition_type": null,
+          "country": "Belgium",
+          "observation_count": 7,
+          "provider": "bzzoiro",
+          "provider_competition_id": "14",
+          "seasons": [
+            {
+              "observation_count": 7,
+              "provider": "bzzoiro",
+              "provider_season_id": "14::1327",
+              "season_name": "Pro League 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 7,
+            "provider": "bzzoiro",
+            "provider_season_id": "14::1327",
+            "season_name": "Pro League 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 19,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_009",
+      "display_names": [
+        "Brasileirão Serie A"
+      ],
+      "countries": [
+        "Brazil"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Brasileirão Serie A",
+          "competition_type": null,
+          "country": "Brazil",
+          "observation_count": 35,
+          "provider": "bzzoiro",
+          "provider_competition_id": "9",
+          "seasons": [
+            {
+              "observation_count": 35,
+              "provider": "bzzoiro",
+              "provider_season_id": "9::28",
+              "season_name": "Brasileiro Serie A 2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 35,
+            "provider": "bzzoiro",
+            "provider_season_id": "9::28",
+            "season_name": "Brasileiro Serie A 2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 20,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_010",
+      "display_names": [
+        "Brasileirão Serie B"
+      ],
+      "countries": [
+        "Brazil"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Brasileirão Serie B",
+          "competition_type": null,
+          "country": "Brazil",
+          "observation_count": 21,
+          "provider": "bzzoiro",
+          "provider_competition_id": "34",
+          "seasons": [
+            {
+              "observation_count": 21,
+              "provider": "bzzoiro",
+              "provider_season_id": "34::52",
+              "season_name": "Brasileiro Serie B 2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 21,
+            "provider": "bzzoiro",
+            "provider_season_id": "34::52",
+            "season_name": "Brasileiro Serie B 2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 21,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_011",
+      "display_names": [
+        "Brazilian Serie A"
+      ],
+      "countries": [
+        "Brazil"
+      ],
+      "providers": [
+        "livescore_football"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Brazilian Serie A",
+          "competition_type": null,
+          "country": "Brazil",
+          "observation_count": 6,
+          "provider": "livescore_football",
+          "provider_competition_id": "630",
+          "seasons": [
+            {
+              "observation_count": 6,
+              "provider": "livescore_football",
+              "provider_season_id": "630::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "livescore_football": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 6,
+            "provider": "livescore_football",
+            "provider_season_id": "630::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 22,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_012",
+      "display_names": [
+        "Campeonato Brasileiro Série A"
+      ],
+      "countries": [
+        "Brazil"
+      ],
+      "providers": [
+        "football_data_org"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Campeonato Brasileiro Série A",
+          "competition_type": "LEAGUE",
+          "country": "Brazil",
+          "observation_count": 31,
+          "provider": "football_data_org",
+          "provider_competition_id": "2013",
+          "seasons": [
+            {
+              "observation_count": 31,
+              "provider": "football_data_org",
+              "provider_season_id": "2013::2474",
+              "season_name": "2026-01-28",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "football_data_org": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 31,
+            "provider": "football_data_org",
+            "provider_season_id": "2013::2474",
+            "season_name": "2026-01-28",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "single_provider_type_evidence",
+        "values": [
+          {
+            "normalized_value": "league",
+            "provider": "football_data_org",
+            "value": "LEAGUE"
+          }
+        ]
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 23,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_013",
+      "display_names": [
+        "Parva Liga"
+      ],
+      "countries": [
+        "Bulgaria"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Parva Liga",
+          "competition_type": null,
+          "country": "Bulgaria",
+          "observation_count": 5,
+          "provider": "bzzoiro",
+          "provider_competition_id": "22",
+          "seasons": [
+            {
+              "observation_count": 5,
+              "provider": "bzzoiro",
+              "provider_season_id": "22::1326",
+              "season_name": "Parva Liga 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 5,
+            "provider": "bzzoiro",
+            "provider_season_id": "22::1326",
+            "season_name": "Parva Liga 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 24,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_014",
+      "display_names": [
+        "Liga de Primera"
+      ],
+      "countries": [
+        "Chile"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Liga de Primera",
+          "competition_type": null,
+          "country": "Chile",
+          "observation_count": 9,
+          "provider": "bzzoiro",
+          "provider_competition_id": "111",
+          "seasons": [
+            {
+              "observation_count": 5,
+              "provider": "bzzoiro",
+              "provider_season_id": "111::2305",
+              "season_name": "Primera Division 2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 5,
+            "provider": "bzzoiro",
+            "provider_season_id": "111::2305",
+            "season_name": "Primera Division 2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 25,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_015",
+      "display_names": [
+        "Categoría Primera A"
+      ],
+      "countries": [
+        "Colombia"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Categoría Primera A",
+          "competition_type": null,
+          "country": "Colombia",
+          "observation_count": 26,
+          "provider": "bzzoiro",
+          "provider_competition_id": "80",
+          "seasons": [
+            {
+              "observation_count": 26,
+              "provider": "bzzoiro",
+              "provider_season_id": "80::1570",
+              "season_name": "Liga DIMAYOR 2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 26,
+            "provider": "bzzoiro",
+            "provider_season_id": "80::1570",
+            "season_name": "Liga DIMAYOR 2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 26,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_016",
+      "display_names": [
+        "Copa Colombia"
+      ],
+      "countries": [
+        "Colombia"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Copa Colombia",
+          "competition_type": null,
+          "country": "Colombia",
+          "observation_count": 6,
+          "provider": "bzzoiro",
+          "provider_competition_id": "81",
+          "seasons": [
+            {
+              "observation_count": 6,
+              "provider": "bzzoiro",
+              "provider_season_id": "81::1586",
+              "season_name": "Copa Colombia 2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 6,
+            "provider": "bzzoiro",
+            "provider_season_id": "81::1586",
+            "season_name": "Copa Colombia 2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 27,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_017",
+      "display_names": [
+        "Czech First League"
+      ],
+      "countries": [
+        "Czech Republic"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Czech First League",
+          "competition_type": null,
+          "country": "Czech Republic",
+          "observation_count": 5,
+          "provider": "bzzoiro",
+          "provider_competition_id": "99",
+          "seasons": [
+            {
+              "observation_count": 5,
+              "provider": "bzzoiro",
+              "provider_season_id": "99::2065",
+              "season_name": "1. Liga 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 5,
+            "provider": "bzzoiro",
+            "provider_season_id": "99::2065",
+            "season_name": "1. Liga 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 28,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_018",
+      "display_names": [
+        "Danish Superliga"
+      ],
+      "countries": [
+        "Denmark"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Danish Superliga",
+          "competition_type": null,
+          "country": "Denmark",
+          "observation_count": 3,
+          "provider": "bzzoiro",
+          "provider_competition_id": "84",
+          "seasons": [
+            {
+              "observation_count": 3,
+              "provider": "bzzoiro",
+              "provider_season_id": "84::1612",
+              "season_name": "Superliga 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 3,
+            "provider": "bzzoiro",
+            "provider_season_id": "84::1612",
+            "season_name": "Superliga 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 29,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_019",
+      "display_names": [
+        "LigaPro Serie A"
+      ],
+      "countries": [
+        "Ecuador"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "LigaPro Serie A",
+          "competition_type": null,
+          "country": "Ecuador",
+          "observation_count": 5,
+          "provider": "bzzoiro",
+          "provider_competition_id": "112",
+          "seasons": [
+            {
+              "observation_count": 3,
+              "provider": "bzzoiro",
+              "provider_season_id": "112::2317",
+              "season_name": "LigaPro Primera A 2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 3,
+            "provider": "bzzoiro",
+            "provider_season_id": "112::2317",
+            "season_name": "LigaPro Primera A 2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 30,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_021",
+      "display_names": [
+        "English EFL Trophy"
+      ],
+      "countries": [
+        "England"
+      ],
+      "providers": [
+        "livescore_football"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "English EFL Trophy",
+          "competition_type": null,
+          "country": "England",
+          "observation_count": 1,
+          "provider": "livescore_football",
+          "provider_competition_id": "18481",
+          "seasons": [
+            {
+              "observation_count": 1,
+              "provider": "livescore_football",
+              "provider_season_id": "18481::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "livescore_football": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 1,
+            "provider": "livescore_football",
+            "provider_season_id": "18481::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 31,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_022",
+      "display_names": [
+        "English League Championship"
+      ],
+      "countries": [
+        "England"
+      ],
+      "providers": [
+        "livescore_football"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "English League Championship",
+          "competition_type": null,
+          "country": "England",
+          "observation_count": 11,
+          "provider": "livescore_football",
+          "provider_competition_id": "3914",
+          "seasons": [
+            {
+              "observation_count": 11,
+              "provider": "livescore_football",
+              "provider_season_id": "3914::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "livescore_football": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 11,
+            "provider": "livescore_football",
+            "provider_season_id": "3914::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 32,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_023",
+      "display_names": [
+        "English League One"
+      ],
+      "countries": [
+        "England"
+      ],
+      "providers": [
+        "livescore_football"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "English League One",
+          "competition_type": null,
+          "country": "England",
+          "observation_count": 15,
+          "provider": "livescore_football",
+          "provider_competition_id": "3915",
+          "seasons": [
+            {
+              "observation_count": 15,
+              "provider": "livescore_football",
+              "provider_season_id": "3915::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "livescore_football": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 15,
+            "provider": "livescore_football",
+            "provider_season_id": "3915::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 33,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_024",
+      "display_names": [
+        "English League Two"
+      ],
+      "countries": [
+        "England"
+      ],
+      "providers": [
+        "livescore_football"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "English League Two",
+          "competition_type": null,
+          "country": "England",
+          "observation_count": 30,
+          "provider": "livescore_football",
+          "provider_competition_id": "3916",
+          "seasons": [
+            {
+              "observation_count": 30,
+              "provider": "livescore_football",
+              "provider_season_id": "3916::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "livescore_football": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 30,
+            "provider": "livescore_football",
+            "provider_season_id": "3916::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 34,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_025",
+      "display_names": [
+        "English National League"
+      ],
+      "countries": [
+        "England"
+      ],
+      "providers": [
+        "livescore_football"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "English National League",
+          "competition_type": null,
+          "country": "England",
+          "observation_count": 33,
+          "provider": "livescore_football",
+          "provider_competition_id": "3917",
+          "seasons": [
+            {
+              "observation_count": 33,
+              "provider": "livescore_football",
+              "provider_season_id": "3917::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "livescore_football": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 33,
+            "provider": "livescore_football",
+            "provider_season_id": "3917::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 35,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_026",
+      "display_names": [
+        "English Premier League"
+      ],
+      "countries": [
+        "England"
+      ],
+      "providers": [
+        "livescore_football"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "English Premier League",
+          "competition_type": null,
+          "country": "England",
+          "observation_count": 10,
+          "provider": "livescore_football",
+          "provider_competition_id": "700",
+          "seasons": [
+            {
+              "observation_count": 10,
+              "provider": "livescore_football",
+              "provider_season_id": "700::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "livescore_football": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 10,
+            "provider": "livescore_football",
+            "provider_season_id": "700::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 36,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_027",
+      "display_names": [
+        "English Women's FA Cup"
+      ],
+      "countries": [
+        "England"
+      ],
+      "providers": [
+        "livescore_football"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "English Women's FA Cup",
+          "competition_type": null,
+          "country": "England",
+          "observation_count": 3,
+          "provider": "livescore_football",
+          "provider_competition_id": "20226",
+          "seasons": [
+            {
+              "observation_count": 3,
+              "provider": "livescore_football",
+              "provider_season_id": "20226::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "livescore_football": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 3,
+            "provider": "livescore_football",
+            "provider_season_id": "20226::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 37,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_028",
+      "display_names": [
+        "English Women's Super League"
+      ],
+      "countries": [
+        "England"
+      ],
+      "providers": [
+        "livescore_football"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "English Women's Super League",
+          "competition_type": null,
+          "country": "England",
+          "observation_count": 12,
+          "provider": "livescore_football",
+          "provider_competition_id": "8097",
+          "seasons": [
+            {
+              "observation_count": 12,
+              "provider": "livescore_football",
+              "provider_season_id": "8097::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "livescore_football": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 12,
+            "provider": "livescore_football",
+            "provider_season_id": "8097::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 38,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_029",
+      "display_names": [
+        "League One"
+      ],
+      "countries": [
+        "England"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "League One",
+          "competition_type": null,
+          "country": "England",
+          "observation_count": 50,
+          "provider": "bzzoiro",
+          "provider_competition_id": "86",
+          "seasons": [
+            {
+              "observation_count": 50,
+              "provider": "bzzoiro",
+              "provider_season_id": "86::1655",
+              "season_name": "League One 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 50,
+            "provider": "bzzoiro",
+            "provider_season_id": "86::1655",
+            "season_name": "League One 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 39,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_030",
+      "display_names": [
+        "League Two"
+      ],
+      "countries": [
+        "England"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "League Two",
+          "competition_type": null,
+          "country": "England",
+          "observation_count": 48,
+          "provider": "bzzoiro",
+          "provider_competition_id": "87",
+          "seasons": [
+            {
+              "observation_count": 48,
+              "provider": "bzzoiro",
+              "provider_season_id": "87::1674",
+              "season_name": "League Two 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 48,
+            "provider": "bzzoiro",
+            "provider_season_id": "87::1674",
+            "season_name": "League Two 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 40,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_031",
+      "display_names": [
+        "National League"
+      ],
+      "countries": [
+        "England"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "National League",
+          "competition_type": null,
+          "country": "England",
+          "observation_count": 50,
+          "provider": "bzzoiro",
+          "provider_competition_id": "91",
+          "seasons": [
+            {
+              "observation_count": 50,
+              "provider": "bzzoiro",
+              "provider_season_id": "91::1903",
+              "season_name": "National League 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 50,
+            "provider": "bzzoiro",
+            "provider_season_id": "91::1903",
+            "season_name": "National League 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 41,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_033",
+      "display_names": [
+        "Conference League"
+      ],
+      "countries": [
+        "Europe"
+      ],
+      "providers": [
+        "openligadb"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Conference League",
+          "competition_type": null,
+          "country": "Europe",
+          "observation_count": 324,
+          "provider": "openligadb",
+          "provider_competition_id": "6015",
+          "seasons": [
+            {
+              "observation_count": 324,
+              "provider": "openligadb",
+              "provider_season_id": "6015::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "openligadb": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 324,
+            "provider": "openligadb",
+            "provider_season_id": "6015::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 42,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_034",
+      "display_names": [
+        "Europa League"
+      ],
+      "countries": [
+        "Europe"
+      ],
+      "providers": [
+        "openligadb"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Europa League",
+          "competition_type": null,
+          "country": "Europe",
+          "observation_count": 432,
+          "provider": "openligadb",
+          "provider_competition_id": "6000",
+          "seasons": [
+            {
+              "observation_count": 432,
+              "provider": "openligadb",
+              "provider_season_id": "6000::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "openligadb": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 432,
+            "provider": "openligadb",
+            "provider_season_id": "6000::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 43,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_035",
+      "display_names": [
+        "Nations League A"
+      ],
+      "countries": [
+        "Europe"
+      ],
+      "providers": [
+        "openligadb"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Nations League A",
+          "competition_type": null,
+          "country": "Europe",
+          "observation_count": 144,
+          "provider": "openligadb",
+          "provider_competition_id": "5978",
+          "seasons": [
+            {
+              "observation_count": 144,
+              "provider": "openligadb",
+              "provider_season_id": "5978::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "openligadb": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 144,
+            "provider": "openligadb",
+            "provider_season_id": "5978::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 44,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_036",
+      "display_names": [
+        "UEFA Champions League"
+      ],
+      "countries": [
+        "Europe"
+      ],
+      "providers": [
+        "openligadb"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "UEFA Champions League",
+          "competition_type": null,
+          "country": "Europe",
+          "observation_count": 432,
+          "provider": "openligadb",
+          "provider_competition_id": "4946",
+          "seasons": [
+            {
+              "observation_count": 432,
+              "provider": "openligadb",
+              "provider_season_id": "4946::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        },
+        {
+          "competition_name": "UEFA Champions League",
+          "competition_type": null,
+          "country": "Europe",
+          "observation_count": 96,
+          "provider": "openligadb",
+          "provider_competition_id": "5997",
+          "seasons": [
+            {
+              "observation_count": 96,
+              "provider": "openligadb",
+              "provider_season_id": "5997::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "openligadb": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 432,
+            "provider": "openligadb",
+            "provider_season_id": "4946::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          },
+          {
+            "observation_count": 96,
+            "provider": "openligadb",
+            "provider_season_id": "5997::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 45,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_037",
+      "display_names": [
+        "UEFA Nations League"
+      ],
+      "countries": [
+        "Europe"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "UEFA Nations League",
+          "competition_type": null,
+          "country": "Europe",
+          "observation_count": 122,
+          "provider": "bzzoiro",
+          "provider_competition_id": "64",
+          "seasons": [
+            {
+              "observation_count": 122,
+              "provider": "bzzoiro",
+              "provider_season_id": "64::1430",
+              "season_name": "UEFA Nations League 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 122,
+            "provider": "bzzoiro",
+            "provider_season_id": "64::1430",
+            "season_name": "UEFA Nations League 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 46,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_038",
+      "display_names": [
+        "Coupe de France"
+      ],
+      "countries": [
+        "France"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Coupe de France",
+          "competition_type": null,
+          "country": "France",
+          "observation_count": 261,
+          "provider": "bzzoiro",
+          "provider_competition_id": "44",
+          "seasons": [
+            {
+              "observation_count": 261,
+              "provider": "bzzoiro",
+              "provider_season_id": "44::2240",
+              "season_name": "Coupe de France 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 261,
+            "provider": "bzzoiro",
+            "provider_season_id": "44::2240",
+            "season_name": "Coupe de France 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 47,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_039",
+      "display_names": [
+        "French Ligue 1"
+      ],
+      "countries": [
+        "France"
+      ],
+      "providers": [
+        "livescore_football"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "French Ligue 1",
+          "competition_type": null,
+          "country": "France",
+          "observation_count": 1,
+          "provider": "livescore_football",
+          "provider_competition_id": "710",
+          "seasons": [
+            {
+              "observation_count": 1,
+              "provider": "livescore_football",
+              "provider_season_id": "710::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "livescore_football": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 1,
+            "provider": "livescore_football",
+            "provider_season_id": "710::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 48,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_041",
+      "display_names": [
+        "Ligue 2"
+      ],
+      "countries": [
+        "France"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Ligue 2",
+          "competition_type": null,
+          "country": "France",
+          "observation_count": 21,
+          "provider": "bzzoiro",
+          "provider_competition_id": "89",
+          "seasons": [
+            {
+              "observation_count": 21,
+              "provider": "bzzoiro",
+              "provider_season_id": "89::1848",
+              "season_name": "Ligue 2 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 21,
+            "provider": "bzzoiro",
+            "provider_season_id": "89::1848",
+            "season_name": "Ligue 2 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 49,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_042",
+      "display_names": [
+        "Ligue 3"
+      ],
+      "countries": [
+        "France"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Ligue 3",
+          "competition_type": null,
+          "country": "France",
+          "observation_count": 10,
+          "provider": "bzzoiro",
+          "provider_competition_id": "105",
+          "seasons": [
+            {
+              "observation_count": 10,
+              "provider": "bzzoiro",
+              "provider_season_id": "105::2163",
+              "season_name": "Ligue 3 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 10,
+            "provider": "bzzoiro",
+            "provider_season_id": "105::2163",
+            "season_name": "Ligue 3 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 50,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_044",
+      "display_names": [
+        "3. Liga"
+      ],
+      "countries": [
+        "Germany"
+      ],
+      "providers": [
+        "openligadb"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "3. Liga",
+          "competition_type": null,
+          "country": "Germany",
+          "observation_count": 1140,
+          "provider": "openligadb",
+          "provider_competition_id": "4939",
+          "seasons": [
+            {
+              "observation_count": 1140,
+              "provider": "openligadb",
+              "provider_season_id": "4939::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "openligadb": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 1140,
+            "provider": "openligadb",
+            "provider_season_id": "4939::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 51,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_046",
+      "display_names": [
+        "DFB Pokal"
+      ],
+      "countries": [
+        "Germany"
+      ],
+      "providers": [
+        "openligadb"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "DFB Pokal",
+          "competition_type": null,
+          "country": "Germany",
+          "observation_count": 168,
+          "provider": "openligadb",
+          "provider_competition_id": "4945",
+          "seasons": [
+            {
+              "observation_count": 168,
+              "provider": "openligadb",
+              "provider_season_id": "4945::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "openligadb": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 168,
+            "provider": "openligadb",
+            "provider_season_id": "4945::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 52,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_047",
+      "display_names": [
+        "German Bundesliga"
+      ],
+      "countries": [
+        "Germany"
+      ],
+      "providers": [
+        "livescore_football"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "German Bundesliga",
+          "competition_type": null,
+          "country": "Germany",
+          "observation_count": 1,
+          "provider": "livescore_football",
+          "provider_competition_id": "720",
+          "seasons": [
+            {
+              "observation_count": 1,
+              "provider": "livescore_football",
+              "provider_season_id": "720::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "livescore_football": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 1,
+            "provider": "livescore_football",
+            "provider_season_id": "720::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 53,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_048",
+      "display_names": [
+        "Stoiximan Super League"
+      ],
+      "countries": [
+        "Greece"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Stoiximan Super League",
+          "competition_type": null,
+          "country": "Greece",
+          "observation_count": 1,
+          "provider": "bzzoiro",
+          "provider_competition_id": "24",
+          "seasons": [
+            {
+              "observation_count": 1,
+              "provider": "bzzoiro",
+              "provider_season_id": "24::1569",
+              "season_name": "Super League 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 1,
+            "provider": "bzzoiro",
+            "provider_season_id": "24::1569",
+            "season_name": "Super League 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 54,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_049",
+      "display_names": [
+        "International Friendly Games"
+      ],
+      "countries": [
+        "International"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "International Friendly Games",
+          "competition_type": null,
+          "country": "International",
+          "observation_count": 91,
+          "provider": "bzzoiro",
+          "provider_competition_id": "31",
+          "seasons": [
+            {
+              "observation_count": 91,
+              "provider": "bzzoiro",
+              "provider_season_id": "31::133",
+              "season_name": "Int. Friendly Games 2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 91,
+            "provider": "bzzoiro",
+            "provider_season_id": "31::133",
+            "season_name": "Int. Friendly Games 2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 55,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_051",
+      "display_names": [
+        "Serie B"
+      ],
+      "countries": [
+        "Italy"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Serie B",
+          "competition_type": null,
+          "country": "Italy",
+          "observation_count": 10,
+          "provider": "bzzoiro",
+          "provider_competition_id": "100",
+          "seasons": [
+            {
+              "observation_count": 10,
+              "provider": "bzzoiro",
+              "provider_season_id": "100::2084",
+              "season_name": "Serie B 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 10,
+            "provider": "bzzoiro",
+            "provider_season_id": "100::2084",
+            "season_name": "Serie B 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 56,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_052",
+      "display_names": [
+        "Serie C, Girone A"
+      ],
+      "countries": [
+        "Italy"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Serie C, Girone A",
+          "competition_type": null,
+          "country": "Italy",
+          "observation_count": 35,
+          "provider": "bzzoiro",
+          "provider_competition_id": "101",
+          "seasons": [
+            {
+              "observation_count": 35,
+              "provider": "bzzoiro",
+              "provider_season_id": "101::2103",
+              "season_name": "Serie C, Group A 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 35,
+            "provider": "bzzoiro",
+            "provider_season_id": "101::2103",
+            "season_name": "Serie C, Group A 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 57,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_053",
+      "display_names": [
+        "Serie C, Girone B"
+      ],
+      "countries": [
+        "Italy"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Serie C, Girone B",
+          "competition_type": null,
+          "country": "Italy",
+          "observation_count": 33,
+          "provider": "bzzoiro",
+          "provider_competition_id": "103",
+          "seasons": [
+            {
+              "observation_count": 33,
+              "provider": "bzzoiro",
+              "provider_season_id": "103::2130",
+              "season_name": "Serie C, Group B 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 33,
+            "provider": "bzzoiro",
+            "provider_season_id": "103::2130",
+            "season_name": "Serie C, Group B 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 58,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_054",
+      "display_names": [
+        "Serie C, Girone C"
+      ],
+      "countries": [
+        "Italy"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Serie C, Girone C",
+          "competition_type": null,
+          "country": "Italy",
+          "observation_count": 38,
+          "provider": "bzzoiro",
+          "provider_competition_id": "102",
+          "seasons": [
+            {
+              "observation_count": 38,
+              "provider": "bzzoiro",
+              "provider_season_id": "102::2116",
+              "season_name": "Serie C, Group C 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 38,
+            "provider": "bzzoiro",
+            "provider_season_id": "102::2116",
+            "season_name": "Serie C, Group C 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 59,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_055",
+      "display_names": [
+        "J1 League"
+      ],
+      "countries": [
+        "Japan"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "J1 League",
+          "competition_type": null,
+          "country": "Japan",
+          "observation_count": 16,
+          "provider": "bzzoiro",
+          "provider_competition_id": "49",
+          "seasons": [
+            {
+              "observation_count": 16,
+              "provider": "bzzoiro",
+              "provider_season_id": "49::1518",
+              "season_name": "J1 League 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 16,
+            "provider": "bzzoiro",
+            "provider_season_id": "49::1518",
+            "season_name": "J1 League 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 60,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_056",
+      "display_names": [
+        "Japanese J.League"
+      ],
+      "countries": [
+        "Japan"
+      ],
+      "providers": [
+        "livescore_football"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Japanese J.League",
+          "competition_type": null,
+          "country": "Japan",
+          "observation_count": 3,
+          "provider": "livescore_football",
+          "provider_competition_id": "750",
+          "seasons": [
+            {
+              "observation_count": 3,
+              "provider": "livescore_football",
+              "provider_season_id": "750::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "livescore_football": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 3,
+            "provider": "livescore_football",
+            "provider_season_id": "750::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 61,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_057",
+      "display_names": [
+        "Liga MX Apertura"
+      ],
+      "countries": [
+        "Mexico"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Liga MX Apertura",
+          "competition_type": null,
+          "country": "Mexico",
+          "observation_count": 8,
+          "provider": "bzzoiro",
+          "provider_competition_id": "19",
+          "seasons": [
+            {
+              "observation_count": 8,
+              "provider": "bzzoiro",
+              "provider_season_id": "19::1309",
+              "season_name": "Liga MX, Apertura 2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 8,
+            "provider": "bzzoiro",
+            "provider_season_id": "19::1309",
+            "season_name": "Liga MX, Apertura 2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 62,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_058",
+      "display_names": [
+        "Mexican Liga BBVA MX"
+      ],
+      "countries": [
+        "Mexico"
+      ],
+      "providers": [
+        "livescore_football"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Mexican Liga BBVA MX",
+          "competition_type": null,
+          "country": "Mexico",
+          "observation_count": 3,
+          "provider": "livescore_football",
+          "provider_competition_id": "760",
+          "seasons": [
+            {
+              "observation_count": 3,
+              "provider": "livescore_football",
+              "provider_season_id": "760::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "livescore_football": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 3,
+            "provider": "livescore_football",
+            "provider_season_id": "760::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 63,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_059",
+      "display_names": [
+        "Eerste Divisie"
+      ],
+      "countries": [
+        "Netherlands"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Eerste Divisie",
+          "competition_type": null,
+          "country": "Netherlands",
+          "observation_count": 52,
+          "provider": "bzzoiro",
+          "provider_competition_id": "108",
+          "seasons": [
+            {
+              "observation_count": 52,
+              "provider": "bzzoiro",
+              "provider_season_id": "108::2220",
+              "season_name": "Eerste Divisie 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 52,
+            "provider": "bzzoiro",
+            "provider_season_id": "108::2220",
+            "season_name": "Eerste Divisie 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 64,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_061",
+      "display_names": [
+        "Nigeria Premier Football League"
+      ],
+      "countries": [
+        "Nigeria"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Nigeria Premier Football League",
+          "competition_type": null,
+          "country": "Nigeria",
+          "observation_count": 36,
+          "provider": "bzzoiro",
+          "provider_competition_id": "28",
+          "seasons": [
+            {
+              "observation_count": 36,
+              "provider": "bzzoiro",
+              "provider_season_id": "28::1901",
+              "season_name": "Premier League 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 36,
+            "provider": "bzzoiro",
+            "provider_season_id": "28::1901",
+            "season_name": "Premier League 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 65,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_062",
+      "display_names": [
+        "CONCACAF Nations League"
+      ],
+      "countries": [
+        "North America"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "CONCACAF Nations League",
+          "competition_type": null,
+          "country": "North America",
+          "observation_count": 76,
+          "provider": "bzzoiro",
+          "provider_competition_id": "65",
+          "seasons": [
+            {
+              "observation_count": 76,
+              "provider": "bzzoiro",
+              "provider_season_id": "65::1633",
+              "season_name": "CONCACAF Nations League 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 76,
+            "provider": "bzzoiro",
+            "provider_season_id": "65::1633",
+            "season_name": "CONCACAF Nations League 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 66,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_063",
+      "display_names": [
+        "Eliteserien"
+      ],
+      "countries": [
+        "Norway"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Eliteserien",
+          "competition_type": null,
+          "country": "Norway",
+          "observation_count": 6,
+          "provider": "bzzoiro",
+          "provider_competition_id": "54",
+          "seasons": [
+            {
+              "observation_count": 6,
+              "provider": "bzzoiro",
+              "provider_season_id": "54::1230",
+              "season_name": "Eliteserien 2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 6,
+            "provider": "bzzoiro",
+            "provider_season_id": "54::1230",
+            "season_name": "Eliteserien 2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 67,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_064",
+      "display_names": [
+        "Liga 1"
+      ],
+      "countries": [
+        "Peru"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Liga 1",
+          "competition_type": null,
+          "country": "Peru",
+          "observation_count": 33,
+          "provider": "bzzoiro",
+          "provider_competition_id": "113",
+          "seasons": [
+            {
+              "observation_count": 11,
+              "provider": "bzzoiro",
+              "provider_season_id": "113::2286",
+              "season_name": "Liga 1 2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 11,
+            "provider": "bzzoiro",
+            "provider_season_id": "113::2286",
+            "season_name": "Liga 1 2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 68,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_065",
+      "display_names": [
+        "Ekstraklasa"
+      ],
+      "countries": [
+        "Poland"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Ekstraklasa",
+          "competition_type": null,
+          "country": "Poland",
+          "observation_count": 9,
+          "provider": "bzzoiro",
+          "provider_competition_id": "25",
+          "seasons": [
+            {
+              "observation_count": 9,
+              "provider": "bzzoiro",
+              "provider_season_id": "25::1229",
+              "season_name": "Ekstraklasa 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 9,
+            "provider": "bzzoiro",
+            "provider_season_id": "25::1229",
+            "season_name": "Ekstraklasa 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 69,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_066",
+      "display_names": [
+        "Campeonato de Portugal"
+      ],
+      "countries": [
+        "Portugal"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Campeonato de Portugal",
+          "competition_type": null,
+          "country": "Portugal",
+          "observation_count": 3,
+          "provider": "bzzoiro",
+          "provider_competition_id": "95",
+          "seasons": [
+            {
+              "observation_count": 3,
+              "provider": "bzzoiro",
+              "provider_season_id": "95::1986",
+              "season_name": "Campeonato de Portugal 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 3,
+            "provider": "bzzoiro",
+            "provider_season_id": "95::1986",
+            "season_name": "Campeonato de Portugal 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 70,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_067",
+      "display_names": [
+        "Liga 3"
+      ],
+      "countries": [
+        "Portugal"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Liga 3",
+          "competition_type": null,
+          "country": "Portugal",
+          "observation_count": 1,
+          "provider": "bzzoiro",
+          "provider_competition_id": "82",
+          "seasons": [
+            {
+              "observation_count": 1,
+              "provider": "bzzoiro",
+              "provider_season_id": "82::1600",
+              "season_name": "Liga Portugal 3 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 1,
+            "provider": "bzzoiro",
+            "provider_season_id": "82::1600",
+            "season_name": "Liga Portugal 3 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 71,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_068",
+      "display_names": [
+        "Liga Portugal 2"
+      ],
+      "countries": [
+        "Portugal"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Liga Portugal 2",
+          "competition_type": null,
+          "country": "Portugal",
+          "observation_count": 27,
+          "provider": "bzzoiro",
+          "provider_competition_id": "88",
+          "seasons": [
+            {
+              "observation_count": 27,
+              "provider": "bzzoiro",
+              "provider_season_id": "88::1693",
+              "season_name": "Liga Portugal 2 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 27,
+            "provider": "bzzoiro",
+            "provider_season_id": "88::1693",
+            "season_name": "Liga Portugal 2 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 72,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_069",
+      "display_names": [
+        "Primeira Liga"
+      ],
+      "countries": [
+        "Portugal"
+      ],
+      "providers": [
+        "openfootball"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Primeira Liga",
+          "competition_type": null,
+          "country": "Portugal",
+          "observation_count": 918,
+          "provider": "openfootball",
+          "provider_competition_id": "pt.1",
+          "seasons": [
+            {
+              "observation_count": 918,
+              "provider": "openfootball",
+              "provider_season_id": "pt.1::2026-27",
+              "season_name": "2026-27",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "openfootball": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 918,
+            "provider": "openfootball",
+            "provider_season_id": "pt.1::2026-27",
+            "season_name": "2026-27",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 73,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_070",
+      "display_names": [
+        "Taça de Portugal"
+      ],
+      "countries": [
+        "Portugal"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Taça de Portugal",
+          "competition_type": null,
+          "country": "Portugal",
+          "observation_count": 10,
+          "provider": "bzzoiro",
+          "provider_competition_id": "92",
+          "seasons": [
+            {
+              "observation_count": 10,
+              "provider": "bzzoiro",
+              "provider_season_id": "92::1922",
+              "season_name": "Taca de Portugal 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 10,
+            "provider": "bzzoiro",
+            "provider_season_id": "92::1922",
+            "season_name": "Taca de Portugal 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 74,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_071",
+      "display_names": [
+        "Superliga"
+      ],
+      "countries": [
+        "Romania"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Superliga",
+          "competition_type": null,
+          "country": "Romania",
+          "observation_count": 9,
+          "provider": "bzzoiro",
+          "provider_competition_id": "23",
+          "seasons": [
+            {
+              "observation_count": 9,
+              "provider": "bzzoiro",
+              "provider_season_id": "23::1396",
+              "season_name": "Superliga 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 9,
+            "provider": "bzzoiro",
+            "provider_season_id": "23::1396",
+            "season_name": "Superliga 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 75,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_073",
+      "display_names": [
+        "Scottish Premiership"
+      ],
+      "countries": [
+        "Scotland"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Scottish Premiership",
+          "competition_type": null,
+          "country": "Scotland",
+          "observation_count": 6,
+          "provider": "bzzoiro",
+          "provider_competition_id": "13",
+          "seasons": [
+            {
+              "observation_count": 6,
+              "provider": "bzzoiro",
+              "provider_season_id": "13::1355",
+              "season_name": "Premiership 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 6,
+            "provider": "bzzoiro",
+            "provider_season_id": "13::1355",
+            "season_name": "Premiership 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 76,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_074",
+      "display_names": [
+        "Niké liga"
+      ],
+      "countries": [
+        "Slovakia"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Niké liga",
+          "competition_type": null,
+          "country": "Slovakia",
+          "observation_count": 4,
+          "provider": "bzzoiro",
+          "provider_competition_id": "109",
+          "seasons": [
+            {
+              "observation_count": 4,
+              "provider": "bzzoiro",
+              "provider_season_id": "109::2243",
+              "season_name": "Superliga 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 4,
+            "provider": "bzzoiro",
+            "provider_season_id": "109::2243",
+            "season_name": "Superliga 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 77,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_075",
+      "display_names": [
+        "Copa Sudamericana"
+      ],
+      "countries": [
+        "South America"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Copa Sudamericana",
+          "competition_type": null,
+          "country": "South America",
+          "observation_count": 1,
+          "provider": "bzzoiro",
+          "provider_competition_id": "33",
+          "seasons": [
+            {
+              "observation_count": 1,
+              "provider": "bzzoiro",
+              "provider_season_id": "33::114",
+              "season_name": "CONMEBOL Sudamericana 2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 1,
+            "provider": "bzzoiro",
+            "provider_season_id": "33::114",
+            "season_name": "CONMEBOL Sudamericana 2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 78,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_076",
+      "display_names": [
+        "K League 1"
+      ],
+      "countries": [
+        "South Korea"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "K League 1",
+          "competition_type": null,
+          "country": "South Korea",
+          "observation_count": 4,
+          "provider": "bzzoiro",
+          "provider_competition_id": "50",
+          "seasons": [
+            {
+              "observation_count": 4,
+              "provider": "bzzoiro",
+              "provider_season_id": "50::1288",
+              "season_name": "K-League 1 2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 4,
+            "provider": "bzzoiro",
+            "provider_season_id": "50::1288",
+            "season_name": "K-League 1 2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 79,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_077",
+      "display_names": [
+        "Copa del Rey"
+      ],
+      "countries": [
+        "Spain"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Copa del Rey",
+          "competition_type": null,
+          "country": "Spain",
+          "observation_count": 20,
+          "provider": "bzzoiro",
+          "provider_competition_id": "41",
+          "seasons": [
+            {
+              "observation_count": 20,
+              "provider": "bzzoiro",
+              "provider_season_id": "41::2052",
+              "season_name": "Copa del Rey 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 20,
+            "provider": "bzzoiro",
+            "provider_season_id": "41::2052",
+            "season_name": "Copa del Rey 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 80,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_079",
+      "display_names": [
+        "LaLiga EA Sports"
+      ],
+      "countries": [
+        "Spain"
+      ],
+      "providers": [
+        "openligadb"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "LaLiga EA Sports",
+          "competition_type": null,
+          "country": "Spain",
+          "observation_count": 1140,
+          "provider": "openligadb",
+          "provider_competition_id": "4936",
+          "seasons": [
+            {
+              "observation_count": 1140,
+              "provider": "openligadb",
+              "provider_season_id": "4936::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "openligadb": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 1140,
+            "provider": "openligadb",
+            "provider_season_id": "4936::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 81,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_080",
+      "display_names": [
+        "Liga F"
+      ],
+      "countries": [
+        "Spain"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Liga F",
+          "competition_type": null,
+          "country": "Spain",
+          "observation_count": 27,
+          "provider": "bzzoiro",
+          "provider_competition_id": "36",
+          "seasons": [
+            {
+              "observation_count": 27,
+              "provider": "bzzoiro",
+              "provider_season_id": "36::1308",
+              "season_name": "Primera Division Women 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 27,
+            "provider": "bzzoiro",
+            "provider_season_id": "36::1308",
+            "season_name": "Primera Division Women 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 82,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_081",
+      "display_names": [
+        "Primera Division"
+      ],
+      "countries": [
+        "Spain"
+      ],
+      "providers": [
+        "football_data_org"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Primera Division",
+          "competition_type": "LEAGUE",
+          "country": "Spain",
+          "observation_count": 1,
+          "provider": "football_data_org",
+          "provider_competition_id": "2014",
+          "seasons": [
+            {
+              "observation_count": 1,
+              "provider": "football_data_org",
+              "provider_season_id": "2014::2518",
+              "season_name": "2026-08-16",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "football_data_org": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 1,
+            "provider": "football_data_org",
+            "provider_season_id": "2014::2518",
+            "season_name": "2026-08-16",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "single_provider_type_evidence",
+        "values": [
+          {
+            "normalized_value": "league",
+            "provider": "football_data_org",
+            "value": "LEAGUE"
+          }
+        ]
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 83,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_082",
+      "display_names": [
+        "Segunda División"
+      ],
+      "countries": [
+        "Spain"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Segunda División",
+          "competition_type": null,
+          "country": "Spain",
+          "observation_count": 39,
+          "provider": "bzzoiro",
+          "provider_competition_id": "38",
+          "seasons": [
+            {
+              "observation_count": 39,
+              "provider": "bzzoiro",
+              "provider_season_id": "38::1356",
+              "season_name": "LaLiga 2 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 39,
+            "provider": "bzzoiro",
+            "provider_season_id": "38::1356",
+            "season_name": "LaLiga 2 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 84,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_083",
+      "display_names": [
+        "Spanish Copa de la Reina"
+      ],
+      "countries": [
+        "Spain"
+      ],
+      "providers": [
+        "livescore_football"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Spanish Copa de la Reina",
+          "competition_type": null,
+          "country": "Spain",
+          "observation_count": 3,
+          "provider": "livescore_football",
+          "provider_competition_id": "20381",
+          "seasons": [
+            {
+              "observation_count": 3,
+              "provider": "livescore_football",
+              "provider_season_id": "20381::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "livescore_football": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 3,
+            "provider": "livescore_football",
+            "provider_season_id": "20381::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 85,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_084",
+      "display_names": [
+        "Spanish Copa del Rey"
+      ],
+      "countries": [
+        "Spain"
+      ],
+      "providers": [
+        "livescore_football"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Spanish Copa del Rey",
+          "competition_type": null,
+          "country": "Spain",
+          "observation_count": 5,
+          "provider": "livescore_football",
+          "provider_competition_id": "3951",
+          "seasons": [
+            {
+              "observation_count": 5,
+              "provider": "livescore_football",
+              "provider_season_id": "3951::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "livescore_football": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 5,
+            "provider": "livescore_football",
+            "provider_season_id": "3951::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 86,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_085",
+      "display_names": [
+        "Spanish LALIGA"
+      ],
+      "countries": [
+        "Spain"
+      ],
+      "providers": [
+        "livescore_football"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Spanish LALIGA",
+          "competition_type": null,
+          "country": "Spain",
+          "observation_count": 1,
+          "provider": "livescore_football",
+          "provider_competition_id": "740",
+          "seasons": [
+            {
+              "observation_count": 1,
+              "provider": "livescore_football",
+              "provider_season_id": "740::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "livescore_football": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 1,
+            "provider": "livescore_football",
+            "provider_season_id": "740::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 87,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_086",
+      "display_names": [
+        "Spanish LALIGA 2"
+      ],
+      "countries": [
+        "Spain"
+      ],
+      "providers": [
+        "livescore_football"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Spanish LALIGA 2",
+          "competition_type": null,
+          "country": "Spain",
+          "observation_count": 1,
+          "provider": "livescore_football",
+          "provider_competition_id": "3921",
+          "seasons": [
+            {
+              "observation_count": 1,
+              "provider": "livescore_football",
+              "provider_season_id": "3921::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "livescore_football": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 1,
+            "provider": "livescore_football",
+            "provider_season_id": "3921::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 88,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_087",
+      "display_names": [
+        "Spanish Liga F"
+      ],
+      "countries": [
+        "Spain"
+      ],
+      "providers": [
+        "livescore_football"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Spanish Liga F",
+          "competition_type": null,
+          "country": "Spain",
+          "observation_count": 9,
+          "provider": "livescore_football",
+          "provider_competition_id": "20956",
+          "seasons": [
+            {
+              "observation_count": 9,
+              "provider": "livescore_football",
+              "provider_season_id": "20956::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "livescore_football": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 9,
+            "provider": "livescore_football",
+            "provider_season_id": "20956::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 89,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_088",
+      "display_names": [
+        "Allsvenskan"
+      ],
+      "countries": [
+        "Sweden"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Allsvenskan",
+          "competition_type": null,
+          "country": "Sweden",
+          "observation_count": 4,
+          "provider": "bzzoiro",
+          "provider_competition_id": "26",
+          "seasons": [
+            {
+              "observation_count": 4,
+              "provider": "bzzoiro",
+              "provider_season_id": "26::9",
+              "season_name": "Allsvenskan 2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 4,
+            "provider": "bzzoiro",
+            "provider_season_id": "26::9",
+            "season_name": "Allsvenskan 2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 90,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_089",
+      "display_names": [
+        "Superettan"
+      ],
+      "countries": [
+        "Sweden"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Superettan",
+          "competition_type": null,
+          "country": "Sweden",
+          "observation_count": 2,
+          "provider": "bzzoiro",
+          "provider_competition_id": "106",
+          "seasons": [
+            {
+              "observation_count": 2,
+              "provider": "bzzoiro",
+              "provider_season_id": "106::2182",
+              "season_name": "Superettan 2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 2,
+            "provider": "bzzoiro",
+            "provider_season_id": "106::2182",
+            "season_name": "Superettan 2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 91,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_090",
+      "display_names": [
+        "Super League"
+      ],
+      "countries": [
+        "Switzerland"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Super League",
+          "competition_type": null,
+          "country": "Switzerland",
+          "observation_count": 3,
+          "provider": "bzzoiro",
+          "provider_competition_id": "15",
+          "seasons": [
+            {
+              "observation_count": 3,
+              "provider": "bzzoiro",
+              "provider_season_id": "15::1395",
+              "season_name": "Super League 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 3,
+            "provider": "bzzoiro",
+            "provider_season_id": "15::1395",
+            "season_name": "Super League 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 92,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_091",
+      "display_names": [
+        "Tunisian Ligue Professionnelle 1"
+      ],
+      "countries": [
+        "Tunisia"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Tunisian Ligue Professionnelle 1",
+          "competition_type": null,
+          "country": "Tunisia",
+          "observation_count": 12,
+          "provider": "bzzoiro",
+          "provider_competition_id": "47",
+          "seasons": [
+            {
+              "observation_count": 12,
+              "provider": "bzzoiro",
+              "provider_season_id": "47::1634",
+              "season_name": "Ligue 1 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 12,
+            "provider": "bzzoiro",
+            "provider_season_id": "47::1634",
+            "season_name": "Ligue 1 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 93,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_092",
+      "display_names": [
+        "Trendyol 1. Lig"
+      ],
+      "countries": [
+        "Turkey"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Trendyol 1. Lig",
+          "competition_type": null,
+          "country": "Turkey",
+          "observation_count": 7,
+          "provider": "bzzoiro",
+          "provider_competition_id": "107",
+          "seasons": [
+            {
+              "observation_count": 7,
+              "provider": "bzzoiro",
+              "provider_season_id": "107::2201",
+              "season_name": "1. Lig 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 7,
+            "provider": "bzzoiro",
+            "provider_season_id": "107::2201",
+            "season_name": "1. Lig 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 94,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_093",
+      "display_names": [
+        "Trendyol Super Lig"
+      ],
+      "countries": [
+        "Turkey"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Trendyol Super Lig",
+          "competition_type": null,
+          "country": "Turkey",
+          "observation_count": 4,
+          "provider": "bzzoiro",
+          "provider_competition_id": "11",
+          "seasons": [
+            {
+              "observation_count": 4,
+              "provider": "bzzoiro",
+              "provider_season_id": "11::1539",
+              "season_name": "Super Lig 26/27",
+              "start_years": []
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": []
+        },
+        "season_records": [
+          {
+            "observation_count": 4,
+            "provider": "bzzoiro",
+            "provider_season_id": "11::1539",
+            "season_name": "Super Lig 26/27",
+            "start_years": []
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 95,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_095",
+      "display_names": [
+        "NWSL"
+      ],
+      "countries": [
+        "USA"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "NWSL",
+          "competition_type": null,
+          "country": "USA",
+          "observation_count": 6,
+          "provider": "bzzoiro",
+          "provider_competition_id": "72",
+          "seasons": [
+            {
+              "observation_count": 6,
+              "provider": "bzzoiro",
+              "provider_season_id": "72::1540",
+              "season_name": "National Womens Soccer League 2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 6,
+            "provider": "bzzoiro",
+            "provider_season_id": "72::1540",
+            "season_name": "National Womens Soccer League 2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 96,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_096",
+      "display_names": [
+        "USL Championship"
+      ],
+      "countries": [
+        "USA"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "USL Championship",
+          "competition_type": null,
+          "country": "USA",
+          "observation_count": 6,
+          "provider": "bzzoiro",
+          "provider_competition_id": "57",
+          "seasons": [
+            {
+              "observation_count": 6,
+              "provider": "bzzoiro",
+              "provider_season_id": "57::1435",
+              "season_name": "USL Championship 2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 6,
+            "provider": "bzzoiro",
+            "provider_season_id": "57::1435",
+            "season_name": "USL Championship 2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    },
+    {
+      "review_order": 97,
+      "priority": "B",
+      "catalogue_entry_id": "observed_competition_097",
+      "display_names": [
+        "Club Friendlies"
+      ],
+      "countries": [
+        "World"
+      ],
+      "providers": [
+        "bzzoiro"
+      ],
+      "provider_count": 1,
+      "source_records": [
+        {
+          "competition_name": "Club Friendlies",
+          "competition_type": null,
+          "country": "World",
+          "observation_count": 77,
+          "provider": "bzzoiro",
+          "provider_competition_id": "79",
+          "seasons": [
+            {
+              "observation_count": 77,
+              "provider": "bzzoiro",
+              "provider_season_id": "79::1552",
+              "season_name": "Club Friendly Games 2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 77,
+            "provider": "bzzoiro",
+            "provider_season_id": "79::1552",
+            "season_name": "Club Friendly Games 2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false
+    }
+  ],
+  "priority_counts": {
+    "A": 10,
+    "B": 87,
+    "C": 0
+  }
+}
