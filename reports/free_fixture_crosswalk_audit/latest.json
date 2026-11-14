@@ -1,7 +1,7 @@
 {
   "automatic_mapping_approvals": 0,
   "canonical_fixture_writes": 0,
-  "generated_at_utc": "2026-11-14T07:04:03.223623+00:00",
+  "generated_at_utc": "2026-11-14T15:58:56.434658+00:00",
   "prediction_ledger_writes": 0,
   "provider_independent_catalogue": {
     "automatic_mapping_approvals": 0,
@@ -30,7 +30,9 @@
         "review_requirement": "Verify competition identity, competition type, active season, and cross-provider season alignment before any canonical catalogue entry or provider link is created.",
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": [],
+            "bzzoiro": [
+              2026
+            ],
             "openfootball": [
               2026
             ]
@@ -41,7 +43,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "12::1111",
               "season_name": "Championship 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             },
             {
               "observation_count": 1656,
@@ -53,8 +57,10 @@
               ]
             }
           ],
-          "shared_start_years": [],
-          "status": "insufficient_provider_season_evidence"
+          "shared_start_years": [
+            2026
+          ],
+          "status": "cross_provider_start_year_overlap"
         },
         "sources": [
           {
@@ -70,7 +76,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "12::1111",
                 "season_name": "Championship 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           },
@@ -119,7 +127,9 @@
         "review_requirement": "Verify competition identity, competition type, active season, and cross-provider season alignment before any canonical catalogue entry or provider link is created.",
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": [],
+            "bzzoiro": [
+              2026
+            ],
             "openfootball": [
               2026
             ],
@@ -133,7 +143,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "1::1058",
               "season_name": "Premier League 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             },
             {
               "observation_count": 1140,
@@ -173,7 +185,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "1::1058",
                 "season_name": "Premier League 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           },
@@ -247,7 +261,9 @@
         "review_requirement": "Verify competition identity, competition type, active season, and cross-provider season alignment before any canonical catalogue entry or provider link is created.",
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": [],
+            "bzzoiro": [
+              2026
+            ],
             "football_data_org": [
               2026
             ],
@@ -261,10 +277,12 @@
               "provider": "bzzoiro",
               "provider_season_id": "6::1311",
               "season_name": "Ligue 1 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             },
             {
-              "observation_count": 1,
+              "observation_count": 2,
               "provider": "football_data_org",
               "provider_season_id": "2015::2497",
               "season_name": "2026-08-22",
@@ -301,7 +319,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "6::1311",
                 "season_name": "Ligue 1 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           },
@@ -309,12 +329,12 @@
             "competition_name": "Ligue 1",
             "competition_type": "LEAGUE",
             "country": "France",
-            "observation_count": 1,
+            "observation_count": 2,
             "provider": "football_data_org",
             "provider_competition_id": "2015",
             "seasons": [
               {
-                "observation_count": 1,
+                "observation_count": 2,
                 "provider": "football_data_org",
                 "provider_season_id": "2015::2497",
                 "season_name": "2026-08-22",
@@ -368,7 +388,9 @@
         "review_requirement": "Verify competition identity, competition type, active season, and cross-provider season alignment before any canonical catalogue entry or provider link is created.",
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": [],
+            "bzzoiro": [
+              2026
+            ],
             "openligadb": [
               2026
             ]
@@ -379,7 +401,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "94::1967",
               "season_name": "2. Bundesliga 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             },
             {
               "observation_count": 918,
@@ -391,8 +415,10 @@
               ]
             }
           ],
-          "shared_start_years": [],
-          "status": "insufficient_provider_season_evidence"
+          "shared_start_years": [
+            2026
+          ],
+          "status": "cross_provider_start_year_overlap"
         },
         "sources": [
           {
@@ -408,7 +434,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "94::1967",
                 "season_name": "2. Bundesliga 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           },
@@ -464,7 +492,9 @@
         "review_requirement": "Verify competition identity, competition type, active season, and cross-provider season alignment before any canonical catalogue entry or provider link is created.",
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": [],
+            "bzzoiro": [
+              2026
+            ],
             "football_data_org": [
               2026
             ],
@@ -481,10 +511,12 @@
               "provider": "bzzoiro",
               "provider_season_id": "5::1091",
               "season_name": "Bundesliga 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             },
             {
-              "observation_count": 1,
+              "observation_count": 2,
               "provider": "football_data_org",
               "provider_season_id": "2002::2522",
               "season_name": "2026-08-28",
@@ -530,7 +562,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "5::1091",
                 "season_name": "Bundesliga 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           },
@@ -538,12 +572,12 @@
             "competition_name": "Bundesliga",
             "competition_type": "LEAGUE",
             "country": "Germany",
-            "observation_count": 1,
+            "observation_count": 2,
             "provider": "football_data_org",
             "provider_competition_id": "2002",
             "seasons": [
               {
-                "observation_count": 1,
+                "observation_count": 2,
                 "provider": "football_data_org",
                 "provider_season_id": "2002::2522",
                 "season_name": "2026-08-28",
@@ -616,7 +650,9 @@
         "review_requirement": "Verify competition identity, competition type, active season, and cross-provider season alignment before any canonical catalogue entry or provider link is created.",
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": [],
+            "bzzoiro": [
+              2026
+            ],
             "openfootball": [
               2026
             ]
@@ -627,7 +663,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "4::1375",
               "season_name": "Serie A 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             },
             {
               "observation_count": 1140,
@@ -639,8 +677,10 @@
               ]
             }
           ],
-          "shared_start_years": [],
-          "status": "insufficient_provider_season_evidence"
+          "shared_start_years": [
+            2026
+          ],
+          "status": "cross_provider_start_year_overlap"
         },
         "sources": [
           {
@@ -656,7 +696,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "4::1375",
                 "season_name": "Serie A 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           },
@@ -704,7 +746,9 @@
         "review_requirement": "Verify competition identity, competition type, active season, and cross-provider season alignment before any canonical catalogue entry or provider link is created.",
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": [],
+            "bzzoiro": [
+              2026
+            ],
             "openfootball": [
               2026
             ]
@@ -715,7 +759,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "10::1268",
               "season_name": "Eredivisie 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             },
             {
               "observation_count": 918,
@@ -727,8 +773,10 @@
               ]
             }
           ],
-          "shared_start_years": [],
-          "status": "insufficient_provider_season_evidence"
+          "shared_start_years": [
+            2026
+          ],
+          "status": "cross_provider_start_year_overlap"
         },
         "sources": [
           {
@@ -744,7 +792,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "10::1268",
                 "season_name": "Eredivisie 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           },
@@ -792,7 +842,9 @@
         "review_requirement": "Verify competition identity, competition type, active season, and cross-provider season alignment before any canonical catalogue entry or provider link is created.",
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": [],
+            "bzzoiro": [
+              2026
+            ],
             "livescore_football": [
               2026
             ]
@@ -803,7 +855,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "17::1631",
               "season_name": "Saudi Pro League 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             },
             {
               "observation_count": 3,
@@ -815,8 +869,10 @@
               ]
             }
           ],
-          "shared_start_years": [],
-          "status": "insufficient_provider_season_evidence"
+          "shared_start_years": [
+            2026
+          ],
+          "status": "cross_provider_start_year_overlap"
         },
         "sources": [
           {
@@ -832,7 +888,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "17::1631",
                 "season_name": "Saudi Pro League 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           },
@@ -880,7 +938,9 @@
         "review_requirement": "Verify competition identity, competition type, active season, and cross-provider season alignment before any canonical catalogue entry or provider link is created.",
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": [],
+            "bzzoiro": [
+              2026
+            ],
             "openfootball": [
               2026
             ]
@@ -891,7 +951,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "3::1307",
               "season_name": "LaLiga 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             },
             {
               "observation_count": 1140,
@@ -903,8 +965,10 @@
               ]
             }
           ],
-          "shared_start_years": [],
-          "status": "insufficient_provider_season_evidence"
+          "shared_start_years": [
+            2026
+          ],
+          "status": "cross_provider_start_year_overlap"
         },
         "sources": [
           {
@@ -920,7 +984,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "3::1307",
                 "season_name": "LaLiga 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           },
@@ -1067,7 +1133,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -1075,7 +1143,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "98::2037",
               "season_name": "Girabola 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -1095,7 +1165,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "98::2037",
                 "season_name": "Girabola 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -1250,7 +1322,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -1258,7 +1332,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "104::2144",
               "season_name": "A-League 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -1278,7 +1354,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "104::2144",
                 "season_name": "A-League 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -1307,7 +1385,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -1315,7 +1395,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "96::1999",
               "season_name": "Bundesliga 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -1335,7 +1417,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "96::1999",
                 "season_name": "Bundesliga 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -1427,7 +1511,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -1435,7 +1521,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "97::2018",
               "season_name": "Challenger Pro League 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -1455,7 +1543,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "97::2018",
                 "season_name": "Challenger Pro League 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -1484,7 +1574,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -1492,7 +1584,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "14::1327",
               "season_name": "Pro League 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -1512,7 +1606,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "14::1327",
                 "season_name": "Pro League 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -1742,7 +1838,7 @@
           },
           "season_records": [
             {
-              "observation_count": 31,
+              "observation_count": 32,
               "provider": "football_data_org",
               "provider_season_id": "2013::2474",
               "season_name": "2026-01-28",
@@ -1759,12 +1855,12 @@
             "competition_name": "Campeonato Brasileiro S\u00e9rie A",
             "competition_type": "LEAGUE",
             "country": "Brazil",
-            "observation_count": 31,
+            "observation_count": 32,
             "provider": "football_data_org",
             "provider_competition_id": "2013",
             "seasons": [
               {
-                "observation_count": 31,
+                "observation_count": 32,
                 "provider": "football_data_org",
                 "provider_season_id": "2013::2474",
                 "season_name": "2026-01-28",
@@ -1799,7 +1895,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -1807,7 +1905,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "22::1326",
               "season_name": "Parva Liga 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -1827,7 +1927,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "22::1326",
                 "season_name": "Parva Liga 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -2045,7 +2147,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -2053,7 +2157,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "99::2065",
               "season_name": "1. Liga 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -2073,7 +2179,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "99::2065",
                 "season_name": "1. Liga 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -2102,7 +2210,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -2110,7 +2220,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "84::1612",
               "season_name": "Superliga 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -2130,7 +2242,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "84::1612",
                 "season_name": "Superliga 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -2223,7 +2337,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": [],
+            "bzzoiro": [
+              2026
+            ],
             "openfootball": [
               2026
             ]
@@ -2234,7 +2350,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "12::1111",
               "season_name": "Championship 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             },
             {
               "observation_count": 1656,
@@ -2246,8 +2364,10 @@
               ]
             }
           ],
-          "shared_start_years": [],
-          "status": "insufficient_provider_season_evidence"
+          "shared_start_years": [
+            2026
+          ],
+          "status": "cross_provider_start_year_overlap"
         },
         "sources": [
           {
@@ -2263,7 +2383,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "12::1111",
                 "season_name": "Championship 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           },
@@ -2815,7 +2937,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -2823,7 +2947,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "86::1655",
               "season_name": "League One 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -2843,7 +2969,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "86::1655",
                 "season_name": "League One 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -2872,7 +3000,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -2880,7 +3010,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "87::1674",
               "season_name": "League Two 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -2900,7 +3032,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "87::1674",
                 "season_name": "League Two 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -2929,7 +3063,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -2937,7 +3073,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "91::1903",
               "season_name": "National League 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -2957,7 +3095,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "91::1903",
                 "season_name": "National League 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -2988,7 +3128,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": [],
+            "bzzoiro": [
+              2026
+            ],
             "openfootball": [
               2026
             ],
@@ -3002,7 +3144,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "1::1058",
               "season_name": "Premier League 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             },
             {
               "observation_count": 1140,
@@ -3042,7 +3186,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "1::1058",
                 "season_name": "Premier League 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           },
@@ -3389,7 +3535,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -3397,7 +3545,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "64::1430",
               "season_name": "UEFA Nations League 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -3417,7 +3567,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "64::1430",
                 "season_name": "UEFA Nations League 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -3446,7 +3598,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -3454,7 +3608,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "44::2240",
               "season_name": "Coupe de France 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -3474,7 +3630,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "44::2240",
                 "season_name": "Coupe de France 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -3574,7 +3732,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": [],
+            "bzzoiro": [
+              2026
+            ],
             "football_data_org": [
               2026
             ],
@@ -3588,10 +3748,12 @@
               "provider": "bzzoiro",
               "provider_season_id": "6::1311",
               "season_name": "Ligue 1 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             },
             {
-              "observation_count": 1,
+              "observation_count": 2,
               "provider": "football_data_org",
               "provider_season_id": "2015::2497",
               "season_name": "2026-08-22",
@@ -3628,7 +3790,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "6::1311",
                 "season_name": "Ligue 1 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           },
@@ -3636,12 +3800,12 @@
             "competition_name": "Ligue 1",
             "competition_type": "LEAGUE",
             "country": "France",
-            "observation_count": 1,
+            "observation_count": 2,
             "provider": "football_data_org",
             "provider_competition_id": "2015",
             "seasons": [
               {
-                "observation_count": 1,
+                "observation_count": 2,
                 "provider": "football_data_org",
                 "provider_season_id": "2015::2497",
                 "season_name": "2026-08-22",
@@ -3695,7 +3859,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -3703,7 +3869,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "89::1848",
               "season_name": "Ligue 2 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -3723,7 +3891,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "89::1848",
                 "season_name": "Ligue 2 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -3752,7 +3922,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -3760,7 +3932,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "105::2163",
               "season_name": "Ligue 3 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -3780,7 +3954,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "105::2163",
                 "season_name": "Ligue 3 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -3810,7 +3986,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": [],
+            "bzzoiro": [
+              2026
+            ],
             "openligadb": [
               2026
             ]
@@ -3821,7 +3999,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "94::1967",
               "season_name": "2. Bundesliga 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             },
             {
               "observation_count": 918,
@@ -3833,8 +4013,10 @@
               ]
             }
           ],
-          "shared_start_years": [],
-          "status": "insufficient_provider_season_evidence"
+          "shared_start_years": [
+            2026
+          ],
+          "status": "cross_provider_start_year_overlap"
         },
         "sources": [
           {
@@ -3850,7 +4032,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "94::1967",
                 "season_name": "2. Bundesliga 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           },
@@ -3970,7 +4154,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": [],
+            "bzzoiro": [
+              2026
+            ],
             "football_data_org": [
               2026
             ],
@@ -3987,10 +4173,12 @@
               "provider": "bzzoiro",
               "provider_season_id": "5::1091",
               "season_name": "Bundesliga 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             },
             {
-              "observation_count": 1,
+              "observation_count": 2,
               "provider": "football_data_org",
               "provider_season_id": "2002::2522",
               "season_name": "2026-08-28",
@@ -4036,7 +4224,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "5::1091",
                 "season_name": "Bundesliga 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           },
@@ -4044,12 +4234,12 @@
             "competition_name": "Bundesliga",
             "competition_type": "LEAGUE",
             "country": "Germany",
-            "observation_count": 1,
+            "observation_count": 2,
             "provider": "football_data_org",
             "provider_competition_id": "2002",
             "seasons": [
               {
-                "observation_count": 1,
+                "observation_count": 2,
                 "provider": "football_data_org",
                 "provider_season_id": "2002::2522",
                 "season_name": "2026-08-28",
@@ -4248,7 +4438,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -4256,7 +4448,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "24::1569",
               "season_name": "Super League 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -4276,7 +4470,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "24::1569",
                 "season_name": "Super League 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -4369,7 +4565,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": [],
+            "bzzoiro": [
+              2026
+            ],
             "openfootball": [
               2026
             ]
@@ -4380,7 +4578,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "4::1375",
               "season_name": "Serie A 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             },
             {
               "observation_count": 1140,
@@ -4392,8 +4592,10 @@
               ]
             }
           ],
-          "shared_start_years": [],
-          "status": "insufficient_provider_season_evidence"
+          "shared_start_years": [
+            2026
+          ],
+          "status": "cross_provider_start_year_overlap"
         },
         "sources": [
           {
@@ -4409,7 +4611,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "4::1375",
                 "season_name": "Serie A 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           },
@@ -4457,7 +4661,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -4465,7 +4671,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "100::2084",
               "season_name": "Serie B 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -4485,7 +4693,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "100::2084",
                 "season_name": "Serie B 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -4514,7 +4724,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -4522,7 +4734,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "101::2103",
               "season_name": "Serie C, Group A 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -4542,7 +4756,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "101::2103",
                 "season_name": "Serie C, Group A 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -4571,7 +4787,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -4579,7 +4797,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "103::2130",
               "season_name": "Serie C, Group B 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -4599,7 +4819,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "103::2130",
                 "season_name": "Serie C, Group B 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -4628,7 +4850,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -4636,7 +4860,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "102::2116",
               "season_name": "Serie C, Group C 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -4656,7 +4882,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "102::2116",
                 "season_name": "Serie C, Group C 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -4685,7 +4913,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -4693,7 +4923,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "49::1518",
               "season_name": "J1 League 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -4713,7 +4945,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "49::1518",
                 "season_name": "J1 League 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -4931,7 +5165,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -4939,7 +5175,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "108::2220",
               "season_name": "Eerste Divisie 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -4959,7 +5197,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "108::2220",
                 "season_name": "Eerste Divisie 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -4989,7 +5229,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": [],
+            "bzzoiro": [
+              2026
+            ],
             "openfootball": [
               2026
             ]
@@ -5000,7 +5242,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "10::1268",
               "season_name": "Eredivisie 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             },
             {
               "observation_count": 918,
@@ -5012,8 +5256,10 @@
               ]
             }
           ],
-          "shared_start_years": [],
-          "status": "insufficient_provider_season_evidence"
+          "shared_start_years": [
+            2026
+          ],
+          "status": "cross_provider_start_year_overlap"
         },
         "sources": [
           {
@@ -5029,7 +5275,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "10::1268",
                 "season_name": "Eredivisie 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           },
@@ -5077,7 +5325,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -5085,7 +5335,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "28::1901",
               "season_name": "Premier League 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -5105,7 +5357,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "28::1901",
                 "season_name": "Premier League 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -5134,7 +5388,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -5142,7 +5398,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "65::1633",
               "season_name": "CONCACAF Nations League 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -5162,7 +5420,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "65::1633",
                 "season_name": "CONCACAF Nations League 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -5317,7 +5577,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -5325,7 +5587,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "25::1229",
               "season_name": "Ekstraklasa 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -5345,7 +5609,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "25::1229",
                 "season_name": "Ekstraklasa 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -5374,7 +5640,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -5382,7 +5650,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "95::1986",
               "season_name": "Campeonato de Portugal 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -5402,7 +5672,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "95::1986",
                 "season_name": "Campeonato de Portugal 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -5431,7 +5703,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -5439,7 +5713,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "82::1600",
               "season_name": "Liga Portugal 3 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -5459,7 +5735,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "82::1600",
                 "season_name": "Liga Portugal 3 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -5488,7 +5766,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -5496,7 +5776,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "88::1693",
               "season_name": "Liga Portugal 2 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -5516,7 +5798,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "88::1693",
                 "season_name": "Liga Portugal 2 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -5608,7 +5892,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -5616,7 +5902,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "92::1922",
               "season_name": "Taca de Portugal 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -5636,7 +5924,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "92::1922",
                 "season_name": "Taca de Portugal 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -5665,7 +5955,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -5673,7 +5965,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "23::1396",
               "season_name": "Superliga 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -5693,7 +5987,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "23::1396",
                 "season_name": "Superliga 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -5723,7 +6019,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": [],
+            "bzzoiro": [
+              2026
+            ],
             "livescore_football": [
               2026
             ]
@@ -5734,7 +6032,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "17::1631",
               "season_name": "Saudi Pro League 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             },
             {
               "observation_count": 3,
@@ -5746,8 +6046,10 @@
               ]
             }
           ],
-          "shared_start_years": [],
-          "status": "insufficient_provider_season_evidence"
+          "shared_start_years": [
+            2026
+          ],
+          "status": "cross_provider_start_year_overlap"
         },
         "sources": [
           {
@@ -5763,7 +6065,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "17::1631",
                 "season_name": "Saudi Pro League 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           },
@@ -5811,7 +6115,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -5819,7 +6125,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "13::1355",
               "season_name": "Premiership 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -5839,7 +6147,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "13::1355",
                 "season_name": "Premiership 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -5868,7 +6178,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -5876,7 +6188,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "109::2243",
               "season_name": "Superliga 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -5896,7 +6210,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "109::2243",
                 "season_name": "Superliga 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -6051,7 +6367,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -6059,7 +6377,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "41::2052",
               "season_name": "Copa del Rey 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -6079,7 +6399,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "41::2052",
                 "season_name": "Copa del Rey 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -6109,7 +6431,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": [],
+            "bzzoiro": [
+              2026
+            ],
             "openfootball": [
               2026
             ]
@@ -6120,7 +6444,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "3::1307",
               "season_name": "LaLiga 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             },
             {
               "observation_count": 1140,
@@ -6132,8 +6458,10 @@
               ]
             }
           ],
-          "shared_start_years": [],
-          "status": "insufficient_provider_season_evidence"
+          "shared_start_years": [
+            2026
+          ],
+          "status": "cross_provider_start_year_overlap"
         },
         "sources": [
           {
@@ -6149,7 +6477,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "3::1307",
                 "season_name": "LaLiga 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           },
@@ -6260,7 +6590,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -6268,7 +6600,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "36::1308",
               "season_name": "Primera Division Women 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -6288,7 +6622,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "36::1308",
                 "season_name": "Primera Division Women 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -6329,7 +6665,7 @@
           },
           "season_records": [
             {
-              "observation_count": 1,
+              "observation_count": 2,
               "provider": "football_data_org",
               "provider_season_id": "2014::2518",
               "season_name": "2026-08-16",
@@ -6346,12 +6682,12 @@
             "competition_name": "Primera Division",
             "competition_type": "LEAGUE",
             "country": "Spain",
-            "observation_count": 1,
+            "observation_count": 2,
             "provider": "football_data_org",
             "provider_competition_id": "2014",
             "seasons": [
               {
-                "observation_count": 1,
+                "observation_count": 2,
                 "provider": "football_data_org",
                 "provider_season_id": "2014::2518",
                 "season_name": "2026-08-16",
@@ -6386,7 +6722,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -6394,7 +6732,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "38::1356",
               "season_name": "LaLiga 2 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -6414,7 +6754,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "38::1356",
                 "season_name": "LaLiga 2 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -6884,7 +7226,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -6892,7 +7236,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "15::1395",
               "season_name": "Super League 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -6912,7 +7258,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "15::1395",
                 "season_name": "Super League 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -6941,7 +7289,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -6949,7 +7299,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "47::1634",
               "season_name": "Ligue 1 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -6969,7 +7321,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "47::1634",
                 "season_name": "Ligue 1 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -6998,7 +7352,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -7006,7 +7362,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "107::2201",
               "season_name": "1. Lig 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -7026,7 +7384,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "107::2201",
                 "season_name": "1. Lig 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -7055,7 +7415,9 @@
         ],
         "season_evidence": {
           "provider_start_years": {
-            "bzzoiro": []
+            "bzzoiro": [
+              2026
+            ]
           },
           "season_records": [
             {
@@ -7063,7 +7425,9 @@
               "provider": "bzzoiro",
               "provider_season_id": "11::1539",
               "season_name": "Super Lig 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
             }
           ],
           "shared_start_years": [],
@@ -7083,7 +7447,9 @@
                 "provider": "bzzoiro",
                 "provider_season_id": "11::1539",
                 "season_name": "Super Lig 26/27",
-                "start_years": []
+                "start_years": [
+                  2026
+                ]
               }
             ]
           }
@@ -10393,7 +10759,7 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 34,
+      "observation_count": 38,
       "snapshot_count": 3,
       "source_entity_counts": {
         "leagues": 4,
