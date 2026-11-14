@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -43,6 +44,62 @@ def _country(row: Mapping[str, Any]) -> str:
         row.get("country") or raw.get("country") or raw.get("leagueCountry")
         or raw.get("country_name") or league.get("country")
     )
+
+
+def _season_label_year_evidence(value: Any) -> dict[str, Any] | None:
+    """Parse season labels without mistaking calendar dates for season ranges.
+
+    Examples: 26/27, 2026/27, 2026-27 and a standalone 2026.
+    This is descriptive evidence only; it never establishes season equivalence.
+    """
+    label = _text(value)
+    if not label or re.fullmatch(r"20\d{2}-\d{2}-\d{2}", label):
+        return None
+
+    match = re.search(r"(?<!\d)(20\d{2})\s*[/–—-]\s*(\d{2}|20\d{2})(?!\d)", label)
+    if match:
+        start = int(match.group(1))
+        end_token = match.group(2)
+        end = int(end_token) if len(end_token) == 4 else (start // 100) * 100 + int(end_token)
+        if end < start:
+            end += 100
+        if end - start not in (0, 1):
+            return None
+        return {
+            "label": label,
+            "start_year": start,
+            "end_year": end,
+            "normalized_season": f"{start}/{end}",
+            "format": "four_digit_start_year_range",
+        }
+
+    short_match = re.search(r"(?<!\d)(\d{2})\s*/\s*(\d{2})(?!\d)", label)
+    if short_match:
+        start_short, end_short = map(int, short_match.groups())
+        start = 2000 + start_short if start_short <= 79 else 1900 + start_short
+        end = (start // 100) * 100 + end_short
+        if end < start:
+            end += 100
+        if end - start not in (0, 1):
+            return None
+        return {
+            "label": label,
+            "start_year": start,
+            "end_year": end,
+            "normalized_season": f"{start}/{end}",
+            "format": "two_digit_season_range",
+        }
+
+    if re.fullmatch(r"20\d{2}", label):
+        year = int(label)
+        return {
+            "label": label,
+            "start_year": year,
+            "end_year": None,
+            "normalized_season": str(year),
+            "format": "calendar_year",
+        }
+    return None
 
 
 def _kickoff(value: Any) -> str | None:
@@ -230,6 +287,10 @@ def build_priority_a_observation_audit(
                     "valid_timezone_aware_kickoffs": record["valid_utc_kickoffs"],
                     "competition_names": names,
                     "season_names": sorted(record["season_names"]),
+                    "season_label_year_evidence": [
+                        evidence for label in sorted(record["season_names"])
+                        if (evidence := _season_label_year_evidence(label)) is not None
+                    ],
                     "countries": countries,
                     "competition_name_matches_queue": _norm(expected_name) in {_norm(v) for v in names},
                     "country_matches_queue": _norm(expected_country) in {_norm(v) for v in countries},
