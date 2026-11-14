@@ -1,0 +1,60 @@
+name: Priority A provider observation audit
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "priority_a_provider_observation_audit.py"
+      - "provider_data_storage.py"
+      - "provider_entity_crosswalk.py"
+      - "reports/provider_independent_catalogue/identity_review_queue.json"
+      - ".github/workflows/priority-a-provider-observation-audit.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: main-report-archive
+  queue: max
+
+jobs:
+  audit:
+    name: Inspect archived provider observations read-only
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Validate database access configuration
+        run: |
+          test -n "$PROVIDER_DATABASE_URL" || { echo "::error::PROVIDER_DATABASE_URL secret is missing."; exit 1; }
+          test -f root.crt || { echo "::error::CockroachDB root.crt is missing."; exit 1; }
+      - name: Run Priority A raw observation audit
+        run: |
+          set -euo pipefail
+          mkdir -p reports/provider_independent_catalogue/priority_a_provider_observation_audit/archive
+          stamp="$(date -u +%Y%m%dT%H%M%SZ)"
+          python priority_a_provider_observation_audit.py
+          python -m json.tool reports/provider_independent_catalogue/priority_a_provider_observation_audit/latest.json >/dev/null
+          cp reports/provider_independent_catalogue/priority_a_provider_observation_audit/latest.json "reports/provider_independent_catalogue/priority_a_provider_observation_audit/archive/${stamp}.json"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/provider_independent_catalogue/priority_a_provider_observation_audit
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive Priority A provider observation audit ${stamp}"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
