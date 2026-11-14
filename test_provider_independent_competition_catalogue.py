@@ -136,6 +136,39 @@ class ProviderIndependentCompetitionCatalogueTests(unittest.TestCase):
             "insufficient_provider_season_evidence",
         )
 
+    def test_abbreviated_two_digit_season_range_is_expanded(self):
+        report = build_provider_independent_competition_catalogue(
+            {
+                "bzzoiro": [{"id": "5", "name": "Bundesliga", "country": "Germany"}],
+                "openligadb": [{"id": "4937", "name": "Bundesliga", "country": "Germany"}],
+            },
+            {
+                "bzzoiro": [{
+                    "id": "5::1091", "name": "Bundesliga 26/27",
+                    "provider_competition_id": "5",
+                }],
+                "openligadb": [{
+                    "id": "4937::2026", "name": "2026",
+                    "provider_competition_id": "4937",
+                }],
+            },
+        )
+        seasons = report["competitions"][0]["season_evidence"]
+        self.assertEqual(seasons["provider_start_years"]["bzzoiro"], [2026])
+        self.assertEqual(seasons["shared_start_years"], [2026])
+        self.assertEqual(seasons["status"], "cross_provider_start_year_overlap")
+
+    def test_abbreviated_season_range_handles_century_rollover(self):
+        report = build_provider_independent_competition_catalogue(
+            {"provider_a": [{"id": "1", "name": "Example Cup", "country": "England"}]},
+            {"provider_a": [{
+                "id": "opaque::x", "name": "1999/00",
+                "provider_competition_id": "1",
+            }]},
+        )
+        season = report["competitions"][0]["sources"][0]["seasons"][0]
+        self.assertEqual(season["start_years"], [1999])
+
     def test_calendar_year_in_season_label_is_still_extracted(self):
         report = build_provider_independent_competition_catalogue(
             {
