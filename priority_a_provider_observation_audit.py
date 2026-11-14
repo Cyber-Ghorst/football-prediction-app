@@ -36,6 +36,30 @@ def _norm(value: Any) -> str:
     return normalize_entity_name(_text(value))
 
 
+def _country_norm(value: Any) -> str:
+    """Normalize common country aliases for comparison, without rewriting source evidence."""
+    key = _norm(value)
+    aliases = {
+        "usa": "united states",
+        "us": "united states",
+        "united states of america": "united states",
+    }
+    return aliases.get(key, key)
+
+
+def _raw_kickoff_evidence(row: Mapping[str, Any]) -> tuple[str, str | None]:
+    """Distinguish source date-only evidence from an absent kickoff field."""
+    raw = row.get("raw_payload")
+    raw = raw if isinstance(raw, Mapping) else {}
+    date_value = _text(raw.get("date") or raw.get("match_date"))
+    time_value = _text(raw.get("time") or raw.get("kickoff"))
+    if date_value and not time_value and re.fullmatch(r"20\\d{2}-\\d{2}-\\d{2}", date_value):
+        return "date_only", f"date={date_value}"
+    if date_value and time_value:
+        return "raw_date_time", f"date={date_value}; time={time_value}"
+    return "not_available", None
+
+
 def _country(row: Mapping[str, Any]) -> str:
     raw = row.get("raw_payload")
     raw = raw if isinstance(raw, Mapping) else {}
@@ -208,6 +232,7 @@ def build_priority_a_observation_audit(
                 "all_observations": 0,
                 "valid_utc_kickoffs": 0,
                 "missing_kickoffs": 0,
+                "date_only_kickoffs": 0,
                 "invalid_or_timezone_naive_kickoffs": 0,
                 "kickoff_examples": set(),
                 "not_eligible_observations": 0,
@@ -244,7 +269,15 @@ def build_priority_a_observation_audit(
             if kickoff_quality == "valid_timezone_aware":
                 record["valid_utc_kickoffs"] += 1
             elif kickoff_quality == "missing":
-                record["missing_kickoffs"] += 1
+                evidence_kind, evidence_example = _raw_kickoff_evidence(row)
+                if evidence_kind == "date_only":
+                    record["date_only_kickoffs"] += 1
+                    if evidence_example and len(record["kickoff_examples"]) < 3:
+                        record["kickoff_examples"].add(evidence_example[:120])
+                else:
+                    record["missing_kickoffs"] += 1
+                    if evidence_example and len(record["kickoff_examples"]) < 3:
+                        record["kickoff_examples"].add(evidence_example[:120])
             else:
                 record["invalid_or_timezone_naive_kickoffs"] += 1
                 if len(record["kickoff_examples"]) < 3:
@@ -313,6 +346,7 @@ def build_priority_a_observation_audit(
                     "unique_provider_fixture_ids": len(record["fixture_ids"]),
                     "valid_timezone_aware_kickoffs": record["valid_utc_kickoffs"],
                     "missing_kickoffs": record["missing_kickoffs"],
+                    "date_only_kickoffs": record["date_only_kickoffs"],
                     "invalid_or_timezone_naive_kickoffs": record["invalid_or_timezone_naive_kickoffs"],
                     "kickoff_value_examples": sorted(record["kickoff_examples"]),
                     "not_eligible_observations": record["not_eligible_observations"],
@@ -326,7 +360,7 @@ def build_priority_a_observation_audit(
                     ],
                     "countries": countries,
                     "competition_name_matches_queue": _norm(expected_name) in {_norm(v) for v in names},
-                    "country_matches_queue": _norm(expected_country) in {_norm(v) for v in countries},
+                    "country_matches_queue": _country_norm(expected_country) in {_country_norm(v) for v in countries},
                     "status_counts": dict(sorted(record["statuses"].items())),
                 })
         entries.append({
