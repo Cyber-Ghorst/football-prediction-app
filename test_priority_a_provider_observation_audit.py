@@ -99,6 +99,29 @@ def test_date_only_source_payload_is_not_reported_as_completely_missing_kickoff(
     assert report["exact_overlap_count"] == 0
 
 
+
+def test_local_date_time_without_timezone_is_separate_from_date_only_and_missing():
+    snapshot = _snapshot("openfootball", "en.1", "2026-27", "of-local-datetime")
+    row = snapshot["payload"]["observations"][0]
+    row["kickoff_utc"] = None
+    row["eligible_for_review"] = False
+    row["raw_payload"] = {
+        "date": "2026-11-20",
+        "time": "19:30",
+        "team1": "Arsenal",
+        "team2": "Chelsea",
+    }
+    report = build_priority_a_observation_audit(
+        _queue(), [snapshot], generated_at=datetime(2026, 11, 14, tzinfo=timezone.utc)
+    )
+    source = report["entries"][0]["provider_sources"][0]
+    assert source["local_date_time_without_timezone"] == 1
+    assert source["date_only_kickoffs"] == 0
+    assert source["missing_kickoffs"] == 1
+    assert source["kickoff_value_examples"] == ["date=2026-11-20; time=19:30"]
+    assert report["exact_overlap_count"] == 0
+
+
 def test_country_alias_usa_matches_united_states_without_rewriting_source_country():
     queue = {
         "entries": [{
