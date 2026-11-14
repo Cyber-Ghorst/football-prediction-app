@@ -22,3 +22,15 @@ This queue stages the 97 approved observed competition records for manual identi
 This is a triage queue only. All entries remain unverified. No canonical identities, provider links, seasons, teams, fixtures, or prediction eligibility are created or approved. Future-fixture routes remain disabled pending their separate gates.
 
 Machine-readable details: [identity_review_queue.json](../reports/provider_independent_catalogue/identity_review_queue.json).
+
+## Disposition update — 14 November 2026
+
+All 97 entries now have an explicit machine-readable review disposition:
+
+- Priority A (10): official-source and raw-observation evidence reviewed; canonical mapping remains unapproved.
+- Priority B (87): held as single-provider-only because no second independent source corroborates the exact competition/country identity.
+- Priority C (0): no entries.
+- 27 country-unscoped source records remain outside identity groups and are held until country evidence is available.
+
+This closes the intake triage. It does **not** authorize canonical mappings. The latest read-only provider crosswalk and Priority A raw-observation reports are linked from [the Layer 11 closeout report](LAYER11_COMPLETION_REPORT_2026-11-14.md). The 87 single-provider records must remain source-scoped until independent evidence exists.
+
