@@ -115,7 +115,7 @@ class ProviderIndependentCompetitionCatalogueTests(unittest.TestCase):
         self.assertFalse(candidate["automatic_approval"])
         self.assertEqual(candidate["canonical_record_created"], False)
 
-    def test_numeric_provider_season_id_is_not_mistaken_for_a_calendar_year(self):
+    def test_numeric_provider_season_id_stays_opaque_and_label_is_parsed(self):
         report = build_provider_independent_competition_catalogue(
             {
                 "bzzoiro": [{"id": "98", "name": "Girabola", "country": "Angola"}],
@@ -130,7 +130,7 @@ class ProviderIndependentCompetitionCatalogueTests(unittest.TestCase):
         season = report["competitions"][0]["sources"][0]["seasons"][0]
         self.assertEqual(season["provider_season_id"], "98::2037")
         self.assertEqual(season["season_name"], "Girabola 26/27")
-        self.assertEqual(season["start_years"], [])
+        self.assertEqual(season["start_years"], [2026])
         self.assertEqual(
             report["competitions"][0]["season_evidence"]["status"],
             "insufficient_provider_season_evidence",
