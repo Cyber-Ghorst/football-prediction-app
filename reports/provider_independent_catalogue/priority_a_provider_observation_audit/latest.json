@@ -1,4 +1,6 @@
 {
+  "date_level_fixture_candidate_count": 0,
+  "date_level_fixture_candidates": [],
   "entries": [
     {
       "catalogue_entry_id": "observed_competition_045",
@@ -94,7 +96,7 @@
             "Germany"
           ],
           "country_matches_queue": true,
-          "date_only_kickoffs": 0,
+          "date_only_kickoffs": 3960,
           "eligible_observation_count": 0,
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [
@@ -104,7 +106,7 @@
           ],
           "local_date_time_without_timezone": 2160,
           "missing_country_observations": 0,
-          "missing_kickoffs": 6120,
+          "missing_kickoffs": 2160,
           "missing_team_name_observations": 0,
           "not_eligible_observations": 6120,
           "provider": "openfootball",
@@ -431,7 +433,7 @@
             "France"
           ],
           "country_matches_queue": true,
-          "date_only_kickoffs": 0,
+          "date_only_kickoffs": 3840,
           "eligible_observation_count": 0,
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [
@@ -441,7 +443,7 @@
           ],
           "local_date_time_without_timezone": 2280,
           "missing_country_observations": 0,
-          "missing_kickoffs": 6120,
+          "missing_kickoffs": 2280,
           "missing_team_name_observations": 0,
           "not_eligible_observations": 6120,
           "provider": "openfootball",
@@ -537,7 +539,7 @@
             "England"
           ],
           "country_matches_queue": true,
-          "date_only_kickoffs": 0,
+          "date_only_kickoffs": 5280,
           "eligible_observation_count": 0,
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [
@@ -547,7 +549,7 @@
           ],
           "local_date_time_without_timezone": 5760,
           "missing_country_observations": 0,
-          "missing_kickoffs": 11040,
+          "missing_kickoffs": 5760,
           "missing_team_name_observations": 0,
           "not_eligible_observations": 11040,
           "provider": "openfootball",
@@ -744,7 +746,7 @@
             "Italy"
           ],
           "country_matches_queue": true,
-          "date_only_kickoffs": 0,
+          "date_only_kickoffs": 5200,
           "eligible_observation_count": 0,
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [
@@ -754,7 +756,7 @@
           ],
           "local_date_time_without_timezone": 2400,
           "missing_country_observations": 0,
-          "missing_kickoffs": 7600,
+          "missing_kickoffs": 2400,
           "missing_team_name_observations": 0,
           "not_eligible_observations": 7600,
           "provider": "openfootball",
@@ -849,7 +851,7 @@
             "Netherlands"
           ],
           "country_matches_queue": true,
-          "date_only_kickoffs": 0,
+          "date_only_kickoffs": 2000,
           "eligible_observation_count": 0,
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [
@@ -859,7 +861,7 @@
           ],
           "local_date_time_without_timezone": 4120,
           "missing_country_observations": 0,
-          "missing_kickoffs": 6120,
+          "missing_kickoffs": 4120,
           "missing_team_name_observations": 0,
           "not_eligible_observations": 6120,
           "provider": "openfootball",
@@ -1056,7 +1058,7 @@
             "Spain"
           ],
           "country_matches_queue": true,
-          "date_only_kickoffs": 0,
+          "date_only_kickoffs": 5800,
           "eligible_observation_count": 0,
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [
@@ -1066,7 +1068,7 @@
           ],
           "local_date_time_without_timezone": 1800,
           "missing_country_observations": 0,
-          "missing_kickoffs": 7600,
+          "missing_kickoffs": 1800,
           "missing_team_name_observations": 0,
           "not_eligible_observations": 7600,
           "provider": "openfootball",
@@ -1330,8 +1332,8 @@
     }
   ],
   "exact_overlap_count": 11,
-  "generated_at_utc": "2026-11-14T21:34:08.749514+00:00",
-  "interpretation": "An exact team-pair and UTC-kickoff overlap is strong fixture-level corroboration, but does not alone approve competition or season identity. Missing observations in the selected recent snapshots mean not observed in this audit window, not that the provider lacks the competition.",
+  "generated_at_utc": "2026-11-14T22:00:57.744162+00:00",
+  "interpretation": "An exact team-pair and UTC-kickoff overlap is strong fixture-level corroboration, but does not alone approve competition or season identity. Date-level candidates match team pairs on dates within one day where at least one source has a local date/time without timezone; they are manual-review leads only and never count as exact overlaps. Missing observations in selected snapshots mean not observed in this audit window, not that the provider lacks the competition.",
   "priority_a_entry_count": 10,
   "providers_checked": [
     "bzzoiro",
