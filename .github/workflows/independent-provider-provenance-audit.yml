@@ -2,6 +2,12 @@ name: Read-only independent provider provenance audit
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'independent_provider_provenance_audit.py'
+      - 'provider_data_storage.py'
+      - '.github/workflows/independent-provider-provenance-audit.yml'
 
 permissions:
   contents: write
