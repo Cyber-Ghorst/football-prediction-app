@@ -28,8 +28,17 @@ def _season_years(*values: Any) -> list[int]:
     """Extract years only from human-readable season labels, never provider IDs."""
     years = set()
     for value in values:
-        for match in re.findall(r"(?<!\d)(20\d{2})(?!\d)", str(value or "")):
+        label = str(value or "")
+        for match in re.findall(r"(?<!\\d)(20\\d{2})(?!\\d)", label):
             years.add(int(match))
+        # Expand provider labels such as "2026/27" or "26/27". Only
+        # consecutive season pairs are accepted; provider IDs stay opaque.
+        for start, end in re.findall(r"(?<!\\d)(\\d{2})\\s*/\\s*(\\d{2})(?!\\d)", label):
+            start_year = int(start)
+            end_year = int(end)
+            expanded_start = 2000 + start_year if start_year <= 69 else 1900 + start_year
+            if end_year == (start_year + 1) % 100:
+                years.add(expanded_start)
     return sorted(years)
 
 
