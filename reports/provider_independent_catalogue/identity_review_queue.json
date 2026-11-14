@@ -2,7 +2,7 @@
   "queue_name": "provider_independent_competition_identity_review",
   "source_catalogue": "reports/provider_independent_catalogue/approved_scope.json",
   "entry_count": 97,
-  "policy": "Triage order only. No competition type, canonical identity, provider link, season, team, fixture, or prediction eligibility is approved by this queue.",
+  "policy": "Every observed competition has an explicit triage disposition. Priority A entries have official-source and raw-observation evidence reviewed but remain unapproved for canonical mapping; Priority B entries are held because only one provider contributes the exact competition/country identity; country-unscoped source records remain held. This queue does not itself approve competition type, canonical identity, provider links, seasons, teams, fixtures, or prediction eligibility.",
   "review_gates": [
     "Verify competition exists and identify its actual type (league, cup, tournament, etc.).",
     "Verify country/territory from source evidence; leave unknown when not supported.",
@@ -178,7 +178,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "evidence_reviewed_not_approved",
+      "review_reason": "Official competition context and the read-only provider-observation audit were reviewed. Provider-specific competition and season IDs are not yet proven to be equivalent canonical identities; exact fixture overlaps are corroboration, not approval."
     },
     {
       "review_order": 2,
@@ -303,7 +305,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "evidence_reviewed_not_approved",
+      "review_reason": "Official competition context and the read-only provider-observation audit were reviewed. Provider-specific competition and season IDs are not yet proven to be equivalent canonical identities; exact fixture overlaps are corroboration, not approval."
     },
     {
       "review_order": 3,
@@ -434,7 +438,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "evidence_reviewed_not_approved",
+      "review_reason": "Official competition context and the read-only provider-observation audit were reviewed. Provider-specific competition and season IDs are not yet proven to be equivalent canonical identities; exact fixture overlaps are corroboration, not approval."
     },
     {
       "review_order": 4,
@@ -525,7 +531,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "evidence_reviewed_not_approved",
+      "review_reason": "Official competition context and the read-only provider-observation audit were reviewed. Provider-specific competition and season IDs are not yet proven to be equivalent canonical identities; exact fixture overlaps are corroboration, not approval."
     },
     {
       "review_order": 5,
@@ -616,7 +624,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "evidence_reviewed_not_approved",
+      "review_reason": "Official competition context and the read-only provider-observation audit were reviewed. Provider-specific competition and season IDs are not yet proven to be equivalent canonical identities; exact fixture overlaps are corroboration, not approval."
     },
     {
       "review_order": 6,
@@ -707,7 +717,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "evidence_reviewed_not_approved",
+      "review_reason": "Official competition context and the read-only provider-observation audit were reviewed. Provider-specific competition and season IDs are not yet proven to be equivalent canonical identities; exact fixture overlaps are corroboration, not approval."
     },
     {
       "review_order": 7,
@@ -798,7 +810,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "evidence_reviewed_not_approved",
+      "review_reason": "Official competition context and the read-only provider-observation audit were reviewed. Provider-specific competition and season IDs are not yet proven to be equivalent canonical identities; exact fixture overlaps are corroboration, not approval."
     },
     {
       "review_order": 8,
@@ -889,7 +903,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "evidence_reviewed_not_approved",
+      "review_reason": "Official competition context and the read-only provider-observation audit were reviewed. Provider-specific competition and season IDs are not yet proven to be equivalent canonical identities; exact fixture overlaps are corroboration, not approval."
     },
     {
       "review_order": 9,
@@ -980,7 +996,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "evidence_reviewed_not_approved",
+      "review_reason": "Official competition context and the read-only provider-observation audit were reviewed. Provider-specific competition and season IDs are not yet proven to be equivalent canonical identities; exact fixture overlaps are corroboration, not approval."
     },
     {
       "review_order": 10,
@@ -1080,7 +1098,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "evidence_reviewed_not_approved",
+      "review_reason": "Official competition context and the read-only provider-observation audit were reviewed. Provider-specific competition and season IDs are not yet proven to be equivalent canonical identities; exact fixture overlaps are corroboration, not approval."
     },
     {
       "review_order": 11,
@@ -1139,7 +1159,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 12,
@@ -1204,7 +1226,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 13,
@@ -1269,7 +1293,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 14,
@@ -1328,7 +1354,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 15,
@@ -1387,7 +1415,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 16,
@@ -1452,7 +1482,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 17,
@@ -1511,7 +1543,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 18,
@@ -1570,7 +1604,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 19,
@@ -1635,7 +1671,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 20,
@@ -1700,7 +1738,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 21,
@@ -1765,7 +1805,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 22,
@@ -1836,7 +1878,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 23,
@@ -1895,7 +1939,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 24,
@@ -1960,7 +2006,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 25,
@@ -2025,7 +2073,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 26,
@@ -2090,7 +2140,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 27,
@@ -2149,7 +2201,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 28,
@@ -2208,7 +2262,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 29,
@@ -2273,7 +2329,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 30,
@@ -2338,7 +2396,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 31,
@@ -2403,7 +2463,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 32,
@@ -2468,7 +2530,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 33,
@@ -2533,7 +2597,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 34,
@@ -2598,7 +2664,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 35,
@@ -2663,7 +2731,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 36,
@@ -2728,7 +2798,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 37,
@@ -2793,7 +2865,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 38,
@@ -2852,7 +2926,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 39,
@@ -2911,7 +2987,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 40,
@@ -2970,7 +3048,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 41,
@@ -3035,7 +3115,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 42,
@@ -3100,7 +3182,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 43,
@@ -3165,7 +3249,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 44,
@@ -3258,7 +3344,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 45,
@@ -3317,7 +3405,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 46,
@@ -3376,7 +3466,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 47,
@@ -3441,7 +3533,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 48,
@@ -3500,7 +3594,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 49,
@@ -3559,7 +3655,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 50,
@@ -3624,7 +3722,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 51,
@@ -3689,7 +3789,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 52,
@@ -3754,7 +3856,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 53,
@@ -3813,7 +3917,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 54,
@@ -3878,7 +3984,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 55,
@@ -3937,7 +4045,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 56,
@@ -3996,7 +4106,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 57,
@@ -4055,7 +4167,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 58,
@@ -4114,7 +4228,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 59,
@@ -4173,7 +4289,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 60,
@@ -4238,7 +4356,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 61,
@@ -4303,7 +4423,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 62,
@@ -4368,7 +4490,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 63,
@@ -4427,7 +4551,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 64,
@@ -4486,7 +4612,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 65,
@@ -4545,7 +4673,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 66,
@@ -4610,7 +4740,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 67,
@@ -4675,7 +4807,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 68,
@@ -4734,7 +4868,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 69,
@@ -4793,7 +4929,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 70,
@@ -4852,7 +4990,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 71,
@@ -4911,7 +5051,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 72,
@@ -4976,7 +5118,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 73,
@@ -5035,7 +5179,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 74,
@@ -5094,7 +5240,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 75,
@@ -5153,7 +5301,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 76,
@@ -5212,7 +5362,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 77,
@@ -5277,7 +5429,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 78,
@@ -5342,7 +5496,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 79,
@@ -5401,7 +5557,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 80,
@@ -5466,7 +5624,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 81,
@@ -5525,7 +5685,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 82,
@@ -5596,7 +5758,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 83,
@@ -5655,7 +5819,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 84,
@@ -5720,7 +5886,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 85,
@@ -5785,7 +5953,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 86,
@@ -5850,7 +6020,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 87,
@@ -5915,7 +6087,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 88,
@@ -5980,7 +6154,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 89,
@@ -6045,7 +6221,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 90,
@@ -6110,7 +6288,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 91,
@@ -6169,7 +6349,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 92,
@@ -6228,7 +6410,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 93,
@@ -6287,7 +6471,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 94,
@@ -6346,7 +6532,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 95,
@@ -6411,7 +6599,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 96,
@@ -6476,7 +6666,9 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
       "review_order": 97,
@@ -6541,12 +6733,39 @@
       "canonical_mapping_created": false,
       "provider_links_created": false,
       "fixture_ingestion_enabled": false,
-      "prediction_eligible": false
+      "prediction_eligible": false,
+      "review_disposition": "held_single_provider",
+      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     }
   ],
   "priority_counts": {
     "A": 10,
     "B": 87,
     "C": 0
+  },
+  "disposition_summary": {
+    "generated_at_utc": "2026-11-14T15:59:00Z",
+    "priority_a": {
+      "count": 10,
+      "disposition": "evidence_reviewed_not_approved"
+    },
+    "priority_b": {
+      "count": 87,
+      "disposition": "held_single_provider"
+    },
+    "priority_c": {
+      "count": 0,
+      "disposition": "held_missing_or_ambiguous_country"
+    },
+    "country_unscoped_source_records": {
+      "count": 27,
+      "disposition": "held_outside_identity_groups_until_country_evidence"
+    },
+    "canonical_identity_approvals": 0,
+    "provider_links_created": 0,
+    "season_links_created": 0,
+    "team_links_created": 0,
+    "fixture_writes": 0,
+    "prediction_ledger_writes": 0
   }
 }
