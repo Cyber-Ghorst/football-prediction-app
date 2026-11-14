@@ -1,0 +1,262 @@
+{
+  "report_name": "competition_identity_external_evidence_dossier",
+  "generated_at": "2026-11-14",
+  "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
+  "scope": "Priority A only: ten multi-provider observed competition entries with country context.",
+  "interpretation": "External official competition evidence supports the public competition identity and season context. It does not prove that provider-specific IDs or season IDs refer to the same canonical competition or season.",
+  "safeguards": {
+    "canonical_competition_created": false,
+    "provider_links_created": false,
+    "canonical_seasons_created": false,
+    "fixture_ingestion_enabled": false,
+    "prediction_eligibility_enabled": false,
+    "automatic_identity_approval": false
+  },
+  "entries": [
+    {
+      "catalogue_entry_id": "observed_competition_045",
+      "name": "Bundesliga",
+      "observed_country": "Germany",
+      "providers": [
+        "bzzoiro",
+        "football_data_org",
+        "openfootball",
+        "openligadb"
+      ],
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026/27",
+      "external_evidence": [
+        {
+          "publisher": "Bundesliga",
+          "url": "https://www.bundesliga.com/en/bundesliga/news/calendar-for-2026-27-season-world-cup-34676",
+          "supports": "Official 2026/27 Bundesliga calendar; start 28 August 2026."
+        },
+        {
+          "publisher": "DFL",
+          "url": "https://media.dfl.de/sites/2/2026/03/Spielordnung-SpOL-2026-03-06-Stand.pdf",
+          "supports": "DFL competition regulations identify Bundesliga and 2. Bundesliga as licensed leagues."
+        }
+      ],
+      "provider_season_evidence": "Cross-provider 2026 start-year overlap for football-data.org, OpenFootball and OpenLigaDB; Bzzoiro season label is 26/27 but lacks parsed start year.",
+      "review_status": "external_identity_supported_provider_ids_unverified"
+    },
+    {
+      "catalogue_entry_id": "observed_competition_032",
+      "name": "Premier League",
+      "observed_country": "England",
+      "providers": [
+        "bzzoiro",
+        "openfootball",
+        "openligadb"
+      ],
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026/27",
+      "external_evidence": [
+        {
+          "publisher": "Premier League",
+          "url": "https://www.premierleague.com/en/news/4365156",
+          "supports": "Official 2026/27 club list and confirms the Championship is the second tier below the Premier League."
+        }
+      ],
+      "provider_season_evidence": "OpenFootball and OpenLigaDB share 2026 start-year evidence; Bzzoiro season label is 26/27 without parsed start year.",
+      "review_status": "external_identity_supported_provider_ids_unverified"
+    },
+    {
+      "catalogue_entry_id": "observed_competition_040",
+      "name": "Ligue 1",
+      "observed_country": "France",
+      "providers": [
+        "bzzoiro",
+        "football_data_org",
+        "openfootball"
+      ],
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026/27",
+      "external_evidence": [
+        {
+          "publisher": "Ligue 1 / LFP",
+          "url": "https://ligue1.com/en/articles/l1_article_3812-",
+          "supports": "Official LFP 2026/27 Ligue 1 season dates."
+        },
+        {
+          "publisher": "Ligue 1 / LFP",
+          "url": "https://ligue1.com/fr/articles/l1_article_5284-ligue-1-mcdonald-s-le-calendrier-de-la-saison-26-27",
+          "supports": "Official 2026/27 fixture calendar and 34 matchdays."
+        }
+      ],
+      "provider_season_evidence": "Football-data.org and OpenFootball share 2026 start-year evidence; Bzzoiro label is 26/27 without parsed start year.",
+      "review_status": "external_identity_supported_provider_ids_unverified"
+    },
+    {
+      "catalogue_entry_id": "observed_competition_020",
+      "name": "Championship",
+      "observed_country": "England",
+      "providers": [
+        "bzzoiro",
+        "openfootball"
+      ],
+      "external_competition_type": "men's second-tier domestic league",
+      "external_season": "2026/27",
+      "external_evidence": [
+        {
+          "publisher": "English Football League",
+          "url": "https://www.efl.com/about-the-efl/our-competitions/",
+          "supports": "EFL identifies the Championship as one of its three divisions and describes its regular-season structure."
+        },
+        {
+          "publisher": "English Football League",
+          "url": "https://www.efl.com/competitions/efl-championship/",
+          "supports": "Official EFL Championship competition page and league table."
+        }
+      ],
+      "provider_season_evidence": "No shared parsed season start year in current provider snapshots.",
+      "review_status": "external_identity_supported_provider_season_unverified"
+    },
+    {
+      "catalogue_entry_id": "observed_competition_043",
+      "name": "2. Bundesliga",
+      "observed_country": "Germany",
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ],
+      "external_competition_type": "men's second-tier domestic league",
+      "external_season": "2026/27",
+      "external_evidence": [
+        {
+          "publisher": "Bundesliga",
+          "url": "https://www.bundesliga.com/en/bundesliga/news/calendar-for-2026-27-season-world-cup-34676",
+          "supports": "Official calendar distinguishes Bundesliga and Bundesliga 2, with Bundesliga 2 beginning 7 August 2026."
+        },
+        {
+          "publisher": "DFL",
+          "url": "https://media.dfl.de/sites/2/2026/03/Spielordnung-SpOL-2026-03-06-Stand.pdf",
+          "supports": "DFL regulations identify 2. Bundesliga as a licensed league."
+        }
+      ],
+      "provider_season_evidence": "OpenLigaDB season year 2026; Bzzoiro season label is 26/27 without parsed start year.",
+      "review_status": "external_identity_supported_provider_season_unverified"
+    },
+    {
+      "catalogue_entry_id": "observed_competition_050",
+      "name": "Serie A",
+      "observed_country": "Italy",
+      "providers": [
+        "bzzoiro",
+        "openfootball"
+      ],
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026/27",
+      "external_evidence": [
+        {
+          "publisher": "Lega Serie A",
+          "url": "https://www.legaseriea.it/serie-a/news/le-date-della-stagione-2026-2027",
+          "supports": "Official Serie A 2026/27 calendar dates; distinguishes Serie A from Coppa Italia."
+        },
+        {
+          "publisher": "Lega Serie A",
+          "url": "https://www.legaseriea.it/serie-a/classifica?lang=en",
+          "supports": "Official 2026/27 Serie A standings."
+        }
+      ],
+      "provider_season_evidence": "No shared parsed season start year in current provider snapshots.",
+      "review_status": "external_identity_supported_provider_season_unverified"
+    },
+    {
+      "catalogue_entry_id": "observed_competition_060",
+      "name": "Eredivisie",
+      "observed_country": "Netherlands",
+      "providers": [
+        "bzzoiro",
+        "openfootball"
+      ],
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026/27",
+      "external_evidence": [
+        {
+          "publisher": "Eredivisie / KNVB",
+          "url": "https://eredivisie.nl/nieuws/speeldagenkalender-betaald-voetbal-seizoen-2026-27-vastgesteld/",
+          "supports": "Official 2026/27 calendar for the Eredivisie and Keuken Kampioen Divisie, including start and end dates."
+        }
+      ],
+      "provider_season_evidence": "No shared parsed season start year in current provider snapshots.",
+      "review_status": "external_identity_supported_provider_season_unverified"
+    },
+    {
+      "catalogue_entry_id": "observed_competition_072",
+      "name": "Saudi Pro League",
+      "observed_country": "Saudi Arabia",
+      "providers": [
+        "bzzoiro",
+        "livescore_football"
+      ],
+      "external_competition_type": "men's top-tier domestic league (Roshn Saudi League)",
+      "external_season": "2026/27",
+      "external_evidence": [
+        {
+          "publisher": "Saudi Pro League",
+          "url": "https://www.spl.com.sa/en/news/spl-announces-2026-27-rsl-fixture-schedule",
+          "supports": "Official 2026/27 Roshn Saudi League schedule; 34 rounds and 306 matches."
+        },
+        {
+          "publisher": "Saudi Pro League",
+          "url": "https://www.spl.com.sa/en/news/rsl-schedule-2026-27",
+          "supports": "Official revised 2026/27 league calendar."
+        }
+      ],
+      "provider_season_evidence": "No shared parsed season start year in current provider snapshots.",
+      "review_status": "external_identity_supported_provider_season_unverified"
+    },
+    {
+      "catalogue_entry_id": "observed_competition_078",
+      "name": "La Liga",
+      "observed_country": "Spain",
+      "providers": [
+        "bzzoiro",
+        "openfootball"
+      ],
+      "external_competition_type": "men's top-tier domestic league (LALIGA EA SPORTS)",
+      "external_season": "2026/27",
+      "external_evidence": [
+        {
+          "publisher": "LALIGA",
+          "url": "https://www.laliga.com/en-US/laliga-easports",
+          "supports": "Official LALIGA EA SPORTS 2026/27 competition page and scheduled fixtures."
+        }
+      ],
+      "provider_season_evidence": "No shared parsed season start year in current provider snapshots.",
+      "review_status": "external_identity_supported_provider_season_unverified"
+    },
+    {
+      "catalogue_entry_id": "observed_competition_094",
+      "name": "MLS",
+      "observed_country": "United States and Canada",
+      "providers": [
+        "bzzoiro",
+        "livescore_football"
+      ],
+      "external_competition_type": "men's top-tier professional league spanning the United States and Canada",
+      "external_season": "2026",
+      "external_evidence": [
+        {
+          "publisher": "Major League Soccer",
+          "url": "https://www.mlssoccer.com/news/about-major-league-soccer-x4174",
+          "supports": "Official MLS profile identifies MLS as the top-flight professional league in the United States and Canada and describes the 2026 season."
+        },
+        {
+          "publisher": "Major League Soccer",
+          "url": "https://www.mlssoccer.com/league-reports/competition-guidelines/",
+          "supports": "Official 2026 competition guidelines and 30-club competition structure."
+        }
+      ],
+      "provider_season_evidence": "Shared 2026 start-year overlap exists in provider snapshots; MLS season is calendar-year rather than European-style 2026/27.",
+      "review_status": "external_identity_supported_provider_ids_and_scope_unverified"
+    }
+  ],
+  "next_required_checks": [
+    "Inspect raw source payloads for exact competition and season metadata, not just names and start years.",
+    "Verify gender, age group, reserve status, country scope and competition tier for each provider source record.",
+    "Verify participating clubs and season schedule overlap before proposing provider-to-canonical identity links.",
+    "Obtain explicit human approval before writing any canonical mapping or provider link."
+  ]
+}
