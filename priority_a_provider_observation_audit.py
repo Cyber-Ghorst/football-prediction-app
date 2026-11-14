@@ -53,10 +53,10 @@ def _season_label_year_evidence(value: Any) -> dict[str, Any] | None:
     This is descriptive evidence only; it never establishes season equivalence.
     """
     label = _text(value)
-    if not label or re.fullmatch(r"20\\d{2}-\\d{2}-\\d{2}", label):
+    if not label or re.fullmatch(r"20\d{2}-\d{2}-\d{2}", label):
         return None
 
-    match = re.search(r"(?<!\\d)(20\\d{2})\\s*[/–—-]\\s*(\\d{2}|20\\d{2})(?!\\d)", label)
+    match = re.search(r"(?<!\d)(20\d{2})\s*[/–—-]\s*(\d{2}|20\d{2})(?!\d)", label)
     if match:
         start = int(match.group(1))
         end_token = match.group(2)
@@ -73,7 +73,7 @@ def _season_label_year_evidence(value: Any) -> dict[str, Any] | None:
             "format": "four_digit_start_year_range",
         }
 
-    short_match = re.search(r"(?<!\\d)(\\d{2})\\s*/\\s*(\\d{2})(?!\\d)", label)
+    short_match = re.search(r"(?<!\d)(\d{2})\s*/\s*(\d{2})(?!\d)", label)
     if short_match:
         start_short, end_short = map(int, short_match.groups())
         start = 2000 + start_short if start_short <= 79 else 1900 + start_short
@@ -90,7 +90,7 @@ def _season_label_year_evidence(value: Any) -> dict[str, Any] | None:
             "format": "two_digit_season_range",
         }
 
-    if re.fullmatch(r"20\\d{2}", label):
+    if re.fullmatch(r"20\d{2}", label):
         year = int(label)
         return {
             "label": label,
