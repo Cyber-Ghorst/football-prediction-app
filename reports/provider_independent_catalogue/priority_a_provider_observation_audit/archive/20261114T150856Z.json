@@ -1,0 +1,1145 @@
+{
+  "entries": [
+    {
+      "catalogue_entry_id": "observed_competition_045",
+      "competition": "Bundesliga",
+      "country": "Germany",
+      "exact_cross_provider_fixture_overlap_count": 6,
+      "identity_decision": "not_approved",
+      "provider_sources": [
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Bundesliga"
+          ],
+          "countries": [
+            "Germany"
+          ],
+          "country_matches_queue": true,
+          "eligible_observation_count": 11,
+          "provider": "bzzoiro",
+          "provider_competition_id": "5",
+          "provider_season_id": "5::1091",
+          "raw_observation_count": 11,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "Bundesliga 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "Bundesliga 26/27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "notstarted": 11
+          },
+          "unique_away_teams": 7,
+          "unique_home_teams": 7,
+          "unique_provider_fixture_ids": 7,
+          "unique_teams_combined": 14,
+          "valid_timezone_aware_kickoffs": 11
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Bundesliga"
+          ],
+          "countries": [],
+          "country_matches_queue": false,
+          "eligible_observation_count": 1,
+          "provider": "football_data_org",
+          "provider_competition_id": "2002",
+          "provider_season_id": "2002::2522",
+          "raw_observation_count": 1,
+          "season_label_year_evidence": [],
+          "season_names": [
+            "2026-08-28"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "scheduled": 1
+          },
+          "unique_away_teams": 1,
+          "unique_home_teams": 1,
+          "unique_provider_fixture_ids": 1,
+          "unique_teams_combined": 2,
+          "valid_timezone_aware_kickoffs": 1
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Bundesliga"
+          ],
+          "countries": [
+            "Germany"
+          ],
+          "country_matches_queue": true,
+          "eligible_observation_count": 0,
+          "provider": "openfootball",
+          "provider_competition_id": "de.1",
+          "provider_season_id": "de.1::2026-27",
+          "raw_observation_count": 1530,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "four_digit_start_year_range",
+              "label": "2026-27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2026-27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "scheduled": 1530
+          },
+          "unique_away_teams": 18,
+          "unique_home_teams": 18,
+          "unique_provider_fixture_ids": 306,
+          "unique_teams_combined": 18,
+          "valid_timezone_aware_kickoffs": 0
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Bundesliga"
+          ],
+          "countries": [
+            "Germany"
+          ],
+          "country_matches_queue": true,
+          "eligible_observation_count": 1125,
+          "provider": "openligadb",
+          "provider_competition_id": "4937",
+          "provider_season_id": "4937::2026",
+          "raw_observation_count": 1530,
+          "season_label_year_evidence": [
+            {
+              "end_year": null,
+              "format": "calendar_year",
+              "label": "2026",
+              "normalized_season": "2026",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2026"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "finished": 405,
+            "scheduled": 1125
+          },
+          "unique_away_teams": 18,
+          "unique_home_teams": 18,
+          "unique_provider_fixture_ids": 306,
+          "unique_teams_combined": 18,
+          "valid_timezone_aware_kickoffs": 1530
+        }
+      ],
+      "providers": [
+        "bzzoiro",
+        "football_data_org",
+        "openfootball",
+        "openligadb"
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_032",
+      "competition": "Premier League",
+      "country": "England",
+      "exact_cross_provider_fixture_overlap_count": 1,
+      "identity_decision": "not_approved",
+      "provider_sources": [
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Premier League"
+          ],
+          "countries": [
+            "England"
+          ],
+          "country_matches_queue": true,
+          "eligible_observation_count": 7,
+          "provider": "bzzoiro",
+          "provider_competition_id": "1",
+          "provider_season_id": "1::1058",
+          "raw_observation_count": 7,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "Premier League 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "Premier League 26/27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "notstarted": 7
+          },
+          "unique_away_teams": 7,
+          "unique_home_teams": 7,
+          "unique_provider_fixture_ids": 7,
+          "unique_teams_combined": 14,
+          "valid_timezone_aware_kickoffs": 7
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Premier League"
+          ],
+          "countries": [
+            "England"
+          ],
+          "country_matches_queue": true,
+          "eligible_observation_count": 0,
+          "provider": "openfootball",
+          "provider_competition_id": "en.1",
+          "provider_season_id": "en.1::2026-27",
+          "raw_observation_count": 1900,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "four_digit_start_year_range",
+              "label": "2026-27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2026-27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "scheduled": 1900
+          },
+          "unique_away_teams": 20,
+          "unique_home_teams": 20,
+          "unique_provider_fixture_ids": 380,
+          "unique_teams_combined": 20,
+          "valid_timezone_aware_kickoffs": 0
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Premier League"
+          ],
+          "countries": [
+            "England"
+          ],
+          "country_matches_queue": true,
+          "eligible_observation_count": 1400,
+          "provider": "openligadb",
+          "provider_competition_id": "5996",
+          "provider_season_id": "5996::2026",
+          "raw_observation_count": 1900,
+          "season_label_year_evidence": [
+            {
+              "end_year": null,
+              "format": "calendar_year",
+              "label": "2026",
+              "normalized_season": "2026",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2026"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "finished": 500,
+            "scheduled": 1400
+          },
+          "unique_away_teams": 20,
+          "unique_home_teams": 20,
+          "unique_provider_fixture_ids": 380,
+          "unique_teams_combined": 20,
+          "valid_timezone_aware_kickoffs": 1900
+        }
+      ],
+      "providers": [
+        "bzzoiro",
+        "openfootball",
+        "openligadb"
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_040",
+      "competition": "Ligue 1",
+      "country": "France",
+      "exact_cross_provider_fixture_overlap_count": 0,
+      "identity_decision": "not_approved",
+      "provider_sources": [
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Ligue 1"
+          ],
+          "countries": [
+            "France"
+          ],
+          "country_matches_queue": true,
+          "eligible_observation_count": 10,
+          "provider": "bzzoiro",
+          "provider_competition_id": "6",
+          "provider_season_id": "6::1311",
+          "raw_observation_count": 10,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "Ligue 1 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "Ligue 1 26/27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "notstarted": 10
+          },
+          "unique_away_teams": 6,
+          "unique_home_teams": 6,
+          "unique_provider_fixture_ids": 6,
+          "unique_teams_combined": 12,
+          "valid_timezone_aware_kickoffs": 10
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Ligue 1"
+          ],
+          "countries": [],
+          "country_matches_queue": false,
+          "eligible_observation_count": 1,
+          "provider": "football_data_org",
+          "provider_competition_id": "2015",
+          "provider_season_id": "2015::2497",
+          "raw_observation_count": 1,
+          "season_label_year_evidence": [],
+          "season_names": [
+            "2026-08-22"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "scheduled": 1
+          },
+          "unique_away_teams": 1,
+          "unique_home_teams": 1,
+          "unique_provider_fixture_ids": 1,
+          "unique_teams_combined": 2,
+          "valid_timezone_aware_kickoffs": 1
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Ligue 1"
+          ],
+          "countries": [
+            "France"
+          ],
+          "country_matches_queue": true,
+          "eligible_observation_count": 0,
+          "provider": "openfootball",
+          "provider_competition_id": "fr.1",
+          "provider_season_id": "fr.1::2026-27",
+          "raw_observation_count": 1530,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "four_digit_start_year_range",
+              "label": "2026-27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2026-27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "scheduled": 1530
+          },
+          "unique_away_teams": 18,
+          "unique_home_teams": 18,
+          "unique_provider_fixture_ids": 306,
+          "unique_teams_combined": 18,
+          "valid_timezone_aware_kickoffs": 0
+        }
+      ],
+      "providers": [
+        "bzzoiro",
+        "football_data_org",
+        "openfootball"
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_020",
+      "competition": "Championship",
+      "country": "England",
+      "exact_cross_provider_fixture_overlap_count": 0,
+      "identity_decision": "not_approved",
+      "provider_sources": [
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Championship"
+          ],
+          "countries": [
+            "England"
+          ],
+          "country_matches_queue": true,
+          "eligible_observation_count": 11,
+          "provider": "bzzoiro",
+          "provider_competition_id": "12",
+          "provider_season_id": "12::1111",
+          "raw_observation_count": 11,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "Championship 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "Championship 26/27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "notstarted": 11
+          },
+          "unique_away_teams": 11,
+          "unique_home_teams": 11,
+          "unique_provider_fixture_ids": 11,
+          "unique_teams_combined": 22,
+          "valid_timezone_aware_kickoffs": 11
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Championship"
+          ],
+          "countries": [
+            "England"
+          ],
+          "country_matches_queue": true,
+          "eligible_observation_count": 0,
+          "provider": "openfootball",
+          "provider_competition_id": "en.2",
+          "provider_season_id": "en.2::2026-27",
+          "raw_observation_count": 2760,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "four_digit_start_year_range",
+              "label": "2026-27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2026-27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "scheduled": 2760
+          },
+          "unique_away_teams": 24,
+          "unique_home_teams": 24,
+          "unique_provider_fixture_ids": 552,
+          "unique_teams_combined": 24,
+          "valid_timezone_aware_kickoffs": 0
+        }
+      ],
+      "providers": [
+        "bzzoiro",
+        "openfootball"
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_043",
+      "competition": "2. Bundesliga",
+      "country": "Germany",
+      "exact_cross_provider_fixture_overlap_count": 3,
+      "identity_decision": "not_approved",
+      "provider_sources": [
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "2. Bundesliga"
+          ],
+          "countries": [
+            "Germany"
+          ],
+          "country_matches_queue": true,
+          "eligible_observation_count": 14,
+          "provider": "bzzoiro",
+          "provider_competition_id": "94",
+          "provider_season_id": "94::1967",
+          "raw_observation_count": 14,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "2. Bundesliga 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2. Bundesliga 26/27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "notstarted": 14
+          },
+          "unique_away_teams": 6,
+          "unique_home_teams": 6,
+          "unique_provider_fixture_ids": 6,
+          "unique_teams_combined": 12,
+          "valid_timezone_aware_kickoffs": 14
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "2. Bundesliga"
+          ],
+          "countries": [
+            "Germany"
+          ],
+          "country_matches_queue": true,
+          "eligible_observation_count": 1035,
+          "provider": "openligadb",
+          "provider_competition_id": "4938",
+          "provider_season_id": "4938::2026",
+          "raw_observation_count": 1530,
+          "season_label_year_evidence": [
+            {
+              "end_year": null,
+              "format": "calendar_year",
+              "label": "2026",
+              "normalized_season": "2026",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2026"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "finished": 495,
+            "scheduled": 1035
+          },
+          "unique_away_teams": 18,
+          "unique_home_teams": 18,
+          "unique_provider_fixture_ids": 306,
+          "unique_teams_combined": 18,
+          "valid_timezone_aware_kickoffs": 1530
+        }
+      ],
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_050",
+      "competition": "Serie A",
+      "country": "Italy",
+      "exact_cross_provider_fixture_overlap_count": 0,
+      "identity_decision": "not_approved",
+      "provider_sources": [
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Serie A"
+          ],
+          "countries": [
+            "Italy"
+          ],
+          "country_matches_queue": true,
+          "eligible_observation_count": 4,
+          "provider": "bzzoiro",
+          "provider_competition_id": "4",
+          "provider_season_id": "4::1375",
+          "raw_observation_count": 4,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "Serie A 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "Serie A 26/27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "notstarted": 4
+          },
+          "unique_away_teams": 4,
+          "unique_home_teams": 4,
+          "unique_provider_fixture_ids": 4,
+          "unique_teams_combined": 8,
+          "valid_timezone_aware_kickoffs": 4
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Serie A"
+          ],
+          "countries": [
+            "Italy"
+          ],
+          "country_matches_queue": true,
+          "eligible_observation_count": 0,
+          "provider": "openfootball",
+          "provider_competition_id": "it.1",
+          "provider_season_id": "it.1::2026-27",
+          "raw_observation_count": 1900,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "four_digit_start_year_range",
+              "label": "2026-27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2026-27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "scheduled": 1900
+          },
+          "unique_away_teams": 20,
+          "unique_home_teams": 20,
+          "unique_provider_fixture_ids": 380,
+          "unique_teams_combined": 20,
+          "valid_timezone_aware_kickoffs": 0
+        }
+      ],
+      "providers": [
+        "bzzoiro",
+        "openfootball"
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_060",
+      "competition": "Eredivisie",
+      "country": "Netherlands",
+      "exact_cross_provider_fixture_overlap_count": 0,
+      "identity_decision": "not_approved",
+      "provider_sources": [
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Eredivisie"
+          ],
+          "countries": [
+            "Netherlands"
+          ],
+          "country_matches_queue": true,
+          "eligible_observation_count": 5,
+          "provider": "bzzoiro",
+          "provider_competition_id": "10",
+          "provider_season_id": "10::1268",
+          "raw_observation_count": 5,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "Eredivisie 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "Eredivisie 26/27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "notstarted": 5
+          },
+          "unique_away_teams": 5,
+          "unique_home_teams": 5,
+          "unique_provider_fixture_ids": 5,
+          "unique_teams_combined": 10,
+          "valid_timezone_aware_kickoffs": 5
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Eredivisie"
+          ],
+          "countries": [
+            "Netherlands"
+          ],
+          "country_matches_queue": true,
+          "eligible_observation_count": 0,
+          "provider": "openfootball",
+          "provider_competition_id": "nl.1",
+          "provider_season_id": "nl.1::2026-27",
+          "raw_observation_count": 1530,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "four_digit_start_year_range",
+              "label": "2026-27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2026-27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "scheduled": 1530
+          },
+          "unique_away_teams": 18,
+          "unique_home_teams": 18,
+          "unique_provider_fixture_ids": 306,
+          "unique_teams_combined": 18,
+          "valid_timezone_aware_kickoffs": 0
+        }
+      ],
+      "providers": [
+        "bzzoiro",
+        "openfootball"
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_072",
+      "competition": "Saudi Pro League",
+      "country": "Saudi Arabia",
+      "exact_cross_provider_fixture_overlap_count": 1,
+      "identity_decision": "not_approved",
+      "provider_sources": [
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Saudi Pro League"
+          ],
+          "countries": [
+            "Saudi Arabia"
+          ],
+          "country_matches_queue": true,
+          "eligible_observation_count": 5,
+          "provider": "bzzoiro",
+          "provider_competition_id": "17",
+          "provider_season_id": "17::1631",
+          "raw_observation_count": 50,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "Saudi Pro League 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "Saudi Pro League 26/27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "notstarted": 5,
+            "postponed": 45
+          },
+          "unique_away_teams": 10,
+          "unique_home_teams": 9,
+          "unique_provider_fixture_ids": 10,
+          "unique_teams_combined": 18,
+          "valid_timezone_aware_kickoffs": 50
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Saudi Pro League"
+          ],
+          "countries": [
+            "Saudi Arabia"
+          ],
+          "country_matches_queue": true,
+          "eligible_observation_count": 5,
+          "provider": "livescore_football",
+          "provider_competition_id": "21231",
+          "provider_season_id": "21231::2026",
+          "raw_observation_count": 5,
+          "season_label_year_evidence": [
+            {
+              "end_year": null,
+              "format": "calendar_year",
+              "label": "2026",
+              "normalized_season": "2026",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2026"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "scheduled": 5
+          },
+          "unique_away_teams": 1,
+          "unique_home_teams": 1,
+          "unique_provider_fixture_ids": 1,
+          "unique_teams_combined": 2,
+          "valid_timezone_aware_kickoffs": 5
+        }
+      ],
+      "providers": [
+        "bzzoiro",
+        "livescore_football"
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_078",
+      "competition": "La Liga",
+      "country": "Spain",
+      "exact_cross_provider_fixture_overlap_count": 0,
+      "identity_decision": "not_approved",
+      "provider_sources": [
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "La Liga"
+          ],
+          "countries": [
+            "Spain"
+          ],
+          "country_matches_queue": true,
+          "eligible_observation_count": 9,
+          "provider": "bzzoiro",
+          "provider_competition_id": "3",
+          "provider_season_id": "3::1307",
+          "raw_observation_count": 9,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "LaLiga 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "LaLiga 26/27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "notstarted": 9
+          },
+          "unique_away_teams": 5,
+          "unique_home_teams": 5,
+          "unique_provider_fixture_ids": 5,
+          "unique_teams_combined": 10,
+          "valid_timezone_aware_kickoffs": 9
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "La Liga"
+          ],
+          "countries": [
+            "Spain"
+          ],
+          "country_matches_queue": true,
+          "eligible_observation_count": 0,
+          "provider": "openfootball",
+          "provider_competition_id": "es.1",
+          "provider_season_id": "es.1::2026-27",
+          "raw_observation_count": 1900,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "four_digit_start_year_range",
+              "label": "2026-27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2026-27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "scheduled": 1900
+          },
+          "unique_away_teams": 20,
+          "unique_home_teams": 20,
+          "unique_provider_fixture_ids": 380,
+          "unique_teams_combined": 20,
+          "valid_timezone_aware_kickoffs": 0
+        }
+      ],
+      "providers": [
+        "bzzoiro",
+        "openfootball"
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_094",
+      "competition": "MLS",
+      "country": "United States",
+      "exact_cross_provider_fixture_overlap_count": 0,
+      "identity_decision": "not_approved",
+      "provider_sources": [
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "MLS"
+          ],
+          "countries": [
+            "USA"
+          ],
+          "country_matches_queue": false,
+          "eligible_observation_count": 13,
+          "provider": "bzzoiro",
+          "provider_competition_id": "18",
+          "provider_season_id": "18::158",
+          "raw_observation_count": 13,
+          "season_label_year_evidence": [],
+          "season_names": [
+            "MLS 2026"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "notstarted": 13
+          },
+          "unique_away_teams": 5,
+          "unique_home_teams": 5,
+          "unique_provider_fixture_ids": 5,
+          "unique_teams_combined": 10,
+          "valid_timezone_aware_kickoffs": 13
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "MLS"
+          ],
+          "countries": [
+            "United States"
+          ],
+          "country_matches_queue": true,
+          "eligible_observation_count": 10,
+          "provider": "livescore_football",
+          "provider_competition_id": "770",
+          "provider_season_id": "770::2026",
+          "raw_observation_count": 10,
+          "season_label_year_evidence": [
+            {
+              "end_year": null,
+              "format": "calendar_year",
+              "label": "2026",
+              "normalized_season": "2026",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2026"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "scheduled": 10
+          },
+          "unique_away_teams": 2,
+          "unique_home_teams": 2,
+          "unique_provider_fixture_ids": 2,
+          "unique_teams_combined": 4,
+          "valid_timezone_aware_kickoffs": 10
+        }
+      ],
+      "providers": [
+        "bzzoiro",
+        "livescore_football"
+      ]
+    }
+  ],
+  "exact_cross_provider_fixture_overlaps": [
+    {
+      "away_team_key": "sunderland",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "home_team_key": "aston villa",
+      "kickoff_utc": "2026-11-21T15:00:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ]
+    },
+    {
+      "away_team_key": "eintracht braunschweig",
+      "competition_key": "2 bundesliga",
+      "country_key": "germany",
+      "home_team_key": "1 fc nurnberg",
+      "kickoff_utc": "2026-11-21T12:00:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ]
+    },
+    {
+      "away_team_key": "spvgg greuther furth",
+      "competition_key": "2 bundesliga",
+      "country_key": "germany",
+      "home_team_key": "hannover 96",
+      "kickoff_utc": "2026-11-21T12:00:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ]
+    },
+    {
+      "away_team_key": "holstein kiel",
+      "competition_key": "2 bundesliga",
+      "country_key": "germany",
+      "home_team_key": "vfl wolfsburg",
+      "kickoff_utc": "2026-11-21T12:00:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ]
+    },
+    {
+      "away_team_key": "1 fc koln",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "home_team_key": "fc bayern munchen",
+      "kickoff_utc": "2026-11-20T19:30:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ]
+    },
+    {
+      "away_team_key": "rb leipzig",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "home_team_key": "1 fc union berlin",
+      "kickoff_utc": "2026-11-21T14:30:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ]
+    },
+    {
+      "away_team_key": "sc paderborn 07",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "home_team_key": "bayer 04 leverkusen",
+      "kickoff_utc": "2026-11-21T14:30:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ]
+    },
+    {
+      "away_team_key": "tsg hoffenheim",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "home_team_key": "eintracht frankfurt",
+      "kickoff_utc": "2026-11-21T14:30:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ]
+    },
+    {
+      "away_team_key": "sc freiburg",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "home_team_key": "sv 07 elversberg",
+      "kickoff_utc": "2026-11-21T14:30:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ]
+    },
+    {
+      "away_team_key": "vfb stuttgart",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "home_team_key": "fc schalke 04",
+      "kickoff_utc": "2026-11-21T17:30:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ]
+    },
+    {
+      "away_team_key": "al nassr",
+      "competition_key": "saudi pro league",
+      "country_key": "saudi arabia",
+      "home_team_key": "al ahli",
+      "kickoff_utc": "2026-11-20T17:30:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "livescore_football"
+      ]
+    }
+  ],
+  "exact_overlap_count": 11,
+  "generated_at_utc": "2026-11-14T15:10:04.213019+00:00",
+  "interpretation": "An exact team-pair and UTC-kickoff overlap is strong fixture-level corroboration, but does not alone approve competition or season identity. Missing observations in the selected recent snapshots mean not observed in this audit window, not that the provider lacks the competition.",
+  "priority_a_entry_count": 10,
+  "providers_checked": [
+    "bzzoiro",
+    "football_data_org",
+    "openfootball",
+    "openligadb",
+    "livescore_football"
+  ],
+  "report_name": "priority_a_provider_observation_audit",
+  "safeguards": {
+    "automatic_identity_approvals": 0,
+    "canonical_competition_writes": 0,
+    "canonical_season_writes": 0,
+    "database_transaction_read_only": true,
+    "fixture_writes": 0,
+    "future_fixture_routes_enabled": 0,
+    "prediction_ledger_writes": 0,
+    "provider_link_writes": 0
+  },
+  "snapshot_counts_by_provider_resource": {
+    "bzzoiro:future_fixture_observations": 5,
+    "football_data_org:future_fixture_observations": 5,
+    "football_data_org:independent_data_observations": 5,
+    "livescore_football:future_fixture_observations": 5,
+    "openfootball:future_fixture_observations": 5,
+    "openligadb:future_fixture_observations": 5
+  },
+  "snapshot_limit_per_provider_resource": 5,
+  "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
+  "total_raw_observations_examined": 41894
+}

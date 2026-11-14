@@ -21,6 +21,15 @@
           "provider_competition_id": "5",
           "provider_season_id": "5::1091",
           "raw_observation_count": 11,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "Bundesliga 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
           "season_names": [
             "Bundesliga 26/27"
           ],
@@ -46,6 +55,7 @@
           "provider_competition_id": "2002",
           "provider_season_id": "2002::2522",
           "raw_observation_count": 1,
+          "season_label_year_evidence": [],
           "season_names": [
             "2026-08-28"
           ],
@@ -73,6 +83,15 @@
           "provider_competition_id": "de.1",
           "provider_season_id": "de.1::2026-27",
           "raw_observation_count": 1530,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "four_digit_start_year_range",
+              "label": "2026-27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
           "season_names": [
             "2026-27"
           ],
@@ -100,6 +119,15 @@
           "provider_competition_id": "4937",
           "provider_season_id": "4937::2026",
           "raw_observation_count": 1530,
+          "season_label_year_evidence": [
+            {
+              "end_year": null,
+              "format": "calendar_year",
+              "label": "2026",
+              "normalized_season": "2026",
+              "start_year": 2026
+            }
+          ],
           "season_names": [
             "2026"
           ],
@@ -143,6 +171,15 @@
           "provider_competition_id": "1",
           "provider_season_id": "1::1058",
           "raw_observation_count": 7,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "Premier League 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
           "season_names": [
             "Premier League 26/27"
           ],
@@ -170,6 +207,15 @@
           "provider_competition_id": "en.1",
           "provider_season_id": "en.1::2026-27",
           "raw_observation_count": 1900,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "four_digit_start_year_range",
+              "label": "2026-27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
           "season_names": [
             "2026-27"
           ],
@@ -197,6 +243,15 @@
           "provider_competition_id": "5996",
           "provider_season_id": "5996::2026",
           "raw_observation_count": 1900,
+          "season_label_year_evidence": [
+            {
+              "end_year": null,
+              "format": "calendar_year",
+              "label": "2026",
+              "normalized_season": "2026",
+              "start_year": 2026
+            }
+          ],
           "season_names": [
             "2026"
           ],
@@ -239,6 +294,15 @@
           "provider_competition_id": "6",
           "provider_season_id": "6::1311",
           "raw_observation_count": 10,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "Ligue 1 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
           "season_names": [
             "Ligue 1 26/27"
           ],
@@ -264,6 +328,7 @@
           "provider_competition_id": "2015",
           "provider_season_id": "2015::2497",
           "raw_observation_count": 1,
+          "season_label_year_evidence": [],
           "season_names": [
             "2026-08-22"
           ],
@@ -291,6 +356,15 @@
           "provider_competition_id": "fr.1",
           "provider_season_id": "fr.1::2026-27",
           "raw_observation_count": 1530,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "four_digit_start_year_range",
+              "label": "2026-27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
           "season_names": [
             "2026-27"
           ],
@@ -332,6 +406,15 @@
           "provider_competition_id": "12",
           "provider_season_id": "12::1111",
           "raw_observation_count": 11,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "Championship 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
           "season_names": [
             "Championship 26/27"
           ],
@@ -359,6 +442,15 @@
           "provider_competition_id": "en.2",
           "provider_season_id": "en.2::2026-27",
           "raw_observation_count": 2760,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "four_digit_start_year_range",
+              "label": "2026-27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
           "season_names": [
             "2026-27"
           ],
@@ -399,6 +491,15 @@
           "provider_competition_id": "94",
           "provider_season_id": "94::1967",
           "raw_observation_count": 14,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "2. Bundesliga 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
           "season_names": [
             "2. Bundesliga 26/27"
           ],
@@ -426,6 +527,15 @@
           "provider_competition_id": "4938",
           "provider_season_id": "4938::2026",
           "raw_observation_count": 1530,
+          "season_label_year_evidence": [
+            {
+              "end_year": null,
+              "format": "calendar_year",
+              "label": "2026",
+              "normalized_season": "2026",
+              "start_year": 2026
+            }
+          ],
           "season_names": [
             "2026"
           ],
@@ -467,6 +577,15 @@
           "provider_competition_id": "4",
           "provider_season_id": "4::1375",
           "raw_observation_count": 4,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "Serie A 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
           "season_names": [
             "Serie A 26/27"
           ],
@@ -494,6 +613,15 @@
           "provider_competition_id": "it.1",
           "provider_season_id": "it.1::2026-27",
           "raw_observation_count": 1900,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "four_digit_start_year_range",
+              "label": "2026-27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
           "season_names": [
             "2026-27"
           ],
@@ -534,6 +662,15 @@
           "provider_competition_id": "10",
           "provider_season_id": "10::1268",
           "raw_observation_count": 5,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "Eredivisie 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
           "season_names": [
             "Eredivisie 26/27"
           ],
@@ -561,6 +698,15 @@
           "provider_competition_id": "nl.1",
           "provider_season_id": "nl.1::2026-27",
           "raw_observation_count": 1530,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "four_digit_start_year_range",
+              "label": "2026-27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
           "season_names": [
             "2026-27"
           ],
@@ -601,6 +747,15 @@
           "provider_competition_id": "17",
           "provider_season_id": "17::1631",
           "raw_observation_count": 50,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "Saudi Pro League 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
           "season_names": [
             "Saudi Pro League 26/27"
           ],
@@ -629,6 +784,15 @@
           "provider_competition_id": "21231",
           "provider_season_id": "21231::2026",
           "raw_observation_count": 5,
+          "season_label_year_evidence": [
+            {
+              "end_year": null,
+              "format": "calendar_year",
+              "label": "2026",
+              "normalized_season": "2026",
+              "start_year": 2026
+            }
+          ],
           "season_names": [
             "2026"
           ],
@@ -669,6 +833,15 @@
           "provider_competition_id": "3",
           "provider_season_id": "3::1307",
           "raw_observation_count": 9,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "LaLiga 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
           "season_names": [
             "LaLiga 26/27"
           ],
@@ -696,6 +869,15 @@
           "provider_competition_id": "es.1",
           "provider_season_id": "es.1::2026-27",
           "raw_observation_count": 1900,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "four_digit_start_year_range",
+              "label": "2026-27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
           "season_names": [
             "2026-27"
           ],
@@ -736,6 +918,7 @@
           "provider_competition_id": "18",
           "provider_season_id": "18::158",
           "raw_observation_count": 13,
+          "season_label_year_evidence": [],
           "season_names": [
             "MLS 2026"
           ],
@@ -763,6 +946,15 @@
           "provider_competition_id": "770",
           "provider_season_id": "770::2026",
           "raw_observation_count": 10,
+          "season_label_year_evidence": [
+            {
+              "end_year": null,
+              "format": "calendar_year",
+              "label": "2026",
+              "normalized_season": "2026",
+              "start_year": 2026
+            }
+          ],
           "season_names": [
             "2026"
           ],
@@ -918,7 +1110,7 @@
     }
   ],
   "exact_overlap_count": 11,
-  "generated_at_utc": "2026-11-14T15:05:46.591292+00:00",
+  "generated_at_utc": "2026-11-14T15:10:04.213019+00:00",
   "interpretation": "An exact team-pair and UTC-kickoff overlap is strong fixture-level corroboration, but does not alone approve competition or season identity. Missing observations in the selected recent snapshots mean not observed in this audit window, not that the provider lacks the competition.",
   "priority_a_entry_count": 10,
   "providers_checked": [
