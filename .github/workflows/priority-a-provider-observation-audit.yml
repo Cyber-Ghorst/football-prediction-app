@@ -8,6 +8,7 @@ on:
       - "priority_a_provider_observation_audit.py"
       - "provider_data_storage.py"
       - "provider_entity_crosswalk.py"
+      - "provider_independent_competition_catalogue.py"
       - "reports/provider_independent_catalogue/identity_review_queue.json"
       - ".github/workflows/priority-a-provider-observation-audit.yml"
 

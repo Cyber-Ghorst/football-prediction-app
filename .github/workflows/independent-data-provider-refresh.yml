@@ -16,6 +16,7 @@ on:
       - "test_provider_data_storage.py"
       - "test_provider_config.py"
       - "free_fixture_crosswalk_audit.py"
+      - "provider_independent_competition_catalogue.py"
       - "test_independent_provider_refresh.py"
       - "test_provider_routing.py"
       - "docs/FOOTBALL_DATA_ORG_INTEGRATION.md"
