@@ -54,7 +54,7 @@ def _raw_kickoff_evidence(row: Mapping[str, Any]) -> tuple[str, str | None]:
     raw = raw if isinstance(raw, Mapping) else {}
     date_value = _text(raw.get("date") or raw.get("match_date"))
     time_value = _text(raw.get("time") or raw.get("kickoff"))
-    if date_value and not time_value and re.fullmatch(r"20\\d{2}-\\d{2}-\\d{2}", date_value):
+    if date_value and not time_value and re.fullmatch(r"20\d{2}-\d{2}-\d{2}", date_value):
         return "date_only", f"date={date_value}"
     if date_value and time_value:
         return "raw_date_time", f"date={date_value}; time={time_value}"
