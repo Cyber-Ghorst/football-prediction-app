@@ -233,6 +233,7 @@ def build_priority_a_observation_audit(
                 "valid_utc_kickoffs": 0,
                 "missing_kickoffs": 0,
                 "date_only_kickoffs": 0,
+                "local_date_time_without_timezone": 0,
                 "invalid_or_timezone_naive_kickoffs": 0,
                 "kickoff_examples": set(),
                 "not_eligible_observations": 0,
@@ -275,6 +276,8 @@ def build_priority_a_observation_audit(
                     if evidence_example and len(record["kickoff_examples"]) < 3:
                         record["kickoff_examples"].add(evidence_example[:120])
                 else:
+                    if evidence_kind == "raw_date_time":
+                        record["local_date_time_without_timezone"] += 1
                     record["missing_kickoffs"] += 1
                     if evidence_example and len(record["kickoff_examples"]) < 3:
                         record["kickoff_examples"].add(evidence_example[:120])
@@ -347,6 +350,7 @@ def build_priority_a_observation_audit(
                     "valid_timezone_aware_kickoffs": record["valid_utc_kickoffs"],
                     "missing_kickoffs": record["missing_kickoffs"],
                     "date_only_kickoffs": record["date_only_kickoffs"],
+                    "local_date_time_without_timezone": record["local_date_time_without_timezone"],
                     "invalid_or_timezone_naive_kickoffs": record["invalid_or_timezone_naive_kickoffs"],
                     "kickoff_value_examples": sorted(record["kickoff_examples"]),
                     "not_eligible_observations": record["not_eligible_observations"],
