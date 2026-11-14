@@ -29,16 +29,21 @@ def _season_years(*values: Any) -> list[int]:
     years = set()
     for value in values:
         label = str(value or "")
-        for match in re.findall(r"(?<!\d)(20\d{2})(?!\d)", label):
+        for match in re.findall(r"(?<!\\d)((?:19|20)\\d{2})(?!\\d)", label):
             years.add(int(match))
-        # Expand provider labels such as "2026/27" or "26/27". Only
-        # consecutive season pairs are accepted; provider IDs stay opaque.
-        for start, end in re.findall(r"(?<!\d)(\d{2})\s*/\s*(\d{2})(?!\d)", label):
+        # Full start year with abbreviated end year, e.g. 1999/00 or 2026/27.
+        for start, end in re.findall(
+            r"(?<!\\d)((?:19|20)\\d{2})\\s*/\\s*(\\d{2})(?!\\d)", label
+        ):
             start_year = int(start)
-            end_year = int(end)
-            expanded_start = 2000 + start_year if start_year <= 69 else 1900 + start_year
-            if end_year == (start_year + 1) % 100:
-                years.add(expanded_start)
+            if int(end) == (start_year + 1) % 100:
+                years.add(start_year)
+        # Fully abbreviated labels such as "26/27". Use a conventional
+        # 69/70 pivot for the century while keeping source IDs opaque.
+        for start, end in re.findall(r"(?<!\\d)(\\d{2})\\s*/\\s*(\\d{2})(?!\\d)", label):
+            start_year = int(start)
+            if int(end) == (start_year + 1) % 100:
+                years.add(2000 + start_year if start_year <= 69 else 1900 + start_year)
     return sorted(years)
 
 
