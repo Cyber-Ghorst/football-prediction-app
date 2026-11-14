@@ -1,0 +1,50 @@
+name: Read-only independent provider provenance audit
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: independent-provider-provenance-report
+  queue: max
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Validate read-only audit configuration
+        run: |
+          test -n "$PROVIDER_DATABASE_URL" || { echo "::error::PROVIDER_DATABASE_URL secret is missing."; exit 1; }
+          test -f root.crt || { echo "::error::CockroachDB root.crt is missing."; exit 1; }
+      - name: Run provenance inventory
+        run: |
+          set -euo pipefail
+          python independent_provider_provenance_audit.py
+          python -m json.tool reports/independent_provider_provenance/latest.json >/dev/null
+          stamp="$(date -u +%Y%m%dT%H%M%SZ)"
+          cp reports/independent_provider_provenance/latest.json "reports/independent_provider_provenance/${stamp}.json"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/independent_provider_provenance
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive independent provider provenance audit ${stamp}"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
