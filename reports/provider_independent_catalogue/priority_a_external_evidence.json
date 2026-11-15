@@ -1,6 +1,6 @@
 {
   "report_name": "competition_identity_external_evidence_dossier",
-  "generated_at": "2026-11-14",
+  "generated_at": "2026-11-15T16:43:14.454Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority A only: twelve multi-provider observed competition entries with country context.",
   "interpretation": "External official competition evidence supports the public competition identity and season context. It does not prove that provider-specific IDs or season IDs refer to the same canonical competition or season.",
@@ -193,16 +193,26 @@
         {
           "publisher": "Lega Serie A",
           "url": "https://www.legaseriea.it/serie-a/news/le-date-della-stagione-2026-2027",
-          "supports": "Official Serie A 2026/27 calendar dates; distinguishes Serie A from Coppa Italia."
+          "supports": "Official Serie A 2026/27 season dates; distinguishes Serie A from Coppa Italia."
         },
         {
           "publisher": "Lega Serie A",
-          "url": "https://www.legaseriea.it/serie-a/classifica?lang=en",
-          "supports": "Official 2026/27 Serie A standings."
+          "url": "https://en.legaseriea.it/serie-a/news/looking-forward-to-the-2026-27-serie-a-fixture-list",
+          "supports": "Official announcement identifies 20 clubs, 38 matchdays and 380 matches, and gives the season dates."
+        },
+        {
+          "publisher": "Lega Serie A",
+          "url": "https://www.legaseriea.it/serie-a/news/calendario-della-serie-a-enilive-2026-27",
+          "supports": "Official 2026/27 fixture-list publication dated 5 June 2026."
+        },
+        {
+          "publisher": "Lega Serie A",
+          "url": "https://www.legaseriea.it/serie-a/calendario-risultati",
+          "supports": "Official Matchday 12 fixture listing for 21–23 November 2026."
         }
       ],
-      "provider_season_evidence": "No shared parsed season start year in current provider snapshots.",
-      "review_status": "external_identity_supported_provider_season_unverified"
+      "provider_season_evidence": "Both source labels normalize descriptively to 2026/27 (Bzzoiro 'Serie A 26/27'; OpenFootball '2026-27'). Bzzoiro has 21 raw observations, 9 unique fixture IDs, and 18 observed teams; OpenFootball has 7,600 raw observations, 380 unique fixtures, and all 20 official teams, but its sampled kickoffs are local-time values without timezone. No exact UTC cross-provider fixture overlap was established.",
+      "review_status": "external_identity_supported_provider_season_and_roster_scope_unverified"
     },
     {
       "catalogue_entry_id": "observed_competition_060",
