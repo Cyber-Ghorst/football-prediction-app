@@ -1,6 +1,6 @@
 {
   "operation": "sportmonks_catalogue_access_audit",
-  "checked_at_utc": "2026-11-15T14:21:15.031679+00:00",
+  "checked_at_utc": "2026-11-15T14:34:30.790695+00:00",
   "status": "partial",
   "read_only": true,
   "database_touched": false,
@@ -1319,20 +1319,44 @@
     "Bundesliga": {
       "status": "error",
       "error_type": "SportmonksError",
-      "error": "Sportmonks rejected the request; verify endpoint access and parameters.",
-      "http_status": 200
+      "error": "Sportmonks rejected the request; provider message: No result(s) found matching your request. Either the query did not return any results or you don't have access to it via your current subscription.",
+      "http_status": 200,
+      "provider_metadata": {
+        "request_path": "leagues/82",
+        "http_status": 200,
+        "request_seconds": 0.366,
+        "rate_limit": "2000",
+        "rate_remaining": "1981",
+        "provider_message": "No result(s) found matching your request. Either the query did not return any results or you don't have access to it via your current subscription."
+      }
     },
     "Ligue 1": {
       "status": "error",
       "error_type": "SportmonksError",
-      "error": "Sportmonks rejected the request; verify endpoint access and parameters.",
-      "http_status": 200
+      "error": "Sportmonks rejected the request; provider message: No result(s) found matching your request. Either the query did not return any results or you don't have access to it via your current subscription.",
+      "http_status": 200,
+      "provider_metadata": {
+        "request_path": "leagues/301",
+        "http_status": 200,
+        "request_seconds": 0.379,
+        "rate_limit": "2000",
+        "rate_remaining": "1980",
+        "provider_message": "No result(s) found matching your request. Either the query did not return any results or you don't have access to it via your current subscription."
+      }
     },
     "World Cup": {
       "status": "error",
       "error_type": "SportmonksError",
-      "error": "Sportmonks rejected the request; verify endpoint access and parameters.",
-      "http_status": 200
+      "error": "Sportmonks rejected the request; provider message: No result(s) found matching your request. Either the query did not return any results or you don't have access to it via your current subscription.",
+      "http_status": 200,
+      "provider_metadata": {
+        "request_path": "leagues/732",
+        "http_status": 200,
+        "request_seconds": 0.39,
+        "rate_limit": "2000",
+        "rate_remaining": "1979",
+        "provider_message": "No result(s) found matching your request. Either the query did not return any results or you don't have access to it via your current subscription."
+      }
     }
   },
   "name_search_probes": {
