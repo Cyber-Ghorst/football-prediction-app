@@ -312,3 +312,62 @@ def store_provider_source_bundle(
                 )
                 counts["statistics"] += 1
     return counts
+
+
+def audit_provider_source_evidence(database_url: str, provider: str) -> dict[str, Any]:
+    """Read-only audit of provider-native staging rows; no canonical data is consulted."""
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+    source = _provider(provider)
+    entity_counts: dict[str, dict[str, int]] = {}
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("SET TRANSACTION READ ONLY")
+            cursor.execute(
+                """SELECT entity_type, COUNT(*), COUNT(country)
+                   FROM provider_source_entities
+                   WHERE provider = %s
+                   GROUP BY entity_type ORDER BY entity_type""",
+                (source,),
+            )
+            for entity_type, total, country_known in cursor.fetchall():
+                entity_counts[str(entity_type)] = {
+                    "total": int(total or 0),
+                    "country_known": int(country_known or 0),
+                }
+            cursor.execute(
+                """SELECT
+                     COUNT(*) FILTER (WHERE raw_payload->>'team_evidence_complete' = 'false'),
+                     COUNT(*) FILTER (WHERE jsonb_typeof(raw_payload->'competition_provider_ids') = 'array'),
+                     COUNT(*) FILTER (WHERE country IS NULL)
+                   FROM provider_source_entities
+                   WHERE provider = %s AND entity_type = 'team'""",
+                (source,),
+            )
+            team_row = cursor.fetchone() or (0, 0, 0)
+            cursor.execute(
+                """SELECT COUNT(*) FROM provider_source_fixtures WHERE provider = %s""",
+                (source,),
+            )
+            fixture_count = int((cursor.fetchone() or (0,))[0] or 0)
+            cursor.execute(
+                """SELECT COUNT(*) FROM provider_source_fixture_statistics WHERE provider = %s""",
+                (source,),
+            )
+            statistic_count = int((cursor.fetchone() or (0,))[0] or 0)
+    return {
+        "provider": source,
+        "read_only": True,
+        "database_writes": False,
+        "entity_counts": entity_counts,
+        "team_evidence": {
+            "incomplete_participant_evidence_count": int(team_row[0] or 0),
+            "competition_context_array_count": int(team_row[1] or 0),
+            "country_missing_count": int(team_row[2] or 0),
+        },
+        "fixture_rows": fixture_count,
+        "statistic_rows": statistic_count,
+        "canonical_entities_created": 0,
+        "cross_provider_links_created": 0,
+        "prediction_ledger_touched": False,
+    }
