@@ -19,6 +19,7 @@ class ProviderSourceRosterStageTests(unittest.TestCase):
         team = next(row for row in rows if row["entity_type"] == "team")
         self.assertEqual(competition["provider_entity_id"], "ger.1")
         self.assertEqual(competition["country"], "Germany")
+        self.assertIsNone(competition["competition_type"])
         self.assertEqual(team["provider_entity_id"], "10388")
         self.assertIsNone(team["country"])
         self.assertEqual(team["raw_payload"]["competition_provider_ids"], ["ger.1"])
