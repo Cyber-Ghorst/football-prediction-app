@@ -146,7 +146,7 @@ def collect_competitions() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
             league = selected.get("league") or {}
             season = next((row for row in selected.get("seasons", [])
                            if isinstance(row, Mapping)
-                           and str(row.get("year")) == str(SEASON_YEAR)), None)
+                           and str(row.get("year")) == str(CATALOGUE_REFERENCE_SEASON)), None)
             if season is None:
                 outcomes.append({"target": target, "status": "season_not_listed",
                                  "competition_provider_id": league.get("id")})
