@@ -1,6 +1,7 @@
 import unittest
+from unittest.mock import Mock, patch
 
-from provider_season_roster_audit import _select_highlightly
+from provider_season_roster_audit import _select_highlightly, audit_livescore_rosters
 
 
 class ProviderSeasonRosterAuditTests(unittest.TestCase):
@@ -35,6 +36,31 @@ class ProviderSeasonRosterAuditTests(unittest.TestCase):
         )
         self.assertIsNone(selected)
         self.assertEqual(status, "not_found")
+
+    @patch("provider_season_roster_audit.collect_livescore_season_participants")
+    @patch("provider_season_roster_audit.LiveScoreFootballClient")
+    def test_livescore_audit_uses_full_catalogue_then_applies_active_data_gates(
+        self, client_class, collect,
+    ):
+        client = Mock()
+        client_class.return_value = client
+        client.leagues.return_value = [
+            {"slug": "ger.1", "name": "Bundesliga", "country": "Germany",
+             "active": True, "coverage": {"hasData": True}},
+            {"slug": "fra.1", "name": "Ligue 1", "country": "France",
+             "active": True, "coverage": {"hasData": True}},
+        ]
+        collect.side_effect = lambda _client, *, league, **kwargs: {
+            "teams": [{"id": "1", "name": "Example"}],
+            "fixtures_examined": 10,
+            "league": {"id": league["slug"]},
+            "team_evidence_method": "season_window_fixture_participants",
+        }
+        result = audit_livescore_rosters()
+        client.leagues.assert_called_once_with(kind="all", available=False)
+        self.assertEqual([row["status"] for row in result["competitions"]],
+                         ["collected", "collected"])
+        self.assertEqual([row["team_count"] for row in result["competitions"]], [1, 1])
 
 
 if __name__ == "__main__":

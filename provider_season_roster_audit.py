@@ -114,7 +114,7 @@ def audit_livescore_rosters() -> dict[str, Any]:
         return {"status": "not_configured", "reason": str(exc)[:250], "competitions": []}
     results = []
     try:
-        catalogue = client.leagues(kind="club", available=True)
+        catalogue = client.leagues(kind="all", available=False)
         for target in TARGET_LIVESCORE:
             matches = [
                 row for row in catalogue
