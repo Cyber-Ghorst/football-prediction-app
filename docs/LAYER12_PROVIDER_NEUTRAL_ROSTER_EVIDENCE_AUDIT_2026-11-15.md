@@ -69,6 +69,33 @@ The audit was strictly read-only:
 
 All provider IDs remain namespaced and provider-native. The 12 Bundesliga and 13 Ligue 1 exact-name overlaps, plus the alias candidates above, are review queues only. No Sportmonks ID or catalogue availability is required to use Highlightly or LiveScoreFootball as independent evidence sources.
 
+
+## Official competition roster corroboration
+
+A separate read-only review of the official 2026/27 league roster pages found the expected official club display names for the alias candidates above:
+
+- Bundesliga official 2026/27 table and club directory: [official standings](https://www.bundesliga.com/en/bundesliga/table) and [official clubs](https://www.bundesliga.com/en/bundesliga/clubs).
+- Ligue 1 official 2026/27 standings and match coverage: [Ligue 1 official site](https://ligue1.com/?type_classement=EXT) and [2026/27 official calendar](https://ligue1.com/en/articles/l1_article_5292-).
+
+The official roster names align with these candidate variants:
+
+| Competition | Highlightly name | LiveScoreFootball name | Official league display name |
+|---|---|---|---|
+| Bundesliga | 1899 Hoffenheim | TSG Hoffenheim | TSG Hoffenheim |
+| Bundesliga | FC Koln | FC Cologne | 1. FC Köln |
+| Bundesliga | FC Schalke 04 | Schalke 04 | FC Schalke 04 |
+| Bundesliga | FSV Mainz 05 | Mainz | 1. FSV Mainz 05 |
+| Bundesliga | Hamburger SV | Hamburg SV | Hamburger SV |
+| Bundesliga | Union Berlin | 1. FC Union Berlin | 1. FC Union Berlin |
+| Ligue 1 | Auxerre | AJ Auxerre | AJ Auxerre |
+| Ligue 1 | Estac Troyes | Troyes | ESTAC Troyes |
+| Ligue 1 | Monaco | AS Monaco | AS Monaco |
+| Ligue 1 | Rennes FC | Stade Rennais | Stade Rennais FC |
+| Ligue 1 | Stade Brestois 29 | Brest | Stade Brestois 29 |
+
+This independent official roster evidence corroborates the display-name variants and season/competition context. It does **not**, by itself, verify that each provider's numeric/string team ID refers to the official club. Therefore all 11 pairs remain mapping candidates, not approved provider links. The next identity review must attach provider-specific source IDs and confirm first-team/senior men's club scope before any write approval.
+
+
 ## Next objective
 
 Collect independent official team-identity evidence for the 11 remaining alias pairs, and separately review the 12 + 13 exact normalized overlaps against competition and squad scope. Only after those reviews should an explicitly approved provider crosswalk be written. Keep World Cup team identities held until a second provider or authoritative official source corroborates them.
