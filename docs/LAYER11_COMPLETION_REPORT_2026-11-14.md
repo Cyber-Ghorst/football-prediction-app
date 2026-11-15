@@ -62,3 +62,26 @@ Official-source review: [Priority A identity evidence dossier](PRIORITY_A_COMPET
 Canonical mapping promotion is a separate gated operation: it requires exact source-to-canonical approval and verified canonical targets. This closeout does not pretend that unverified provider IDs are mapped. It leaves those records safely available for later mapping when corroborating evidence or approved canonical targets exist.
 
 The current Sportmonks canonical catalogue sync is separately partial: its last report imported 4 of 5 selected current-year seasons (82 teams, 90 Sportmonks source links) and held FA Cup season 28020 after a repeated-page response. That issue is recorded as a provider pagination limitation, not silently counted as a successful complete catalogue import.
+
+
+## 15 November 2026 audit refresh
+
+Following the local-date matching correction merged in commit `875bcca2f0f1be36216e0a96198426e338c6ae72`, both the Priority A audit workflow and the repository Python test/smoke-check workflow completed successfully on `main`.
+
+The refreshed read-only audit was generated at **2026-11-15 10:34:18 UTC**. It examined **166,037 raw observations** across five independent providers and found:
+
+| Evidence class | Count | Interpretation |
+|---|---:|---|
+| Exact team-pair + UTC-kickoff overlaps | 20 | Strong fixture-level corroboration; not automatic competition/season approval |
+| Date-and-team candidate records | 162 | Manual-review leads only; local-time/date evidence is not exact UTC confirmation |
+| Distinct date/team fixture leads | 155 | Seven records are repeated provider-pair evidence for the same date/team fixture |
+| Priority A identity entries | 10 | All remain `not_approved` pending verified canonical targets and identity-level review |
+
+The 20 exact overlaps are distributed across Premier League (2), 2. Bundesliga (5), Bundesliga (8), Saudi Pro League (1), and Scottish Premiership (4). The 155 distinct date/team leads are concentrated in Bundesliga (96), Premier League (56), and Eredivisie (3). The raw candidate-record count is higher because the same fixture can be corroborated by more than one provider pair.
+
+The correction therefore repaired candidate discovery without weakening the exact-match rule. Date-only/local-time evidence remains explicitly non-confirmatory. The 20 exact overlaps remain evidence for human review, not permission to create canonical competition, season, team, provider, or fixture links.
+
+The refreshed report confirms the following safeguards remained at zero: automatic identity approvals, canonical competition writes, canonical season writes, provider-link writes, fixture writes, future-fixture routes enabled, and prediction-ledger writes. The database transaction remained read-only.
+
+Machine-readable refreshed report: [priority_a_provider_observation_audit/latest.json](../reports/provider_independent_catalogue/priority_a_provider_observation_audit/latest.json).
+
