@@ -2,7 +2,7 @@
   "report_name": "competition_identity_external_evidence_dossier",
   "generated_at": "2026-11-14",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
-  "scope": "Priority A only: ten multi-provider observed competition entries with country context.",
+  "scope": "Priority A only: twelve multi-provider observed competition entries with country context.",
   "interpretation": "External official competition evidence supports the public competition identity and season context. It does not prove that provider-specific IDs or season IDs refer to the same canonical competition or season.",
   "safeguards": {
     "canonical_competition_created": false,
@@ -56,10 +56,52 @@
           "publisher": "Premier League",
           "url": "https://www.premierleague.com/en/news/4365156",
           "supports": "Official 2026/27 club list and confirms the Championship is the second tier below the Premier League."
+        },
+        {
+          "publisher": "Premier League",
+          "url": "https://www.premierleague.com/en/news/4675097",
+          "supports": "Official 2026/27 fixture list; includes Aston Villa v Sunderland on 21 November and Hull City v Brighton & Hove Albion on 22 November."
+        },
+        {
+          "publisher": "Premier League",
+          "url": "https://www.premierleague.com/en/news/4725574/fixture-amendments-for-premier-league-matches-in-november",
+          "supports": "Official November amendment notice; confirms the two reviewed fixture pairings and states all listed kick-offs are GMT and 15:00 unless otherwise stated."
         }
       ],
       "provider_season_evidence": "OpenFootball and OpenLigaDB share 2026 start-year evidence; Bzzoiro season label is 26/27 without parsed start year.",
-      "review_status": "external_identity_supported_provider_ids_unverified"
+      "review_status": "external_identity_and_two_fixture_pairs_confirmed_provider_ids_and_team_crosswalk_unverified",
+      "fixture_corroboration": [
+        {
+          "kickoff_utc": "2026-11-21T15:00:00Z",
+          "home": "Aston Villa",
+          "away": "Sunderland",
+          "providers": [
+            "bzzoiro",
+            "openligadb"
+          ],
+          "official_schedule_confirmed": true
+        },
+        {
+          "kickoff_utc": "2026-11-22T14:00:00Z",
+          "home": "Hull City",
+          "away": "Brighton & Hove Albion",
+          "providers": [
+            "bzzoiro",
+            "openligadb"
+          ],
+          "official_schedule_confirmed": true
+        }
+      ],
+      "canonical_target_check": {
+        "provider": "sportmonks",
+        "league_id": "8",
+        "season_id": "28083",
+        "season": "2026/2027",
+        "teams_received": 20,
+        "teams_upserted": 20,
+        "full_roster_in_committed_report": false,
+        "source_to_canonical_team_crosswalk_verified": false
+      }
     },
     {
       "catalogue_entry_id": "observed_competition_040",

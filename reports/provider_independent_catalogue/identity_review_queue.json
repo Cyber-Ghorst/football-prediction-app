@@ -20,6 +20,133 @@
     {
       "review_order": 1,
       "priority": "A",
+      "catalogue_entry_id": "observed_competition_032",
+      "display_names": [
+        "Premier League"
+      ],
+      "countries": [
+        "England"
+      ],
+      "providers": [
+        "bzzoiro",
+        "openfootball",
+        "openligadb"
+      ],
+      "provider_count": 3,
+      "source_records": [
+        {
+          "competition_name": "Premier League",
+          "competition_type": null,
+          "country": "England",
+          "observation_count": 7,
+          "provider": "bzzoiro",
+          "provider_competition_id": "1",
+          "seasons": [
+            {
+              "observation_count": 7,
+              "provider": "bzzoiro",
+              "provider_season_id": "1::1058",
+              "season_name": "Premier League 26/27",
+              "start_years": []
+            }
+          ]
+        },
+        {
+          "competition_name": "Premier League",
+          "competition_type": null,
+          "country": "England",
+          "observation_count": 1140,
+          "provider": "openfootball",
+          "provider_competition_id": "en.1",
+          "seasons": [
+            {
+              "observation_count": 1140,
+              "provider": "openfootball",
+              "provider_season_id": "en.1::2026-27",
+              "season_name": "2026-27",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        },
+        {
+          "competition_name": "Premier League",
+          "competition_type": null,
+          "country": "England",
+          "observation_count": 1140,
+          "provider": "openligadb",
+          "provider_competition_id": "5996",
+          "seasons": [
+            {
+              "observation_count": 1140,
+              "provider": "openligadb",
+              "provider_season_id": "5996::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [],
+          "openfootball": [
+            2026
+          ],
+          "openligadb": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 7,
+            "provider": "bzzoiro",
+            "provider_season_id": "1::1058",
+            "season_name": "Premier League 26/27",
+            "start_years": []
+          },
+          {
+            "observation_count": 1140,
+            "provider": "openfootball",
+            "provider_season_id": "en.1::2026-27",
+            "season_name": "2026-27",
+            "start_years": [
+              2026
+            ]
+          },
+          {
+            "observation_count": 1140,
+            "provider": "openligadb",
+            "provider_season_id": "5996::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [
+          2026
+        ],
+        "status": "cross_provider_start_year_overlap"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "review_disposition": "evidence_reviewed_not_approved",
+      "review_reason": "Official competition context and the read-only provider-observation audit were reviewed. Provider-specific competition and season IDs are not yet proven to be equivalent canonical identities; exact fixture overlaps are corroboration, not approval."
+    },
+    {
+      "review_order": 2,
+      "priority": "A",
       "catalogue_entry_id": "observed_competition_045",
       "display_names": [
         "Bundesliga"
@@ -183,70 +310,50 @@
       "review_reason": "Official competition context and the read-only provider-observation audit were reviewed. Provider-specific competition and season IDs are not yet proven to be equivalent canonical identities; exact fixture overlaps are corroboration, not approval."
     },
     {
-      "review_order": 2,
+      "review_order": 3,
       "priority": "A",
-      "catalogue_entry_id": "observed_competition_032",
+      "catalogue_entry_id": "observed_competition_043",
       "display_names": [
-        "Premier League"
+        "2. Bundesliga"
       ],
       "countries": [
-        "England"
+        "Germany"
       ],
       "providers": [
         "bzzoiro",
-        "openfootball",
         "openligadb"
       ],
-      "provider_count": 3,
+      "provider_count": 2,
       "source_records": [
         {
-          "competition_name": "Premier League",
+          "competition_name": "2. Bundesliga",
           "competition_type": null,
-          "country": "England",
-          "observation_count": 7,
+          "country": "Germany",
+          "observation_count": 10,
           "provider": "bzzoiro",
-          "provider_competition_id": "1",
+          "provider_competition_id": "94",
           "seasons": [
             {
-              "observation_count": 7,
+              "observation_count": 10,
               "provider": "bzzoiro",
-              "provider_season_id": "1::1058",
-              "season_name": "Premier League 26/27",
+              "provider_season_id": "94::1967",
+              "season_name": "2. Bundesliga 26/27",
               "start_years": []
             }
           ]
         },
         {
-          "competition_name": "Premier League",
+          "competition_name": "2. Bundesliga",
           "competition_type": null,
-          "country": "England",
-          "observation_count": 1140,
-          "provider": "openfootball",
-          "provider_competition_id": "en.1",
-          "seasons": [
-            {
-              "observation_count": 1140,
-              "provider": "openfootball",
-              "provider_season_id": "en.1::2026-27",
-              "season_name": "2026-27",
-              "start_years": [
-                2026
-              ]
-            }
-          ]
-        },
-        {
-          "competition_name": "Premier League",
-          "competition_type": null,
-          "country": "England",
-          "observation_count": 1140,
+          "country": "Germany",
+          "observation_count": 918,
           "provider": "openligadb",
-          "provider_competition_id": "5996",
+          "provider_competition_id": "4938",
           "seasons": [
             {
-              "observation_count": 1140,
+              "observation_count": 918,
               "provider": "openligadb",
-              "provider_season_id": "5996::2026",
+              "provider_season_id": "4938::2026",
               "season_name": "2026",
               "start_years": [
                 2026
@@ -258,34 +365,121 @@
       "season_evidence": {
         "provider_start_years": {
           "bzzoiro": [],
-          "openfootball": [
-            2026
-          ],
           "openligadb": [
             2026
           ]
         },
         "season_records": [
           {
-            "observation_count": 7,
+            "observation_count": 10,
             "provider": "bzzoiro",
-            "provider_season_id": "1::1058",
-            "season_name": "Premier League 26/27",
+            "provider_season_id": "94::1967",
+            "season_name": "2. Bundesliga 26/27",
             "start_years": []
           },
           {
-            "observation_count": 1140,
-            "provider": "openfootball",
-            "provider_season_id": "en.1::2026-27",
-            "season_name": "2026-27",
+            "observation_count": 918,
+            "provider": "openligadb",
+            "provider_season_id": "4938::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "review_disposition": "evidence_reviewed_not_approved",
+      "review_reason": "Official competition context and the read-only provider-observation audit were reviewed. Provider-specific competition and season IDs are not yet proven to be equivalent canonical identities; exact fixture overlaps are corroboration, not approval."
+    },
+    {
+      "review_order": 4,
+      "priority": "A",
+      "catalogue_entry_id": "observed_competition_073",
+      "display_names": [
+        "Scottish Premiership"
+      ],
+      "countries": [
+        "Scotland"
+      ],
+      "providers": [
+        "bzzoiro",
+        "livescore_football"
+      ],
+      "provider_count": 2,
+      "source_records": [
+        {
+          "competition_name": "Scottish Premiership",
+          "competition_type": null,
+          "country": "Scotland",
+          "observation_count": 18,
+          "provider": "bzzoiro",
+          "provider_competition_id": "13",
+          "seasons": [
+            {
+              "observation_count": 18,
+              "provider": "bzzoiro",
+              "provider_season_id": "13::1355",
+              "season_name": "Premiership 26/27",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        },
+        {
+          "competition_name": "Scottish Premiership",
+          "competition_type": null,
+          "country": "Scotland",
+          "observation_count": 6,
+          "provider": "livescore_football",
+          "provider_competition_id": "735",
+          "seasons": [
+            {
+              "observation_count": 6,
+              "provider": "livescore_football",
+              "provider_season_id": "735::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [
+            2026
+          ],
+          "livescore_football": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 18,
+            "provider": "bzzoiro",
+            "provider_season_id": "13::1355",
+            "season_name": "Premiership 26/27",
             "start_years": [
               2026
             ]
           },
           {
-            "observation_count": 1140,
-            "provider": "openligadb",
-            "provider_season_id": "5996::2026",
+            "observation_count": 6,
+            "provider": "livescore_football",
+            "provider_season_id": "735::2026",
             "season_name": "2026",
             "start_years": [
               2026
@@ -307,10 +501,289 @@
       "fixture_ingestion_enabled": false,
       "prediction_eligible": false,
       "review_disposition": "evidence_reviewed_not_approved",
+      "review_reason": "Independent provider observations and shared 2026 season-year evidence now corroborate this competition/country identity. Official governing-body 2026/27 competition and fixture information was reviewed (SPFL William Hill Premiership 2026/27 fixtures). Provider-specific competition and season IDs, exact scope and canonical target equivalence remain unverified; no canonical mapping or provider link is approved."
+    },
+    {
+      "review_order": 5,
+      "priority": "A",
+      "catalogue_entry_id": "observed_competition_072",
+      "display_names": [
+        "Saudi Pro League"
+      ],
+      "countries": [
+        "Saudi Arabia"
+      ],
+      "providers": [
+        "bzzoiro",
+        "livescore_football"
+      ],
+      "provider_count": 2,
+      "source_records": [
+        {
+          "competition_name": "Saudi Pro League",
+          "competition_type": null,
+          "country": "Saudi Arabia",
+          "observation_count": 30,
+          "provider": "bzzoiro",
+          "provider_competition_id": "17",
+          "seasons": [
+            {
+              "observation_count": 30,
+              "provider": "bzzoiro",
+              "provider_season_id": "17::1631",
+              "season_name": "Saudi Pro League 26/27",
+              "start_years": []
+            }
+          ]
+        },
+        {
+          "competition_name": "Saudi Pro League",
+          "competition_type": null,
+          "country": "Saudi Arabia",
+          "observation_count": 3,
+          "provider": "livescore_football",
+          "provider_competition_id": "21231",
+          "seasons": [
+            {
+              "observation_count": 3,
+              "provider": "livescore_football",
+              "provider_season_id": "21231::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [],
+          "livescore_football": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 30,
+            "provider": "bzzoiro",
+            "provider_season_id": "17::1631",
+            "season_name": "Saudi Pro League 26/27",
+            "start_years": []
+          },
+          {
+            "observation_count": 3,
+            "provider": "livescore_football",
+            "provider_season_id": "21231::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "review_disposition": "evidence_reviewed_not_approved",
       "review_reason": "Official competition context and the read-only provider-observation audit were reviewed. Provider-specific competition and season IDs are not yet proven to be equivalent canonical identities; exact fixture overlaps are corroboration, not approval."
     },
     {
-      "review_order": 3,
+      "review_order": 6,
+      "priority": "A",
+      "catalogue_entry_id": "observed_competition_078",
+      "display_names": [
+        "La Liga"
+      ],
+      "countries": [
+        "Spain"
+      ],
+      "providers": [
+        "bzzoiro",
+        "openfootball"
+      ],
+      "provider_count": 2,
+      "source_records": [
+        {
+          "competition_name": "La Liga",
+          "competition_type": null,
+          "country": "Spain",
+          "observation_count": 7,
+          "provider": "bzzoiro",
+          "provider_competition_id": "3",
+          "seasons": [
+            {
+              "observation_count": 7,
+              "provider": "bzzoiro",
+              "provider_season_id": "3::1307",
+              "season_name": "LaLiga 26/27",
+              "start_years": []
+            }
+          ]
+        },
+        {
+          "competition_name": "La Liga",
+          "competition_type": null,
+          "country": "Spain",
+          "observation_count": 1140,
+          "provider": "openfootball",
+          "provider_competition_id": "es.1",
+          "seasons": [
+            {
+              "observation_count": 1140,
+              "provider": "openfootball",
+              "provider_season_id": "es.1::2026-27",
+              "season_name": "2026-27",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [],
+          "openfootball": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 7,
+            "provider": "bzzoiro",
+            "provider_season_id": "3::1307",
+            "season_name": "LaLiga 26/27",
+            "start_years": []
+          },
+          {
+            "observation_count": 1140,
+            "provider": "openfootball",
+            "provider_season_id": "es.1::2026-27",
+            "season_name": "2026-27",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "review_disposition": "evidence_reviewed_not_approved",
+      "review_reason": "Official competition context and the read-only provider-observation audit were reviewed. Provider-specific competition and season IDs are not yet proven to be equivalent canonical identities; exact fixture overlaps are corroboration, not approval."
+    },
+    {
+      "review_order": 7,
+      "priority": "A",
+      "catalogue_entry_id": "observed_competition_050",
+      "display_names": [
+        "Serie A"
+      ],
+      "countries": [
+        "Italy"
+      ],
+      "providers": [
+        "bzzoiro",
+        "openfootball"
+      ],
+      "provider_count": 2,
+      "source_records": [
+        {
+          "competition_name": "Serie A",
+          "competition_type": null,
+          "country": "Italy",
+          "observation_count": 4,
+          "provider": "bzzoiro",
+          "provider_competition_id": "4",
+          "seasons": [
+            {
+              "observation_count": 4,
+              "provider": "bzzoiro",
+              "provider_season_id": "4::1375",
+              "season_name": "Serie A 26/27",
+              "start_years": []
+            }
+          ]
+        },
+        {
+          "competition_name": "Serie A",
+          "competition_type": null,
+          "country": "Italy",
+          "observation_count": 1140,
+          "provider": "openfootball",
+          "provider_competition_id": "it.1",
+          "seasons": [
+            {
+              "observation_count": 1140,
+              "provider": "openfootball",
+              "provider_season_id": "it.1::2026-27",
+              "season_name": "2026-27",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [],
+          "openfootball": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 4,
+            "provider": "bzzoiro",
+            "provider_season_id": "4::1375",
+            "season_name": "Serie A 26/27",
+            "start_years": []
+          },
+          {
+            "observation_count": 1140,
+            "provider": "openfootball",
+            "provider_season_id": "it.1::2026-27",
+            "season_name": "2026-27",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [],
+        "status": "insufficient_provider_season_evidence"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "review_disposition": "evidence_reviewed_not_approved",
+      "review_reason": "Official competition context and the read-only provider-observation audit were reviewed. Provider-specific competition and season IDs are not yet proven to be equivalent canonical identities; exact fixture overlaps are corroboration, not approval."
+    },
+    {
+      "review_order": 8,
       "priority": "A",
       "catalogue_entry_id": "observed_competition_040",
       "display_names": [
@@ -443,7 +916,7 @@
       "review_reason": "Official competition context and the read-only provider-observation audit were reviewed. Provider-specific competition and season IDs are not yet proven to be equivalent canonical identities; exact fixture overlaps are corroboration, not approval."
     },
     {
-      "review_order": 4,
+      "review_order": 9,
       "priority": "A",
       "catalogue_entry_id": "observed_competition_020",
       "display_names": [
@@ -536,193 +1009,7 @@
       "review_reason": "Official competition context and the read-only provider-observation audit were reviewed. Provider-specific competition and season IDs are not yet proven to be equivalent canonical identities; exact fixture overlaps are corroboration, not approval."
     },
     {
-      "review_order": 5,
-      "priority": "A",
-      "catalogue_entry_id": "observed_competition_043",
-      "display_names": [
-        "2. Bundesliga"
-      ],
-      "countries": [
-        "Germany"
-      ],
-      "providers": [
-        "bzzoiro",
-        "openligadb"
-      ],
-      "provider_count": 2,
-      "source_records": [
-        {
-          "competition_name": "2. Bundesliga",
-          "competition_type": null,
-          "country": "Germany",
-          "observation_count": 10,
-          "provider": "bzzoiro",
-          "provider_competition_id": "94",
-          "seasons": [
-            {
-              "observation_count": 10,
-              "provider": "bzzoiro",
-              "provider_season_id": "94::1967",
-              "season_name": "2. Bundesliga 26/27",
-              "start_years": []
-            }
-          ]
-        },
-        {
-          "competition_name": "2. Bundesliga",
-          "competition_type": null,
-          "country": "Germany",
-          "observation_count": 918,
-          "provider": "openligadb",
-          "provider_competition_id": "4938",
-          "seasons": [
-            {
-              "observation_count": 918,
-              "provider": "openligadb",
-              "provider_season_id": "4938::2026",
-              "season_name": "2026",
-              "start_years": [
-                2026
-              ]
-            }
-          ]
-        }
-      ],
-      "season_evidence": {
-        "provider_start_years": {
-          "bzzoiro": [],
-          "openligadb": [
-            2026
-          ]
-        },
-        "season_records": [
-          {
-            "observation_count": 10,
-            "provider": "bzzoiro",
-            "provider_season_id": "94::1967",
-            "season_name": "2. Bundesliga 26/27",
-            "start_years": []
-          },
-          {
-            "observation_count": 918,
-            "provider": "openligadb",
-            "provider_season_id": "4938::2026",
-            "season_name": "2026",
-            "start_years": [
-              2026
-            ]
-          }
-        ],
-        "shared_start_years": [],
-        "status": "insufficient_provider_season_evidence"
-      },
-      "competition_type_evidence": {
-        "status": "unknown_not_supplied",
-        "values": []
-      },
-      "identity_status": "unverified",
-      "canonical_mapping_created": false,
-      "provider_links_created": false,
-      "fixture_ingestion_enabled": false,
-      "prediction_eligible": false,
-      "review_disposition": "evidence_reviewed_not_approved",
-      "review_reason": "Official competition context and the read-only provider-observation audit were reviewed. Provider-specific competition and season IDs are not yet proven to be equivalent canonical identities; exact fixture overlaps are corroboration, not approval."
-    },
-    {
-      "review_order": 6,
-      "priority": "A",
-      "catalogue_entry_id": "observed_competition_050",
-      "display_names": [
-        "Serie A"
-      ],
-      "countries": [
-        "Italy"
-      ],
-      "providers": [
-        "bzzoiro",
-        "openfootball"
-      ],
-      "provider_count": 2,
-      "source_records": [
-        {
-          "competition_name": "Serie A",
-          "competition_type": null,
-          "country": "Italy",
-          "observation_count": 4,
-          "provider": "bzzoiro",
-          "provider_competition_id": "4",
-          "seasons": [
-            {
-              "observation_count": 4,
-              "provider": "bzzoiro",
-              "provider_season_id": "4::1375",
-              "season_name": "Serie A 26/27",
-              "start_years": []
-            }
-          ]
-        },
-        {
-          "competition_name": "Serie A",
-          "competition_type": null,
-          "country": "Italy",
-          "observation_count": 1140,
-          "provider": "openfootball",
-          "provider_competition_id": "it.1",
-          "seasons": [
-            {
-              "observation_count": 1140,
-              "provider": "openfootball",
-              "provider_season_id": "it.1::2026-27",
-              "season_name": "2026-27",
-              "start_years": [
-                2026
-              ]
-            }
-          ]
-        }
-      ],
-      "season_evidence": {
-        "provider_start_years": {
-          "bzzoiro": [],
-          "openfootball": [
-            2026
-          ]
-        },
-        "season_records": [
-          {
-            "observation_count": 4,
-            "provider": "bzzoiro",
-            "provider_season_id": "4::1375",
-            "season_name": "Serie A 26/27",
-            "start_years": []
-          },
-          {
-            "observation_count": 1140,
-            "provider": "openfootball",
-            "provider_season_id": "it.1::2026-27",
-            "season_name": "2026-27",
-            "start_years": [
-              2026
-            ]
-          }
-        ],
-        "shared_start_years": [],
-        "status": "insufficient_provider_season_evidence"
-      },
-      "competition_type_evidence": {
-        "status": "unknown_not_supplied",
-        "values": []
-      },
-      "identity_status": "unverified",
-      "canonical_mapping_created": false,
-      "provider_links_created": false,
-      "fixture_ingestion_enabled": false,
-      "prediction_eligible": false,
-      "review_disposition": "evidence_reviewed_not_approved",
-      "review_reason": "Official competition context and the read-only provider-observation audit were reviewed. Provider-specific competition and season IDs are not yet proven to be equivalent canonical identities; exact fixture overlaps are corroboration, not approval."
-    },
-    {
-      "review_order": 7,
+      "review_order": 10,
       "priority": "A",
       "catalogue_entry_id": "observed_competition_060",
       "display_names": [
@@ -815,193 +1102,7 @@
       "review_reason": "Official competition context and the read-only provider-observation audit were reviewed. Provider-specific competition and season IDs are not yet proven to be equivalent canonical identities; exact fixture overlaps are corroboration, not approval."
     },
     {
-      "review_order": 8,
-      "priority": "A",
-      "catalogue_entry_id": "observed_competition_072",
-      "display_names": [
-        "Saudi Pro League"
-      ],
-      "countries": [
-        "Saudi Arabia"
-      ],
-      "providers": [
-        "bzzoiro",
-        "livescore_football"
-      ],
-      "provider_count": 2,
-      "source_records": [
-        {
-          "competition_name": "Saudi Pro League",
-          "competition_type": null,
-          "country": "Saudi Arabia",
-          "observation_count": 30,
-          "provider": "bzzoiro",
-          "provider_competition_id": "17",
-          "seasons": [
-            {
-              "observation_count": 30,
-              "provider": "bzzoiro",
-              "provider_season_id": "17::1631",
-              "season_name": "Saudi Pro League 26/27",
-              "start_years": []
-            }
-          ]
-        },
-        {
-          "competition_name": "Saudi Pro League",
-          "competition_type": null,
-          "country": "Saudi Arabia",
-          "observation_count": 3,
-          "provider": "livescore_football",
-          "provider_competition_id": "21231",
-          "seasons": [
-            {
-              "observation_count": 3,
-              "provider": "livescore_football",
-              "provider_season_id": "21231::2026",
-              "season_name": "2026",
-              "start_years": [
-                2026
-              ]
-            }
-          ]
-        }
-      ],
-      "season_evidence": {
-        "provider_start_years": {
-          "bzzoiro": [],
-          "livescore_football": [
-            2026
-          ]
-        },
-        "season_records": [
-          {
-            "observation_count": 30,
-            "provider": "bzzoiro",
-            "provider_season_id": "17::1631",
-            "season_name": "Saudi Pro League 26/27",
-            "start_years": []
-          },
-          {
-            "observation_count": 3,
-            "provider": "livescore_football",
-            "provider_season_id": "21231::2026",
-            "season_name": "2026",
-            "start_years": [
-              2026
-            ]
-          }
-        ],
-        "shared_start_years": [],
-        "status": "insufficient_provider_season_evidence"
-      },
-      "competition_type_evidence": {
-        "status": "unknown_not_supplied",
-        "values": []
-      },
-      "identity_status": "unverified",
-      "canonical_mapping_created": false,
-      "provider_links_created": false,
-      "fixture_ingestion_enabled": false,
-      "prediction_eligible": false,
-      "review_disposition": "evidence_reviewed_not_approved",
-      "review_reason": "Official competition context and the read-only provider-observation audit were reviewed. Provider-specific competition and season IDs are not yet proven to be equivalent canonical identities; exact fixture overlaps are corroboration, not approval."
-    },
-    {
-      "review_order": 9,
-      "priority": "A",
-      "catalogue_entry_id": "observed_competition_078",
-      "display_names": [
-        "La Liga"
-      ],
-      "countries": [
-        "Spain"
-      ],
-      "providers": [
-        "bzzoiro",
-        "openfootball"
-      ],
-      "provider_count": 2,
-      "source_records": [
-        {
-          "competition_name": "La Liga",
-          "competition_type": null,
-          "country": "Spain",
-          "observation_count": 7,
-          "provider": "bzzoiro",
-          "provider_competition_id": "3",
-          "seasons": [
-            {
-              "observation_count": 7,
-              "provider": "bzzoiro",
-              "provider_season_id": "3::1307",
-              "season_name": "LaLiga 26/27",
-              "start_years": []
-            }
-          ]
-        },
-        {
-          "competition_name": "La Liga",
-          "competition_type": null,
-          "country": "Spain",
-          "observation_count": 1140,
-          "provider": "openfootball",
-          "provider_competition_id": "es.1",
-          "seasons": [
-            {
-              "observation_count": 1140,
-              "provider": "openfootball",
-              "provider_season_id": "es.1::2026-27",
-              "season_name": "2026-27",
-              "start_years": [
-                2026
-              ]
-            }
-          ]
-        }
-      ],
-      "season_evidence": {
-        "provider_start_years": {
-          "bzzoiro": [],
-          "openfootball": [
-            2026
-          ]
-        },
-        "season_records": [
-          {
-            "observation_count": 7,
-            "provider": "bzzoiro",
-            "provider_season_id": "3::1307",
-            "season_name": "LaLiga 26/27",
-            "start_years": []
-          },
-          {
-            "observation_count": 1140,
-            "provider": "openfootball",
-            "provider_season_id": "es.1::2026-27",
-            "season_name": "2026-27",
-            "start_years": [
-              2026
-            ]
-          }
-        ],
-        "shared_start_years": [],
-        "status": "insufficient_provider_season_evidence"
-      },
-      "competition_type_evidence": {
-        "status": "unknown_not_supplied",
-        "values": []
-      },
-      "identity_status": "unverified",
-      "canonical_mapping_created": false,
-      "provider_links_created": false,
-      "fixture_ingestion_enabled": false,
-      "prediction_eligible": false,
-      "review_disposition": "evidence_reviewed_not_approved",
-      "review_reason": "Official competition context and the read-only provider-observation audit were reviewed. Provider-specific competition and season IDs are not yet proven to be equivalent canonical identities; exact fixture overlaps are corroboration, not approval."
-    },
-    {
-      "review_order": 10,
+      "review_order": 11,
       "priority": "A",
       "catalogue_entry_id": "observed_competition_094",
       "display_names": [
@@ -1103,7 +1204,7 @@
       "review_reason": "Official competition context and the read-only provider-observation audit were reviewed. Provider-specific competition and season IDs are not yet proven to be equivalent canonical identities; exact fixture overlaps are corroboration, not approval."
     },
     {
-      "review_order": 11,
+      "review_order": 12,
       "priority": "A",
       "catalogue_entry_id": "observed_competition_005",
       "display_names": [
@@ -1202,107 +1303,6 @@
       "prediction_eligible": false,
       "review_disposition": "evidence_reviewed_not_approved",
       "review_reason": "Independent provider observations and shared 2026 season-year evidence now corroborate this competition/country identity. Official governing-body 2026/27 competition and fixture information was reviewed (Österreichische Fußball-Bundesliga 2026/27 schedule). Provider-specific competition and season IDs, exact scope and canonical target equivalence remain unverified; no canonical mapping or provider link is approved."
-    },
-    {
-      "review_order": 12,
-      "priority": "A",
-      "catalogue_entry_id": "observed_competition_073",
-      "display_names": [
-        "Scottish Premiership"
-      ],
-      "countries": [
-        "Scotland"
-      ],
-      "providers": [
-        "bzzoiro",
-        "livescore_football"
-      ],
-      "provider_count": 2,
-      "source_records": [
-        {
-          "competition_name": "Scottish Premiership",
-          "competition_type": null,
-          "country": "Scotland",
-          "observation_count": 18,
-          "provider": "bzzoiro",
-          "provider_competition_id": "13",
-          "seasons": [
-            {
-              "observation_count": 18,
-              "provider": "bzzoiro",
-              "provider_season_id": "13::1355",
-              "season_name": "Premiership 26/27",
-              "start_years": [
-                2026
-              ]
-            }
-          ]
-        },
-        {
-          "competition_name": "Scottish Premiership",
-          "competition_type": null,
-          "country": "Scotland",
-          "observation_count": 6,
-          "provider": "livescore_football",
-          "provider_competition_id": "735",
-          "seasons": [
-            {
-              "observation_count": 6,
-              "provider": "livescore_football",
-              "provider_season_id": "735::2026",
-              "season_name": "2026",
-              "start_years": [
-                2026
-              ]
-            }
-          ]
-        }
-      ],
-      "season_evidence": {
-        "provider_start_years": {
-          "bzzoiro": [
-            2026
-          ],
-          "livescore_football": [
-            2026
-          ]
-        },
-        "season_records": [
-          {
-            "observation_count": 18,
-            "provider": "bzzoiro",
-            "provider_season_id": "13::1355",
-            "season_name": "Premiership 26/27",
-            "start_years": [
-              2026
-            ]
-          },
-          {
-            "observation_count": 6,
-            "provider": "livescore_football",
-            "provider_season_id": "735::2026",
-            "season_name": "2026",
-            "start_years": [
-              2026
-            ]
-          }
-        ],
-        "shared_start_years": [
-          2026
-        ],
-        "status": "cross_provider_start_year_overlap"
-      },
-      "competition_type_evidence": {
-        "status": "unknown_not_supplied",
-        "values": []
-      },
-      "identity_status": "unverified",
-      "canonical_mapping_created": false,
-      "provider_links_created": false,
-      "fixture_ingestion_enabled": false,
-      "prediction_eligible": false,
-      "review_disposition": "evidence_reviewed_not_approved",
-      "review_reason": "Independent provider observations and shared 2026 season-year evidence now corroborate this competition/country identity. Official governing-body 2026/27 competition and fixture information was reviewed (SPFL William Hill Premiership 2026/27 fixtures). Provider-specific competition and season IDs, exact scope and canonical target equivalence remain unverified; no canonical mapping or provider link is approved."
     },
     {
       "review_order": 13,
@@ -6847,5 +6847,6 @@
     "team_links_created": 0,
     "fixture_writes": 0,
     "prediction_ledger_writes": 0
-  }
+  },
+  "review_order_basis": "Priority A is sequenced by actionable evidence: current canonical target plus official exact-fixture corroboration first (Premier League); then exact-overlap strength and remaining target coverage. Priority B retains its prior relative order. Review order is not identity approval."
 }
