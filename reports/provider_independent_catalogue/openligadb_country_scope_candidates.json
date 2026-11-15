@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "generated_at": "2026-11-15T00:00:00Z",
   "source": "reports/free_fixture_crosswalk_audit/latest.json country_unscoped_sources, as classified in docs/LAYER11_OPENLIGADB_COUNTRY_SCOPE_REVIEW_2026-11-15.md",
   "source_record_count": 27,
@@ -246,6 +246,17 @@
       "scope_class": "international_tournament_alias_candidate",
       "candidate_country": "International",
       "review_note": "World Cup-labelled record; verify whether it duplicates ID 4949 and preserve international scope."
+    }
+  ],
+  "comparison_reference_records": [
+    {
+      "league_id": 4938,
+      "source_name": "2. Bundesliga",
+      "season": 2026,
+      "prior_observation_count": 6120,
+      "scope_class": "priority_a_crosswalk_reference",
+      "candidate_country": "Germany",
+      "review_note": "Priority A OpenLigaDB reference record from the country-scoped provider observation audit; compare against unscoped OpenLigaDB ID 5958 without merging or approving either record."
     }
   ]
 }

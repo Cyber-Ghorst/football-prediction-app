@@ -185,15 +185,22 @@ def build_probe_report(
     generated_at: datetime | None = None,
 ) -> dict[str, Any]:
     records = candidates.get("records")
+    reference_records = candidates.get("comparison_reference_records", [])
     if not isinstance(records, list):
         raise ValueError("Candidate inventory must contain a records array.")
+    if not isinstance(reference_records, list):
+        raise ValueError("Comparison reference records must be an array.")
+    all_records = [
+        *((source, "country_unscoped_source") for source in records),
+        *((source, "priority_a_reference") for source in reference_records),
+    ]
     available, available_hash = get_json(f"{API_BASE}/getavailableleagues/2026")
     if not isinstance(available, list):
         raise OpenLigaDBProbeError("OpenLigaDB available-leagues response was not an array.")
 
     results: list[dict[str, Any]] = []
     fixture_identity_sets: dict[int, set[str]] = {}
-    for index, source in enumerate(records):
+    for index, (source, source_role) in enumerate(all_records):
         if not isinstance(source, Mapping):
             continue
         league_id = _int(source.get("league_id"))
@@ -201,6 +208,7 @@ def build_probe_report(
         base = {
             "league_id": league_id,
             "source_name": source.get("source_name"),
+            "source_role": source_role,
             "source_scope_class": source.get("scope_class"),
             "candidate_country": source.get("candidate_country"),
             "prior_observation_count": source.get("prior_observation_count"),
@@ -272,6 +280,8 @@ def build_probe_report(
         "generated_at_utc": current.astimezone(timezone.utc).isoformat(),
         "source_candidate_inventory": str(INPUT_PATH),
         "source_record_count": len(records),
+        "comparison_reference_record_count": len(reference_records),
+        "total_source_records_probed": len(all_records),
         "available_leagues_season": 2026,
         "available_leagues_sha256": available_hash,
         "api_rate_limit_note": "OpenLigaDB documentation states a limit of 60 requests per minute; requests are spaced by at least one second.",
@@ -284,6 +294,8 @@ def build_probe_report(
         },
         "summary": {
             "records_probed": len(results),
+            "country_unscoped_records_probed": sum(row.get("source_role") == "country_unscoped_source" for row in results),
+            "comparison_reference_records_probed": sum(row.get("source_role") == "priority_a_reference" for row in results),
             "matches_found": sum(row.get("status") == "matches_found" for row in results),
             "empty_match_lists": sum(row.get("status") == "empty_match_list" for row in results),
             "not_found_or_ambiguous": sum(
