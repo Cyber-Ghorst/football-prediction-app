@@ -72,3 +72,41 @@ The read-only audit at [latest.json](../reports/provider_independent_catalogue/p
 
 The machine-readable audit is the source of truth for per-provider row counts and kickoff-quality counters. This summary is a review aid, not a replacement for the raw audit report.
 
+
+
+## 15 November 2026 — refreshed review order
+
+The corrected read-only audit completed successfully on 15 November 2026. Its per-entry exact-overlap counts and the current Sportmonks catalogue import state give the following review sequence. A catalogue target being present is **not** an approved identity link; it only means a potential canonical competition/season record is available for a later controlled comparison.
+
+| Priority A identity | Exact fixture overlaps | Sportmonks 2026/27 target in current import | Review disposition |
+|---|---:|---|---|
+| Premier League — England | 2 | Present: league 8, season 28083 | First candidate for controlled source-to-target verification; provider IDs still unapproved |
+| Bundesliga — Germany | 8 | Not present | Strongest fixture corroboration; canonical target must be sourced/verified before any link |
+| 2. Bundesliga — Germany | 5 | Not present | Strong fixture corroboration; keep separate from Bundesliga |
+| Saudi Pro League — Saudi Arabia | 1 | Not present | Verify provider competition scope and season independently before target search |
+| La Liga — Spain | 0 | Present: league 564, season 27965 | Target exists; zero exact overlaps means source-side fixture/season evidence is still needed |
+| Serie A — Italy | 0 | Present: league 384, season 27895 | Target exists; zero exact overlaps means source-side fixture/season evidence is still needed |
+| Ligue 1 — France | 0 | Not present | Hold pending stronger cross-provider fixture/season evidence and canonical target |
+| Championship — England | 0 | Not present | Hold; explicitly verify men's EFL Championship scope and season |
+| Eredivisie — Netherlands | 0 | Not present | Hold; three distinct date/team leads are not exact UTC corroboration |
+| MLS — United States/Canada | 0 | Not present | Hold; reconcile provider country metadata with MLS's cross-border competition scope |
+
+The audit reports 20 exact overlaps overall, but only **16 belong to these ten Priority A identities**: Bundesliga 8, 2. Bundesliga 5, Premier League 2 and Saudi Pro League 1. The other four exact overlaps concern Scottish Premiership, which is outside this ten-entry Priority A queue and must not be counted as evidence for one of these identities.
+
+The date-level report contains 162 candidate records representing **155 distinct date/team fixture leads** (seven repeated provider-pair records). Those leads are concentrated in Bundesliga (96), Premier League (56) and Eredivisie (3). They remain non-confirmatory because at least one source lacks timezone-aware kickoff evidence.
+
+### Canonical target coverage limitation
+
+The latest Sportmonks catalogue report is still partial: 4 of 5 selected seasons imported, covering Premier League, La Liga, La Liga 2 and Serie A (82 teams, 90 Sportmonks source links). The FA Cup season 28020 remains held after a repeated-page response. No fixtures were imported by that catalogue-only run. Therefore, target presence above is limited to the three imported Priority A competitions; it is not evidence that the other seven competitions do not exist in the canonical catalogue.
+
+### Safe next actions
+
+1. Verify Premier League source IDs against the available canonical target using official competition/season identity, team membership and timezone-aware fixture evidence. Keep the link proposal separate from approval.
+2. Preserve Bundesliga and 2. Bundesliga as distinct competitions while locating verified canonical targets and checking their season scopes.
+3. Investigate the Saudi Pro League provider-scope difference before looking for a canonical target.
+4. For La Liga and Serie A, use official season/club evidence and independent provider schedules to address the lack of exact overlaps before proposing any source link.
+5. Keep all remaining entries held until the evidence gates are met.
+
+No new canonical records, provider links, fixture rows, future-fixture routes or prediction-ledger rows are authorized by this review-order update.
+
+Machine-readable source: [refreshed Priority A observation audit](../reports/provider_independent_catalogue/priority_a_provider_observation_audit/latest.json). Canonical target coverage source: [Sportmonks catalogue sync report](../reports/sportmonks_catalogue_sync/latest.json).
