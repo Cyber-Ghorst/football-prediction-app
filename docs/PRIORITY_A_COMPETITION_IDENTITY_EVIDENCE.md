@@ -95,7 +95,7 @@ The corrected read-only audit completed successfully on 15 November 2026. Its pe
 | Eredivisie — Netherlands | 0 | Not present | Hold; three distinct date/team leads are not exact UTC corroboration |
 | MLS — United States/Canada | 0 | Not present | Hold; reconcile provider country metadata with MLS's cross-border competition scope |
 
-The audit reports 20 exact overlaps overall, but only **16 belong to these ten Priority A identities**: Bundesliga 8, 2. Bundesliga 5, Premier League 2 and Saudi Pro League 1. The other four exact overlaps concern Scottish Premiership, which is outside this ten-entry Priority A queue and must not be counted as evidence for one of these identities.
+The audit reports **20 exact overlaps across the twelve Priority A identities**: Bundesliga 8, 2. Bundesliga 5, Scottish Premiership 4, Premier League 2 and Saudi Pro League 1. Austrian Bundesliga has shared provider/season-year evidence but no exact UTC fixture overlap in this snapshot.
 
 The date-level report contains 162 candidate records representing **155 distinct date/team fixture leads** (seven repeated provider-pair records). Those leads are concentrated in Bundesliga (96), Premier League (56) and Eredivisie (3). They remain non-confirmatory because at least one source lacks timezone-aware kickoff evidence.
 
