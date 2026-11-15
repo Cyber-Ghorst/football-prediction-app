@@ -1,6 +1,6 @@
 {
   "report_name": "priority_b_external_identity_evidence",
-  "generated_at": "2026-11-15T17:22:36.700Z",
+  "generated_at": "2026-11-15T17:24:40.976Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority B single-provider competition identities; official evidence can support competition type, country and season context but does not replace independent provider corroboration or human canonical approval.",
   "safeguards": [
@@ -1761,6 +1761,189 @@
         "Verify provider-specific season boundaries and the meaning of provider season IDs.",
         "Obtain broader roster/fixture evidence where sample size is small.",
         "Compare exact fixture evidence with other providers before proposing any crosswalk."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_051",
+      "name": "Serie B",
+      "observed_country": "Italy",
+      "provider": "bzzoiro",
+      "provider_competition_id": "100",
+      "provider_season_id": "100::2084",
+      "provider_season_label": "Serie B 26/27",
+      "raw_observation_count": 10,
+      "external_competition_type": "men's second-tier professional league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 20,
+        "matchdays": 38,
+        "regular_season_matches": 380
+      },
+      "external_evidence": [
+        {
+          "publisher": "Lega B",
+          "url": "https://www.legab.it/seriebkt/ultime-news/serie-bkt-2026-2027-curiosita-e-statistiche-delle-20-squadre",
+          "supports": "Official 2026/27 Serie BKT overview identifies 20 participating clubs."
+        },
+        {
+          "publisher": "Lega B",
+          "url": "https://www.legab.it/news/i-criteri-della-serie-bkt-2026-2027",
+          "supports": "Official 2026/27 calendar guidance identifies 38 rounds."
+        },
+        {
+          "publisher": "Lega B",
+          "url": "https://www.legab.it/seriebkt/calendario",
+          "supports": "Official 2026/27 Serie BKT fixture calendar."
+        }
+      ],
+      "assessment": "Official Lega B sources establish Serie BKT 2026/27 as the 20-club second tier, with a 38-round league calendar. Bzzoiro's 10 observations are insufficient to verify complete roster coverage or the semantics of season ID 100::2084.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain full Bzzoiro group roster and season fixture sample.",
+        "Verify provider-specific season boundaries and the meaning of the provider season ID.",
+        "Compare provider fixtures with official Lega B/Lega Pro schedules before proposing any crosswalk."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_052",
+      "name": "Serie C, Girone A",
+      "observed_country": "Italy",
+      "provider": "bzzoiro",
+      "provider_competition_id": "101",
+      "provider_season_id": "101::2103",
+      "provider_season_label": "Serie C, Group A 26/27",
+      "raw_observation_count": 35,
+      "external_competition_type": "men's third-tier professional league — Group A",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 20,
+        "matchdays": 38,
+        "regular_season_matches": 380,
+        "umbrella_competition": "Serie C"
+      },
+      "external_evidence": [
+        {
+          "publisher": "Lega Pro",
+          "url": "https://www.lega-pro.com/pdf/cod-autoregolam.pdf",
+          "supports": "Official league regulations describe Serie C as a single division comprising three groups of 20 clubs each."
+        },
+        {
+          "publisher": "Lega Pro",
+          "url": "https://www.lega-pro.com/com/1819-215DIV.pdf",
+          "supports": "Official Lega Pro competition pages publish current fixtures and tables separately for Groups A, B and C."
+        },
+        {
+          "publisher": "Lega Pro",
+          "url": "https://www.lega-pro.com/com/2526-134L.pdf",
+          "supports": "Official Lega Pro communication documents the standard 38-match regular season in a 20-club group; the cited 2025/26 exception is explicitly excluded from the 2026/27 claim."
+        }
+      ],
+      "assessment": "Official Lega Pro materials define Serie C as one division split into three groups of 20 clubs. Group A is one regionalized competition group, not a separate national tier. Bzzoiro's 35 observations do not prove full roster or fixture coverage or the season-ID semantics.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain full Bzzoiro group roster and season fixture sample.",
+        "Verify provider-specific season boundaries and the meaning of the provider season ID.",
+        "Compare provider fixtures with official Lega B/Lega Pro schedules before proposing any crosswalk."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_053",
+      "name": "Serie C, Girone B",
+      "observed_country": "Italy",
+      "provider": "bzzoiro",
+      "provider_competition_id": "103",
+      "provider_season_id": "103::2130",
+      "provider_season_label": "Serie C, Group B 26/27",
+      "raw_observation_count": 33,
+      "external_competition_type": "men's third-tier professional league — Group B",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 20,
+        "matchdays": 38,
+        "regular_season_matches": 380,
+        "umbrella_competition": "Serie C"
+      },
+      "external_evidence": [
+        {
+          "publisher": "Lega Pro",
+          "url": "https://www.lega-pro.com/pdf/cod-autoregolam.pdf",
+          "supports": "Official league regulations describe Serie C as a single division comprising three groups of 20 clubs each."
+        },
+        {
+          "publisher": "Lega Pro",
+          "url": "https://www.lega-pro.com/com/1819-215DIV.pdf",
+          "supports": "Official Lega Pro competition pages publish current fixtures and tables separately for Groups A, B and C."
+        },
+        {
+          "publisher": "Lega Pro",
+          "url": "https://www.lega-pro.com/com/2526-134L.pdf",
+          "supports": "Official Lega Pro communication documents the standard 38-match regular season in a 20-club group; the cited 2025/26 exception is explicitly excluded from the 2026/27 claim."
+        }
+      ],
+      "assessment": "Official Lega Pro materials define Serie C as one division split into three groups of 20 clubs. Group B is one regionalized competition group, not a separate national tier. Bzzoiro's 33 observations do not prove full roster or fixture coverage or the season-ID semantics.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain full Bzzoiro group roster and season fixture sample.",
+        "Verify provider-specific season boundaries and the meaning of the provider season ID.",
+        "Compare provider fixtures with official Lega B/Lega Pro schedules before proposing any crosswalk."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_054",
+      "name": "Serie C, Girone C",
+      "observed_country": "Italy",
+      "provider": "bzzoiro",
+      "provider_competition_id": "102",
+      "provider_season_id": "102::2116",
+      "provider_season_label": "Serie C, Group C 26/27",
+      "raw_observation_count": 38,
+      "external_competition_type": "men's third-tier professional league — Group C",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 20,
+        "matchdays": 38,
+        "regular_season_matches": 380,
+        "umbrella_competition": "Serie C"
+      },
+      "external_evidence": [
+        {
+          "publisher": "Lega Pro",
+          "url": "https://www.lega-pro.com/pdf/cod-autoregolam.pdf",
+          "supports": "Official league regulations describe Serie C as a single division comprising three groups of 20 clubs each."
+        },
+        {
+          "publisher": "Lega Pro",
+          "url": "https://www.lega-pro.com/com/1819-215DIV.pdf",
+          "supports": "Official Lega Pro competition pages publish current fixtures and tables separately for Groups A, B and C."
+        },
+        {
+          "publisher": "Lega Pro",
+          "url": "https://www.lega-pro.com/com/2526-134L.pdf",
+          "supports": "Official Lega Pro communication documents the standard 38-match regular season in a 20-club group; the cited 2025/26 exception is explicitly excluded from the 2026/27 claim."
+        }
+      ],
+      "assessment": "Official Lega Pro materials define Serie C as one division split into three groups of 20 clubs. Group C is one regionalized competition group, not a separate national tier. Bzzoiro's 38 observations do not prove full roster or fixture coverage or the season-ID semantics.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain full Bzzoiro group roster and season fixture sample.",
+        "Verify provider-specific season boundaries and the meaning of the provider season ID.",
+        "Compare provider fixtures with official Lega B/Lega Pro schedules before proposing any crosswalk."
       ]
     }
   ]
