@@ -1,6 +1,6 @@
 {
   "report_name": "priority_b_external_identity_evidence",
-  "generated_at": "2026-11-15T17:26:32.034Z",
+  "generated_at": "2026-11-15T17:28:50.976Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority B single-provider competition identities; official evidence can support competition type, country and season context but does not replace independent provider corroboration or human canonical approval.",
   "safeguards": [
@@ -2009,6 +2009,209 @@
         "Obtain the complete Bzzoiro Girone C roster and fixture sample.",
         "Verify provider season ID 102::2116 and its season boundaries.",
         "Compare exact provider fixtures with the official Lega Pro Girone C schedule."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_055",
+      "name": "J1 League",
+      "observed_country": "Japan",
+      "provider": "bzzoiro",
+      "provider_competition_id": "49",
+      "provider_season_id": "49::1518",
+      "provider_season_label": "J1 League 26/27",
+      "raw_observation_count": 16,
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 20,
+        "rounds": 38,
+        "matches": 380
+      },
+      "external_evidence": [
+        {
+          "publisher": "J.League",
+          "url": "https://aboutj.jleague.jp/corporate/about_competitions/season/",
+          "supports": "Official J.League 2026/27 overview: 20 J1 clubs, 38 rounds and 380 matches; season starts 7 August 2026."
+        },
+        {
+          "publisher": "J.League",
+          "url": "https://www.jleague.jp/news/article/34183/",
+          "supports": "Official 2026/27 J1 fixtures through Matchday 38."
+        }
+      ],
+      "assessment": "Official J.League sources establish a 20-club J1 League season from August 2026 to June 2027. Bzzoiro's 16 observations are a small sample; its 2026/27 season scope is broadly consistent with the official season.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader roster and fixture samples.",
+        "Verify provider-specific season boundaries and ID semantics."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_056",
+      "name": "Japanese J.League",
+      "observed_country": "Japan",
+      "provider": "livescore_football",
+      "provider_competition_id": "750",
+      "provider_season_id": "750::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 3,
+      "external_competition_type": "men's Japanese professional league source record; season identity ambiguous",
+      "external_season": "2026 special season or 2026/27",
+      "official_scope": {
+        "clubs": 20,
+        "formats": [
+          "2026 J1 100 Year Vision League special season",
+          "2026/27 J1 League season"
+        ]
+      },
+      "external_evidence": [
+        {
+          "publisher": "J.League",
+          "url": "https://www.jleague.jp/en/j1/standings/2026/",
+          "supports": "Official standings label the 2026 competition as the J1 100 Year Vision League (2026 Special)."
+        },
+        {
+          "publisher": "J.League",
+          "url": "https://aboutj.jleague.jp/corporate/about_competitions/season/",
+          "supports": "Official page separately defines the 2026/27 J1 League season, 20 clubs and 38 rounds."
+        },
+        {
+          "publisher": "J.League",
+          "url": "https://www.jleague.jp/news/article/32852/",
+          "supports": "Official J.League club composition announcement distinguishes the 2026 special season and 2026/27 season."
+        }
+      ],
+      "assessment": "Official J.League sources explicitly distinguish the 2026 J1 100 Year Vision League special season from the 2026/27 J1 League season. LiveScoreFootball's generic `2026` label does not establish which event it represents; do not map it to Bzzoiro's `J1 League 26/27`.",
+      "review_status": "provider_season_scope_ambiguous_2026_special_vs_2026_27",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain raw fixture dates and competition metadata for 750::2026 to distinguish the 2026 special season from 2026/27.",
+        "Do not link this source to 49::1518 until the exact season is established."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_057",
+      "name": "Liga MX Apertura",
+      "observed_country": "Mexico",
+      "provider": "bzzoiro",
+      "provider_competition_id": "19",
+      "provider_season_id": "19::1309",
+      "provider_season_label": "Liga MX, Apertura 2026",
+      "raw_observation_count": 8,
+      "external_competition_type": "men's top-tier league tournament (Apertura phase)",
+      "external_season": "2026 calendar year / 2026-27 season",
+      "official_scope": {
+        "tournament": "Apertura 2026",
+        "format": "First half-season tournament within Liga MX"
+      },
+      "external_evidence": [
+        {
+          "publisher": "Liga BBVA MX",
+          "url": "https://ligamx.net/",
+          "supports": "Official Liga BBVA MX competition portal."
+        },
+        {
+          "publisher": "Liga BBVA MX",
+          "url": "https://tienda.ligamx.net/products/balon-de-futbol-aereus40-apertura-no-5-basic-juego-amateur",
+          "supports": "Official league material identifies Apertura 2026 as a distinct tournament."
+        }
+      ],
+      "assessment": "The Bzzoiro record explicitly identifies the Apertura 2026 tournament of the men's Liga MX. The sample has eight observations. Exact full tournament scope and season-ID semantics remain unverified.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Verify whether the provider record covers Apertura, Clausura, or both.",
+        "Compare exact fixtures and season boundaries before any cross-provider mapping."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_058",
+      "name": "Mexican Liga BBVA MX",
+      "observed_country": "Mexico",
+      "provider": "livescore_football",
+      "provider_competition_id": "760",
+      "provider_season_id": "760::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 3,
+      "external_competition_type": "men's top-tier domestic league source record; tournament scope ambiguous",
+      "external_season": "2026 calendar year / 2026-27 season",
+      "official_scope": {
+        "parent_competition": "Liga BBVA MX",
+        "tournaments": [
+          "Apertura",
+          "Clausura"
+        ]
+      },
+      "external_evidence": [
+        {
+          "publisher": "Liga BBVA MX",
+          "url": "https://ligamx.net/",
+          "supports": "Official Liga BBVA MX competition portal."
+        },
+        {
+          "publisher": "Liga BBVA MX",
+          "url": "https://tienda.ligamx.net/products/balon-de-futbol-aereus40-apertura-no-5-basic-juego-amateur",
+          "supports": "Official league material distinguishes Apertura 2026 as a tournament within the broader competition."
+        }
+      ],
+      "assessment": "Official Liga BBVA MX materials distinguish the Apertura 2026 tournament within the broader league. LiveScoreFootball's generic `2026` label and three observations do not show whether its record covers Apertura only, Clausura only, or both tournaments. Do not crosswalk it to the Bzzoiro Apertura record.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Verify whether the provider record covers Apertura, Clausura, or both.",
+        "Compare exact fixtures and season boundaries before any cross-provider mapping."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_059",
+      "name": "Eerste Divisie",
+      "observed_country": "Netherlands",
+      "provider": "bzzoiro",
+      "provider_competition_id": "108",
+      "provider_season_id": "108::2220",
+      "provider_season_label": "Eerste Divisie 26/27",
+      "raw_observation_count": 52,
+      "external_competition_type": "men's second-tier domestic league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 20,
+        "rounds": 38,
+        "matches": 380
+      },
+      "external_evidence": [
+        {
+          "publisher": "KNVB",
+          "url": "https://www.knvb.nl/competities/competitiezaken/competitiemodel",
+          "supports": "Official KNVB competition model states the Eerste Divisie has 20 teams."
+        },
+        {
+          "publisher": "KNVB",
+          "url": "https://www.knvb.nl/competities/competitiezaken/competitiemodel/periodetitels-in-de-eerste-divisie",
+          "supports": "Official KNVB page lists the 38-round period structure for the Eerste Divisie."
+        }
+      ],
+      "assessment": "Official KNVB sources establish the Eerste Divisie as the men's second tier with 20 teams and 38 matchdays. Bzzoiro's 52 observations provide a larger sample, but full roster and provider season-ID equivalence still require review.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader roster and fixture samples.",
+        "Verify provider-specific season boundaries and ID semantics."
       ]
     }
   ]
