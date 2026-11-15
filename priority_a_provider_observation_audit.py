@@ -313,7 +313,7 @@ def build_priority_a_observation_audit(
                 source_time = _text(raw_payload.get("time") or raw_payload.get("kickoff"))
                 candidate_date = None
                 evidence_label = None
-                if source_date and re.fullmatch(r"20\\d{2}-\\d{2}-\\d{2}", source_date) and source_time:
+                if source_date and re.fullmatch(r"20\d{2}-\d{2}-\d{2}", source_date) and source_time:
                     candidate_date = source_date
                     evidence_label = f"source_local={source_date} {source_time}"
                 elif kickoff:
