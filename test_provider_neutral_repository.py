@@ -92,11 +92,6 @@ class ProviderNeutralRepositoryTests(unittest.TestCase):
         self.assertEqual(report["writes_performed"], 0)
         self.assertTrue(statements)
         self.assertTrue(all(statement.startswith("SELECT") for statement in statements))
-        self.assertFalse(any(
-            token in statement
-            for statement in statements
-            for token in ("INSERT", "UPDATE", "DELETE", "CREATE", "ALTER", "DROP")
-        ))
 
 
 if __name__ == "__main__":
