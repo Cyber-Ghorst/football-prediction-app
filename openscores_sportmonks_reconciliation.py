@@ -378,7 +378,10 @@ def write_explicit_openscores_links(
                     )
                     inserted += 1
 
-                evidence = json.dumps(mapping.get("evidence") or {}, sort_keys=True)
+                evidence_payload = dict(mapping.get("evidence") or {})
+                evidence_payload["approved_by"] = str(mapping["approved_by"]).strip()
+                evidence_payload["approval_reason"] = str(mapping["approval_reason"]).strip()
+                evidence = json.dumps(evidence_payload, sort_keys=True)
                 method = str(
                     mapping.get("verification_method")
                     or mapping.get("basis")
