@@ -30,6 +30,27 @@ competition, season and team context. Once mappings are approved, fixture
 reconciliation still requires ordered home/away canonical IDs and kickoff
 within the five-minute tolerance.
 
+## Explicit approval gate
+
+The automated reconciliation operation consumes only pre-existing
+`provider_entity_links` rows joined to `provider_entity_link_verifications`
+records whose status is already `verified`. It does not create or promote
+links from candidate names, aliases, country codes or season labels.
+
+The low-level link writer fails closed unless a separate caller supplies an
+explicit approval flag, a named reviewer and an approval reason of at least
+12 characters for every mapping. Reviewer and rationale are retained in the
+verification evidence. A routine controller reconciliation must never set
+that approval flag.
+
+The reconciliation path no longer imports a Sportmonks season or writes
+canonical fixtures. If the canonical season/fixture catalogue or required
+verified entity links are absent, observations remain pending and the report
+records the block. Reconciliation may update observation status and a matched
+canonical fixture reference only when the complete pre-existing verified
+league, season and ordered home/away team crosswalk is present and the exact
+fixture fingerprint meets the five-minute kickoff tolerance.
+
 ## Running the audit
 
 Use the Prediction Lab Controller operation:
