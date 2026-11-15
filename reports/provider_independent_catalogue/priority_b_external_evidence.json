@@ -1,6 +1,6 @@
 {
   "report_name": "priority_b_external_identity_evidence",
-  "generated_at": "2026-11-15T17:26:32.034Z",
+  "generated_at": "2026-11-15T17:28:57.282Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority B single-provider competition identities; official evidence can support competition type, country and season context but does not replace independent provider corroboration or human canonical approval.",
   "safeguards": [
@@ -2009,6 +2009,179 @@
         "Obtain the complete Bzzoiro Girone C roster and fixture sample.",
         "Verify provider season ID 102::2116 and its season boundaries.",
         "Compare exact provider fixtures with the official Lega Pro Girone C schedule."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_055",
+      "name": "J1 League",
+      "observed_country": "Japan",
+      "provider": "bzzoiro",
+      "provider_competition_id": "49",
+      "provider_season_id": "49::1518",
+      "provider_season_label": "J1 League 26/27",
+      "raw_observation_count": 16,
+      "external_competition_type": "men's top-tier domestic professional league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 20,
+        "matchdays": 38,
+        "regular_season_matches": 380
+      },
+      "external_evidence": [
+        {
+          "publisher": "J.LEAGUE",
+          "url": "https://aboutj.jleague.jp/corporate/about_competitions/season/",
+          "supports": "Official 2026/27 season page specifies 20 clubs in J1 and 38-round, 380-match home-and-away league format."
+        },
+        {
+          "publisher": "J.LEAGUE",
+          "url": "https://www.jleague.jp/en/outline/j1/",
+          "supports": "Official J1 competition overview and 2026/27 competition period."
+        },
+        {
+          "publisher": "J.LEAGUE",
+          "url": "https://www.jleague.jp/news/article/32852/",
+          "supports": "Official 2026/27 club composition lists 20 J1 clubs."
+        }
+      ],
+      "assessment": "J.League's official 2026/27 season format establishes J1 as a 20-club top division with 38 home-and-away rounds and 380 matches. The Bzzoiro record has 16 observations; full roster coverage and provider season ID 49::1518 remain unverified.",
+      "review_status": "external_identity_supported_single_provider_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples.",
+        "Verify the exact season and tournament scope of the provider season ID.",
+        "Compare exact home/away fixture pairs and kickoff timestamps before proposing a provider crosswalk."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_056",
+      "name": "Japanese J.League",
+      "observed_country": "Japan",
+      "provider": "livescore_football",
+      "provider_competition_id": "750",
+      "provider_season_id": "750::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 3,
+      "external_competition_type": "candidate J.League fixture identity; exact competition season unresolved",
+      "external_season": "2026 calendar-year transition competition or 2026/27 season",
+      "official_scope": {
+        "2026_special_season": {
+          "clubs": 20,
+          "format": "Regional groups and playoffs"
+        },
+        "2026_27_season": {
+          "j1_clubs": 20,
+          "matchdays": 38,
+          "regular_season_matches": 380
+        }
+      },
+      "external_evidence": [
+        {
+          "publisher": "J.LEAGUE",
+          "url": "https://www.jleague.jp/news/article/29712/",
+          "supports": "Official description of the 2026 transition special competitions, distinct from the 2026/27 season."
+        },
+        {
+          "publisher": "J.LEAGUE",
+          "url": "https://aboutj.jleague.jp/corporate/about_competitions/season/",
+          "supports": "Official 2026/27 season structure for J1, J2 and J3."
+        }
+      ],
+      "assessment": "J.League operated a distinct 2026 transition special season before moving to the 2026/27 autumn-to-spring calendar. LiveScoreFootball's generic 2026 label and three observations do not establish whether this record represents the special season, 2026/27 J1, or multiple J.League divisions. Do not link it to Bzzoiro's 2026/27 J1 record.",
+      "review_status": "candidate_alias_season_scope_ambiguous",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples.",
+        "Verify the exact season and tournament scope of the provider season ID.",
+        "Compare exact home/away fixture pairs and kickoff timestamps before proposing a provider crosswalk."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_057",
+      "name": "Liga MX Apertura",
+      "observed_country": "Mexico",
+      "provider": "bzzoiro",
+      "provider_competition_id": "19",
+      "provider_season_id": "19::1309",
+      "provider_season_label": "Liga MX, Apertura 2026",
+      "raw_observation_count": 8,
+      "external_competition_type": "men's top-tier domestic league tournament — Apertura half-season",
+      "external_season": "2026 Apertura",
+      "official_scope": {
+        "clubs": 18,
+        "regular_season_matchdays": 17,
+        "format": "Single round-robin phase followed by final phase"
+      },
+      "external_evidence": [
+        {
+          "publisher": "N+",
+          "url": "https://www.nmas.com.mx/deportes/liga-mx-anuncia-calendario-oficial-del-apertura-2026-este-dia-arranca-el-torneo/",
+          "supports": "Reports the official Liga MX Apertura 2026 calendar, 18 clubs, 17 regular-season matchdays and Liguilla dates."
+        },
+        {
+          "publisher": "Federación Mexicana de Fútbol",
+          "url": "https://fmf.mx/docs/reglamentos/497.pdf",
+          "supports": "Official FMF/Liga BBVA competition regulations establish 18 participating clubs in the 2025/26 competition framework; not used alone to assert 2026/27 season ID."
+        }
+      ],
+      "assessment": "Contemporary reporting of the official Liga MX calendar confirms the 2026 Apertura tournament began 16 July 2026, with 18 clubs and a 17-match regular phase followed by Liguilla. Bzzoiro's eight observations do not establish complete roster or season-ID semantics.",
+      "review_status": "external_identity_supported_single_provider_roster_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples.",
+        "Verify the exact season and tournament scope of the provider season ID.",
+        "Compare exact home/away fixture pairs and kickoff timestamps before proposing a provider crosswalk."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_058",
+      "name": "Mexican Liga BBVA MX",
+      "observed_country": "Mexico",
+      "provider": "livescore_football",
+      "provider_competition_id": "760",
+      "provider_season_id": "760::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 3,
+      "external_competition_type": "men's top-tier domestic league — season/tournament scope unresolved",
+      "external_season": "2026 calendar year",
+      "official_scope": {
+        "Apertura_2026": {
+          "clubs": 18,
+          "regular_season_matchdays": 17
+        },
+        "Clausura_2027": "separate tournament expected in 2026/27 cycle"
+      },
+      "external_evidence": [
+        {
+          "publisher": "N+",
+          "url": "https://www.nmas.com.mx/deportes/liga-mx-anuncia-calendario-oficial-del-apertura-2026-este-dia-arranca-el-torneo/",
+          "supports": "Official-calendar reporting identifies the Apertura 2026 as an 18-club Liga BBVA MX tournament with 17 regular-season rounds."
+        },
+        {
+          "publisher": "Federación Mexicana de Fútbol",
+          "url": "https://fmf.mx/docs/reglamentos/497.pdf",
+          "supports": "Official FMF/Liga BBVA regulations describe the 18-club Liga MX competition structure."
+        }
+      ],
+      "assessment": "The LiveScoreFootball name is consistent with Mexico's top-tier Liga BBVA MX, but its three observations and generic 2026 season label do not show whether it refers to Apertura 2026, Clausura 2026, or the umbrella league. It must not be linked automatically to Bzzoiro's Apertura-specific record.",
+      "review_status": "candidate_alias_season_scope_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples.",
+        "Verify the exact season and tournament scope of the provider season ID.",
+        "Compare exact home/away fixture pairs and kickoff timestamps before proposing a provider crosswalk."
       ]
     }
   ]
