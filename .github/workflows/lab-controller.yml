@@ -26,6 +26,7 @@ on:
           - provider_source_repository_audit
           - provider_source_legacy_catalogue_stage
           - provider_neutral_identity_candidate_audit
+          - provider_team_scope_evidence_audit
           - provider_source_highlightly_roster_stage
           - provider_source_api_football_roster_stage
           - deployment_redeploy
@@ -132,7 +133,7 @@ jobs:
               trigger = json.loads(Path(".agent/trigger.json").read_text(encoding="utf-8"))
               operation = trigger.get("operation", "")
 
-          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync", "tipmaster_refresh_verify", "openscores_connection_check", "openscores_entity_mapping_audit", "openscores_sportmonks_reconciliation", "sportmonks_catalogue_access_audit", "provider_league_catalogue_audit", "provider_season_roster_audit", "provider_neutral_repository_audit", "provider_source_roster_stage", "provider_source_repository_audit", "provider_source_legacy_catalogue_stage", "provider_neutral_identity_candidate_audit", "provider_source_highlightly_roster_stage", "provider_source_api_football_roster_stage", "learning_audit", "deployment_redeploy"}
+          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync", "tipmaster_refresh_verify", "openscores_connection_check", "openscores_entity_mapping_audit", "openscores_sportmonks_reconciliation", "sportmonks_catalogue_access_audit", "provider_league_catalogue_audit", "provider_season_roster_audit", "provider_neutral_repository_audit", "provider_source_roster_stage", "provider_source_repository_audit", "provider_source_legacy_catalogue_stage", "provider_neutral_identity_candidate_audit", "provider_source_highlightly_roster_stage", "provider_source_api_football_roster_stage", "provider_team_scope_evidence_audit", "learning_audit", "deployment_redeploy"}
           if operation not in allowed:
               raise SystemExit("Rejected unsupported or missing operation")
           if operation == "prediction_run":
@@ -498,7 +499,7 @@ jobs:
           python sportmonks_catalogue_access_audit.py
 
       - name: Install provider catalogue audit dependency
-        if: steps.operation.outputs.operation == 'provider_league_catalogue_audit' || steps.operation.outputs.operation == 'provider_season_roster_audit' || steps.operation.outputs.operation == 'provider_neutral_repository_audit' || steps.operation.outputs.operation == 'provider_source_roster_stage' || steps.operation.outputs.operation == 'provider_source_repository_audit' || steps.operation.outputs.operation == 'provider_source_legacy_catalogue_stage' || steps.operation.outputs.operation == 'provider_neutral_identity_candidate_audit' || steps.operation.outputs.operation == 'provider_source_highlightly_roster_stage' || steps.operation.outputs.operation == 'provider_source_api_football_roster_stage'
+        if: steps.operation.outputs.operation == 'provider_league_catalogue_audit' || steps.operation.outputs.operation == 'provider_season_roster_audit' || steps.operation.outputs.operation == 'provider_neutral_repository_audit' || steps.operation.outputs.operation == 'provider_source_roster_stage' || steps.operation.outputs.operation == 'provider_source_repository_audit' || steps.operation.outputs.operation == 'provider_source_legacy_catalogue_stage' || steps.operation.outputs.operation == 'provider_neutral_identity_candidate_audit' || steps.operation.outputs.operation == 'provider_source_highlightly_roster_stage' || steps.operation.outputs.operation == 'provider_source_api_football_roster_stage' || steps.operation.outputs.operation == 'provider_team_scope_evidence_audit'
         run: |
           set -euo pipefail
           python -m pip install requests 'psycopg[binary]'
@@ -571,6 +572,14 @@ jobs:
         run: |
           set -euo pipefail
           python provider_neutral_identity_candidate_audit_report.py
+
+      - name: Audit provider team-scope source evidence (read-only)
+        if: steps.operation.outputs.operation == 'provider_team_scope_evidence_audit'
+        env:
+          PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
+        run: |
+          set -euo pipefail
+          python provider_team_scope_evidence_audit.py
 
       - name: Audit staged provider source evidence (read-only)
         if: steps.operation.outputs.operation == 'provider_source_repository_audit'
@@ -725,6 +734,9 @@ jobs:
               ("provider-league-catalogue-audit.json", "Highlightly and LiveScoreFootball league catalogue audit"),
               ("provider-season-roster-audit.json", "Season-scoped provider roster evidence audit"),
               ("provider-neutral-repository-audit.json", "Read-only provider-neutral repository compatibility audit"),
+              ("provider-source-repository-audit.json", "Provider-native source evidence audit"),
+              ("provider-neutral-identity-candidate-audit.json", "Provider-neutral identity candidate audit"),
+              ("provider-team-scope-evidence-audit.json", "Provider team-scope evidence audit"),
               ("prediction-run-report.json", "Automated prediction run report"),
               ("learning-readiness-report.json", "Leakage-safe learning readiness report"),
           )
@@ -837,6 +849,7 @@ jobs:
             provider-source-repository-audit.json
             provider-source-legacy-catalogue-stage-report.json
             provider-neutral-identity-candidate-audit.json
+            provider-team-scope-evidence-audit.json
             provider-source-highlightly-roster-stage-report.json
             provider-source-api-football-roster-stage-report.json
             prediction-run-report.json
