@@ -34,7 +34,7 @@ class APIFootballSourceRosterStageTests(unittest.TestCase):
         rows = build_source_entities([{
             "league": {"id": 61, "name": "Ligue 1", "type": "League"},
             "country": {"name": "France"},
-            "seasons": [{"year": 2026}],
+            "seasons": [{"year": 2024}],
             "teams": [{"team": {"id": 1, "name": "Example FC", "country": None}}],
         }])
         team = next(row for row in rows if row["entity_type"] == "team")
