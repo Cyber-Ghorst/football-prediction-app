@@ -115,7 +115,9 @@ def _season_metadata(season: Mapping[str, Any]) -> dict[str, Any]:
 def _unique_name_candidates(source: Mapping[str, Any], canonical: list[Mapping[str, Any]],
                             *, require_country: bool = False) -> dict[str, Any]:
     source_name = _norm(source.get("name"))
-    source_country = _norm(_country(source.get("country")) )
+    source_country = _norm(
+        _league_country(source) if require_country else _country(source.get("country"))
+    )
     if not source_name:
         return {"status": "insufficient_source_identity", "candidates": []}
     matches = []
