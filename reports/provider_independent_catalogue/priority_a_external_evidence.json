@@ -1,6 +1,6 @@
 {
   "report_name": "competition_identity_external_evidence_dossier",
-  "generated_at": "2026-11-15T16:51:06.534Z",
+  "generated_at": "2026-11-15T16:53:06.826Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority A only: twelve multi-provider observed competition entries with country context.",
   "interpretation": "External official competition evidence supports the public competition identity and season context. It does not prove that provider-specific IDs or season IDs refer to the same canonical competition or season.",
@@ -338,6 +338,36 @@
       ],
       "provider_season_evidence": "Both providers identify the 2026 calendar-year season. The current raw-observation audit has 35 Bzzoiro timezone-aware observations across 12 teams and 6 unique fixtures; LiveScoreFootball has 22 timezone-aware observations across 4 teams and 2 unique fixtures. No exact cross-provider fixture overlap was established. The official MLS scope spans the United States and Canada, while current provider country fields only state USA/United States; country-scope representation in the identity queue needs an explicit cross-border convention.",
       "review_status": "external_identity_supported_provider_ids_roster_and_cross_border_scope_unverified"
+    },
+    {
+      "catalogue_entry_id": "observed_competition_005",
+      "name": "Austrian Bundesliga",
+      "observed_country": "Austria",
+      "providers": [
+        "bzzoiro",
+        "livescore_football"
+      ],
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026/27",
+      "external_evidence": [
+        {
+          "publisher": "Österreichische Fußball-Bundesliga",
+          "url": "https://www.bundesliga.at/de/news/artikel/admiral-bundesliga-spielplan-fuer-den-grunddurchgang-2026-27",
+          "supports": "Official 2026/27 basic-round schedule, beginning with LASK vs Grazer AK on 31 July 2026."
+        },
+        {
+          "publisher": "Österreichische Fußball-Bundesliga",
+          "url": "https://www.bundesliga.at/de/spielplan",
+          "supports": "Official 2026/27 match schedule."
+        },
+        {
+          "publisher": "Österreichische Fußball-Bundesliga",
+          "url": "https://www.oefbl.at/de/medienbereich/mediainfos/2026/alles-wissenswerte-zur-saison-2026-27",
+          "supports": "Official season overview: 12 clubs, 22-round home-and-away basic phase, then split into championship and qualification groups."
+        }
+      ],
+      "provider_season_evidence": "Bzzoiro labels the season 'Bundesliga 26/27'; LiveScoreFootball labels its season '2026'. The current audit has 15 Bzzoiro timezone-aware observations across all 12 team names and 6 unique fixtures; LiveScoreFootball has 3 timezone-aware observations across 6 teams and 3 unique fixtures. No exact cross-provider fixture overlap was established. The calendar-year label on LiveScoreFootball is consistent with the 2026 start year but does not prove its season ID covers the same full 2026/27 competition.",
+      "review_status": "external_identity_supported_provider_season_and_roster_scope_unverified"
     }
   ],
   "next_required_checks": [
