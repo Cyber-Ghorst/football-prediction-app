@@ -49,6 +49,41 @@ class OpenLigaDBScopeProbeTests(unittest.TestCase):
         self.assertEqual(summary["utc_kickoff_count"], 1)
         self.assertEqual(summary["team_names"], ["1. FC Köln", "FC Bayern München"])
         self.assertEqual(summary["sample_fixtures"][0]["kickoff_utc"], "2026-11-20T19:30:00Z")
+        self.assertEqual(len(summary["fixture_identity_hashes"]), 1)
+
+
+    def test_probe_reports_exact_fixture_overlaps_without_promoting_identities(self):
+        candidates = {"records": [
+            {"league_id": 1, "source_name": "Official league", "season": 2026,
+             "scope_class": "domestic_league_candidate", "candidate_country": "X"},
+            {"league_id": 2, "source_name": "Alias collection", "season": 2026,
+             "scope_class": "possible_alias", "candidate_country": "X"},
+        ]}
+        fixture = {"matchID": 10, "leagueId": 1, "leagueSeason": 2026,
+                   "team1": {"teamName": "FC Example"}, "team2": {"teamName": "United"},
+                   "matchDateTimeUTC": "2026-11-20T19:30:00Z"}
+        def fake_get(url):
+            if url.endswith("/getavailableleagues/2026"):
+                return ([
+                    {"leagueId": 1, "leagueName": "Official league", "leagueShortcut": "one",
+                     "leagueSeason": 2026, "sport": {"sportName": "Football"}},
+                    {"leagueId": 2, "leagueName": "Alias collection", "leagueShortcut": "two",
+                     "leagueSeason": 2026, "sport": {"sportName": "Football"}},
+                ], "available-hash")
+            if "/one/" in url:
+                return ([fixture], "one-hash")
+            alias_fixture = {**fixture, "matchID": 99, "leagueId": 2,
+                             "team1": {"teamName": " fc example "}}
+            return ([alias_fixture], "two-hash")
+        report = build_probe_report(
+            candidates, get_json=fake_get, sleep=lambda _: None,
+            generated_at=datetime(2026, 11, 15, tzinfo=timezone.utc),
+        )
+        comparison = report["fixture_identity_comparison"]
+        self.assertEqual(comparison["pairs_with_exact_fixture_overlap"], 1)
+        self.assertEqual(comparison["overlap_pairs"][0]["exact_fixture_overlap_count"], 1)
+        self.assertEqual(report["results"][0]["api_metadata"]["sport"], "Football")
+        self.assertFalse(report["safeguards"]["provider_link_writes"])
 
     def test_probe_is_read_only_and_records_api_hashes(self):
         candidates = {"records": [

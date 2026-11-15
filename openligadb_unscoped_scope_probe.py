@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 import json
 import time
+import unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Mapping, Sequence
@@ -70,12 +71,17 @@ def select_league_metadata(
     shortcut = str(row.get("leagueShortcut") or "").strip()
     if not shortcut:
         return None, "available_league_missing_shortcut"
+    sport_value = row.get("sport")
+    if isinstance(sport_value, Mapping):
+        sport_name = str(sport_value.get("sportName") or "").strip() or None
+    else:
+        sport_name = str(sport_value or "").strip() or None
     return {
         "league_id": _int(row.get("leagueId")),
         "league_name": str(row.get("leagueName") or "").strip() or None,
         "league_shortcut": shortcut,
         "league_season": _int(row.get("leagueSeason")),
-        "sport": str(row.get("sport") or "").strip() or None,
+        "sport": sport_name,
     }, "metadata_found"
 
 
@@ -90,6 +96,7 @@ def summarize_matches(matches: Any) -> dict[str, Any]:
     local_kickoffs = 0
     id_mismatches = 0
     normalized: list[dict[str, Any]] = []
+    fixture_identity_hashes: list[str] = []
     first_valid = next((row for row in matches if isinstance(row, Mapping)), {})
     expected_league_id = _int(first_valid.get("leagueId")) if isinstance(first_valid, Mapping) else None
     expected_season = _int(first_valid.get("leagueSeason")) if isinstance(first_valid, Mapping) else None
@@ -118,6 +125,11 @@ def summarize_matches(matches: Any) -> dict[str, Any]:
         local_value = str(match.get("matchDateTime") or "").strip()
         if utc_value:
             utc_kickoffs += 1
+            if home and away:
+                home_key = " ".join(unicodedata.normalize("NFKC", home).casefold().split())
+                away_key = " ".join(unicodedata.normalize("NFKC", away).casefold().split())
+                identity_key = "\x1f".join((home_key, away_key, utc_value))
+                fixture_identity_hashes.append(hashlib.sha256(identity_key.encode("utf-8")).hexdigest())
         elif local_value:
             local_kickoffs += 1
         match_league_id = _int(match.get("leagueId"))
@@ -159,6 +171,8 @@ def summarize_matches(matches: Any) -> dict[str, Any]:
         "local_kickoff_only_count": local_kickoffs,
         "timezone_ids": sorted(timezone_ids),
         "league_id_or_season_mismatch_rows": id_mismatches,
+        "fixture_identity_hashes": sorted(set(fixture_identity_hashes)),
+        "fixture_identity_duplicate_rows": len(fixture_identity_hashes) - len(set(fixture_identity_hashes)),
         "sample_fixtures": normalized[:MAX_SAMPLE_FIXTURES],
     }
 
@@ -178,6 +192,7 @@ def build_probe_report(
         raise OpenLigaDBProbeError("OpenLigaDB available-leagues response was not an array.")
 
     results: list[dict[str, Any]] = []
+    fixture_identity_sets: dict[int, set[str]] = {}
     for index, source in enumerate(records):
         if not isinstance(source, Mapping):
             continue
@@ -204,6 +219,12 @@ def build_probe_report(
         try:
             matches, payload_hash = get_json(url)
             summary = summarize_matches(matches)
+            identity_hashes = summary.pop("fixture_identity_hashes", [])
+            fixture_identity_sets[league_id] = set(identity_hashes)
+            summary["fixture_identity_count"] = len(identity_hashes)
+            summary["fixture_identity_set_sha256"] = hashlib.sha256(
+                "\n".join(identity_hashes).encode("utf-8")
+            ).hexdigest()
             results.append({
                 **base,
                 "status": summary["status"],
@@ -220,6 +241,28 @@ def build_probe_report(
                 "error": str(exc),
             })
 
+    exact_overlap_pairs: list[dict[str, Any]] = []
+    for left_index, left in enumerate(results):
+        left_id = left.get("league_id")
+        if left_id not in fixture_identity_sets:
+            continue
+        for right in results[left_index + 1:]:
+            right_id = right.get("league_id")
+            if right_id not in fixture_identity_sets:
+                continue
+            shared = sorted(fixture_identity_sets[left_id] & fixture_identity_sets[right_id])
+            if shared:
+                exact_overlap_pairs.append({
+                    "left_league_id": left_id,
+                    "left_source_name": left.get("source_name"),
+                    "right_league_id": right_id,
+                    "right_source_name": right.get("source_name"),
+                    "exact_fixture_overlap_count": len(shared),
+                    "left_only_fixture_count": len(fixture_identity_sets[left_id] - fixture_identity_sets[right_id]),
+                    "right_only_fixture_count": len(fixture_identity_sets[right_id] - fixture_identity_sets[left_id]),
+                    "overlap_sample_hashes": shared[:5],
+                })
+
     current = generated_at or datetime.now(timezone.utc)
     if current.tzinfo is None or current.utcoffset() is None:
         raise ValueError("generated_at must be timezone-aware.")
@@ -233,6 +276,12 @@ def build_probe_report(
         "available_leagues_sha256": available_hash,
         "api_rate_limit_note": "OpenLigaDB documentation states a limit of 60 requests per minute; requests are spaced by at least one second.",
         "results": results,
+        "fixture_identity_comparison": {
+            "identity_basis": "exact normalized home team, away team and UTC kickoff; Unicode NFKC and casefold applied to team names",
+            "pairs_with_exact_fixture_overlap": len(exact_overlap_pairs),
+            "overlap_pairs": exact_overlap_pairs,
+            "interpretation": "Exact overlaps are evidence of shared fixture observations, not automatic competition or season identity approval.",
+        },
         "summary": {
             "records_probed": len(results),
             "matches_found": sum(row.get("status") == "matches_found" for row in results),
