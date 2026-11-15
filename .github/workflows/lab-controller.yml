@@ -22,6 +22,7 @@ on:
           - provider_league_catalogue_audit
           - provider_season_roster_audit
           - provider_neutral_repository_audit
+          - provider_source_roster_stage
           - deployment_redeploy
         default: health_check
       season:
