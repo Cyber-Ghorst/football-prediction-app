@@ -26,6 +26,7 @@ on:
           - provider_source_repository_audit
           - provider_source_legacy_catalogue_stage
           - provider_neutral_identity_candidate_audit
+          - provider_source_highlightly_roster_stage
           - deployment_redeploy
         default: health_check
       season:
@@ -130,7 +131,7 @@ jobs:
               trigger = json.loads(Path(".agent/trigger.json").read_text(encoding="utf-8"))
               operation = trigger.get("operation", "")
 
-          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync", "tipmaster_refresh_verify", "openscores_connection_check", "openscores_entity_mapping_audit", "openscores_sportmonks_reconciliation", "sportmonks_catalogue_access_audit", "provider_league_catalogue_audit", "provider_season_roster_audit", "provider_neutral_repository_audit", "provider_source_roster_stage", "provider_source_repository_audit", "provider_source_legacy_catalogue_stage", "provider_neutral_identity_candidate_audit", "learning_audit", "deployment_redeploy"}
+          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync", "tipmaster_refresh_verify", "openscores_connection_check", "openscores_entity_mapping_audit", "openscores_sportmonks_reconciliation", "sportmonks_catalogue_access_audit", "provider_league_catalogue_audit", "provider_season_roster_audit", "provider_neutral_repository_audit", "provider_source_roster_stage", "provider_source_repository_audit", "provider_source_legacy_catalogue_stage", "provider_neutral_identity_candidate_audit", "provider_source_highlightly_roster_stage", "learning_audit", "deployment_redeploy"}
           if operation not in allowed:
               raise SystemExit("Rejected unsupported or missing operation")
           if operation == "prediction_run":
@@ -496,7 +497,7 @@ jobs:
           python sportmonks_catalogue_access_audit.py
 
       - name: Install provider catalogue audit dependency
-        if: steps.operation.outputs.operation == 'provider_league_catalogue_audit' || steps.operation.outputs.operation == 'provider_season_roster_audit' || steps.operation.outputs.operation == 'provider_neutral_repository_audit' || steps.operation.outputs.operation == 'provider_source_roster_stage' || steps.operation.outputs.operation == 'provider_source_repository_audit' || steps.operation.outputs.operation == 'provider_source_legacy_catalogue_stage' || steps.operation.outputs.operation == 'provider_neutral_identity_candidate_audit'
+        if: steps.operation.outputs.operation == 'provider_league_catalogue_audit' || steps.operation.outputs.operation == 'provider_season_roster_audit' || steps.operation.outputs.operation == 'provider_neutral_repository_audit' || steps.operation.outputs.operation == 'provider_source_roster_stage' || steps.operation.outputs.operation == 'provider_source_repository_audit' || steps.operation.outputs.operation == 'provider_source_legacy_catalogue_stage' || steps.operation.outputs.operation == 'provider_neutral_identity_candidate_audit' || steps.operation.outputs.operation == 'provider_source_highlightly_roster_stage'
         run: |
           set -euo pipefail
           python -m pip install requests 'psycopg[binary]'
@@ -541,6 +542,17 @@ jobs:
         run: |
           set -euo pipefail
           python provider_source_legacy_catalogue_stage.py
+
+      - name: Stage Highlightly competition and standings roster source evidence only
+        if: steps.operation.outputs.operation == 'provider_source_highlightly_roster_stage'
+        env:
+          HIGHLIGHTLY_API_KEY: ${{ secrets.HIGHLIGHTLY_API_KEY }}
+          FREE_FIXTURE_TERMS_ACK_HIGHLIGHTLY: ${{ secrets.FREE_FIXTURE_TERMS_ACK_HIGHLIGHTLY }}
+          HIGHLIGHTLY_NON_BETTING_USE_CONFIRMED: ${{ secrets.HIGHLIGHTLY_NON_BETTING_USE_CONFIRMED }}
+          PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
+        run: |
+          set -euo pipefail
+          python provider_source_highlightly_roster_stage.py
 
       - name: Audit provider-neutral identity candidates (read-only)
         if: steps.operation.outputs.operation == 'provider_neutral_identity_candidate_audit'
@@ -815,6 +827,7 @@ jobs:
             provider-source-repository-audit.json
             provider-source-legacy-catalogue-stage-report.json
             provider-neutral-identity-candidate-audit.json
+            provider-source-highlightly-roster-stage-report.json
             prediction-run-report.json
             learning-readiness-report.json
             watchdog-report.json
