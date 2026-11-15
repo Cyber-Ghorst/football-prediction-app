@@ -309,6 +309,26 @@ class ProviderAdapterTests(unittest.TestCase):
         self.assertNotIn("secret-token", str(raised.exception))
         client.close()
 
+    def test_sportmonks_api_error_preserves_safe_provider_message(self):
+        client = SportmonksClient(api_token="secret-token")
+        response = Mock()
+        response.status_code = 200
+        response.headers = {}
+        response.raise_for_status.return_value = None
+        response.json.return_value = {
+            "message": "The requested league is not available for this subscription: secret-token",
+            "error": "Forbidden",
+        }
+        client.session.get = Mock(return_value=response)
+        with self.assertRaisesRegex(SportmonksError, "not available for this subscription"):
+            client.leagues()
+        self.assertNotIn("secret-token", str(client.last_metadata))
+        self.assertEqual(
+            client.last_metadata["provider_message"],
+            "The requested league is not available for this subscription: [REDACTED]",
+        )
+        client.close()
+
     def test_highlightly_matches_reports_data_envelope_metadata(self):
         client = HighlightlyClient(api_key="test-only")
         response = Mock()

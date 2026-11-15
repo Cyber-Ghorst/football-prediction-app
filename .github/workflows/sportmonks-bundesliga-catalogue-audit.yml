@@ -6,6 +6,8 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/sportmonks-bundesliga-catalogue-audit.yml"
+      - "sportmonks.py"
+      - "sportmonks_catalogue_access_audit.py"
 
 permissions:
   contents: write

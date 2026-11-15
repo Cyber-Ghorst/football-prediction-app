@@ -104,7 +104,17 @@ class SportmonksClient:
         if not isinstance(payload, dict):
             raise SportmonksError("Sportmonks returned an unexpected response schema.")
         if payload.get("message") and not isinstance(payload.get("data"), (list, dict)):
-            raise SportmonksError("Sportmonks rejected the request; verify endpoint access and parameters.")
+            # Keep a short, credential-safe provider diagnostic so account/plan
+            # restrictions can be distinguished from malformed endpoint requests.
+            provider_message = str(payload.get("message") or "").strip()
+            if self.api_token:
+                provider_message = provider_message.replace(self.api_token, "[REDACTED]")
+            provider_message = " ".join(provider_message.split())[:240]
+            self.last_metadata["provider_message"] = provider_message or "unspecified provider error"
+            raise SportmonksError(
+                "Sportmonks rejected the request; "
+                f"provider message: {self.last_metadata['provider_message']}"
+            )
         return payload
 
     @staticmethod
