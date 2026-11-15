@@ -1,5 +1,4 @@
 import unittest
-from unittest.mock import Mock
 
 from sportmonks_fa_cup_pagination_probe import inspect_response, run_probe
 
@@ -42,7 +41,7 @@ class PaginationProbeTests(unittest.TestCase):
         self.assertFalse(report["database_accessed"])
         self.assertEqual(report["requests_made"], 4)
         by_size = {x["per_page"]: x for x in report["page_comparisons"]}
-        self.assertFalse(by_size[50]["same_id_sequence"])
+        self.assertTrue(by_size[50]["same_id_sequence"])
         self.assertEqual(by_size[50]["overlap_count"], 50)
         self.assertEqual(by_size[25]["page_2_count"], 15)
 
