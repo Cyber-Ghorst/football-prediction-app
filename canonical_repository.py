@@ -109,12 +109,12 @@ def audit_provider_link_parity(
     *,
     provider: str,
 ) -> dict[str, Any]:
-    """Read-only inventory of provider links, distinguishing native identity anchors.
+    """Read-only inventory of approval, verification and native identity evidence.
 
-    Sportmonks links whose source ID is identical to the legacy primary key are
-    first-party identity anchors, not cross-provider approvals. Other links
-    require an exact approval-audit match and a non-empty reason of at least
-    12 characters. No link or legacy row is modified.
+    Sportmonks links whose canonical IDs use the legacy Sportmonks namespace
+    are native identity anchors. OpenScores has a separate verification ledger;
+    only exact matching rows marked verified count as verified crosswalks.
+    Other cross-provider links require an exact approval-audit match.
     """
     provider_name = str(provider or "").strip().casefold()
     if not database_url:
@@ -138,6 +138,8 @@ def audit_provider_link_parity(
                             WHEN approval.link_id IS NULL
                              AND NOT (link.provider = 'sportmonks'
                                       AND link.canonical_entity_id = 'sportmonks:' || link.provider_entity_id)
+                             AND NOT (link.provider = 'openscores'
+                                      AND verification.verification_status = 'verified')
                             THEN link.link_id
                         END) AS unapproved_links,
                         COUNT(DISTINCT CASE
@@ -151,6 +153,18 @@ def audit_provider_link_parity(
                              AND legacy_entity.{primary_key} IS NULL
                             THEN link.link_id
                         END) AS native_identity_anchors_missing_target,
+                        COUNT(DISTINCT CASE
+                            WHEN verification.verification_status = 'verified'
+                            THEN link.link_id
+                        END) AS verified_links,
+                        COUNT(DISTINCT CASE
+                            WHEN verification.verification_status = 'review_required'
+                            THEN link.link_id
+                        END) AS review_required_links,
+                        COUNT(DISTINCT CASE
+                            WHEN verification.verification_status = 'rejected'
+                            THEN link.link_id
+                        END) AS rejected_links,
                         COUNT(DISTINCT CASE
                             WHEN approval.link_id IS NOT NULL
                              AND legacy_entity.{primary_key} IS NULL
@@ -169,6 +183,12 @@ def audit_provider_link_parity(
                      AND approval.provider_entity_id = link.provider_entity_id
                      AND approval.canonical_entity_id = link.canonical_entity_id
                      AND LENGTH(BTRIM(approval.approval_reason)) >= 12
+                    LEFT JOIN provider_entity_link_verifications AS verification
+                      ON verification.link_id = link.link_id
+                     AND verification.provider = link.provider
+                     AND verification.entity_type = link.entity_type
+                     AND verification.provider_entity_id = link.provider_entity_id
+                     AND verification.canonical_entity_id = link.canonical_entity_id
                     LEFT JOIN {table} AS legacy_entity
                       ON legacy_entity.{primary_key} = link.canonical_entity_id
                     WHERE link.provider = %s AND link.entity_type = %s
@@ -182,8 +202,11 @@ def audit_provider_link_parity(
                     "unapproved_links": int(row[2] or 0),
                     "native_identity_anchors": int(row[3] or 0),
                     "native_identity_anchors_missing_target": int(row[4] or 0),
-                    "approved_targets_missing": int(row[5] or 0),
-                    "approved_links_with_legacy_target": int(row[6] or 0),
+                    "verified_links": int(row[5] or 0),
+                    "review_required_links": int(row[6] or 0),
+                    "rejected_links": int(row[7] or 0),
+                    "approved_targets_missing": int(row[8] or 0),
+                    "approved_links_with_legacy_target": int(row[9] or 0),
                 }
 
                 cursor.execute(
@@ -191,14 +214,22 @@ def audit_provider_link_parity(
                     SELECT COUNT(*) FROM (
                         SELECT link.canonical_entity_id
                         FROM provider_entity_links AS link
-                        INNER JOIN provider_entity_link_approval_audit AS approval
+                        LEFT JOIN provider_entity_link_approval_audit AS approval
                           ON approval.link_id = link.link_id
                          AND approval.provider = link.provider
                          AND approval.entity_type = link.entity_type
                          AND approval.provider_entity_id = link.provider_entity_id
                          AND approval.canonical_entity_id = link.canonical_entity_id
                          AND LENGTH(BTRIM(approval.approval_reason)) >= 12
+                        LEFT JOIN provider_entity_link_verifications AS verification
+                          ON verification.link_id = link.link_id
+                         AND verification.provider = link.provider
+                         AND verification.entity_type = link.entity_type
+                         AND verification.provider_entity_id = link.provider_entity_id
+                         AND verification.canonical_entity_id = link.canonical_entity_id
                         WHERE link.provider = %s AND link.entity_type = %s
+                          AND (approval.link_id IS NOT NULL
+                               OR verification.verification_status = 'verified')
                         GROUP BY link.canonical_entity_id
                         HAVING COUNT(DISTINCT link.provider_entity_id) > 1
                     ) AS ambiguous_targets
@@ -214,6 +245,7 @@ def audit_provider_link_parity(
         for key in (
             "total_links", "approved_links", "unapproved_links",
             "native_identity_anchors", "native_identity_anchors_missing_target",
+            "verified_links", "review_required_links", "rejected_links",
             "approved_targets_missing", "approved_links_with_legacy_target",
         )
     }
@@ -226,6 +258,7 @@ def audit_provider_link_parity(
         "entity_types": entity_reports,
         "totals": totals,
     }
+
 
 def list_provider_link_sources(database_url: str) -> list[str]:
     """Return provider names represented in the link table using a read-only query."""
