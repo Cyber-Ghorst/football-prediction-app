@@ -1,8 +1,8 @@
-"""Safely import matching Sportmonks history and reconcile OpenScores observations.
+"""Reconcile staged OpenScores observations through pre-approved crosswalks.
 
-Only exact competition/country, season-year, and unique team-name matches are
-used to create explicit provider_entity_links. Sportmonks remains the canonical
-fixture source. OpenScores never writes canonical fixtures or prediction data.
+This module does not discover or approve mappings and does not import canonical
+fixtures. Automated reconciliation consumes only pre-existing verified entity
+links; link creation requires a separate explicit reviewer approval.
 """
 from __future__ import annotations
 
