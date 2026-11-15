@@ -716,7 +716,31 @@
       "fixture_ingestion_enabled": false,
       "prediction_eligible": false,
       "review_disposition": "evidence_reviewed_not_approved",
-      "review_reason": "Official competition context and the read-only provider-observation audit were reviewed. Provider-specific competition and season IDs are not yet proven to be equivalent canonical identities; exact fixture overlaps are corroboration, not approval."
+      "review_reason": "Official LALIGA sources confirm the 2026/27 EA SPORTS Primera División calendar and official 20-club roster. Bzzoiro and OpenFootball both report Spain's La Liga with 2026/27 season labels; OpenFootball lists all 20 official clubs but all 7,600 sampled observations have local kickoff times without timezone, so none is eligible for exact UTC overlap. Bzzoiro provides 31 timezone-aware observations and 18 unique team names, missing Elche CF and Levante UD from this bounded sample. No exact cross-provider fixture overlap is confirmed. Competition identity is strongly corroborated, but provider season semantics and full roster/fixture equivalence remain unverified; no mapping is approved.",
+      "external_evidence": [
+        {
+          "source": "LALIGA — complete 2026/27 calendar",
+          "published_date": "2026-06-30",
+          "url": "https://www.laliga.com/noticias/ya-se-conoce-el-calendario-al-completo-de-laliga-ea-sports-2026-27",
+          "supports": [
+            "Official 2026/27 calendar and matchdays"
+          ]
+        },
+        {
+          "source": "LALIGA — 2026/27 clubs",
+          "url": "https://www.laliga.com/en-US/laliga-easports/clubs",
+          "supports": [
+            "Official roster lists 20 LALIGA EA SPORTS clubs"
+          ]
+        },
+        {
+          "source": "LALIGA — 2026/27 calendar",
+          "url": "https://www.laliga.com/calendar-2026-2027/laliga-easports",
+          "supports": [
+            "Official calendar contains 38 matchdays and fixtures"
+          ]
+        }
+      ]
     },
     {
       "review_order": 7,
