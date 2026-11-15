@@ -1,6 +1,6 @@
 {
   "report_name": "priority_b_external_identity_evidence",
-  "generated_at": "2026-11-15T17:24:55.599Z",
+  "generated_at": "2026-11-15T17:26:32.034Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority B single-provider competition identities; official evidence can support competition type, country and season context but does not replace independent provider corroboration or human canonical approval.",
   "safeguards": [
@@ -1968,6 +1968,47 @@
         "Verify provider season boundaries and exact season ID semantics.",
         "Obtain broader provider roster/fixture evidence.",
         "Keep Serie C group A and group B separate under their parent competition."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_054",
+      "name": "Serie C, Girone C",
+      "observed_country": "Italy",
+      "provider": "bzzoiro",
+      "provider_competition_id": "102",
+      "provider_season_id": "102::2116",
+      "provider_season_label": "Serie C, Group C 26/27",
+      "raw_observation_count": 38,
+      "external_competition_type": "men's third-tier domestic league group",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs_in_group": 20,
+        "rounds": 38,
+        "regular_season_matches": 380,
+        "parent_competition": "Serie C, three regional groups"
+      },
+      "external_evidence": [
+        {
+          "publisher": "Lega Pro",
+          "url": "https://www.lega-pro.com/pdf/cod-autoregolam.pdf",
+          "supports": "Official Lega Pro regulations define Serie C as one division with three groups of 20 clubs."
+        },
+        {
+          "publisher": "Lega Pro",
+          "url": "https://www.lega-pro.com/com/1819-215DIV.pdf",
+          "supports": "Official Lega Pro site publishes distinct Group A, B and C fixtures and standings for the 2026/27 competition."
+        }
+      ],
+      "assessment": "Official Lega Pro regulations establish Girone C as one of the three regional groups in Serie C, the men's third tier. A standard 20-club group plays 38 regular-season matches per club. Bzzoiro's 38 observations do not prove complete group roster coverage or provider season-ID equivalence.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain the complete Bzzoiro Girone C roster and fixture sample.",
+        "Verify provider season ID 102::2116 and its season boundaries.",
+        "Compare exact provider fixtures with the official Lega Pro Girone C schedule."
       ]
     }
   ]
