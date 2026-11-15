@@ -1,6 +1,6 @@
 {
   "report_name": "priority_b_external_identity_evidence",
-  "generated_at": "2026-11-15T17:31:34.589Z",
+  "generated_at": "2026-11-15T17:33:49.341Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority B single-provider competition identities; official evidence can support competition type, country and season context but does not replace independent provider corroboration or human canonical approval.",
   "safeguards": [
@@ -2637,6 +2637,340 @@
         "Obtain broader provider roster and fixture samples.",
         "Verify provider season boundaries and competition ID semantics.",
         "Keep league/cup/tier/group distinctions intact."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_075",
+      "name": "Copa Sudamericana",
+      "observed_country": "South America",
+      "provider": "bzzoiro",
+      "provider_competition_id": "33",
+      "provider_season_id": "33::114",
+      "provider_season_label": "CONMEBOL Sudamericana 2026",
+      "raw_observation_count": 1,
+      "external_competition_type": "men's continental club knockout competition",
+      "external_season": "2026 calendar year",
+      "official_scope": {
+        "associations": 10,
+        "qualified_clubs": 44,
+        "group_stage_clubs": 32,
+        "total_matches": 157,
+        "format": "Preliminary national ties, group stage and knockout rounds"
+      },
+      "external_evidence": [
+        {
+          "publisher": "CONMEBOL",
+          "url": "https://cdn.conmebol.com/wp-content/uploads/2025/12/CS-2026-Manual-de-Clubes-ESP-Feb26.pdf",
+          "supports": "Official 2026 club manual states 44 clubs from ten associations and 157 matches."
+        },
+        {
+          "publisher": "CONMEBOL",
+          "url": "https://gol.conmebol.com/sudamericana/en/news/conmebol-sudamericana-2026-group-stage-draw-date-time-qualified-teams-pots-and-format",
+          "supports": "Official 2026 group-stage draw and format."
+        }
+      ],
+      "assessment": "CONMEBOL's official 2026 club manual establishes the Sudamericana as an annual continental men's club competition involving 44 clubs from ten member associations and 157 matches. Bzzoiro contributes only one observation; provider season ID 33::114 and full coverage remain unverified.",
+      "review_status": "external_identity_supported_single_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster/fixture samples where possible.",
+        "Verify provider season boundaries and the exact meaning of the provider season ID.",
+        "Compare exact fixtures and kickoff timestamps before proposing cross-provider links."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_076",
+      "name": "K League 1",
+      "observed_country": "South Korea",
+      "provider": "bzzoiro",
+      "provider_competition_id": "50",
+      "provider_season_id": "50::1288",
+      "provider_season_label": "K-League 1 2026",
+      "raw_observation_count": 4,
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026 calendar year",
+      "official_scope": {
+        "clubs": 12,
+        "regular_rounds": 33,
+        "final_rounds": 5,
+        "total_matches_per_club": 38,
+        "total_matches": 228,
+        "format": "Triple round-robin regular phase; split top-six/bottom-six final round"
+      },
+      "external_evidence": [
+        {
+          "publisher": "K League",
+          "url": "https://www.kleague.com/about/competition.do",
+          "supports": "Official 2026 K League 1 rules specify 12 clubs, 33 regular rounds, split final rounds and 228 total matches."
+        },
+        {
+          "publisher": "K League",
+          "url": "https://www.kleague.com/news_view.do?orderBy=seq&page=1&seq=94117&viewOption=list",
+          "supports": "Official 2026 season schedule announcement confirms 12 clubs and 33 regular rounds."
+        }
+      ],
+      "assessment": "K League's official 2026 regulations establish 12 clubs, 33 regular rounds and a five-match split final round for 38 matches per club. Bzzoiro's four observations do not establish full roster coverage or season-ID semantics.",
+      "review_status": "external_identity_supported_single_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster/fixture samples where possible.",
+        "Verify provider season boundaries and the exact meaning of the provider season ID.",
+        "Compare exact fixtures and kickoff timestamps before proposing cross-provider links."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_077",
+      "name": "Copa del Rey",
+      "observed_country": "Spain",
+      "provider": "bzzoiro",
+      "provider_competition_id": "41",
+      "provider_season_id": "41::2052",
+      "provider_season_label": "Copa del Rey 26/27",
+      "raw_observation_count": 20,
+      "external_competition_type": "men's national knockout cup",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 106,
+        "format": "Single-elimination national cup with staged entry rounds"
+      },
+      "external_evidence": [
+        {
+          "publisher": "RFEF",
+          "url": "https://rfef.es/sites/default/files/pdf/circulares/102_con_anexos_20250624.pdf",
+          "supports": "Official 2026/27 Copa del Rey regulations specify 106 participating clubs and access criteria."
+        },
+        {
+          "publisher": "RFEF",
+          "url": "https://rfef.es/es/federacion/normativas-y-circulares/circulares",
+          "supports": "Official RFEF circular register contains 2026/27 Copa del Rey round and draw notices."
+        }
+      ],
+      "assessment": "RFEF's official 2026/27 regulations specify 106 clubs admitted to the Copa del Rey, including all 20 Primera División and 22 Segunda División clubs plus qualified lower-division clubs and preliminary-round qualifiers. Bzzoiro has 20 observations; complete entrant and round coverage and season-ID semantics remain unverified.",
+      "review_status": "external_identity_supported_single_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster/fixture samples where possible.",
+        "Verify provider season boundaries and the exact meaning of the provider season ID.",
+        "Compare exact fixtures and kickoff timestamps before proposing cross-provider links."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_079",
+      "name": "LaLiga EA Sports",
+      "observed_country": "Spain",
+      "provider": "openligadb",
+      "provider_competition_id": "4936",
+      "provider_season_id": "4936::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 1140,
+      "external_competition_type": "men's top-tier domestic professional league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 20,
+        "rounds": 38,
+        "unique_matches_per_season": 380
+      },
+      "external_evidence": [
+        {
+          "publisher": "LALIGA",
+          "url": "https://www.laliga.com/laliga-easports/clasificacion",
+          "supports": "Official 2026/27 LALIGA EA SPORTS standings."
+        },
+        {
+          "publisher": "LALIGA",
+          "url": "https://assets.laliga.com/assets/2025/03/24/originals/5408fc235e5b383d670bef19ab1fd196.pdf",
+          "supports": "Official LALIGA competition structure defines 20 clubs, 38 rounds and 380 matches for Primera División."
+        }
+      ],
+      "assessment": "LALIGA's official 2026/27 standings and competition information establish the men's top tier with 20 clubs and 38 rounds. This OpenLigaDB source record is a plausible counterpart to existing La Liga records, but 1,140 raw observations exceed a single season's 380 matches and may include duplicates or multiple observation types; do not treat raw row count as unique fixtures or approve a crosswalk.",
+      "review_status": "candidate_alias_of_existing_laliga_identity_raw_observation_semantics_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster/fixture samples where possible.",
+        "Verify provider season boundaries and the exact meaning of the provider season ID.",
+        "Compare exact fixtures and kickoff timestamps before proposing cross-provider links."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_080",
+      "name": "Liga F",
+      "observed_country": "Spain",
+      "provider": "bzzoiro",
+      "provider_competition_id": "36",
+      "provider_season_id": "36::1308",
+      "provider_season_label": "Primera Division Women 26/27",
+      "raw_observation_count": 27,
+      "external_competition_type": "women's top-tier domestic professional league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 16,
+        "rounds": 30,
+        "matches": 240
+      },
+      "external_evidence": [
+        {
+          "publisher": "Liga F",
+          "url": "https://ligaf.es/noticia/los-clubes-de-liga-f-moeve-arrancan-la-temporada-20262027",
+          "supports": "Official 2026/27 announcement identifies the 16 participating Liga F clubs."
+        },
+        {
+          "publisher": "Liga F",
+          "url": "https://ligaf.es/noticia/liga-f-moeve-ya-tiene-definido-el-calendario-de-emparejamientos-de-la-temporada-20262027",
+          "supports": "Official 2026/27 fixture calendar."
+        },
+        {
+          "publisher": "RFEF",
+          "url": "https://rfef.es/es/noticias/repasa-las-fechas-clave-del-futbol-femenino-para-la-temporada-202627",
+          "supports": "Official women's football calendar for the 2026/27 season."
+        }
+      ],
+      "assessment": "Liga F's official 2026/27 season announcement confirms 16 participating clubs and the season calendar. A 16-club home-and-away league produces 30 rounds and 240 matches. Bzzoiro's 27 observations do not establish full roster coverage or provider season-ID semantics.",
+      "review_status": "external_identity_supported_single_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster/fixture samples where possible.",
+        "Verify provider season boundaries and the exact meaning of the provider season ID.",
+        "Compare exact fixtures and kickoff timestamps before proposing cross-provider links."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_081",
+      "name": "Primera Division",
+      "observed_country": "Spain",
+      "provider": "football_data_org",
+      "provider_competition_id": "2014",
+      "provider_season_id": "2014::2518",
+      "provider_season_label": "2026-08-16",
+      "raw_observation_count": 1,
+      "external_competition_type": "candidate alias of men's top-tier domestic professional league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 20,
+        "rounds": 38,
+        "matches": 380
+      },
+      "external_evidence": [
+        {
+          "publisher": "LALIGA",
+          "url": "https://www.laliga.com/laliga-easports/clasificacion",
+          "supports": "Official 2026/27 LALIGA EA SPORTS standings."
+        },
+        {
+          "publisher": "LALIGA",
+          "url": "https://assets.laliga.com/assets/2025/03/24/originals/5408fc235e5b383d670bef19ab1fd196.pdf",
+          "supports": "Official Primera División structure: 20 clubs, 38 rounds and 380 matches."
+        }
+      ],
+      "assessment": "football-data.org's Primera Division label and 2026 date are consistent with Spain's men's top tier, but a single observation does not establish the provider's competition-season scope or exact fixture equivalence with existing La Liga records. Treat as a candidate alias only.",
+      "review_status": "candidate_alias_of_existing_laliga_identity_provider_scope_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster/fixture samples where possible.",
+        "Verify provider season boundaries and the exact meaning of the provider season ID.",
+        "Compare exact fixtures and kickoff timestamps before proposing cross-provider links."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_082",
+      "name": "Segunda División",
+      "observed_country": "Spain",
+      "provider": "bzzoiro",
+      "provider_competition_id": "38",
+      "provider_season_id": "38::1356",
+      "provider_season_label": "LaLiga 2 26/27",
+      "raw_observation_count": 39,
+      "external_competition_type": "men's second-tier domestic professional league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 22,
+        "rounds": 42,
+        "matches": 462
+      },
+      "external_evidence": [
+        {
+          "publisher": "LALIGA",
+          "url": "https://assets.laliga.com/assets/2025/03/24/originals/5408fc235e5b383d670bef19ab1fd196.pdf",
+          "supports": "Official LALIGA competition structure specifies 22 clubs, 42 rounds and 462 Segunda División matches."
+        },
+        {
+          "publisher": "LALIGA",
+          "url": "https://www.laliga.com/laliga-hypermotion/clasificacion",
+          "supports": "Official 2026/27 LALIGA Hypermotion standings."
+        }
+      ],
+      "assessment": "LALIGA's official competition structure establishes Segunda División as a 22-club league with 42 rounds and 462 matches. Bzzoiro has 39 observations, insufficient to establish full roster coverage or season-ID semantics.",
+      "review_status": "external_identity_supported_single_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster/fixture samples where possible.",
+        "Verify provider season boundaries and the exact meaning of the provider season ID.",
+        "Compare exact fixtures and kickoff timestamps before proposing cross-provider links."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_083",
+      "name": "Spanish Copa de la Reina",
+      "observed_country": "Spain",
+      "provider": "livescore_football",
+      "provider_competition_id": "20381",
+      "provider_season_id": "20381::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 3,
+      "external_competition_type": "women's national knockout cup",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 48,
+        "matches": 49,
+        "format": "Single-elimination cup with staged entry rounds"
+      },
+      "external_evidence": [
+        {
+          "publisher": "RFEF",
+          "url": "https://rfef.es/sites/default/files/pdf/circulares/110_con_anexos_20250624.pdf",
+          "supports": "Official 2026/27 women's Copa de la Reina regulations and 48-club entry criteria."
+        },
+        {
+          "publisher": "RFEF",
+          "url": "https://rfef.es/es/noticias/configurada-la-primera-eliminatoria-de-la-copa-de-la-reina-2026-2027",
+          "supports": "Official 2026/27 first-round announcement: 32 clubs start, later entry rounds build to 48 total clubs."
+        },
+        {
+          "publisher": "RFEF",
+          "url": "https://rfef.es/es/noticias/repasa-las-fechas-clave-del-futbol-femenino-para-la-temporada-202627",
+          "supports": "Official 2026/27 calendar dates for Copa de la Reina Iberdrola."
+        }
+      ],
+      "assessment": "RFEF's official 2026/27 regulations specify 48 clubs in the women's Copa de S.M. la Reina, with 49 matches. LiveScoreFootball contributes only three observations; provider season scope and complete cup coverage remain unverified.",
+      "review_status": "external_identity_supported_single_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster/fixture samples where possible.",
+        "Verify provider season boundaries and the exact meaning of the provider season ID.",
+        "Compare exact fixtures and kickoff timestamps before proposing cross-provider links."
       ]
     }
   ]
