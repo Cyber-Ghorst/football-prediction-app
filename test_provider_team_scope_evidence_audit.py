@@ -29,7 +29,7 @@ class ProviderTeamScopeEvidenceAuditTests(unittest.TestCase):
         fields = {item["field"] for item in result["raw_provider_scope_candidates"]}
         self.assertTrue({"country", "team_type", "gender_scope", "age_group", "squad_scope"} <= fields)
         self.assertEqual(result["structured_scope_fields"], {"country": "England", "team_type": "club"})
-        self.assertIn("not inferred or approved", result["interpretation"])
+        self.assertIn("no team scope was inferred or approved", result["interpretation"])
 
     def test_false_boolean_is_preserved_as_explicit_evidence(self):
         result = extract_team_scope_evidence({
