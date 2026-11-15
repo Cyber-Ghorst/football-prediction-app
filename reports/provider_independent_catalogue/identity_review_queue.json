@@ -594,7 +594,36 @@
       "fixture_ingestion_enabled": false,
       "prediction_eligible": false,
       "review_disposition": "evidence_reviewed_not_approved",
-      "review_reason": "Official competition context and the read-only provider-observation audit were reviewed. Provider-specific competition and season IDs are not yet proven to be equivalent canonical identities; exact fixture overlaps are corroboration, not approval."
+      "review_reason": "Official SPL evidence confirms the Roshn Saudi League 2026/27 is a Saudi domestic league with 18 clubs and 306 fixtures. Bzzoiro and LiveScoreFootball independently report the competition/country and share one exact UTC fixture overlap (Al Ahli–Al Nassr, 2026-11-20 17:30Z), corroborated by the official SPL revised calendar (20 November 2026, 20:30 local). Bzzoiro sample covers 18 team names but 99 of 110 observations are marked postponed; LiveScoreFootball sample contains only Al Ahli and Al Nassr. This is insufficient to verify full provider-season scope, complete rosters, or equivalence of provider-specific season IDs. No canonical mapping or provider link is approved.",
+      "external_evidence": [
+        {
+          "source": "Saudi Pro League — 2026/27 fixture schedule",
+          "published_date": "2026-07-24",
+          "url": "https://www.spl.com.sa/en/news/spl-announces-2026-27-rsl-fixture-schedule",
+          "supports": [
+            "2026/27 season begins 13 August 2026 and ends 29 May 2027",
+            "34 rounds and 306 fixtures",
+            "18-club league context"
+          ]
+        },
+        {
+          "source": "Saudi Pro League — revised 2026/27 calendar",
+          "published_date": "2026-11-09",
+          "url": "https://www.spl.com.sa/en/news/rsl-schedule-2026-27",
+          "supports": [
+            "League resumes 20 November 2026 with Al Ahli hosting Al Nassr",
+            "Updated calendar confirms schedule changes and later matchweeks"
+          ]
+        },
+        {
+          "source": "Saudi Pro League — official 2026/27 fixture PDF",
+          "published_date": "2026-11-09",
+          "url": "https://images.spl.com.sa/image/private/fl_attachment/prd/m54jmnwpd2embhoz8bvb.pdf",
+          "supports": [
+            "Al Ahli vs Al Nassr scheduled 20 November 2026 at 20:30 local"
+          ]
+        }
+      ]
     },
     {
       "review_order": 6,
