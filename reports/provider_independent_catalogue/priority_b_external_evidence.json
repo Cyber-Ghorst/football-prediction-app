@@ -1,6 +1,6 @@
 {
   "report_name": "priority_b_external_identity_evidence",
-  "generated_at": "2026-11-15T17:08:14.378Z",
+  "generated_at": "2026-11-15T17:11:11.127Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority B single-provider competition identities; official evidence can support competition type, country and season context but does not replace independent provider corroboration or human canonical approval.",
   "safeguards": [
@@ -528,6 +528,53 @@
         "Obtain broader Bzzoiro roster and fixture samples.",
         "Verify the full season scope of provider season ID 34::52.",
         "Seek independent provider corroboration for Série B."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_013",
+      "name": "Parva Liga",
+      "observed_country": "Bulgaria",
+      "provider": "bzzoiro",
+      "provider_competition_id": "22",
+      "provider_season_id": "22::1326",
+      "provider_season_label": "Parva Liga 26/27",
+      "raw_observation_count": 5,
+      "external_competition_type": "men's top-tier domestic professional league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 14,
+        "competition_name": "First Professional League (Parva Liga / efbet Liga)",
+        "regular_season_format": "Home-and-away round-robin first phase, followed by three split groups: 1–4, 5–8, and 9–14",
+        "second_phase": "Top four play for championship; places 5–8 play Conference League group; places 9–14 play relegation group"
+      },
+      "external_evidence": [
+        {
+          "publisher": "Bulgarian Football Union",
+          "url": "https://bfunion.bg/uploads/2026-06-24/naredba-za-parvenstavata-26-27.pdf",
+          "supports": "Official 2026/27 regulations identify the First Professional League as the men's first tier with 14 professional clubs; Article 2 specifies the two-phase format and the 1–4, 5–8 and 9–14 split."
+        },
+        {
+          "publisher": "Bulgarian Football Union",
+          "url": "https://www.bfunion.bg/Новини?page=1",
+          "supports": "Official BFU news index records publication of the efbet Liga 2026/2027 calendar on 11 June 2026."
+        },
+        {
+          "publisher": "Bulgarian Football Union",
+          "url": "https://bfunion.bg/календар",
+          "supports": "Official BFU calendar portal for national competitions, including efbet Liga."
+        }
+      ],
+      "assessment": "Official BFU regulations establish that Parva Liga is the Bulgarian men's first-tier professional competition for 2026/27, with 14 clubs and a two-phase split format. The single Bzzoiro source record is consistent in name and season label, but only five raw observations are present. This is insufficient to validate the full roster, season boundaries, provider season ID semantics, or any cross-provider identity.",
+      "review_status": "external_identity_supported_single_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain a broader Bzzoiro 2026/27 fixture and team roster sample.",
+        "Verify the complete 14-club provider roster against the official BFU competition scope.",
+        "Confirm the provider-specific season boundaries and meaning of season ID 22::1326.",
+        "Seek independent provider observations before proposing any cross-provider identity."
       ]
     }
   ]
