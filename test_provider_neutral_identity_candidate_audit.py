@@ -1,0 +1,99 @@
+import unittest
+from unittest.mock import Mock, patch
+
+from provider_neutral_identity_candidate_audit import (
+    build_identity_candidate_report,
+    audit_provider_neutral_identity_candidates,
+)
+
+
+class ProviderNeutralIdentityCandidateAuditTests(unittest.TestCase):
+    def test_competition_key_candidate_requires_all_identity_dimensions(self):
+        report = build_identity_candidate_report([
+            {"provider": "sportmonks", "entity_type": "competition",
+             "provider_entity_id": "8", "name": "Premier League",
+             "country": "England", "competition_type": "league"},
+            {"provider": "livescore_football", "entity_type": "competition",
+             "provider_entity_id": "eng.1", "name": "Premier League",
+             "country": "England", "competition_type": None},
+        ])
+        self.assertEqual(report["summary"]["competition_identity_keys_candidate"], 1)
+        held = next(row for row in report["competition_candidates"]
+                    if row["provider"] == "livescore_football")
+        self.assertEqual(held["status"], "held_missing_identity_dimensions")
+        self.assertEqual(held["missing_dimensions"], ["competition_type"])
+        self.assertEqual(report["shared_competition_candidates"], [])
+
+    def test_exact_cross_provider_competition_identity_is_candidate_not_approved_link(self):
+        report = build_identity_candidate_report([
+            {"provider": "sportmonks", "entity_type": "competition",
+             "provider_entity_id": "8", "name": "Premier League",
+             "country": "England", "competition_type": "league"},
+            {"provider": "highlightly", "entity_type": "competition",
+             "provider_entity_id": "pl-1", "name": "Premier League",
+             "country": "England", "competition_type": "league"},
+        ])
+        self.assertEqual(len(report["shared_competition_candidates"]), 1)
+        self.assertEqual(
+            {row["status"] for row in report["competition_candidates"]},
+            {"shared_identity_candidate_requires_manual_review"},
+        )
+        self.assertEqual(report["canonical_ids_assigned"], 0)
+        self.assertEqual(report["provider_links_created"], 0)
+
+    def test_seasons_and_teams_are_held_without_parent_and_team_scope_evidence(self):
+        report = build_identity_candidate_report([
+            {"provider": "sportmonks", "entity_type": "season",
+             "provider_entity_id": "28083", "name": "2026/27",
+             "season_label": "2026/27", "parent_competition_provider_id": "8"},
+            {"provider": "livescore_football", "entity_type": "team",
+             "provider_entity_id": "123", "name": "Bayern Munich",
+             "country": None, "team_type": None, "gender_scope": None,
+             "age_group": None, "squad_scope": None},
+        ])
+        self.assertEqual(
+            report["season_candidates"][0]["status"],
+            "held_until_parent_competition_is_approved",
+        )
+        self.assertEqual(
+            report["team_candidates"][0]["missing_dimensions"],
+            ["country", "team_type", "gender_scope", "age_group", "squad_scope"],
+        )
+        self.assertEqual(report["summary"]["teams_held_for_scope_evidence"], 1)
+
+    def test_same_provider_duplicate_is_not_misreported_as_cross_provider_match(self):
+        report = build_identity_candidate_report([
+            {"provider": "sportmonks", "entity_type": "competition",
+             "provider_entity_id": "8", "name": "Premier League",
+             "country": "England", "competition_type": "league"},
+            {"provider": "sportmonks", "entity_type": "competition",
+             "provider_entity_id": "80", "name": "Premier League",
+             "country": "England", "competition_type": "league"},
+        ])
+        self.assertEqual(report["shared_competition_candidates"], [])
+        self.assertEqual(len(report["duplicate_competition_candidates"]), 1)
+
+    @patch("provider_neutral_identity_candidate_audit._connect")
+    def test_database_audit_is_select_only(self, connect):
+        cursor = Mock()
+        cursor.fetchall.return_value = [
+            ("sportmonks", "competition", "8", "Premier League", "England",
+             "league", None, None, None, None, None, None)
+        ]
+        connection = Mock()
+        connection.__enter__ = Mock(return_value=connection)
+        connection.__exit__ = Mock(return_value=False)
+        connection.cursor.return_value.__enter__ = Mock(return_value=cursor)
+        connection.cursor.return_value.__exit__ = Mock(return_value=False)
+        connect.return_value = connection
+        report = audit_provider_neutral_identity_candidates("postgresql://readonly")
+        self.assertTrue(report["database_read_only"])
+        self.assertFalse(report["database_writes"])
+        statements = [str(call.args[0]).strip().upper()
+                      for call in cursor.execute.call_args_list]
+        self.assertTrue(statements[0].startswith("SET TRANSACTION READ ONLY"))
+        self.assertTrue(all(statement.startswith("SELECT") for statement in statements[1:]))
+
+
+if __name__ == "__main__":
+    unittest.main()
