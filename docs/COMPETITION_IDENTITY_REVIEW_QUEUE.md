@@ -4,8 +4,8 @@ This queue stages the 97 approved observed competition records for manual identi
 
 ## Priority counts
 
-- **A — multi-provider with country context:** 10
-- **B — single-provider with country context:** 87
+- **A — multi-provider with country context:** 12
+- **B — single-provider with country context:** 85
 - **C — country missing/ambiguous:** 0
 
 ## Required review gates
@@ -23,14 +23,22 @@ This is a triage queue only. All entries remain unverified. No canonical identit
 
 Machine-readable details: [identity_review_queue.json](../reports/provider_independent_catalogue/identity_review_queue.json).
 
-## Disposition update — 14 November 2026
+## Disposition update — 15 November 2026
 
 All 97 entries now have an explicit machine-readable review disposition:
 
-- Priority A (10): official-source and raw-observation evidence reviewed; canonical mapping remains unapproved.
-- Priority B (87): held as single-provider-only because no second independent source corroborates the exact competition/country identity.
+- Priority A (12): official-source and raw-observation evidence reviewed; canonical mapping remains unapproved.
+- Priority B (85): held as single-provider-only because no second independent source corroborates the exact competition/country identity.
 - Priority C (0): no entries.
 - 27 country-unscoped source records remain outside identity groups and are held until country evidence is available.
 
-This closes the intake triage. It does **not** authorize canonical mappings. The latest read-only provider crosswalk and Priority A raw-observation reports are linked from [the Layer 11 closeout report](LAYER11_COMPLETION_REPORT_2026-11-14.md). The 87 single-provider records must remain source-scoped until independent evidence exists.
+This closes the intake triage. It does **not** authorize canonical mappings. The latest read-only provider crosswalk and Priority A raw-observation reports are linked from [the Layer 11 closeout report](LAYER11_COMPLETION_REPORT_2026-11-14.md). The 85 single-provider records must remain source-scoped until independent evidence exists.
 
+
+
+Two records were re-triaged from Priority B to Priority A after the refreshed provider crosswalk found independent source coverage and shared 2026 season-year evidence, and official competition schedules were reviewed:
+
+- **Austrian Bundesliga — Austria:** Bzzoiro and LiveScoreFootball; provider competition IDs 96 and 3907; season IDs `96::1999` and `3907::2026`. No exact UTC fixture overlap was found in the selected observation window.
+- **Scottish Premiership — Scotland:** Bzzoiro and LiveScoreFootball; provider competition IDs 13 and 735; season IDs `13::1355` and `735::2026`. Four exact UTC fixture overlaps were found and corroborated against the SPFL 2026/27 fixture calendar.
+
+The queue now contains **12 Priority A** and **85 Priority B** identities. All remain unverified for canonical mapping. The 27 country-unscoped OpenLigaDB records remain separately held. No canonical rows, provider links, fixture rows or prediction records were written.
