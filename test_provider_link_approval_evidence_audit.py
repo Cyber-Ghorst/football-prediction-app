@@ -69,7 +69,11 @@ class ProviderLinkApprovalEvidenceAuditTests(unittest.TestCase):
         self.assertEqual(cursor.statements[3][0], UNMATCHED_SAMPLE_SQL)
         self.assertEqual(cursor.statements[4][0], OPENSCORES_SAMPLE_SQL)
         for query, _ in cursor.statements[1:]:
-            self.assertTrue(query.lstrip().upper().startswith("SELECT"))
+            self.assertTrue(query.lstrip().upper().startswith(("SELECT", "WITH")))
+        self.assertIn("PARTITION BY link.provider, link.entity_type", UNMATCHED_SAMPLE_SQL)
+        self.assertIn("PARTITION BY link.entity_type", OPENSCORES_SAMPLE_SQL)
+        self.assertIn("WHERE sample_rank <= 3", UNMATCHED_SAMPLE_SQL)
+        self.assertIn("WHERE sample_rank <= 3", OPENSCORES_SAMPLE_SQL)
         for query in (SUMMARY_SQL, UNMATCHED_SAMPLE_SQL, OPENSCORES_SAMPLE_SQL):
             self.assertIn("approval.provider = link.provider", query)
             self.assertIn("approval.entity_type = link.entity_type", query)
