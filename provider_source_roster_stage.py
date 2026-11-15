@@ -42,7 +42,7 @@ def build_source_entities(rosters: list[Mapping[str, Any]]) -> list[dict[str, An
             "provider_entity_id": competition_id,
             "name": competition_name,
             "country": country,
-            "competition_type": league.get("type") or "league",
+            "competition_type": league.get("type"),
             "raw_payload": {
                 "source": "LiveScoreFootball competition catalogue",
                 "season_window": {"year": SEASON_YEAR, "from": SEASON_START, "to": SEASON_END},
