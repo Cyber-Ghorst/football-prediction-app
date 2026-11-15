@@ -2,7 +2,78 @@
   "api_rate_limit_note": "OpenLigaDB documentation states a limit of 60 requests per minute; requests are spaced by at least one second.",
   "available_leagues_season": 2026,
   "available_leagues_sha256": "ffa86eee57140c6ff67ed21624e97afe671535d087357bfe7602b2ad3bdd20ec",
-  "generated_at_utc": "2026-11-15T17:52:25.130888+00:00",
+  "fixture_identity_comparison": {
+    "identity_basis": "exact normalized home team, away team and UTC kickoff; Unicode NFKC and casefold applied to team names",
+    "interpretation": "Exact overlaps are evidence of shared fixture observations, not automatic competition or season identity approval.",
+    "overlap_pairs": [
+      {
+        "exact_fixture_overlap_count": 19,
+        "left_league_id": 5958,
+        "left_only_fixture_count": 287,
+        "left_source_name": "2. Bundesliga 2026/27 (Herren)",
+        "overlap_sample_hashes": [
+          "05bb937e42236c7386a0cc2ccc42e5ad10d07b184513b357fc62f4cefa3dfca0",
+          "06d8b3e599275b4e563b5aa31078c86a0d5fc48c61edabdda34c5b78828d3bb8",
+          "110c5260ee0caf53f6f443b95deab53fbe424a39803f227313d1d50e5c83b8f1",
+          "120adac641ff6e788f61e592535f5b6aaaf90c1e58898b168026dfc780c224b2",
+          "16f7b895cb4b54fcc89366b236e8e08401b4ae3d764b89ddc1d0015fe44b2472"
+        ],
+        "right_league_id": 5992,
+        "right_only_fixture_count": 15,
+        "right_source_name": "Spiele mit Arminia Bielefeld Beteiligung"
+      },
+      {
+        "exact_fixture_overlap_count": 46,
+        "left_league_id": 4949,
+        "left_only_fixture_count": 2,
+        "left_source_name": "FIFA World Cup",
+        "overlap_sample_hashes": [
+          "0658ff10ce4e71ee7f41712ae45a9427707bfade6aee8f975fc3295ab77cdebf",
+          "10d9a6a62b582a11ac9d6ca730a4f040d8c8f5832b422cfca6f3ee7483ef4afb",
+          "1242b52b52fa62a265bb843496a458b6047db6f9a3fd7b8ec1f81d4444a80a59",
+          "1251bcf43358b6699dd5bee1f9e08e9884ac460479589729b4072d7db0f3a33f",
+          "12e6a30fd6044516c4d7184121345c0661d4e08e399c231076e94691b5157f29"
+        ],
+        "right_league_id": 4897,
+        "right_only_fixture_count": 58,
+        "right_source_name": "WM"
+      },
+      {
+        "exact_fixture_overlap_count": 46,
+        "left_league_id": 4949,
+        "left_only_fixture_count": 2,
+        "left_source_name": "FIFA World Cup",
+        "overlap_sample_hashes": [
+          "0658ff10ce4e71ee7f41712ae45a9427707bfade6aee8f975fc3295ab77cdebf",
+          "10d9a6a62b582a11ac9d6ca730a4f040d8c8f5832b422cfca6f3ee7483ef4afb",
+          "1242b52b52fa62a265bb843496a458b6047db6f9a3fd7b8ec1f81d4444a80a59",
+          "1251bcf43358b6699dd5bee1f9e08e9884ac460479589729b4072d7db0f3a33f",
+          "12e6a30fd6044516c4d7184121345c0661d4e08e399c231076e94691b5157f29"
+        ],
+        "right_league_id": 4923,
+        "right_only_fixture_count": 26,
+        "right_source_name": "WM 2026 USA"
+      },
+      {
+        "exact_fixture_overlap_count": 66,
+        "left_league_id": 4897,
+        "left_only_fixture_count": 38,
+        "left_source_name": "WM",
+        "overlap_sample_hashes": [
+          "0658ff10ce4e71ee7f41712ae45a9427707bfade6aee8f975fc3295ab77cdebf",
+          "072732744886f73623f050ee43130850263bf0bdfcda5d2180bd94a1497cbb86",
+          "0992095174707b188d27b63e24680db8ac5eed4bdb6360241d52d59981f8410b",
+          "10d9a6a62b582a11ac9d6ca730a4f040d8c8f5832b422cfca6f3ee7483ef4afb",
+          "1242b52b52fa62a265bb843496a458b6047db6f9a3fd7b8ec1f81d4444a80a59"
+        ],
+        "right_league_id": 4923,
+        "right_only_fixture_count": 6,
+        "right_source_name": "WM 2026 USA"
+      }
+    ],
+    "pairs_with_exact_fixture_overlap": 4
+  },
+  "generated_at_utc": "2026-11-15T17:57:23.235504+00:00",
   "report_name": "openligadb_unscoped_country_scope_probe",
   "results": [
     {
@@ -11,11 +82,14 @@
         "league_name": "1. Frauen Fu\u00dfballbundesliga 2026/2027",
         "league_season": 2026,
         "league_shortcut": "ffb1",
-        "sport": "{'sportId': 1, 'sportName': 'Fu\u00dfball'}"
+        "sport": "Fu\u00dfball"
       },
       "candidate_country": "Germany",
       "league_id": 5972,
       "match_summary": {
+        "fixture_identity_count": 182,
+        "fixture_identity_duplicate_rows": 0,
+        "fixture_identity_set_sha256": "7040312a48960c5fd85774d0fff341b6e1fec4370376f90e2632ce7a7cc8d278",
         "league_id_or_season_mismatch_rows": 0,
         "local_kickoff_only_count": 0,
         "match_count": 182,
@@ -164,11 +238,14 @@
         "league_name": "2. Bundesliga 2026/27 (Herren)",
         "league_season": 2026,
         "league_shortcut": "bl2h",
-        "sport": "{'sportId': 1, 'sportName': 'Fu\u00dfball'}"
+        "sport": "Fu\u00dfball"
       },
       "candidate_country": "Germany",
       "league_id": 5958,
       "match_summary": {
+        "fixture_identity_count": 306,
+        "fixture_identity_duplicate_rows": 0,
+        "fixture_identity_set_sha256": "9aa35b97113a214edead0c3cf32a02df466497bea6099fb71bf4f580522ade0a",
         "league_id_or_season_mismatch_rows": 0,
         "local_kickoff_only_count": 0,
         "match_count": 306,
@@ -325,11 +402,14 @@
         "league_name": "BLClaude",
         "league_season": 2026,
         "league_shortcut": "blclaude",
-        "sport": "{'sportId': 1, 'sportName': 'Fu\u00dfball'}"
+        "sport": "Fu\u00dfball"
       },
       "candidate_country": null,
       "league_id": 5960,
       "match_summary": {
+        "fixture_identity_count": 56,
+        "fixture_identity_duplicate_rows": 2,
+        "fixture_identity_set_sha256": "3b8007a97056acc94616f3159b988873ca5e5e7ea90f3902eba1a4a8cc2c2b06",
         "league_id_or_season_mismatch_rows": 0,
         "local_kickoff_only_count": 0,
         "match_count": 58,
@@ -486,11 +566,14 @@
         "league_name": "Bundesliga",
         "league_season": 2026,
         "league_shortcut": "bl1test",
-        "sport": "{'sportId': 1, 'sportName': 'Fu\u00dfball'}"
+        "sport": "Fu\u00dfball"
       },
       "candidate_country": "Germany",
       "league_id": 5957,
       "match_summary": {
+        "fixture_identity_count": 1,
+        "fixture_identity_duplicate_rows": 0,
+        "fixture_identity_set_sha256": "1b906c7cfae38a7b185f9c63ec6ecefd093d8dc8f651ce9a4da32d6d18243c56",
         "league_id_or_season_mismatch_rows": 0,
         "local_kickoff_only_count": 0,
         "match_count": 1,
@@ -536,11 +619,14 @@
         "league_name": "DFB Frauen Supercup",
         "league_season": 2026,
         "league_shortcut": "wsc",
-        "sport": "{'sportId': 1, 'sportName': 'Fu\u00dfball'}"
+        "sport": "Fu\u00dfball"
       },
       "candidate_country": "Germany",
       "league_id": 5985,
       "match_summary": {
+        "fixture_identity_count": 1,
+        "fixture_identity_duplicate_rows": 0,
+        "fixture_identity_set_sha256": "c709227185a935579901b923e9e5ebcbe000e0ab1830a1130a2d0f037a8e0e50",
         "league_id_or_season_mismatch_rows": 0,
         "local_kickoff_only_count": 0,
         "match_count": 1,
@@ -588,11 +674,14 @@
         "league_name": "DFB Nationalspiele",
         "league_season": 2026,
         "league_shortcut": "DFBN",
-        "sport": "{'sportId': 1, 'sportName': 'Fu\u00dfball'}"
+        "sport": "Fu\u00dfball"
       },
       "candidate_country": "Germany",
       "league_id": 5981,
       "match_summary": {
+        "fixture_identity_count": 6,
+        "fixture_identity_duplicate_rows": 0,
+        "fixture_identity_set_sha256": "3645d0d5a59db4fff488196a5223d239590271ea5c1ee3d11b0cee343a5a6ac5",
         "league_id_or_season_mismatch_rows": 0,
         "local_kickoff_only_count": 0,
         "match_count": 6,
@@ -699,11 +788,14 @@
         "league_name": "DFB U21",
         "league_season": 2026,
         "league_shortcut": "u21dfb",
-        "sport": "{'sportId': 1, 'sportName': 'Fu\u00dfball'}"
+        "sport": "Fu\u00dfball"
       },
       "candidate_country": "Germany",
       "league_id": 5984,
       "match_summary": {
+        "fixture_identity_count": 3,
+        "fixture_identity_duplicate_rows": 0,
+        "fixture_identity_set_sha256": "1bd12b387fa7ed8d79e8c8d01f07ef5cf714394db57e67ebb5d74491253acfbb",
         "league_id_or_season_mismatch_rows": 0,
         "local_kickoff_only_count": 0,
         "match_count": 3,
@@ -777,11 +869,14 @@
         "league_name": "DFB-Pokal Frauen 2026/2027",
         "league_season": 2026,
         "league_shortcut": "dfbf",
-        "sport": "{'sportId': 1, 'sportName': 'Fu\u00dfball'}"
+        "sport": "Fu\u00dfball"
       },
       "candidate_country": "Germany",
       "league_id": 6020,
       "match_summary": {
+        "fixture_identity_count": 40,
+        "fixture_identity_duplicate_rows": 0,
+        "fixture_identity_set_sha256": "9ebfb056c8600f85feab5e8378a26977425c4be05d96773edb9b49c7ce27560f",
         "league_id_or_season_mismatch_rows": 0,
         "local_kickoff_only_count": 0,
         "match_count": 40,
@@ -998,11 +1093,14 @@
         "league_name": "Empty Stands Spendenliga 2026/2027 (https://emptystands.me/aktivismus/spendenliga)",
         "league_season": 2026,
         "league_shortcut": "essl",
-        "sport": "{'sportId': 1, 'sportName': 'Fu\u00dfball'}"
+        "sport": "Fu\u00dfball"
       },
       "candidate_country": null,
       "league_id": 5959,
       "match_summary": {
+        "fixture_identity_count": 144,
+        "fixture_identity_duplicate_rows": 0,
+        "fixture_identity_set_sha256": "cbd642ce8b41f8cded715d7b5fa42a213f56faf1b375b9533f2383341aa33293",
         "league_id_or_season_mismatch_rows": 0,
         "local_kickoff_only_count": 0,
         "match_count": 144,
@@ -1143,11 +1241,14 @@
         "league_name": "Eredivisie",
         "league_season": 2026,
         "league_shortcut": "ERE",
-        "sport": "{'sportId': 1, 'sportName': 'Fu\u00dfball'}"
+        "sport": "Fu\u00dfball"
       },
       "candidate_country": "Netherlands",
       "league_id": 6027,
       "match_summary": {
+        "fixture_identity_count": 306,
+        "fixture_identity_duplicate_rows": 0,
+        "fixture_identity_set_sha256": "3337c0a5f1dba8813ddd62aed6d4909c25b37ebe5eaf47c4571a51158ac65931",
         "league_id_or_season_mismatch_rows": 0,
         "local_kickoff_only_count": 0,
         "match_count": 306,
@@ -1304,11 +1405,14 @@
         "league_name": "FIFA World Cup 2026",
         "league_season": 2026,
         "league_shortcut": "wm2026_xlife",
-        "sport": "{'sportId': 1, 'sportName': 'Fu\u00dfball'}"
+        "sport": "Fu\u00dfball"
       },
       "candidate_country": "International",
       "league_id": 4949,
       "match_summary": {
+        "fixture_identity_count": 48,
+        "fixture_identity_duplicate_rows": 0,
+        "fixture_identity_set_sha256": "4d2d700798012f448add192293d926a6da8d035e1248b81c593c396c38dbaca0",
         "league_id_or_season_mismatch_rows": 0,
         "local_kickoff_only_count": 0,
         "match_count": 48,
@@ -1525,11 +1629,14 @@
         "league_name": "Franz-Beckenbauer-Supercup",
         "league_season": 2026,
         "league_shortcut": "BLSupercup",
-        "sport": "{'sportId': 1, 'sportName': 'Fu\u00dfball'}"
+        "sport": "Fu\u00dfball"
       },
       "candidate_country": "Germany",
       "league_id": 5966,
       "match_summary": {
+        "fixture_identity_count": 1,
+        "fixture_identity_duplicate_rows": 0,
+        "fixture_identity_set_sha256": "35ba0d1974eb8bc655caab7353449c13f9591f128f089e5cb9282fb485e21738",
         "league_id_or_season_mismatch_rows": 0,
         "local_kickoff_only_count": 0,
         "match_count": 1,
@@ -1575,11 +1682,14 @@
         "league_name": "Frauen-Nationalmannschaft",
         "league_season": 2026,
         "league_shortcut": "fna",
-        "sport": "{'sportId': 1, 'sportName': 'Fu\u00dfball'}"
+        "sport": "Fu\u00dfball"
       },
       "candidate_country": "Germany",
       "league_id": 5983,
       "match_summary": {
+        "fixture_identity_count": 2,
+        "fixture_identity_duplicate_rows": 0,
+        "fixture_identity_set_sha256": "c3191f5a9a00958ff96d0469a8d7ef1409d14d2af7ef2625e1ef61e8e1aa35ae",
         "league_id_or_season_mismatch_rows": 0,
         "local_kickoff_only_count": 0,
         "match_count": 2,
@@ -1640,11 +1750,14 @@
         "league_name": "Freundschafts-und Testspiele",
         "league_season": 2026,
         "league_shortcut": "FTS",
-        "sport": "{'sportId': 1, 'sportName': 'Fu\u00dfball'}"
+        "sport": "Fu\u00dfball"
       },
       "candidate_country": "International",
       "league_id": 4941,
       "match_summary": {
+        "fixture_identity_count": 1,
+        "fixture_identity_duplicate_rows": 0,
+        "fixture_identity_set_sha256": "353a1423a1933a7b41f6ccf0a574a7d97e0b9234ce45bc61127501ee3806b349",
         "league_id_or_season_mismatch_rows": 0,
         "local_kickoff_only_count": 0,
         "match_count": 1,
@@ -1690,11 +1803,14 @@
         "league_name": "Fu\u00dfball-Regionalliga Nord",
         "league_season": 2026,
         "league_shortcut": "rln",
-        "sport": "{'sportId': 1, 'sportName': 'Fu\u00dfball'}"
+        "sport": "Fu\u00dfball"
       },
       "candidate_country": "Germany",
       "league_id": 5998,
       "match_summary": {
+        "fixture_identity_count": 306,
+        "fixture_identity_duplicate_rows": 0,
+        "fixture_identity_set_sha256": "eb4556e3cecfcf88a4318aa6ffbb3a0b46dc69b121989b152f212823456ece90",
         "league_id_or_season_mismatch_rows": 0,
         "local_kickoff_only_count": 0,
         "match_count": 306,
@@ -1851,11 +1967,14 @@
         "league_name": "Hallenstadtmeisterschaft 2026 Bottrop",
         "league_season": 2026,
         "league_shortcut": "HSM",
-        "sport": "{'sportId': 1, 'sportName': 'Fu\u00dfball'}"
+        "sport": "Fu\u00dfball"
       },
       "candidate_country": "Germany",
       "league_id": 4900,
       "match_summary": {
+        "fixture_identity_count": 14,
+        "fixture_identity_duplicate_rows": 0,
+        "fixture_identity_set_sha256": "88e512566f2b872a10157b07a8558718f79d5514fea4ba0b4b843dfcf43e5c95",
         "league_id_or_season_mismatch_rows": 0,
         "local_kickoff_only_count": 0,
         "match_count": 14,
@@ -2002,11 +2121,14 @@
         "league_name": "NOFV Regionalliga NordOst",
         "league_season": 2026,
         "league_shortcut": "rlno",
-        "sport": "{'sportId': 1, 'sportName': 'Fu\u00dfball'}"
+        "sport": "Fu\u00dfball"
       },
       "candidate_country": "Germany",
       "league_id": 5991,
       "match_summary": {
+        "fixture_identity_count": 306,
+        "fixture_identity_duplicate_rows": 0,
+        "fixture_identity_set_sha256": "3185a038f747431d3fd4cb66f7e0c9f1d726df08d0f11de4edb4156b84294ac0",
         "league_id_or_season_mismatch_rows": 0,
         "local_kickoff_only_count": 0,
         "match_count": 306,
@@ -2163,11 +2285,14 @@
         "league_name": "NOFV-Oberliga S\u00fcd",
         "league_season": 2026,
         "league_shortcut": "nofvos",
-        "sport": "{'sportId': 1, 'sportName': 'Fu\u00dfball'}"
+        "sport": "Fu\u00dfball"
       },
       "candidate_country": "Germany",
       "league_id": 6010,
       "match_summary": {
+        "fixture_identity_count": 240,
+        "fixture_identity_duplicate_rows": 0,
+        "fixture_identity_set_sha256": "8608b16d0544e3d2ad47847c67d61df18c176f84ccb6cd9ae6ebcd8bf6ccdd80",
         "league_id_or_season_mismatch_rows": 0,
         "local_kickoff_only_count": 0,
         "match_count": 240,
@@ -2320,11 +2445,14 @@
         "league_name": "Oberliga Niederrhein",
         "league_season": 2026,
         "league_shortcut": "OL1",
-        "sport": "{'sportId': 1, 'sportName': 'Fu\u00dfball'}"
+        "sport": "Fu\u00dfball"
       },
       "candidate_country": "Germany",
       "league_id": 6016,
       "match_summary": {
+        "fixture_identity_count": 153,
+        "fixture_identity_duplicate_rows": 0,
+        "fixture_identity_set_sha256": "0fbdb32956f78a5ae2bfc4628279979fab96c1e6de8c42a678767cfa830f4848",
         "league_id_or_season_mismatch_rows": 0,
         "local_kickoff_only_count": 0,
         "match_count": 153,
@@ -2481,11 +2609,14 @@
         "league_name": "Regionalliga West Frauen",
         "league_season": 2026,
         "league_shortcut": "rlw-frauen",
-        "sport": "{'sportId': 1, 'sportName': 'Fu\u00dfball'}"
+        "sport": "Fu\u00dfball"
       },
       "candidate_country": "Germany",
       "league_id": 5994,
       "match_summary": {
+        "fixture_identity_count": 240,
+        "fixture_identity_duplicate_rows": 0,
+        "fixture_identity_set_sha256": "9d67daff0a7f438d2437f69c0bc5e2ce3cd33b7fca93aa729f3e0f09ebd795c2",
         "league_id_or_season_mismatch_rows": 0,
         "local_kickoff_only_count": 0,
         "match_count": 240,
@@ -2638,11 +2769,14 @@
         "league_name": "Spiele mit Arminia Bielefeld Beteiligung",
         "league_season": 2026,
         "league_shortcut": "dsc",
-        "sport": "{'sportId': 1, 'sportName': 'Fu\u00dfball'}"
+        "sport": "Fu\u00dfball"
       },
       "candidate_country": "Germany",
       "league_id": 5992,
       "match_summary": {
+        "fixture_identity_count": 34,
+        "fixture_identity_duplicate_rows": 0,
+        "fixture_identity_set_sha256": "3722048e5cdf7b1a199e80b8ce2e18839d6a22a2faab2dd0d69f94408fe764b9",
         "league_id_or_season_mismatch_rows": 0,
         "local_kickoff_only_count": 0,
         "match_count": 34,
@@ -2799,11 +2933,14 @@
         "league_name": "tem26",
         "league_season": 2026,
         "league_shortcut": "mwtem26",
-        "sport": "{'sportId': 1, 'sportName': 'Fu\u00dfball'}"
+        "sport": "Fu\u00dfball"
       },
       "candidate_country": null,
       "league_id": 4922,
       "match_summary": {
+        "fixture_identity_count": 15,
+        "fixture_identity_duplicate_rows": 0,
+        "fixture_identity_set_sha256": "2a65788aee8277296e59fb2910e5d0f800ef8639324a0582249166dcc5b2f13e",
         "league_id_or_season_mismatch_rows": 0,
         "local_kickoff_only_count": 0,
         "match_count": 15,
@@ -2938,11 +3075,14 @@
         "league_name": "Testliga Outi77 2026",
         "league_season": 2026,
         "league_shortcut": "tst1",
-        "sport": "{'sportId': 1, 'sportName': 'Fu\u00dfball'}"
+        "sport": "Fu\u00dfball"
       },
       "candidate_country": null,
       "league_id": 4943,
       "match_summary": {
+        "fixture_identity_count": 27,
+        "fixture_identity_duplicate_rows": 0,
+        "fixture_identity_set_sha256": "4f78c8c9d85a94f15f15b42a0a1c2ac83cf93f2bedf8ed80dff054eedc17f94d",
         "league_id_or_season_mismatch_rows": 0,
         "local_kickoff_only_count": 0,
         "match_count": 27,
@@ -3099,11 +3239,14 @@
         "league_name": "Testspiele Eintracht Frankfurt 26/27",
         "league_season": 2026,
         "league_shortcut": "ef-ts",
-        "sport": "{'sportId': 1, 'sportName': 'Fu\u00dfball'}"
+        "sport": "Fu\u00dfball"
       },
       "candidate_country": "Germany",
       "league_id": 4927,
       "match_summary": {
+        "fixture_identity_count": 3,
+        "fixture_identity_duplicate_rows": 0,
+        "fixture_identity_set_sha256": "d1bcc007afec4642afee1ea944d0c2bd55624cedfd5c56635ae11c6c034e2718",
         "league_id_or_season_mismatch_rows": 0,
         "local_kickoff_only_count": 0,
         "match_count": 3,
@@ -3177,11 +3320,14 @@
         "league_name": "Testspiele2026",
         "league_season": 2026,
         "league_shortcut": "ts2026",
-        "sport": "{'sportId': 1, 'sportName': 'Fu\u00dfball'}"
+        "sport": "Fu\u00dfball"
       },
       "candidate_country": "International",
       "league_id": 4944,
       "match_summary": {
+        "fixture_identity_count": 14,
+        "fixture_identity_duplicate_rows": 0,
+        "fixture_identity_set_sha256": "8cdd8457c432bd6a881b519161abc541b0e483b2c387dfd49840501289179b9e",
         "league_id_or_season_mismatch_rows": 0,
         "local_kickoff_only_count": 0,
         "match_count": 14,
@@ -3350,11 +3496,14 @@
         "league_name": "WM 2026",
         "league_season": 2026,
         "league_shortcut": "wm26",
-        "sport": "{'sportId': 1, 'sportName': 'Fu\u00dfball'}"
+        "sport": "Fu\u00dfball"
       },
       "candidate_country": "International",
       "league_id": 4897,
       "match_summary": {
+        "fixture_identity_count": 104,
+        "fixture_identity_duplicate_rows": 0,
+        "fixture_identity_set_sha256": "d213e87acb8f830a59fddcfb87f72d845298ca2d068cba2206c06e767d286787",
         "league_id_or_season_mismatch_rows": 0,
         "local_kickoff_only_count": 0,
         "match_count": 104,
@@ -3571,11 +3720,14 @@
         "league_name": "WM 2026 USA",
         "league_season": 2026,
         "league_shortcut": "wm2026",
-        "sport": "{'sportId': 1, 'sportName': 'Fu\u00dfball'}"
+        "sport": "Fu\u00dfball"
       },
       "candidate_country": "International",
       "league_id": 4923,
       "match_summary": {
+        "fixture_identity_count": 72,
+        "fixture_identity_duplicate_rows": 0,
+        "fixture_identity_set_sha256": "0da947d2e8aabc570b7da097fda5df5bd56eb71ea7a2d6d902b39cef0b426167",
         "league_id_or_season_mismatch_rows": 0,
         "local_kickoff_only_count": 0,
         "match_count": 72,
