@@ -1,9 +1,11 @@
 import unittest
+from unittest.mock import patch
 
 from provider_neutral_repository import (
     build_provider_neutral_audit,
     normalize_repository_rows,
     split_provider_identity,
+    read_provider_neutral_repository,
 )
 
 
@@ -62,6 +64,39 @@ class ProviderNeutralRepositoryTests(unittest.TestCase):
         self.assertEqual(report["provider_entity_counts"]["highlightly"]["teams"], 1)
         self.assertEqual(report["existing_approved_link_counts"]["sportmonks"], 1)
         self.assertEqual(report["invalid_source_identity_count"], 0)
+
+    def test_database_facade_issues_only_select_queries_and_never_schema_ddl(self):
+        statements = []
+
+        class Cursor:
+            def __enter__(self):
+                return self
+            def __exit__(self, *args):
+                return False
+            def execute(self, statement, params=None):
+                statements.append(statement.strip().upper())
+            def fetchall(self):
+                return []
+
+        class Connection:
+            def __enter__(self):
+                return self
+            def __exit__(self, *args):
+                return False
+            def cursor(self):
+                return Cursor()
+
+        with patch("provider_neutral_repository._connect", return_value=Connection()):
+            report = read_provider_neutral_repository("postgresql://readonly")
+        self.assertTrue(report["database_read_only"])
+        self.assertEqual(report["writes_performed"], 0)
+        self.assertTrue(statements)
+        self.assertTrue(all(statement.startswith("SELECT") for statement in statements))
+        self.assertFalse(any(
+            token in statement
+            for statement in statements
+            for token in ("INSERT", "UPDATE", "DELETE", "CREATE", "ALTER", "DROP")
+        ))
 
 
 if __name__ == "__main__":
