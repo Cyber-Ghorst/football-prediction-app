@@ -1,6 +1,6 @@
 {
   "report_name": "priority_b_external_identity_evidence",
-  "generated_at": "2026-11-15T17:03:44.147Z",
+  "generated_at": "2026-11-15T17:05:46.855Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority B single-provider competition identities; official evidence can support competition type, country and season context but does not replace independent provider corroboration or human canonical approval.",
   "safeguards": [
@@ -200,6 +200,150 @@
         "Obtain a broader Bzzoiro season roster and fixture sample.",
         "Establish a canonical cross-border country-scope convention for Australia and New Zealand competitions.",
         "Seek independent provider observations and verify the season scope of 104::2144."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_006",
+      "name": "Belgian Pro League",
+      "observed_country": "Belgium",
+      "provider": "livescore_football",
+      "provider_competition_id": "3901",
+      "provider_season_id": "3901::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 1,
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 18,
+        "matchdays": 34
+      },
+      "external_evidence": [
+        {
+          "publisher": "Pro League Belgium",
+          "url": "https://www.proleague.be/nieuws/kalender-2026-2027-club-brugge-opent-tegen-kv-kortrijk-eerste-super-sunday-al-op-speeldag-4",
+          "supports": "Official 2026/27 Jupiler Pro League calendar confirms 18 clubs, 34 matchdays and the season schedule."
+        },
+        {
+          "publisher": "Pro League Belgium",
+          "url": "https://www.proleague.be/nieuws/vanaf-seizoen-26-27-met-18-clubs-in-de-jupiler-pro-league",
+          "supports": "Official competition-format decision confirms the Jupiler Pro League returns to 18 clubs from 2026/27."
+        },
+        {
+          "publisher": "Pro League Belgium",
+          "url": "https://www.proleague.be/nieuws/kalender-2026-2027-nieuwkomers-treffen-elkaar-meteen-in-challenger-pro-league",
+          "supports": "Official 2026/27 Challenger Pro League calendar confirms 15 clubs and a 30-matchday regular season."
+        },
+        {
+          "publisher": "Pro League Belgium",
+          "url": "https://www.proleague.be/nieuws/challenger-pro-league-heeft-nieuw-format-zonder-quota-voor-u23",
+          "supports": "Official format decision confirms the 2026/27 Challenger Pro League will start with 15 clubs and the promotion/relegation format."
+        }
+      ],
+      "assessment": "Official sources establish the 2026/27 Jupiler Pro League as the Belgian men's top tier with 18 clubs and 34 matchdays. LiveScoreFootball contributes only one observation; no provider-season crosswalk can be established.",
+      "review_status": "external_identity_supported_provider_crosswalk_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain a larger fixture and roster sample from each provider.",
+        "Verify provider-specific season boundaries and compare exact fixtures before proposing a crosswalk."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_008",
+      "name": "Pro League",
+      "observed_country": "Belgium",
+      "provider": "bzzoiro",
+      "provider_competition_id": "14",
+      "provider_season_id": "14::1327",
+      "provider_season_label": "Pro League 26/27",
+      "raw_observation_count": 7,
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 18,
+        "matchdays": 34
+      },
+      "external_evidence": [
+        {
+          "publisher": "Pro League Belgium",
+          "url": "https://www.proleague.be/nieuws/kalender-2026-2027-club-brugge-opent-tegen-kv-kortrijk-eerste-super-sunday-al-op-speeldag-4",
+          "supports": "Official 2026/27 Jupiler Pro League calendar confirms 18 clubs, 34 matchdays and the season schedule."
+        },
+        {
+          "publisher": "Pro League Belgium",
+          "url": "https://www.proleague.be/nieuws/vanaf-seizoen-26-27-met-18-clubs-in-de-jupiler-pro-league",
+          "supports": "Official competition-format decision confirms the Jupiler Pro League returns to 18 clubs from 2026/27."
+        },
+        {
+          "publisher": "Pro League Belgium",
+          "url": "https://www.proleague.be/nieuws/kalender-2026-2027-nieuwkomers-treffen-elkaar-meteen-in-challenger-pro-league",
+          "supports": "Official 2026/27 Challenger Pro League calendar confirms 15 clubs and a 30-matchday regular season."
+        },
+        {
+          "publisher": "Pro League Belgium",
+          "url": "https://www.proleague.be/nieuws/challenger-pro-league-heeft-nieuw-format-zonder-quota-voor-u23",
+          "supports": "Official format decision confirms the 2026/27 Challenger Pro League will start with 15 clubs and the promotion/relegation format."
+        }
+      ],
+      "assessment": "Official sources establish the 2026/27 Jupiler Pro League as the Belgian men's top tier with 18 clubs and 34 matchdays. Bzzoiro's seven observations are too few to establish full roster coverage or exact equivalence with the LiveScoreFootball record.",
+      "review_status": "external_identity_supported_provider_crosswalk_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain a larger fixture and roster sample from each provider.",
+        "Verify provider-specific season boundaries and compare exact fixtures before proposing a crosswalk."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_007",
+      "name": "Challenger Pro League",
+      "observed_country": "Belgium",
+      "provider": "bzzoiro",
+      "provider_competition_id": "97",
+      "provider_season_id": "97::2018",
+      "provider_season_label": "Challenger Pro League 26/27",
+      "raw_observation_count": 9,
+      "external_competition_type": "men's second-tier professional league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 15,
+        "matchdays": 30
+      },
+      "external_evidence": [
+        {
+          "publisher": "Pro League Belgium",
+          "url": "https://www.proleague.be/nieuws/kalender-2026-2027-club-brugge-opent-tegen-kv-kortrijk-eerste-super-sunday-al-op-speeldag-4",
+          "supports": "Official 2026/27 Jupiler Pro League calendar confirms 18 clubs, 34 matchdays and the season schedule."
+        },
+        {
+          "publisher": "Pro League Belgium",
+          "url": "https://www.proleague.be/nieuws/vanaf-seizoen-26-27-met-18-clubs-in-de-jupiler-pro-league",
+          "supports": "Official competition-format decision confirms the Jupiler Pro League returns to 18 clubs from 2026/27."
+        },
+        {
+          "publisher": "Pro League Belgium",
+          "url": "https://www.proleague.be/nieuws/kalender-2026-2027-nieuwkomers-treffen-elkaar-meteen-in-challenger-pro-league",
+          "supports": "Official 2026/27 Challenger Pro League calendar confirms 15 clubs and a 30-matchday regular season."
+        },
+        {
+          "publisher": "Pro League Belgium",
+          "url": "https://www.proleague.be/nieuws/challenger-pro-league-heeft-nieuw-format-zonder-quota-voor-u23",
+          "supports": "Official format decision confirms the 2026/27 Challenger Pro League will start with 15 clubs and the promotion/relegation format."
+        }
+      ],
+      "assessment": "Official Pro League sources establish the 2026/27 Challenger Pro League as the second-tier professional competition with 15 clubs and 30 regular-season matchdays. Bzzoiro contributes only nine observations, insufficient for full roster or season-ID verification.",
+      "review_status": "external_identity_supported_single_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain a broader Bzzoiro roster and fixture sample.",
+        "Verify season boundaries and the provider-specific meaning of 97::2018."
       ]
     }
   ]
