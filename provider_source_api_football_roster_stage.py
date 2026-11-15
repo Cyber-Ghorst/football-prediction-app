@@ -14,7 +14,7 @@ from typing import Any, Mapping
 from api_football import APIFootballClient
 from provider_source_repository import store_provider_source_bundle
 
-SEASON_YEAR = 2026
+CATALOGUE_REFERENCE_SEASON = 2024
 TARGETS = (
     {"name": "Premier League", "country": "England"},
     {"name": "La Liga", "country": "Spain"},
@@ -72,7 +72,7 @@ def build_source_entities(competitions: list[Mapping[str, Any]]) -> list[dict[st
         }
         season = next((row for row in item.get("seasons", [])
                        if isinstance(row, Mapping)
-                       and str(row.get("year")) == str(SEASON_YEAR)), None)
+                       and str(row.get("year")) == str(CATALOGUE_REFERENCE_SEASON)), None)
         if season is None:
             continue
         native_season_id = str(season.get("year"))
@@ -113,6 +113,7 @@ def build_source_entities(competitions: list[Mapping[str, Any]]) -> list[dict[st
                 "raw_payload": {
                     "source": "API-Football league-season teams endpoint",
                     "team_evidence_method": "provider_league_season_team_catalogue",
+                    "catalogue_reference_season": CATALOGUE_REFERENCE_SEASON,
                     "team_evidence_complete": False,
                     "team_national_flag_from_provider": national_flag,
                     "team_country_from_provider": team_country,
@@ -136,7 +137,7 @@ def collect_competitions() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     outcomes = []
     collected = []
     try:
-        rows = client.leagues(season=SEASON_YEAR)
+        rows = client.leagues(season=CATALOGUE_REFERENCE_SEASON)
         for target in TARGETS:
             selected, status = _select_competition(rows, target)
             if selected is None:
@@ -151,7 +152,7 @@ def collect_competitions() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
                                  "competition_provider_id": league.get("id")})
                 continue
             try:
-                team_rows = client.teams(int(league["id"]), SEASON_YEAR)
+                team_rows = client.teams(int(league["id"]), CATALOGUE_REFERENCE_SEASON)
             except Exception as exc:
                 outcomes.append({"target": target, "status": "team_roster_error",
                                  "competition_provider_id": league.get("id"),
@@ -160,7 +161,7 @@ def collect_competitions() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
             collected.append({**selected, "teams": team_rows})
             outcomes.append({"target": target, "status": "collected",
                              "competition_provider_id": league.get("id"),
-                             "season_year": SEASON_YEAR,
+                             "season_year": CATALOGUE_REFERENCE_SEASON,
                              "team_count": len(team_rows)})
     finally:
         client.session.close()
@@ -185,7 +186,7 @@ def main() -> int:
     report = {
         "checked_at": datetime.now(timezone.utc).isoformat(),
         "provider": "api_football",
-        "season_year": SEASON_YEAR,
+        "season_year": CATALOGUE_REFERENCE_SEASON,
         "competition_outcomes": outcomes,
         "source_entities_written": counts["entities"],
         "source_fixtures_written": counts["fixtures"],
