@@ -1,0 +1,62 @@
+{
+  "audit_mode": "read_only",
+  "database_writes": false,
+  "generated_at": "2026-11-15T16:10:22.934321+00:00",
+  "providers": [
+    {
+      "audit_mode": "read_only",
+      "database_writes": false,
+      "generated_at": "2026-11-15T16:10:22.934286+00:00",
+      "interpretation": "This is an inventory of existing provider links and exact approval-audit evidence. Counts do not authorize new links. Unapproved, missing-target, or ambiguous records require separate evidence review; no records are created, modified, approved, or promoted by this report.",
+      "provider": "sportmonks",
+      "report_schema_version": 1,
+      "result": {
+        "entity_types": {
+          "fixture": {
+            "ambiguous_canonical_targets": 0,
+            "approved_links": 0,
+            "approved_links_with_legacy_target": 0,
+            "approved_targets_missing": 0,
+            "total_links": 1911,
+            "unapproved_links": 1911
+          },
+          "league": {
+            "ambiguous_canonical_targets": 0,
+            "approved_links": 0,
+            "approved_links_with_legacy_target": 0,
+            "approved_targets_missing": 0,
+            "total_links": 4,
+            "unapproved_links": 4
+          },
+          "season": {
+            "ambiguous_canonical_targets": 0,
+            "approved_links": 0,
+            "approved_links_with_legacy_target": 0,
+            "approved_targets_missing": 0,
+            "total_links": 7,
+            "unapproved_links": 7
+          },
+          "team": {
+            "ambiguous_canonical_targets": 0,
+            "approved_links": 0,
+            "approved_links_with_legacy_target": 0,
+            "approved_targets_missing": 0,
+            "total_links": 88,
+            "unapproved_links": 88
+          }
+        },
+        "provider": "sportmonks",
+        "read_only": true,
+        "totals": {
+          "ambiguous_canonical_targets": 0,
+          "approved_links": 0,
+          "approved_links_with_legacy_target": 0,
+          "approved_targets_missing": 0,
+          "total_links": 2010,
+          "unapproved_links": 2010
+        }
+      }
+    }
+  ],
+  "report_schema_version": 1
+}
