@@ -1,6 +1,6 @@
 {
   "report_name": "priority_b_external_identity_evidence",
-  "generated_at": "2026-11-15T17:36:05.006Z",
+  "generated_at": "2026-11-15T17:37:31.177Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority B single-provider competition identities; official evidence can support competition type, country and season context but does not replace independent provider corroboration or human canonical approval.",
   "safeguards": [
@@ -3181,6 +3181,131 @@
         "Verify provider-specific season boundaries and competition-ID semantics.",
         "Compare exact fixtures and timezone-normalized kickoffs before proposing cross-provider links.",
         "Keep league/cup and division identities separate."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_087",
+      "name": "Spanish Liga F",
+      "observed_country": "Spain",
+      "provider": "livescore_football",
+      "provider_competition_id": "20956",
+      "provider_season_id": "20956::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 9,
+      "external_competition_type": "candidate alias of women's top-tier domestic professional league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 16,
+        "rounds": 30,
+        "matches": 240
+      },
+      "external_evidence": [
+        {
+          "publisher": "Liga F",
+          "url": "https://ligaf.es/noticia/los-clubes-de-liga-f-moeve-arrancan-la-temporada-20262027",
+          "supports": "Official 2026/27 season announcement confirms 16 clubs."
+        },
+        {
+          "publisher": "Liga F",
+          "url": "https://ligaf.es/noticia/liga-f-moeve-ya-tiene-definido-el-calendario-de-emparejamientos-de-la-temporada-20262027",
+          "supports": "Official 2026/27 fixture calendar."
+        },
+        {
+          "publisher": "RFEF",
+          "url": "https://rfef.es/es/noticias/repasa-las-fechas-clave-del-futbol-femenino-para-la-temporada-202627",
+          "supports": "Official 2026/27 women's football competition calendar."
+        }
+      ],
+      "assessment": "The LiveScoreFootball label is consistent with Spain's women's top division Liga F. Official Liga F sources identify 16 clubs and the 2026/27 fixture calendar. Nine observations and a generic 2026 season label do not establish exact provider season scope or fixture equivalence with Bzzoiro's Liga F record.",
+      "review_status": "candidate_alias_of_existing_liga_f_identity_provider_scope_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples where possible.",
+        "Verify provider-specific season boundaries and exact season ID semantics.",
+        "Compare exact fixture pairs and kickoff timestamps before proposing cross-provider links."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_088",
+      "name": "Allsvenskan",
+      "observed_country": "Sweden",
+      "provider": "bzzoiro",
+      "provider_competition_id": "26",
+      "provider_season_id": "26::9",
+      "provider_season_label": "Allsvenskan 2026",
+      "raw_observation_count": 4,
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026 calendar year",
+      "official_scope": {
+        "clubs": 16,
+        "rounds": 30,
+        "matches": 240
+      },
+      "external_evidence": [
+        {
+          "publisher": "Svenska Fotbollförbundet",
+          "url": "https://www.svenskfotboll.se/4afe1c/globalassets/svff/dokumentdokumentblock/tavling/arsplaner--seriesammansattningar/2026/faststalld-seriesammansattning-allsvenskan-och-superettan-2026.pdf",
+          "supports": "Official 2026 series composition lists 16 Allsvenskan clubs."
+        },
+        {
+          "publisher": "Svenska Fotbollförbundet",
+          "url": "https://www.svenskfotboll.se/nyheter/serier/2026/09/allsvenskans-slutomgangar-spikade",
+          "supports": "Official 2026 schedule confirms matchdays through round 30."
+        }
+      ],
+      "assessment": "Svenska Fotbollförbundet's official 2026 series composition lists 16 Allsvenskan clubs; official 2026 schedules run through round 30. Bzzoiro has four observations, insufficient to verify complete roster or season-ID semantics.",
+      "review_status": "external_identity_supported_single_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples where possible.",
+        "Verify provider-specific season boundaries and exact season ID semantics.",
+        "Compare exact fixture pairs and kickoff timestamps before proposing cross-provider links."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_089",
+      "name": "Superettan",
+      "observed_country": "Sweden",
+      "provider": "bzzoiro",
+      "provider_competition_id": "106",
+      "provider_season_id": "106::2182",
+      "provider_season_label": "Superettan 2026",
+      "raw_observation_count": 2,
+      "external_competition_type": "men's second-tier domestic league",
+      "external_season": "2026 calendar year",
+      "official_scope": {
+        "clubs": 16,
+        "rounds": 30,
+        "matches": 240
+      },
+      "external_evidence": [
+        {
+          "publisher": "Svenska Fotbollförbundet",
+          "url": "https://www.svenskfotboll.se/4afe1c/globalassets/svff/dokumentdokumentblock/tavling/arsplaner--seriesammansattningar/2026/faststalld-seriesammansattning-allsvenskan-och-superettan-2026.pdf",
+          "supports": "Official 2026 series composition lists 16 Superettan clubs."
+        },
+        {
+          "publisher": "Svenska Fotbollförbundet",
+          "url": "https://www.svenskfotboll.se/nyheter/serier/2025/12/spelordning-for-superettan-2026/",
+          "supports": "Official 2026 Superettan schedule and season format."
+        }
+      ],
+      "assessment": "Svenska Fotbollförbundet's official 2026 series composition lists 16 Superettan clubs; the official schedule confirms the 2026 season programme. Bzzoiro has two observations, insufficient to verify complete roster or season-ID semantics.",
+      "review_status": "external_identity_supported_single_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples where possible.",
+        "Verify provider-specific season boundaries and exact season ID semantics.",
+        "Compare exact fixture pairs and kickoff timestamps before proposing cross-provider links."
       ]
     }
   ]
