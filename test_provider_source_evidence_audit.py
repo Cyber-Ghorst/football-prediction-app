@@ -9,8 +9,8 @@ class ProviderSourceEvidenceAuditTests(unittest.TestCase):
     def test_audit_reports_staged_roster_evidence_read_only(self, connect):
         cursor = Mock()
         cursor.fetchall.return_value = [
-            ("competition", 2, 2),
-            ("team", 36, 0),
+            ("competition", 2, 2, 0, 0, 0, 0, 0, 0),
+            ("team", 36, 0, 0, 0, 0, 0, 0, 0),
         ]
         cursor.fetchone.side_effect = [
             (36, 36, 36),
