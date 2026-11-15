@@ -98,4 +98,4 @@ This independent official roster evidence corroborates the display-name variants
 
 ## Next objective
 
-Collect independent official team-identity evidence for the 11 remaining alias pairs, and separately review the 12 + 13 exact normalized overlaps against competition and squad scope. Only after those reviews should an explicitly approved provider crosswalk be written. Keep World Cup team identities held until a second provider or authoritative official source corroborates them.
+Attach each provider-native team ID to the corresponding official club record using independently verifiable source evidence, then verify first-team/senior men's club scope for all 23 exact-name and alias candidates. Keep every candidate in review until explicit approval is recorded. Keep World Cup team identities held until a second provider or authoritative official source corroborates the 48 participant IDs.
