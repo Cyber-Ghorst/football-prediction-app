@@ -1,6 +1,6 @@
 {
   "report_name": "competition_identity_external_evidence_dossier",
-  "generated_at": "2026-11-15T16:47:16.869Z",
+  "generated_at": "2026-11-15T16:49:08.989Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority A only: twelve multi-provider observed competition entries with country context.",
   "interpretation": "External official competition evidence supports the public competition identity and season context. It does not prove that provider-specific IDs or season IDs refer to the same canonical competition or season.",
@@ -241,13 +241,28 @@
       "external_season": "2026/27",
       "external_evidence": [
         {
-          "publisher": "Eredivisie / KNVB",
+          "publisher": "Eredivisie CV",
           "url": "https://eredivisie.nl/nieuws/speeldagenkalender-betaald-voetbal-seizoen-2026-27-vastgesteld/",
-          "supports": "Official 2026/27 calendar for the Eredivisie and Keuken Kampioen Divisie, including start and end dates."
+          "supports": "Official 2026/27 calendar sets the season start weekend of 7–9 August 2026 and final matchday on 23 May 2027."
+        },
+        {
+          "publisher": "KNVB",
+          "url": "https://www.knvb.nl/competities/competitiezaken/competitiemodel",
+          "supports": "Official competition model describes the Eredivisie as the Netherlands' highest level with 18 teams."
+        },
+        {
+          "publisher": "Eredivisie CV",
+          "url": "https://eredivisie.nl/meer/merk/logos-18-clubs/",
+          "supports": "Official 2026/27 club branding page identifies the 18 participating VriendenLoterij Eredivisie clubs."
+        },
+        {
+          "publisher": "KNVB",
+          "url": "https://www.knvb.nl/downloads/bestand/30062/definitiefcompetitieprogrammavriendenloterijeredivisie",
+          "supports": "Official definitive 2026/27 fixture programme with matchday dates, clubs and kick-off times."
         }
       ],
-      "provider_season_evidence": "No shared parsed season start year in current provider snapshots.",
-      "review_status": "external_identity_supported_provider_season_unverified"
+      "provider_season_evidence": "Bzzoiro labels the season 'Eredivisie 26/27'; OpenFootball labels it '2026-27'. The current raw-observation audit has 24 Bzzoiro observations across 18 teams and 9 unique fixture IDs, all timezone-aware; OpenFootball has 6,120 observations, 306 unique fixtures and 18 teams, but includes 2,000 date-only and 4,120 local-time-without-timezone kickoff observations. No exact UTC cross-provider fixture overlap was established.",
+      "review_status": "external_identity_supported_provider_season_and_fixture_crosswalk_unverified"
     },
     {
       "catalogue_entry_id": "observed_competition_072",
