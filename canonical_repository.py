@@ -226,3 +226,18 @@ def audit_provider_link_parity(
         "entity_types": entity_reports,
         "totals": totals,
     }
+
+def list_provider_link_sources(database_url: str) -> list[str]:
+    """Return provider names represented in the link table using a read-only query."""
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("SET TRANSACTION READ ONLY", ())
+            cursor.execute(
+                "SELECT DISTINCT provider FROM provider_entity_links "
+                "WHERE provider IS NOT NULL ORDER BY provider",
+                (),
+            )
+            return [str(row[0]).strip().casefold() for row in cursor.fetchall()
+                    if row and str(row[0] or "").strip()]
