@@ -106,53 +106,42 @@ ORDER BY approval.provider, approval.entity_type
 """
 
 UNMATCHED_SAMPLE_SQL = """
-SELECT
-    link.provider, link.entity_type, link.link_id,
-    link.provider_entity_id, link.canonical_entity_id,
-    CASE WHEN EXISTS (
-        SELECT 1 FROM provider_entity_link_approval_audit AS approval
-        WHERE approval.link_id = link.link_id
-    ) THEN 'link_id_present_but_tuple_or_reason_invalid'
-    ELSE 'no_approval_record_for_link_id' END AS approval_record_state,
-    EXISTS (
-        SELECT 1 FROM provider_entity_link_verifications AS verification
-        WHERE verification.link_id = link.link_id
-          AND verification.provider = link.provider
-          AND verification.entity_type = link.entity_type
-          AND verification.provider_entity_id = link.provider_entity_id
-          AND verification.canonical_entity_id = link.canonical_entity_id
-          AND verification.verification_status = 'verified'
-    ) AS has_exact_verified_evidence,
-    EXISTS (
-        SELECT 1 FROM provider_fixture_observations AS observation
-        WHERE link.provider = 'openscores'
-          AND link.entity_type = 'fixture'
-          AND observation.provider = 'openscores'
-          AND observation.provider_fixture_id = link.provider_entity_id
-          AND observation.canonical_fixture_id = link.canonical_entity_id
-          AND observation.reconciliation_status IN ('matched', 'outside_upcoming_window')
-    ) AS has_exact_reconciled_fixture_evidence,
-    (link.provider = 'sportmonks'
-      AND link.canonical_entity_id = 'sportmonks:' || link.provider_entity_id)
-      AS is_sportmonks_native_identity_anchor
-FROM provider_entity_links AS link
-WHERE NOT EXISTS (
-    SELECT 1 FROM provider_entity_link_approval_audit AS approval
-    WHERE approval.link_id = link.link_id
-      AND approval.provider = link.provider
-      AND approval.entity_type = link.entity_type
-      AND approval.provider_entity_id = link.provider_entity_id
-      AND approval.canonical_entity_id = link.canonical_entity_id
-      AND LENGTH(BTRIM(approval.approval_reason)) >= 12
-)
-ORDER BY link.provider, link.entity_type, link.provider_entity_id
-LIMIT 30
-"""
-
-OPENSCORES_SAMPLE_SQL = """
-SELECT
-    link.link_id, link.entity_type, link.provider_entity_id, link.canonical_entity_id,
-    EXISTS (
+WITH candidates AS (
+    SELECT
+        link.provider, link.entity_type, link.link_id,
+        link.provider_entity_id, link.canonical_entity_id,
+        CASE WHEN EXISTS (
+            SELECT 1 FROM provider_entity_link_approval_audit AS approval
+            WHERE approval.link_id = link.link_id
+        ) THEN 'link_id_present_but_tuple_or_reason_invalid'
+        ELSE 'no_approval_record_for_link_id' END AS approval_record_state,
+        EXISTS (
+            SELECT 1 FROM provider_entity_link_verifications AS verification
+            WHERE verification.link_id = link.link_id
+              AND verification.provider = link.provider
+              AND verification.entity_type = link.entity_type
+              AND verification.provider_entity_id = link.provider_entity_id
+              AND verification.canonical_entity_id = link.canonical_entity_id
+              AND verification.verification_status = 'verified'
+        ) AS has_exact_verified_evidence,
+        EXISTS (
+            SELECT 1 FROM provider_fixture_observations AS observation
+            WHERE link.provider = 'openscores'
+              AND link.entity_type = 'fixture'
+              AND observation.provider = 'openscores'
+              AND observation.provider_fixture_id = link.provider_entity_id
+              AND observation.canonical_fixture_id = link.canonical_entity_id
+              AND observation.reconciliation_status IN ('matched', 'outside_upcoming_window')
+        ) AS has_exact_reconciled_fixture_evidence,
+        (link.provider = 'sportmonks'
+          AND link.canonical_entity_id = 'sportmonks:' || link.provider_entity_id)
+          AS is_sportmonks_native_identity_anchor,
+        ROW_NUMBER() OVER (
+            PARTITION BY link.provider, link.entity_type
+            ORDER BY link.provider_entity_id
+        ) AS sample_rank
+    FROM provider_entity_links AS link
+    WHERE NOT EXISTS (
         SELECT 1 FROM provider_entity_link_approval_audit AS approval
         WHERE approval.link_id = link.link_id
           AND approval.provider = link.provider
@@ -160,27 +149,60 @@ SELECT
           AND approval.provider_entity_id = link.provider_entity_id
           AND approval.canonical_entity_id = link.canonical_entity_id
           AND LENGTH(BTRIM(approval.approval_reason)) >= 12
-    ) AS has_exact_approval_evidence,
-    EXISTS (
-        SELECT 1 FROM provider_entity_link_verifications AS verification
-        WHERE verification.link_id = link.link_id
-          AND verification.provider = link.provider
-          AND verification.entity_type = link.entity_type
-          AND verification.provider_entity_id = link.provider_entity_id
-          AND verification.canonical_entity_id = link.canonical_entity_id
-          AND verification.verification_status = 'verified'
-    ) AS has_exact_verified_evidence,
-    EXISTS (
-        SELECT 1 FROM provider_fixture_observations AS observation
-        WHERE link.entity_type = 'fixture'
-          AND observation.provider = 'openscores'
-          AND observation.provider_fixture_id = link.provider_entity_id
-          AND observation.canonical_fixture_id = link.canonical_entity_id
-          AND observation.reconciliation_status IN ('matched', 'outside_upcoming_window')
-    ) AS has_exact_reconciled_fixture_evidence
-FROM provider_entity_links AS link
-WHERE link.provider = 'openscores'
-ORDER BY link.entity_type, link.provider_entity_id
+    )
+)
+SELECT provider, entity_type, link_id, provider_entity_id, canonical_entity_id,
+       approval_record_state, has_exact_verified_evidence,
+       has_exact_reconciled_fixture_evidence, is_sportmonks_native_identity_anchor
+FROM candidates
+WHERE sample_rank <= 3
+ORDER BY provider, entity_type, sample_rank
+LIMIT 30
+"""
+
+OPENSCORES_SAMPLE_SQL = """
+WITH samples AS (
+    SELECT
+        link.link_id, link.entity_type, link.provider_entity_id, link.canonical_entity_id,
+        EXISTS (
+            SELECT 1 FROM provider_entity_link_approval_audit AS approval
+            WHERE approval.link_id = link.link_id
+              AND approval.provider = link.provider
+              AND approval.entity_type = link.entity_type
+              AND approval.provider_entity_id = link.provider_entity_id
+              AND approval.canonical_entity_id = link.canonical_entity_id
+              AND LENGTH(BTRIM(approval.approval_reason)) >= 12
+        ) AS has_exact_approval_evidence,
+        EXISTS (
+            SELECT 1 FROM provider_entity_link_verifications AS verification
+            WHERE verification.link_id = link.link_id
+              AND verification.provider = link.provider
+              AND verification.entity_type = link.entity_type
+              AND verification.provider_entity_id = link.provider_entity_id
+              AND verification.canonical_entity_id = link.canonical_entity_id
+              AND verification.verification_status = 'verified'
+        ) AS has_exact_verified_evidence,
+        EXISTS (
+            SELECT 1 FROM provider_fixture_observations AS observation
+            WHERE link.entity_type = 'fixture'
+              AND observation.provider = 'openscores'
+              AND observation.provider_fixture_id = link.provider_entity_id
+              AND observation.canonical_fixture_id = link.canonical_entity_id
+              AND observation.reconciliation_status IN ('matched', 'outside_upcoming_window')
+        ) AS has_exact_reconciled_fixture_evidence,
+        ROW_NUMBER() OVER (
+            PARTITION BY link.entity_type
+            ORDER BY link.provider_entity_id
+        ) AS sample_rank
+    FROM provider_entity_links AS link
+    WHERE link.provider = 'openscores'
+)
+SELECT link_id, entity_type, provider_entity_id, canonical_entity_id,
+       has_exact_approval_evidence, has_exact_verified_evidence,
+       has_exact_reconciled_fixture_evidence
+FROM samples
+WHERE sample_rank <= 3
+ORDER BY entity_type, sample_rank
 LIMIT 12
 """
 
