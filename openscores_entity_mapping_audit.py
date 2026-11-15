@@ -54,7 +54,19 @@ def _league_country(league: Mapping[str, Any]) -> str:
         value = _country(league.get(key))
         if value:
             return value
-    return ""
+    # OpenScores currently exposes ISO-3 country_code on league records.
+    # Resolve only documented, unambiguous codes; never infer a country from
+    # the competition name (e.g. "Premier League" is not globally unique).
+    country_codes = {
+        "DEU": "Germany",
+        "ESP": "Spain",
+        "FRA": "France",
+        "ENG": "England",
+        "ITA": "Italy",
+        "GBR": "United Kingdom",
+    }
+    code = str(league.get("country_code") or "").strip().upper()
+    return country_codes.get(code, "")
 
 
 def _key_inventory(payloads: list[Any], *, max_depth: int = 3) -> list[str]:
@@ -103,7 +115,9 @@ def _season_metadata(season: Mapping[str, Any]) -> dict[str, Any]:
 def _unique_name_candidates(source: Mapping[str, Any], canonical: list[Mapping[str, Any]],
                             *, require_country: bool = False) -> dict[str, Any]:
     source_name = _norm(source.get("name"))
-    source_country = _norm(_country(source.get("country")) )
+    source_country = _norm(
+        _league_country(source) if require_country else _country(source.get("country"))
+    )
     if not source_name:
         return {"status": "insufficient_source_identity", "candidates": []}
     matches = []
@@ -132,6 +146,11 @@ def _unique_name_candidates(source: Mapping[str, Any], canonical: list[Mapping[s
     return {"status": status, "candidates": matches}
 
 
+def _season_year_pair(value: Any) -> tuple[int, int] | None:
+    match = re.search(r"(20\d{2})\s*[/\-]\s*(20\d{2})", str(value or ""))
+    return (int(match.group(1)), int(match.group(2))) if match else None
+
+
 def _season_candidates(source: Mapping[str, Any], canonical: list[Mapping[str, Any]],
                        canonical_league_id: str | None) -> dict[str, Any]:
     if not canonical_league_id:
@@ -139,6 +158,11 @@ def _season_candidates(source: Mapping[str, Any], canonical: list[Mapping[str, A
     source_name = _norm(source.get("name"))
     source_start = str(source.get("starting_at") or source.get("start_date") or "")[:10]
     source_end = str(source.get("ending_at") or source.get("end_date") or "")[:10]
+    source_years = (
+        _season_year_pair(source.get("name"))
+        or _season_year_pair(source.get("season_name"))
+        or _season_year_pair(source_start)
+    )
     matches = []
     for row in canonical:
         if str(row.get("league_id")) != canonical_league_id:
@@ -148,13 +172,23 @@ def _season_candidates(source: Mapping[str, Any], canonical: list[Mapping[str, A
         target_end = str(row.get("end_date") or "")[:10]
         exact_name = bool(source_name and target_name and source_name == target_name)
         exact_dates = bool(source_start and source_end and source_start == target_start and source_end == target_end)
-        if exact_name or exact_dates:
+        target_years = (
+            _season_year_pair(row.get("name"))
+            or _season_year_pair(target_start)
+        )
+        exact_year_pair = bool(source_years and target_years and source_years == target_years)
+        if exact_name or exact_dates or exact_year_pair:
+            basis = (
+                "exact_name" if exact_name else
+                "exact_start_and_end_dates" if exact_dates else
+                "exact_season_year_pair"
+            )
             matches.append({
                 "canonical_id": str(row.get("id")),
                 "name": row.get("name"),
                 "start_date": row.get("start_date"),
                 "end_date": row.get("end_date"),
-                "match_basis": "exact_name" if exact_name else "exact_start_and_end_dates",
+                "match_basis": basis,
             })
     status = ("unique_candidate_requires_review" if len(matches) == 1 else
               "ambiguous_candidates" if len(matches) > 1 else "no_candidate")
