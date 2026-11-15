@@ -91,6 +91,9 @@ def summarize_matches(matches: Any) -> dict[str, Any]:
     id_mismatches = 0
     examples: list[dict[str, Any]] = []
     normalized: list[dict[str, Any]] = []
+    first_valid = next((row for row in matches if isinstance(row, Mapping)), {})
+    expected_league_id = _int(first_valid.get("leagueId")) if isinstance(first_valid, Mapping) else None
+    expected_season = _int(first_valid.get("leagueSeason")) if isinstance(first_valid, Mapping) else None
 
     for match in matches:
         if not isinstance(match, Mapping):
@@ -118,9 +121,10 @@ def summarize_matches(matches: Any) -> dict[str, Any]:
             utc_kickoffs += 1
         elif local_value:
             local_kickoffs += 1
-        if _int(match.get("leagueId")) is not None and _int(match.get("leagueSeason")) is not None:
-            if _int(match.get("leagueId")) != _int(matches[0].get("leagueId")) or _int(match.get("leagueSeason")) != _int(matches[0].get("leagueSeason")):
-                id_mismatches += 1
+        if expected_league_id is not None and _int(match.get("leagueId")) is not None and _int(match.get("leagueId")) != expected_league_id:
+            id_mismatches += 1
+        if expected_season is not None and _int(match.get("leagueSeason")) is not None and _int(match.get("leagueSeason")) != expected_season:
+            id_mismatches += 1
         normalized.append({
             "match_id": _int(match.get("matchID")),
             "kickoff_utc": utc_value or None,
