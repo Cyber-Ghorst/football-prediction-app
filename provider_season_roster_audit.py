@@ -17,6 +17,7 @@ from highlightly import HighlightlyClient
 from livescore_football import LiveScoreFootballClient
 from provider_roster_collection import (
     collect_highlightly_season_roster,
+    collect_highlightly_season_match_participants,
     collect_livescore_season_participants,
 )
 
@@ -90,12 +91,23 @@ def audit_highlightly_rosters() -> dict[str, Any]:
                 roster = collect_highlightly_season_roster(
                     client, league=league, season=season,
                 )
+                if not roster["teams"]:
+                    roster = collect_highlightly_season_match_participants(
+                        client, league=league, season=season,
+                    )
                 results.append({
-                    "target": target, "status": "collected" if roster["teams"] else "empty_standings",
+                    "target": target,
+                    "status": (
+                        "collected" if roster["teams"] and roster["team_evidence_method"] == "league_season_standings"
+                        else "collected_match_participants" if roster["teams"]
+                        else "empty_standings_and_matches"
+                    ),
                     "selection": selection, "league_id": league.get("id"),
                     "season": SEASON_YEAR, "team_count": len(roster["teams"]),
                     "team_evidence_method": roster["team_evidence_method"],
                     "team_evidence_complete": roster["team_evidence_complete"],
+                    "matches_examined": roster.get("matches_examined"),
+                    "pagination_complete": roster.get("pagination_complete"),
                     "teams": roster["teams"],
                     "rate_limit": dict(client.last_metadata),
                 })

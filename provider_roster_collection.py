@@ -183,3 +183,83 @@ def collect_livescore_season_participants(
         "fixtures_examined": len(events),
         "season_window_fixtures": len(selected_events),
     }
+
+
+def collect_highlightly_season_match_participants(
+    client: Any,
+    *,
+    league: Mapping[str, Any],
+    season: Mapping[str, Any],
+    page_size: int = 100,
+    max_pages: int = 20,
+) -> dict[str, Any]:
+    """Collect teams explicitly participating in every retrieved season match.
+
+    This is a fallback when a tournament has no standings table (for example,
+    a completed group-stage tournament). It remains participant evidence, not
+    a club/national-team identity approval.
+    """
+    league_id = league.get("id")
+    season_value = season.get("season", season.get("year", season.get("id")))
+    if league_id is None or season_value is None:
+        raise ValueError("Highlightly league ID and explicit season are required.")
+    page_size = min(max(int(page_size), 1), 100)
+    max_pages = max(1, min(int(max_pages), 20))
+    found: dict[str, dict[str, Any]] = {}
+    matches_examined = 0
+    offset = 0
+    total_count = None
+    pagination_complete = False
+    for _ in range(max_pages):
+        matches = client.matches(
+            leagueId=league_id, season=season_value,
+            limit=page_size, offset=offset,
+        )
+        metadata = getattr(client, "last_metadata", {}) or {}
+        pagination = metadata.get("pagination") if isinstance(metadata, Mapping) else None
+        if isinstance(pagination, Mapping) and pagination.get("total_count") is not None:
+            try:
+                total_count = int(pagination["total_count"])
+            except (TypeError, ValueError):
+                total_count = None
+        if not matches:
+            pagination_complete = total_count is None or offset >= total_count
+            break
+        matches_examined += len(matches)
+        for match in matches:
+            if not isinstance(match, Mapping):
+                continue
+            for key in ("homeTeam", "awayTeam"):
+                team = match.get(key)
+                normalized = _team_record(team)
+                if normalized:
+                    found.setdefault(str(normalized["id"]), normalized)
+        offset += len(matches)
+        if total_count is not None and offset >= total_count:
+            pagination_complete = True
+            break
+        if len(matches) < page_size:
+            pagination_complete = True
+            break
+    teams = [found[key] for key in sorted(found)]
+    return {
+        "provider": "highlightly",
+        "league": {
+            "id": league_id,
+            "name": league.get("name"),
+            "country": league.get("country"),
+            "type": league.get("type"),
+        },
+        "season": {
+            "id": season_value,
+            "league_id": league_id,
+            "name": str(season_value),
+        },
+        "teams": teams,
+        "team_evidence_method": "season_match_participants",
+        "team_evidence_complete": pagination_complete and bool(teams),
+        "matches_examined": matches_examined,
+        "pagination_complete": pagination_complete,
+        "fixtures_imported": 0,
+        "cross_provider_links_created": 0,
+    }
