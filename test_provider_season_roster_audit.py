@@ -53,6 +53,8 @@ class ProviderSeasonRosterAuditTests(unittest.TestCase):
         collect.side_effect = lambda _client, *, league, **kwargs: {
             "teams": [{"id": "1", "name": "Example"}],
             "fixtures_examined": 10,
+            "league": {"id": league["slug"]},
+            "team_evidence_method": "season_window_fixture_participants",
         }
         result = audit_livescore_rosters()
         client.leagues.assert_called_once_with(kind="all", available=False)
