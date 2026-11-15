@@ -140,6 +140,9 @@ def audit_provider_link_parity(
                                       AND link.canonical_entity_id = 'sportmonks:' || link.provider_entity_id)
                              AND NOT (link.provider = 'openscores'
                                       AND verification.verification_status = 'verified')
+                             AND NOT (link.provider = 'openscores'
+                                      AND link.entity_type = 'fixture'
+                                      AND fixture_observation.observation_id IS NOT NULL)
                             THEN link.link_id
                         END) AS unapproved_links,
                         COUNT(DISTINCT CASE
@@ -166,6 +169,18 @@ def audit_provider_link_parity(
                             THEN link.link_id
                         END) AS rejected_links,
                         COUNT(DISTINCT CASE
+                            WHEN link.provider = 'openscores'
+                             AND link.entity_type = 'fixture'
+                             AND fixture_observation.observation_id IS NOT NULL
+                            THEN link.link_id
+                        END) AS reconciled_fixture_links,
+                        COUNT(DISTINCT CASE
+                            WHEN link.provider = 'openscores'
+                             AND link.entity_type = 'fixture'
+                             AND fixture_observation.observation_id IS NULL
+                            THEN link.link_id
+                        END) AS unreconciled_fixture_links,
+                        COUNT(DISTINCT CASE
                             WHEN approval.link_id IS NOT NULL
                              AND legacy_entity.{primary_key} IS NULL
                             THEN link.link_id
@@ -189,6 +204,11 @@ def audit_provider_link_parity(
                      AND verification.entity_type = link.entity_type
                      AND verification.provider_entity_id = link.provider_entity_id
                      AND verification.canonical_entity_id = link.canonical_entity_id
+                    LEFT JOIN provider_fixture_observations AS fixture_observation
+                      ON fixture_observation.provider = 'openscores'
+                     AND fixture_observation.provider_fixture_id = link.provider_entity_id
+                     AND fixture_observation.canonical_fixture_id = link.canonical_entity_id
+                     AND fixture_observation.reconciliation_status IN ('matched', 'outside_upcoming_window')
                     LEFT JOIN {table} AS legacy_entity
                       ON legacy_entity.{primary_key} = link.canonical_entity_id
                     WHERE link.provider = %s AND link.entity_type = %s
@@ -205,8 +225,10 @@ def audit_provider_link_parity(
                     "verified_links": int(row[5] or 0),
                     "review_required_links": int(row[6] or 0),
                     "rejected_links": int(row[7] or 0),
-                    "approved_targets_missing": int(row[8] or 0),
-                    "approved_links_with_legacy_target": int(row[9] or 0),
+                    "reconciled_fixture_links": int(row[8] or 0),
+                    "unreconciled_fixture_links": int(row[9] or 0),
+                    "approved_targets_missing": int(row[10] or 0),
+                    "approved_links_with_legacy_target": int(row[11] or 0),
                 }
 
                 cursor.execute(
@@ -227,9 +249,15 @@ def audit_provider_link_parity(
                          AND verification.entity_type = link.entity_type
                          AND verification.provider_entity_id = link.provider_entity_id
                          AND verification.canonical_entity_id = link.canonical_entity_id
+                        LEFT JOIN provider_fixture_observations AS fixture_observation
+                          ON fixture_observation.provider = 'openscores'
+                         AND fixture_observation.provider_fixture_id = link.provider_entity_id
+                         AND fixture_observation.canonical_fixture_id = link.canonical_entity_id
+                         AND fixture_observation.reconciliation_status IN ('matched', 'outside_upcoming_window')
                         WHERE link.provider = %s AND link.entity_type = %s
                           AND (approval.link_id IS NOT NULL
-                               OR verification.verification_status = 'verified')
+                               OR verification.verification_status = 'verified'
+                               OR fixture_observation.observation_id IS NOT NULL)
                         GROUP BY link.canonical_entity_id
                         HAVING COUNT(DISTINCT link.provider_entity_id) > 1
                     ) AS ambiguous_targets
@@ -246,6 +274,7 @@ def audit_provider_link_parity(
             "total_links", "approved_links", "unapproved_links",
             "native_identity_anchors", "native_identity_anchors_missing_target",
             "verified_links", "review_required_links", "rejected_links",
+            "reconciled_fixture_links", "unreconciled_fixture_links",
             "approved_targets_missing", "approved_links_with_legacy_target",
         )
     }

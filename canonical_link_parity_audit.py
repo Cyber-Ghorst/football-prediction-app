@@ -29,9 +29,10 @@ def build_report(database_url: str, provider: str) -> dict[str, Any]:
         "result": result,
         "interpretation": (
             "Sportmonks legacy IDs are reported as native identity anchors. OpenScores "
-            "crosswalks use their separate exact-match verification ledger; other "
-            "cross-provider links require approval-audit evidence. Unapproved, review, "
-            "rejected, missing-target, or ambiguous records require separate review. "
+            "crosswalks use their separate exact-match verification ledger, and "
+            "fixture links require an exact matched observation with the same canonical "
+            "fixture. Other cross-provider links require approval-audit evidence. "
+            "Unapproved, review, rejected, missing-target, or ambiguous records require review. "
             "No records are created, modified, approved, or promoted by this report."
         ),
     }
