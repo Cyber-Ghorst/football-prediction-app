@@ -42,3 +42,8 @@ Two records were re-triaged from Priority B to Priority A after the refreshed pr
 - **Scottish Premiership — Scotland:** Bzzoiro and LiveScoreFootball; provider competition IDs 13 and 735; season IDs `13::1355` and `735::2026`. Four exact UTC fixture overlaps were found and corroborated against the SPFL 2026/27 fixture calendar.
 
 The queue now contains **12 Priority A** and **85 Priority B** identities. All remain unverified for canonical mapping. The 27 country-unscoped OpenLigaDB records remain separately held. No canonical rows, provider links, fixture rows or prediction records were written.
+
+
+## Saudi Pro League 2026/27 evidence review — 15 November 2026
+
+The Saudi Pro League entry (Priority A) now has a competition-level evidence review. Official SPL sources confirm the 2026/27 competition and corroborate one exact Bzzoiro/LiveScoreFootball fixture overlap (Al Ahli vs Al Nassr, 20 November 2026). Full roster coverage and provider-specific season-ID equivalence remain unverified; the entry remains unapproved. See [the detailed evidence review](LAYER11_SAUDI_PRO_LEAGUE_IDENTITY_REVIEW_2026-11-15.md).
