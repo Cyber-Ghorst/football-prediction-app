@@ -1,7 +1,7 @@
 {
   "catalogue_name": "provider_independent_competition_intake",
   "generated_from": "reports/free_fixture_crosswalk_audit/latest.json",
-  "source_generated_at_utc": "2026-11-15T12:30:00Z",
+  "source_generated_at_utc": "2026-11-14T07:04:03.223623+00:00",
   "scope_authorization": "User approved inclusion of all 97 observed competitions, including cups/tournaments and single-provider observations, in the provider-independent intake catalogue.",
   "competition_count": 97,
   "rules": [
