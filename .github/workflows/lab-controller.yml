@@ -491,7 +491,7 @@ jobs:
           python sportmonks_catalogue_access_audit.py
 
       - name: Install provider catalogue audit dependency
-        if: steps.operation.outputs.operation == 'provider_league_catalogue_audit'
+        if: steps.operation.outputs.operation == 'provider_league_catalogue_audit' || steps.operation.outputs.operation == 'provider_season_roster_audit'
         run: |
           set -euo pipefail
           python -m pip install requests
@@ -762,6 +762,7 @@ jobs:
             openscores-sportmonks-reconciliation-report.json
             sportmonks-catalogue-access-report.json
             provider-league-catalogue-audit.json
+            provider-season-roster-audit.json
             prediction-run-report.json
             learning-readiness-report.json
             watchdog-report.json
