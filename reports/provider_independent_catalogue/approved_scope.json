@@ -13,8 +13,8 @@
     "No fixture ingestion or prediction route is enabled by catalogue inclusion."
   ],
   "counts": {
-    "corroborated_observed_competitions": 10,
-    "single_provider_observed_competitions": 87,
+    "corroborated_observed_competitions": 12,
+    "single_provider_observed_competitions": 85,
     "country_unscoped_source_records": 27,
     "canonical_rows_created": 0,
     "provider_links_created": 0,
@@ -278,43 +278,83 @@
         "Austria"
       ],
       "providers": [
-        "bzzoiro"
+        "bzzoiro",
+        "livescore_football"
       ],
-      "provider_count": 1,
+      "provider_count": 2,
       "source_records": [
         {
           "competition_name": "Austrian Bundesliga",
           "competition_type": null,
           "country": "Austria",
-          "observation_count": 3,
+          "observation_count": 12,
           "provider": "bzzoiro",
           "provider_competition_id": "96",
           "seasons": [
             {
-              "observation_count": 3,
+              "observation_count": 12,
               "provider": "bzzoiro",
               "provider_season_id": "96::1999",
               "season_name": "Bundesliga 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        },
+        {
+          "competition_name": "Austrian Bundesliga",
+          "competition_type": null,
+          "country": "Austria",
+          "observation_count": 3,
+          "provider": "livescore_football",
+          "provider_competition_id": "3907",
+          "seasons": [
+            {
+              "observation_count": 3,
+              "provider": "livescore_football",
+              "provider_season_id": "3907::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
             }
           ]
         }
       ],
       "season_evidence": {
         "provider_start_years": {
-          "bzzoiro": []
+          "bzzoiro": [
+            2026
+          ],
+          "livescore_football": [
+            2026
+          ]
         },
         "season_records": [
           {
-            "observation_count": 3,
+            "observation_count": 12,
             "provider": "bzzoiro",
             "provider_season_id": "96::1999",
             "season_name": "Bundesliga 26/27",
-            "start_years": []
+            "start_years": [
+              2026
+            ]
+          },
+          {
+            "observation_count": 3,
+            "provider": "livescore_football",
+            "provider_season_id": "3907::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
           }
         ],
-        "shared_start_years": [],
-        "status": "insufficient_provider_season_evidence"
+        "shared_start_years": [
+          2026
+        ],
+        "status": "cross_provider_start_year_overlap"
       },
       "competition_type_evidence": {
         "status": "unknown_not_supplied",
@@ -326,7 +366,7 @@
       "fixture_ingestion_enabled": false,
       "prediction_eligible": false,
       "review_status": "provisional_identity_review",
-      "observed_status": "single_provider_only"
+      "observed_status": "corroborated_multi_provider"
     },
     {
       "catalogue_entry_id": "observed_competition_006",
@@ -4918,43 +4958,83 @@
         "Scotland"
       ],
       "providers": [
-        "bzzoiro"
+        "bzzoiro",
+        "livescore_football"
       ],
-      "provider_count": 1,
+      "provider_count": 2,
       "source_records": [
         {
           "competition_name": "Scottish Premiership",
           "competition_type": null,
           "country": "Scotland",
-          "observation_count": 6,
+          "observation_count": 18,
           "provider": "bzzoiro",
           "provider_competition_id": "13",
           "seasons": [
             {
-              "observation_count": 6,
+              "observation_count": 18,
               "provider": "bzzoiro",
               "provider_season_id": "13::1355",
               "season_name": "Premiership 26/27",
-              "start_years": []
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        },
+        {
+          "competition_name": "Scottish Premiership",
+          "competition_type": null,
+          "country": "Scotland",
+          "observation_count": 6,
+          "provider": "livescore_football",
+          "provider_competition_id": "735",
+          "seasons": [
+            {
+              "observation_count": 6,
+              "provider": "livescore_football",
+              "provider_season_id": "735::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
             }
           ]
         }
       ],
       "season_evidence": {
         "provider_start_years": {
-          "bzzoiro": []
+          "bzzoiro": [
+            2026
+          ],
+          "livescore_football": [
+            2026
+          ]
         },
         "season_records": [
           {
-            "observation_count": 6,
+            "observation_count": 18,
             "provider": "bzzoiro",
             "provider_season_id": "13::1355",
             "season_name": "Premiership 26/27",
-            "start_years": []
+            "start_years": [
+              2026
+            ]
+          },
+          {
+            "observation_count": 6,
+            "provider": "livescore_football",
+            "provider_season_id": "735::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
           }
         ],
-        "shared_start_years": [],
-        "status": "insufficient_provider_season_evidence"
+        "shared_start_years": [
+          2026
+        ],
+        "status": "cross_provider_start_year_overlap"
       },
       "competition_type_evidence": {
         "status": "unknown_not_supplied",
@@ -4966,7 +5046,7 @@
       "fixture_ingestion_enabled": false,
       "prediction_eligible": false,
       "review_status": "provisional_identity_review",
-      "observed_status": "single_provider_only"
+      "observed_status": "corroborated_multi_provider"
     },
     {
       "catalogue_entry_id": "observed_competition_074",
