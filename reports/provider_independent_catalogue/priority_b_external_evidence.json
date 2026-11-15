@@ -1,6 +1,6 @@
 {
   "report_name": "priority_b_external_identity_evidence",
-  "generated_at": "2026-11-15T17:12:45.988Z",
+  "generated_at": "2026-11-15T17:15:25.215Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority B single-provider competition identities; official evidence can support competition type, country and season context but does not replace independent provider corroboration or human canonical approval.",
   "safeguards": [
@@ -822,6 +822,215 @@
         "Obtain a broader provider roster and fixture sample.",
         "Verify provider-specific season boundaries and the meaning of the provider season ID.",
         "Seek independent provider corroboration."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_021",
+      "name": "English EFL Trophy",
+      "observed_country": "England",
+      "provider": "livescore_football",
+      "provider_competition_id": "18481",
+      "provider_season_id": "18481::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 1,
+      "external_competition_type": "men's domestic knockout cup for EFL League One and League Two clubs plus invited under-21 teams",
+      "external_season": "2026/27",
+      "official_scope": {
+        "teams": 64,
+        "club_teams": 48,
+        "invited_under_21_teams": 16,
+        "format": "16 regional groups of four; top two from each group advance to knockout rounds"
+      },
+      "external_evidence": [
+        {
+          "publisher": "English Football League",
+          "url": "https://www.efl.com/news/2026/june/23/under-21-teams-and-group-stage-draw-confirmed-for-2026-27-efl-trophy/",
+          "supports": "Official EFL announcement confirms 16 invited Premier League U21 teams joining 48 League One and League Two clubs, forming 16 regional groups of four for 2026/27."
+        },
+        {
+          "publisher": "English Football League",
+          "url": "https://www.efl.com/news/2026/june/25/efl-trophy-group-stage-draw-confirmed/",
+          "supports": "Official 2026/27 group-stage draw and competition format."
+        },
+        {
+          "publisher": "English Football League",
+          "url": "https://www.efl.com/news/2026/april/10/efl-fixture-release-day-confirmed-for-2026-27-season/",
+          "supports": "Official EFL announcement identifies the Vertu Trophy as part of the 2026/27 season calendar."
+        }
+      ],
+      "assessment": "The EFL confirms the 2026/27 EFL Trophy is a cup competition involving 48 League One/League Two clubs and 16 invited Premier League under-21 sides. The single LiveScoreFootball observation cannot establish provider season scope or fixture coverage.",
+      "review_status": "external_identity_supported_single_provider_sample_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain a broader LiveScoreFootball group-stage and knockout fixture sample.",
+        "Verify the provider's 2026 season ID represents the complete 2026/27 EFL Trophy.",
+        "Keep the cup distinct from league competitions."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_022",
+      "name": "English League Championship",
+      "observed_country": "England",
+      "provider": "livescore_football",
+      "provider_competition_id": "3914",
+      "provider_season_id": "3914::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 11,
+      "external_competition_type": "men's second-tier domestic league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 24,
+        "season_start": "14 August 2026",
+        "relationship": "Candidate provider counterpart to Priority A Championship entry observed_competition_020; no provider crosswalk approved"
+      },
+      "external_evidence": [
+        {
+          "publisher": "English Football League",
+          "url": "https://www.efl.com/news/2026/june/25/the-2026-27-efl-fixtures-are-here/",
+          "supports": "Official 2026/27 Championship fixtures and opening weekend."
+        },
+        {
+          "publisher": "English Football League",
+          "url": "https://www.efl.com/documents/efl-handbook.pdf",
+          "supports": "EFL regulations specify 24 clubs in the Championship and League One."
+        }
+      ],
+      "assessment": "Official EFL sources establish the Championship as the second tier in the 2026/27 EFL competition. This LiveScoreFootball record is a plausible counterpart to the separately reviewed Priority A Championship source records, but its provider ID 3914 and season ID 3914::2026 are not equivalent by assumption; exact fixture-level corroboration remains necessary.",
+      "review_status": "external_identity_supported_candidate_counterpart_provider_crosswalk_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Compare exact LiveScoreFootball fixtures and UTC kickoffs with the Priority A Championship provider samples.",
+        "Verify season boundaries and the meaning of 3914::2026.",
+        "Do not merge provider IDs or approve a crosswalk from names alone."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_023",
+      "name": "English League One",
+      "observed_country": "England",
+      "provider": "livescore_football",
+      "provider_competition_id": "3915",
+      "provider_season_id": "3915::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 15,
+      "external_competition_type": "men's third-tier domestic league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 24,
+        "season_start": "14 August 2026"
+      },
+      "external_evidence": [
+        {
+          "publisher": "English Football League",
+          "url": "https://www.efl.com/news/2026/june/25/the-2026-27-efl-fixtures-are-here/",
+          "supports": "Official 2026/27 League One fixture release and season opening weekend."
+        },
+        {
+          "publisher": "English Football League",
+          "url": "https://www.efl.com/documents/efl-handbook.pdf",
+          "supports": "EFL regulations specify 24 clubs in League One."
+        }
+      ],
+      "assessment": "Official EFL sources establish League One as the third tier of the 2026/27 EFL competition with 24 clubs. The 15 LiveScoreFootball observations are a limited sample and do not prove full roster coverage or season-ID semantics.",
+      "review_status": "external_identity_supported_single_provider_roster_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader LiveScoreFootball team and fixture samples.",
+        "Verify the complete 2026/27 scope of provider season ID 3915::2026.",
+        "Seek exact independent fixture corroboration."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_024",
+      "name": "English League Two",
+      "observed_country": "England",
+      "provider": "livescore_football",
+      "provider_competition_id": "3916",
+      "provider_season_id": "3916::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 30,
+      "external_competition_type": "men's fourth-tier domestic league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 24,
+        "season_start": "14 August 2026"
+      },
+      "external_evidence": [
+        {
+          "publisher": "English Football League",
+          "url": "https://www.efl.com/news/2026/june/25/the-2026-27-efl-fixtures-are-here/",
+          "supports": "Official 2026/27 League Two fixture release and season opening weekend."
+        },
+        {
+          "publisher": "English Football League",
+          "url": "https://www.efl.com/documents/efl-handbook.pdf",
+          "supports": "EFL regulations state that the EFL has 72 clubs across three divisions; the Championship and League One each contain 24, leaving 24 in League Two."
+        }
+      ],
+      "assessment": "Official EFL sources establish League Two as the fourth tier of the English league pyramid within the EFL's 72-club, three-division structure. The 30 LiveScoreFootball observations do not establish full roster or season-ID scope.",
+      "review_status": "external_identity_supported_single_provider_roster_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader LiveScoreFootball team and fixture samples.",
+        "Verify the complete 2026/27 scope of provider season ID 3916::2026.",
+        "Seek exact independent fixture corroboration."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_025",
+      "name": "English National League",
+      "observed_country": "England",
+      "provider": "livescore_football",
+      "provider_competition_id": "3917",
+      "provider_season_id": "3917::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 33,
+      "external_competition_type": "men's fifth-tier domestic league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "season": "2026/27",
+        "observed_matchday_fixture_count": 12,
+        "format_note": "Official National League coverage lists 12 fixtures for a complete matchday; this supports the top division's 24-club matchday structure but the full roster has not been independently audited here."
+      },
+      "external_evidence": [
+        {
+          "publisher": "The National League",
+          "url": "https://www.thenationalleague.org.uk/news/2026/november/13/all-games-available-to-watch-on-dazn-this-weekend-/",
+          "supports": "Official National League report lists the 12 Enterprise National League fixtures for a 2026/27 matchday and confirms the current season."
+        },
+        {
+          "publisher": "The National League",
+          "url": "https://www.thenationalleague.org.uk/news/2026/october/01/how-to-watch-and-follow-the-enterprise-national-league-this-weekend/",
+          "supports": "Official 2026/27 National League coverage identifies 12 fixtures in a complete matchday and the season's 400-plus broadcast games."
+        },
+        {
+          "publisher": "The National League",
+          "url": "https://www.thenationalleague.org.uk/news/2026/november/12/wonderful-wood-sweep-up-as-garrard-and-brunt-/",
+          "supports": "Official competition reporting places Enterprise National League clubs in the 2026/27 season and refers to it as part of English football's top seven divisions."
+        }
+      ],
+      "assessment": "The official National League's 2026/27 reporting confirms the Enterprise National League competition and a 12-match complete matchday. The 33 LiveScoreFootball observations support only a limited sample; exact division boundaries, full roster, and provider season-ID semantics remain unverified in this evidence review.",
+      "review_status": "external_identity_supported_single_provider_roster_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain the official 2026/27 National League club directory or standings roster and compare all 24 clubs.",
+        "Verify provider season ID 3917::2026 covers the full 2026/27 season.",
+        "Obtain exact fixture/timezone corroboration from an independent provider."
       ]
     }
   ]
