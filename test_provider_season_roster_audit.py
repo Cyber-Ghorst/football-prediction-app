@@ -45,9 +45,9 @@ class ProviderSeasonRosterAuditTests(unittest.TestCase):
         client = Mock()
         client_class.return_value = client
         client.leagues.return_value = [
-            {"slug": "ger.1", "name": "Bundesliga", "country": "Germany",
+            {"slug": "ger.1", "name": "German Bundesliga", "country": "Germany",
              "active": True, "coverage": {"hasData": True}},
-            {"slug": "fra.1", "name": "Ligue 1", "country": "France",
+            {"slug": "fra.1", "name": "French Ligue 1", "country": "France",
              "active": True, "coverage": {"hasData": True}},
         ]
         collect.side_effect = lambda _client, *, league, **kwargs: {
