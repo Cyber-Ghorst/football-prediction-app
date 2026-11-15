@@ -1,6 +1,6 @@
 {
   "report_name": "competition_identity_external_evidence_dossier",
-  "generated_at": "2026-11-15T16:43:14.454Z",
+  "generated_at": "2026-11-15T16:45:19.165Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority A only: twelve multi-provider observed competition entries with country context.",
   "interpretation": "External official competition evidence supports the public competition identity and season context. It does not prove that provider-specific IDs or season IDs refer to the same canonical competition or season.",
@@ -117,17 +117,22 @@
       "external_evidence": [
         {
           "publisher": "Ligue 1 / LFP",
-          "url": "https://ligue1.com/en/articles/l1_article_3812-",
-          "supports": "Official LFP 2026/27 Ligue 1 season dates."
+          "url": "https://ligue1.com/en/articles/l1_article_5292-",
+          "supports": "Official 2026/27 Ligue 1 calendar, season dates, matchday structure and scheduled fixtures."
         },
         {
           "publisher": "Ligue 1 / LFP",
-          "url": "https://ligue1.com/fr/articles/l1_article_5284-ligue-1-mcdonald-s-le-calendrier-de-la-saison-26-27",
-          "supports": "Official 2026/27 fixture calendar and 34 matchdays."
+          "url": "https://ligue1.com/en/articles/l1_article_5328-when-does-the-season-start-for-ligue-1-mc-donald-s-clubs",
+          "supports": "Official announcement explicitly refers to the 18 clubs of Ligue 1 for 2026/27."
+        },
+        {
+          "publisher": "LFP",
+          "url": "https://www.lfp.fr/article/ligue-1-mc-donald-s-le-calendrier-de-la-saison-2026-2027",
+          "supports": "Official LFP French-language calendar announcement dated 10 June 2026."
         }
       ],
-      "provider_season_evidence": "Football-data.org and OpenFootball share 2026 start-year evidence; Bzzoiro label is 26/27 without parsed start year.",
-      "review_status": "external_identity_supported_provider_ids_unverified"
+      "provider_season_evidence": "Bzzoiro's 2026/27 season label is explicit; OpenFootball's 2026-27 label and football-data.org's 2026-08-22 date are consistent with the official season start but do not prove provider season-ID equivalence. Bzzoiro has 34 timezone-aware observations, 9 unique fixtures and all 18 official team names in its bounded sample. OpenFootball has 6,120 observations and 306 unique fixtures, but its kickoff values are local/date-only without timezone and some are missing. football-data.org has 10 timezone-aware observations covering 12 teams, but country is missing on all 10. No exact UTC cross-provider fixture overlap was established.",
+      "review_status": "external_identity_supported_provider_season_and_fixture_scope_unverified"
     },
     {
       "catalogue_entry_id": "observed_competition_020",
