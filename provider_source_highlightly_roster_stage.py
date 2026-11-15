@@ -47,6 +47,7 @@ def _select_competition(rows: list[dict[str, Any]], target: Mapping[str, Any]) -
 
 def build_source_entities(rosters: list[Mapping[str, Any]]) -> list[dict[str, Any]]:
     entities: dict[tuple[str, str], dict[str, Any]] = {}
+    team_competitions: dict[str, set[str]] = {}
     for roster in rosters:
         league = roster.get("league") or {}
         season = roster.get("season") or {}
@@ -68,7 +69,11 @@ def build_source_entities(rosters: list[Mapping[str, Any]]) -> list[dict[str, An
                 "raw_league": dict(league),
             },
         }
-        season_id = str(season.get("id") or "").strip()
+        native_season_id = str(season.get("id") or "").strip()
+        # Highlightly season values such as "2026" are reused across competitions.
+        # Scope the source row key by provider competition ID and preserve the
+        # native season value separately in the provenance payload.
+        season_id = f"{competition_id}:{native_season_id}" if native_season_id else ""
         if season_id:
             entities[("season", season_id)] = {
                 "entity_type": "season",
@@ -80,6 +85,8 @@ def build_source_entities(rosters: list[Mapping[str, Any]]) -> list[dict[str, An
                 "end_date": season.get("end_date"),
                 "raw_payload": {
                     "source": "Highlightly league season record",
+                    "provider_native_season_id": native_season_id,
+                    "provider_entity_id_kind": "competition_scoped_composite",
                     "raw_season": dict(season),
                 },
             }
@@ -99,6 +106,7 @@ def build_source_entities(rosters: list[Mapping[str, Any]]) -> list[dict[str, An
                     "source": "Highlightly league-season standings",
                     "competition_provider_id": competition_id,
                     "season_provider_id": season_id or None,
+                    "provider_native_season_id": native_season_id or None,
                     "team_evidence_method": roster.get("team_evidence_method"),
                     "roster_observation_complete": bool(roster.get("team_evidence_complete")),
                     "team_evidence_complete": False,
@@ -106,7 +114,15 @@ def build_source_entities(rosters: list[Mapping[str, Any]]) -> list[dict[str, An
                     "raw_team": team.get("raw") or dict(team),
                 },
             }
-    return list(entities.values())
+            team_competitions.setdefault(team_id, set()).add(competition_id)
+    output = []
+    for (kind, entity_id), row in entities.items():
+        if kind == "team":
+            row["raw_payload"]["competition_provider_ids"] = sorted(
+                team_competitions.get(entity_id, set())
+            )
+        output.append(row)
+    return output
 
 
 def collect_rosters() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
