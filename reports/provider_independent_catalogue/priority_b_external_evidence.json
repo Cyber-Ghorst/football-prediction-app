@@ -1,6 +1,6 @@
 {
   "report_name": "priority_b_external_identity_evidence",
-  "generated_at": "2026-11-15T16:57:24.635Z",
+  "generated_at": "2026-11-15T17:01:36.392Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority B single-provider competition identities; official evidence can support competition type, country and season context but does not replace independent provider corroboration or human canonical approval.",
   "safeguards": [
@@ -53,6 +53,104 @@
         "Obtain a broader Bzzoiro season roster and fixture sample.",
         "Seek an independent provider with country-scoped 2026/27 Girabola observations.",
         "Verify the provider's season boundaries and the meaning of season ID 98::2037."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_002",
+      "name": "Argentine Liga Profesional de Fútbol",
+      "observed_country": "Argentina",
+      "provider": "livescore_football",
+      "provider_competition_id": "745",
+      "provider_season_id": "745::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 1,
+      "external_competition_type": "men's first-division professional league",
+      "external_season": "2026 calendar year; Torneo Apertura and Torneo Clausura",
+      "official_scope": {
+        "clubs": 30,
+        "groups": 2,
+        "clubs_per_group": 15,
+        "tournaments": [
+          "Torneo Apertura 2026",
+          "Torneo Clausura 2026"
+        ]
+      },
+      "external_evidence": [
+        {
+          "publisher": "Asociación del Fútbol Argentino",
+          "url": "https://assets1.afa.com.ar/2026/BOLETINES/Boletin-Resoluciones-6818---Complementario-01---Reglamento-Torneos-LPF-Primera-2026.pdf",
+          "supports": "Official 2026 Primera División tournament regulations specify 30 participating first-division clubs."
+        },
+        {
+          "publisher": "Asociación del Fútbol Argentino",
+          "url": "https://www.afa.com.ar/es/posts/sorteo-de-la-liga-profesional-2026-se-definen-los-grupos-del-torneo-apertura-y-torneo-clausura",
+          "supports": "Official AFA announcement lists the 2026 Apertura and Clausura groups, 15 clubs in each group."
+        },
+        {
+          "publisher": "Asociación del Fútbol Argentino",
+          "url": "https://www.afa.com.ar/o/posts/agenda-para-la-temporada-2026-de-la-liga-profesional",
+          "supports": "Official 2026 season agenda publishes the Apertura and Clausura fixture programmes."
+        }
+      ],
+      "assessment": "Official AFA sources establish a 30-club men's first-division Liga Profesional competition in 2026, organized through Apertura and Clausura tournaments with two groups of 15. The provider record has only a very small sample; its competition and season IDs cannot be crosswalked from names and calendar-year labels alone.",
+      "review_status": "external_competition_identity_supported_provider_scope_and_crosswalk_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Expand provider fixture and roster samples.",
+        "Compare exact home/away fixture pairs and kickoff timestamps across providers against the official AFA schedule.",
+        "Verify the provider-specific season-ID scope before proposing any crosswalk."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_003",
+      "name": "Liga Profesional de Fútbol",
+      "observed_country": "Argentina",
+      "provider": "bzzoiro",
+      "provider_competition_id": "85",
+      "provider_season_id": "85::1635",
+      "provider_season_label": "Primera LPF 2026",
+      "raw_observation_count": 3,
+      "external_competition_type": "men's first-division professional league",
+      "external_season": "2026 calendar year; Torneo Apertura and Torneo Clausura",
+      "official_scope": {
+        "clubs": 30,
+        "groups": 2,
+        "clubs_per_group": 15,
+        "tournaments": [
+          "Torneo Apertura 2026",
+          "Torneo Clausura 2026"
+        ]
+      },
+      "external_evidence": [
+        {
+          "publisher": "Asociación del Fútbol Argentino",
+          "url": "https://assets1.afa.com.ar/2026/BOLETINES/Boletin-Resoluciones-6818---Complementario-01---Reglamento-Torneos-LPF-Primera-2026.pdf",
+          "supports": "Official 2026 Primera División tournament regulations specify 30 participating first-division clubs."
+        },
+        {
+          "publisher": "Asociación del Fútbol Argentino",
+          "url": "https://www.afa.com.ar/es/posts/sorteo-de-la-liga-profesional-2026-se-definen-los-grupos-del-torneo-apertura-y-torneo-clausura",
+          "supports": "Official AFA announcement lists the 2026 Apertura and Clausura groups, 15 clubs in each group."
+        },
+        {
+          "publisher": "Asociación del Fútbol Argentino",
+          "url": "https://www.afa.com.ar/o/posts/agenda-para-la-temporada-2026-de-la-liga-profesional",
+          "supports": "Official 2026 season agenda publishes the Apertura and Clausura fixture programmes."
+        }
+      ],
+      "assessment": "Official AFA sources establish a 30-club men's first-division Liga Profesional competition in 2026, organized through Apertura and Clausura tournaments with two groups of 15. The provider record has only a very small sample; its competition and season IDs cannot be crosswalked from names and calendar-year labels alone.",
+      "review_status": "external_competition_identity_supported_provider_scope_and_crosswalk_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Expand provider fixture and roster samples.",
+        "Compare exact home/away fixture pairs and kickoff timestamps across providers against the official AFA schedule.",
+        "Verify the provider-specific season-ID scope before proposing any crosswalk."
       ]
     }
   ]
