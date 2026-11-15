@@ -1,6 +1,6 @@
 {
   "report_name": "priority_b_external_identity_evidence",
-  "generated_at": "2026-11-15T17:30:25.108Z",
+  "generated_at": "2026-11-15T17:31:34.589Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority B single-provider competition identities; official evidence can support competition type, country and season context but does not replace independent provider corroboration or human canonical approval.",
   "safeguards": [
@@ -2228,6 +2228,415 @@
       "remaining_evidence": [
         "Obtain broader roster and fixture samples.",
         "Verify provider-specific season boundaries and ID semantics."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_061",
+      "name": "Nigeria Premier Football League",
+      "observed_country": "Nigeria",
+      "provider": "bzzoiro",
+      "provider_competition_id": "28",
+      "provider_season_id": "28::1901",
+      "provider_season_label": "Premier League 26/27",
+      "raw_observation_count": 36,
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 20,
+        "matchdays": 38,
+        "matches": 380
+      },
+      "external_evidence": [
+        {
+          "publisher": "Nigeria Premier Football League",
+          "url": "https://npfl.com.ng/about/",
+          "supports": "Official NPFL description identifies it as Nigeria's highest club league, with 20 clubs, 38 matchdays and 380 matches."
+        },
+        {
+          "publisher": "Nigeria Premier Football League",
+          "url": "https://npfl.com.ng/fixtures/",
+          "supports": "Official 2026/27 NPFL fixture list."
+        }
+      ],
+      "assessment": "Official NPFL sources establish a 20-club men's top tier with 38 matchdays and 380 games. Bzzoiro has 36 observations; full roster and season-ID semantics remain unverified.",
+      "review_status": "external_identity_supported_single_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples.",
+        "Verify provider season boundaries and competition ID semantics.",
+        "Keep league/cup/tier/group distinctions intact."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_062",
+      "name": "CONCACAF Nations League",
+      "observed_country": "North America",
+      "provider": "bzzoiro",
+      "provider_competition_id": "65",
+      "provider_season_id": "65::1633",
+      "provider_season_label": "CONCACAF Nations League 26/27",
+      "raw_observation_count": 76,
+      "external_competition_type": "men's national-team competition",
+      "external_season": "2026/27",
+      "official_scope": {
+        "member_associations": 41,
+        "leagues": [
+          "A",
+          "B",
+          "C"
+        ],
+        "format": "National-team group phases and finals/championships"
+      },
+      "external_evidence": [
+        {
+          "publisher": "Concacaf",
+          "url": "https://www.concacaf.com/competitions/nations-league/news/fifth-edition-of-nations-league-to-begin-in-september",
+          "supports": "Official announcement confirms 41 men's senior national teams from Concacaf Member Associations and the 2026/27 competition schedule."
+        },
+        {
+          "publisher": "Concacaf",
+          "url": "https://www.concacaf.com/competitions/nations-league/news/2026-27-concacaf-nations-league-groups-confirmed",
+          "supports": "Official 2026/27 group announcement details Leagues A, B and C."
+        }
+      ],
+      "assessment": "Official Concacaf sources establish a 2026/27 men's national-team competition involving all 41 Member Associations across Leagues A, B and C. It is not a club competition; retain the broad Nations League as a national-team competition entity, distinct from individual leagues A/B/C.",
+      "review_status": "national_team_competition_scope_supported_provider_scope_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Verify the provider's broad CONCACAF Nations League scope and separate League A/B/C competition taxonomy.",
+        "Do not mix national-team entities with club teams."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_063",
+      "name": "Eliteserien",
+      "observed_country": "Norway",
+      "provider": "bzzoiro",
+      "provider_competition_id": "54",
+      "provider_season_id": "54::1230",
+      "provider_season_label": "Eliteserien 2026",
+      "raw_observation_count": 6,
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026 calendar year",
+      "official_scope": {
+        "clubs": 16,
+        "rounds": 30,
+        "matches": 240
+      },
+      "external_evidence": [
+        {
+          "publisher": "Eliteserien",
+          "url": "https://www.eliteserien.no/terminliste",
+          "supports": "Official 2026 schedule lists 16 clubs and rounds through Matchday 30."
+        },
+        {
+          "publisher": "Norwegian Football Federation",
+          "url": "https://www.fotball.no/globalassets/regler-og-retningslinjer/turneringsbestemmelser/turneringsbestemmelser-eliteserien.pdf",
+          "supports": "NFF competition regulations specify 16 participating clubs."
+        }
+      ],
+      "assessment": "Official league and NFF sources establish Eliteserien as Norway's men's top tier with 16 clubs and 30 rounds in 2026. Bzzoiro has six observations; provider season ID 54::1230 remains unverified.",
+      "review_status": "external_identity_supported_single_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples.",
+        "Verify provider season boundaries and competition ID semantics.",
+        "Keep league/cup/tier/group distinctions intact."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_064",
+      "name": "Liga 1",
+      "observed_country": "Peru",
+      "provider": "bzzoiro",
+      "provider_competition_id": "113",
+      "provider_season_id": "113::2286",
+      "provider_season_label": "Liga 1 2026",
+      "raw_observation_count": 33,
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026 calendar year",
+      "official_scope": {
+        "clubs": 18,
+        "tournaments": [
+          "Apertura",
+          "Clausura"
+        ],
+        "rounds_per_tournament": 17,
+        "final_phase": "Play-offs"
+      },
+      "external_evidence": [
+        {
+          "publisher": "Liga1 Te Apuesto / FPF",
+          "url": "https://liga1.pe/wp-content/uploads/2026/03/Reglamento-Liga1-Te-Apuesto-2026.pdf",
+          "supports": "Official 2026 regulations list 18 clubs and define Apertura, Clausura and play-off stages."
+        },
+        {
+          "publisher": "Liga1 Te Apuesto",
+          "url": "https://liga1.pe/tabla-de-posiciones/",
+          "supports": "Official 2026 standings show separate Apertura, Clausura and aggregate tables."
+        }
+      ],
+      "assessment": "Official Liga1 regulations establish an 18-club men's top tier in 2026 with Apertura and Clausura tournaments and play-offs. Bzzoiro has 33 observations; provider season ID 113::2286 remains unverified.",
+      "review_status": "external_identity_supported_single_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples.",
+        "Verify provider season boundaries and competition ID semantics.",
+        "Keep league/cup/tier/group distinctions intact."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_065",
+      "name": "Ekstraklasa",
+      "observed_country": "Poland",
+      "provider": "bzzoiro",
+      "provider_competition_id": "25",
+      "provider_season_id": "25::1229",
+      "provider_season_label": "Ekstraklasa 26/27",
+      "raw_observation_count": 9,
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 18,
+        "rounds": 34,
+        "matches": 306
+      },
+      "external_evidence": [
+        {
+          "publisher": "Ekstraklasa",
+          "url": "https://ekstraklasa.org/en/standings/2026-2027/",
+          "supports": "Official 2026/27 table lists 18 clubs."
+        },
+        {
+          "publisher": "Ekstraklasa",
+          "url": "https://ekstraklasa.org/aktualnosci/terminarz-pko-bank-polski-ekstraklasy-w-sezonie-2026-27/",
+          "supports": "Official 2026/27 fixture schedule lists 34 matchdays."
+        }
+      ],
+      "assessment": "Official Ekstraklasa sources establish Poland's men's top tier with 18 clubs and 34 rounds in 2026/27. Bzzoiro has nine observations; full roster and provider season-ID semantics remain unverified.",
+      "review_status": "external_identity_supported_single_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples.",
+        "Verify provider season boundaries and competition ID semantics.",
+        "Keep league/cup/tier/group distinctions intact."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_066",
+      "name": "Campeonato de Portugal",
+      "observed_country": "Portugal",
+      "provider": "bzzoiro",
+      "provider_competition_id": "95",
+      "provider_season_id": "95::1986",
+      "provider_season_label": "Campeonato de Portugal 26/27",
+      "raw_observation_count": 3,
+      "external_competition_type": "men's fourth-tier domestic league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 56,
+        "series": 4,
+        "clubs_per_series": 14,
+        "format": "Four phases including maintenance/relegation, promotion and championship"
+      },
+      "external_evidence": [
+        {
+          "publisher": "Federação Portuguesa de Futebol",
+          "url": "https://www.fpf.pt/DownloadDocument.ashx?id=32633",
+          "supports": "Official 2026/27 Campeonato de Portugal regulations and geographic series format."
+        },
+        {
+          "publisher": "Associação de Futebol do Algarve / FPF notice",
+          "url": "https://afatv.pt/news-details/32cc0a33-f2e0-4924-a469-0e5e43f20377",
+          "supports": "2026/27 FPF competition format confirms 56 clubs divided into four series of 14 and four competition phases."
+        }
+      ],
+      "assessment": "Official FPF 2026/27 sources establish Campeonato de Portugal as the men's fourth tier with 56 clubs in four geographic series of 14. Bzzoiro has only three observations; full series/season scope is unverified.",
+      "review_status": "external_identity_supported_single_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples.",
+        "Verify provider season boundaries and competition ID semantics.",
+        "Keep league/cup/tier/group distinctions intact."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_067",
+      "name": "Liga 3",
+      "observed_country": "Portugal",
+      "provider": "bzzoiro",
+      "provider_competition_id": "82",
+      "provider_season_id": "82::1600",
+      "provider_season_label": "Liga Portugal 3 26/27",
+      "raw_observation_count": 1,
+      "external_competition_type": "men's third-tier professional league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 20,
+        "series": 2,
+        "clubs_per_series": 10,
+        "format": "Two phases: first phase and championship/maintenance groups"
+      },
+      "external_evidence": [
+        {
+          "publisher": "Federação Portuguesa de Futebol",
+          "url": "https://www.fpf.pt/DownloadDocument.ashx?id=32598",
+          "supports": "Official 2026/27 Liga 3 Placard format specifies 20 clubs divided into two geographic series of 10."
+        }
+      ],
+      "assessment": "Official FPF sources establish Liga 3 as the men's third-tier professional competition with 20 clubs in two geographic series of 10. Bzzoiro has one observation; provider season ID 82::1600 and group coverage remain unverified.",
+      "review_status": "external_identity_supported_single_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples.",
+        "Verify provider season boundaries and competition ID semantics.",
+        "Keep league/cup/tier/group distinctions intact."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_068",
+      "name": "Liga Portugal 2",
+      "observed_country": "Portugal",
+      "provider": "bzzoiro",
+      "provider_competition_id": "88",
+      "provider_season_id": "88::1693",
+      "provider_season_label": "Liga Portugal 2 26/27",
+      "raw_observation_count": 27,
+      "external_competition_type": "men's second-tier domestic professional league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 18,
+        "rounds": 34,
+        "matches": 306
+      },
+      "external_evidence": [
+        {
+          "publisher": "Liga Portugal",
+          "url": "https://lojaoficial.ligaportugal.pt/pt/liga-portugal/sobre-nos_204.html",
+          "supports": "Official competition description states Liga Portugal Meu Super has 18 teams and 34 matchdays."
+        },
+        {
+          "publisher": "Liga Portugal",
+          "url": "https://www.ligaportugal.pt/news/28124/liga-portugal-awards-com-sorteio-das-competicoes-a-2-de-julho",
+          "supports": "Official 2026/27 season draw confirms 34 rounds for Liga Portugal 2 Meu Super."
+        }
+      ],
+      "assessment": "Official Liga Portugal sources establish the second-tier professional competition with 18 clubs and 34 rounds in 2026/27. Bzzoiro has 27 observations; provider season ID 88::1693 remains unverified.",
+      "review_status": "external_identity_supported_single_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples.",
+        "Verify provider season boundaries and competition ID semantics.",
+        "Keep league/cup/tier/group distinctions intact."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_069",
+      "name": "Primeira Liga",
+      "observed_country": "Portugal",
+      "provider": "openfootball",
+      "provider_competition_id": "pt.1",
+      "provider_season_id": "pt.1::2026-27",
+      "provider_season_label": "2026-27",
+      "raw_observation_count": 918,
+      "external_competition_type": "men's top-tier domestic professional league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 18,
+        "rounds": 34,
+        "matches": 306
+      },
+      "external_evidence": [
+        {
+          "publisher": "Liga Portugal",
+          "url": "https://lojaoficial.ligaportugal.pt/pt/liga-portugal/sobre-nos_204.html",
+          "supports": "Official competition description states the top-tier Liga Portugal Betclic has 18 teams and 34 matchdays."
+        },
+        {
+          "publisher": "Liga Portugal",
+          "url": "https://www.ligaportugal.pt/news/28124/liga-portugal-awards-com-sorteio-das-competicoes-a-2-de-julho",
+          "supports": "Official 2026/27 season draw confirms 34 rounds for Liga Portugal Betclic."
+        },
+        {
+          "publisher": "Liga Portugal",
+          "url": "https://www.ligaportugal.pt/",
+          "supports": "Official 2026/27 competition table and schedule."
+        }
+      ],
+      "assessment": "Official Liga Portugal sources establish Primeira Liga/Liga Portugal Betclic as the men's top tier with 18 clubs and 34 matchdays. OpenFootball has 918 observations, but timezone/season field details still need verification before fixture crosswalks.",
+      "review_status": "external_identity_supported_single_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples.",
+        "Verify provider season boundaries and competition ID semantics.",
+        "Keep league/cup/tier/group distinctions intact."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_070",
+      "name": "Taça de Portugal",
+      "observed_country": "Portugal",
+      "provider": "bzzoiro",
+      "provider_competition_id": "92",
+      "provider_season_id": "92::1922",
+      "provider_season_label": "Taca de Portugal 26/27",
+      "raw_observation_count": 10,
+      "external_competition_type": "men's national knockout cup",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 146,
+        "elimination_rounds": 7,
+        "finals": 1
+      },
+      "external_evidence": [
+        {
+          "publisher": "Federação Portuguesa de Futebol / AFA TV",
+          "url": "https://afatv.pt/news-details/0c60aabb-210a-46df-9aa9-f57fec63d903",
+          "supports": "The 2026/27 Taça de Portugal will include 146 clubs and seven knockout rounds followed by the final."
+        },
+        {
+          "publisher": "Federação Portuguesa de Futebol",
+          "url": "https://www.fpf.pt/DownloadDocument.ashx?id=32633",
+          "supports": "Official 2026/27 FPF competition regulations and calendar."
+        }
+      ],
+      "assessment": "Official federation information establishes Taça de Portugal as the men's national knockout cup with 146 clubs in 2026/27. Bzzoiro has 10 observations; complete entrant coverage and season-ID semantics remain unverified.",
+      "review_status": "external_identity_supported_single_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples.",
+        "Verify provider season boundaries and competition ID semantics.",
+        "Keep league/cup/tier/group distinctions intact."
       ]
     }
   ]
