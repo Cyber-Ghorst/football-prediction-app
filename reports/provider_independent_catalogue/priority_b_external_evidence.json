@@ -1,6 +1,6 @@
 {
   "report_name": "priority_b_external_identity_evidence",
-  "generated_at": "2026-11-15T17:01:36.392Z",
+  "generated_at": "2026-11-15T17:03:30.395Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority B single-provider competition identities; official evidence can support competition type, country and season context but does not replace independent provider corroboration or human canonical approval.",
   "safeguards": [
@@ -151,6 +151,55 @@
         "Expand provider fixture and roster samples.",
         "Compare exact home/away fixture pairs and kickoff timestamps across providers against the official AFA schedule.",
         "Verify the provider-specific season-ID scope before proposing any crosswalk."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_004",
+      "name": "A-League Men",
+      "observed_country": "Australia",
+      "provider": "bzzoiro",
+      "provider_competition_id": "104",
+      "provider_season_id": "104::2144",
+      "provider_season_label": "A-League 26/27",
+      "raw_observation_count": 6,
+      "external_competition_type": "men's top-tier professional club league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 12,
+        "matches_per_club": 26,
+        "regular_season_matches": 156,
+        "geographic_scope": [
+          "Australia",
+          "New Zealand"
+        ]
+      },
+      "external_evidence": [
+        {
+          "publisher": "Australian Professional Leagues / A-Leagues",
+          "url": "https://aleagues.com.au/more/official-documents/",
+          "supports": "Official A-League Men 2026/27 Competition Rules Summary specifies 12 clubs, 26 matches per club and 156 regular-season matches."
+        },
+        {
+          "publisher": "Australian Professional Leagues / A-Leagues",
+          "url": "https://aleagues.com.au/news/aleague-men-ultimate-season-guide-news/",
+          "supports": "Official 2026/27 season guide gives the season start date (16 October 2026), participating clubs, and confirms Western United is no longer in the competition."
+        },
+        {
+          "publisher": "Australian Professional Leagues / A-Leagues",
+          "url": "https://aleagues.com.au/news/aleague-men-2026-2027-fixture-list-revealed-key-dates-fixture-information/",
+          "supports": "Official 2026/27 fixture release confirms 28 matchweeks and 26 games per club."
+        }
+      ],
+      "assessment": "Official sources corroborate the A-League Men as the 12-club men's top-tier professional competition for 2026/27. The official club set includes Auckland FC and Wellington Phoenix from New Zealand, so the current queue's Australia-only country field is incomplete for canonical identity. The intake contains only six Bzzoiro observations and no independent provider record for this exact competition/country identity.",
+      "review_status": "external_identity_supported_single_provider_and_cross_border_scope_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain a broader Bzzoiro season roster and fixture sample.",
+        "Establish a canonical cross-border country-scope convention for Australia and New Zealand competitions.",
+        "Seek independent provider observations and verify the season scope of 104::2144."
       ]
     }
   ]
