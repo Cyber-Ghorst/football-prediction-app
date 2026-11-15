@@ -124,7 +124,7 @@ def audit_provider_link_parity(
     entity_reports: dict[str, dict[str, int]] = {}
     with _connect(database_url) as connection:
         with connection.cursor() as cursor:
-            cursor.execute("SET TRANSACTION READ ONLY")
+            cursor.execute("SET TRANSACTION READ ONLY", ())
             for entity_kind, (table, primary_key) in ENTITY_TABLES.items():
                 cursor.execute(
                     f"""
