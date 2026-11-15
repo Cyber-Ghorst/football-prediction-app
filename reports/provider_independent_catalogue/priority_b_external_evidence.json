@@ -1,0 +1,59 @@
+{
+  "report_name": "priority_b_external_identity_evidence",
+  "generated_at": "2026-11-15T16:57:38.965Z",
+  "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
+  "scope": "Priority B single-provider competition identities; official evidence can support competition type, country and season context but does not replace independent provider corroboration or human canonical approval.",
+  "safeguards": [
+    "Do not create canonical competition, season or team mappings from this report.",
+    "Do not create provider links or enable fixture ingestion.",
+    "Do not infer provider-ID equivalence from competition names or season labels.",
+    "Keep single-provider identities source-scoped until independent corroboration and explicit approval."
+  ],
+  "entries": [
+    {
+      "catalogue_entry_id": "observed_competition_001",
+      "name": "Girabola",
+      "observed_country": "Angola",
+      "provider": "bzzoiro",
+      "provider_competition_id": "98",
+      "provider_season_id": "98::2037",
+      "provider_season_label": "Girabola 26/27",
+      "raw_observation_count": 9,
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 16,
+        "regular_season_matchdays": 30,
+        "format": "16 clubs play home and away; 30 matchdays"
+      },
+      "external_evidence": [
+        {
+          "publisher": "Liga Unitel Girabola / ANCAF",
+          "url": "https://www.ligaunitelgirabola.com/competicao/2026-27?tab=calendario",
+          "supports": "Official 2026/27 competition calendar and table lists 16 participating clubs and 30 matchdays."
+        },
+        {
+          "publisher": "Liga Unitel Girabola / ANCAF",
+          "url": "https://www.ligaunitelgirabola.com/news/comunicado-oficial-002-dce-ancaf-2026",
+          "supports": "ANCAF's official notice publishes the first five rounds of the 2026/27 season for the 16 participating clubs."
+        },
+        {
+          "publisher": "Federação Angolana de Futebol / ANCAF",
+          "url": "https://ligaunitelgirabola.com/news/contrato-cedencia-gestao-girabola-faf-ancaf-2026",
+          "supports": "FAF delegated organisation, regulation and management of the national first-division championship to ANCAF for 2026/27 and 2027/28."
+        }
+      ],
+      "assessment": "Official sources corroborate that Girabola is Angola's men's top-tier national league and that the 2026/27 season is a 16-club, 30-matchday competition. The intake contains only one provider and nine raw Bzzoiro observations. The current sample is insufficient to verify the full roster or provider season-ID semantics.",
+      "review_status": "external_competition_identity_supported_single_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain a broader Bzzoiro season roster and fixture sample.",
+        "Seek an independent provider with country-scoped 2026/27 Girabola observations.",
+        "Verify the provider's season boundaries and the meaning of season ID 98::2037."
+      ]
+    }
+  ]
+}
