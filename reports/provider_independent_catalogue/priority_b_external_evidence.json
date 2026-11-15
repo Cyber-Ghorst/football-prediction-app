@@ -1,6 +1,6 @@
 {
   "report_name": "priority_b_external_identity_evidence",
-  "generated_at": "2026-11-15T17:33:49.341Z",
+  "generated_at": "2026-11-15T17:35:55.856Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority B single-provider competition identities; official evidence can support competition type, country and season context but does not replace independent provider corroboration or human canonical approval.",
   "safeguards": [
@@ -2971,6 +2971,335 @@
         "Obtain broader provider roster/fixture samples where possible.",
         "Verify provider season boundaries and the exact meaning of the provider season ID.",
         "Compare exact fixtures and kickoff timestamps before proposing cross-provider links."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_071",
+      "name": "Superliga",
+      "observed_country": "Romania",
+      "provider": "bzzoiro",
+      "provider_competition_id": "23",
+      "provider_season_id": "23::1396",
+      "provider_season_label": "Superliga 26/27",
+      "raw_observation_count": 9,
+      "external_competition_type": "men's top-tier domestic professional league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 16,
+        "regular_rounds": 30,
+        "playoff_clubs": 6,
+        "playoff_rounds": 10,
+        "playout_clubs": 10,
+        "playout_rounds": 9
+      },
+      "external_evidence": [
+        {
+          "publisher": "Superliga",
+          "url": "https://www.superliga.ro/articole/cunoastem-programul-superligii-pentru-sezonul-20262027-f9b16479",
+          "supports": "Official 2026/27 fixture schedule and 16-team competition."
+        },
+        {
+          "publisher": "Superliga",
+          "url": "https://www.superliga.ro/clasament",
+          "supports": "Official standings distinguish the regular season, six-team play-off and ten-team play-out."
+        }
+      ],
+      "assessment": "Official Superliga 2026/27 schedule and standings identify a 16-club men's top tier, with a 30-round regular season followed by a six-team title playoff and ten-team relegation play-out. Bzzoiro's nine observations do not establish complete roster coverage or provider season-ID semantics.",
+      "review_status": "external_identity_supported_single_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples where possible.",
+        "Verify provider-specific season boundaries and exact season ID semantics.",
+        "Compare exact fixture pairs and kickoff timestamps before proposing cross-provider links."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_074",
+      "name": "Niké liga",
+      "observed_country": "Slovakia",
+      "provider": "bzzoiro",
+      "provider_competition_id": "109",
+      "provider_season_id": "109::2243",
+      "provider_season_label": "Superliga 26/27",
+      "raw_observation_count": 4,
+      "external_competition_type": "men's top-tier domestic professional league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 12,
+        "regular_rounds": 22,
+        "post_split_rounds": 10,
+        "total_rounds": 32,
+        "format": "Top-six championship group and bottom-six relegation group"
+      },
+      "external_evidence": [
+        {
+          "publisher": "Niké liga / ÚLK",
+          "url": "https://www.nikeliga.sk/text/8-ulk",
+          "supports": "Official league operator identifies Niké liga as Slovakia's top division and lists 12 participating clubs for 2026/27."
+        },
+        {
+          "publisher": "Niké liga",
+          "url": "https://www.nikeliga.sk/clanok/4784-majster-zacne-u-novacika-pozname-program-nike-ligy-2026-2027",
+          "supports": "Official 2026/27 fixture calendar and 12-team programme."
+        },
+        {
+          "publisher": "Niké liga",
+          "url": "https://www.nikeliga.sk/text/56-herny-model",
+          "supports": "Official competition model: 12 clubs, 22 regular rounds and ten-round split groups."
+        }
+      ],
+      "assessment": "Official Niké liga sources identify the 12-club Slovak top division and a 22-round home-and-away regular phase followed by ten additional rounds in two six-team groups. Bzzoiro's four observations do not verify complete roster coverage or season-ID semantics.",
+      "review_status": "external_identity_supported_single_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples where possible.",
+        "Verify provider-specific season boundaries and exact season ID semantics.",
+        "Compare exact fixture pairs and kickoff timestamps before proposing cross-provider links."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_084",
+      "name": "Spanish Copa del Rey",
+      "observed_country": "Spain",
+      "provider": "livescore_football",
+      "provider_competition_id": "3951",
+      "provider_season_id": "3951::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 5,
+      "external_competition_type": "candidate alias of men's national knockout cup",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 106,
+        "format": "Single-elimination national cup with staged entry rounds"
+      },
+      "external_evidence": [
+        {
+          "publisher": "RFEF",
+          "url": "https://rfef.es/sites/default/files/pdf/circulares/102_con_anexos_20250624.pdf",
+          "supports": "Official 2026/27 Copa del Rey regulation specifies 106 participating clubs."
+        },
+        {
+          "publisher": "RFEF",
+          "url": "https://rfef.es/es/federacion/normativas-y-circulares/circulares",
+          "supports": "Official RFEF circular register includes 2026/27 Copa del Rey draw and round notices."
+        }
+      ],
+      "assessment": "The generic Spanish Copa del Rey label is consistent with the existing men's Copa del Rey identity. RFEF's 2026/27 regulations admit 106 clubs. LiveScoreFootball contributes five observations with a generic 2026 season label; exact fixture and season equivalence with Bzzoiro's 2026/27 cup record is not established.",
+      "review_status": "candidate_alias_of_existing_copa_del_rey_identity_season_scope_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples where possible.",
+        "Verify provider-specific season boundaries and exact season ID semantics.",
+        "Compare exact fixture pairs and kickoff timestamps before proposing cross-provider links."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_085",
+      "name": "Spanish LALIGA",
+      "observed_country": "Spain",
+      "provider": "livescore_football",
+      "provider_competition_id": "740",
+      "provider_season_id": "740::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 1,
+      "external_competition_type": "candidate alias of men's top-tier domestic professional league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 20,
+        "rounds": 38,
+        "matches": 380
+      },
+      "external_evidence": [
+        {
+          "publisher": "LALIGA",
+          "url": "https://www.laliga.com/laliga-easports/clasificacion",
+          "supports": "Official 2026/27 LALIGA EA SPORTS standings."
+        },
+        {
+          "publisher": "LALIGA",
+          "url": "https://assets.laliga.com/assets/2025/03/24/originals/5408fc235e5b383d670bef19ab1fd196.pdf",
+          "supports": "Official competition structure: 20 clubs, 38 rounds and 380 matches."
+        }
+      ],
+      "assessment": "The provider label is consistent with LALIGA EA SPORTS, the existing Spanish men's top-tier identity. One observation with a generic 2026 season label is insufficient to establish exact fixture or season equivalence with existing provider records.",
+      "review_status": "candidate_alias_of_existing_laliga_identity_provider_scope_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples where possible.",
+        "Verify provider-specific season boundaries and exact season ID semantics.",
+        "Compare exact fixture pairs and kickoff timestamps before proposing cross-provider links."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_086",
+      "name": "Spanish LALIGA 2",
+      "observed_country": "Spain",
+      "provider": "livescore_football",
+      "provider_competition_id": "3921",
+      "provider_season_id": "3921::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 1,
+      "external_competition_type": "candidate alias of men's second-tier domestic professional league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 22,
+        "rounds": 42,
+        "matches": 462
+      },
+      "external_evidence": [
+        {
+          "publisher": "LALIGA",
+          "url": "https://assets.laliga.com/assets/2025/03/24/originals/5408fc235e5b383d670bef19ab1fd196.pdf",
+          "supports": "Official Segunda División structure: 22 clubs, 42 rounds and 462 matches."
+        },
+        {
+          "publisher": "LALIGA",
+          "url": "https://www.laliga.com/laliga-hypermotion/clasificacion",
+          "supports": "Official 2026/27 LALIGA Hypermotion standings."
+        }
+      ],
+      "assessment": "The provider label is consistent with LALIGA Hypermotion (Segunda División), whose official structure has 22 clubs and 42 rounds. One observation and a generic 2026 season label do not establish provider season scope or exact fixture equivalence with Bzzoiro's LaLiga 2 record.",
+      "review_status": "candidate_alias_of_existing_segunda_division_identity_provider_scope_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples where possible.",
+        "Verify provider-specific season boundaries and exact season ID semantics.",
+        "Compare exact fixture pairs and kickoff timestamps before proposing cross-provider links."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_087",
+      "name": "Spanish Liga F",
+      "observed_country": "Spain",
+      "provider": "livescore_football",
+      "provider_competition_id": "20956",
+      "provider_season_id": "20956::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 9,
+      "external_competition_type": "candidate alias of women's top-tier domestic professional league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 16,
+        "rounds": 30,
+        "matches": 240
+      },
+      "external_evidence": [
+        {
+          "publisher": "Liga F",
+          "url": "https://ligaf.es/noticia/los-clubes-de-liga-f-moeve-arrancan-la-temporada-20262027",
+          "supports": "Official 2026/27 season announcement confirms 16 clubs."
+        },
+        {
+          "publisher": "Liga F",
+          "url": "https://ligaf.es/noticia/liga-f-moeve-ya-tiene-definido-el-calendario-de-emparejamientos-de-la-temporada-20262027",
+          "supports": "Official 2026/27 fixture calendar."
+        }
+      ],
+      "assessment": "The provider label is consistent with Spain's women's top division Liga F. Official Liga F sources identify 16 clubs and the 2026/27 fixture calendar. Nine observations and a generic 2026 season label do not establish exact provider season scope or fixture equivalence with Bzzoiro's Liga F record.",
+      "review_status": "candidate_alias_of_existing_liga_f_identity_provider_scope_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples where possible.",
+        "Verify provider-specific season boundaries and exact season ID semantics.",
+        "Compare exact fixture pairs and kickoff timestamps before proposing cross-provider links."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_088",
+      "name": "Allsvenskan",
+      "observed_country": "Sweden",
+      "provider": "bzzoiro",
+      "provider_competition_id": "26",
+      "provider_season_id": "26::9",
+      "provider_season_label": "Allsvenskan 2026",
+      "raw_observation_count": 4,
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026 calendar year",
+      "official_scope": {
+        "clubs": 16,
+        "rounds": 30,
+        "matches": 240
+      },
+      "external_evidence": [
+        {
+          "publisher": "Svenska Fotbollförbundet",
+          "url": "https://www.svenskfotboll.se/4afe1c/globalassets/svff/dokumentdokumentblock/tavling/arsplaner--seriesammansattningar/2026/faststalld-seriesammansattning-allsvenskan-och-superettan-2026.pdf",
+          "supports": "Official 2026 series composition lists 16 Allsvenskan clubs."
+        },
+        {
+          "publisher": "Svenska Fotbollförbundet",
+          "url": "https://www.svenskfotboll.se/nyheter/serier/2026/09/allsvenskans-slutomgangar-spikade",
+          "supports": "Official 2026 schedule confirms matchdays through round 30."
+        }
+      ],
+      "assessment": "Svenska Fotbollförbundet's official 2026 series composition lists 16 Allsvenskan clubs; official 2026 schedules run through round 30. Bzzoiro has four observations, insufficient to verify complete roster or season-ID semantics.",
+      "review_status": "external_identity_supported_single_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples where possible.",
+        "Verify provider-specific season boundaries and exact season ID semantics.",
+        "Compare exact fixture pairs and kickoff timestamps before proposing cross-provider links."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_089",
+      "name": "Superettan",
+      "observed_country": "Sweden",
+      "provider": "bzzoiro",
+      "provider_competition_id": "106",
+      "provider_season_id": "106::2182",
+      "provider_season_label": "Superettan 2026",
+      "raw_observation_count": 2,
+      "external_competition_type": "men's second-tier domestic league",
+      "external_season": "2026 calendar year",
+      "official_scope": {
+        "clubs": 16,
+        "rounds": 30,
+        "matches": 240
+      },
+      "external_evidence": [
+        {
+          "publisher": "Svenska Fotbollförbundet",
+          "url": "https://www.svenskfotboll.se/4afe1c/globalassets/svff/dokumentdokumentblock/tavling/arsplaner--seriesammansattningar/2026/faststalld-seriesammansattning-allsvenskan-och-superettan-2026.pdf",
+          "supports": "Official 2026 series composition lists 16 Superettan clubs."
+        },
+        {
+          "publisher": "Svenska Fotbollförbundet",
+          "url": "https://www.svenskfotboll.se/nyheter/serier/2025/12/spelordning-for-superettan-2026/",
+          "supports": "Official 2026 Superettan schedule and season format."
+        }
+      ],
+      "assessment": "Svenska Fotbollförbundet's official 2026 series composition lists 16 Superettan clubs; the official schedule and final table show a 30-round season. Bzzoiro has two observations, insufficient to verify complete roster or season-ID semantics.",
+      "review_status": "external_identity_supported_single_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples where possible.",
+        "Verify provider-specific season boundaries and exact season ID semantics.",
+        "Compare exact fixture pairs and kickoff timestamps before proposing cross-provider links."
       ]
     }
   ]
