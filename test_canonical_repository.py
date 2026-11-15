@@ -95,10 +95,10 @@ class CanonicalRepositoryResolverTests(unittest.TestCase):
                 # Five aggregate counts followed by one ambiguity count,
                 # repeated for each of the four supported entity types.
                 values = [
-                    (3, 2, 1, 0, 2), (0,),
-                    (2, 2, 0, 0, 2), (0,),
-                    (4, 3, 1, 1, 2), (1,),
-                    (1, 1, 0, 0, 1), (0,),
+                    (3, 2, 1, 1, 0, 0, 2), (0,),
+                    (2, 2, 0, 0, 0, 0, 2), (0,),
+                    (4, 3, 1, 1, 0, 1, 2), (1,),
+                    (1, 1, 0, 0, 0, 0, 1), (0,),
                 ]
                 value = values[self.result_index]
                 self.result_index += 1
@@ -124,6 +124,8 @@ class CanonicalRepositoryResolverTests(unittest.TestCase):
         self.assertEqual(result["totals"]["total_links"], 10)
         self.assertEqual(result["totals"]["approved_links"], 8)
         self.assertEqual(result["totals"]["unapproved_links"], 2)
+        self.assertEqual(result["totals"]["native_identity_anchors"], 2)
+        self.assertEqual(result["totals"]["native_identity_anchors_missing_target"], 0)
         self.assertEqual(result["totals"]["approved_targets_missing"], 1)
         self.assertEqual(result["totals"]["ambiguous_canonical_targets"], 1)
         self.assertEqual(len(cursor.statements), 9)

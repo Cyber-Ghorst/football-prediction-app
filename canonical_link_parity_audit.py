@@ -26,10 +26,11 @@ def build_report(database_url: str, provider: str) -> dict[str, Any]:
         "provider": provider,
         "result": result,
         "interpretation": (
-            "This is an inventory of existing provider links and exact approval-audit "
-            "evidence. Counts do not authorize new links. Unapproved, missing-target, "
-            "or ambiguous records require separate evidence review; no records are "
-            "created, modified, approved, or promoted by this report."
+            "Sportmonks source IDs that equal their legacy primary keys are reported "
+            "as native identity anchors, not cross-provider approvals. Other links "
+            "require exact approval-audit evidence. Counts do not authorize new links; "
+            "unapproved, missing-target, or ambiguous records require separate review. "
+            "No records are created, modified, approved, or promoted by this report."
         ),
     }
 

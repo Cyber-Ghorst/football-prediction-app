@@ -109,11 +109,12 @@ def audit_provider_link_parity(
     *,
     provider: str,
 ) -> dict[str, Any]:
-    """Read-only inventory of approved, unapproved, orphaned and ambiguous links.
+    """Read-only inventory of provider links, distinguishing native identity anchors.
 
-    Approval requires an exact audit match with a non-empty reason of at least
-    12 characters, matching the explicit-link write contract. Counts are
-    scoped by provider and entity type. No link or legacy row is modified.
+    Sportmonks links whose source ID is identical to the legacy primary key are
+    first-party identity anchors, not cross-provider approvals. Other links
+    require an exact approval-audit match and a non-empty reason of at least
+    12 characters. No link or legacy row is modified.
     """
     provider_name = str(provider or "").strip().casefold()
     if not database_url:
@@ -134,8 +135,22 @@ def audit_provider_link_parity(
                             WHEN approval.link_id IS NOT NULL THEN link.link_id
                         END) AS approved_links,
                         COUNT(DISTINCT CASE
-                            WHEN approval.link_id IS NULL THEN link.link_id
+                            WHEN approval.link_id IS NULL
+                             AND NOT (link.provider = 'sportmonks'
+                                      AND link.provider_entity_id = link.canonical_entity_id)
+                            THEN link.link_id
                         END) AS unapproved_links,
+                        COUNT(DISTINCT CASE
+                            WHEN link.provider = 'sportmonks'
+                             AND link.provider_entity_id = link.canonical_entity_id
+                            THEN link.link_id
+                        END) AS native_identity_anchors,
+                        COUNT(DISTINCT CASE
+                            WHEN link.provider = 'sportmonks'
+                             AND link.provider_entity_id = link.canonical_entity_id
+                             AND legacy_entity.{primary_key} IS NULL
+                            THEN link.link_id
+                        END) AS native_identity_anchors_missing_target,
                         COUNT(DISTINCT CASE
                             WHEN approval.link_id IS NOT NULL
                              AND legacy_entity.{primary_key} IS NULL
@@ -165,8 +180,10 @@ def audit_provider_link_parity(
                     "total_links": int(row[0] or 0),
                     "approved_links": int(row[1] or 0),
                     "unapproved_links": int(row[2] or 0),
-                    "approved_targets_missing": int(row[3] or 0),
-                    "approved_links_with_legacy_target": int(row[4] or 0),
+                    "native_identity_anchors": int(row[3] or 0),
+                    "native_identity_anchors_missing_target": int(row[4] or 0),
+                    "approved_targets_missing": int(row[5] or 0),
+                    "approved_links_with_legacy_target": int(row[6] or 0),
                 }
 
                 cursor.execute(
@@ -196,6 +213,7 @@ def audit_provider_link_parity(
         key: sum(report[key] for report in entity_reports.values())
         for key in (
             "total_links", "approved_links", "unapproved_links",
+            "native_identity_anchors", "native_identity_anchors_missing_target",
             "approved_targets_missing", "approved_links_with_legacy_target",
         )
     }
