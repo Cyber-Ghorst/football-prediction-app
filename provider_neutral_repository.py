@@ -164,7 +164,7 @@ def build_provider_neutral_audit(raw: Mapping[str, list[Mapping[str, Any]]],
         "provider_entity_counts": {
             provider: dict(values) for provider, values in sorted(provider_counts.items())
         },
-        "existing_approved_link_counts": dict(sorted(link_counts.items())),
+        "existing_provider_link_counts": dict(sorted(link_counts.items())),
         "invalid_source_identity_count": len(invalid),
         "invalid_source_identities": invalid,
         "normalized_records": normalized,
