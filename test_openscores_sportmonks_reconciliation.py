@@ -144,6 +144,8 @@ class OpenScoresMappingVerificationTests(unittest.TestCase):
             "provider_entity_id": "os-league-2",
             "canonical_entity_id": "sportmonks:8",
             "verification_method": "exact_competition_name_and_country",
+            "approved_by": "human-reviewer",
+            "approval_reason": "Official competition evidence independently checked.",
             "evidence": {"openscores_name": "Premier League", "sportmonks_id": 8},
         }
         with patch(
@@ -152,7 +154,9 @@ class OpenScoresMappingVerificationTests(unittest.TestCase):
             "openscores_sportmonks_reconciliation._connect",
             return_value=connection,
         ):
-            result = write_explicit_openscores_links("postgresql://db", [mapping])
+            result = write_explicit_openscores_links(
+                "postgresql://db", [mapping], explicit_approval=True
+            )
         self.assertEqual(result["status"], "pass")
         self.assertEqual(result["inserted"], 1)
         self.assertEqual(result["verified"], 1)
@@ -164,6 +168,50 @@ class OpenScoresMappingVerificationTests(unittest.TestCase):
             params and "exact_competition_name_and_country" in params
             for _, params in cursor.calls
         ))
+
+    def test_mapping_writer_fails_closed_without_explicit_approval(self):
+        from unittest.mock import patch
+        mapping = {
+            "entity_type": "league",
+            "provider_entity_id": "os-league-2",
+            "canonical_entity_id": "sportmonks:8",
+        }
+        with patch(
+            "openscores_sportmonks_reconciliation.ensure_provider_entity_link_verifications"
+        ) as ensure, patch(
+            "openscores_sportmonks_reconciliation._connect"
+        ) as connect:
+            result = write_explicit_openscores_links("postgresql://db", [mapping])
+        self.assertEqual(result["status"], "approval_required_no_writes")
+        self.assertEqual(result["inserted"], 0)
+        self.assertEqual(result["verified"], 0)
+        ensure.assert_not_called()
+        connect.assert_not_called()
+
+    def test_reconciliation_uses_only_existing_verified_links_and_never_imports_fixtures(self):
+        from unittest.mock import patch
+        from openscores_sportmonks_reconciliation import run_reconciliation
+        with patch(
+            "openscores_sportmonks_reconciliation.reconcile_openscores_observations",
+            return_value={"matched": 0, "pending_entity_mapping": 300},
+        ) as reconcile, patch(
+            "openscores_sportmonks_reconciliation._pending_mapping_diagnostics",
+            return_value={"pending_groups": []},
+        ), patch(
+            "openscores_sportmonks_reconciliation.import_sportmonks_season"
+        ) as import_season:
+            report = run_reconciliation(database_url="postgresql://db")
+        reconcile.assert_called_once_with(
+            "postgresql://db",
+            include_outside_upcoming_window=True,
+            preserve_outside_window_status=True,
+        )
+        import_season.assert_not_called()
+        self.assertEqual(report["status"], "blocked_pending_verified_mappings")
+        self.assertEqual(report["mapping_policy"], "pre_existing_verified_links_only")
+        self.assertEqual(report["explicit_entity_links_inserted"], 0)
+        self.assertEqual(report["canonical_fixtures_imported"], 0)
+        self.assertFalse(report["prediction_ledger_touched"])
 
     def test_conflicting_existing_mapping_is_not_overwritten(self):
         from unittest.mock import patch
