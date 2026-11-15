@@ -1,6 +1,6 @@
 {
   "report_name": "priority_b_external_identity_evidence",
-  "generated_at": "2026-11-15T17:17:43.860Z",
+  "generated_at": "2026-11-15T17:19:51.926Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority B single-provider competition identities; official evidence can support competition type, country and season context but does not replace independent provider corroboration or human canonical approval.",
   "safeguards": [
@@ -1476,6 +1476,86 @@
         "Verify provider-specific season scope and competition-ID semantics.",
         "Compare exact fixtures and kickoff timestamps where multiple provider records may describe the same competition.",
         "Keep national-team competitions separate from club competitions and league tiers."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_038",
+      "name": "Coupe de France",
+      "observed_country": "France",
+      "provider": "bzzoiro",
+      "provider_competition_id": "44",
+      "provider_season_id": "44::2240",
+      "provider_season_label": "Coupe de France 26/27",
+      "raw_observation_count": 261,
+      "external_competition_type": "men's national knockout cup",
+      "external_season": "2026/27",
+      "external_evidence": [
+        {
+          "publisher": "French Football Federation",
+          "url": "https://media.fff.fr/uploads/files/db509044d79863d25e097a847f53638a.pdf",
+          "supports": "Official 2026/27 general competition calendar identifies Coupe de France rounds across the 2026/27 season."
+        },
+        {
+          "publisher": "French Football Federation",
+          "url": "https://laurafoot.fff.fr/simple/les-affiches-des-7e-et-8e-tours-de-coupe-de-france-2026/",
+          "supports": "Official regional FFF article gives the 2026/27 cup round dates, including entry of Ligue 2 at the seventh round and Ligue 1 at the 32nd-final stage."
+        },
+        {
+          "publisher": "French Football Federation",
+          "url": "https://www.fff.fr/competition/engagement/416884-coupe-de-france/phase/1.html",
+          "supports": "Official FFF Coupe de France competition/engagement page."
+        }
+      ],
+      "assessment": "Official FFF sources establish the Coupe de France as the men's national knockout cup for 2026/27, with amateur and professional clubs entering in staged rounds. Bzzoiro contributes 261 observations; full entrant coverage and season-ID semantics remain unverified.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain full-season provider entrant and fixture evidence.",
+        "Verify exact provider season boundaries and the meaning of 44::2240.",
+        "Seek independent provider corroboration."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_039",
+      "name": "French Ligue 1",
+      "observed_country": "France",
+      "provider": "livescore_football",
+      "provider_competition_id": "710",
+      "provider_season_id": "710::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 1,
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026/27",
+      "external_evidence": [
+        {
+          "publisher": "Ligue 1 / LFP",
+          "url": "https://ligue1.com/en/articles/l1_article_5292-",
+          "supports": "Official 2026/27 calendar sets the Ligue 1 season start and final matchday."
+        },
+        {
+          "publisher": "Ligue 1 / LFP",
+          "url": "https://ligue1.com/en/articles/l1_article_5328-when-does-the-season-start-for-ligue-1-mc-donald-s-clubs",
+          "supports": "Official announcement confirms 18 Ligue 1 clubs for 2026/27."
+        },
+        {
+          "publisher": "LFP",
+          "url": "https://www.lfp.fr/article/ligue-1-mc-donald-s-le-calendrier-de-la-saison-2026-2027",
+          "supports": "Official 2026/27 Ligue 1 calendar announcement."
+        }
+      ],
+      "assessment": "Official LFP sources establish French Ligue 1 as the men's top tier with 18 clubs in 2026/27. This LiveScoreFootball record has only one observation and is a plausible counterpart to the Bzzoiro/OpenFootball Ligue 1 records reviewed under Priority A; no cross-provider link is approved.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Compare exact fixture pairs and timezone-normalized kickoffs with Bzzoiro and OpenFootball records.",
+        "Verify the scope of provider season ID 710::2026.",
+        "Do not create links from competition-name similarity."
       ]
     }
   ]
