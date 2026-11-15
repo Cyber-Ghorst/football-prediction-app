@@ -90,6 +90,60 @@ class CompetitionCrosswalkTests(unittest.TestCase):
         rows = build_competition_crosswalk(api, self.live, requested_season=2026, now=self.now)
         self.assertFalse(rows[0]["verified"])
 
+    def test_highlightly_catalogue_can_be_crosswalk_source_without_sportmonks(self):
+        highlightly = [{
+            "id": 52695, "name": "Ligue 1", "countryName": "France",
+            "seasons": [{"year": 2026}],
+        }]
+        live = [{
+            "slug": "fra.1", "name": "Ligue 1", "country": "France",
+            "active": True, "season": {"year": 2026},
+            "coverage": {"hasData": True, "matches": 90,
+                         "lastSyncedAt": "2026-11-07T11:30:00Z"},
+        }]
+        rows = build_competition_crosswalk(
+            highlightly, live, requested_season=2026,
+            source_provider="highlightly", now=self.now,
+        )
+        self.assertTrue(rows[0]["verified"])
+        self.assertEqual(rows[0]["highlightly_id"], "52695")
+        self.assertIsNone(rows[0]["sportmonks_id"])
+        self.assertEqual(
+            verified_livescore_slug(rows, 52695, source_provider="highlightly"),
+            "fra.1",
+        )
+
+    def test_highlightly_crosswalk_rejects_country_mismatch_and_duplicates(self):
+        highlightly = [{
+            "id": 52695, "name": "Ligue 1", "countryName": "France",
+        }]
+        wrong_country = [{
+            "slug": "eng.1", "name": "Ligue 1", "country": "England",
+            "active": True, "season": {"year": 2026},
+            "coverage": {"hasData": True, "lastSyncedAt": "2026-11-07T11:30:00Z"},
+        }]
+        rows = build_competition_crosswalk(
+            highlightly, wrong_country, requested_season=2026,
+            source_provider="highlightly", now=self.now,
+        )
+        self.assertFalse(rows[0]["verified"])
+        self.assertIsNone(rows[0]["livescore_slug"])
+        rows = build_competition_crosswalk(
+            highlightly, self.live * 2, requested_season=2026,
+            source_provider="highlightly", now=self.now,
+        )
+        self.assertFalse(rows[0]["verified"])
+        self.assertIsNone(rows[0]["livescore_slug"])
+
+    def test_api_ninjas_catalogue_can_be_a_provider_neutral_source(self):
+        source = [{"id": "eng.1", "name": "Premier League", "country": "England"}]
+        rows = build_competition_crosswalk(
+            source, self.live, requested_season=2026,
+            source_provider="api_ninjas", now=self.now,
+        )
+        self.assertTrue(rows[0]["verified"])
+        self.assertEqual(rows[0]["api_ninjas_id"], "eng.1")
+
 
 if __name__ == "__main__":
     unittest.main()
