@@ -164,7 +164,133 @@ def audit_livescore_rosters() -> dict[str, Any]:
     return {"status": "completed", "competitions": results}
 
 
+
+def _normalized_team_name(value: Any) -> str:
+    import re
+    import unicodedata
+    text = unicodedata.normalize("NFKD", str(value or ""))
+    text = "".join(ch for ch in text if not unicodedata.combining(ch))
+    text = text.casefold().replace("&", " and ")
+    text = re.sub(r"[^a-z0-9]+", " ", text)
+    return re.sub(r"\\s+", " ", text).strip()
+
+
+def build_roster_identity_candidates(
+    highlightly: dict[str, Any],
+    livescore: dict[str, Any],
+) -> dict[str, Any]:
+    """Compare only same-competition, same-season provider roster observations.
+
+    Exact normalized names produce review candidates, never verified links.
+    Duplicate normalized names are held as ambiguous. No aliases or fuzzy
+    matching are attempted.
+    """
+    pairs = (
+        ("Bundesliga", "German Bundesliga"),
+        ("Ligue 1", "French Ligue 1"),
+    )
+    comparisons = []
+    for highlightly_name, livescore_name in pairs:
+        h_rows = [
+            row for row in highlightly.get("competitions", [])
+            if row.get("target", {}).get("name") == highlightly_name
+            and row.get("status") == "collected"
+            and row.get("team_evidence_method") == "league_season_standings"
+        ]
+        l_rows = [
+            row for row in livescore.get("competitions", [])
+            if row.get("target", {}).get("name") == livescore_name
+            and row.get("status") == "collected"
+        ]
+        if len(h_rows) != 1 or len(l_rows) != 1:
+            comparisons.append({
+                "competition": highlightly_name,
+                "status": "held_missing_or_ambiguous_roster",
+                "candidates": [], "ambiguous": [], "unmatched_highlightly": [],
+                "unmatched_livescore": [],
+            })
+            continue
+        h_row, l_row = h_rows[0], l_rows[0]
+        h_groups: dict[str, list[dict[str, Any]]] = {}
+        l_groups: dict[str, list[dict[str, Any]]] = {}
+        for team in h_row.get("teams", []):
+            key = _normalized_team_name(team.get("name"))
+            if key:
+                h_groups.setdefault(key, []).append(team)
+        for team in l_row.get("teams", []):
+            key = _normalized_team_name(team.get("name"))
+            if key:
+                l_groups.setdefault(key, []).append(team)
+        candidates, ambiguous = [], []
+        for key in sorted(set(h_groups) & set(l_groups)):
+            left, right = h_groups[key], l_groups[key]
+            if len(left) != 1 or len(right) != 1:
+                ambiguous.append({
+                    "normalized_name": key,
+                    "highlightly": [{"id": str(t["id"]), "name": t["name"]} for t in left],
+                    "livescore_football": [{"id": str(t["id"]), "name": t["name"]} for t in right],
+                    "status": "ambiguous_duplicate_normalized_name",
+                })
+                continue
+            candidates.append({
+                "normalized_name": key,
+                "highlightly": {
+                    "provider": "highlightly", "competition_id": str(h_row["league_id"]),
+                    "season": str(h_row["season"]), "team_id": str(left[0]["id"]),
+                    "team_name": left[0]["name"],
+                    "evidence_method": h_row["team_evidence_method"],
+                },
+                "livescore_football": {
+                    "provider": "livescore_football", "competition_id": str(l_row["league_id"]),
+                    "season": str(l_row["season"]), "team_id": str(right[0]["id"]),
+                    "team_name": right[0]["name"],
+                    "evidence_method": l_row["team_evidence_method"],
+                },
+                "status": "candidate_exact_normalized_name_review_required",
+                "verified": False,
+                "link_written": False,
+            })
+        comparisons.append({
+            "competition": highlightly_name,
+            "country": h_row.get("target", {}).get("country"),
+            "season": str(h_row.get("season")),
+            "status": "candidate_review",
+            "highlightly_team_count": len(h_row.get("teams", [])),
+            "livescore_team_count": len(l_row.get("teams", [])),
+            "candidate_count": len(candidates),
+            "ambiguous_count": len(ambiguous),
+            "candidates": candidates,
+            "ambiguous": ambiguous,
+            "unmatched_highlightly": [
+                {"id": str(team["id"]), "name": team["name"]}
+                for key, group in h_groups.items() if key not in l_groups
+                for team in group
+            ],
+            "unmatched_livescore": [
+                {"id": str(team["id"]), "name": team["name"]}
+                for key, group in l_groups.items() if key not in h_groups
+                for team in group
+            ],
+        })
+    total = sum(row.get("candidate_count", 0) for row in comparisons)
+    return {
+        "status": "candidate_only",
+        "method": "exact_normalized_team_name_within_country_competition_and_season",
+        "automatic_aliases_used": False,
+        "fuzzy_matching_used": False,
+        "candidates_total": total,
+        "verified_links_created": 0,
+        "comparisons": comparisons,
+        "warning": (
+            "Matching names and season-scoped roster co-membership are review evidence, "
+            "not proof of identity. Provider-native IDs remain namespaced and unlinked."
+        ),
+    }
+
+
 def main() -> int:
+    highlightly_report = audit_highlightly_rosters()
+    livescore_report = audit_livescore_rosters()
     report = {
         "checked_at": datetime.now(timezone.utc).isoformat(),
         "read_only": True,
@@ -174,8 +300,11 @@ def main() -> int:
         "fixtures_imported": 0,
         "prediction_model_modified": False,
         "prediction_ledger_touched": False,
-        "highlightly": audit_highlightly_rosters(),
-        "livescore_football": audit_livescore_rosters(),
+        "highlightly": highlightly_report,
+        "livescore_football": livescore_report,
+        "cross_provider_team_identity_candidates": build_roster_identity_candidates(
+            highlightly_report, livescore_report,
+        ),
         "season_window": {"year": SEASON_YEAR, "from": SEASON_START, "to": SEASON_END},
         "interpretation": (
             "Highlightly standings are season-scoped roster evidence. "
@@ -188,6 +317,7 @@ def main() -> int:
     print(json.dumps({
         "checked_at": report["checked_at"],
         "read_only": report["read_only"],
+        "cross_provider_candidate_count": report["cross_provider_team_identity_candidates"]["candidates_total"],
         "highlightly": [
             {key: row.get(key) for key in ("target", "status", "league_id", "season", "team_count")}
             for row in report["highlightly"].get("competitions", [])
