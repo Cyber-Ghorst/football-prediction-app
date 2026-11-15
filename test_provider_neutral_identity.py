@@ -4,6 +4,7 @@ from provider_neutral_identity import (
     IDENTITY_KEY_VERSION,
     canonical_competition_key,
     canonical_season_key,
+    canonical_team_key,
 )
 
 
@@ -52,6 +53,45 @@ class ProviderNeutralIdentityTests(unittest.TestCase):
             canonical_season_key("", "2026/27")
         with self.assertRaises(ValueError):
             canonical_season_key("competition-a", "")
+
+    def test_team_key_is_stable_and_scope_aware(self):
+        first = canonical_team_key(
+            "Manchester United", "England", "club", "men", "senior", "first team"
+        )
+        second = canonical_team_key(
+            " manchester   united ", "ENGLAND", "CLUB", "MEN", "SENIOR", "FIRST-TEAM"
+        )
+        self.assertEqual(first, second)
+        self.assertTrue(first.startswith(f"team_v{IDENTITY_KEY_VERSION}_"))
+
+    def test_team_key_separates_club_national_gender_age_and_squad_scope(self):
+        baseline = canonical_team_key(
+            "United", "England", "club", "men", "senior", "first team"
+        )
+        variants = [
+            ("United", "England", "national", "men", "senior", "first team"),
+            ("United", "England", "club", "women", "senior", "first team"),
+            ("United", "England", "club", "men", "u21", "first team"),
+            ("United", "England", "club", "men", "senior", "reserve"),
+            ("United", "Scotland", "club", "men", "senior", "first team"),
+        ]
+        for args in variants:
+            with self.subTest(args=args):
+                self.assertNotEqual(baseline, canonical_team_key(*args))
+
+    def test_team_key_requires_every_identity_scope_dimension(self):
+        baseline = ["United", "England", "club", "men", "senior", "first team"]
+        for index in range(len(baseline)):
+            args = list(baseline)
+            args[index] = ""
+            with self.subTest(index=index), self.assertRaises(ValueError):
+                canonical_team_key(*args)
+
+    def test_team_key_rejects_unverified_team_type(self):
+        with self.assertRaises(ValueError):
+            canonical_team_key(
+                "United", "England", "unknown", "men", "senior", "first team"
+            )
 
 
 if __name__ == "__main__":

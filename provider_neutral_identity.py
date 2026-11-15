@@ -75,3 +75,42 @@ def canonical_season_key(
     if not normalized_label:
         raise ValueError("A season label is required.")
     return _digest("season", (competition_id, normalized_label))
+
+
+def canonical_team_key(
+    name: Any,
+    country: Any,
+    team_type: Any,
+    gender: Any,
+    age_group: Any,
+    squad_scope: Any,
+) -> str:
+    """Return a deterministic team identity candidate with explicit scope.
+
+    Required scope dimensions deliberately distinguish clubs from national
+    teams, men's/women's/mixed teams, senior/youth age groups, and first-team,
+    reserve or academy squads. Values are normalized text rather than guessed
+    from a provider ID or name. Aliases and uncertain scope require review.
+    """
+    normalized = (
+        _normalize(name),
+        _normalize(country),
+        _normalize(team_type),
+        _normalize(gender),
+        _normalize(age_group),
+        _normalize(squad_scope),
+    )
+    labels = (
+        "A team name",
+        "A country or territory",
+        "A verified team type (club or national)",
+        "A verified gender scope",
+        "A verified age-group scope",
+        "A verified squad scope",
+    )
+    for value, label in zip(normalized, labels):
+        if not value:
+            raise ValueError(f"{label} is required for a canonical team key.")
+    if normalized[2] not in {"club", "national"}:
+        raise ValueError("Team type must be 'club' or 'national'.")
+    return _digest("team", normalized)
