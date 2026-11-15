@@ -85,6 +85,39 @@ class OpenLigaDBScopeProbeTests(unittest.TestCase):
         self.assertEqual(report["results"][0]["api_metadata"]["sport"], "Football")
         self.assertFalse(report["safeguards"]["provider_link_writes"])
 
+
+    def test_probe_compares_priority_a_reference_record_without_reclassifying_it(self):
+        candidates = {
+            "records": [{"league_id": 5958, "source_name": "2. Bundesliga 2026/27 (Herren)",
+                         "season": 2026, "scope_class": "domestic_league_candidate"}],
+            "comparison_reference_records": [{"league_id": 4938, "source_name": "2. Bundesliga",
+                                               "season": 2026, "scope_class": "priority_a_crosswalk_reference"}],
+        }
+        fixture = {"matchID": 1, "leagueId": 5958, "leagueSeason": 2026,
+                   "team1": {"teamName": "1. FC Nürnberg"},
+                   "team2": {"teamName": "Eintracht Braunschweig"},
+                   "matchDateTimeUTC": "2026-11-21T12:00:00Z"}
+        def fake_get(url):
+            if url.endswith("/getavailableleagues/2026"):
+                return ([
+                    {"leagueId": 5958, "leagueName": "2. Bundesliga 2026/27 (Herren)",
+                     "leagueShortcut": "bl2h", "leagueSeason": 2026},
+                    {"leagueId": 4938, "leagueName": "2. Bundesliga",
+                     "leagueShortcut": "bl2", "leagueSeason": 2026},
+                ], "available-hash")
+            return ([fixture], "match-hash")
+        report = build_probe_report(
+            candidates, get_json=fake_get, sleep=lambda _: None,
+            generated_at=datetime(2026, 11, 15, tzinfo=timezone.utc),
+        )
+        self.assertEqual(report["source_record_count"], 1)
+        self.assertEqual(report["comparison_reference_record_count"], 1)
+        self.assertEqual(report["summary"]["country_unscoped_records_probed"], 1)
+        self.assertEqual(report["summary"]["comparison_reference_records_probed"], 1)
+        self.assertEqual(report["results"][0]["source_role"], "country_unscoped_source")
+        self.assertEqual(report["results"][1]["source_role"], "priority_a_reference")
+        self.assertEqual(report["fixture_identity_comparison"]["overlap_pairs"][0]["exact_fixture_overlap_count"], 1)
+
     def test_probe_is_read_only_and_records_api_hashes(self):
         candidates = {"records": [
             {"league_id": 4937, "source_name": "Bundesliga", "season": 2026,
