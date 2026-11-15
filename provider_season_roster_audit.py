@@ -172,7 +172,7 @@ def _normalized_team_name(value: Any) -> str:
     text = "".join(ch for ch in text if not unicodedata.combining(ch))
     text = text.casefold().replace("&", " and ")
     text = re.sub(r"[^a-z0-9]+", " ", text)
-    return re.sub(r"\\s+", " ", text).strip()
+    return re.sub(r"\s+", " ", text).strip()
 
 
 def build_roster_identity_candidates(
