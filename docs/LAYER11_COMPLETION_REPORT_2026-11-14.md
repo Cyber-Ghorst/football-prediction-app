@@ -98,3 +98,55 @@ Both entries are now Priority A for manual identity review. This updates the que
 
 The crosswalk's 12 corroborated competition candidates now align with the 12 Priority A queue entries. The separate 27 country-unscoped OpenLigaDB source records remain held outside identity groups.
 
+
+
+## Final Layer 11 reconciliation — 15 November 2026, 18:06 UTC
+
+This section supersedes earlier interim queue counts and consolidates the latest committed evidence reviews and parity audit.
+
+### Reconciled evidence inventory
+
+| Evidence group | Current count | Final safe disposition |
+|---|---:|---|
+| Country-scoped competition intake | 97 | Every record has an explicit queue disposition |
+| Priority A | 12 | Official competition evidence reviewed; identity/provider-season mapping remains unapproved |
+| Priority B | 85 | Official context reviewed in the Priority B evidence dossier; provider identity remains single-source and held |
+| Country-unscoped OpenLigaDB records | 27 | Held outside canonical identity groups pending country evidence |
+| Priority B alias shortlist | 17 groups | Candidate-only; no aliases or provider links approved |
+| Exact UTC fixture overlaps in refreshed Priority A audit | 20 | Human-review evidence only; not automatic identity approval |
+
+The earlier Priority B alias document stated 87 records. That count is superseded: two records (Austrian Bundesliga and Scottish Premiership) were re-triaged to Priority A, leaving 85 Priority B records. The alias shortlist has been reconciled accordingly.
+
+### Priority A final dispositions
+
+All twelve Priority A identities now have official competition evidence reviews. These establish competition scope and provide source provenance, but do not independently verify every provider competition ID, season ID, complete roster or canonical target. The MLS review explicitly preserves the US/Canada cross-border scope discrepancy rather than approving a US-only canonical country. Serie A and Ligue 1 remain separate provider records where timezone/roster evidence is insufficient. Championship and Eredivisie retain their documented kickoff/season evidence gaps.
+
+The 20 exact UTC fixture overlaps are distributed across Premier League (2), 2. Bundesliga (5), Bundesliga (8), Saudi Pro League (1) and Scottish Premiership (4). They remain review evidence, not permission to promote provider links or ingest fixtures.
+
+### Championship alias follow-through
+
+The additional LiveScoreFootball Championship observation record is competition `3914`, season `3914::2026`, with 11 raw observations. Official EFL evidence confirms the 2026/27 Championship is the men's second tier with 24 clubs and 46 league matches per club. The 11-record provider sample does not establish a complete roster, provider season boundaries or timezone-aware fixture overlap with Bzzoiro/OpenFootball. The record therefore remains namespaced and unlinked. OpenFootball local kickoff values without timezone evidence remain excluded from exact UTC matching.
+
+### Live provider-link parity
+
+The latest committed parity audit (`approved_link_parity_latest.json`, generated 2026-11-15 16:26:21 UTC) was read-only and made no database writes.
+
+- OpenScores: 216 link rows — 66 independently verified through its separate verification ledger and 150 fixture observations reconciled by exact observation status. These are not approved cross-provider identity links. OpenScores remains an observation/reconciliation source, not a future-fixture discovery route.
+- Sportmonks: 2,010 source-native identity anchors (1,911 fixtures, 4 leagues, 7 seasons, 88 teams). These are legacy source identities, not independent-provider approvals.
+- Cross-provider links approved through the separate approval audit: 0.
+- Missing targets, ambiguous targets, rejected links and review-required links in this parity snapshot: 0. This is a structural integrity result, not evidence that provider-neutral identity mapping is complete.
+
+### Final safeguards and exit criteria
+
+The following remain unchanged and deliberately gated:
+
+- Canonical competition, season and team promotions: none from this review.
+- Cross-provider provider-link approvals: zero.
+- Fixture ingestion or future-fixture routing enabled by these identity reviews: zero.
+- Prediction eligibility changes: zero.
+- Prediction-ledger writes: zero.
+- Model weights, Layer 1, Layer 2 and TVD: unchanged.
+
+**Layer 11 evidence intake, competition-scope review, queue reconciliation and read-only parity audit are complete.** The layer is closed in a safe-hold state. The remaining items are not unfinished documentation tasks; they are external evidence/approval gates that cannot be responsibly completed from the current source material: verified provider season metadata, reproducible timezone-aware fixture/team samples, country evidence for the 27 unscoped records, verified canonical targets and explicit approval for any promotion.
+
+Any future promotion must be a separately reviewed change with exact source-to-canonical evidence, pre/post parity checks, rollback coverage and CI. Until then, all held source records remain available without being merged, ingested as canonical fixtures or made prediction-eligible.
