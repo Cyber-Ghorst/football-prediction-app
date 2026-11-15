@@ -38,4 +38,4 @@ This review supports the broad competition identity but does not approve a canon
 - Do not create provider links or enable fixture ingestion.
 - Do not change prediction eligibility.
 
-Next evidence needed: a broader Bzzoiro roster/fixture sample, an independent provider source, and explicit season metadata confirming the scope of `98::2037`.
+Next evidence needed: a broader Bzzoiro roster/fixture sample, an independent provider source, and explicit season metadata confirming the scope of `98::2037`. This evidence review is non-executable and does not activate any ingestion path.
