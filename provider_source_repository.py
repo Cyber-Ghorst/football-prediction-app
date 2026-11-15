@@ -324,16 +324,26 @@ def audit_provider_source_evidence(database_url: str, provider: str) -> dict[str
         with connection.cursor() as cursor:
             cursor.execute("SET TRANSACTION READ ONLY")
             cursor.execute(
-                """SELECT entity_type, COUNT(*), COUNT(country)
+                """SELECT entity_type, COUNT(*), COUNT(country), COUNT(competition_type),
+                          COUNT(parent_competition_provider_id), COUNT(team_type),
+                          COUNT(gender_scope), COUNT(age_group), COUNT(squad_scope)
                    FROM provider_source_entities
                    WHERE provider = %s
                    GROUP BY entity_type ORDER BY entity_type""",
                 (source,),
             )
-            for entity_type, total, country_known in cursor.fetchall():
+            for (entity_type, total, country_known, competition_type_known,
+                 parent_competition_known, team_type_known, gender_known,
+                 age_group_known, squad_scope_known) in cursor.fetchall():
                 entity_counts[str(entity_type)] = {
                     "total": int(total or 0),
                     "country_known": int(country_known or 0),
+                    "competition_type_known": int(competition_type_known or 0),
+                    "parent_competition_known": int(parent_competition_known or 0),
+                    "team_type_known": int(team_type_known or 0),
+                    "gender_scope_known": int(gender_known or 0),
+                    "age_group_known": int(age_group_known or 0),
+                    "squad_scope_known": int(squad_scope_known or 0),
                 }
             cursor.execute(
                 """SELECT

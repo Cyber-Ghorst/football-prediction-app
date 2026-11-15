@@ -7,7 +7,7 @@ class ProviderSourceRosterStageTests(unittest.TestCase):
     def test_stages_competition_and_observed_teams_without_inferred_team_country(self):
         rows = build_source_entities([{
             "league": {"id": "ger.1", "name": "German Bundesliga",
-                       "country": "Germany", "type": "league"},
+                       "country": "Germany"},
             "season": {"year": 2026},
             "team_evidence_method": "season_window_fixture_participants",
             "teams": [{
@@ -19,6 +19,7 @@ class ProviderSourceRosterStageTests(unittest.TestCase):
         team = next(row for row in rows if row["entity_type"] == "team")
         self.assertEqual(competition["provider_entity_id"], "ger.1")
         self.assertEqual(competition["country"], "Germany")
+        self.assertIsNone(competition["competition_type"])
         self.assertEqual(team["provider_entity_id"], "10388")
         self.assertIsNone(team["country"])
         self.assertEqual(team["raw_payload"]["competition_provider_ids"], ["ger.1"])
