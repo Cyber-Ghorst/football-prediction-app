@@ -176,6 +176,7 @@ def build_catalogue_report(client_factory=SportmonksClient) -> dict[str, Any]:
                     "error_type": type(exc).__name__,
                     "error": str(exc),
                     "http_status": client.last_metadata.get("http_status"),
+                    "provider_metadata": dict(client.last_metadata),
                 }
 
         search_queries = {
