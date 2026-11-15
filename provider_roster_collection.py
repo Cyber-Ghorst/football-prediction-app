@@ -143,11 +143,21 @@ def collect_livescore_season_participants(
         raise ValueError("An explicit LiveScoreFootball season is required.")
     if not date_from or not date_to or date_from > date_to:
         raise ValueError("A valid inclusive season date window is required.")
-    events = client.fixtures(
-        str(league_id), status="all", date_from=date_from, date_to=date_to,
-    )
-    found: dict[str, dict[str, Any]] = {}
+    # The upstream fixtures endpoint currently rejects the documented-looking
+    # date bounds with HTTP 400. Fetch its bounded paginated catalogue, then
+    # apply the explicit season window locally; events without a parseable date
+    # are excluded rather than assigned to a season.
+    events = client.fixtures(str(league_id), status="all")
+    selected_events = []
     for event in events:
+        if not isinstance(event, Mapping):
+            continue
+        event_date = str(event.get("date") or event.get("startDate") or event.get("dateTime") or "")
+        event_day = event_date[:10]
+        if event_day and date_from <= event_day <= date_to:
+            selected_events.append(event)
+    found: dict[str, dict[str, Any]] = {}
+    for event in selected_events:
         for team in _livescore_competitors(event):
             found.setdefault(str(team["id"]), team)
     return {
@@ -171,4 +181,5 @@ def collect_livescore_season_participants(
         "fixtures_imported": 0,
         "cross_provider_links_created": 0,
         "fixtures_examined": len(events),
+        "season_window_fixtures": len(selected_events),
     }
