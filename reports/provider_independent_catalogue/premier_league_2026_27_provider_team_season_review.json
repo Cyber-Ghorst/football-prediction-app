@@ -1,0 +1,541 @@
+{
+  "report_name": "premier_league_2026_27_sportmonks_provider_team_and_season_review",
+  "generated_at_utc": "2026-11-15T14:20:00Z",
+  "scope": {
+    "competition": "Premier League",
+    "country": "England",
+    "competition_type": "men's top-tier domestic league",
+    "season": "2026/27",
+    "canonical_provider": "Sportmonks",
+    "sportmonks_league_id": "8",
+    "sportmonks_season_id": "28083"
+  },
+  "canonical_roster": {
+    "source_report": "reports/provider_independent_catalogue/premier_league_sportmonks_roster.json",
+    "status": "pass",
+    "teams_returned": 20,
+    "unique_team_ids": 20,
+    "teams": [
+      {
+        "name": "AFC Bournemouth",
+        "id": "52",
+        "code": "BOU"
+      },
+      {
+        "name": "Arsenal",
+        "id": "19",
+        "code": "ARS"
+      },
+      {
+        "name": "Aston Villa",
+        "id": "15",
+        "code": "AVL"
+      },
+      {
+        "name": "Brentford",
+        "id": "236",
+        "code": "BRE"
+      },
+      {
+        "name": "Brighton & Hove Albion",
+        "id": "78",
+        "code": "BHA"
+      },
+      {
+        "name": "Chelsea",
+        "id": "18",
+        "code": "CHE"
+      },
+      {
+        "name": "Coventry City",
+        "id": "117",
+        "code": "CVC"
+      },
+      {
+        "name": "Crystal Palace",
+        "id": "51",
+        "code": "CRY"
+      },
+      {
+        "name": "Everton",
+        "id": "13",
+        "code": "EVE"
+      },
+      {
+        "name": "Fulham",
+        "id": "11",
+        "code": "FUL"
+      },
+      {
+        "name": "Hull City",
+        "id": "22",
+        "code": "HUL"
+      },
+      {
+        "name": "Ipswich Town",
+        "id": "116",
+        "code": "IPS"
+      },
+      {
+        "name": "Leeds United",
+        "id": "71",
+        "code": "LEE"
+      },
+      {
+        "name": "Liverpool",
+        "id": "8",
+        "code": "LIV"
+      },
+      {
+        "name": "Manchester City",
+        "id": "9",
+        "code": "MCI"
+      },
+      {
+        "name": "Manchester United",
+        "id": "14",
+        "code": "MUN"
+      },
+      {
+        "name": "Newcastle United",
+        "id": "20",
+        "code": "NEW"
+      },
+      {
+        "name": "Nottingham Forest",
+        "id": "63",
+        "code": "NFO"
+      },
+      {
+        "name": "Sunderland",
+        "id": "3",
+        "code": "SUN"
+      },
+      {
+        "name": "Tottenham Hotspur",
+        "id": "6",
+        "code": "TOT"
+      }
+    ]
+  },
+  "providers": [
+    {
+      "provider": "bzzoiro",
+      "provider_competition_id": "1",
+      "provider_season_id": "1::1058",
+      "season_names": [
+        "Premier League 26/27"
+      ],
+      "raw_observations": 30,
+      "eligible_observations": 30,
+      "timezone_aware_kickoffs": 30,
+      "missing_kickoffs": 0,
+      "team_count": 18,
+      "exact_matches": 16,
+      "alias_matches": 2,
+      "unmatched": [],
+      "canonical_teams_missing": [
+        "Brentford",
+        "Everton"
+      ],
+      "team_crosswalk": [
+        {
+          "provider_name": "Arsenal",
+          "canonical_team": "Arsenal",
+          "match_type": "exact"
+        },
+        {
+          "provider_name": "Aston Villa",
+          "canonical_team": "Aston Villa",
+          "match_type": "exact"
+        },
+        {
+          "provider_name": "Bournemouth",
+          "canonical_team": "AFC Bournemouth",
+          "match_type": "alias_normalized"
+        },
+        {
+          "provider_name": "Brighton & Hove Albion",
+          "canonical_team": "Brighton & Hove Albion",
+          "match_type": "exact"
+        },
+        {
+          "provider_name": "Chelsea",
+          "canonical_team": "Chelsea",
+          "match_type": "exact"
+        },
+        {
+          "provider_name": "Coventry City",
+          "canonical_team": "Coventry City",
+          "match_type": "exact"
+        },
+        {
+          "provider_name": "Crystal Palace",
+          "canonical_team": "Crystal Palace",
+          "match_type": "exact"
+        },
+        {
+          "provider_name": "Fulham",
+          "canonical_team": "Fulham",
+          "match_type": "exact"
+        },
+        {
+          "provider_name": "Hull City",
+          "canonical_team": "Hull City",
+          "match_type": "exact"
+        },
+        {
+          "provider_name": "Ipswich Town",
+          "canonical_team": "Ipswich Town",
+          "match_type": "exact"
+        },
+        {
+          "provider_name": "Leeds United",
+          "canonical_team": "Leeds United",
+          "match_type": "exact"
+        },
+        {
+          "provider_name": "Liverpool FC",
+          "canonical_team": "Liverpool",
+          "match_type": "alias_normalized"
+        },
+        {
+          "provider_name": "Manchester City",
+          "canonical_team": "Manchester City",
+          "match_type": "exact"
+        },
+        {
+          "provider_name": "Manchester United",
+          "canonical_team": "Manchester United",
+          "match_type": "exact"
+        },
+        {
+          "provider_name": "Newcastle United",
+          "canonical_team": "Newcastle United",
+          "match_type": "exact"
+        },
+        {
+          "provider_name": "Nottingham Forest",
+          "canonical_team": "Nottingham Forest",
+          "match_type": "exact"
+        },
+        {
+          "provider_name": "Sunderland",
+          "canonical_team": "Sunderland",
+          "match_type": "exact"
+        },
+        {
+          "provider_name": "Tottenham Hotspur",
+          "canonical_team": "Tottenham Hotspur",
+          "match_type": "exact"
+        }
+      ]
+    },
+    {
+      "provider": "openfootball",
+      "provider_competition_id": "en.1",
+      "provider_season_id": "en.1::2026-27",
+      "season_names": [
+        "2026-27"
+      ],
+      "raw_observations": 7600,
+      "eligible_observations": 0,
+      "timezone_aware_kickoffs": 0,
+      "missing_kickoffs": 7600,
+      "team_count": 20,
+      "exact_matches": 1,
+      "alias_matches": 19,
+      "unmatched": [],
+      "canonical_teams_missing": [],
+      "team_crosswalk": [
+        {
+          "provider_name": "AFC Bournemouth",
+          "canonical_team": "AFC Bournemouth",
+          "match_type": "exact"
+        },
+        {
+          "provider_name": "Arsenal FC",
+          "canonical_team": "Arsenal",
+          "match_type": "alias_normalized"
+        },
+        {
+          "provider_name": "Aston Villa FC",
+          "canonical_team": "Aston Villa",
+          "match_type": "alias_normalized"
+        },
+        {
+          "provider_name": "Brentford FC",
+          "canonical_team": "Brentford",
+          "match_type": "alias_normalized"
+        },
+        {
+          "provider_name": "Brighton & Hove Albion FC",
+          "canonical_team": "Brighton & Hove Albion",
+          "match_type": "alias_normalized"
+        },
+        {
+          "provider_name": "Chelsea FC",
+          "canonical_team": "Chelsea",
+          "match_type": "alias_normalized"
+        },
+        {
+          "provider_name": "Coventry City FC",
+          "canonical_team": "Coventry City",
+          "match_type": "alias_normalized"
+        },
+        {
+          "provider_name": "Crystal Palace FC",
+          "canonical_team": "Crystal Palace",
+          "match_type": "alias_normalized"
+        },
+        {
+          "provider_name": "Everton FC",
+          "canonical_team": "Everton",
+          "match_type": "alias_normalized"
+        },
+        {
+          "provider_name": "Fulham FC",
+          "canonical_team": "Fulham",
+          "match_type": "alias_normalized"
+        },
+        {
+          "provider_name": "Hull City AFC",
+          "canonical_team": "Hull City",
+          "match_type": "alias_normalized"
+        },
+        {
+          "provider_name": "Ipswich Town FC",
+          "canonical_team": "Ipswich Town",
+          "match_type": "alias_normalized"
+        },
+        {
+          "provider_name": "Leeds United FC",
+          "canonical_team": "Leeds United",
+          "match_type": "alias_normalized"
+        },
+        {
+          "provider_name": "Liverpool FC",
+          "canonical_team": "Liverpool",
+          "match_type": "alias_normalized"
+        },
+        {
+          "provider_name": "Manchester City FC",
+          "canonical_team": "Manchester City",
+          "match_type": "alias_normalized"
+        },
+        {
+          "provider_name": "Manchester United FC",
+          "canonical_team": "Manchester United",
+          "match_type": "alias_normalized"
+        },
+        {
+          "provider_name": "Newcastle United FC",
+          "canonical_team": "Newcastle United",
+          "match_type": "alias_normalized"
+        },
+        {
+          "provider_name": "Nottingham Forest FC",
+          "canonical_team": "Nottingham Forest",
+          "match_type": "alias_normalized"
+        },
+        {
+          "provider_name": "Sunderland AFC",
+          "canonical_team": "Sunderland",
+          "match_type": "alias_normalized"
+        },
+        {
+          "provider_name": "Tottenham Hotspur FC",
+          "canonical_team": "Tottenham Hotspur",
+          "match_type": "alias_normalized"
+        }
+      ]
+    },
+    {
+      "provider": "openligadb",
+      "provider_competition_id": "5996",
+      "provider_season_id": "5996::2026",
+      "season_names": [
+        "2026"
+      ],
+      "raw_observations": 7600,
+      "eligible_observations": 5600,
+      "timezone_aware_kickoffs": 7600,
+      "missing_kickoffs": 0,
+      "team_count": 20,
+      "exact_matches": 10,
+      "alias_matches": 10,
+      "unmatched": [],
+      "canonical_teams_missing": [],
+      "team_crosswalk": [
+        {
+          "provider_name": "AFC Bournemouth",
+          "canonical_team": "AFC Bournemouth",
+          "match_type": "exact"
+        },
+        {
+          "provider_name": "Aston Villa",
+          "canonical_team": "Aston Villa",
+          "match_type": "exact"
+        },
+        {
+          "provider_name": "Brentford F.C.",
+          "canonical_team": "Brentford",
+          "match_type": "alias_normalized"
+        },
+        {
+          "provider_name": "Brighton & Hove Albion",
+          "canonical_team": "Brighton & Hove Albion",
+          "match_type": "exact"
+        },
+        {
+          "provider_name": "Chelsea FC",
+          "canonical_team": "Chelsea",
+          "match_type": "alias_normalized"
+        },
+        {
+          "provider_name": "Coventry City",
+          "canonical_team": "Coventry City",
+          "match_type": "exact"
+        },
+        {
+          "provider_name": "Crystal Palace FC",
+          "canonical_team": "Crystal Palace",
+          "match_type": "alias_normalized"
+        },
+        {
+          "provider_name": "Everton FC",
+          "canonical_team": "Everton",
+          "match_type": "alias_normalized"
+        },
+        {
+          "provider_name": "FC Arsenal",
+          "canonical_team": "Arsenal",
+          "match_type": "alias_normalized"
+        },
+        {
+          "provider_name": "FC Liverpool",
+          "canonical_team": "Liverpool",
+          "match_type": "alias_normalized"
+        },
+        {
+          "provider_name": "Fulham FC",
+          "canonical_team": "Fulham",
+          "match_type": "alias_normalized"
+        },
+        {
+          "provider_name": "Hull City",
+          "canonical_team": "Hull City",
+          "match_type": "exact"
+        },
+        {
+          "provider_name": "Ipswich Town",
+          "canonical_team": "Ipswich Town",
+          "match_type": "exact"
+        },
+        {
+          "provider_name": "Leeds United",
+          "canonical_team": "Leeds United",
+          "match_type": "exact"
+        },
+        {
+          "provider_name": "Manchester City",
+          "canonical_team": "Manchester City",
+          "match_type": "exact"
+        },
+        {
+          "provider_name": "Manchester United FC",
+          "canonical_team": "Manchester United",
+          "match_type": "alias_normalized"
+        },
+        {
+          "provider_name": "Newcastle United FC",
+          "canonical_team": "Newcastle United",
+          "match_type": "alias_normalized"
+        },
+        {
+          "provider_name": "Nottingham Forest",
+          "canonical_team": "Nottingham Forest",
+          "match_type": "exact"
+        },
+        {
+          "provider_name": "Sunderland",
+          "canonical_team": "Sunderland",
+          "match_type": "exact"
+        },
+        {
+          "provider_name": "Tottenham Hotspur FC",
+          "canonical_team": "Tottenham Hotspur",
+          "match_type": "alias_normalized"
+        }
+      ]
+    }
+  ],
+  "fixture_corroboration": [
+    {
+      "away_team_key": "sunderland",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "home_team_key": "aston villa",
+      "kickoff_utc": "2026-11-21T15:00:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ]
+    },
+    {
+      "away_team_key": "brighton and hove albion",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "home_team_key": "hull city",
+      "kickoff_utc": "2026-11-22T14:00:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ]
+    }
+  ],
+  "season_identity_review": {
+    "official_identity": "Premier League official 2026/27 club list and fixture calendar support the men's English top tier.",
+    "openfootball": {
+      "competition_id": "en.1",
+      "season_id": "en.1::2026-27",
+      "season_label": "2026-27",
+      "start_year": 2026,
+      "assessment": "Season label and start year agree with 2026/27; all 7,600 observations in the audit lacked timezone-qualified kickoffs, so none can provide exact UTC fixture corroboration."
+    },
+    "openligadb": {
+      "competition_id": "5996",
+      "season_id": "5996::2026",
+      "season_label": "2026",
+      "start_year": 2026,
+      "assessment": "Start-year evidence agrees with 2026/27; two exact UTC fixture overlaps with Bzzoiro are independently confirmed against the official schedule."
+    },
+    "bzzoiro": {
+      "competition_id": "1",
+      "season_id": "1::1058",
+      "season_label": "Premier League 26/27",
+      "start_year_from_audit": null,
+      "assessment": "Season label explicitly indicates 2026/27; two exact UTC fixture overlaps with OpenLigaDB are independently confirmed against the official schedule."
+    },
+    "conclusion": "Competition identity and 2026/27 season interpretation are strongly supported. Provider-local IDs are well-formed evidence identifiers but their equivalence to a single canonical identity has not been independently proven by raw provider catalogue metadata."
+  },
+  "decisions": {
+    "team_roster_match": "Every observed provider team name maps to the Sportmonks 20-team roster after conservative FC/AFC/prefix/suffix normalization. Bzzoiro observed 18 of 20 and omitted Brentford and Everton from its current sample; OpenFootball and OpenLigaDB observed all 20.",
+    "provider_ids_verified": false,
+    "canonical_mapping_approved": false,
+    "provider_links_written": 0,
+    "season_links_written": 0,
+    "fixture_writes": 0,
+    "prediction_ledger_writes": 0,
+    "fixture_ingestion_enabled": false,
+    "prediction_eligible": false
+  },
+  "limitations": [
+    "Provider observations are bounded snapshots, not complete season rosters or proof of provider catalogue completeness.",
+    "OpenFootball kickoffs are timezone-naive/missing in this audit and are not used as exact UTC corroboration.",
+    "Provider-local IDs are not interchangeable canonical IDs.",
+    "Raw provider API catalogue payloads establishing the exact competition/season ID ownership were not independently captured for all three providers."
+  ]
+}
