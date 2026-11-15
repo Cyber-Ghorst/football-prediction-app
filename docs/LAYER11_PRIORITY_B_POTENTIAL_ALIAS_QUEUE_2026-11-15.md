@@ -6,7 +6,7 @@
 
 ## Purpose
 
-The Priority B queue contains 87 single-provider competition identities. A subset have names and country context that suggest they may be alternate labels for the same real-world competition in another provider. This shortlist groups those likely overlaps so that the next evidence pass can focus on exact team sets, fixtures, season boundaries and competition scope.
+The current Priority B queue contains 85 single-provider competition identities. Two former Priority B entries (Austrian Bundesliga and Scottish Premiership) were re-triaged into Priority A after independent provider observations were found. A subset have names and country context that suggest they may be alternate labels for the same real-world competition in another provider. This shortlist groups those likely overlaps so that the next evidence pass can focus on exact team sets, fixtures, season boundaries and competition scope.
 
 These are **not** approved aliases. Name similarity, a shared country, or a shared calendar year is not enough to link provider IDs. The underlying queue preserves every provider's namespaced competition and season IDs.
 
@@ -58,4 +58,13 @@ These are **not** approved aliases. Name similarity, a shared country, or a shar
 
 This document is a review queue only. It does not modify `identity_review_queue.json`, canonical competitions, provider links, seasons, teams, fixtures, future-fixture routing or the prediction ledger.
 
-**Current result:** 17 likely alias groups are identified from the 87 single-provider entries. The remaining Priority B entries stay individually held until reviewed. The next actual resolution step is to obtain full provider fixture/team observations for each group and run exact cross-provider comparisons.
+**Current result:** 17 likely alias groups remain a manual-review shortlist across the current 85 Priority B records and adjacent Priority A aliases. These are candidate relationships only; none is approved. The next actual resolution step requires reproducible source-level fixture/team observations and timezone-aware kickoff data for each group, followed by season-boundary and official-scope checks. Records that cannot meet those evidence gates remain separately namespaced.
+
+
+## Layer 11 final queue reconciliation — 15 November 2026
+
+The latest committed identity queue is authoritative: **97 country-scoped competition records = 12 Priority A + 85 Priority B**. The earlier count of 87 Priority B records in this document was stale after Austrian Bundesliga and Scottish Premiership moved to Priority A.
+
+The 17 alias groups above are a prioritised investigation list, not 17 verified equivalences. In particular, the additional LiveScoreFootball Championship record (competition `3914`, season `3914::2026`, 11 observations) is not promoted: the committed evidence establishes the EFL Championship's official 24-club 2026/27 scope, but the available sample does not independently verify the LiveScoreFootball season boundary, complete participant set or exact fixture overlap. The Bzzoiro/OpenFootball review likewise retains its timezone limitation for OpenFootball kickoff values.
+
+No Priority B candidate is converted into a provider link by this document. All 85 retain their original provider namespace and remain held until their own evidence gates are met. The 27 country-unscoped OpenLigaDB records are outside these 97 entries and remain separately held.
