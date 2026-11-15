@@ -87,6 +87,25 @@ class ProviderNeutralIdentityTests(unittest.TestCase):
             with self.subTest(index=index), self.assertRaises(ValueError):
                 canonical_team_key(*args)
 
+    def test_identity_keys_reject_unknown_placeholder_dimensions(self):
+        competition = ["Premier League", "England", "league"]
+        for index in range(3):
+            args = list(competition)
+            args[index] = "unknown"
+            with self.subTest(kind="competition", index=index), self.assertRaises(ValueError):
+                canonical_competition_key(*args)
+
+        for placeholder in ("unknown", "N/A", "unspecified", "TBD", "not applicable"):
+            with self.subTest(kind="season", placeholder=placeholder), self.assertRaises(ValueError):
+                canonical_season_key("competition-a", placeholder)
+
+        team = ["United", "England", "club", "men", "senior", "first team"]
+        for index in (0, 1, 3, 4, 5):
+            args = list(team)
+            args[index] = "unknown"
+            with self.subTest(kind="team", index=index), self.assertRaises(ValueError):
+                canonical_team_key(*args)
+
     def test_team_key_rejects_unverified_team_type(self):
         with self.assertRaises(ValueError):
             canonical_team_key(

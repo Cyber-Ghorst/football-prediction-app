@@ -13,6 +13,10 @@ from typing import Any
 
 
 IDENTITY_KEY_VERSION = 1
+_UNKNOWN_DIMENSIONS = {
+    "unknown", "not known", "unspecified", "unverified", "n a", "na",
+    "none", "null", "tbd", "to be determined", "not applicable",
+}
 
 
 def _normalize(value: Any) -> str:
@@ -21,6 +25,13 @@ def _normalize(value: Any) -> str:
     text = text.casefold().replace("&", " and ")
     text = re.sub(r"[^a-z0-9]+", " ", text)
     return re.sub(r"\s+", " ", text).strip()
+
+
+def _require_verified_dimension(value: str, label: str) -> str:
+    """Reject placeholders that would turn missing evidence into identity."""
+    if not value or value in _UNKNOWN_DIMENSIONS:
+        raise ValueError(f"{label} must be verified; unknown placeholders are not accepted.")
+    return value
 
 
 def _digest(kind: str, parts: tuple[str, ...]) -> str:
@@ -44,15 +55,9 @@ def canonical_competition_key(
     normalized name/country/type equality is intentionally conservative:
     synonyms and ambiguous names must be reviewed rather than guessed.
     """
-    normalized_name = _normalize(name)
-    normalized_country = _normalize(country)
-    normalized_type = _normalize(competition_type)
-    if not normalized_name:
-        raise ValueError("A competition name is required.")
-    if not normalized_country:
-        raise ValueError("A country is required for a canonical competition key.")
-    if not normalized_type:
-        raise ValueError("A verified competition type is required.")
+    normalized_name = _require_verified_dimension(_normalize(name), "Competition name")
+    normalized_country = _require_verified_dimension(_normalize(country), "Country")
+    normalized_type = _require_verified_dimension(_normalize(competition_type), "Competition type")
     return _digest(
         "competition",
         (normalized_country, normalized_type, normalized_name),
@@ -69,11 +74,9 @@ def canonical_season_key(
     normalized as text; date-range equivalence requires separate validation.
     """
     competition_id = str(canonical_competition_id or "").strip()
-    normalized_label = _normalize(season_label)
-    if not competition_id:
-        raise ValueError("An existing canonical competition ID is required.")
-    if not normalized_label:
-        raise ValueError("A season label is required.")
+    normalized_label = _require_verified_dimension(_normalize(season_label), "Season label")
+    if not competition_id or _normalize(competition_id) in _UNKNOWN_DIMENSIONS:
+        raise ValueError("An existing verified canonical competition ID is required.")
     return _digest("season", (competition_id, normalized_label))
 
 
@@ -109,8 +112,7 @@ def canonical_team_key(
         "A verified squad scope",
     )
     for value, label in zip(normalized, labels):
-        if not value:
-            raise ValueError(f"{label} is required for a canonical team key.")
+        _require_verified_dimension(value, label)
     if normalized[2] not in {"club", "national"}:
         raise ValueError("Team type must be 'club' or 'national'.")
     return _digest("team", normalized)
