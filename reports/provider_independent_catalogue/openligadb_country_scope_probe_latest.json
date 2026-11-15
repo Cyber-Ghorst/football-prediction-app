@@ -2,6 +2,7 @@
   "api_rate_limit_note": "OpenLigaDB documentation states a limit of 60 requests per minute; requests are spaced by at least one second.",
   "available_leagues_season": 2026,
   "available_leagues_sha256": "ffa86eee57140c6ff67ed21624e97afe671535d087357bfe7602b2ad3bdd20ec",
+  "comparison_reference_record_count": 1,
   "fixture_identity_comparison": {
     "identity_basis": "exact normalized home team, away team and UTC kickoff; Unicode NFKC and casefold applied to team names",
     "interpretation": "Exact overlaps are evidence of shared fixture observations, not automatic competition or season identity approval.",
@@ -21,6 +22,22 @@
         "right_league_id": 5992,
         "right_only_fixture_count": 15,
         "right_source_name": "Spiele mit Arminia Bielefeld Beteiligung"
+      },
+      {
+        "exact_fixture_overlap_count": 27,
+        "left_league_id": 5958,
+        "left_only_fixture_count": 279,
+        "left_source_name": "2. Bundesliga 2026/27 (Herren)",
+        "overlap_sample_hashes": [
+          "06d8b3e599275b4e563b5aa31078c86a0d5fc48c61edabdda34c5b78828d3bb8",
+          "08f89301620ba10f16931c8ad2f18e322f226f2b88ad95e79f7352c66a584d29",
+          "0d2dee07abc1d969fcf3c5b9d4150ccd4567de47a7287f1d2c3529de8fd3a5bd",
+          "1208328d1dea185d311116150ef22da0d42f07a7b3f656139b30e310c70d80a8",
+          "13d1fce317fc8496ec10f729754c1a304f2e8d876c9d3fa033f15c964bd64bec"
+        ],
+        "right_league_id": 4938,
+        "right_only_fixture_count": 279,
+        "right_source_name": "2. Bundesliga"
       },
       {
         "exact_fixture_overlap_count": 46,
@@ -55,6 +72,22 @@
         "right_source_name": "WM 2026 USA"
       },
       {
+        "exact_fixture_overlap_count": 9,
+        "left_league_id": 5992,
+        "left_only_fixture_count": 25,
+        "left_source_name": "Spiele mit Arminia Bielefeld Beteiligung",
+        "overlap_sample_hashes": [
+          "06d8b3e599275b4e563b5aa31078c86a0d5fc48c61edabdda34c5b78828d3bb8",
+          "16f7b895cb4b54fcc89366b236e8e08401b4ae3d764b89ddc1d0015fe44b2472",
+          "3d5b84c201b9488dece19e037ffd355ef5ef688b15755e071895005e5ee2577e",
+          "60ef9faace0bc4571c5769a69a4589e14a0d8379a92f4cc0ea9be27d6b5b0b7b",
+          "a7bf94648f60180197f2c20dbb5f259d6b34d6ff51f3075dd4a39041379bca2e"
+        ],
+        "right_league_id": 4938,
+        "right_only_fixture_count": 297,
+        "right_source_name": "2. Bundesliga"
+      },
+      {
         "exact_fixture_overlap_count": 66,
         "left_league_id": 4897,
         "left_only_fixture_count": 38,
@@ -71,9 +104,9 @@
         "right_source_name": "WM 2026 USA"
       }
     ],
-    "pairs_with_exact_fixture_overlap": 4
+    "pairs_with_exact_fixture_overlap": 6
   },
-  "generated_at_utc": "2026-11-15T17:57:23.235504+00:00",
+  "generated_at_utc": "2026-11-15T18:03:46.542864+00:00",
   "report_name": "openligadb_unscoped_country_scope_probe",
   "results": [
     {
@@ -229,6 +262,7 @@
       "matchdata_url": "https://api.openligadb.de/getmatchdata/ffb1/2026",
       "prior_observation_count": 546,
       "source_name": "1. Frauen Fu\u00dfballbundesliga",
+      "source_role": "country_unscoped_source",
       "source_scope_class": "domestic_league_candidate",
       "status": "matches_found"
     },
@@ -393,6 +427,7 @@
       "matchdata_url": "https://api.openligadb.de/getmatchdata/bl2h/2026",
       "prior_observation_count": 918,
       "source_name": "2. Bundesliga 2026/27 (Herren)",
+      "source_role": "country_unscoped_source",
       "source_scope_class": "domestic_league_candidate",
       "status": "matches_found"
     },
@@ -557,6 +592,7 @@
       "matchdata_url": "https://api.openligadb.de/getmatchdata/blclaude/2026",
       "prior_observation_count": 174,
       "source_name": "BLClaude",
+      "source_role": "country_unscoped_source",
       "source_scope_class": "custom_or_user_created",
       "status": "matches_found"
     },
@@ -610,6 +646,7 @@
       "matchdata_url": "https://api.openligadb.de/getmatchdata/bl1test/2026",
       "prior_observation_count": 3,
       "source_name": "Bundesliga",
+      "source_role": "country_unscoped_source",
       "source_scope_class": "test_or_duplicate_candidate",
       "status": "matches_found"
     },
@@ -665,6 +702,7 @@
       "matchdata_url": "https://api.openligadb.de/getmatchdata/wsc/2026",
       "prior_observation_count": 3,
       "source_name": "DFB Frauen Supercup",
+      "source_role": "country_unscoped_source",
       "source_scope_class": "domestic_cup_or_supercup_candidate",
       "status": "matches_found"
     },
@@ -779,6 +817,7 @@
       "matchdata_url": "https://api.openligadb.de/getmatchdata/DFBN/2026",
       "prior_observation_count": 18,
       "source_name": "DFB Nationalspiele",
+      "source_role": "country_unscoped_source",
       "source_scope_class": "national_team_collection",
       "status": "matches_found"
     },
@@ -860,6 +899,7 @@
       "matchdata_url": "https://api.openligadb.de/getmatchdata/u21dfb/2026",
       "prior_observation_count": 9,
       "source_name": "DFB U21",
+      "source_role": "country_unscoped_source",
       "source_scope_class": "national_team_collection",
       "status": "matches_found"
     },
@@ -1084,6 +1124,7 @@
       "matchdata_url": "https://api.openligadb.de/getmatchdata/dfbf/2026",
       "prior_observation_count": 120,
       "source_name": "DFB-Pokal Frauen",
+      "source_role": "country_unscoped_source",
       "source_scope_class": "domestic_cup_candidate",
       "status": "matches_found"
     },
@@ -1232,6 +1273,7 @@
       "matchdata_url": "https://api.openligadb.de/getmatchdata/essl/2026",
       "prior_observation_count": 432,
       "source_name": "Empty Stands Spendenliga 2026/2027",
+      "source_role": "country_unscoped_source",
       "source_scope_class": "charity_or_custom_competition",
       "status": "matches_found"
     },
@@ -1396,6 +1438,7 @@
       "matchdata_url": "https://api.openligadb.de/getmatchdata/ERE/2026",
       "prior_observation_count": 918,
       "source_name": "Eredivisie",
+      "source_role": "country_unscoped_source",
       "source_scope_class": "domestic_league_candidate",
       "status": "matches_found"
     },
@@ -1620,6 +1663,7 @@
       "matchdata_url": "https://api.openligadb.de/getmatchdata/wm2026_xlife/2026",
       "prior_observation_count": 144,
       "source_name": "FIFA World Cup",
+      "source_role": "country_unscoped_source",
       "source_scope_class": "international_tournament",
       "status": "matches_found"
     },
@@ -1673,6 +1717,7 @@
       "matchdata_url": "https://api.openligadb.de/getmatchdata/BLSupercup/2026",
       "prior_observation_count": 3,
       "source_name": "Franz-Beckenbauer-Supercup",
+      "source_role": "country_unscoped_source",
       "source_scope_class": "domestic_cup_or_supercup_candidate",
       "status": "matches_found"
     },
@@ -1741,6 +1786,7 @@
       "matchdata_url": "https://api.openligadb.de/getmatchdata/fna/2026",
       "prior_observation_count": 6,
       "source_name": "Frauen-Nationalmannschaft",
+      "source_role": "country_unscoped_source",
       "source_scope_class": "national_team_collection",
       "status": "matches_found"
     },
@@ -1794,6 +1840,7 @@
       "matchdata_url": "https://api.openligadb.de/getmatchdata/FTS/2026",
       "prior_observation_count": 3,
       "source_name": "Freundschafts-und-Testspiele",
+      "source_role": "country_unscoped_source",
       "source_scope_class": "friendly_or_test_collection",
       "status": "matches_found"
     },
@@ -1958,6 +2005,7 @@
       "matchdata_url": "https://api.openligadb.de/getmatchdata/rln/2026",
       "prior_observation_count": 918,
       "source_name": "Fu\u00dfball-Regionalliga Nord",
+      "source_role": "country_unscoped_source",
       "source_scope_class": "domestic_regional_league_candidate",
       "status": "matches_found"
     },
@@ -2112,6 +2160,7 @@
       "matchdata_url": "https://api.openligadb.de/getmatchdata/HSM/2026",
       "prior_observation_count": 42,
       "source_name": "Hallenstadtmeisterschaft 2026 Bottrop",
+      "source_role": "country_unscoped_source",
       "source_scope_class": "local_tournament",
       "status": "matches_found"
     },
@@ -2276,6 +2325,7 @@
       "matchdata_url": "https://api.openligadb.de/getmatchdata/rlno/2026",
       "prior_observation_count": 918,
       "source_name": "NOFV Regionalliga NordOst",
+      "source_role": "country_unscoped_source",
       "source_scope_class": "domestic_regional_league_candidate",
       "status": "matches_found"
     },
@@ -2436,6 +2486,7 @@
       "matchdata_url": "https://api.openligadb.de/getmatchdata/nofvos/2026",
       "prior_observation_count": 720,
       "source_name": "NOFV-Oberliga S\u00fcd",
+      "source_role": "country_unscoped_source",
       "source_scope_class": "domestic_regional_league_candidate",
       "status": "matches_found"
     },
@@ -2600,6 +2651,7 @@
       "matchdata_url": "https://api.openligadb.de/getmatchdata/OL1/2026",
       "prior_observation_count": 459,
       "source_name": "Oberliga Niederrhein",
+      "source_role": "country_unscoped_source",
       "source_scope_class": "domestic_regional_league_candidate",
       "status": "matches_found"
     },
@@ -2760,6 +2812,7 @@
       "matchdata_url": "https://api.openligadb.de/getmatchdata/rlw-frauen/2026",
       "prior_observation_count": 720,
       "source_name": "Regionalliga West Frauen",
+      "source_role": "country_unscoped_source",
       "source_scope_class": "domestic_regional_league_candidate",
       "status": "matches_found"
     },
@@ -2924,6 +2977,7 @@
       "matchdata_url": "https://api.openligadb.de/getmatchdata/dsc/2026",
       "prior_observation_count": 102,
       "source_name": "Spiele mit Arminia Bielefeld Beteiligung",
+      "source_role": "country_unscoped_source",
       "source_scope_class": "team_filtered_match_collection",
       "status": "matches_found"
     },
@@ -3066,6 +3120,7 @@
       "matchdata_url": "https://api.openligadb.de/getmatchdata/mwtem26/2026",
       "prior_observation_count": 45,
       "source_name": "tem26",
+      "source_role": "country_unscoped_source",
       "source_scope_class": "opaque_custom_label",
       "status": "matches_found"
     },
@@ -3230,6 +3285,7 @@
       "matchdata_url": "https://api.openligadb.de/getmatchdata/tst1/2026",
       "prior_observation_count": 81,
       "source_name": "Testliga Outi77",
+      "source_role": "country_unscoped_source",
       "source_scope_class": "explicit_test_competition",
       "status": "matches_found"
     },
@@ -3311,6 +3367,7 @@
       "matchdata_url": "https://api.openligadb.de/getmatchdata/ef-ts/2026",
       "prior_observation_count": 9,
       "source_name": "Testspiele Eintracht Frankfurt 26/27",
+      "source_role": "country_unscoped_source",
       "source_scope_class": "team_filtered_friendly_collection",
       "status": "matches_found"
     },
@@ -3487,6 +3544,7 @@
       "matchdata_url": "https://api.openligadb.de/getmatchdata/ts2026/2026",
       "prior_observation_count": 42,
       "source_name": "Testspiele2026",
+      "source_role": "country_unscoped_source",
       "source_scope_class": "generic_test_match_collection",
       "status": "matches_found"
     },
@@ -3711,6 +3769,7 @@
       "matchdata_url": "https://api.openligadb.de/getmatchdata/wm26/2026",
       "prior_observation_count": 312,
       "source_name": "WM",
+      "source_role": "country_unscoped_source",
       "source_scope_class": "international_tournament",
       "status": "matches_found"
     },
@@ -3933,7 +3992,173 @@
       "matchdata_url": "https://api.openligadb.de/getmatchdata/wm2026/2026",
       "prior_observation_count": 216,
       "source_name": "WM 2026 USA",
+      "source_role": "country_unscoped_source",
       "source_scope_class": "international_tournament_alias_candidate",
+      "status": "matches_found"
+    },
+    {
+      "api_metadata": {
+        "league_id": 4938,
+        "league_name": "2. Fu\u00dfball-Bundesliga 2026/2027",
+        "league_season": 2026,
+        "league_shortcut": "bl2",
+        "sport": "Fu\u00dfball"
+      },
+      "candidate_country": "Germany",
+      "league_id": 4938,
+      "match_summary": {
+        "fixture_identity_count": 306,
+        "fixture_identity_duplicate_rows": 0,
+        "fixture_identity_set_sha256": "84e3765cbb25f80b1f2c983e1c8b5eb94da2ac7b5427292e0ee19709c4c2c1ae",
+        "league_id_or_season_mismatch_rows": 0,
+        "local_kickoff_only_count": 0,
+        "match_count": 306,
+        "response_shape": "array",
+        "sample_fixtures": [
+          {
+            "away_team": "Hertha BSC",
+            "finished": true,
+            "group_name": "1. Spieltag",
+            "group_order_id": 1,
+            "home_team": "VfL Bochum",
+            "kickoff_local": "2026-08-07T20:30:00",
+            "kickoff_utc": "2026-08-07T18:30:00Z",
+            "match_id": 83509,
+            "timezone_id": null
+          },
+          {
+            "away_team": "VfL Osnabr\u00fcck",
+            "finished": true,
+            "group_name": "1. Spieltag",
+            "group_order_id": 1,
+            "home_team": "1. FC Heidenheim 1846",
+            "kickoff_local": "2026-08-08T13:00:00",
+            "kickoff_utc": "2026-08-08T11:00:00Z",
+            "match_id": 83513,
+            "timezone_id": null
+          },
+          {
+            "away_team": "Holstein Kiel",
+            "finished": true,
+            "group_name": "1. Spieltag",
+            "group_order_id": 1,
+            "home_team": "SV Darmstadt 98",
+            "kickoff_local": "2026-08-08T13:00:00",
+            "kickoff_utc": "2026-08-08T11:00:00Z",
+            "match_id": 83516,
+            "timezone_id": null
+          },
+          {
+            "away_team": "DSC Arminia Bielefeld",
+            "finished": true,
+            "group_name": "1. Spieltag",
+            "group_order_id": 1,
+            "home_team": "Karlsruher SC",
+            "kickoff_local": "2026-08-08T13:00:00",
+            "kickoff_utc": "2026-08-08T11:00:00Z",
+            "match_id": 83522,
+            "timezone_id": null
+          },
+          {
+            "away_team": "Eintracht Braunschweig",
+            "finished": true,
+            "group_name": "1. Spieltag",
+            "group_order_id": 1,
+            "home_team": "1. FC Magdeburg",
+            "kickoff_local": "2026-08-08T13:00:00",
+            "kickoff_utc": "2026-08-08T11:00:00Z",
+            "match_id": 83524,
+            "timezone_id": null
+          },
+          {
+            "away_team": "1. FC Kaiserslautern",
+            "finished": true,
+            "group_name": "1. Spieltag",
+            "group_order_id": 1,
+            "home_team": "VfL Wolfsburg",
+            "kickoff_local": "2026-08-08T20:30:00",
+            "kickoff_utc": "2026-08-08T18:30:00Z",
+            "match_id": 83510,
+            "timezone_id": null
+          },
+          {
+            "away_team": "SpVgg Greuther F\u00fcrth",
+            "finished": true,
+            "group_name": "1. Spieltag",
+            "group_order_id": 1,
+            "home_team": "FC St. Pauli",
+            "kickoff_local": "2026-08-09T13:30:00",
+            "kickoff_utc": "2026-08-09T11:30:00Z",
+            "match_id": 83511,
+            "timezone_id": null
+          },
+          {
+            "away_team": "Dynamo Dresden",
+            "finished": true,
+            "group_name": "1. Spieltag",
+            "group_order_id": 1,
+            "home_team": "1. FC N\u00fcrnberg",
+            "kickoff_local": "2026-08-09T13:30:00",
+            "kickoff_utc": "2026-08-09T11:30:00Z",
+            "match_id": 83519,
+            "timezone_id": null
+          }
+        ],
+        "status": "matches_found",
+        "team_ids": [
+          36,
+          54,
+          55,
+          74,
+          76,
+          78,
+          79,
+          83,
+          93,
+          98,
+          104,
+          105,
+          115,
+          118,
+          129,
+          131,
+          177,
+          199
+        ],
+        "team_names": [
+          "1. FC Heidenheim 1846",
+          "1. FC Kaiserslautern",
+          "1. FC Magdeburg",
+          "1. FC N\u00fcrnberg",
+          "DSC Arminia Bielefeld",
+          "Dynamo Dresden",
+          "Eintracht Braunschweig",
+          "Energie Cottbus",
+          "FC St. Pauli",
+          "Hannover 96",
+          "Hertha BSC",
+          "Holstein Kiel",
+          "Karlsruher SC",
+          "SV Darmstadt 98",
+          "SpVgg Greuther F\u00fcrth",
+          "VfL Bochum",
+          "VfL Osnabr\u00fcck",
+          "VfL Wolfsburg"
+        ],
+        "timezone_ids": [
+          "W. Europe Standard Time"
+        ],
+        "unique_home_away_pairings": 306,
+        "unique_team_count": 18,
+        "unique_team_id_count": 18,
+        "utc_kickoff_count": 306
+      },
+      "matchdata_sha256": "f3d4bcf007fb59263909534d1758404ef81e4056a5e3448135be918bf7c11495",
+      "matchdata_url": "https://api.openligadb.de/getmatchdata/bl2/2026",
+      "prior_observation_count": 6120,
+      "source_name": "2. Bundesliga",
+      "source_role": "priority_a_reference",
+      "source_scope_class": "priority_a_crosswalk_reference",
       "status": "matches_found"
     }
   ],
@@ -3950,10 +4175,13 @@
   "source_candidate_inventory": "reports/provider_independent_catalogue/openligadb_country_scope_candidates.json",
   "source_record_count": 27,
   "summary": {
+    "comparison_reference_records_probed": 1,
+    "country_unscoped_records_probed": 27,
     "empty_match_lists": 0,
-    "matches_found": 27,
+    "matches_found": 28,
     "not_found_or_ambiguous": 0,
-    "records_probed": 27,
+    "records_probed": 28,
     "request_errors": 0
-  }
+  },
+  "total_source_records_probed": 28
 }
