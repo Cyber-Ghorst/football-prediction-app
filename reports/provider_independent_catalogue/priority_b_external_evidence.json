@@ -1,6 +1,6 @@
 {
   "report_name": "priority_b_external_identity_evidence",
-  "generated_at": "2026-11-15T17:22:36.700Z",
+  "generated_at": "2026-11-15T17:24:55.599Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority B single-provider competition identities; official evidence can support competition type, country and season context but does not replace independent provider corroboration or human canonical approval.",
   "safeguards": [
@@ -1761,6 +1761,213 @@
         "Verify provider-specific season boundaries and the meaning of provider season IDs.",
         "Obtain broader roster/fixture evidence where sample size is small.",
         "Compare exact fixture evidence with other providers before proposing any crosswalk."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_048",
+      "name": "Stoiximan Super League",
+      "observed_country": "Greece",
+      "provider": "bzzoiro",
+      "provider_competition_id": "24",
+      "provider_season_id": "24::1569",
+      "provider_season_label": "Super League 26/27",
+      "raw_observation_count": 1,
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 14,
+        "regular_rounds": 26,
+        "format": "Regular phase followed by championship playoffs, European playoffs and relegation playouts"
+      },
+      "external_evidence": [
+        {
+          "publisher": "Super League Greece",
+          "url": "https://www.slgr.gr/",
+          "supports": "Official league site and competition schedule; 2026/27 round fixtures list seven matches per matchday."
+        },
+        {
+          "publisher": "ERT Sports",
+          "url": "https://www.ertsports.gr/super-league/to-programma-tis-super-league-gia-ti-sezon-2026-2027/",
+          "supports": "2026/27 schedule published after the official league draw lists seven fixtures per matchday."
+        },
+        {
+          "publisher": "Novasports",
+          "url": "https://www.novasports.gr/sport/podosfairo/event/super-league-1/article/14994384/paramenoun-14-oi-omades-sti-super-league/",
+          "supports": "Reports the league's 15 July 2026 decision to retain 14 clubs and the 2026/27 playoff/playout format."
+        }
+      ],
+      "assessment": "The official league fixture schedule shows seven matches per round, and contemporary reporting of the league's 15 July 2026 decision confirms the 14-club format and playoff structure. Bzzoiro has only one observation; provider season ID 24::1569 is not verified.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Verify provider season boundaries and exact season ID semantics.",
+        "Obtain broader provider roster/fixture evidence.",
+        "Keep Serie C group A and group B separate under their parent competition."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_049",
+      "name": "International Friendly Games",
+      "observed_country": "International",
+      "provider": "bzzoiro",
+      "provider_competition_id": "31",
+      "provider_season_id": "31::133",
+      "provider_season_label": "Int. Friendly Games 2026",
+      "raw_observation_count": 91,
+      "external_competition_type": "international friendly fixture category, not a single tournament",
+      "external_season": "2026 calendar year",
+      "official_scope": {
+        "category": "Non-competitive international fixtures between national teams; no single tournament roster or table"
+      },
+      "external_evidence": [
+        {
+          "publisher": "FIFA",
+          "url": "https://inside.fifa.com/football-development/technical/football-calendar",
+          "supports": "FIFA international match calendar provides the scheduling framework for national-team friendly windows."
+        },
+        {
+          "publisher": "UEFA",
+          "url": "https://www.uefa.com/european-qualifiers/news/02a1-1f3c6fcb2d72-9fdd6a9a6d3b-1000--international-match-calendar-2026-2027/",
+          "supports": "UEFA calendar identifies international match windows rather than a single friendly tournament."
+        }
+      ],
+      "assessment": "This provider label represents a generic match category rather than one bounded competition. It spans many national teams and fixtures and has no single competition roster, standings or tournament season. It should be represented as a fixture type/category, not a canonical competition.",
+      "review_status": "reclassify_as_fixture_category_not_competition",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Move this record out of the competition identity queue into fixture-type taxonomy after schema review.",
+        "Do not create a canonical competition or season for generic international friendlies."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_051",
+      "name": "Serie B",
+      "observed_country": "Italy",
+      "provider": "bzzoiro",
+      "provider_competition_id": "100",
+      "provider_season_id": "100::2084",
+      "provider_season_label": "Serie B 26/27",
+      "raw_observation_count": 10,
+      "external_competition_type": "men's second-tier domestic league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 20,
+        "regular_season_matches": 380,
+        "rounds": 38
+      },
+      "external_evidence": [
+        {
+          "publisher": "Lega B",
+          "url": "https://www.legab.it/seriebkt/ultime-news/serie-bkt-2026-2027-curiosita-e-statistiche-delle-20-squadre",
+          "supports": "Official Lega B article confirms 20 clubs for Serie BKT 2026/27."
+        },
+        {
+          "publisher": "Lega B",
+          "url": "https://www.legab.it/news/i-criteri-della-serie-bkt-2026-2027",
+          "supports": "Official 2026/27 Serie B calendar criteria refer to 38 matchdays."
+        },
+        {
+          "publisher": "Lega B",
+          "url": "https://www.legab.it/seriebkt/classifica",
+          "supports": "Official 2026/27 Serie B standings."
+        }
+      ],
+      "assessment": "Official Lega B sources establish Serie B as the men's second tier with 20 clubs and 38 matchdays (380 regular-season matches). Bzzoiro has 10 observations; complete roster and provider season-ID scope remain unverified.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Verify provider season boundaries and exact season ID semantics.",
+        "Obtain broader provider roster/fixture evidence.",
+        "Keep Serie C group A and group B separate under their parent competition."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_052",
+      "name": "Serie C, Girone A",
+      "observed_country": "Italy",
+      "provider": "bzzoiro",
+      "provider_competition_id": "101",
+      "provider_season_id": "101::2103",
+      "provider_season_label": "Serie C, Group A 26/27",
+      "raw_observation_count": 35,
+      "external_competition_type": "men's third-tier domestic league group",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs_in_group": 20,
+        "rounds": 38,
+        "parent_competition": "Serie C, three regional groups"
+      },
+      "external_evidence": [
+        {
+          "publisher": "Lega Pro / Serie C",
+          "url": "https://www.seriec.com/clubs",
+          "supports": "Official 2026/27 Serie C club directory with separate Girone A, B and C lists."
+        },
+        {
+          "publisher": "Lega Pro / Serie C",
+          "url": "https://www.seriec.com/gironi/girone-a",
+          "supports": "Official 2026/27 Girone A schedule and club listing."
+        }
+      ],
+      "assessment": "Official Serie C sources establish Girone A as one of three regional groups in the men's third tier, with 20 clubs. It is a group within Serie C, not a separate national league; keep its group identity distinct from Girone B and C.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Verify provider season boundaries and exact season ID semantics.",
+        "Obtain broader provider roster/fixture evidence.",
+        "Keep Serie C group A and group B separate under their parent competition."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_053",
+      "name": "Serie C, Girone B",
+      "observed_country": "Italy",
+      "provider": "bzzoiro",
+      "provider_competition_id": "103",
+      "provider_season_id": "103::2130",
+      "provider_season_label": "Serie C, Group B 26/27",
+      "raw_observation_count": 33,
+      "external_competition_type": "men's third-tier domestic league group",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs_in_group": 20,
+        "rounds": 38,
+        "parent_competition": "Serie C, three regional groups"
+      },
+      "external_evidence": [
+        {
+          "publisher": "Lega Pro / Serie C",
+          "url": "https://www.seriec.com/clubs",
+          "supports": "Official 2026/27 Serie C club directory with separate Girone A, B and C lists."
+        },
+        {
+          "publisher": "Lega Pro / Serie C",
+          "url": "https://www.seriec.com/gironi/girone-b",
+          "supports": "Official 2026/27 Girone B schedule and club listing."
+        }
+      ],
+      "assessment": "Official Serie C sources establish Girone B as one of three regional groups in the men's third tier, with 20 clubs. It is a group within Serie C, not a separate national league; keep its group identity distinct from Girone A and C.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Verify provider season boundaries and exact season ID semantics.",
+        "Obtain broader provider roster/fixture evidence.",
+        "Keep Serie C group A and group B separate under their parent competition."
       ]
     }
   ]
