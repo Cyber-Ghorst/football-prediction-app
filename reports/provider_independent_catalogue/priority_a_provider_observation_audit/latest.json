@@ -3089,6 +3089,37 @@
       "identity_decision": "not_approved",
       "provider_sources": [
         {
+          "away_team_names": [
+            "Arsenal",
+            "Brighton & Hove Albion",
+            "Crystal Palace",
+            "Fulham",
+            "Ipswich Town",
+            "Leeds United",
+            "Manchester United",
+            "Nottingham Forest",
+            "Sunderland"
+          ],
+          "combined_team_names": [
+            "Arsenal",
+            "Aston Villa",
+            "Bournemouth",
+            "Brighton & Hove Albion",
+            "Chelsea",
+            "Coventry City",
+            "Crystal Palace",
+            "Fulham",
+            "Hull City",
+            "Ipswich Town",
+            "Leeds United",
+            "Liverpool FC",
+            "Manchester City",
+            "Manchester United",
+            "Newcastle United",
+            "Nottingham Forest",
+            "Sunderland",
+            "Tottenham Hotspur"
+          ],
           "competition_name_matches_queue": true,
           "competition_names": [
             "Premier League"
@@ -3099,6 +3130,17 @@
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
           "eligible_observation_count": 30,
+          "home_team_names": [
+            "Aston Villa",
+            "Bournemouth",
+            "Chelsea",
+            "Coventry City",
+            "Hull City",
+            "Liverpool FC",
+            "Manchester City",
+            "Newcastle United",
+            "Tottenham Hotspur"
+          ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [],
           "local_date_time_without_timezone": 0,
@@ -3133,6 +3175,50 @@
           "valid_timezone_aware_kickoffs": 30
         },
         {
+          "away_team_names": [
+            "AFC Bournemouth",
+            "Arsenal FC",
+            "Aston Villa FC",
+            "Brentford FC",
+            "Brighton & Hove Albion FC",
+            "Chelsea FC",
+            "Coventry City FC",
+            "Crystal Palace FC",
+            "Everton FC",
+            "Fulham FC",
+            "Hull City AFC",
+            "Ipswich Town FC",
+            "Leeds United FC",
+            "Liverpool FC",
+            "Manchester City FC",
+            "Manchester United FC",
+            "Newcastle United FC",
+            "Nottingham Forest FC",
+            "Sunderland AFC",
+            "Tottenham Hotspur FC"
+          ],
+          "combined_team_names": [
+            "AFC Bournemouth",
+            "Arsenal FC",
+            "Aston Villa FC",
+            "Brentford FC",
+            "Brighton & Hove Albion FC",
+            "Chelsea FC",
+            "Coventry City FC",
+            "Crystal Palace FC",
+            "Everton FC",
+            "Fulham FC",
+            "Hull City AFC",
+            "Ipswich Town FC",
+            "Leeds United FC",
+            "Liverpool FC",
+            "Manchester City FC",
+            "Manchester United FC",
+            "Newcastle United FC",
+            "Nottingham Forest FC",
+            "Sunderland AFC",
+            "Tottenham Hotspur FC"
+          ],
           "competition_name_matches_queue": true,
           "competition_names": [
             "Premier League"
@@ -3143,6 +3229,28 @@
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
           "eligible_observation_count": 0,
+          "home_team_names": [
+            "AFC Bournemouth",
+            "Arsenal FC",
+            "Aston Villa FC",
+            "Brentford FC",
+            "Brighton & Hove Albion FC",
+            "Chelsea FC",
+            "Coventry City FC",
+            "Crystal Palace FC",
+            "Everton FC",
+            "Fulham FC",
+            "Hull City AFC",
+            "Ipswich Town FC",
+            "Leeds United FC",
+            "Liverpool FC",
+            "Manchester City FC",
+            "Manchester United FC",
+            "Newcastle United FC",
+            "Nottingham Forest FC",
+            "Sunderland AFC",
+            "Tottenham Hotspur FC"
+          ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [
             "date=2026-08-21; time=20:00",
@@ -3181,6 +3289,50 @@
           "valid_timezone_aware_kickoffs": 0
         },
         {
+          "away_team_names": [
+            "AFC Bournemouth",
+            "Aston Villa",
+            "Brentford F.C.",
+            "Brighton & Hove Albion",
+            "Chelsea FC",
+            "Coventry City",
+            "Crystal Palace FC",
+            "Everton FC",
+            "FC Arsenal",
+            "FC Liverpool",
+            "Fulham FC",
+            "Hull City",
+            "Ipswich Town",
+            "Leeds United",
+            "Manchester City",
+            "Manchester United FC",
+            "Newcastle United FC",
+            "Nottingham Forest",
+            "Sunderland",
+            "Tottenham Hotspur FC"
+          ],
+          "combined_team_names": [
+            "AFC Bournemouth",
+            "Aston Villa",
+            "Brentford F.C.",
+            "Brighton & Hove Albion",
+            "Chelsea FC",
+            "Coventry City",
+            "Crystal Palace FC",
+            "Everton FC",
+            "FC Arsenal",
+            "FC Liverpool",
+            "Fulham FC",
+            "Hull City",
+            "Ipswich Town",
+            "Leeds United",
+            "Manchester City",
+            "Manchester United FC",
+            "Newcastle United FC",
+            "Nottingham Forest",
+            "Sunderland",
+            "Tottenham Hotspur FC"
+          ],
           "competition_name_matches_queue": true,
           "competition_names": [
             "Premier League"
@@ -3191,6 +3343,28 @@
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
           "eligible_observation_count": 5600,
+          "home_team_names": [
+            "AFC Bournemouth",
+            "Aston Villa",
+            "Brentford F.C.",
+            "Brighton & Hove Albion",
+            "Chelsea FC",
+            "Coventry City",
+            "Crystal Palace FC",
+            "Everton FC",
+            "FC Arsenal",
+            "FC Liverpool",
+            "Fulham FC",
+            "Hull City",
+            "Ipswich Town",
+            "Leeds United",
+            "Manchester City",
+            "Manchester United FC",
+            "Newcastle United FC",
+            "Nottingham Forest",
+            "Sunderland",
+            "Tottenham Hotspur FC"
+          ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [],
           "local_date_time_without_timezone": 0,
@@ -3240,6 +3414,37 @@
       "identity_decision": "not_approved",
       "provider_sources": [
         {
+          "away_team_names": [
+            "1. FC K\u00f6ln",
+            "1. FSV Mainz 05",
+            "Borussia Dortmund",
+            "Hamburger SV",
+            "RB Leipzig",
+            "SC Freiburg",
+            "SC Paderborn 07",
+            "TSG Hoffenheim",
+            "VfB Stuttgart"
+          ],
+          "combined_team_names": [
+            "1. FC K\u00f6ln",
+            "1. FC Union Berlin",
+            "1. FSV Mainz 05",
+            "Bayer 04 Leverkusen",
+            "Borussia Dortmund",
+            "Borussia M'gladbach",
+            "Eintracht Frankfurt",
+            "FC Augsburg",
+            "FC Bayern M\u00fcnchen",
+            "FC Schalke 04",
+            "Hamburger SV",
+            "RB Leipzig",
+            "SC Freiburg",
+            "SC Paderborn 07",
+            "SV 07 Elversberg",
+            "SV Werder Bremen",
+            "TSG Hoffenheim",
+            "VfB Stuttgart"
+          ],
           "competition_name_matches_queue": true,
           "competition_names": [
             "Bundesliga"
@@ -3250,6 +3455,17 @@
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
           "eligible_observation_count": 37,
+          "home_team_names": [
+            "1. FC Union Berlin",
+            "Bayer 04 Leverkusen",
+            "Borussia M'gladbach",
+            "Eintracht Frankfurt",
+            "FC Augsburg",
+            "FC Bayern M\u00fcnchen",
+            "FC Schalke 04",
+            "SV 07 Elversberg",
+            "SV Werder Bremen"
+          ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [],
           "local_date_time_without_timezone": 0,
@@ -3284,6 +3500,31 @@
           "valid_timezone_aware_kickoffs": 37
         },
         {
+          "away_team_names": [
+            "1. FC K\u00f6ln",
+            "Borussia Dortmund",
+            "RB Leipzig",
+            "SC Freiburg",
+            "SC Paderborn 07",
+            "TSG 1899 Hoffenheim",
+            "VfB Stuttgart"
+          ],
+          "combined_team_names": [
+            "1. FC K\u00f6ln",
+            "1. FC Union Berlin",
+            "Bayer 04 Leverkusen",
+            "Borussia Dortmund",
+            "Borussia M\u00f6nchengladbach",
+            "Eintracht Frankfurt",
+            "FC Bayern M\u00fcnchen",
+            "FC Schalke 04",
+            "RB Leipzig",
+            "SC Freiburg",
+            "SC Paderborn 07",
+            "SV 07 Elversberg",
+            "TSG 1899 Hoffenheim",
+            "VfB Stuttgart"
+          ],
           "competition_name_matches_queue": true,
           "competition_names": [
             "Bundesliga"
@@ -3292,6 +3533,15 @@
           "country_matches_queue": false,
           "date_only_kickoffs": 0,
           "eligible_observation_count": 11,
+          "home_team_names": [
+            "1. FC Union Berlin",
+            "Bayer 04 Leverkusen",
+            "Borussia M\u00f6nchengladbach",
+            "Eintracht Frankfurt",
+            "FC Bayern M\u00fcnchen",
+            "FC Schalke 04",
+            "SV 07 Elversberg"
+          ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [],
           "local_date_time_without_timezone": 0,
@@ -3318,6 +3568,46 @@
           "valid_timezone_aware_kickoffs": 11
         },
         {
+          "away_team_names": [
+            "1. FC K\u00f6ln",
+            "1. FC Union Berlin",
+            "1. FSV Mainz 05",
+            "Bayer 04 Leverkusen",
+            "Borussia Dortmund",
+            "Borussia M\u00f6nchengladbach",
+            "Eintracht Frankfurt",
+            "FC Augsburg",
+            "FC Bayern M\u00fcnchen",
+            "FC Schalke 04",
+            "Hamburger SV",
+            "RB Leipzig",
+            "SC Freiburg",
+            "SC Paderborn 07",
+            "SV 07 Elversberg",
+            "SV Werder Bremen",
+            "TSG 1899 Hoffenheim",
+            "VfB Stuttgart"
+          ],
+          "combined_team_names": [
+            "1. FC K\u00f6ln",
+            "1. FC Union Berlin",
+            "1. FSV Mainz 05",
+            "Bayer 04 Leverkusen",
+            "Borussia Dortmund",
+            "Borussia M\u00f6nchengladbach",
+            "Eintracht Frankfurt",
+            "FC Augsburg",
+            "FC Bayern M\u00fcnchen",
+            "FC Schalke 04",
+            "Hamburger SV",
+            "RB Leipzig",
+            "SC Freiburg",
+            "SC Paderborn 07",
+            "SV 07 Elversberg",
+            "SV Werder Bremen",
+            "TSG 1899 Hoffenheim",
+            "VfB Stuttgart"
+          ],
           "competition_name_matches_queue": true,
           "competition_names": [
             "Bundesliga"
@@ -3328,6 +3618,26 @@
           "country_matches_queue": true,
           "date_only_kickoffs": 3960,
           "eligible_observation_count": 0,
+          "home_team_names": [
+            "1. FC K\u00f6ln",
+            "1. FC Union Berlin",
+            "1. FSV Mainz 05",
+            "Bayer 04 Leverkusen",
+            "Borussia Dortmund",
+            "Borussia M\u00f6nchengladbach",
+            "Eintracht Frankfurt",
+            "FC Augsburg",
+            "FC Bayern M\u00fcnchen",
+            "FC Schalke 04",
+            "Hamburger SV",
+            "RB Leipzig",
+            "SC Freiburg",
+            "SC Paderborn 07",
+            "SV 07 Elversberg",
+            "SV Werder Bremen",
+            "TSG 1899 Hoffenheim",
+            "VfB Stuttgart"
+          ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [
             "date=2026-08-28; time=20:30",
@@ -3366,6 +3676,46 @@
           "valid_timezone_aware_kickoffs": 0
         },
         {
+          "away_team_names": [
+            "1. FC K\u00f6ln",
+            "1. FC Union Berlin",
+            "1. FSV Mainz 05",
+            "Bayer 04 Leverkusen",
+            "Borussia Dortmund",
+            "Borussia M\u00f6nchengladbach",
+            "Eintracht Frankfurt",
+            "FC Augsburg",
+            "FC Bayern M\u00fcnchen",
+            "FC Schalke 04",
+            "Hamburger SV",
+            "RB Leipzig",
+            "SC Freiburg",
+            "SC Paderborn 07",
+            "SV 07 Elversberg",
+            "SV Werder Bremen",
+            "TSG Hoffenheim",
+            "VfB Stuttgart"
+          ],
+          "combined_team_names": [
+            "1. FC K\u00f6ln",
+            "1. FC Union Berlin",
+            "1. FSV Mainz 05",
+            "Bayer 04 Leverkusen",
+            "Borussia Dortmund",
+            "Borussia M\u00f6nchengladbach",
+            "Eintracht Frankfurt",
+            "FC Augsburg",
+            "FC Bayern M\u00fcnchen",
+            "FC Schalke 04",
+            "Hamburger SV",
+            "RB Leipzig",
+            "SC Freiburg",
+            "SC Paderborn 07",
+            "SV 07 Elversberg",
+            "SV Werder Bremen",
+            "TSG Hoffenheim",
+            "VfB Stuttgart"
+          ],
           "competition_name_matches_queue": true,
           "competition_names": [
             "Bundesliga"
@@ -3376,6 +3726,26 @@
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
           "eligible_observation_count": 4500,
+          "home_team_names": [
+            "1. FC K\u00f6ln",
+            "1. FC Union Berlin",
+            "1. FSV Mainz 05",
+            "Bayer 04 Leverkusen",
+            "Borussia Dortmund",
+            "Borussia M\u00f6nchengladbach",
+            "Eintracht Frankfurt",
+            "FC Augsburg",
+            "FC Bayern M\u00fcnchen",
+            "FC Schalke 04",
+            "Hamburger SV",
+            "RB Leipzig",
+            "SC Freiburg",
+            "SC Paderborn 07",
+            "SV 07 Elversberg",
+            "SV Werder Bremen",
+            "TSG Hoffenheim",
+            "VfB Stuttgart"
+          ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [],
           "local_date_time_without_timezone": 0,
@@ -3426,6 +3796,37 @@
       "identity_decision": "not_approved",
       "provider_sources": [
         {
+          "away_team_names": [
+            "1. FC Heidenheim",
+            "1. FC Magdeburg",
+            "Eintracht Braunschweig",
+            "Hertha BSC",
+            "Holstein Kiel",
+            "SG Dynamo Dresden",
+            "SpVgg Greuther F\u00fcrth",
+            "VfL Bochum 1848",
+            "VfL Osnabr\u00fcck"
+          ],
+          "combined_team_names": [
+            "1. FC Heidenheim",
+            "1. FC Kaiserslautern",
+            "1. FC Magdeburg",
+            "1. FC N\u00fcrnberg",
+            "Arminia Bielefeld",
+            "Darmstadt 98",
+            "Eintracht Braunschweig",
+            "Energie Cottbus",
+            "FC St. Pauli",
+            "Hannover 96",
+            "Hertha BSC",
+            "Holstein Kiel",
+            "Karlsruher SC",
+            "SG Dynamo Dresden",
+            "SpVgg Greuther F\u00fcrth",
+            "VfL Bochum 1848",
+            "VfL Osnabr\u00fcck",
+            "VfL Wolfsburg"
+          ],
           "competition_name_matches_queue": true,
           "competition_names": [
             "2. Bundesliga"
@@ -3436,6 +3837,17 @@
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
           "eligible_observation_count": 41,
+          "home_team_names": [
+            "1. FC Kaiserslautern",
+            "1. FC N\u00fcrnberg",
+            "Arminia Bielefeld",
+            "Darmstadt 98",
+            "Energie Cottbus",
+            "FC St. Pauli",
+            "Hannover 96",
+            "Karlsruher SC",
+            "VfL Wolfsburg"
+          ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [],
           "local_date_time_without_timezone": 0,
@@ -3470,6 +3882,46 @@
           "valid_timezone_aware_kickoffs": 41
         },
         {
+          "away_team_names": [
+            "1. FC Heidenheim 1846",
+            "1. FC Kaiserslautern",
+            "1. FC Magdeburg",
+            "1. FC N\u00fcrnberg",
+            "DSC Arminia Bielefeld",
+            "Dynamo Dresden",
+            "Eintracht Braunschweig",
+            "Energie Cottbus",
+            "FC St. Pauli",
+            "Hannover 96",
+            "Hertha BSC",
+            "Holstein Kiel",
+            "Karlsruher SC",
+            "SV Darmstadt 98",
+            "SpVgg Greuther F\u00fcrth",
+            "VfL Bochum",
+            "VfL Osnabr\u00fcck",
+            "VfL Wolfsburg"
+          ],
+          "combined_team_names": [
+            "1. FC Heidenheim 1846",
+            "1. FC Kaiserslautern",
+            "1. FC Magdeburg",
+            "1. FC N\u00fcrnberg",
+            "DSC Arminia Bielefeld",
+            "Dynamo Dresden",
+            "Eintracht Braunschweig",
+            "Energie Cottbus",
+            "FC St. Pauli",
+            "Hannover 96",
+            "Hertha BSC",
+            "Holstein Kiel",
+            "Karlsruher SC",
+            "SV Darmstadt 98",
+            "SpVgg Greuther F\u00fcrth",
+            "VfL Bochum",
+            "VfL Osnabr\u00fcck",
+            "VfL Wolfsburg"
+          ],
           "competition_name_matches_queue": true,
           "competition_names": [
             "2. Bundesliga"
@@ -3480,6 +3932,26 @@
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
           "eligible_observation_count": 4140,
+          "home_team_names": [
+            "1. FC Heidenheim 1846",
+            "1. FC Kaiserslautern",
+            "1. FC Magdeburg",
+            "1. FC N\u00fcrnberg",
+            "DSC Arminia Bielefeld",
+            "Dynamo Dresden",
+            "Eintracht Braunschweig",
+            "Energie Cottbus",
+            "FC St. Pauli",
+            "Hannover 96",
+            "Hertha BSC",
+            "Holstein Kiel",
+            "Karlsruher SC",
+            "SV Darmstadt 98",
+            "SpVgg Greuther F\u00fcrth",
+            "VfL Bochum",
+            "VfL Osnabr\u00fcck",
+            "VfL Wolfsburg"
+          ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [],
           "local_date_time_without_timezone": 0,
@@ -3528,6 +4000,28 @@
       "identity_decision": "not_approved",
       "provider_sources": [
         {
+          "away_team_names": [
+            "Aberdeen",
+            "Dundee United",
+            "Heart of Midlothian",
+            "Rangers",
+            "St. Johnstone",
+            "St. Mirren"
+          ],
+          "combined_team_names": [
+            "Aberdeen",
+            "Celtic",
+            "Dundee FC",
+            "Dundee United",
+            "Falkirk FC",
+            "Heart of Midlothian",
+            "Hibernian",
+            "Kilmarnock",
+            "Motherwell",
+            "Rangers",
+            "St. Johnstone",
+            "St. Mirren"
+          ],
           "competition_name_matches_queue": true,
           "competition_names": [
             "Scottish Premiership"
@@ -3538,6 +4032,14 @@
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
           "eligible_observation_count": 24,
+          "home_team_names": [
+            "Celtic",
+            "Dundee FC",
+            "Falkirk FC",
+            "Hibernian",
+            "Kilmarnock",
+            "Motherwell"
+          ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [],
           "local_date_time_without_timezone": 0,
@@ -3572,6 +4074,28 @@
           "valid_timezone_aware_kickoffs": 24
         },
         {
+          "away_team_names": [
+            "Aberdeen",
+            "Dundee United",
+            "Heart of Midlothian",
+            "Rangers",
+            "St Johnstone",
+            "St Mirren"
+          ],
+          "combined_team_names": [
+            "Aberdeen",
+            "Celtic",
+            "Dundee",
+            "Dundee United",
+            "Falkirk",
+            "Heart of Midlothian",
+            "Hibernian",
+            "Kilmarnock",
+            "Motherwell",
+            "Rangers",
+            "St Johnstone",
+            "St Mirren"
+          ],
           "competition_name_matches_queue": true,
           "competition_names": [
             "Scottish Premiership"
@@ -3582,6 +4106,14 @@
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
           "eligible_observation_count": 6,
+          "home_team_names": [
+            "Celtic",
+            "Dundee",
+            "Falkirk",
+            "Hibernian",
+            "Kilmarnock",
+            "Motherwell"
+          ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [],
           "local_date_time_without_timezone": 0,
@@ -3629,6 +4161,38 @@
       "identity_decision": "not_approved",
       "provider_sources": [
         {
+          "away_team_names": [
+            "Abha",
+            "Al Faisaly",
+            "Al-Ettifaq",
+            "Al-Fateh",
+            "Al-Hazem",
+            "Al-Ittihad",
+            "Al-Kholood",
+            "Al-Nassr",
+            "Al-Qadsiah",
+            "Diriyah"
+          ],
+          "combined_team_names": [
+            "Abha",
+            "Al Faisaly",
+            "Al-Ahli",
+            "Al-Ettifaq",
+            "Al-Fateh",
+            "Al-Fayha",
+            "Al-Hazem",
+            "Al-Hilal",
+            "Al-Ittihad",
+            "Al-Khaleej",
+            "Al-Kholood",
+            "Al-Nassr",
+            "Al-Qadsiah",
+            "Al-Riyadh",
+            "Al-Shabab",
+            "Al-Taawoun",
+            "Diriyah",
+            "Neom SC"
+          ],
           "competition_name_matches_queue": true,
           "competition_names": [
             "Saudi Pro League"
@@ -3639,6 +4203,17 @@
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
           "eligible_observation_count": 11,
+          "home_team_names": [
+            "Al-Ahli",
+            "Al-Fayha",
+            "Al-Hilal",
+            "Al-Khaleej",
+            "Al-Nassr",
+            "Al-Riyadh",
+            "Al-Shabab",
+            "Al-Taawoun",
+            "Neom SC"
+          ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [],
           "local_date_time_without_timezone": 0,
@@ -3674,6 +4249,13 @@
           "valid_timezone_aware_kickoffs": 110
         },
         {
+          "away_team_names": [
+            "Al Nassr"
+          ],
+          "combined_team_names": [
+            "Al Ahli",
+            "Al Nassr"
+          ],
           "competition_name_matches_queue": true,
           "competition_names": [
             "Saudi Pro League"
@@ -3684,6 +4266,9 @@
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
           "eligible_observation_count": 11,
+          "home_team_names": [
+            "Al Ahli"
+          ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [],
           "local_date_time_without_timezone": 0,
@@ -3731,6 +4316,37 @@
       "identity_decision": "not_approved",
       "provider_sources": [
         {
+          "away_team_names": [
+            "Atl\u00e9tico Madrid",
+            "Celta Vigo",
+            "Deportivo de A Coru\u00f1a",
+            "Espanyol",
+            "M\u00e1laga CF",
+            "Real Betis",
+            "Real Sociedad",
+            "Valencia",
+            "Villarreal"
+          ],
+          "combined_team_names": [
+            "Athletic Club",
+            "Atl\u00e9tico Madrid",
+            "Celta Vigo",
+            "Deportivo Alav\u00e9s",
+            "Deportivo de A Coru\u00f1a",
+            "Espanyol",
+            "FC Barcelona",
+            "Getafe",
+            "M\u00e1laga CF",
+            "Osasuna",
+            "Rayo Vallecano",
+            "Real Betis",
+            "Real Madrid",
+            "Real Racing Club",
+            "Real Sociedad",
+            "Sevilla",
+            "Valencia",
+            "Villarreal"
+          ],
           "competition_name_matches_queue": true,
           "competition_names": [
             "La Liga"
@@ -3741,6 +4357,17 @@
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
           "eligible_observation_count": 31,
+          "home_team_names": [
+            "Athletic Club",
+            "Deportivo Alav\u00e9s",
+            "FC Barcelona",
+            "Getafe",
+            "Osasuna",
+            "Rayo Vallecano",
+            "Real Madrid",
+            "Real Racing Club",
+            "Sevilla"
+          ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [],
           "local_date_time_without_timezone": 0,
@@ -3775,6 +4402,50 @@
           "valid_timezone_aware_kickoffs": 31
         },
         {
+          "away_team_names": [
+            "Athletic Club",
+            "CA Osasuna",
+            "Club Atl\u00e9tico de Madrid",
+            "Deportivo Alav\u00e9s",
+            "Elche CF",
+            "FC Barcelona",
+            "Getafe CF",
+            "Levante UD",
+            "M\u00e1laga CF",
+            "RC Celta de Vigo",
+            "RC Deportivo La Coru\u00f1a",
+            "RCD Espanyol de Barcelona",
+            "Rayo Vallecano de Madrid",
+            "Real Betis Balompi\u00e9",
+            "Real Madrid CF",
+            "Real Racing Club de Santander",
+            "Real Sociedad de F\u00fatbol",
+            "Sevilla FC",
+            "Valencia CF",
+            "Villarreal CF"
+          ],
+          "combined_team_names": [
+            "Athletic Club",
+            "CA Osasuna",
+            "Club Atl\u00e9tico de Madrid",
+            "Deportivo Alav\u00e9s",
+            "Elche CF",
+            "FC Barcelona",
+            "Getafe CF",
+            "Levante UD",
+            "M\u00e1laga CF",
+            "RC Celta de Vigo",
+            "RC Deportivo La Coru\u00f1a",
+            "RCD Espanyol de Barcelona",
+            "Rayo Vallecano de Madrid",
+            "Real Betis Balompi\u00e9",
+            "Real Madrid CF",
+            "Real Racing Club de Santander",
+            "Real Sociedad de F\u00fatbol",
+            "Sevilla FC",
+            "Valencia CF",
+            "Villarreal CF"
+          ],
           "competition_name_matches_queue": true,
           "competition_names": [
             "La Liga"
@@ -3785,6 +4456,28 @@
           "country_matches_queue": true,
           "date_only_kickoffs": 5800,
           "eligible_observation_count": 0,
+          "home_team_names": [
+            "Athletic Club",
+            "CA Osasuna",
+            "Club Atl\u00e9tico de Madrid",
+            "Deportivo Alav\u00e9s",
+            "Elche CF",
+            "FC Barcelona",
+            "Getafe CF",
+            "Levante UD",
+            "M\u00e1laga CF",
+            "RC Celta de Vigo",
+            "RC Deportivo La Coru\u00f1a",
+            "RCD Espanyol de Barcelona",
+            "Rayo Vallecano de Madrid",
+            "Real Betis Balompi\u00e9",
+            "Real Madrid CF",
+            "Real Racing Club de Santander",
+            "Real Sociedad de F\u00fatbol",
+            "Sevilla FC",
+            "Valencia CF",
+            "Villarreal CF"
+          ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [
             "date=2026-08-15; time=19:30",
@@ -3836,6 +4529,37 @@
       "identity_decision": "not_approved",
       "provider_sources": [
         {
+          "away_team_names": [
+            "AS Roma",
+            "Cagliari",
+            "Frosinone",
+            "Genoa",
+            "Inter",
+            "Lecce",
+            "Torino",
+            "Udinese",
+            "Venezia"
+          ],
+          "combined_team_names": [
+            "AC Milan",
+            "AS Roma",
+            "Atalanta",
+            "Bologna",
+            "Cagliari",
+            "Como",
+            "Frosinone",
+            "Genoa",
+            "Inter",
+            "Juventus",
+            "Lazio",
+            "Lecce",
+            "Parma",
+            "SSC Napoli",
+            "Sassuolo",
+            "Torino",
+            "Udinese",
+            "Venezia"
+          ],
           "competition_name_matches_queue": true,
           "competition_names": [
             "Serie A"
@@ -3846,6 +4570,17 @@
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
           "eligible_observation_count": 21,
+          "home_team_names": [
+            "AC Milan",
+            "Atalanta",
+            "Bologna",
+            "Como",
+            "Juventus",
+            "Lazio",
+            "Parma",
+            "SSC Napoli",
+            "Sassuolo"
+          ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [],
           "local_date_time_without_timezone": 0,
@@ -3880,6 +4615,50 @@
           "valid_timezone_aware_kickoffs": 21
         },
         {
+          "away_team_names": [
+            "AC Milan",
+            "AC Monza",
+            "ACF Fiorentina",
+            "AS Roma",
+            "Atalanta BC",
+            "Bologna FC 1909",
+            "Cagliari Calcio",
+            "Como 1907",
+            "FC Internazionale Milano",
+            "Frosinone Calcio",
+            "Genoa CFC",
+            "Juventus FC",
+            "Parma Calcio 1913",
+            "SS Lazio",
+            "SSC Napoli",
+            "Torino FC",
+            "US Lecce",
+            "US Sassuolo Calcio",
+            "Udinese Calcio",
+            "Venezia FC"
+          ],
+          "combined_team_names": [
+            "AC Milan",
+            "AC Monza",
+            "ACF Fiorentina",
+            "AS Roma",
+            "Atalanta BC",
+            "Bologna FC 1909",
+            "Cagliari Calcio",
+            "Como 1907",
+            "FC Internazionale Milano",
+            "Frosinone Calcio",
+            "Genoa CFC",
+            "Juventus FC",
+            "Parma Calcio 1913",
+            "SS Lazio",
+            "SSC Napoli",
+            "Torino FC",
+            "US Lecce",
+            "US Sassuolo Calcio",
+            "Udinese Calcio",
+            "Venezia FC"
+          ],
           "competition_name_matches_queue": true,
           "competition_names": [
             "Serie A"
@@ -3890,6 +4669,28 @@
           "country_matches_queue": true,
           "date_only_kickoffs": 5200,
           "eligible_observation_count": 0,
+          "home_team_names": [
+            "AC Milan",
+            "AC Monza",
+            "ACF Fiorentina",
+            "AS Roma",
+            "Atalanta BC",
+            "Bologna FC 1909",
+            "Cagliari Calcio",
+            "Como 1907",
+            "FC Internazionale Milano",
+            "Frosinone Calcio",
+            "Genoa CFC",
+            "Juventus FC",
+            "Parma Calcio 1913",
+            "SS Lazio",
+            "SSC Napoli",
+            "Torino FC",
+            "US Lecce",
+            "US Sassuolo Calcio",
+            "Udinese Calcio",
+            "Venezia FC"
+          ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [
             "date=2026-08-22; time=18:30",
@@ -3941,6 +4742,37 @@
       "identity_decision": "not_approved",
       "provider_sources": [
         {
+          "away_team_names": [
+            "AJ Auxerre",
+            "Angers",
+            "Le Havre",
+            "Le Mans",
+            "Olympique Lyonnais",
+            "Paris Saint-Germain",
+            "Stade Brestois",
+            "Stade Rennais",
+            "Toulouse"
+          ],
+          "combined_team_names": [
+            "AJ Auxerre",
+            "AS Monaco",
+            "Angers",
+            "LOSC Lille",
+            "Le Havre",
+            "Le Mans",
+            "Lorient",
+            "OGC Nice",
+            "Olympique Lyonnais",
+            "Olympique de Marseille",
+            "Paris FC",
+            "Paris Saint-Germain",
+            "RC Lens",
+            "RC Strasbourg",
+            "Stade Brestois",
+            "Stade Rennais",
+            "Toulouse",
+            "Troyes"
+          ],
           "competition_name_matches_queue": true,
           "competition_names": [
             "Ligue 1"
@@ -3951,6 +4783,17 @@
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
           "eligible_observation_count": 34,
+          "home_team_names": [
+            "AS Monaco",
+            "LOSC Lille",
+            "Lorient",
+            "OGC Nice",
+            "Olympique de Marseille",
+            "Paris FC",
+            "RC Lens",
+            "RC Strasbourg",
+            "Troyes"
+          ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [],
           "local_date_time_without_timezone": 0,
@@ -3985,6 +4828,28 @@
           "valid_timezone_aware_kickoffs": 34
         },
         {
+          "away_team_names": [
+            "AJ Auxerre",
+            "Le Havre AC",
+            "Olympique Lyonnais",
+            "Paris Saint-Germain FC",
+            "Stade Brestois 29",
+            "Toulouse FC"
+          ],
+          "combined_team_names": [
+            "AJ Auxerre",
+            "AS Monaco FC",
+            "ES Troyes AC",
+            "Le Havre AC",
+            "Lille OSC",
+            "OGC Nice",
+            "Olympique Lyonnais",
+            "Paris Saint-Germain FC",
+            "RC Strasbourg Alsace",
+            "Racing Club de Lens",
+            "Stade Brestois 29",
+            "Toulouse FC"
+          ],
           "competition_name_matches_queue": true,
           "competition_names": [
             "Ligue 1"
@@ -3993,6 +4858,14 @@
           "country_matches_queue": false,
           "date_only_kickoffs": 0,
           "eligible_observation_count": 10,
+          "home_team_names": [
+            "AS Monaco FC",
+            "ES Troyes AC",
+            "Lille OSC",
+            "OGC Nice",
+            "RC Strasbourg Alsace",
+            "Racing Club de Lens"
+          ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [],
           "local_date_time_without_timezone": 0,
@@ -4019,6 +4892,46 @@
           "valid_timezone_aware_kickoffs": 10
         },
         {
+          "away_team_names": [
+            "AJ Auxerre",
+            "AS Monaco FC",
+            "Angers SCO",
+            "ES Troyes AC",
+            "FC Lorient",
+            "Le Havre AC",
+            "Le Mans FC",
+            "Lille OSC",
+            "OGC Nice",
+            "Olympique Lyonnais",
+            "Olympique de Marseille",
+            "Paris FC",
+            "Paris Saint-Germain FC",
+            "RC Strasbourg Alsace",
+            "Racing Club de Lens",
+            "Stade Brestois 29",
+            "Stade Rennais FC 1901",
+            "Toulouse FC"
+          ],
+          "combined_team_names": [
+            "AJ Auxerre",
+            "AS Monaco FC",
+            "Angers SCO",
+            "ES Troyes AC",
+            "FC Lorient",
+            "Le Havre AC",
+            "Le Mans FC",
+            "Lille OSC",
+            "OGC Nice",
+            "Olympique Lyonnais",
+            "Olympique de Marseille",
+            "Paris FC",
+            "Paris Saint-Germain FC",
+            "RC Strasbourg Alsace",
+            "Racing Club de Lens",
+            "Stade Brestois 29",
+            "Stade Rennais FC 1901",
+            "Toulouse FC"
+          ],
           "competition_name_matches_queue": true,
           "competition_names": [
             "Ligue 1"
@@ -4029,6 +4942,26 @@
           "country_matches_queue": true,
           "date_only_kickoffs": 3840,
           "eligible_observation_count": 0,
+          "home_team_names": [
+            "AJ Auxerre",
+            "AS Monaco FC",
+            "Angers SCO",
+            "ES Troyes AC",
+            "FC Lorient",
+            "Le Havre AC",
+            "Le Mans FC",
+            "Lille OSC",
+            "OGC Nice",
+            "Olympique Lyonnais",
+            "Olympique de Marseille",
+            "Paris FC",
+            "Paris Saint-Germain FC",
+            "RC Strasbourg Alsace",
+            "Racing Club de Lens",
+            "Stade Brestois 29",
+            "Stade Rennais FC 1901",
+            "Toulouse FC"
+          ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [
             "date=2026-08-21; time=20:45",
@@ -4081,6 +5014,46 @@
       "identity_decision": "not_approved",
       "provider_sources": [
         {
+          "away_team_names": [
+            "Birmingham City",
+            "Blackburn Rovers",
+            "Bristol City",
+            "Cardiff City",
+            "Charlton Athletic",
+            "Derby County",
+            "Portsmouth",
+            "Preston North End",
+            "Queens Park Rangers",
+            "Watford",
+            "West Bromwich Albion",
+            "Wrexham"
+          ],
+          "combined_team_names": [
+            "Birmingham City",
+            "Blackburn Rovers",
+            "Bolton Wanderers",
+            "Bristol City",
+            "Burnley",
+            "Cardiff City",
+            "Charlton Athletic",
+            "Derby County",
+            "Lincoln City",
+            "Middlesbrough",
+            "Millwall",
+            "Norwich City",
+            "Portsmouth",
+            "Preston North End",
+            "Queens Park Rangers",
+            "Sheffield United",
+            "Southampton",
+            "Stoke City",
+            "Swansea City",
+            "Watford",
+            "West Bromwich Albion",
+            "West Ham United",
+            "Wolverhampton",
+            "Wrexham"
+          ],
           "competition_name_matches_queue": true,
           "competition_names": [
             "Championship"
@@ -4091,6 +5064,20 @@
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
           "eligible_observation_count": 45,
+          "home_team_names": [
+            "Bolton Wanderers",
+            "Burnley",
+            "Lincoln City",
+            "Middlesbrough",
+            "Millwall",
+            "Norwich City",
+            "Sheffield United",
+            "Southampton",
+            "Stoke City",
+            "Swansea City",
+            "West Ham United",
+            "Wolverhampton"
+          ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [],
           "local_date_time_without_timezone": 0,
@@ -4125,6 +5112,58 @@
           "valid_timezone_aware_kickoffs": 45
         },
         {
+          "away_team_names": [
+            "Birmingham City FC",
+            "Blackburn Rovers FC",
+            "Bolton Wanderers FC",
+            "Bristol City FC",
+            "Burnley FC",
+            "Cardiff City FC",
+            "Charlton Athletic FC",
+            "Derby County FC",
+            "Lincoln City FC",
+            "Middlesbrough FC",
+            "Millwall FC",
+            "Norwich City FC",
+            "Portsmouth FC",
+            "Preston North End FC",
+            "Queens Park Rangers FC",
+            "Sheffield United FC",
+            "Southampton FC",
+            "Stoke City FC",
+            "Swansea City AFC",
+            "Watford FC",
+            "West Bromwich Albion FC",
+            "West Ham United FC",
+            "Wolverhampton Wanderers FC",
+            "Wrexham AFC"
+          ],
+          "combined_team_names": [
+            "Birmingham City FC",
+            "Blackburn Rovers FC",
+            "Bolton Wanderers FC",
+            "Bristol City FC",
+            "Burnley FC",
+            "Cardiff City FC",
+            "Charlton Athletic FC",
+            "Derby County FC",
+            "Lincoln City FC",
+            "Middlesbrough FC",
+            "Millwall FC",
+            "Norwich City FC",
+            "Portsmouth FC",
+            "Preston North End FC",
+            "Queens Park Rangers FC",
+            "Sheffield United FC",
+            "Southampton FC",
+            "Stoke City FC",
+            "Swansea City AFC",
+            "Watford FC",
+            "West Bromwich Albion FC",
+            "West Ham United FC",
+            "Wolverhampton Wanderers FC",
+            "Wrexham AFC"
+          ],
           "competition_name_matches_queue": true,
           "competition_names": [
             "Championship"
@@ -4135,6 +5174,32 @@
           "country_matches_queue": true,
           "date_only_kickoffs": 5280,
           "eligible_observation_count": 0,
+          "home_team_names": [
+            "Birmingham City FC",
+            "Blackburn Rovers FC",
+            "Bolton Wanderers FC",
+            "Bristol City FC",
+            "Burnley FC",
+            "Cardiff City FC",
+            "Charlton Athletic FC",
+            "Derby County FC",
+            "Lincoln City FC",
+            "Middlesbrough FC",
+            "Millwall FC",
+            "Norwich City FC",
+            "Portsmouth FC",
+            "Preston North End FC",
+            "Queens Park Rangers FC",
+            "Sheffield United FC",
+            "Southampton FC",
+            "Stoke City FC",
+            "Swansea City AFC",
+            "Watford FC",
+            "West Bromwich Albion FC",
+            "West Ham United FC",
+            "Wolverhampton Wanderers FC",
+            "Wrexham AFC"
+          ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [
             "date=2026-08-14; time=20:00",
@@ -4186,6 +5251,37 @@
       "identity_decision": "not_approved",
       "provider_sources": [
         {
+          "away_team_names": [
+            "ADO Den Haag",
+            "AZ Alkmaar",
+            "Excelsior",
+            "Fortuna Sittard",
+            "PEC Zwolle",
+            "PSV Eindhoven",
+            "SC Cambuur",
+            "SC Heerenveen",
+            "Willem II Tilburg"
+          ],
+          "combined_team_names": [
+            "ADO Den Haag",
+            "AFC Ajax",
+            "AZ Alkmaar",
+            "Excelsior",
+            "FC Groningen",
+            "FC Twente",
+            "FC Utrecht",
+            "Feyenoord",
+            "Fortuna Sittard",
+            "Go Ahead Eagles",
+            "NEC Nijmegen",
+            "PEC Zwolle",
+            "PSV Eindhoven",
+            "SC Cambuur",
+            "SC Heerenveen",
+            "SC Telstar",
+            "Sparta Rotterdam",
+            "Willem II Tilburg"
+          ],
           "competition_name_matches_queue": true,
           "competition_names": [
             "Eredivisie"
@@ -4196,6 +5292,17 @@
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
           "eligible_observation_count": 24,
+          "home_team_names": [
+            "AFC Ajax",
+            "FC Groningen",
+            "FC Twente",
+            "FC Utrecht",
+            "Feyenoord",
+            "Go Ahead Eagles",
+            "NEC Nijmegen",
+            "SC Telstar",
+            "Sparta Rotterdam"
+          ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [],
           "local_date_time_without_timezone": 0,
@@ -4230,6 +5337,46 @@
           "valid_timezone_aware_kickoffs": 24
         },
         {
+          "away_team_names": [
+            "ADO Den Haag",
+            "AFC Ajax",
+            "AZ",
+            "FC Groningen",
+            "FC Twente '65",
+            "FC Utrecht",
+            "Feyenoord Rotterdam",
+            "Fortuna Sittard",
+            "Go Ahead Eagles",
+            "NEC",
+            "PEC Zwolle",
+            "PSV",
+            "SBV Excelsior",
+            "SC Cambuur-Leeuwarden",
+            "SC Heerenveen",
+            "Sparta Rotterdam",
+            "Telstar 1963",
+            "Willem II Tilburg"
+          ],
+          "combined_team_names": [
+            "ADO Den Haag",
+            "AFC Ajax",
+            "AZ",
+            "FC Groningen",
+            "FC Twente '65",
+            "FC Utrecht",
+            "Feyenoord Rotterdam",
+            "Fortuna Sittard",
+            "Go Ahead Eagles",
+            "NEC",
+            "PEC Zwolle",
+            "PSV",
+            "SBV Excelsior",
+            "SC Cambuur-Leeuwarden",
+            "SC Heerenveen",
+            "Sparta Rotterdam",
+            "Telstar 1963",
+            "Willem II Tilburg"
+          ],
           "competition_name_matches_queue": true,
           "competition_names": [
             "Eredivisie"
@@ -4240,6 +5387,26 @@
           "country_matches_queue": true,
           "date_only_kickoffs": 2000,
           "eligible_observation_count": 0,
+          "home_team_names": [
+            "ADO Den Haag",
+            "AFC Ajax",
+            "AZ",
+            "FC Groningen",
+            "FC Twente '65",
+            "FC Utrecht",
+            "Feyenoord Rotterdam",
+            "Fortuna Sittard",
+            "Go Ahead Eagles",
+            "NEC",
+            "PEC Zwolle",
+            "PSV",
+            "SBV Excelsior",
+            "SC Cambuur-Leeuwarden",
+            "SC Heerenveen",
+            "Sparta Rotterdam",
+            "Telstar 1963",
+            "Willem II Tilburg"
+          ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [
             "date=2026-08-07; time=20:00",
@@ -4291,6 +5458,28 @@
       "identity_decision": "not_approved",
       "provider_sources": [
         {
+          "away_team_names": [
+            "Charlotte FC",
+            "Columbus Crew",
+            "FC Cincinnati",
+            "Philadelphia Union",
+            "Portland Timbers",
+            "Real Salt Lake"
+          ],
+          "combined_team_names": [
+            "Charlotte FC",
+            "Chicago Fire",
+            "Columbus Crew",
+            "FC Cincinnati",
+            "FC Dallas",
+            "Inter Miami CF",
+            "New England Revolution",
+            "Orlando City SC",
+            "Philadelphia Union",
+            "Portland Timbers",
+            "Real Salt Lake",
+            "Seattle Sounders FC"
+          ],
           "competition_name_matches_queue": true,
           "competition_names": [
             "MLS"
@@ -4301,6 +5490,14 @@
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
           "eligible_observation_count": 35,
+          "home_team_names": [
+            "Chicago Fire",
+            "FC Dallas",
+            "Inter Miami CF",
+            "New England Revolution",
+            "Orlando City SC",
+            "Seattle Sounders FC"
+          ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [],
           "local_date_time_without_timezone": 0,
@@ -4327,6 +5524,16 @@
           "valid_timezone_aware_kickoffs": 35
         },
         {
+          "away_team_names": [
+            "FC Cincinnati",
+            "Real Salt Lake"
+          ],
+          "combined_team_names": [
+            "FC Cincinnati",
+            "Orlando City SC",
+            "Real Salt Lake",
+            "Seattle Sounders FC"
+          ],
           "competition_name_matches_queue": true,
           "competition_names": [
             "MLS"
@@ -4337,6 +5544,10 @@
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
           "eligible_observation_count": 22,
+          "home_team_names": [
+            "Orlando City SC",
+            "Seattle Sounders FC"
+          ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [],
           "local_date_time_without_timezone": 0,
@@ -4384,6 +5595,28 @@
       "identity_decision": "not_approved",
       "provider_sources": [
         {
+          "away_team_names": [
+            "Red Bull Salzburg",
+            "SC Austria Lustenau",
+            "SK Rapid Wien",
+            "SK Sturm Graz",
+            "SV Ried",
+            "TSV Hartberg"
+          ],
+          "combined_team_names": [
+            "FK Austria Wien",
+            "Grazer AK 1902",
+            "LASK",
+            "Red Bull Salzburg",
+            "SC Austria Lustenau",
+            "SCR Altach",
+            "SK Rapid Wien",
+            "SK Sturm Graz",
+            "SV Ried",
+            "TSV Hartberg",
+            "WSG Tirol",
+            "Wolfsberger AC"
+          ],
           "competition_name_matches_queue": true,
           "competition_names": [
             "Austrian Bundesliga"
@@ -4394,6 +5627,14 @@
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
           "eligible_observation_count": 15,
+          "home_team_names": [
+            "FK Austria Wien",
+            "Grazer AK 1902",
+            "LASK",
+            "SCR Altach",
+            "WSG Tirol",
+            "Wolfsberger AC"
+          ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [],
           "local_date_time_without_timezone": 0,
@@ -4428,6 +5669,19 @@
           "valid_timezone_aware_kickoffs": 15
         },
         {
+          "away_team_names": [
+            "Austria Lustenau",
+            "Rapid Vienna",
+            "TSV Hartberg"
+          ],
+          "combined_team_names": [
+            "Austria Lustenau",
+            "Grazer AK",
+            "LASK Linz",
+            "Rapid Vienna",
+            "TSV Hartberg",
+            "WSG Swarovski Tirol"
+          ],
           "competition_name_matches_queue": true,
           "competition_names": [
             "Austrian Bundesliga"
@@ -4438,6 +5692,11 @@
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
           "eligible_observation_count": 3,
+          "home_team_names": [
+            "Grazer AK",
+            "LASK Linz",
+            "WSG Swarovski Tirol"
+          ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [],
           "local_date_time_without_timezone": 0,
@@ -4721,7 +5980,7 @@
     }
   ],
   "exact_overlap_count": 20,
-  "generated_at_utc": "2026-11-15T12:46:45.465416+00:00",
+  "generated_at_utc": "2026-11-15T13:33:24.727156+00:00",
   "interpretation": "An exact team-pair and UTC-kickoff overlap is strong fixture-level corroboration, but does not alone approve competition or season identity. Date-level candidates match team pairs on dates within one day where at least one source has a local date/time without timezone; they are manual-review leads only and never count as exact overlaps. Missing observations in selected snapshots mean not observed in this audit window, not that the provider lacks the competition.",
   "priority_a_entry_count": 12,
   "providers_checked": [
