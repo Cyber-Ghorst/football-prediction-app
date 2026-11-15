@@ -20,6 +20,7 @@ on:
           - openscores_sportmonks_reconciliation
           - sportmonks_catalogue_access_audit
           - provider_league_catalogue_audit
+          - provider_season_roster_audit
           - deployment_redeploy
         default: health_check
       season:
@@ -124,7 +125,7 @@ jobs:
               trigger = json.loads(Path(".agent/trigger.json").read_text(encoding="utf-8"))
               operation = trigger.get("operation", "")
 
-          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync", "tipmaster_refresh_verify", "openscores_connection_check", "openscores_entity_mapping_audit", "openscores_sportmonks_reconciliation", "sportmonks_catalogue_access_audit", "provider_league_catalogue_audit", "learning_audit", "deployment_redeploy"}
+          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync", "tipmaster_refresh_verify", "openscores_connection_check", "openscores_entity_mapping_audit", "openscores_sportmonks_reconciliation", "sportmonks_catalogue_access_audit", "provider_league_catalogue_audit", "provider_season_roster_audit", "learning_audit", "deployment_redeploy"}
           if operation not in allowed:
               raise SystemExit("Rejected unsupported or missing operation")
           if operation == "prediction_run":
@@ -507,6 +508,18 @@ jobs:
           set -euo pipefail
           python provider_league_catalogue_audit.py
 
+      - name: Audit season-scoped rosters from independent providers (read-only)
+        if: steps.operation.outputs.operation == 'provider_season_roster_audit'
+        env:
+          HIGHLIGHTLY_API_KEY: ${{ secrets.HIGHLIGHTLY_API_KEY }}
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+          FREE_FIXTURE_TERMS_ACK_HIGHLIGHTLY: ${{ secrets.FREE_FIXTURE_TERMS_ACK_HIGHLIGHTLY }}
+          HIGHLIGHTLY_NON_BETTING_USE_CONFIRMED: ${{ secrets.HIGHLIGHTLY_NON_BETTING_USE_CONFIRMED }}
+          LIVESCORE_FOOTBALL_BASE_URL: ${{ secrets.LIVESCORE_FOOTBALL_BASE_URL }}
+        run: |
+          set -euo pipefail
+          python provider_season_roster_audit.py
+
       - name: Reconcile OpenScores against canonical Sportmonks history
         if: steps.operation.outputs.operation == 'openscores_sportmonks_reconciliation'
         env:
@@ -642,6 +655,7 @@ jobs:
               ("openscores-sportmonks-reconciliation-report.json", "OpenScores to Sportmonks reconciliation"),
               ("sportmonks-catalogue-access-report.json", "Sportmonks account catalogue access audit"),
               ("provider-league-catalogue-audit.json", "Highlightly and LiveScoreFootball league catalogue audit"),
+              ("provider-season-roster-audit.json", "Season-scoped provider roster evidence audit"),
               ("prediction-run-report.json", "Automated prediction run report"),
               ("learning-readiness-report.json", "Leakage-safe learning readiness report"),
           )
