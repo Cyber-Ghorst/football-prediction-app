@@ -1,6 +1,6 @@
 {
   "report_name": "priority_b_external_identity_evidence",
-  "generated_at": "2026-11-15T17:15:28.613Z",
+  "generated_at": "2026-11-15T17:17:43.860Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority B single-provider competition identities; official evidence can support competition type, country and season context but does not replace independent provider corroboration or human canonical approval.",
   "safeguards": [
@@ -1150,6 +1150,332 @@
         "Obtain broader provider-specific fixture and roster samples.",
         "Verify provider season boundaries and competition ID semantics.",
         "Seek independent provider corroboration where available."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_029",
+      "name": "League One",
+      "observed_country": "England",
+      "provider": "bzzoiro",
+      "provider_competition_id": "86",
+      "provider_season_id": "86::1655",
+      "provider_season_label": "League One 26/27",
+      "raw_observation_count": 50,
+      "external_competition_type": "men's third-tier domestic league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 24,
+        "matches_per_club": 46
+      },
+      "external_evidence": [
+        {
+          "publisher": "English Football League",
+          "url": "https://www.efl.com/news/2026/june/25/the-2026-27-efl-fixtures-are-here/",
+          "supports": "Official 2026/27 League One fixtures."
+        },
+        {
+          "publisher": "English Football League",
+          "url": "https://www.efl.com/competitions/efl-league-one",
+          "supports": "Official League One table and competition information."
+        },
+        {
+          "publisher": "English Football League",
+          "url": "https://images.gc.eflservices.co.uk/6a32d710-5b0b-11f0-ad0f-97502a343283.pdf",
+          "supports": "EFL regulations define League One as 24 clubs."
+        }
+      ],
+      "assessment": "Official EFL evidence establishes League One as the men's third tier with 24 clubs and 46 matches per club. This Bzzoiro record is a plausible counterpart to LiveScoreFootball's English League One record, but no provider crosswalk is approved.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Verify provider-specific season scope and competition-ID semantics.",
+        "Compare exact fixtures and kickoff timestamps where multiple provider records may describe the same competition.",
+        "Keep national-team competitions separate from club competitions and league tiers."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_030",
+      "name": "League Two",
+      "observed_country": "England",
+      "provider": "bzzoiro",
+      "provider_competition_id": "87",
+      "provider_season_id": "87::1674",
+      "provider_season_label": "League Two 26/27",
+      "raw_observation_count": 48,
+      "external_competition_type": "men's fourth-tier domestic league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 24,
+        "matches_per_club": 46
+      },
+      "external_evidence": [
+        {
+          "publisher": "English Football League",
+          "url": "https://www.efl.com/news/2026/june/25/the-2026-27-efl-fixtures-are-here/",
+          "supports": "Official 2026/27 League Two fixtures."
+        },
+        {
+          "publisher": "English Football League",
+          "url": "https://www.efl.com/competitions/efl-league-two",
+          "supports": "Official League Two table and competition information."
+        },
+        {
+          "publisher": "English Football League",
+          "url": "https://images.gc.eflservices.co.uk/6a32d710-5b0b-11f0-ad0f-97502a343283.pdf",
+          "supports": "EFL regulations define a 72-club structure with 24 clubs in each division."
+        }
+      ],
+      "assessment": "Official EFL evidence establishes League Two as the men's fourth tier with 24 clubs and 46 matches per club. This Bzzoiro record is a plausible counterpart to LiveScoreFootball's English League Two record, but no provider crosswalk is approved.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Verify provider-specific season scope and competition-ID semantics.",
+        "Compare exact fixtures and kickoff timestamps where multiple provider records may describe the same competition.",
+        "Keep national-team competitions separate from club competitions and league tiers."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_031",
+      "name": "National League",
+      "observed_country": "England",
+      "provider": "bzzoiro",
+      "provider_competition_id": "91",
+      "provider_season_id": "91::1903",
+      "provider_season_label": "National League 26/27",
+      "raw_observation_count": 50,
+      "external_competition_type": "men's fifth-tier domestic league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 24
+      },
+      "external_evidence": [
+        {
+          "publisher": "The National League",
+          "url": "https://www.thenationalleague.org.uk/news/2026/november/13/all-games-available-to-watch-on-dazn-this-weekend-/",
+          "supports": "Official 2026/27 coverage article lists the 12 Enterprise National League fixtures in a standard round."
+        },
+        {
+          "publisher": "The National League",
+          "url": "https://www.thenationalleague.org.uk/news/2026/october/01/how-to-watch-and-follow-the-enterprise-national-league-this-weekend/",
+          "supports": "Official article lists all 12 fixtures in a standard round."
+        }
+      ],
+      "assessment": "Official National League evidence establishes a 24-club men's fifth-tier competition. This Bzzoiro record is a plausible counterpart to LiveScoreFootball's English National League record; exact fixture corroboration and season-ID equivalence remain unverified.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Verify provider-specific season scope and competition-ID semantics.",
+        "Compare exact fixtures and kickoff timestamps where multiple provider records may describe the same competition.",
+        "Keep national-team competitions separate from club competitions and league tiers."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_033",
+      "name": "Conference League",
+      "observed_country": "Europe",
+      "provider": "openligadb",
+      "provider_competition_id": "6015",
+      "provider_season_id": "6015::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 324,
+      "external_competition_type": "men's European club competition",
+      "external_season": "2026/27",
+      "official_scope": {
+        "league_phase_clubs": 36,
+        "matches_per_club": 6,
+        "league_phase_matches": 108
+      },
+      "external_evidence": [
+        {
+          "publisher": "UEFA",
+          "url": "https://www.uefa.com/uefaconferenceleague/news/02a8-21a6c3b6-3209db321888-1000--uefa-conference-league-league-phase-draw/",
+          "supports": "Official 2026/27 league-phase draw: 36 clubs and 108 matches across six matchdays."
+        },
+        {
+          "publisher": "UEFA",
+          "url": "https://documents.uefa.com/r/Regulations-of-the-UEFA-Conference-League-2026/27/Article-17-Match-system-league-phase-Online",
+          "supports": "Official 2026/27 regulations specify six opponents per club in the league phase."
+        }
+      ],
+      "assessment": "Official UEFA sources establish the men's UEFA Conference League club competition for 2026/27 with 36 league-phase clubs, six matches per club and 108 league-phase matches. OpenLigaDB's 324 observations are a broad sample; its 2026 season ID needs explicit mapping to UEFA's 2026/27 season.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Verify provider-specific season scope and competition-ID semantics.",
+        "Compare exact fixtures and kickoff timestamps where multiple provider records may describe the same competition.",
+        "Keep national-team competitions separate from club competitions and league tiers."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_034",
+      "name": "Europa League",
+      "observed_country": "Europe",
+      "provider": "openligadb",
+      "provider_competition_id": "6000",
+      "provider_season_id": "6000::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 432,
+      "external_competition_type": "men's European club competition",
+      "external_season": "2026/27",
+      "official_scope": {
+        "league_phase_clubs": 36,
+        "matches_per_club": 8,
+        "league_phase_matches": 144
+      },
+      "external_evidence": [
+        {
+          "publisher": "UEFA",
+          "url": "https://www.uefa.com/uefaeuropaleague/news/02a8-2158218f1f65-17c3b264ec94-1000--uefa-europa-league-league-phase-draw/",
+          "supports": "Official 2026/27 draw: 36 clubs and 144 matches over eight matchdays."
+        },
+        {
+          "publisher": "UEFA",
+          "url": "https://documents.uefa.com/r/Regulations-of-the-UEFA-Europa-League-2026/27/Article-17-Match-system-league-phase-Online",
+          "supports": "Official 2026/27 regulations specify eight opponents per club."
+        }
+      ],
+      "assessment": "Official UEFA sources establish the men's UEFA Europa League for 2026/27 with 36 league-phase clubs, eight matches per club and 144 league-phase matches. OpenLigaDB's season label 2026 is consistent with the season start year but does not prove full 2026/27 scope.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Verify provider-specific season scope and competition-ID semantics.",
+        "Compare exact fixtures and kickoff timestamps where multiple provider records may describe the same competition.",
+        "Keep national-team competitions separate from club competitions and league tiers."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_035",
+      "name": "Nations League A",
+      "observed_country": "Europe",
+      "provider": "openligadb",
+      "provider_competition_id": "5978",
+      "provider_season_id": "5978::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 144,
+      "external_competition_type": "men's national-team competition tier",
+      "external_season": "2026/27",
+      "official_scope": {
+        "national_teams": 16,
+        "groups": 4,
+        "teams_per_group": 4
+      },
+      "external_evidence": [
+        {
+          "publisher": "UEFA",
+          "url": "https://www.uefa.com/uefanationsleague/news/0298-1d6ef1acfaef-b54fcf1da859-1000--2026-27-uefa-nations-league-all-you-need-to-know/",
+          "supports": "Official 2026/27 Nations League guide lists four League A groups of four national teams."
+        },
+        {
+          "publisher": "UEFA",
+          "url": "https://documents.uefa.com/r/Regulations-of-the-UEFA-Nations-League-2026/27/Article-13-Group-formation-league-phase-Online",
+          "supports": "Official regulations specify 16 national teams in League A."
+        }
+      ],
+      "assessment": "Official UEFA sources establish Nations League A as the top tier of a men's national-team competition, comprising 16 national teams in four groups. This is not a club league and must remain distinct from the broad UEFA Nations League record.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Verify provider-specific season scope and competition-ID semantics.",
+        "Compare exact fixtures and kickoff timestamps where multiple provider records may describe the same competition.",
+        "Keep national-team competitions separate from club competitions and league tiers."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_036",
+      "name": "UEFA Champions League",
+      "observed_country": "Europe",
+      "provider": "openligadb",
+      "provider_competition_id": "4946;5997",
+      "provider_season_id": "4946::2026;5997::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 528,
+      "external_competition_type": "men's European club competition",
+      "external_season": "2026/27",
+      "official_scope": {
+        "league_phase_clubs": 36,
+        "matches_per_club": 8,
+        "league_phase_matches": 144
+      },
+      "external_evidence": [
+        {
+          "publisher": "UEFA",
+          "url": "https://www.uefa.com/uefachampionsleague/news/02a8-217215a96a96-9a3b43fad585-1000--uefa-champions-league-league-phase-draw/",
+          "supports": "Official 2026/27 league-phase draw: 36 clubs and 144 matches over eight matchdays."
+        },
+        {
+          "publisher": "UEFA",
+          "url": "https://documents.uefa.com/r/Regulations-of-the-UEFA-Champions-League-2026/27/Article-17-Match-system-league-phase-Online",
+          "supports": "Official regulations specify eight opponents per club in the league phase."
+        }
+      ],
+      "assessment": "Official UEFA sources establish the men's Champions League 2026/27 with 36 league-phase clubs, eight matches per club and 144 league-phase matches. OpenLigaDB has two separate competition IDs (4946 and 5997) and separate observation counts; the reason for the split is not established. Preserve both IDs separately until source semantics and exact fixture scope are reviewed.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Verify provider-specific season scope and competition-ID semantics.",
+        "Compare exact fixtures and kickoff timestamps where multiple provider records may describe the same competition.",
+        "Keep national-team competitions separate from club competitions and league tiers."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_037",
+      "name": "UEFA Nations League",
+      "observed_country": "Europe",
+      "provider": "bzzoiro",
+      "provider_competition_id": "64",
+      "provider_season_id": "64::1430",
+      "provider_season_label": "UEFA Nations League 26/27",
+      "raw_observation_count": 122,
+      "external_competition_type": "men's national-team competition",
+      "external_season": "2026/27",
+      "official_scope": {
+        "national_associations": 54,
+        "leagues": 4,
+        "league_a_teams": 16
+      },
+      "external_evidence": [
+        {
+          "publisher": "UEFA",
+          "url": "https://www.uefa.com/uefanationsleague/news/0298-1d6ef1acfaef-b54fcf1da859-1000--2026-27-uefa-nations-league-all-you-need-to-know/",
+          "supports": "Official 2026/27 Nations League guide lists Leagues A–D and the 54 participating associations."
+        },
+        {
+          "publisher": "UEFA",
+          "url": "https://documents.uefa.com/r/Regulations-of-the-UEFA-Nations-League-2026/27/Article-13-Group-formation-league-phase-Online",
+          "supports": "Official regulations define the four leagues, with 16 teams in each of Leagues A, B and C."
+        }
+      ],
+      "assessment": "Official UEFA sources establish the UEFA Nations League as a men's national-team competition across four leagues. The Bzzoiro record is a broad competition identity, not the same entity as OpenLigaDB's narrower Nations League A record. Do not merge them.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Verify provider-specific season scope and competition-ID semantics.",
+        "Compare exact fixtures and kickoff timestamps where multiple provider records may describe the same competition.",
+        "Keep national-team competitions separate from club competitions and league tiers."
       ]
     }
   ]
