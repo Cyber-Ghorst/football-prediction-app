@@ -137,17 +137,17 @@ def audit_provider_link_parity(
                         COUNT(DISTINCT CASE
                             WHEN approval.link_id IS NULL
                              AND NOT (link.provider = 'sportmonks'
-                                      AND link.provider_entity_id = link.canonical_entity_id)
+                                      AND link.canonical_entity_id = 'sportmonks:' || link.provider_entity_id)
                             THEN link.link_id
                         END) AS unapproved_links,
                         COUNT(DISTINCT CASE
                             WHEN link.provider = 'sportmonks'
-                             AND link.provider_entity_id = link.canonical_entity_id
+                             AND link.canonical_entity_id = 'sportmonks:' || link.provider_entity_id
                             THEN link.link_id
                         END) AS native_identity_anchors,
                         COUNT(DISTINCT CASE
                             WHEN link.provider = 'sportmonks'
-                             AND link.provider_entity_id = link.canonical_entity_id
+                             AND link.canonical_entity_id = 'sportmonks:' || link.provider_entity_id
                              AND legacy_entity.{primary_key} IS NULL
                             THEN link.link_id
                         END) AS native_identity_anchors_missing_target,
