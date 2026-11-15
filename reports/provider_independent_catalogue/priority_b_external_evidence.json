@@ -1,6 +1,6 @@
 {
   "report_name": "priority_b_external_identity_evidence",
-  "generated_at": "2026-11-15T17:19:51.926Z",
+  "generated_at": "2026-11-15T17:22:33.127Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority B single-provider competition identities; official evidence can support competition type, country and season context but does not replace independent provider corroboration or human canonical approval.",
   "safeguards": [
@@ -1556,6 +1556,177 @@
         "Compare exact fixture pairs and timezone-normalized kickoffs with Bzzoiro and OpenFootball records.",
         "Verify the scope of provider season ID 710::2026.",
         "Do not create links from competition-name similarity."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_041",
+      "name": "Ligue 2",
+      "observed_country": "France",
+      "provider": "bzzoiro",
+      "provider_competition_id": "89",
+      "provider_season_id": "89::1848",
+      "provider_season_label": "Ligue 2 26/27",
+      "raw_observation_count": 21,
+      "external_competition_type": "men's second-tier domestic professional league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 18,
+        "matchdays": 34,
+        "regular_season_matches": 306
+      },
+      "external_evidence": [
+        {
+          "publisher": "Ligue de Football Professionnel",
+          "url": "https://www.lfp.fr/article/ligue-2-bkt-le-calendrier-de-la-saison-2026-2027",
+          "supports": "Official 34-round 2026/27 Ligue 2 BKT calendar and fixture list."
+        },
+        {
+          "publisher": "Ligue1.com / LFP",
+          "url": "https://ligue1.com/fr/articles/l1_article_5343-les-dates-de-reprise-des-clubs-de-ligue-2-bkt-2627",
+          "supports": "Official publication lists the 18 Ligue 2 BKT clubs for 2026/27."
+        }
+      ],
+      "assessment": "Official LFP sources establish Ligue 2 BKT 2026/27 as a distinct second-tier professional league with 34 matchdays and an 18-club fixture programme. Bzzoiro's 21 observations do not establish full roster coverage or provider season-ID semantics.",
+      "review_status": "external_identity_supported_single_provider_roster_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider fixture/roster evidence and validate provider season-ID semantics.",
+        "Compare exact fixture pairs and kickoff timestamps against official calendars where applicable.",
+        "Keep source-scoped until a reviewed crosswalk is supported."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_042",
+      "name": "Ligue 3",
+      "observed_country": "France",
+      "provider": "bzzoiro",
+      "provider_competition_id": "105",
+      "provider_season_id": "105::2163",
+      "provider_season_label": "Ligue 3 26/27",
+      "raw_observation_count": 10,
+      "external_competition_type": "men's third-tier professional league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 18,
+        "matchdays": 34,
+        "regular_season_matches": 306,
+        "format": "Single table, home-and-away; promotion play-offs"
+      },
+      "external_evidence": [
+        {
+          "publisher": "Fédération Française de Football",
+          "url": "https://www.fff.fr/article/16778-la-fff-officialise-la-ligue-3-professionnelle.html",
+          "supports": "Official creation of professional Ligue 3 from 2026/27, 18 clubs, 34 matchdays and renaming of lower divisions."
+        },
+        {
+          "publisher": "Fédération Française de Football",
+          "url": "https://www.fff.fr/article/17022-le-calendrier-2026-2027-est-servi.html",
+          "supports": "Official 2026/27 Ligue 3 fixture calendar and full 18-club participant list."
+        },
+        {
+          "publisher": "Fédération Française de Football",
+          "url": "https://media.fff.fr/uploads/documents/textes-votes-a-l-ag-fff-du-06.06.2026.pdf",
+          "supports": "Official Ligue 3 regulations effective 1 July 2026."
+        }
+      ],
+      "assessment": "The FFF officially launched professional Ligue 3 for 2026/27, replacing the former Championnat National. It is an 18-club single-poule competition with 34 home-and-away matchdays. Bzzoiro's 10 observations are insufficient to verify complete roster coverage or the meaning of season ID 105::2163.",
+      "review_status": "external_identity_supported_new_official_division_provider_scope_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider fixture/roster evidence and validate provider season-ID semantics.",
+        "Compare exact fixture pairs and kickoff timestamps against official calendars where applicable.",
+        "Keep source-scoped until a reviewed crosswalk is supported."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_044",
+      "name": "3. Liga",
+      "observed_country": "Germany",
+      "provider": "openligadb",
+      "provider_competition_id": "4939",
+      "provider_season_id": "4939::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 1140,
+      "external_competition_type": "men's third-tier domestic professional league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 20,
+        "matchdays": 38,
+        "regular_season_matches": 380
+      },
+      "external_evidence": [
+        {
+          "publisher": "Deutscher Fußball-Bund",
+          "url": "https://www.dfb.de/news/teilnehmerfeld-der-3-liga-steht-fest-havelse-rueckt-fuer-1860-nach",
+          "supports": "Official 2026/27 3. Liga participant field of 20 clubs and 380 matches."
+        },
+        {
+          "publisher": "DFB Datencenter",
+          "url": "https://datencenter.dfb.de/en/competitions/4/seasons/current/current_matchweek",
+          "supports": "Official DFB 3. Liga 2026/27 table and current competition data."
+        }
+      ],
+      "assessment": "DFB official materials establish the 2026/27 3. Liga as a 20-club professional division with 380 matches. OpenLigaDB contributes 1,140 observations, but the season ID's exact scope and whether all rows belong to this competition-season remain to be verified.",
+      "review_status": "external_identity_supported_single_provider_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider fixture/roster evidence and validate provider season-ID semantics.",
+        "Compare exact fixture pairs and kickoff timestamps against official calendars where applicable.",
+        "Keep source-scoped until a reviewed crosswalk is supported."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_046",
+      "name": "DFB Pokal",
+      "observed_country": "Germany",
+      "provider": "openligadb",
+      "provider_competition_id": "4945",
+      "provider_season_id": "4945::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 168,
+      "external_competition_type": "men's national knockout cup",
+      "external_season": "2026/27",
+      "official_scope": {
+        "participants": 64,
+        "matches": 63,
+        "format": "Single-elimination national cup"
+      },
+      "external_evidence": [
+        {
+          "publisher": "Deutscher Fußball-Bund",
+          "url": "https://www.dfb.de/news/faq-hier-wird-die-erste-dfb-pokalrunde-live-gezeigt",
+          "supports": "Official DFB confirms 64 clubs admitted to the 2026/27 first main round."
+        },
+        {
+          "publisher": "Deutscher Fußball-Bund",
+          "url": "https://www.dfb.de/news/dates-and-kick-off-times-confirmed-for-dfb-pokal-first-round",
+          "supports": "Official 2026/27 first-round schedule and cup competition context."
+        },
+        {
+          "publisher": "Deutscher Fußball-Bund",
+          "url": "https://www.dfb.de/maenner/wettbewerbe/dfb-pokal/modus",
+          "supports": "Official DFB competition format and 64-team qualification rules."
+        }
+      ],
+      "assessment": "DFB official sources establish the 2026/27 DFB-Pokal as Germany's national men's knockout cup, with 64 clubs in the opening round and 63 matches across the competition. OpenLigaDB's 168 observations are not equivalent to the unique match count; row semantics and provider season scope remain unverified.",
+      "review_status": "external_identity_supported_single_provider_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider fixture/roster evidence and validate provider season-ID semantics.",
+        "Compare exact fixture pairs and kickoff timestamps against official calendars where applicable.",
+        "Keep source-scoped until a reviewed crosswalk is supported."
       ]
     }
   ]
