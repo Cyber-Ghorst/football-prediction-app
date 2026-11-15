@@ -1,12 +1,76 @@
 {
   "audit_mode": "read_only",
   "database_writes": false,
-  "generated_at": "2026-11-15T16:16:56.500804+00:00",
+  "generated_at": "2026-11-15T16:19:44.917812+00:00",
   "providers": [
     {
       "audit_mode": "read_only",
       "database_writes": false,
-      "generated_at": "2026-11-15T16:16:56.500776+00:00",
+      "generated_at": "2026-11-15T16:19:40.863278+00:00",
+      "interpretation": "Sportmonks source IDs that equal their legacy primary keys are reported as native identity anchors, not cross-provider approvals. Other links require exact approval-audit evidence. Counts do not authorize new links; unapproved, missing-target, or ambiguous records require separate review. No records are created, modified, approved, or promoted by this report.",
+      "provider": "openscores",
+      "report_schema_version": 1,
+      "result": {
+        "entity_types": {
+          "fixture": {
+            "ambiguous_canonical_targets": 0,
+            "approved_links": 0,
+            "approved_links_with_legacy_target": 0,
+            "approved_targets_missing": 0,
+            "native_identity_anchors": 0,
+            "native_identity_anchors_missing_target": 0,
+            "total_links": 150,
+            "unapproved_links": 150
+          },
+          "league": {
+            "ambiguous_canonical_targets": 0,
+            "approved_links": 0,
+            "approved_links_with_legacy_target": 0,
+            "approved_targets_missing": 0,
+            "native_identity_anchors": 0,
+            "native_identity_anchors_missing_target": 0,
+            "total_links": 3,
+            "unapproved_links": 3
+          },
+          "season": {
+            "ambiguous_canonical_targets": 0,
+            "approved_links": 0,
+            "approved_links_with_legacy_target": 0,
+            "approved_targets_missing": 0,
+            "native_identity_anchors": 0,
+            "native_identity_anchors_missing_target": 0,
+            "total_links": 3,
+            "unapproved_links": 3
+          },
+          "team": {
+            "ambiguous_canonical_targets": 0,
+            "approved_links": 0,
+            "approved_links_with_legacy_target": 0,
+            "approved_targets_missing": 0,
+            "native_identity_anchors": 0,
+            "native_identity_anchors_missing_target": 0,
+            "total_links": 60,
+            "unapproved_links": 60
+          }
+        },
+        "provider": "openscores",
+        "read_only": true,
+        "totals": {
+          "ambiguous_canonical_targets": 0,
+          "approved_links": 0,
+          "approved_links_with_legacy_target": 0,
+          "approved_targets_missing": 0,
+          "native_identity_anchors": 0,
+          "native_identity_anchors_missing_target": 0,
+          "total_links": 216,
+          "unapproved_links": 216
+        }
+      }
+    },
+    {
+      "audit_mode": "read_only",
+      "database_writes": false,
+      "generated_at": "2026-11-15T16:19:44.917785+00:00",
       "interpretation": "Sportmonks source IDs that equal their legacy primary keys are reported as native identity anchors, not cross-provider approvals. Other links require exact approval-audit evidence. Counts do not authorize new links; unapproved, missing-target, or ambiguous records require separate review. No records are created, modified, approved, or promoted by this report.",
       "provider": "sportmonks",
       "report_schema_version": 1,
