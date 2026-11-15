@@ -10,7 +10,7 @@ def roster(name, provider_id, method="league_season_standings"):
         "league_id": 67162 if name == "Bundesliga" else 52695 if name == "Ligue 1" else "ger.1",
         "season": 2026,
         "team_evidence_method": method,
-        "teams": [{"id": provider_id, "name": "Bayern München"}],
+        "teams": [{"id": provider_id, "name": "Bayern Munchen"}],
     }
 
 
