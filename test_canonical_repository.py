@@ -46,6 +46,10 @@ class CanonicalRepositoryResolverTests(unittest.TestCase):
             def __init__(self):
                 self.query = ""
                 self.params = None
+            def __enter__(self):
+                return self
+            def __exit__(self, *args):
+                return False
             def execute(self, query, params):
                 self.query, self.params = query, params
             def fetchall(self):
