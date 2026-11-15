@@ -69,6 +69,30 @@ class OpenScoresEntityMappingAuditTests(unittest.TestCase):
         self.assertEqual(result["seasons"][0]["status"], "blocked_until_league_mapping")
         self.assertFalse(result["leagues"][0]["automatic_mapping_created"])
 
+    def test_iso3_country_code_resolves_competition_candidate(self):
+        result = build_entity_mapping_candidates(
+            leagues=[{"id": "os", "name": "Premier League", "country_code": "ENG"}],
+            seasons_by_league={"os": [{"id": "os-season", "name": "Premier League 2025/2026"}]},
+            observed_teams=[],
+            canonical_leagues=[{"id": "sm", "name": "Premier League", "country": "England"}],
+            canonical_seasons=[
+                {"id": "sm-2025", "league_id": "sm", "name": "2025/2026"},
+                {"id": "sm-2026", "league_id": "sm", "name": "2026/2027"},
+            ],
+            canonical_teams=[],
+        )
+        self.assertEqual(result["leagues"][0]["country"], "England")
+        self.assertEqual(result["leagues"][0]["status"], "unique_name_candidate_requires_review")
+        self.assertEqual(result["seasons"][0]["status"], "unique_candidate_requires_review")
+        self.assertEqual(result["seasons"][0]["candidates"][0]["canonical_id"], "sm-2025")
+        self.assertEqual(result["seasons"][0]["candidates"][0]["match_basis"], "exact_season_year_pair")
+        self.assertFalse(result["leagues"][0]["automatic_mapping_created"])
+        self.assertFalse(result["seasons"][0]["automatic_mapping_created"])
+
+    def test_unknown_country_code_does_not_guess_country(self):
+        from openscores_entity_mapping_audit import _league_country
+        self.assertEqual(_league_country({"name": "Premier League", "country_code": "XXX"}), "")
+
     def test_ambiguous_team_names_are_not_selected(self):
         result = build_entity_mapping_candidates(
             leagues=[], seasons_by_league={},
