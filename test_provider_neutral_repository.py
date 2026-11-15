@@ -62,7 +62,7 @@ class ProviderNeutralRepositoryTests(unittest.TestCase):
         self.assertEqual(report["application_owned_canonical_ids_assigned"], 0)
         self.assertEqual(report["normalized_entity_counts"]["leagues"], 2)
         self.assertEqual(report["provider_entity_counts"]["highlightly"]["teams"], 1)
-        self.assertEqual(report["existing_approved_link_counts"]["sportmonks"], 1)
+        self.assertEqual(report["existing_provider_link_counts"]["sportmonks"], 1)
         self.assertEqual(report["invalid_source_identity_count"], 0)
 
     def test_database_facade_issues_only_select_queries_and_never_schema_ddl(self):
