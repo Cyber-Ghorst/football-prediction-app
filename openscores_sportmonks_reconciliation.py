@@ -272,8 +272,24 @@ def _canonical_fixture_count(database_url: str, season_id: str) -> int:
 def write_explicit_openscores_links(
     database_url: str,
     mappings: list[Mapping[str, Any]],
+    *,
+    explicit_approval: bool = False,
 ) -> dict[str, Any]:
-    """Persist explicit links with an auditable verified-mapping record."""
+    """Persist links only when a reviewer explicitly approves every mapping.
+
+    Candidate generation and automated reconciliation must never promote
+    name-based matches into verified links. Each mapping must carry a reviewer
+    and a substantive approval reason from a separately reviewed decision.
+    """
+    if not explicit_approval or not mappings or any(
+        not str(item.get("approved_by") or "").strip()
+        or len(str(item.get("approval_reason") or "").strip()) < 12
+        for item in mappings
+    ):
+        return {
+            "inserted": 0, "existing": 0, "verified": 0,
+            "conflicts": [], "status": "approval_required_no_writes",
+        }
     ensure_provider_entity_link_verifications(database_url)
     conflicts = []
     inserted = 0
@@ -436,10 +452,15 @@ def _pending_mapping_diagnostics(database_url: str) -> dict[str, Any]:
 
 def run_reconciliation(
     *,
-    openscores_client_factory=OpenScoresClient,
-    sportmonks_client_factory=SportmonksClient,
     database_url: str | None = None,
 ) -> dict[str, Any]:
+    """Reconcile staged observations using only pre-existing verified links.
+
+    This operation is deliberately database-only and fail-closed. It does not
+    discover or approve mappings, import canonical Sportmonks fixtures, fetch
+    future fixtures, or create provider links. A separate reviewed operation
+    must populate verified mappings before observations can match.
+    """
     db_url = (database_url or os.getenv("PROVIDER_DATABASE_URL", "")).strip()
     if not db_url:
         raise ValueError("PROVIDER_DATABASE_URL is required")
@@ -447,6 +468,7 @@ def run_reconciliation(
         "operation": "openscores_sportmonks_reconciliation",
         "checked_at_utc": datetime.now(timezone.utc).isoformat(),
         "status": "fail",
+        "mapping_policy": "pre_existing_verified_links_only",
         "competitions_considered": 0,
         "competitions_imported": 0,
         "canonical_fixtures_imported": 0,
@@ -461,199 +483,10 @@ def run_reconciliation(
         "prediction_ledger_touched": False,
     }
 
-    ensure_football_repository(db_url)
-    with openscores_client_factory() as openscores, sportmonks_client_factory() as sportmonks:
-        source_leagues = openscores._league_collection(
-            openscores.list_leagues().get("data")
-        )[0]
-        if source_leagues is None:
-            raise RuntimeError("OpenScores league catalogue could not be normalized")
-        sm_leagues = sportmonks.available_leagues(include="country")
-        sm_seasons = sportmonks.available_seasons()
-
-        for source_league in source_leagues:
-            source_league_id = str(source_league.get("id") or source_league.get("league_id") or "")
-            if not source_league_id:
-                continue
-            source_seasons = _records(
-                openscores.list_seasons(source_league_id).get("data"),
-                ("seasons", "items", "results", "data", "records"),
-            )
-            if not source_seasons:
-                continue
-            report["competitions_considered"] += 1
-            league_match = find_unique_sportmonks_league(source_league, sm_leagues)
-            if league_match["status"] != "unique_exact_name_country_match":
-                same_name_candidates = [
-                    {
-                        "sportmonks_league_id": str(candidate.get("id")),
-                        "name": candidate.get("name"),
-                        "country": _country_name(candidate),
-                        "country_payload": candidate.get("country"),
-                    }
-                    for candidate in sm_leagues
-                    if _norm(candidate.get("name")) == _norm(
-                        source_league.get("name") or source_league.get("league_name")
-                    )
-                ]
-                expected_country = COUNTRY_CODES.get(
-                    str(source_league.get("country_code") or "").upper()
-                )
-                country_candidates = [
-                    {
-                        "sportmonks_league_id": str(candidate.get("id")),
-                        "name": candidate.get("name"),
-                        "country": _country_name(candidate),
-                    }
-                    for candidate in sm_leagues
-                    if expected_country
-                    and _norm(_country_name(candidate)) == _norm(expected_country)
-                ][:30]
-                international_candidates = [
-                    {
-                        "sportmonks_league_id": str(candidate.get("id")),
-                        "name": candidate.get("name"),
-                        "country": _country_name(candidate),
-                    }
-                    for candidate in sm_leagues
-                    if not expected_country
-                    and _norm(_country_name(candidate)) in {"", "world", "international", "global"}
-                ][:30]
-                report["competition_results"].append({
-                    "openscores_league_id": source_league_id,
-                    "name": source_league.get("name"),
-                    "openscores_country_code": source_league.get("country_code"),
-                    "status": league_match["status"],
-                    "candidate_count": league_match.get("candidate_count", 0),
-                    "sportmonks_same_name_candidates": same_name_candidates,
-                    "sportmonks_country_candidates": country_candidates,
-                    "sportmonks_international_candidates": international_candidates,
-                })
-                continue
-            sm_league = league_match["league"]
-            season_match = find_unique_sportmonks_season(
-                source_seasons[0], sm_seasons, sm_league["id"]
-            )
-            if season_match["status"] != "unique_exact_league_year_match":
-                report["competition_results"].append({
-                    "openscores_league_id": source_league_id,
-                    "name": source_league.get("name"),
-                    "status": season_match["status"],
-                    "sportmonks_league_id": str(sm_league["id"]),
-                })
-                continue
-
-            sm_season = season_match["season"]
-            sm_season_id = str(sm_season["id"])
-            teams = sportmonks.teams_by_season(sm_season_id)
-            fixtures = sportmonks.fixtures_by_season(
-                sm_season_id, include_statistics=False
-            )
-            if not teams or not fixtures:
-                report["competition_results"].append({
-                    "openscores_league_id": source_league_id,
-                    "name": source_league.get("name"),
-                    "status": "sportmonks_season_empty",
-                    "sportmonks_season_id": sm_season_id,
-                    "teams_received": len(teams),
-                    "fixtures_received": len(fixtures),
-                })
-                continue
-
-            canonical_season_id = f"sportmonks:{sm_season_id}"
-            existing_fixtures = _canonical_fixture_count(db_url, canonical_season_id)
-            if existing_fixtures == 0:
-                imported = import_sportmonks_season(
-                    db_url, league=sm_league, season=sm_season,
-                    teams=teams, fixtures=fixtures,
-                )
-                fixture_count = int(imported["upserted"]["fixtures"])
-                report["canonical_fixtures_imported"] += fixture_count
-            else:
-                fixture_count = existing_fixtures
-
-            observed_teams = _observed_teams(
-                db_url, source_league_id,
-                str(source_seasons[0].get("id") or source_seasons[0].get("season_id") or ""),
-            )
-            team_mappings = unique_team_crosswalks(observed_teams, teams)
-            mapped_provider_team_ids = {
-                mapping["provider_entity_id"] for mapping in team_mappings
-            }
-            unmapped_observed_teams = [
-                team for team in observed_teams
-                if team["provider_team_id"] not in mapped_provider_team_ids
-            ]
-            mappings = [
-                {
-                    "entity_type": "league",
-                    "provider_entity_id": source_league_id,
-                    "canonical_entity_id": f"sportmonks:{sm_league['id']}",
-                    "verification_method": "exact_competition_name_and_country",
-                    "evidence": {
-                        "openscores_competition_name": source_league.get("name"),
-                        "openscores_country_code": source_league.get("country_code"),
-                        "sportmonks_competition_name": sm_league.get("name"),
-                        "sportmonks_country": _country_name(sm_league),
-                        "sportmonks_league_id": str(sm_league["id"]),
-                    },
-                },
-                {
-                    "entity_type": "season",
-                    "provider_entity_id": str(source_seasons[0].get("id") or source_seasons[0].get("season_id")),
-                    "canonical_entity_id": canonical_season_id,
-                    "verification_method": "same_league_and_exact_season_year_pair",
-                    "evidence": {
-                        "openscores_season": source_seasons[0].get("name") or source_seasons[0].get("season_name"),
-                        "sportmonks_season": sm_season.get("name") or sm_season.get("starting_at"),
-                        "sportmonks_league_id": str(sm_league["id"]),
-                        "sportmonks_season_id": sm_season_id,
-                    },
-                },
-                *team_mappings,
-            ]
-            written = write_explicit_openscores_links(db_url, mappings)
-            if written["conflicts"]:
-                report["entity_link_conflicts"].extend(written["conflicts"])
-                report["competition_results"].append({
-                    "openscores_league_id": source_league_id,
-                    "name": source_league.get("name"),
-                    "status": "existing_entity_link_conflict",
-                    "conflicts": written["conflicts"],
-                })
-                continue
-
-            report["explicit_entity_links_inserted"] += written["inserted"]
-            report["explicit_entity_links_existing"] += written["existing"]
-            report["explicit_entity_links_verified"] += written.get("verified", 0)
-            report["competitions_imported"] += 1
-            report["competition_results"].append({
-                "openscores_league_id": source_league_id,
-                "name": source_league.get("name"),
-                "status": "mapped_and_reconciled",
-                "sportmonks_league_id": str(sm_league["id"]),
-                "sportmonks_season_id": sm_season_id,
-                "sportmonks_teams_received": len(teams),
-                "sportmonks_fixtures_received": len(fixtures),
-                "sportmonks_team_roster": [
-                    {"id": str(team.get("id")), "name": team.get("name")}
-                    for team in teams
-                ],
-                "canonical_fixtures_available": fixture_count,
-                "openscores_teams_observed": len(observed_teams),
-                "unique_team_links": len(team_mappings),
-                "unmapped_observed_teams": unmapped_observed_teams,
-                "entity_links_inserted": written["inserted"],
-                "entity_links_existing": written["existing"],
-            })
-
-    if report["entity_link_conflicts"]:
-        report["reconciliation"] = {
-            "status": "skipped_due_to_entity_link_conflicts"
-        }
-        report["status"] = "fail"
-        return report
-
+    # The reconciler reads only provider_entity_links joined to verification
+    # rows whose status is already 'verified'. It updates observation
+    # reconciliation status/fingerprint only; it never writes canonical
+    # fixtures or creates entity mappings.
     report["reconciliation"] = reconcile_openscores_observations(
         db_url,
         include_outside_upcoming_window=True,
@@ -665,10 +498,10 @@ def run_reconciliation(
     report["status"] = (
         "pass" if matched > 0 and pending == 0
         else "partial" if matched > 0
-        else "fail"
+        else "blocked_pending_verified_mappings" if pending > 0
+        else "no_eligible_observations"
     )
     return report
-
 
 def main() -> int:
     report = run_reconciliation()
@@ -687,7 +520,7 @@ def main() -> int:
             summary.write(f"- Explicit OpenScores entity links inserted: {report['explicit_entity_links_inserted']}\n")
             summary.write(f"- Prediction model modified: no\n- Prediction ledger touched: no\n")
             summary.write(f"\n### Reconciliation\n\n`{json.dumps(report['reconciliation'], sort_keys=True)}`\n")
-    return 0 if report["status"] in {"pass", "partial"} else 1
+    return 0 if report["status"] in {"pass", "partial", "blocked_pending_verified_mappings", "no_eligible_observations"} else 1
 
 
 if __name__ == "__main__":
