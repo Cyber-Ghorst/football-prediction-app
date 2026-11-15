@@ -126,8 +126,9 @@ class CanonicalRepositoryResolverTests(unittest.TestCase):
         self.assertEqual(result["totals"]["unapproved_links"], 2)
         self.assertEqual(result["totals"]["approved_targets_missing"], 1)
         self.assertEqual(result["totals"]["ambiguous_canonical_targets"], 1)
-        self.assertEqual(len(cursor.statements), 8)
-        for query, params in cursor.statements:
+        self.assertEqual(len(cursor.statements), 9)
+        self.assertEqual(cursor.statements[0], ("SET TRANSACTION READ ONLY", ()))
+        for query, params in cursor.statements[1:]:
             self.assertEqual(params[0], "openligadb")
             self.assertTrue(query.lstrip().upper().startswith("SELECT"))
             self.assertIn("provider_entity_link_approval_audit", query)
