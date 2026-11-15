@@ -28,6 +28,7 @@ REPORT = Path("provider-source-roster-stage-report.json")
 def build_source_entities(rosters: list[Mapping[str, Any]]) -> list[dict[str, Any]]:
     """Convert observed catalogue/roster records into provider-native source rows."""
     entities: dict[tuple[str, str], dict[str, Any]] = {}
+    team_competitions: dict[str, set[str]] = {}
     for roster in rosters:
         league = roster.get("league") or {}
         season = roster.get("season") or {}
@@ -59,10 +60,9 @@ def build_source_entities(rosters: list[Mapping[str, Any]]) -> list[dict[str, An
                 "provider_entity_id": team_id,
                 "name": team_name,
                 "country": team_country,
-                "parent_competition_provider_id": competition_id,
                 "raw_payload": {
                     "source": "LiveScoreFootball season-window fixture participants",
-                    "competition_provider_id": competition_id,
+                    "competition_provider_ids": [],
                     "season_window": {"year": SEASON_YEAR, "from": SEASON_START, "to": SEASON_END},
                     "team_evidence_method": roster.get("team_evidence_method"),
                     "team_evidence_complete": False,
@@ -71,7 +71,13 @@ def build_source_entities(rosters: list[Mapping[str, Any]]) -> list[dict[str, An
                     "raw_team": team.get("raw") or team,
                 },
             }
-    return list(entities.values())
+            team_competitions.setdefault(team_id, set()).add(competition_id)
+    output = []
+    for (kind, entity_id), row in entities.items():
+        if kind == "team":
+            row["raw_payload"]["competition_provider_ids"] = sorted(team_competitions.get(entity_id, set()))
+        output.append(row)
+    return output
 
 
 def collect_rosters() -> list[dict[str, Any]]:
