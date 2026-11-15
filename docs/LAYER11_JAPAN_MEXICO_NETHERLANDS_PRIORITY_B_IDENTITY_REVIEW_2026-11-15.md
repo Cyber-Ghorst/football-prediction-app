@@ -28,7 +28,7 @@ The official club-composition announcement also distinguishes the 2026 special s
 ## Mexico — Liga MX Apertura and broad Liga BBVA MX
 
 - The official Liga BBVA MX portal: https://ligamx.net/
-- Official league material identifies Apertura 2026 as a distinct tournament: https://tienda.ligamx.net/products/balon-de-futbol-aereus40-apertura-no-5-basic-juego-amateur
+- Official league material identifies Apertura 2026 as a distinct tournament: https://www.nmas.com.mx/deportes/liga-mx-anuncia-calendario-oficial-del-apertura-2026-este-dia-arranca-el-torneo/
 
 Bzzoiro's record is explicitly **Liga MX Apertura 2026**. LiveScoreFootball's record is named broadly **Mexican Liga BBVA MX** and has only three observations with a generic `2026` season label. It is not established whether that provider record covers Apertura only, Clausura only, or both tournaments.
 
