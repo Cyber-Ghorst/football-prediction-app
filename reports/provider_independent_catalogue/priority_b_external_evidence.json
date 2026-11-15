@@ -1,6 +1,6 @@
 {
   "report_name": "priority_b_external_identity_evidence",
-  "generated_at": "2026-11-15T17:33:49.341Z",
+  "generated_at": "2026-11-15T17:36:05.006Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority B single-provider competition identities; official evidence can support competition type, country and season context but does not replace independent provider corroboration or human canonical approval.",
   "safeguards": [
@@ -2971,6 +2971,216 @@
         "Obtain broader provider roster/fixture samples where possible.",
         "Verify provider season boundaries and the exact meaning of the provider season ID.",
         "Compare exact fixtures and kickoff timestamps before proposing cross-provider links."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_071",
+      "name": "Superliga",
+      "observed_country": "Romania",
+      "provider": "bzzoiro",
+      "provider_competition_id": "23",
+      "provider_season_id": "23::1396",
+      "provider_season_label": "Superliga 26/27",
+      "raw_observation_count": 9,
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 16,
+        "regular_rounds": 30,
+        "playoff_clubs": 6,
+        "playout_clubs": 10
+      },
+      "external_evidence": [
+        {
+          "publisher": "Liga Profesionistă de Fotbal",
+          "url": "https://lpf.ro/buletin/superliga-incepe-azi/1283",
+          "supports": "Official 2026/27 LPF bulletin lists the 16 clubs participating in the season."
+        },
+        {
+          "publisher": "Liga Profesionistă de Fotbal",
+          "url": "https://lpf.ro/noutati/superliga-programul-turului-editiei-2026-2027/6593",
+          "supports": "Official 2026/27 schedule and 30-round regular phase."
+        },
+        {
+          "publisher": "Liga Profesionistă de Fotbal",
+          "url": "https://lpf.ro/liga-1",
+          "supports": "Official standings show top-six playoff and bottom-ten playout."
+        }
+      ],
+      "assessment": "Official LPF sources establish the Romanian men's top tier as a 16-club competition with 30 regular-season rounds, followed by a six-club championship playoff and ten-club relegation playout. Bzzoiro has nine observations; provider season-ID semantics remain unverified.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Verify provider-specific season boundaries and competition-ID semantics.",
+        "Compare exact fixtures and timezone-normalized kickoffs before proposing cross-provider links.",
+        "Keep league/cup and division identities separate."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_074",
+      "name": "Niké liga",
+      "observed_country": "Slovakia",
+      "provider": "bzzoiro",
+      "provider_competition_id": "109",
+      "provider_season_id": "109::2243",
+      "provider_season_label": "Superliga 26/27",
+      "raw_observation_count": 4,
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 12,
+        "regular_rounds": 22,
+        "split_rounds": 10,
+        "split_groups": 2
+      },
+      "external_evidence": [
+        {
+          "publisher": "Únia ligových klubov / Niké liga",
+          "url": "https://www.nikeliga.sk/text/8-ulk",
+          "supports": "Official league governance page lists 12 member clubs for 2026/27."
+        },
+        {
+          "publisher": "Niké liga",
+          "url": "https://www.nikeliga.sk/text/56-herny-model",
+          "supports": "Official format page specifies 12 clubs, 22 regular rounds and ten split-phase rounds."
+        },
+        {
+          "publisher": "Niké liga",
+          "url": "https://www.nikeliga.sk/clanok/4784-majster-zacne-u-novacika-pozname-program-nike-ligy-2026-2027",
+          "supports": "Official 2026/27 schedule confirms the split phase."
+        }
+      ],
+      "assessment": "Official league sources establish Niké liga as Slovakia's men's top tier with 12 clubs, 22 regular rounds and ten split-phase rounds. Bzzoiro has four observations; provider season ID 109::2243 remains unverified.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Verify provider-specific season boundaries and competition-ID semantics.",
+        "Compare exact fixtures and timezone-normalized kickoffs before proposing cross-provider links.",
+        "Keep league/cup and division identities separate."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_084",
+      "name": "Spanish Copa del Rey",
+      "observed_country": "Spain",
+      "provider": "livescore_football",
+      "provider_competition_id": "3951",
+      "provider_season_id": "3951::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 5,
+      "external_competition_type": "men's national knockout cup",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 116,
+        "first_round_clubs": 112,
+        "super_cup_teams_enter_later": 4
+      },
+      "external_evidence": [
+        {
+          "publisher": "Real Federación Española de Fútbol",
+          "url": "https://rfef.es/es/noticias/112-equipos-56-cruces-para-la-primera-eliminatoria-de-la-copa-del-rey-mapfre-se-sortea-el-5-de",
+          "supports": "Official RFEF announcement confirms 116 participating clubs, 112 in the first round and four Supercopa teams entering in the round of 16."
+        },
+        {
+          "publisher": "Real Federación Española de Fútbol",
+          "url": "https://rfef.es/es/noticias/veinte-suenos-alzaran-el-telon-de-la-copa-del-rey",
+          "supports": "Official 2026/27 preliminary-round schedule."
+        }
+      ],
+      "assessment": "Official RFEF sources establish the men's Copa del Rey as a 116-club national cup. LiveScoreFootball's five observations make this a candidate counterpart to Bzzoiro's Copa del Rey record, but no cross-provider link is approved.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Verify provider-specific season boundaries and competition-ID semantics.",
+        "Compare exact fixtures and timezone-normalized kickoffs before proposing cross-provider links.",
+        "Keep league/cup and division identities separate."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_085",
+      "name": "Spanish LALIGA",
+      "observed_country": "Spain",
+      "provider": "livescore_football",
+      "provider_competition_id": "740",
+      "provider_season_id": "740::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 1,
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 20,
+        "rounds": 38
+      },
+      "external_evidence": [
+        {
+          "publisher": "LaLiga",
+          "url": "https://www.laliga.com/laliga-easports/clubes",
+          "supports": "Official 2026/27 LaLiga EA SPORTS club directory lists 20 clubs."
+        },
+        {
+          "publisher": "LaLiga",
+          "url": "https://www.laliga.com/noticias?page=3",
+          "supports": "Official 2026/27 calendar announcement."
+        }
+      ],
+      "assessment": "LiveScoreFootball's Spanish LALIGA record is a plausible counterpart to Bzzoiro/OpenLigaDB/football-data.org top-tier records, but it has only one observation and a generic 2026 season label. Do not link it without exact fixture corroboration.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Verify provider-specific season boundaries and competition-ID semantics.",
+        "Compare exact fixtures and timezone-normalized kickoffs before proposing cross-provider links.",
+        "Keep league/cup and division identities separate."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_086",
+      "name": "Spanish LALIGA 2",
+      "observed_country": "Spain",
+      "provider": "livescore_football",
+      "provider_competition_id": "3921",
+      "provider_season_id": "3921::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 1,
+      "external_competition_type": "men's second-tier domestic league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 22,
+        "rounds": 42
+      },
+      "external_evidence": [
+        {
+          "publisher": "LaLiga",
+          "url": "https://www.laliga.com/laliga-hypermotion/clubes",
+          "supports": "Official 2026/27 LALIGA HYPERMOTION directory lists 22 clubs."
+        },
+        {
+          "publisher": "LaLiga",
+          "url": "https://www.laliga.com/es-NG/noticias/conoce-el-calendario-completo-de-laliga-hypermotion-2026-27",
+          "supports": "Official 2026/27 calendar lists 42 matchdays."
+        }
+      ],
+      "assessment": "LiveScoreFootball's Spanish LALIGA 2 record is a plausible counterpart to Bzzoiro's Segunda División record, but has one observation and a generic 2026 label. Keep separate until exact fixture and season-scope evidence is established.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Verify provider-specific season boundaries and competition-ID semantics.",
+        "Compare exact fixtures and timezone-normalized kickoffs before proposing cross-provider links.",
+        "Keep league/cup and division identities separate."
       ]
     }
   ]
