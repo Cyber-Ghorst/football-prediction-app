@@ -189,7 +189,7 @@ def import_provider_catalogue(
                          name = excluded.name, short_name = excluded.short_name,
                          country = excluded.country, logo_url = excluded.logo_url,
                          source_provider = excluded.source_provider,
-                         provider_updated_at = NOW(), collected_at = NOW(),
+                         collected_at = NOW(),
                          raw_payload = excluded.raw_payload""",
                     (row["team_id"], row["name"], row["short_name"], row["country"],
                      row["logo_url"], source, Jsonb(row["raw_payload"])),
