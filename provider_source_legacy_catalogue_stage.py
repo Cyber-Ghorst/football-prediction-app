@@ -17,6 +17,23 @@ from provider_source_repository import store_provider_source_bundle
 
 REPORT = Path("provider-source-legacy-catalogue-stage-report.json")
 
+def _explicit_gender_scope(value: Any) -> str | None:
+    """Preserve a non-empty provider-supplied gender value; never infer it."""
+    payload = value
+    if isinstance(payload, str):
+        try:
+            payload = json.loads(payload)
+        except (TypeError, ValueError):
+            return None
+    if not isinstance(payload, dict):
+        return None
+    gender = payload.get("gender")
+    if not isinstance(gender, str) or not gender.strip():
+        return None
+    if gender.strip().casefold() in {"unknown", "unspecified", "unverified", "null", "none"}:
+        return None
+    return gender.strip()
+
 
 def extract_legacy_catalogue_entities(
     leagues: list[dict[str, Any]],
@@ -68,17 +85,23 @@ def extract_legacy_catalogue_entities(
         })
 
     for row in teams:
+        raw_team_payload = row.get("raw_payload")
+        gender_scope = _explicit_gender_scope(raw_team_payload)
         output.append({
             "entity_type": "team",
             "provider_entity_id": provider_id(row.get("team_id"), "Team ID"),
             "name": str(row.get("name") or "").strip(),
             "country": row.get("country"),
+            "gender_scope": gender_scope,
             "raw_payload": {
                 "source": "existing football_teams row",
                 "legacy_repository_id": row.get("team_id"),
                 "source_provider": row.get("source_provider"),
-                "team_scope_evidence": "not enriched by this migration",
-                "raw_payload": row.get("raw_payload"),
+                "team_scope_evidence": (
+                    "explicit_provider_gender_field" if gender_scope else "no_explicit_gender_field"
+                ),
+                "gender_scope_from_provider": gender_scope,
+                "raw_payload": raw_team_payload,
             },
         })
     return output
