@@ -78,5 +78,68 @@ class CanonicalRepositoryResolverTests(unittest.TestCase):
         self.assertFalse(cursor.query.lstrip().upper().startswith(("INSERT", "UPDATE", "DELETE", "CREATE", "ALTER")))
 
 
+    def test_parity_audit_is_read_only_and_reports_all_entity_types(self):
+        from canonical_repository import audit_provider_link_parity
+
+        class Cursor:
+            def __init__(self):
+                self.statements = []
+                self.result_index = 0
+            def __enter__(self):
+                return self
+            def __exit__(self, *args):
+                return False
+            def execute(self, query, params):
+                self.statements.append((query, params))
+            def fetchone(self):
+                # Five aggregate counts followed by one ambiguity count,
+                # repeated for each of the four supported entity types.
+                values = [
+                    (3, 2, 1, 0, 2), (0,),
+                    (2, 2, 0, 0, 2), (0,),
+                    (4, 3, 1, 1, 2), (1,),
+                    (1, 1, 0, 0, 1), (0,),
+                ]
+                value = values[self.result_index]
+                self.result_index += 1
+                return value
+
+        class Connection:
+            def __init__(self, cursor):
+                self.cursor_value = cursor
+            def __enter__(self):
+                return self
+            def __exit__(self, *args):
+                return False
+            def cursor(self):
+                return self.cursor_value
+
+        cursor = Cursor()
+        with patch("canonical_repository._connect", return_value=Connection(cursor)):
+            result = audit_provider_link_parity("db", provider="OpenLigaDB")
+
+        self.assertTrue(result["read_only"])
+        self.assertEqual(result["provider"], "openligadb")
+        self.assertEqual(set(result["entity_types"]), {"league", "season", "team", "fixture"})
+        self.assertEqual(result["totals"]["total_links"], 10)
+        self.assertEqual(result["totals"]["approved_links"], 8)
+        self.assertEqual(result["totals"]["unapproved_links"], 2)
+        self.assertEqual(result["totals"]["approved_targets_missing"], 1)
+        self.assertEqual(result["totals"]["ambiguous_canonical_targets"], 1)
+        self.assertEqual(len(cursor.statements), 8)
+        for query, params in cursor.statements:
+            self.assertEqual(params[0], "openligadb")
+            self.assertTrue(query.lstrip().upper().startswith("SELECT"))
+            self.assertIn("provider_entity_link_approval_audit", query)
+            self.assertIn("LENGTH(BTRIM(approval.approval_reason)) >= 12", query)
+
+    def test_parity_audit_requires_provider_before_database_access(self):
+        from canonical_repository import audit_provider_link_parity
+        with patch("canonical_repository._connect") as connect:
+            with self.assertRaisesRegex(ValueError, "source provider"):
+                audit_provider_link_parity("db", provider="")
+            connect.assert_not_called()
+
+
 if __name__ == "__main__":
     unittest.main()
