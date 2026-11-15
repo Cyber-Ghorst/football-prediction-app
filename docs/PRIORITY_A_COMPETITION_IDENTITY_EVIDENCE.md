@@ -1,12 +1,12 @@
 # Priority A competition identity evidence dossier
 
-Generated: 14 November 2026
+Updated: 15 November 2026
 
 This dossier adds official competition evidence for the ten multi-provider, country-scoped entries in the identity-review queue. It is an evidence aid, **not an approval of canonical identities or provider mappings**.
 
 ## Key finding
 
-Official sources support the public competition identity and season context for all ten names. The provider-specific competition IDs and season IDs remain unverified as equivalent identities. Name, country and overlapping season-year evidence alone are not sufficient to create cross-provider links.
+Official sources support the public competition identity and season context for all twelve identities now in the Priority A queue. The provider-specific competition IDs and season IDs remain unverified as equivalent identities. Name, country and overlapping season-year evidence alone are not sufficient to create cross-provider links.
 
 | Observed competition | External evidence | Provider-side gap |
 |---|---|---|
@@ -33,6 +33,8 @@ Official sources support the public competition identity and season context for 
 - **Saudi Pro League:** [2026/27 fixture schedule](https://www.spl.com.sa/en/news/spl-announces-2026-27-rsl-fixture-schedule); [revised 2026/27 calendar](https://www.spl.com.sa/en/news/rsl-schedule-2026-27).
 - **La Liga:** [LALIGA EA SPORTS 2026/27](https://www.laliga.com/en-US/laliga-easports).
 - **MLS:** [About MLS and the 2026 season](https://www.mlssoccer.com/news/about-major-league-soccer-x4174); [2026 competition guidelines](https://www.mlssoccer.com/league-reports/competition-guidelines/).
+- **Austrian Bundesliga:** [Official ADMIRAL Bundesliga 2026/27 fixture calendar](https://www.bundesliga.at/de/news/artikel/admiral-bundesliga-spielplan-fuer-den-grunddurchgang-2026-27); [official match schedule](https://www.bundesliga.at/de/spielplan).
+- **Scottish Premiership:** [SPFL official 2026/27 fixture lists](https://spfl.co.uk/news/spfl-fixtures-for-202627); [William Hill Premiership fixtures](https://spfl.co.uk/league/premiership/fixtures).
 
 ## Required safeguards
 
@@ -47,20 +49,22 @@ Machine-readable evidence: `reports/provider_independent_catalogue/priority_a_ex
 
 ## Raw provider audit findings (14 November 2026)
 
-The read-only audit at [latest.json](../reports/provider_independent_catalogue/priority_a_provider_observation_audit/latest.json) examined 41,894 raw observations across the selected provider snapshots. It found 11 exact cross-provider fixture overlaps across the ten Priority A competition entries.
+The corrected read-only audit at [latest.json](../reports/provider_independent_catalogue/priority_a_provider_observation_audit/latest.json) examined 166,037 raw observations across five independent providers. With Austrian Bundesliga and Scottish Premiership added to Priority A after the crosswalk corroboration review, it found 20 exact cross-provider fixture overlaps across the twelve Priority A identities.
 
 | Competition | Exact fixture overlaps | Material provider-side finding |
 |---|---:|---|
-| Bundesliga | 6 | OpenFootball's 1,530 rows have local date/time values without timezone evidence and are not eligible for exact UTC matching; football-data.org's sampled row lacks country. |
-| Premier League | 1 | OpenFootball's 1,900 rows have local date/time without timezone evidence; no eligible exact UTC matches from that source. |
-| Ligue 1 | 0 | OpenFootball's 1,530 rows have local date/time without timezone evidence; the sampled football-data.org row lacks country. |
-| Championship | 0 | OpenFootball's 2,760 rows have local date/time without timezone evidence; no exact UTC cross-provider corroboration in this snapshot. |
-| 2. Bundesliga | 3 | Bzzoiro and OpenLigaDB provide timezone-aware fixture observations; season labels differ (2026/27 vs 2026). |
-| Serie A | 0 | OpenFootball's 1,900 rows have local date/time without timezone evidence; no eligible exact UTC corroboration from that source. |
-| Eredivisie | 0 | OpenFootball's 1,530 rows have local date/time without timezone evidence; no eligible exact UTC corroboration from that source. |
-| Saudi Pro League | 1 | Bzzoiro's snapshot contains 50 raw rows but only 5 eligible rows; LiveScoreFootball has 5 eligible rows. |
-| La Liga | 0 | OpenFootball's 1,900 rows have local date/time without timezone evidence; no eligible exact UTC corroboration from that source. |
-| MLS | 0 | Official league scope spans the United States and Canada, while one provider's observed country field says United States; provider geography needs reconciliation. |
+| Bundesliga | 8 | Bzzoiro and OpenLigaDB contribute timezone-aware exact overlaps; OpenFootball local date/time rows remain ineligible for exact UTC matching. |
+| Premier League | 2 | Bzzoiro and OpenLigaDB contribute exact UTC overlaps; OpenFootball local date/time rows remain ineligible. |
+| Ligue 1 | 0 | Cross-provider season-year evidence exists, but no exact UTC fixture overlap was found in the selected snapshots. |
+| Championship | 0 | Multiple providers and shared 2026 season-year evidence exist; no exact UTC overlap was found in the selected snapshots. |
+| 2. Bundesliga | 5 | Bzzoiro and OpenLigaDB contribute timezone-aware exact overlaps; keep distinct from Bundesliga. |
+| Serie A | 0 | Multiple providers and shared 2026 season-year evidence exist; no exact UTC overlap was found in the selected snapshots. |
+| Eredivisie | 0 | Three date/team leads exist, but no exact UTC overlap was found; local-time evidence remains non-confirmatory. |
+| Saudi Pro League | 1 | Bzzoiro and LiveScoreFootball contribute one exact UTC overlap; verify competition scope and season independently. |
+| La Liga | 0 | Multiple providers and shared 2026 season-year evidence exist; no exact UTC overlap was found in the selected snapshots. |
+| MLS | 0 | Official league scope spans the United States and Canada, while provider country metadata differs; geography still requires reconciliation. |
+| Austrian Bundesliga | 0 | Bzzoiro and LiveScoreFootball independently report the competition and shared 2026 season-year evidence; no exact UTC fixture overlap was found in this snapshot. |
+| Scottish Premiership | 4 | Bzzoiro and LiveScoreFootball have four exact UTC fixture overlaps; SPFL's official 2026/27 fixture list independently confirms the corresponding league and schedule context. |
 
 ### Interpretation and action
 
