@@ -1,0 +1,4756 @@
+{
+  "date_level_fixture_candidate_count": 162,
+  "date_level_fixture_candidates": [
+    {
+      "away_team_key": "hamburger sv",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-22 <> 2026-11-22"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-22 17:30",
+        "source_utc=2026-11-22T16:30:00Z"
+      ],
+      "home_team_key": "sv werder bremen",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "bzzoiro",
+        "openfootball"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "hamburger sv",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-22 <> 2026-11-22"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-22 17:30",
+        "source_utc=2026-11-22T16:30:00Z"
+      ],
+      "home_team_key": "sv werder bremen",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "fortuna sittard",
+      "competition_key": "eredivisie",
+      "country_key": "netherlands",
+      "date_pairs": [
+        "2026-11-22 <> 2026-11-22"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-22 16:45",
+        "source_utc=2026-11-22T15:45:00Z"
+      ],
+      "home_team_key": "go ahead eagles",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "bzzoiro",
+        "openfootball"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "1 fsv mainz 05",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-22 <> 2026-11-22"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-22 15:30",
+        "source_utc=2026-11-22T14:30:00Z"
+      ],
+      "home_team_key": "fc augsburg",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "bzzoiro",
+        "openfootball"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "1 fsv mainz 05",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-22 <> 2026-11-22"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-22 15:30",
+        "source_utc=2026-11-22T14:30:00Z"
+      ],
+      "home_team_key": "fc augsburg",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "ado den haag",
+      "competition_key": "eredivisie",
+      "country_key": "netherlands",
+      "date_pairs": [
+        "2026-11-22 <> 2026-11-22"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-22 14:30",
+        "source_utc=2026-11-22T13:30:00Z"
+      ],
+      "home_team_key": "afc ajax",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "bzzoiro",
+        "openfootball"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "sc heerenveen",
+      "competition_key": "eredivisie",
+      "country_key": "netherlands",
+      "date_pairs": [
+        "2026-11-21 <> 2026-11-21"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-21 21:00",
+        "source_utc=2026-11-21T20:00:00Z"
+      ],
+      "home_team_key": "fc groningen",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "bzzoiro",
+        "openfootball"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "vfb stuttgart",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-21 <> 2026-11-21"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-21 18:30",
+        "source_utc=2026-11-21T17:30:00Z"
+      ],
+      "home_team_key": "fc schalke 04",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "bzzoiro",
+        "openfootball"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "vfb stuttgart",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-21 <> 2026-11-21"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-21 18:30",
+        "source_utc=2026-11-21T17:30:00Z"
+      ],
+      "home_team_key": "fc schalke 04",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "sc freiburg",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-21 <> 2026-11-21"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-21 15:30",
+        "source_utc=2026-11-21T14:30:00Z"
+      ],
+      "home_team_key": "sv 07 elversberg",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "bzzoiro",
+        "openfootball"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "sc freiburg",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-21 <> 2026-11-21"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-21 15:30",
+        "source_utc=2026-11-21T14:30:00Z"
+      ],
+      "home_team_key": "sv 07 elversberg",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "sc paderborn 07",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-21 <> 2026-11-21"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-21 15:30",
+        "source_utc=2026-11-21T14:30:00Z"
+      ],
+      "home_team_key": "bayer 04 leverkusen",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "bzzoiro",
+        "openfootball"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "sc paderborn 07",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-21 <> 2026-11-21"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-21 15:30",
+        "source_utc=2026-11-21T14:30:00Z"
+      ],
+      "home_team_key": "bayer 04 leverkusen",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "rb leipzig",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-21 <> 2026-11-21"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-21 15:30",
+        "source_utc=2026-11-21T14:30:00Z"
+      ],
+      "home_team_key": "1 fc union berlin",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "bzzoiro",
+        "openfootball"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "rb leipzig",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-21 <> 2026-11-21"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-21 15:30",
+        "source_utc=2026-11-21T14:30:00Z"
+      ],
+      "home_team_key": "1 fc union berlin",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "1 fc koln",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-20 <> 2026-11-20"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-20 20:30",
+        "source_utc=2026-11-20T19:30:00Z"
+      ],
+      "home_team_key": "fc bayern munchen",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "bzzoiro",
+        "openfootball"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "1 fc koln",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-20 <> 2026-11-20"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-20 20:30",
+        "source_utc=2026-11-20T19:30:00Z"
+      ],
+      "home_team_key": "fc bayern munchen",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "vfb stuttgart",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-08-28 <> 2026-08-28"
+      ],
+      "evidence_examples": [
+        "source_local=2026-08-28 20:30",
+        "source_utc=2026-08-28T18:30:00Z"
+      ],
+      "home_team_key": "fc bayern munchen",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "borussia monchengladbach",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-08-29 <> 2026-08-29"
+      ],
+      "evidence_examples": [
+        "source_local=2026-08-29 15:30",
+        "source_utc=2026-08-29T13:30:00Z"
+      ],
+      "home_team_key": "rb leipzig",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "sc paderborn 07",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-08-29 <> 2026-08-29"
+      ],
+      "evidence_examples": [
+        "source_local=2026-08-29 15:30",
+        "source_utc=2026-08-29T13:30:00Z"
+      ],
+      "home_team_key": "1 fsv mainz 05",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "eintracht frankfurt",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-08-29 <> 2026-08-29"
+      ],
+      "evidence_examples": [
+        "source_local=2026-08-29 15:30",
+        "source_utc=2026-08-29T13:30:00Z"
+      ],
+      "home_team_key": "1 fc union berlin",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "bayer 04 leverkusen",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-08-29 <> 2026-08-29"
+      ],
+      "evidence_examples": [
+        "source_local=2026-08-29 15:30",
+        "source_utc=2026-08-29T13:30:00Z"
+      ],
+      "home_team_key": "sv 07 elversberg",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "hamburger sv",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-08-29 <> 2026-08-29"
+      ],
+      "evidence_examples": [
+        "source_local=2026-08-29 18:30",
+        "source_utc=2026-08-29T16:30:00Z"
+      ],
+      "home_team_key": "borussia dortmund",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "sv werder bremen",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-08-30 <> 2026-08-30"
+      ],
+      "evidence_examples": [
+        "source_local=2026-08-30 15:30",
+        "source_utc=2026-08-30T13:30:00Z"
+      ],
+      "home_team_key": "sc freiburg",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "fc schalke 04",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-08-30 <> 2026-08-30"
+      ],
+      "evidence_examples": [
+        "source_local=2026-08-30 17:30",
+        "source_utc=2026-08-30T15:30:00Z"
+      ],
+      "home_team_key": "fc augsburg",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "1 fc koln",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-09-04 <> 2026-09-04"
+      ],
+      "evidence_examples": [
+        "source_local=2026-09-04 20:30",
+        "source_utc=2026-09-04T18:30:00Z"
+      ],
+      "home_team_key": "vfb stuttgart",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "rb leipzig",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-09-05 <> 2026-09-05"
+      ],
+      "evidence_examples": [
+        "source_local=2026-09-05 15:30",
+        "source_utc=2026-09-05T13:30:00Z"
+      ],
+      "home_team_key": "sv werder bremen",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "1 fc union berlin",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-09-05 <> 2026-09-05"
+      ],
+      "evidence_examples": [
+        "source_local=2026-09-05 15:30",
+        "source_utc=2026-09-05T13:30:00Z"
+      ],
+      "home_team_key": "bayer 04 leverkusen",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "sv 07 elversberg",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-09-05 <> 2026-09-05"
+      ],
+      "evidence_examples": [
+        "source_local=2026-09-05 15:30",
+        "source_utc=2026-09-05T13:30:00Z"
+      ],
+      "home_team_key": "borussia monchengladbach",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "sc freiburg",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-09-05 <> 2026-09-05"
+      ],
+      "evidence_examples": [
+        "source_local=2026-09-05 15:30",
+        "source_utc=2026-09-05T13:30:00Z"
+      ],
+      "home_team_key": "sc paderborn 07",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "fc bayern munchen",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-09-05 <> 2026-09-05"
+      ],
+      "evidence_examples": [
+        "source_local=2026-09-05 18:30",
+        "source_utc=2026-09-05T16:30:00Z"
+      ],
+      "home_team_key": "fc schalke 04",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "1 fsv mainz 05",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-09-06 <> 2026-09-06"
+      ],
+      "evidence_examples": [
+        "source_local=2026-09-06 15:30",
+        "source_utc=2026-09-06T13:30:00Z"
+      ],
+      "home_team_key": "hamburger sv",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "fc augsburg",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-09-06 <> 2026-09-06"
+      ],
+      "evidence_examples": [
+        "source_local=2026-09-06 17:30",
+        "source_utc=2026-09-06T15:30:00Z"
+      ],
+      "home_team_key": "eintracht frankfurt",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "fc schalke 04",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-09-11 <> 2026-09-11"
+      ],
+      "evidence_examples": [
+        "source_local=2026-09-11 20:30",
+        "source_utc=2026-09-11T18:30:00Z"
+      ],
+      "home_team_key": "1 fc union berlin",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "sc paderborn 07",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-09-12 <> 2026-09-12"
+      ],
+      "evidence_examples": [
+        "source_local=2026-09-12 15:30",
+        "source_utc=2026-09-12T13:30:00Z"
+      ],
+      "home_team_key": "borussia dortmund",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "bayer 04 leverkusen",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-09-12 <> 2026-09-12"
+      ],
+      "evidence_examples": [
+        "source_local=2026-09-12 15:30",
+        "source_utc=2026-09-12T13:30:00Z"
+      ],
+      "home_team_key": "fc augsburg",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "eintracht frankfurt",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-09-12 <> 2026-09-12"
+      ],
+      "evidence_examples": [
+        "source_local=2026-09-12 15:30",
+        "source_utc=2026-09-12T13:30:00Z"
+      ],
+      "home_team_key": "1 fsv mainz 05",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "borussia monchengladbach",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-09-12 <> 2026-09-12"
+      ],
+      "evidence_examples": [
+        "source_local=2026-09-12 15:30",
+        "source_utc=2026-09-12T13:30:00Z"
+      ],
+      "home_team_key": "sc freiburg",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "sv werder bremen",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-09-12 <> 2026-09-12"
+      ],
+      "evidence_examples": [
+        "source_local=2026-09-12 18:30",
+        "source_utc=2026-09-12T16:30:00Z"
+      ],
+      "home_team_key": "1 fc koln",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "hamburger sv",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-09-13 <> 2026-09-13"
+      ],
+      "evidence_examples": [
+        "source_local=2026-09-13 15:30",
+        "source_utc=2026-09-13T13:30:00Z"
+      ],
+      "home_team_key": "rb leipzig",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "fc bayern munchen",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-09-13 <> 2026-09-13"
+      ],
+      "evidence_examples": [
+        "source_local=2026-09-13 17:30",
+        "source_utc=2026-09-13T15:30:00Z"
+      ],
+      "home_team_key": "sv 07 elversberg",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "1 fc union berlin",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-09-18 <> 2026-09-18"
+      ],
+      "evidence_examples": [
+        "source_local=2026-09-18 20:30",
+        "source_utc=2026-09-18T18:30:00Z"
+      ],
+      "home_team_key": "fc bayern munchen",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "1 fc koln",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-09-19 <> 2026-09-19"
+      ],
+      "evidence_examples": [
+        "source_local=2026-09-19 15:30",
+        "source_utc=2026-09-19T13:30:00Z"
+      ],
+      "home_team_key": "hamburger sv",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "1 fsv mainz 05",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-09-19 <> 2026-09-19"
+      ],
+      "evidence_examples": [
+        "source_local=2026-09-19 15:30",
+        "source_utc=2026-09-19T13:30:00Z"
+      ],
+      "home_team_key": "borussia monchengladbach",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "fc augsburg",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-09-19 <> 2026-09-19"
+      ],
+      "evidence_examples": [
+        "source_local=2026-09-19 15:30",
+        "source_utc=2026-09-19T13:30:00Z"
+      ],
+      "home_team_key": "sv werder bremen",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "sc freiburg",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-09-19 <> 2026-09-19"
+      ],
+      "evidence_examples": [
+        "source_local=2026-09-19 15:30",
+        "source_utc=2026-09-19T13:30:00Z"
+      ],
+      "home_team_key": "eintracht frankfurt",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "borussia dortmund",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-09-19 <> 2026-09-19"
+      ],
+      "evidence_examples": [
+        "source_local=2026-09-19 18:30",
+        "source_utc=2026-09-19T16:30:00Z"
+      ],
+      "home_team_key": "vfb stuttgart",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "rb leipzig",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-09-20 <> 2026-09-20"
+      ],
+      "evidence_examples": [
+        "source_local=2026-09-20 15:30",
+        "source_utc=2026-09-20T13:30:00Z"
+      ],
+      "home_team_key": "bayer 04 leverkusen",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "sv 07 elversberg",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-09-20 <> 2026-09-20"
+      ],
+      "evidence_examples": [
+        "source_local=2026-09-20 17:30",
+        "source_utc=2026-09-20T15:30:00Z"
+      ],
+      "home_team_key": "fc schalke 04",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "sv werder bremen",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-09 <> 2026-10-09"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-09 20:30",
+        "source_utc=2026-10-09T18:30:00Z"
+      ],
+      "home_team_key": "borussia dortmund",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "bayer 04 leverkusen",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-10 <> 2026-10-10"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-10 15:30",
+        "source_utc=2026-10-10T13:30:00Z"
+      ],
+      "home_team_key": "1 fsv mainz 05",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "vfb stuttgart",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-10 <> 2026-10-10"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-10 15:30",
+        "source_utc=2026-10-10T13:30:00Z"
+      ],
+      "home_team_key": "sc paderborn 07",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "sv 07 elversberg",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-10 <> 2026-10-10"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-10 15:30",
+        "source_utc=2026-10-10T13:30:00Z"
+      ],
+      "home_team_key": "1 fc union berlin",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "fc bayern munchen",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-10 <> 2026-10-10"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-10 15:30",
+        "source_utc=2026-10-10T13:30:00Z"
+      ],
+      "home_team_key": "fc augsburg",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "eintracht frankfurt",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-10 <> 2026-10-10"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-10 18:30",
+        "source_utc=2026-10-10T16:30:00Z"
+      ],
+      "home_team_key": "rb leipzig",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "borussia monchengladbach",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-11 <> 2026-10-11"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-11 15:30",
+        "source_utc=2026-10-11T13:30:00Z"
+      ],
+      "home_team_key": "1 fc koln",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "fc schalke 04",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-11 <> 2026-10-11"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-11 17:30",
+        "source_utc=2026-10-11T15:30:00Z"
+      ],
+      "home_team_key": "sc freiburg",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "1 fc koln",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-16 <> 2026-10-16"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-16 20:30",
+        "source_utc=2026-10-16T18:30:00Z"
+      ],
+      "home_team_key": "eintracht frankfurt",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "borussia dortmund",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-17 <> 2026-10-17"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-17 15:30",
+        "source_utc=2026-10-17T13:30:00Z"
+      ],
+      "home_team_key": "1 fc union berlin",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "vfb stuttgart",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-17 <> 2026-10-17"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-17 15:30",
+        "source_utc=2026-10-17T13:30:00Z"
+      ],
+      "home_team_key": "hamburger sv",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "sc paderborn 07",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-17 <> 2026-10-17"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-17 15:30",
+        "source_utc=2026-10-17T13:30:00Z"
+      ],
+      "home_team_key": "sv werder bremen",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "fc augsburg",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-17 <> 2026-10-17"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-17 15:30",
+        "source_utc=2026-10-17T13:30:00Z"
+      ],
+      "home_team_key": "sv 07 elversberg",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "1 fsv mainz 05",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-17 <> 2026-10-17"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-17 15:30",
+        "source_utc=2026-10-17T13:30:00Z"
+      ],
+      "home_team_key": "fc schalke 04",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "rb leipzig",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-17 <> 2026-10-17"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-17 18:30",
+        "source_utc=2026-10-17T16:30:00Z"
+      ],
+      "home_team_key": "fc bayern munchen",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "sc freiburg",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-18 <> 2026-10-18"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-18 15:30",
+        "source_utc=2026-10-18T13:30:00Z"
+      ],
+      "home_team_key": "bayer 04 leverkusen",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "borussia monchengladbach",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-23 <> 2026-10-23"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-23 20:30",
+        "source_utc=2026-10-23T18:30:00Z"
+      ],
+      "home_team_key": "vfb stuttgart",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "sv werder bremen",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-24 <> 2026-10-24"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-24 15:30",
+        "source_utc=2026-10-24T13:30:00Z"
+      ],
+      "home_team_key": "1 fsv mainz 05",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "fc schalke 04",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-24 <> 2026-10-24"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-24 15:30",
+        "source_utc=2026-10-24T13:30:00Z"
+      ],
+      "home_team_key": "1 fc koln",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "sv 07 elversberg",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-24 <> 2026-10-24"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-24 15:30",
+        "source_utc=2026-10-24T13:30:00Z"
+      ],
+      "home_team_key": "rb leipzig",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "hamburger sv",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-24 <> 2026-10-24"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-24 15:30",
+        "source_utc=2026-10-24T13:30:00Z"
+      ],
+      "home_team_key": "sc paderborn 07",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "1 fc union berlin",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-24 <> 2026-10-24"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-24 15:30",
+        "source_utc=2026-10-24T13:30:00Z"
+      ],
+      "home_team_key": "fc augsburg",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "eintracht frankfurt",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-24 <> 2026-10-24"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-24 18:30",
+        "source_utc=2026-10-24T16:30:00Z"
+      ],
+      "home_team_key": "borussia dortmund",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "fc bayern munchen",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-25 <> 2026-10-25"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-25 17:30",
+        "source_utc=2026-10-25T16:30:00Z"
+      ],
+      "home_team_key": "sc freiburg",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "1 fsv mainz 05",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-30 <> 2026-10-30"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-30 20:30",
+        "source_utc=2026-10-30T19:30:00Z"
+      ],
+      "home_team_key": "sv 07 elversberg",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "sc paderborn 07",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-31 <> 2026-10-31"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-31 15:30",
+        "source_utc=2026-10-31T14:30:00Z"
+      ],
+      "home_team_key": "borussia monchengladbach",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "rb leipzig",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-31 <> 2026-10-31"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-31 15:30",
+        "source_utc=2026-10-31T14:30:00Z"
+      ],
+      "home_team_key": "fc schalke 04",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "sc freiburg",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-31 <> 2026-10-31"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-31 15:30",
+        "source_utc=2026-10-31T14:30:00Z"
+      ],
+      "home_team_key": "fc augsburg",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "vfb stuttgart",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-31 <> 2026-10-31"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-31 15:30",
+        "source_utc=2026-10-31T14:30:00Z"
+      ],
+      "home_team_key": "bayer 04 leverkusen",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "borussia dortmund",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-10-31 <> 2026-10-31"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-31 18:30",
+        "source_utc=2026-10-31T17:30:00Z"
+      ],
+      "home_team_key": "fc bayern munchen",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "1 fc koln",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-01 <> 2026-11-01"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-01 15:30",
+        "source_utc=2026-11-01T14:30:00Z"
+      ],
+      "home_team_key": "1 fc union berlin",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "hamburger sv",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-01 <> 2026-11-01"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-01 17:30",
+        "source_utc=2026-11-01T16:30:00Z"
+      ],
+      "home_team_key": "eintracht frankfurt",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "borussia monchengladbach",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-06 <> 2026-11-06"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-06 20:30",
+        "source_utc=2026-11-06T19:30:00Z"
+      ],
+      "home_team_key": "hamburger sv",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "fc augsburg",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-07 <> 2026-11-07"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-07 15:30",
+        "source_utc=2026-11-07T14:30:00Z"
+      ],
+      "home_team_key": "rb leipzig",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "sv 07 elversberg",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-07 <> 2026-11-07"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-07 15:30",
+        "source_utc=2026-11-07T14:30:00Z"
+      ],
+      "home_team_key": "borussia dortmund",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "fc bayern munchen",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-07 <> 2026-11-07"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-07 15:30",
+        "source_utc=2026-11-07T14:30:00Z"
+      ],
+      "home_team_key": "1 fsv mainz 05",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "eintracht frankfurt",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-07 <> 2026-11-07"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-07 15:30",
+        "source_utc=2026-11-07T14:30:00Z"
+      ],
+      "home_team_key": "sc paderborn 07",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "sv werder bremen",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-07 <> 2026-11-07"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-07 18:30",
+        "source_utc=2026-11-07T17:30:00Z"
+      ],
+      "home_team_key": "vfb stuttgart",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "bayer 04 leverkusen",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-08 <> 2026-11-08"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-08 15:30",
+        "source_utc=2026-11-08T14:30:00Z"
+      ],
+      "home_team_key": "1 fc koln",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "1 fc union berlin",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-08 <> 2026-11-08"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-08 17:30",
+        "source_utc=2026-11-08T16:30:00Z"
+      ],
+      "home_team_key": "sc freiburg",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "borussia dortmund",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-21 <> 2026-11-21"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-21 15:30",
+        "source_utc=2026-11-21T14:30:00Z"
+      ],
+      "home_team_key": "borussia monchengladbach",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "borussia monchengladbach",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-27 <> 2026-11-27"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-27 20:30",
+        "source_utc=2026-11-27T19:30:00Z"
+      ],
+      "home_team_key": "sv werder bremen",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "sv 07 elversberg",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-28 <> 2026-11-28"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-28 15:30",
+        "source_utc=2026-11-28T14:30:00Z"
+      ],
+      "home_team_key": "1 fc koln",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "1 fc union berlin",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-28 <> 2026-11-28"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-28 15:30",
+        "source_utc=2026-11-28T14:30:00Z"
+      ],
+      "home_team_key": "1 fsv mainz 05",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "fc schalke 04",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-28 <> 2026-11-28"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-28 15:30",
+        "source_utc=2026-11-28T14:30:00Z"
+      ],
+      "home_team_key": "sc paderborn 07",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "fc bayern munchen",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-28 <> 2026-11-28"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-28 15:30",
+        "source_utc=2026-11-28T14:30:00Z"
+      ],
+      "home_team_key": "hamburger sv",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "eintracht frankfurt",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-28 <> 2026-11-28"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-28 18:30",
+        "source_utc=2026-11-28T17:30:00Z"
+      ],
+      "home_team_key": "vfb stuttgart",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "rb leipzig",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-29 <> 2026-11-29"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-29 15:30",
+        "source_utc=2026-11-29T14:30:00Z"
+      ],
+      "home_team_key": "sc freiburg",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "bayer 04 leverkusen",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2026-11-29 <> 2026-11-29"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-29 19:30",
+        "source_utc=2026-11-29T18:30:00Z"
+      ],
+      "home_team_key": "borussia dortmund",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "borussia monchengladbach",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2027-05-22 <> 2027-05-22"
+      ],
+      "evidence_examples": [
+        "source_local=2027-05-22 15:30",
+        "source_utc=2027-05-22T13:30:00Z"
+      ],
+      "home_team_key": "1 fc union berlin",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "vfb stuttgart",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2027-05-22 <> 2027-05-22"
+      ],
+      "evidence_examples": [
+        "source_local=2027-05-22 15:30",
+        "source_utc=2027-05-22T13:30:00Z"
+      ],
+      "home_team_key": "1 fsv mainz 05",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "bayer 04 leverkusen",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2027-05-22 <> 2027-05-22"
+      ],
+      "evidence_examples": [
+        "source_local=2027-05-22 15:30",
+        "source_utc=2027-05-22T13:30:00Z"
+      ],
+      "home_team_key": "fc schalke 04",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "sv werder bremen",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2027-05-22 <> 2027-05-22"
+      ],
+      "evidence_examples": [
+        "source_local=2027-05-22 15:30",
+        "source_utc=2027-05-22T13:30:00Z"
+      ],
+      "home_team_key": "sv 07 elversberg",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "eintracht frankfurt",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2027-05-22 <> 2027-05-22"
+      ],
+      "evidence_examples": [
+        "source_local=2027-05-22 15:30",
+        "source_utc=2027-05-22T13:30:00Z"
+      ],
+      "home_team_key": "fc bayern munchen",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "hamburger sv",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2027-05-22 <> 2027-05-22"
+      ],
+      "evidence_examples": [
+        "source_local=2027-05-22 15:30",
+        "source_utc=2027-05-22T13:30:00Z"
+      ],
+      "home_team_key": "fc augsburg",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "borussia dortmund",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2027-05-22 <> 2027-05-22"
+      ],
+      "evidence_examples": [
+        "source_local=2027-05-22 15:30",
+        "source_utc=2027-05-22T13:30:00Z"
+      ],
+      "home_team_key": "sc freiburg",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "sc paderborn 07",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "date_pairs": [
+        "2027-05-22 <> 2027-05-22"
+      ],
+      "evidence_examples": [
+        "source_local=2027-05-22 15:30",
+        "source_utc=2027-05-22T13:30:00Z"
+      ],
+      "home_team_key": "1 fc koln",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "crystal palace fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2026-08-22 <> 2026-08-22"
+      ],
+      "evidence_examples": [
+        "source_local=2026-08-22 15:00",
+        "source_utc=2026-08-22T14:00:00Z"
+      ],
+      "home_team_key": "everton fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "chelsea fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2026-08-24 <> 2026-08-24"
+      ],
+      "evidence_examples": [
+        "source_local=2026-08-24 20:00",
+        "source_utc=2026-08-24T19:00:00Z"
+      ],
+      "home_team_key": "fulham fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "everton fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2026-08-29 <> 2026-08-29"
+      ],
+      "evidence_examples": [
+        "source_local=2026-08-29 15:00",
+        "source_utc=2026-08-29T14:00:00Z"
+      ],
+      "home_team_key": "afc bournemouth",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "newcastle united fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2026-08-29 <> 2026-08-29"
+      ],
+      "evidence_examples": [
+        "source_local=2026-08-29 17:30",
+        "source_utc=2026-08-29T16:30:00Z"
+      ],
+      "home_team_key": "tottenham hotspur fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "afc bournemouth",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2026-09-05 <> 2026-09-05"
+      ],
+      "evidence_examples": [
+        "source_local=2026-09-05 12:30",
+        "source_utc=2026-09-05T11:30:00Z"
+      ],
+      "home_team_key": "newcastle united fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "crystal palace fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2026-09-05 <> 2026-09-05"
+      ],
+      "evidence_examples": [
+        "source_local=2026-09-05 15:00",
+        "source_utc=2026-09-05T14:00:00Z"
+      ],
+      "home_team_key": "fulham fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "manchester united fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2026-09-06 <> 2026-09-06"
+      ],
+      "evidence_examples": [
+        "source_local=2026-09-06 14:00",
+        "source_utc=2026-09-06T13:00:00Z"
+      ],
+      "home_team_key": "everton fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "everton fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2026-09-12 <> 2026-09-12"
+      ],
+      "evidence_examples": [
+        "source_local=2026-09-12 17:30",
+        "source_utc=2026-09-12T16:30:00Z"
+      ],
+      "home_team_key": "tottenham hotspur fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "manchester united fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2026-09-20 <> 2026-09-20"
+      ],
+      "evidence_examples": [
+        "source_local=2026-09-20 16:30",
+        "source_utc=2026-09-20T15:30:00Z"
+      ],
+      "home_team_key": "fulham fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "afc bournemouth",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2026-10-10 <> 2026-10-10"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-10 15:00",
+        "source_utc=2026-10-10T14:00:00Z"
+      ],
+      "home_team_key": "chelsea fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "tottenham hotspur fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2026-10-10 <> 2026-10-10"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-10 17:30",
+        "source_utc=2026-10-10T16:30:00Z"
+      ],
+      "home_team_key": "manchester united fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "chelsea fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2026-10-17 <> 2026-10-17"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-17 12:30",
+        "source_utc=2026-10-17T11:30:00Z"
+      ],
+      "home_team_key": "everton fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "tottenham hotspur fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2026-10-24 <> 2026-10-24"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-24 17:30",
+        "source_utc=2026-10-24T16:30:00Z"
+      ],
+      "home_team_key": "chelsea fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "newcastle united fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2026-10-25 <> 2026-10-25"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-25 14:00",
+        "source_utc=2026-10-25T14:00:00Z"
+      ],
+      "home_team_key": "crystal palace fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "afc bournemouth",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2026-10-25 <> 2026-10-25"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-25 14:00",
+        "source_utc=2026-10-25T14:00:00Z"
+      ],
+      "home_team_key": "manchester united fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "manchester united fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2026-10-31 <> 2026-10-31"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-31 12:30",
+        "source_utc=2026-10-31T12:30:00Z"
+      ],
+      "home_team_key": "chelsea fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "crystal palace fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2026-10-31 <> 2026-10-31"
+      ],
+      "evidence_examples": [
+        "source_local=2026-10-31 17:30",
+        "source_utc=2026-10-31T17:30:00Z"
+      ],
+      "home_team_key": "tottenham hotspur fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "everton fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2026-11-02 <> 2026-11-02"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-02 20:00",
+        "source_utc=2026-11-02T20:00:00Z"
+      ],
+      "home_team_key": "newcastle united fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "newcastle united fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2026-11-07 <> 2026-11-07"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-07 15:00",
+        "source_utc=2026-11-07T15:00:00Z"
+      ],
+      "home_team_key": "fulham fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "afc bournemouth",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2026-11-28 <> 2026-11-29"
+      ],
+      "evidence_examples": [
+        "source_local=2026-11-28 15:00",
+        "source_utc=2026-11-29T14:05:00Z"
+      ],
+      "home_team_key": "fulham fc",
+      "maximum_date_difference_days": 1,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "fulham fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2026-12-02 <> 2026-12-03"
+      ],
+      "evidence_examples": [
+        "source_local=2026-12-02 20:00",
+        "source_utc=2026-12-03T20:00:00Z"
+      ],
+      "home_team_key": "tottenham hotspur fc",
+      "maximum_date_difference_days": 1,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "crystal palace fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2026-12-02 <> 2026-12-02"
+      ],
+      "evidence_examples": [
+        "source_local=2026-12-02 20:00",
+        "source_utc=2026-12-02T19:30:00Z"
+      ],
+      "home_team_key": "chelsea fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "manchester united fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2026-12-02 <> 2026-12-02"
+      ],
+      "evidence_examples": [
+        "source_local=2026-12-02 20:00",
+        "source_utc=2026-12-02T20:15:00Z"
+      ],
+      "home_team_key": "newcastle united fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "fulham fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2026-12-05 <> 2026-12-06"
+      ],
+      "evidence_examples": [
+        "source_local=2026-12-05 15:00",
+        "source_utc=2026-12-06T14:00:00Z"
+      ],
+      "home_team_key": "everton fc",
+      "maximum_date_difference_days": 1,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "manchester united fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2026-12-12 <> 2026-12-13"
+      ],
+      "evidence_examples": [
+        "source_local=2026-12-12 15:00",
+        "source_utc=2026-12-13T19:00:00Z"
+      ],
+      "home_team_key": "crystal palace fc",
+      "maximum_date_difference_days": 1,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "afc bournemouth",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2026-12-26 <> 2026-12-26"
+      ],
+      "evidence_examples": [
+        "source_local=2026-12-26 15:00",
+        "source_utc=2026-12-26T15:00:00Z"
+      ],
+      "home_team_key": "tottenham hotspur fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "afc bournemouth",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2026-12-30 <> 2026-12-30"
+      ],
+      "evidence_examples": [
+        "source_local=2026-12-30 19:30",
+        "source_utc=2026-12-30T19:30:00Z"
+      ],
+      "home_team_key": "crystal palace fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "newcastle united fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2027-01-03 <> 2027-01-03"
+      ],
+      "evidence_examples": [
+        "source_local=2027-01-03 14:00",
+        "source_utc=2027-01-03T14:00:00Z"
+      ],
+      "home_team_key": "chelsea fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "tottenham hotspur fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2027-01-06 <> 2027-01-06"
+      ],
+      "evidence_examples": [
+        "source_local=2027-01-06 19:30",
+        "source_utc=2027-01-06T19:30:00Z"
+      ],
+      "home_team_key": "fulham fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "chelsea fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2027-01-06 <> 2027-01-06"
+      ],
+      "evidence_examples": [
+        "source_local=2027-01-06 19:30",
+        "source_utc=2027-01-06T19:30:00Z"
+      ],
+      "home_team_key": "crystal palace fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "newcastle united fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2027-01-07 <> 2027-01-07"
+      ],
+      "evidence_examples": [
+        "source_local=2027-01-07 20:00",
+        "source_utc=2027-01-07T20:00:00Z"
+      ],
+      "home_team_key": "manchester united fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "fulham fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2027-01-16 <> 2027-01-16"
+      ],
+      "evidence_examples": [
+        "source_local=2027-01-16 15:00",
+        "source_utc=2027-01-16T15:00:00Z"
+      ],
+      "home_team_key": "newcastle united fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "tottenham hotspur fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2027-01-23 <> 2027-01-23"
+      ],
+      "evidence_examples": [
+        "source_local=2027-01-23 15:00",
+        "source_utc=2027-01-23T15:00:00Z"
+      ],
+      "home_team_key": "crystal palace fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "fulham fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2027-01-30 <> 2027-01-30"
+      ],
+      "evidence_examples": [
+        "source_local=2027-01-30 15:00",
+        "source_utc=2027-01-30T15:00:00Z"
+      ],
+      "home_team_key": "afc bournemouth",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "newcastle united fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2027-02-06 <> 2027-02-06"
+      ],
+      "evidence_examples": [
+        "source_local=2027-02-06 15:00",
+        "source_utc=2027-02-06T15:00:00Z"
+      ],
+      "home_team_key": "everton fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "chelsea fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2027-02-06 <> 2027-02-06"
+      ],
+      "evidence_examples": [
+        "source_local=2027-02-06 15:00",
+        "source_utc=2027-02-06T15:00:00Z"
+      ],
+      "home_team_key": "manchester united fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "chelsea fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2027-02-10 <> 2027-02-10"
+      ],
+      "evidence_examples": [
+        "source_local=2027-02-10 20:00",
+        "source_utc=2027-02-10T20:00:00Z"
+      ],
+      "home_team_key": "newcastle united fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "crystal palace fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2027-02-20 <> 2027-02-20"
+      ],
+      "evidence_examples": [
+        "source_local=2027-02-20 15:00",
+        "source_utc=2027-02-20T15:00:00Z"
+      ],
+      "home_team_key": "afc bournemouth",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "tottenham hotspur fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2027-03-03 <> 2027-03-03"
+      ],
+      "evidence_examples": [
+        "source_local=2027-03-03 20:00",
+        "source_utc=2027-03-03T20:00:00Z"
+      ],
+      "home_team_key": "afc bournemouth",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "fulham fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2027-03-13 <> 2027-03-13"
+      ],
+      "evidence_examples": [
+        "source_local=2027-03-13 15:00",
+        "source_utc=2027-03-13T15:00:00Z"
+      ],
+      "home_team_key": "crystal palace fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "newcastle united fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2027-03-13 <> 2027-03-13"
+      ],
+      "evidence_examples": [
+        "source_local=2027-03-13 15:00",
+        "source_utc=2027-03-13T15:00:00Z"
+      ],
+      "home_team_key": "afc bournemouth",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "everton fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2027-03-13 <> 2027-03-13"
+      ],
+      "evidence_examples": [
+        "source_local=2027-03-13 15:00",
+        "source_utc=2027-03-13T15:00:00Z"
+      ],
+      "home_team_key": "manchester united fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "tottenham hotspur fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2027-03-20 <> 2027-03-20"
+      ],
+      "evidence_examples": [
+        "source_local=2027-03-20 15:00",
+        "source_utc=2027-03-20T15:00:00Z"
+      ],
+      "home_team_key": "everton fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "fulham fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2027-04-10 <> 2027-04-10"
+      ],
+      "evidence_examples": [
+        "source_local=2027-04-10 15:00",
+        "source_utc=2027-04-10T14:00:00Z"
+      ],
+      "home_team_key": "chelsea fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "everton fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2027-04-10 <> 2027-04-10"
+      ],
+      "evidence_examples": [
+        "source_local=2027-04-10 15:00",
+        "source_utc=2027-04-10T14:00:00Z"
+      ],
+      "home_team_key": "crystal palace fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "tottenham hotspur fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2027-04-17 <> 2027-04-17"
+      ],
+      "evidence_examples": [
+        "source_local=2027-04-17 15:00",
+        "source_utc=2027-04-17T14:00:00Z"
+      ],
+      "home_team_key": "newcastle united fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "afc bournemouth",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2027-04-17 <> 2027-04-17"
+      ],
+      "evidence_examples": [
+        "source_local=2027-04-17 15:00",
+        "source_utc=2027-04-17T14:00:00Z"
+      ],
+      "home_team_key": "everton fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "crystal palace fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2027-04-24 <> 2027-04-24"
+      ],
+      "evidence_examples": [
+        "source_local=2027-04-24 15:00",
+        "source_utc=2027-04-24T14:00:00Z"
+      ],
+      "home_team_key": "manchester united fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "everton fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2027-05-01 <> 2027-05-01"
+      ],
+      "evidence_examples": [
+        "source_local=2027-05-01 15:00",
+        "source_utc=2027-05-01T14:00:00Z"
+      ],
+      "home_team_key": "fulham fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "chelsea fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2027-05-08 <> 2027-05-08"
+      ],
+      "evidence_examples": [
+        "source_local=2027-05-08 15:00",
+        "source_utc=2027-05-08T14:00:00Z"
+      ],
+      "home_team_key": "tottenham hotspur fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "manchester united fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2027-05-08 <> 2027-05-08"
+      ],
+      "evidence_examples": [
+        "source_local=2027-05-08 15:00",
+        "source_utc=2027-05-08T14:00:00Z"
+      ],
+      "home_team_key": "afc bournemouth",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "everton fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2027-05-15 <> 2027-05-15"
+      ],
+      "evidence_examples": [
+        "source_local=2027-05-15 15:00",
+        "source_utc=2027-05-15T14:00:00Z"
+      ],
+      "home_team_key": "chelsea fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "crystal palace fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2027-05-23 <> 2027-05-23"
+      ],
+      "evidence_examples": [
+        "source_local=2027-05-23 15:00",
+        "source_utc=2027-05-23T14:00:00Z"
+      ],
+      "home_team_key": "newcastle united fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "manchester united fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2027-05-23 <> 2027-05-23"
+      ],
+      "evidence_examples": [
+        "source_local=2027-05-23 15:00",
+        "source_utc=2027-05-23T14:00:00Z"
+      ],
+      "home_team_key": "tottenham hotspur fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "chelsea fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2027-05-23 <> 2027-05-23"
+      ],
+      "evidence_examples": [
+        "source_local=2027-05-23 15:00",
+        "source_utc=2027-05-23T14:00:00Z"
+      ],
+      "home_team_key": "afc bournemouth",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    },
+    {
+      "away_team_key": "fulham fc",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "date_pairs": [
+        "2027-05-30 <> 2027-05-30"
+      ],
+      "evidence_examples": [
+        "source_local=2027-05-30 16:00",
+        "source_utc=2027-05-30T15:00:00Z"
+      ],
+      "home_team_key": "manchester united fc",
+      "maximum_date_difference_days": 0,
+      "providers": [
+        "openfootball",
+        "openligadb"
+      ],
+      "status": "date_and_team_candidate_only_not_exact_fixture_confirmation"
+    }
+  ],
+  "entries": [
+    {
+      "catalogue_entry_id": "observed_competition_032",
+      "competition": "Premier League",
+      "country": "England",
+      "exact_cross_provider_fixture_overlap_count": 2,
+      "identity_decision": "not_approved",
+      "provider_sources": [
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Premier League"
+          ],
+          "countries": [
+            "England"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 0,
+          "eligible_observation_count": 30,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [],
+          "local_date_time_without_timezone": 0,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 0,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 0,
+          "provider": "bzzoiro",
+          "provider_competition_id": "1",
+          "provider_season_id": "1::1058",
+          "raw_observation_count": 30,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "Premier League 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "Premier League 26/27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "notstarted": 30
+          },
+          "unique_away_teams": 9,
+          "unique_home_teams": 9,
+          "unique_provider_fixture_ids": 9,
+          "unique_teams_combined": 18,
+          "valid_timezone_aware_kickoffs": 30
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Premier League"
+          ],
+          "countries": [
+            "England"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 0,
+          "eligible_observation_count": 0,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [
+            "date=2026-08-21; time=20:00",
+            "date=2026-08-22; time=12:30",
+            "date=2026-08-22; time=15:00"
+          ],
+          "local_date_time_without_timezone": 7600,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 7600,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 7600,
+          "provider": "openfootball",
+          "provider_competition_id": "en.1",
+          "provider_season_id": "en.1::2026-27",
+          "raw_observation_count": 7600,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "four_digit_start_year_range",
+              "label": "2026-27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2026-27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "scheduled": 7600
+          },
+          "unique_away_teams": 20,
+          "unique_home_teams": 20,
+          "unique_provider_fixture_ids": 380,
+          "unique_teams_combined": 20,
+          "valid_timezone_aware_kickoffs": 0
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Premier League"
+          ],
+          "countries": [
+            "England"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 0,
+          "eligible_observation_count": 5600,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [],
+          "local_date_time_without_timezone": 0,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 0,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 2000,
+          "provider": "openligadb",
+          "provider_competition_id": "5996",
+          "provider_season_id": "5996::2026",
+          "raw_observation_count": 7600,
+          "season_label_year_evidence": [
+            {
+              "end_year": null,
+              "format": "calendar_year",
+              "label": "2026",
+              "normalized_season": "2026",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2026"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "finished": 2000,
+            "scheduled": 5600
+          },
+          "unique_away_teams": 20,
+          "unique_home_teams": 20,
+          "unique_provider_fixture_ids": 380,
+          "unique_teams_combined": 20,
+          "valid_timezone_aware_kickoffs": 7600
+        }
+      ],
+      "providers": [
+        "bzzoiro",
+        "openfootball",
+        "openligadb"
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_045",
+      "competition": "Bundesliga",
+      "country": "Germany",
+      "exact_cross_provider_fixture_overlap_count": 8,
+      "identity_decision": "not_approved",
+      "provider_sources": [
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Bundesliga"
+          ],
+          "countries": [
+            "Germany"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 0,
+          "eligible_observation_count": 37,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [],
+          "local_date_time_without_timezone": 0,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 0,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 0,
+          "provider": "bzzoiro",
+          "provider_competition_id": "5",
+          "provider_season_id": "5::1091",
+          "raw_observation_count": 37,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "Bundesliga 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "Bundesliga 26/27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "notstarted": 37
+          },
+          "unique_away_teams": 9,
+          "unique_home_teams": 9,
+          "unique_provider_fixture_ids": 9,
+          "unique_teams_combined": 18,
+          "valid_timezone_aware_kickoffs": 37
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Bundesliga"
+          ],
+          "countries": [],
+          "country_matches_queue": false,
+          "date_only_kickoffs": 0,
+          "eligible_observation_count": 11,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [],
+          "local_date_time_without_timezone": 0,
+          "missing_country_observations": 11,
+          "missing_kickoffs": 0,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 0,
+          "provider": "football_data_org",
+          "provider_competition_id": "2002",
+          "provider_season_id": "2002::2522",
+          "raw_observation_count": 11,
+          "season_label_year_evidence": [],
+          "season_names": [
+            "2026-08-28"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "scheduled": 11
+          },
+          "unique_away_teams": 7,
+          "unique_home_teams": 7,
+          "unique_provider_fixture_ids": 7,
+          "unique_teams_combined": 14,
+          "valid_timezone_aware_kickoffs": 11
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Bundesliga"
+          ],
+          "countries": [
+            "Germany"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 3960,
+          "eligible_observation_count": 0,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [
+            "date=2026-08-28; time=20:30",
+            "date=2026-08-29; time=15:30",
+            "date=2026-08-29; time=18:30"
+          ],
+          "local_date_time_without_timezone": 2160,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 2160,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 6120,
+          "provider": "openfootball",
+          "provider_competition_id": "de.1",
+          "provider_season_id": "de.1::2026-27",
+          "raw_observation_count": 6120,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "four_digit_start_year_range",
+              "label": "2026-27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2026-27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "scheduled": 6120
+          },
+          "unique_away_teams": 18,
+          "unique_home_teams": 18,
+          "unique_provider_fixture_ids": 306,
+          "unique_teams_combined": 18,
+          "valid_timezone_aware_kickoffs": 0
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Bundesliga"
+          ],
+          "countries": [
+            "Germany"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 0,
+          "eligible_observation_count": 4500,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [],
+          "local_date_time_without_timezone": 0,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 0,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 1620,
+          "provider": "openligadb",
+          "provider_competition_id": "4937",
+          "provider_season_id": "4937::2026",
+          "raw_observation_count": 6120,
+          "season_label_year_evidence": [
+            {
+              "end_year": null,
+              "format": "calendar_year",
+              "label": "2026",
+              "normalized_season": "2026",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2026"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "finished": 1620,
+            "scheduled": 4500
+          },
+          "unique_away_teams": 18,
+          "unique_home_teams": 18,
+          "unique_provider_fixture_ids": 306,
+          "unique_teams_combined": 18,
+          "valid_timezone_aware_kickoffs": 6120
+        }
+      ],
+      "providers": [
+        "bzzoiro",
+        "football_data_org",
+        "openfootball",
+        "openligadb"
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_043",
+      "competition": "2. Bundesliga",
+      "country": "Germany",
+      "exact_cross_provider_fixture_overlap_count": 5,
+      "identity_decision": "not_approved",
+      "provider_sources": [
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "2. Bundesliga"
+          ],
+          "countries": [
+            "Germany"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 0,
+          "eligible_observation_count": 41,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [],
+          "local_date_time_without_timezone": 0,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 0,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 0,
+          "provider": "bzzoiro",
+          "provider_competition_id": "94",
+          "provider_season_id": "94::1967",
+          "raw_observation_count": 41,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "2. Bundesliga 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2. Bundesliga 26/27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "notstarted": 41
+          },
+          "unique_away_teams": 9,
+          "unique_home_teams": 9,
+          "unique_provider_fixture_ids": 9,
+          "unique_teams_combined": 18,
+          "valid_timezone_aware_kickoffs": 41
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "2. Bundesliga"
+          ],
+          "countries": [
+            "Germany"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 0,
+          "eligible_observation_count": 4140,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [],
+          "local_date_time_without_timezone": 0,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 0,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 1980,
+          "provider": "openligadb",
+          "provider_competition_id": "4938",
+          "provider_season_id": "4938::2026",
+          "raw_observation_count": 6120,
+          "season_label_year_evidence": [
+            {
+              "end_year": null,
+              "format": "calendar_year",
+              "label": "2026",
+              "normalized_season": "2026",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2026"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "finished": 1980,
+            "scheduled": 4140
+          },
+          "unique_away_teams": 18,
+          "unique_home_teams": 18,
+          "unique_provider_fixture_ids": 306,
+          "unique_teams_combined": 18,
+          "valid_timezone_aware_kickoffs": 6120
+        }
+      ],
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_073",
+      "competition": "Scottish Premiership",
+      "country": "Scotland",
+      "exact_cross_provider_fixture_overlap_count": 4,
+      "identity_decision": "not_approved",
+      "provider_sources": [
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Scottish Premiership"
+          ],
+          "countries": [
+            "Scotland"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 0,
+          "eligible_observation_count": 24,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [],
+          "local_date_time_without_timezone": 0,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 0,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 0,
+          "provider": "bzzoiro",
+          "provider_competition_id": "13",
+          "provider_season_id": "13::1355",
+          "raw_observation_count": 24,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "Premiership 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "Premiership 26/27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "notstarted": 24
+          },
+          "unique_away_teams": 6,
+          "unique_home_teams": 6,
+          "unique_provider_fixture_ids": 6,
+          "unique_teams_combined": 12,
+          "valid_timezone_aware_kickoffs": 24
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Scottish Premiership"
+          ],
+          "countries": [
+            "Scotland"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 0,
+          "eligible_observation_count": 6,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [],
+          "local_date_time_without_timezone": 0,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 0,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 0,
+          "provider": "livescore_football",
+          "provider_competition_id": "735",
+          "provider_season_id": "735::2026",
+          "raw_observation_count": 6,
+          "season_label_year_evidence": [
+            {
+              "end_year": null,
+              "format": "calendar_year",
+              "label": "2026",
+              "normalized_season": "2026",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2026"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "scheduled": 6
+          },
+          "unique_away_teams": 6,
+          "unique_home_teams": 6,
+          "unique_provider_fixture_ids": 6,
+          "unique_teams_combined": 12,
+          "valid_timezone_aware_kickoffs": 6
+        }
+      ],
+      "providers": [
+        "bzzoiro",
+        "livescore_football"
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_072",
+      "competition": "Saudi Pro League",
+      "country": "Saudi Arabia",
+      "exact_cross_provider_fixture_overlap_count": 1,
+      "identity_decision": "not_approved",
+      "provider_sources": [
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Saudi Pro League"
+          ],
+          "countries": [
+            "Saudi Arabia"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 0,
+          "eligible_observation_count": 11,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [],
+          "local_date_time_without_timezone": 0,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 0,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 99,
+          "provider": "bzzoiro",
+          "provider_competition_id": "17",
+          "provider_season_id": "17::1631",
+          "raw_observation_count": 110,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "Saudi Pro League 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "Saudi Pro League 26/27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "notstarted": 11,
+            "postponed": 99
+          },
+          "unique_away_teams": 10,
+          "unique_home_teams": 9,
+          "unique_provider_fixture_ids": 10,
+          "unique_teams_combined": 18,
+          "valid_timezone_aware_kickoffs": 110
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Saudi Pro League"
+          ],
+          "countries": [
+            "Saudi Arabia"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 0,
+          "eligible_observation_count": 11,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [],
+          "local_date_time_without_timezone": 0,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 0,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 0,
+          "provider": "livescore_football",
+          "provider_competition_id": "21231",
+          "provider_season_id": "21231::2026",
+          "raw_observation_count": 11,
+          "season_label_year_evidence": [
+            {
+              "end_year": null,
+              "format": "calendar_year",
+              "label": "2026",
+              "normalized_season": "2026",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2026"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "scheduled": 11
+          },
+          "unique_away_teams": 1,
+          "unique_home_teams": 1,
+          "unique_provider_fixture_ids": 1,
+          "unique_teams_combined": 2,
+          "valid_timezone_aware_kickoffs": 11
+        }
+      ],
+      "providers": [
+        "bzzoiro",
+        "livescore_football"
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_078",
+      "competition": "La Liga",
+      "country": "Spain",
+      "exact_cross_provider_fixture_overlap_count": 0,
+      "identity_decision": "not_approved",
+      "provider_sources": [
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "La Liga"
+          ],
+          "countries": [
+            "Spain"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 0,
+          "eligible_observation_count": 31,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [],
+          "local_date_time_without_timezone": 0,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 0,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 0,
+          "provider": "bzzoiro",
+          "provider_competition_id": "3",
+          "provider_season_id": "3::1307",
+          "raw_observation_count": 31,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "LaLiga 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "LaLiga 26/27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "notstarted": 31
+          },
+          "unique_away_teams": 9,
+          "unique_home_teams": 9,
+          "unique_provider_fixture_ids": 9,
+          "unique_teams_combined": 18,
+          "valid_timezone_aware_kickoffs": 31
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "La Liga"
+          ],
+          "countries": [
+            "Spain"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 5800,
+          "eligible_observation_count": 0,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [
+            "date=2026-08-15; time=19:30",
+            "date=2026-08-15; time=21:30",
+            "date=2026-08-16; time=17:00"
+          ],
+          "local_date_time_without_timezone": 1800,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 1800,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 7600,
+          "provider": "openfootball",
+          "provider_competition_id": "es.1",
+          "provider_season_id": "es.1::2026-27",
+          "raw_observation_count": 7600,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "four_digit_start_year_range",
+              "label": "2026-27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2026-27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "scheduled": 7600
+          },
+          "unique_away_teams": 20,
+          "unique_home_teams": 20,
+          "unique_provider_fixture_ids": 380,
+          "unique_teams_combined": 20,
+          "valid_timezone_aware_kickoffs": 0
+        }
+      ],
+      "providers": [
+        "bzzoiro",
+        "openfootball"
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_050",
+      "competition": "Serie A",
+      "country": "Italy",
+      "exact_cross_provider_fixture_overlap_count": 0,
+      "identity_decision": "not_approved",
+      "provider_sources": [
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Serie A"
+          ],
+          "countries": [
+            "Italy"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 0,
+          "eligible_observation_count": 21,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [],
+          "local_date_time_without_timezone": 0,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 0,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 0,
+          "provider": "bzzoiro",
+          "provider_competition_id": "4",
+          "provider_season_id": "4::1375",
+          "raw_observation_count": 21,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "Serie A 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "Serie A 26/27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "notstarted": 21
+          },
+          "unique_away_teams": 9,
+          "unique_home_teams": 9,
+          "unique_provider_fixture_ids": 9,
+          "unique_teams_combined": 18,
+          "valid_timezone_aware_kickoffs": 21
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Serie A"
+          ],
+          "countries": [
+            "Italy"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 5200,
+          "eligible_observation_count": 0,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [
+            "date=2026-08-22; time=18:30",
+            "date=2026-08-22; time=20:45",
+            "date=2026-08-23; time=18:30"
+          ],
+          "local_date_time_without_timezone": 2400,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 2400,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 7600,
+          "provider": "openfootball",
+          "provider_competition_id": "it.1",
+          "provider_season_id": "it.1::2026-27",
+          "raw_observation_count": 7600,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "four_digit_start_year_range",
+              "label": "2026-27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2026-27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "scheduled": 7600
+          },
+          "unique_away_teams": 20,
+          "unique_home_teams": 20,
+          "unique_provider_fixture_ids": 380,
+          "unique_teams_combined": 20,
+          "valid_timezone_aware_kickoffs": 0
+        }
+      ],
+      "providers": [
+        "bzzoiro",
+        "openfootball"
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_040",
+      "competition": "Ligue 1",
+      "country": "France",
+      "exact_cross_provider_fixture_overlap_count": 0,
+      "identity_decision": "not_approved",
+      "provider_sources": [
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Ligue 1"
+          ],
+          "countries": [
+            "France"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 0,
+          "eligible_observation_count": 34,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [],
+          "local_date_time_without_timezone": 0,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 0,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 0,
+          "provider": "bzzoiro",
+          "provider_competition_id": "6",
+          "provider_season_id": "6::1311",
+          "raw_observation_count": 34,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "Ligue 1 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "Ligue 1 26/27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "notstarted": 34
+          },
+          "unique_away_teams": 9,
+          "unique_home_teams": 9,
+          "unique_provider_fixture_ids": 9,
+          "unique_teams_combined": 18,
+          "valid_timezone_aware_kickoffs": 34
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Ligue 1"
+          ],
+          "countries": [],
+          "country_matches_queue": false,
+          "date_only_kickoffs": 0,
+          "eligible_observation_count": 10,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [],
+          "local_date_time_without_timezone": 0,
+          "missing_country_observations": 10,
+          "missing_kickoffs": 0,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 0,
+          "provider": "football_data_org",
+          "provider_competition_id": "2015",
+          "provider_season_id": "2015::2497",
+          "raw_observation_count": 10,
+          "season_label_year_evidence": [],
+          "season_names": [
+            "2026-08-22"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "scheduled": 10
+          },
+          "unique_away_teams": 6,
+          "unique_home_teams": 6,
+          "unique_provider_fixture_ids": 6,
+          "unique_teams_combined": 12,
+          "valid_timezone_aware_kickoffs": 10
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Ligue 1"
+          ],
+          "countries": [
+            "France"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 3840,
+          "eligible_observation_count": 0,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [
+            "date=2026-08-21; time=20:45",
+            "date=2026-08-22; time=17:15",
+            "date=2026-08-22; time=20:45"
+          ],
+          "local_date_time_without_timezone": 2280,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 2280,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 6120,
+          "provider": "openfootball",
+          "provider_competition_id": "fr.1",
+          "provider_season_id": "fr.1::2026-27",
+          "raw_observation_count": 6120,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "four_digit_start_year_range",
+              "label": "2026-27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2026-27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "scheduled": 6120
+          },
+          "unique_away_teams": 18,
+          "unique_home_teams": 18,
+          "unique_provider_fixture_ids": 306,
+          "unique_teams_combined": 18,
+          "valid_timezone_aware_kickoffs": 0
+        }
+      ],
+      "providers": [
+        "bzzoiro",
+        "football_data_org",
+        "openfootball"
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_020",
+      "competition": "Championship",
+      "country": "England",
+      "exact_cross_provider_fixture_overlap_count": 0,
+      "identity_decision": "not_approved",
+      "provider_sources": [
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Championship"
+          ],
+          "countries": [
+            "England"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 0,
+          "eligible_observation_count": 45,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [],
+          "local_date_time_without_timezone": 0,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 0,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 0,
+          "provider": "bzzoiro",
+          "provider_competition_id": "12",
+          "provider_season_id": "12::1111",
+          "raw_observation_count": 45,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "Championship 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "Championship 26/27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "notstarted": 45
+          },
+          "unique_away_teams": 12,
+          "unique_home_teams": 12,
+          "unique_provider_fixture_ids": 12,
+          "unique_teams_combined": 24,
+          "valid_timezone_aware_kickoffs": 45
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Championship"
+          ],
+          "countries": [
+            "England"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 5280,
+          "eligible_observation_count": 0,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [
+            "date=2026-08-14; time=20:00",
+            "date=2026-08-15; time=12:30",
+            "date=2026-08-15; time=15:00"
+          ],
+          "local_date_time_without_timezone": 5760,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 5760,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 11040,
+          "provider": "openfootball",
+          "provider_competition_id": "en.2",
+          "provider_season_id": "en.2::2026-27",
+          "raw_observation_count": 11040,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "four_digit_start_year_range",
+              "label": "2026-27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2026-27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "scheduled": 11040
+          },
+          "unique_away_teams": 24,
+          "unique_home_teams": 24,
+          "unique_provider_fixture_ids": 552,
+          "unique_teams_combined": 24,
+          "valid_timezone_aware_kickoffs": 0
+        }
+      ],
+      "providers": [
+        "bzzoiro",
+        "openfootball"
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_060",
+      "competition": "Eredivisie",
+      "country": "Netherlands",
+      "exact_cross_provider_fixture_overlap_count": 0,
+      "identity_decision": "not_approved",
+      "provider_sources": [
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Eredivisie"
+          ],
+          "countries": [
+            "Netherlands"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 0,
+          "eligible_observation_count": 24,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [],
+          "local_date_time_without_timezone": 0,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 0,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 0,
+          "provider": "bzzoiro",
+          "provider_competition_id": "10",
+          "provider_season_id": "10::1268",
+          "raw_observation_count": 24,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "Eredivisie 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "Eredivisie 26/27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "notstarted": 24
+          },
+          "unique_away_teams": 9,
+          "unique_home_teams": 9,
+          "unique_provider_fixture_ids": 9,
+          "unique_teams_combined": 18,
+          "valid_timezone_aware_kickoffs": 24
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Eredivisie"
+          ],
+          "countries": [
+            "Netherlands"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 2000,
+          "eligible_observation_count": 0,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [
+            "date=2026-08-07; time=20:00",
+            "date=2026-08-08; time=16:30",
+            "date=2026-08-08; time=18:45"
+          ],
+          "local_date_time_without_timezone": 4120,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 4120,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 6120,
+          "provider": "openfootball",
+          "provider_competition_id": "nl.1",
+          "provider_season_id": "nl.1::2026-27",
+          "raw_observation_count": 6120,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "four_digit_start_year_range",
+              "label": "2026-27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2026-27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "scheduled": 6120
+          },
+          "unique_away_teams": 18,
+          "unique_home_teams": 18,
+          "unique_provider_fixture_ids": 306,
+          "unique_teams_combined": 18,
+          "valid_timezone_aware_kickoffs": 0
+        }
+      ],
+      "providers": [
+        "bzzoiro",
+        "openfootball"
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_094",
+      "competition": "MLS",
+      "country": "United States",
+      "exact_cross_provider_fixture_overlap_count": 0,
+      "identity_decision": "not_approved",
+      "provider_sources": [
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "MLS"
+          ],
+          "countries": [
+            "USA"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 0,
+          "eligible_observation_count": 35,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [],
+          "local_date_time_without_timezone": 0,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 0,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 0,
+          "provider": "bzzoiro",
+          "provider_competition_id": "18",
+          "provider_season_id": "18::158",
+          "raw_observation_count": 35,
+          "season_label_year_evidence": [],
+          "season_names": [
+            "MLS 2026"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "notstarted": 35
+          },
+          "unique_away_teams": 6,
+          "unique_home_teams": 6,
+          "unique_provider_fixture_ids": 6,
+          "unique_teams_combined": 12,
+          "valid_timezone_aware_kickoffs": 35
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "MLS"
+          ],
+          "countries": [
+            "United States"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 0,
+          "eligible_observation_count": 22,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [],
+          "local_date_time_without_timezone": 0,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 0,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 0,
+          "provider": "livescore_football",
+          "provider_competition_id": "770",
+          "provider_season_id": "770::2026",
+          "raw_observation_count": 22,
+          "season_label_year_evidence": [
+            {
+              "end_year": null,
+              "format": "calendar_year",
+              "label": "2026",
+              "normalized_season": "2026",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2026"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "scheduled": 22
+          },
+          "unique_away_teams": 2,
+          "unique_home_teams": 2,
+          "unique_provider_fixture_ids": 2,
+          "unique_teams_combined": 4,
+          "valid_timezone_aware_kickoffs": 22
+        }
+      ],
+      "providers": [
+        "bzzoiro",
+        "livescore_football"
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_005",
+      "competition": "Austrian Bundesliga",
+      "country": "Austria",
+      "exact_cross_provider_fixture_overlap_count": 0,
+      "identity_decision": "not_approved",
+      "provider_sources": [
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Austrian Bundesliga"
+          ],
+          "countries": [
+            "Austria"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 0,
+          "eligible_observation_count": 15,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [],
+          "local_date_time_without_timezone": 0,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 0,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 0,
+          "provider": "bzzoiro",
+          "provider_competition_id": "96",
+          "provider_season_id": "96::1999",
+          "raw_observation_count": 15,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "Bundesliga 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "Bundesliga 26/27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "notstarted": 15
+          },
+          "unique_away_teams": 6,
+          "unique_home_teams": 6,
+          "unique_provider_fixture_ids": 6,
+          "unique_teams_combined": 12,
+          "valid_timezone_aware_kickoffs": 15
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Austrian Bundesliga"
+          ],
+          "countries": [
+            "Austria"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 0,
+          "eligible_observation_count": 3,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [],
+          "local_date_time_without_timezone": 0,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 0,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 0,
+          "provider": "livescore_football",
+          "provider_competition_id": "3907",
+          "provider_season_id": "3907::2026",
+          "raw_observation_count": 3,
+          "season_label_year_evidence": [
+            {
+              "end_year": null,
+              "format": "calendar_year",
+              "label": "2026",
+              "normalized_season": "2026",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2026"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "scheduled": 3
+          },
+          "unique_away_teams": 3,
+          "unique_home_teams": 3,
+          "unique_provider_fixture_ids": 3,
+          "unique_teams_combined": 6,
+          "valid_timezone_aware_kickoffs": 3
+        }
+      ],
+      "providers": [
+        "bzzoiro",
+        "livescore_football"
+      ]
+    }
+  ],
+  "exact_cross_provider_fixture_overlaps": [
+    {
+      "away_team_key": "sunderland",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "home_team_key": "aston villa",
+      "kickoff_utc": "2026-11-21T15:00:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ]
+    },
+    {
+      "away_team_key": "brighton and hove albion",
+      "competition_key": "premier league",
+      "country_key": "england",
+      "home_team_key": "hull city",
+      "kickoff_utc": "2026-11-22T14:00:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ]
+    },
+    {
+      "away_team_key": "eintracht braunschweig",
+      "competition_key": "2 bundesliga",
+      "country_key": "germany",
+      "home_team_key": "1 fc nurnberg",
+      "kickoff_utc": "2026-11-21T12:00:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ]
+    },
+    {
+      "away_team_key": "spvgg greuther furth",
+      "competition_key": "2 bundesliga",
+      "country_key": "germany",
+      "home_team_key": "hannover 96",
+      "kickoff_utc": "2026-11-21T12:00:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ]
+    },
+    {
+      "away_team_key": "holstein kiel",
+      "competition_key": "2 bundesliga",
+      "country_key": "germany",
+      "home_team_key": "vfl wolfsburg",
+      "kickoff_utc": "2026-11-21T12:00:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ]
+    },
+    {
+      "away_team_key": "hertha bsc",
+      "competition_key": "2 bundesliga",
+      "country_key": "germany",
+      "home_team_key": "energie cottbus",
+      "kickoff_utc": "2026-11-22T12:30:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ]
+    },
+    {
+      "away_team_key": "vfl osnabruck",
+      "competition_key": "2 bundesliga",
+      "country_key": "germany",
+      "home_team_key": "karlsruher sc",
+      "kickoff_utc": "2026-11-22T12:30:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ]
+    },
+    {
+      "away_team_key": "1 fc koln",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "home_team_key": "fc bayern munchen",
+      "kickoff_utc": "2026-11-20T19:30:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ]
+    },
+    {
+      "away_team_key": "rb leipzig",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "home_team_key": "1 fc union berlin",
+      "kickoff_utc": "2026-11-21T14:30:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ]
+    },
+    {
+      "away_team_key": "sc paderborn 07",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "home_team_key": "bayer 04 leverkusen",
+      "kickoff_utc": "2026-11-21T14:30:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ]
+    },
+    {
+      "away_team_key": "tsg hoffenheim",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "home_team_key": "eintracht frankfurt",
+      "kickoff_utc": "2026-11-21T14:30:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ]
+    },
+    {
+      "away_team_key": "sc freiburg",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "home_team_key": "sv 07 elversberg",
+      "kickoff_utc": "2026-11-21T14:30:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ]
+    },
+    {
+      "away_team_key": "vfb stuttgart",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "home_team_key": "fc schalke 04",
+      "kickoff_utc": "2026-11-21T17:30:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ]
+    },
+    {
+      "away_team_key": "1 fsv mainz 05",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "home_team_key": "fc augsburg",
+      "kickoff_utc": "2026-11-22T14:30:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ]
+    },
+    {
+      "away_team_key": "hamburger sv",
+      "competition_key": "bundesliga",
+      "country_key": "germany",
+      "home_team_key": "sv werder bremen",
+      "kickoff_utc": "2026-11-22T16:30:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ]
+    },
+    {
+      "away_team_key": "al nassr",
+      "competition_key": "saudi pro league",
+      "country_key": "saudi arabia",
+      "home_team_key": "al ahli",
+      "kickoff_utc": "2026-11-20T17:30:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "livescore_football"
+      ]
+    },
+    {
+      "away_team_key": "st mirren",
+      "competition_key": "scottish premiership",
+      "country_key": "scotland",
+      "home_team_key": "celtic",
+      "kickoff_utc": "2026-11-21T15:00:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "livescore_football"
+      ]
+    },
+    {
+      "away_team_key": "dundee united",
+      "competition_key": "scottish premiership",
+      "country_key": "scotland",
+      "home_team_key": "hibernian",
+      "kickoff_utc": "2026-11-21T15:00:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "livescore_football"
+      ]
+    },
+    {
+      "away_team_key": "aberdeen",
+      "competition_key": "scottish premiership",
+      "country_key": "scotland",
+      "home_team_key": "kilmarnock",
+      "kickoff_utc": "2026-11-21T15:00:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "livescore_football"
+      ]
+    },
+    {
+      "away_team_key": "rangers",
+      "competition_key": "scottish premiership",
+      "country_key": "scotland",
+      "home_team_key": "motherwell",
+      "kickoff_utc": "2026-11-21T20:00:00Z",
+      "provider_count": 2,
+      "providers": [
+        "bzzoiro",
+        "livescore_football"
+      ]
+    }
+  ],
+  "exact_overlap_count": 20,
+  "generated_at_utc": "2026-11-15T12:46:45.465416+00:00",
+  "interpretation": "An exact team-pair and UTC-kickoff overlap is strong fixture-level corroboration, but does not alone approve competition or season identity. Date-level candidates match team pairs on dates within one day where at least one source has a local date/time without timezone; they are manual-review leads only and never count as exact overlaps. Missing observations in selected snapshots mean not observed in this audit window, not that the provider lacks the competition.",
+  "priority_a_entry_count": 12,
+  "providers_checked": [
+    "bzzoiro",
+    "football_data_org",
+    "openfootball",
+    "openligadb",
+    "livescore_football"
+  ],
+  "report_name": "priority_a_provider_observation_audit",
+  "safeguards": {
+    "automatic_identity_approvals": 0,
+    "canonical_competition_writes": 0,
+    "canonical_season_writes": 0,
+    "database_transaction_read_only": true,
+    "fixture_writes": 0,
+    "future_fixture_routes_enabled": 0,
+    "prediction_ledger_writes": 0,
+    "provider_link_writes": 0
+  },
+  "snapshot_counts_by_provider_resource": {
+    "bzzoiro:future_fixture_observations": 20,
+    "football_data_org:future_fixture_observations": 5,
+    "football_data_org:independent_data_observations": 10,
+    "livescore_football:future_fixture_observations": 20,
+    "openfootball:future_fixture_observations": 20,
+    "openligadb:future_fixture_observations": 20
+  },
+  "snapshot_limit_per_provider_resource": 20,
+  "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
+  "total_raw_observations_examined": 166037
+}
