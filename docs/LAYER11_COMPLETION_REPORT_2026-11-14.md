@@ -75,7 +75,7 @@ The refreshed read-only audit was generated at **2026-11-15 10:34:18 UTC**. It e
 | Exact team-pair + UTC-kickoff overlaps | 20 | Strong fixture-level corroboration; not automatic competition/season approval |
 | Date-and-team candidate records | 162 | Manual-review leads only; local-time/date evidence is not exact UTC confirmation |
 | Distinct date/team fixture leads | 155 | Seven records are repeated provider-pair evidence for the same date/team fixture |
-| Priority A identity entries | 10 | All remain `not_approved` pending verified canonical targets and identity-level review |
+| Priority A identity entries | 12 | All remain `not_approved` pending verified canonical targets and identity-level review |
 
 The 20 exact overlaps are distributed across Premier League (2), 2. Bundesliga (5), Bundesliga (8), Saudi Pro League (1), and Scottish Premiership (4). The 155 distinct date/team leads are concentrated in Bundesliga (96), Premier League (56), and Eredivisie (3). The raw candidate-record count is higher because the same fixture can be corroborated by more than one provider pair.
 
