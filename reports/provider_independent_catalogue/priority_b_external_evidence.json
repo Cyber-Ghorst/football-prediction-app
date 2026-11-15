@@ -1,6 +1,6 @@
 {
   "report_name": "priority_b_external_identity_evidence",
-  "generated_at": "2026-11-15T17:08:14.378Z",
+  "generated_at": "2026-11-15T17:10:31.129Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority B single-provider competition identities; official evidence can support competition type, country and season context but does not replace independent provider corroboration or human canonical approval.",
   "safeguards": [
@@ -528,6 +528,170 @@
         "Obtain broader Bzzoiro roster and fixture samples.",
         "Verify the full season scope of provider season ID 34::52.",
         "Seek independent provider corroboration for Série B."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_013",
+      "name": "Parva Liga",
+      "observed_country": "Bulgaria",
+      "provider": "bzzoiro",
+      "provider_competition_id": "22",
+      "provider_season_id": "22::1326",
+      "provider_season_label": "Parva Liga 26/27",
+      "raw_observation_count": 5,
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 14,
+        "format": "26-round double round-robin regular season followed by three split groups"
+      },
+      "external_evidence": [
+        {
+          "publisher": "Bulgarian Football Union",
+          "url": "https://bfunion.bg/uploads/2026-06-24/naredba-za-parvenstavata-26-27.pdf",
+          "supports": "Official 2026/27 BFU regulations identify the First Professional League as 14 professional clubs and define the two-phase format."
+        },
+        {
+          "publisher": "Bulgarian Football Union",
+          "url": "https://bfunion.bg/",
+          "supports": "National governing-body source for the 2026/27 professional competition regulations."
+        }
+      ],
+      "assessment": "Official BFU regulations establish the 2026/27 Parva Liga as Bulgaria's men's first-tier professional competition with 14 clubs and a two-phase format. Bzzoiro's five observations are insufficient to verify full roster coverage or provider season-ID semantics.",
+      "review_status": "external_identity_supported_single_provider_roster_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples.",
+        "Verify provider-specific season boundaries and the meaning of the provider season ID.",
+        "Seek independent provider corroboration."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_014",
+      "name": "Liga de Primera",
+      "observed_country": "Chile",
+      "provider": "bzzoiro",
+      "provider_competition_id": "111",
+      "provider_season_id": "111::2305",
+      "provider_season_label": "Primera Division 2026",
+      "raw_observation_count": 9,
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026",
+      "official_scope": {
+        "clubs": 16
+      },
+      "external_evidence": [
+        {
+          "publisher": "Asociación Nacional de Fútbol Profesional",
+          "url": "https://www.anfp.cl/?jet_download=0eb34046ea45a8d6098a924f1e05556c7351fb83",
+          "supports": "Official 2026 Primera División regulations specify 16 participating clubs."
+        },
+        {
+          "publisher": "Asociación Nacional de Fútbol Profesional",
+          "url": "https://www.anfp.cl/el-futbol-chileno-tiene-un-nuevo-nombre-liga-de-primera-mercado-libre-2026/",
+          "supports": "ANFP identifies the 2026 top-flight competition as Liga de Primera and confirms 16 clubs."
+        }
+      ],
+      "assessment": "Official ANFP sources establish Liga de Primera as Chile's men's top-flight competition for 2026 with 16 clubs. The Bzzoiro sample contains nine observations; full roster coverage and provider season-ID semantics remain unverified.",
+      "review_status": "external_identity_supported_single_provider_roster_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples.",
+        "Verify provider-specific season boundaries and the meaning of the provider season ID.",
+        "Seek independent provider corroboration."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_015",
+      "name": "Categoría Primera A",
+      "observed_country": "Colombia",
+      "provider": "bzzoiro",
+      "provider_competition_id": "80",
+      "provider_season_id": "80::1570",
+      "provider_season_label": "Liga DIMAYOR 2026",
+      "raw_observation_count": 26,
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026",
+      "official_scope": {
+        "clubs": 20,
+        "tournaments": [
+          "Liga BetPlay DIMAYOR I 2026",
+          "Liga BetPlay DIMAYOR II 2026"
+        ],
+        "format": "Two semester tournaments, each with 20 clubs"
+      },
+      "external_evidence": [
+        {
+          "publisher": "DIMAYOR",
+          "url": "https://dimayor.com.co/wp-content/uploads/2026/01/REGLAMENTO-LIGA-2026-V11-1.pdf",
+          "supports": "Official 2026 Liga BetPlay regulations specify 20 clubs and the two semester tournaments."
+        },
+        {
+          "publisher": "DIMAYOR",
+          "url": "https://dimayor.com.co/2026/08/19/comunicado-oficial-dimayor-informa-decisiones-de-la-asamblea-extraordinaria/",
+          "supports": "Official August 2026 notice confirms the format decision for the second-semester competition."
+        }
+      ],
+      "assessment": "Official DIMAYOR regulations establish the 2026 men's Primera A as a 20-club top-tier competition with separate first- and second-semester tournaments. Bzzoiro's 26 observations do not establish full roster coverage or season-ID equivalence.",
+      "review_status": "external_identity_supported_single_provider_roster_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples.",
+        "Verify provider-specific season boundaries and the meaning of the provider season ID.",
+        "Seek independent provider corroboration."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_016",
+      "name": "Copa Colombia",
+      "observed_country": "Colombia",
+      "provider": "bzzoiro",
+      "provider_competition_id": "81",
+      "provider_season_id": "81::1586",
+      "provider_season_label": "Copa Colombia 2026",
+      "raw_observation_count": 6,
+      "external_competition_type": "men's national knockout cup",
+      "external_season": "2026",
+      "official_scope": {
+        "clubs": 36,
+        "format": "National cup with group/qualification phases and knockout rounds"
+      },
+      "external_evidence": [
+        {
+          "publisher": "DIMAYOR",
+          "url": "https://dimayor.com.co/wp-content/uploads/2026/04/REGLAMENTO-COPA-2026-V5.pdf",
+          "supports": "Official 2026 Copa BetPlay regulations specify 36 affiliated clubs and the cup competition stages."
+        },
+        {
+          "publisher": "DIMAYOR",
+          "url": "https://dimayor.com.co/2026/05/04/definidos-los-grupos-y-el-fixture-de-la-copa-betplay-dimayor-2026/",
+          "supports": "Official draw and fixture announcement for the 2026 Copa BetPlay."
+        },
+        {
+          "publisher": "DIMAYOR",
+          "url": "https://dimayor.com.co/2026/08/19/comunicado-oficial-dimayor-informa-decisiones-de-la-asamblea-extraordinaria/",
+          "supports": "Official August 2026 update to the 2026 cup knockout format."
+        }
+      ],
+      "assessment": "Official DIMAYOR regulations establish Copa BetPlay 2026 as a men's national cup involving 36 affiliated clubs. It is a cup, not a league; Bzzoiro's six observations are insufficient to verify the full entrant set or provider season-ID semantics.",
+      "review_status": "external_identity_supported_single_provider_roster_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples.",
+        "Verify provider-specific season boundaries and the meaning of the provider season ID.",
+        "Seek independent provider corroboration."
       ]
     }
   ]
