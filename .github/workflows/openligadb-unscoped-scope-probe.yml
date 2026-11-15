@@ -1,0 +1,50 @@
+name: OpenLigaDB country-unscoped scope probe
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "openligadb_unscoped_scope_probe.py"
+      - "reports/provider_independent_catalogue/openligadb_country_scope_candidates.json"
+      - ".github/workflows/openligadb-unscoped-scope-probe.yml"
+      - "test_openligadb_unscoped_scope_probe.py"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: main-report-archive
+  queue: max
+
+jobs:
+  probe:
+    name: Read-only OpenLigaDB source identity probe
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run unit tests
+        run: python -m unittest test_openligadb_unscoped_scope_probe.py
+      - name: Run bounded public API probe
+        run: |
+          set -euo pipefail
+          mkdir -p reports/provider_independent_catalogue/archive
+          stamp="$(date -u +%Y%m%dT%H%M%SZ)"
+          python openligadb_unscoped_scope_probe.py
+          python -m json.tool reports/provider_independent_catalogue/openligadb_country_scope_probe_latest.json >/dev/null
+          cp reports/provider_independent_catalogue/openligadb_country_scope_probe_latest.json "reports/provider_independent_catalogue/archive/openligadb_country_scope_probe_${stamp}.json"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/provider_independent_catalogue/openligadb_country_scope_probe_latest.json reports/provider_independent_catalogue/archive
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive OpenLigaDB country scope probe ${stamp}"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
