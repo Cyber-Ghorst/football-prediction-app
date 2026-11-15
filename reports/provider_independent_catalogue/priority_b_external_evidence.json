@@ -1,6 +1,6 @@
 {
   "report_name": "priority_b_external_identity_evidence",
-  "generated_at": "2026-11-15T17:05:46.855Z",
+  "generated_at": "2026-11-15T17:08:14.378Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority B single-provider competition identities; official evidence can support competition type, country and season context but does not replace independent provider corroboration or human canonical approval.",
   "safeguards": [
@@ -344,6 +344,190 @@
       "remaining_evidence": [
         "Obtain a broader Bzzoiro roster and fixture sample.",
         "Verify season boundaries and the provider-specific meaning of 97::2018."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_009",
+      "name": "Brasileirão Serie A",
+      "observed_country": "Brazil",
+      "provider": "bzzoiro",
+      "provider_competition_id": "9",
+      "provider_season_id": "9::28",
+      "provider_season_label": "Brasileiro Serie A 2026",
+      "raw_observation_count": 35,
+      "external_competition_type": "men's top-tier domestic professional league",
+      "external_season": "2026 calendar year",
+      "official_scope": {
+        "clubs": 20,
+        "rounds": 38,
+        "regular_season_matches": 380,
+        "format": "Single round-robin home and away"
+      },
+      "external_evidence": [
+        {
+          "publisher": "Confederação Brasileira de Futebol",
+          "url": "https://www.cbf.com.br/futebol-brasileiro/noticias/copa-verde/masculino/cbf-divulga-tabela-detalhada-das-primeiras-rodadas-do-brasileirao-2026",
+          "supports": "Official CBF release of the 2026 Série A regulations and 38-round fixture table."
+        },
+        {
+          "publisher": "Confederação Brasileira de Futebol",
+          "url": "https://www.cbf.com.br/futebol-brasileiro/noticias/jogosdehoje-copa-brasil-sub20/a/brasileirao-betano-2026-tem-a-maior-media-de-gols-desde-2007",
+          "supports": "CBF identifies the 2026 Série A format as 20 clubs and 38 rounds."
+        },
+        {
+          "publisher": "Confederação Brasileira de Futebol",
+          "url": "https://www.cbf.com.br/futebol-brasileiro/tabelas/campeonato-brasileiro/serie-a/2026",
+          "supports": "Official CBF 2026 Série A table and competition documents."
+        }
+      ],
+      "assessment": "Official CBF sources establish the 2026 men's Série A as the 20-club top tier with 38 rounds. Three provider records with closely related names and calendar-year season labels are plausible counterparts, but their provider IDs are not interchangeable and exact fixture crosswalk evidence has not been established in this review.",
+      "review_status": "external_identity_supported_candidate_provider_pairings_crosswalk_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Compare exact fixture pairs and timezone-normalized kickoffs across Bzzoiro, LiveScoreFootball and football-data.org.",
+        "Verify each provider's 2026 season metadata and boundaries.",
+        "Keep the three records separate until a reviewed crosswalk is supported."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_011",
+      "name": "Brazilian Serie A",
+      "observed_country": "Brazil",
+      "provider": "livescore_football",
+      "provider_competition_id": "630",
+      "provider_season_id": "630::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 6,
+      "external_competition_type": "men's top-tier domestic professional league",
+      "external_season": "2026 calendar year",
+      "official_scope": {
+        "clubs": 20,
+        "rounds": 38,
+        "regular_season_matches": 380,
+        "format": "Single round-robin home and away"
+      },
+      "external_evidence": [
+        {
+          "publisher": "Confederação Brasileira de Futebol",
+          "url": "https://www.cbf.com.br/futebol-brasileiro/noticias/copa-verde/masculino/cbf-divulga-tabela-detalhada-das-primeiras-rodadas-do-brasileirao-2026",
+          "supports": "Official CBF release of the 2026 Série A regulations and 38-round fixture table."
+        },
+        {
+          "publisher": "Confederação Brasileira de Futebol",
+          "url": "https://www.cbf.com.br/futebol-brasileiro/noticias/jogosdehoje-copa-brasil-sub20/a/brasileirao-betano-2026-tem-a-maior-media-de-gols-desde-2007",
+          "supports": "CBF identifies the 2026 Série A format as 20 clubs and 38 rounds."
+        },
+        {
+          "publisher": "Confederação Brasileira de Futebol",
+          "url": "https://www.cbf.com.br/futebol-brasileiro/tabelas/campeonato-brasileiro/serie-a/2026",
+          "supports": "Official CBF 2026 Série A table and competition documents."
+        }
+      ],
+      "assessment": "Official CBF sources establish the 2026 men's Série A as the 20-club top tier with 38 rounds. Three provider records with closely related names and calendar-year season labels are plausible counterparts, but their provider IDs are not interchangeable and exact fixture crosswalk evidence has not been established in this review.",
+      "review_status": "external_identity_supported_candidate_provider_pairings_crosswalk_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Compare exact fixture pairs and timezone-normalized kickoffs across Bzzoiro, LiveScoreFootball and football-data.org.",
+        "Verify each provider's 2026 season metadata and boundaries.",
+        "Keep the three records separate until a reviewed crosswalk is supported."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_012",
+      "name": "Campeonato Brasileiro Série A",
+      "observed_country": "Brazil",
+      "provider": "football_data_org",
+      "provider_competition_id": "2013",
+      "provider_season_id": "2013::2474",
+      "provider_season_label": "2026-01-28",
+      "raw_observation_count": 31,
+      "external_competition_type": "men's top-tier domestic professional league",
+      "external_season": "2026 calendar year",
+      "official_scope": {
+        "clubs": 20,
+        "rounds": 38,
+        "regular_season_matches": 380,
+        "format": "Single round-robin home and away"
+      },
+      "external_evidence": [
+        {
+          "publisher": "Confederação Brasileira de Futebol",
+          "url": "https://www.cbf.com.br/futebol-brasileiro/noticias/copa-verde/masculino/cbf-divulga-tabela-detalhada-das-primeiras-rodadas-do-brasileirao-2026",
+          "supports": "Official CBF release of the 2026 Série A regulations and 38-round fixture table."
+        },
+        {
+          "publisher": "Confederação Brasileira de Futebol",
+          "url": "https://www.cbf.com.br/futebol-brasileiro/noticias/jogosdehoje-copa-brasil-sub20/a/brasileirao-betano-2026-tem-a-maior-media-de-gols-desde-2007",
+          "supports": "CBF identifies the 2026 Série A format as 20 clubs and 38 rounds."
+        },
+        {
+          "publisher": "Confederação Brasileira de Futebol",
+          "url": "https://www.cbf.com.br/futebol-brasileiro/tabelas/campeonato-brasileiro/serie-a/2026",
+          "supports": "Official CBF 2026 Série A table and competition documents."
+        }
+      ],
+      "assessment": "Official CBF sources establish the 2026 men's Série A as the 20-club top tier with 38 rounds. Three provider records with closely related names and calendar-year season labels are plausible counterparts, but their provider IDs are not interchangeable and exact fixture crosswalk evidence has not been established in this review.",
+      "review_status": "external_identity_supported_candidate_provider_pairings_crosswalk_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Compare exact fixture pairs and timezone-normalized kickoffs across Bzzoiro, LiveScoreFootball and football-data.org.",
+        "Verify each provider's 2026 season metadata and boundaries.",
+        "Keep the three records separate until a reviewed crosswalk is supported."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_010",
+      "name": "Brasileirão Serie B",
+      "observed_country": "Brazil",
+      "provider": "bzzoiro",
+      "provider_competition_id": "34",
+      "provider_season_id": "34::52",
+      "provider_season_label": "Brasileiro Serie B 2026",
+      "raw_observation_count": 21,
+      "external_competition_type": "men's second-tier domestic professional league",
+      "external_season": "2026 calendar year",
+      "official_scope": {
+        "clubs": 20,
+        "rounds": 38,
+        "regular_season_matches": 380,
+        "format": "Single round-robin home and away; promotion playoff for positions 3–6"
+      },
+      "external_evidence": [
+        {
+          "publisher": "Confederação Brasileira de Futebol",
+          "url": "https://www.cbf.com.br/futebol-brasileiro/noticias/selecao-masculina/comunicado-1/brasileirao-serie-b-comeca-neste-fim-de-semana-com-novo-formato",
+          "supports": "Official CBF announcement states 20 clubs and 38 rounds for the 2026 Série B, with promotion playoffs for positions 3–6."
+        },
+        {
+          "publisher": "Confederação Brasileira de Futebol",
+          "url": "https://www.cbf.com.br/futebol-brasileiro/noticias/undefined/flamengo-x-heips/cbf-divulga-documentos-tecnicos-do-brasileirao-da-serie-b-de-2026",
+          "supports": "Official 2026 competition documents include the regulations and basic schedule."
+        },
+        {
+          "publisher": "Confederação Brasileira de Futebol",
+          "url": "https://www.cbf.com.br/futebol-brasileiro/tabelas/campeonato-brasileiro/serie-b/2026",
+          "supports": "Official CBF 2026 Série B table lists the competition and its 38-match standings."
+        }
+      ],
+      "assessment": "Official CBF sources establish the 2026 men's Série B as the 20-club second tier with 38 rounds. The single Bzzoiro record contains 21 observations; its full roster and season-ID semantics remain unverified.",
+      "review_status": "external_identity_supported_single_provider_roster_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader Bzzoiro roster and fixture samples.",
+        "Verify the full season scope of provider season ID 34::52.",
+        "Seek independent provider corroboration for Série B."
       ]
     }
   ]
