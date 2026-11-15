@@ -27,8 +27,8 @@ TARGET_HIGHLIGHTLY = (
     {"name": "World Cup", "country": None},
 )
 TARGET_LIVESCORE = (
-    {"name": "Bundesliga", "country": "Germany", "slug": "ger.1"},
-    {"name": "Ligue 1", "country": "France", "slug": "fra.1"},
+    {"name": "German Bundesliga", "country": "Germany", "slug": "ger.1"},
+    {"name": "French Ligue 1", "country": "France", "slug": "fra.1"},
 )
 SEASON_START = "2026-08-01"
 SEASON_END = "2027-05-31"
