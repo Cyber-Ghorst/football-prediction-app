@@ -8,11 +8,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from canonical_repository import audit_provider_link_parity
+from canonical_repository import (
+    audit_provider_link_parity,
+    list_provider_link_sources,
+)
 
 
 REPORT_PATH = Path("reports/provider_independent_catalogue/approved_link_parity_latest.json")
-PROVIDERS = ("sportmonks",)
 
 
 def build_report(database_url: str, provider: str) -> dict[str, Any]:
@@ -41,7 +43,8 @@ def main() -> int:
         print("ERROR: PROVIDER_DATABASE_URL is not configured.", file=sys.stderr)
         return 2
     try:
-        reports = [build_report(database_url, provider) for provider in PROVIDERS]
+        providers = list_provider_link_sources(database_url)
+        reports = [build_report(database_url, provider) for provider in providers]
         payload: dict[str, Any] = {
             "report_schema_version": 1,
             "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -64,6 +67,7 @@ def main() -> int:
     print(json.dumps({
         "audit_status": "completed",
         "provider_count": len(reports),
+        "providers": [item["provider"] for item in reports],
         "report_path": str(REPORT_PATH),
         "database_writes": False,
     }, indent=2))
