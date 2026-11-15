@@ -249,6 +249,11 @@ def audit_provider_link_parity(
                          AND verification.entity_type = link.entity_type
                          AND verification.provider_entity_id = link.provider_entity_id
                          AND verification.canonical_entity_id = link.canonical_entity_id
+                        LEFT JOIN provider_fixture_observations AS fixture_observation
+                          ON fixture_observation.provider = 'openscores'
+                         AND fixture_observation.provider_fixture_id = link.provider_entity_id
+                         AND fixture_observation.canonical_fixture_id = link.canonical_entity_id
+                         AND fixture_observation.reconciliation_status IN ('matched', 'outside_upcoming_window')
                         WHERE link.provider = %s AND link.entity_type = %s
                           AND (approval.link_id IS NOT NULL
                                OR verification.verification_status = 'verified'
