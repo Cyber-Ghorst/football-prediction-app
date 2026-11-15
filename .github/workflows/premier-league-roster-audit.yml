@@ -1,0 +1,50 @@
+name: Read-only Premier League roster evidence
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "sportmonks_premier_league_roster_audit.py"
+      - ".github/workflows/premier-league-roster-audit.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: premier-league-roster-evidence
+  queue: max
+
+jobs:
+  roster:
+    name: Export Sportmonks Premier League team roster (read-only)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SPORTMONKS_API_TOKEN: ${{ secrets.SPORTMONKS_API_TOKEN }}
+      SPORTMONKS_API_KEY: ${{ secrets.SPORTMONKS_API_KEY }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install HTTP dependency
+        run: python -m pip install requests
+      - name: Fetch roster without database access
+        run: |
+          mkdir -p reports/provider_independent_catalogue
+          python sportmonks_premier_league_roster_audit.py > reports/provider_independent_catalogue/premier_league_sportmonks_roster.json
+      - name: Commit evidence report
+        if: always()
+        run: |
+          if [ -f reports/provider_independent_catalogue/premier_league_sportmonks_roster.json ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add reports/provider_independent_catalogue/premier_league_sportmonks_roster.json
+            if ! git diff --cached --quiet; then
+              git commit -m "Archive read-only Premier League team roster evidence"
+              git pull --rebase origin main
+              git push origin HEAD:main
+            fi
+          fi
