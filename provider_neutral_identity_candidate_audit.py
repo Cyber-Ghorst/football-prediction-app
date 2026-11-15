@@ -11,7 +11,6 @@ from typing import Any, Mapping
 from provider_data_storage import _connect
 from provider_neutral_identity import (
     canonical_competition_key,
-    canonical_season_key,
     canonical_team_key,
 )
 
@@ -91,14 +90,23 @@ def build_identity_candidate_report(rows: list[Mapping[str, Any]]) -> dict[str, 
             teams.append(result)
 
     shared = []
+    duplicates = []
     for key, sources in key_groups.items():
-        if len(sources) > 1:
+        providers = {source["provider"] for source in sources}
+        if len(providers) > 1:
             shared.append({"identity_key_candidate": key, "source_entities": sources,
                            "status": "shared_identity_candidate_requires_manual_review"})
+        elif len(sources) > 1:
+            duplicates.append({"identity_key_candidate": key, "source_entities": sources,
+                               "status": "duplicate_within_provider_requires_review"})
     shared_keys = {row["identity_key_candidate"] for row in shared}
+    duplicate_keys = {row["identity_key_candidate"] for row in duplicates}
     for row in competition_candidates:
-        if row.get("identity_key_candidate") in shared_keys:
+        key = row.get("identity_key_candidate")
+        if key in shared_keys:
             row["status"] = "shared_identity_candidate_requires_manual_review"
+        elif key in duplicate_keys:
+            row["status"] = "duplicate_within_provider_requires_review"
 
     return {
         "read_only": True,
@@ -106,6 +114,7 @@ def build_identity_candidate_report(rows: list[Mapping[str, Any]]) -> dict[str, 
         "provider_links_created": 0,
         "competition_candidates": competition_candidates,
         "shared_competition_candidates": shared,
+        "duplicate_competition_candidates": duplicates,
         "season_candidates": seasons,
         "team_candidates": teams,
         "summary": {
@@ -114,6 +123,7 @@ def build_identity_candidate_report(rows: list[Mapping[str, Any]]) -> dict[str, 
                 bool(row.get("identity_key_candidate")) for row in competition_candidates
             ),
             "shared_competition_identity_candidates": len(shared),
+            "duplicate_competition_identity_candidates": len(duplicates),
             "seasons_held_for_parent_approval": len(seasons),
             "team_source_rows": len(teams),
             "teams_held_for_scope_evidence": sum(
