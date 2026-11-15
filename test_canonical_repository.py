@@ -3,6 +3,7 @@ from unittest.mock import patch
 
 from canonical_repository import (
     classify_approved_link_rows,
+    list_provider_link_sources,
     resolve_approved_legacy_source_id,
 )
 
@@ -135,6 +136,35 @@ class CanonicalRepositoryResolverTests(unittest.TestCase):
             self.assertTrue(query.lstrip().upper().startswith("SELECT"))
             self.assertIn("provider_entity_link_approval_audit", query)
             self.assertIn("LENGTH(BTRIM(approval.approval_reason)) >= 12", query)
+
+
+    def test_list_provider_link_sources_uses_read_only_distinct_query(self):
+        class Cursor:
+            def __init__(self):
+                self.statements = []
+            def __enter__(self):
+                return self
+            def __exit__(self, *args):
+                return False
+            def execute(self, query, params):
+                self.statements.append((query, params))
+            def fetchall(self):
+                return [("Sportmonks",), ("OpenLigaDB",), ("",)]
+        class Connection:
+            def __init__(self, cursor):
+                self.cursor_value = cursor
+            def __enter__(self):
+                return self
+            def __exit__(self, *args):
+                return False
+            def cursor(self):
+                return self.cursor_value
+        cursor = Cursor()
+        with patch("canonical_repository._connect", return_value=Connection(cursor)):
+            providers = list_provider_link_sources("db")
+        self.assertEqual(providers, ["sportmonks", "openligadb"])
+        self.assertEqual(cursor.statements[0], ("SET TRANSACTION READ ONLY", ()))
+        self.assertTrue(cursor.statements[1][0].lstrip().upper().startswith("SELECT DISTINCT"))
 
     def test_parity_audit_requires_provider_before_database_access(self):
         from canonical_repository import audit_provider_link_parity
