@@ -2,7 +2,7 @@
 
 Updated: 15 November 2026
 
-This dossier adds official competition evidence for the ten multi-provider, country-scoped entries in the identity-review queue. It is an evidence aid, **not an approval of canonical identities or provider mappings**.
+This dossier adds official competition evidence for the twelve multi-provider, country-scoped entries in the identity-review queue. It is an evidence aid, **not an approval of canonical identities or provider mappings**.
 
 ## Key finding
 
@@ -114,3 +114,37 @@ The latest Sportmonks catalogue report is still partial: 4 of 5 selected seasons
 No new canonical records, provider links, fixture rows, future-fixture routes or prediction-ledger rows are authorized by this review-order update.
 
 Machine-readable source: [refreshed Priority A observation audit](../reports/provider_independent_catalogue/priority_a_provider_observation_audit/latest.json). Canonical target coverage source: [Sportmonks catalogue sync report](../reports/sportmonks_catalogue_sync/latest.json).
+
+
+## 15 November 2026 — Premier League source-to-target review
+
+### Result: competition identity strongly corroborated; provider mappings remain unapproved
+
+The official Premier League 2026/27 fixture list and its November fixture-amendment notice independently confirm both exact cross-provider fixture overlaps recorded by the read-only audit:
+
+| Kickoff (UTC) | Home | Away | Independent providers | Official schedule check |
+|---|---|---|---|---|
+| 2026-11-21 15:00 | Aston Villa | Sunderland | Bzzoiro + OpenLigaDB | Listed for Saturday 21 November; the official amendment states fixtures are GMT and 15:00 unless otherwise stated |
+| 2026-11-22 14:00 | Hull City | Brighton & Hove Albion | Bzzoiro + OpenLigaDB | Listed for Sunday 22 November at 14:00 GMT |
+
+Official references: [Premier League 2026/27 fixture list](https://www.premierleague.com/en/news/4675097) and [November fixture amendments](https://www.premierleague.com/en/news/4725574/fixture-amendments-for-premier-league-matches-in-november).
+
+### Canonical target check
+
+The committed Sportmonks catalogue-only sync report records a Premier League target at league ID `8`, season ID `28083`, with 20 teams received/upserted. The report does not expose the full canonical team roster or source-to-canonical team crosswalk in its committed summary. Consequently, this review confirms target existence and team-count parity only; it does **not** establish all 20 club identities or authorize any provider link.
+
+Provider evidence remains:
+- Bzzoiro competition `1`, season `1::1058` (season label `Premier League 26/27`, no parsed start year).
+- OpenFootball competition `en.1`, season `en.1::2026-27`.
+- OpenLigaDB competition `5996`, season `5996::2026`.
+- OpenFootball and OpenLigaDB share parsed 2026 start-year evidence; Bzzoiro's label is consistent with 2026/27 but its structured start year remains absent.
+
+### Decision and next gate
+
+- Public identity: supported as the English men's top-tier Premier League, 2026/27.
+- Fixture corroboration: 2 exact UTC overlaps, both independently confirmed against the official schedule.
+- Sportmonks target: league 8 / season 28083 exists; 20 teams imported.
+- Provider competition IDs, provider season IDs, and the 20-team canonical roster crosswalk: **not yet verified**.
+- Canonical approvals, provider-link writes, season/team links, fixture writes, future-fixture routing, and prediction eligibility: **none authorized or performed**.
+
+Next safe action is to obtain the actual read-only Sportmonks team roster and compare it club-by-club with the three provider snapshots, including source IDs and season metadata. Do not create links until that comparison is complete and human approval is recorded.
