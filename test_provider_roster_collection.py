@@ -44,6 +44,7 @@ class ProviderRosterCollectionTests(unittest.TestCase):
         client = Mock()
         client.fixtures.return_value = [{
             "id": "fixture-1",
+            "date": "2026-11-01T15:00:00Z",
             "competitions": [{
                 "competitors": [
                     {"id": "club.1", "team": {"id": "club.1", "name": "Home FC"},
@@ -60,9 +61,8 @@ class ProviderRosterCollectionTests(unittest.TestCase):
             date_from="2026-08-01",
             date_to="2027-05-31",
         )
-        client.fixtures.assert_called_once_with(
-            "fra.1", status="all", date_from="2026-08-01", date_to="2027-05-31"
-        )
+        client.fixtures.assert_called_once_with("fra.1", status="all")
+        self.assertEqual(result["season_window_fixtures"], 1)
         self.assertEqual([x["id"] for x in result["teams"]], ["club.1", "club.2"])
         self.assertFalse(result["team_evidence_complete"])
         self.assertEqual(result["fixtures_imported"], 0)
