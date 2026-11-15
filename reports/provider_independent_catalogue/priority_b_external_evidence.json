@@ -1,6 +1,6 @@
 {
   "report_name": "priority_b_external_identity_evidence",
-  "generated_at": "2026-11-15T17:19:51.926Z",
+  "generated_at": "2026-11-15T17:22:36.700Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority B single-provider competition identities; official evidence can support competition type, country and season context but does not replace independent provider corroboration or human canonical approval.",
   "safeguards": [
@@ -1556,6 +1556,211 @@
         "Compare exact fixture pairs and timezone-normalized kickoffs with Bzzoiro and OpenFootball records.",
         "Verify the scope of provider season ID 710::2026.",
         "Do not create links from competition-name similarity."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_041",
+      "name": "Ligue 2",
+      "observed_country": "France",
+      "provider": "bzzoiro",
+      "provider_competition_id": "89",
+      "provider_season_id": "89::1848",
+      "provider_season_label": "Ligue 2 26/27",
+      "raw_observation_count": 21,
+      "external_competition_type": "men's second-tier domestic league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 18,
+        "matchdays": 34,
+        "matches": 306
+      },
+      "external_evidence": [
+        {
+          "publisher": "LFP",
+          "url": "https://ligue1.com/fr/articles/l1_article_5281-",
+          "supports": "Official 2026/27 Ligue 2 schedule lists 34 matchdays and opening/closing dates."
+        }
+      ],
+      "assessment": "Official LFP sources establish Ligue 2 as the men's second tier with 18 clubs and 34 matchdays in 2026/27. Bzzoiro has 21 observations; provider season-ID scope and complete roster remain unverified.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Verify provider-specific season boundaries and the meaning of provider season IDs.",
+        "Obtain broader roster/fixture evidence where sample size is small.",
+        "Compare exact fixture evidence with other providers before proposing any crosswalk."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_042",
+      "name": "Ligue 3",
+      "observed_country": "France",
+      "provider": "bzzoiro",
+      "provider_competition_id": "105",
+      "provider_season_id": "105::2163",
+      "provider_season_label": "Ligue 3 26/27",
+      "raw_observation_count": 10,
+      "external_competition_type": "men's third-tier professional league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 18,
+        "matchdays": 34,
+        "matches": 306,
+        "format": "Single table; promotion playoffs"
+      },
+      "external_evidence": [
+        {
+          "publisher": "French Football Federation",
+          "url": "https://www.fff.fr/article/17022-le-calendrier-2026-2027-est-servi.html",
+          "supports": "Official 2026/27 Ligue 3 calendar confirms 18 clubs and 34 matchdays."
+        },
+        {
+          "publisher": "French Football Federation",
+          "url": "https://www.fff.fr/article/16778-la-fff-officialise-la-ligue-3-professionnelle.html",
+          "supports": "Official FFF decision establishes professional Ligue 3 as an 18-club competition."
+        },
+        {
+          "publisher": "LFP",
+          "url": "https://ligue1.com/fr/articles/l1_article_5407-ligue-3-le-calendrier-de-la-saison-2026-2027",
+          "supports": "Official 2026/27 Ligue 3 fixture list."
+        }
+      ],
+      "assessment": "Official FFF/LFP sources establish Ligue 3 as the new men's professional third tier from 2026/27, replacing the former National competition, with 18 clubs and 34 matchdays. Bzzoiro's 10 observations do not establish full roster coverage.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Verify provider-specific season boundaries and the meaning of provider season IDs.",
+        "Obtain broader roster/fixture evidence where sample size is small.",
+        "Compare exact fixture evidence with other providers before proposing any crosswalk."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_044",
+      "name": "3. Liga",
+      "observed_country": "Germany",
+      "provider": "openligadb",
+      "provider_competition_id": "4939",
+      "provider_season_id": "4939::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 1140,
+      "external_competition_type": "men's third-tier domestic professional league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 20,
+        "matches": 380,
+        "rounds": 38
+      },
+      "external_evidence": [
+        {
+          "publisher": "German Football Association (DFB)",
+          "url": "https://www.dfb.de/news/teilnehmerfeld-der-3-liga-steht-fest-havelse-rueckt-fuer-1860-nach",
+          "supports": "Official DFB announcement lists the 20 clubs admitted to the 2026/27 3. Liga and confirms 380 matches."
+        },
+        {
+          "publisher": "German Football Association (DFB)",
+          "url": "https://assets.dfb.de/uploads/000/322/300/original_Heft_02_Statut_3_Liga_20250701.pdf",
+          "supports": "DFB 3. Liga statute specifies the competition is played with 20 participants."
+        }
+      ],
+      "assessment": "Official DFB sources establish 3. Liga as the men's third-tier professional competition with 20 clubs and 380 matches in 2026/27. OpenLigaDB has 1,140 observations; season label 2026 still needs explicit mapping to the full 2026/27 season.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Verify provider-specific season boundaries and the meaning of provider season IDs.",
+        "Obtain broader roster/fixture evidence where sample size is small.",
+        "Compare exact fixture evidence with other providers before proposing any crosswalk."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_046",
+      "name": "DFB Pokal",
+      "observed_country": "Germany",
+      "provider": "openligadb",
+      "provider_competition_id": "4945",
+      "provider_season_id": "4945::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 168,
+      "external_competition_type": "men's national knockout cup",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 64,
+        "format": "64-team knockout competition"
+      },
+      "external_evidence": [
+        {
+          "publisher": "German Football Association (DFB)",
+          "url": "https://www.dfb.de/en/men/mens-dfb-pokal",
+          "supports": "Official DFB description states 64 teams take part in the opening round and explains qualification/format."
+        },
+        {
+          "publisher": "Bundesliga",
+          "url": "https://www.bundesliga.com/en/bundesliga/news/calendar-for-2026-27-season-world-cup-34676",
+          "supports": "Official 2026/27 calendar schedules the DFB Cup opening round and final."
+        }
+      ],
+      "assessment": "Official DFB sources establish DFB-Pokal as the men's national knockout cup with 64 teams in the opening round. OpenLigaDB's 168 observations are not enough to establish full entrant coverage or season-ID semantics.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Verify provider-specific season boundaries and the meaning of provider season IDs.",
+        "Obtain broader roster/fixture evidence where sample size is small.",
+        "Compare exact fixture evidence with other providers before proposing any crosswalk."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_047",
+      "name": "German Bundesliga",
+      "observed_country": "Germany",
+      "provider": "livescore_football",
+      "provider_competition_id": "720",
+      "provider_season_id": "720::2026",
+      "provider_season_label": "2026",
+      "raw_observation_count": 1,
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 18,
+        "matchdays": 34,
+        "matches": 306
+      },
+      "external_evidence": [
+        {
+          "publisher": "Bundesliga",
+          "url": "https://www.bundesliga.com/en/bundesliga/news/2026-27-season-fixture-schedules-37671",
+          "supports": "Official 2026/27 fixture release states Matchday 1 is 28–30 August 2026 and Matchday 34 is 22 May 2027."
+        },
+        {
+          "publisher": "Bundesliga",
+          "url": "https://www.bundesliga.com/en/bundesliga/table",
+          "supports": "Official 2026/27 table lists 18 clubs."
+        },
+        {
+          "publisher": "Bundesliga",
+          "url": "https://www.bundesliga.com/en/bundesliga/news/2026-27-fixture-lists-now-available-38068",
+          "supports": "Official 2026/27 fixture lists."
+        }
+      ],
+      "assessment": "Official Bundesliga sources establish the men's top tier with 18 clubs and 34 matchdays in 2026/27. LiveScoreFootball contributes only one observation; this is a plausible counterpart to the Bzzoiro Bundesliga record reviewed under Priority A, but no provider crosswalk is approved.",
+      "review_status": "external_identity_supported_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Verify provider-specific season boundaries and the meaning of provider season IDs.",
+        "Obtain broader roster/fixture evidence where sample size is small.",
+        "Compare exact fixture evidence with other providers before proposing any crosswalk."
       ]
     }
   ]
