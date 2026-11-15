@@ -44,12 +44,19 @@ def normalize_country(value: Any) -> str:
 
 
 def _source_parts(row: Mapping[str, Any], source_provider: str) -> tuple[str, str, str]:
-    if source_provider == "sportmonks":
+    if source_provider in {"sportmonks", "highlightly", "api_ninjas"}:
         country = row.get("country") if isinstance(row.get("country"), Mapping) else {}
+        country_name = (
+            country.get("name")
+            or row.get("countryName")
+            or row.get("country_name")
+            or row.get("country")
+            or ""
+        )
         return (
-            str(row.get("name") or ""),
-            str(country.get("name") or row.get("country_name") or ""),
-            str(row.get("id") or ""),
+            str(row.get("name") or row.get("leagueName") or ""),
+            str(country_name),
+            str(row.get("id") or row.get("league_id") or ""),
         )
     league = row.get("league") if isinstance(row.get("league"), Mapping) else row
     country = row.get("country") if isinstance(row.get("country"), Mapping) else {}
@@ -78,8 +85,10 @@ def build_competition_crosswalk(
     max_age_seconds: int = 24 * 60 * 60,
 ) -> list[dict[str, Any]]:
     """Match exact competition/country identities and require fresh coverage."""
-    if source_provider not in {"api_football", "sportmonks"}:
-        raise ValueError("source_provider must be api_football or sportmonks")
+    if source_provider not in {"api_football", "sportmonks", "highlightly", "api_ninjas"}:
+        raise ValueError(
+            "source_provider must be api_football, sportmonks, highlightly, or api_ninjas"
+        )
     live_rows = [row for row in livescore_competitions if isinstance(row, Mapping)]
     output: list[dict[str, Any]] = []
     for source_row in source_competitions:
@@ -101,6 +110,8 @@ def build_competition_crosswalk(
             "source_competition_id": source_id,
             "api_football_id": source_id if source_provider == "api_football" else None,
             "sportmonks_id": source_id if source_provider == "sportmonks" else None,
+            "highlightly_id": source_id if source_provider == "highlightly" else None,
+            "api_ninjas_id": source_id if source_provider == "api_ninjas" else None,
             "name": source_name,
             "country": source_country,
         }
