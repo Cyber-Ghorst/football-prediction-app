@@ -102,3 +102,108 @@ def resolve_approved_legacy_source_id(
             return {"status": "unresolved", "source_provider": None,
                     "source_entity_id": None}
     return result
+
+
+def audit_provider_link_parity(
+    database_url: str,
+    *,
+    provider: str,
+) -> dict[str, Any]:
+    """Read-only inventory of approved, unapproved, orphaned and ambiguous links.
+
+    Approval requires an exact audit match with a non-empty reason of at least
+    12 characters, matching the explicit-link write contract. Counts are
+    scoped by provider and entity type. No link or legacy row is modified.
+    """
+    provider_name = str(provider or "").strip().casefold()
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required.")
+    if not provider_name:
+        raise ValueError("A source provider is required.")
+
+    entity_reports: dict[str, dict[str, int]] = {}
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            for entity_kind, (table, primary_key) in ENTITY_TABLES.items():
+                cursor.execute(
+                    f"""
+                    SELECT
+                        COUNT(DISTINCT link.link_id) AS total_links,
+                        COUNT(DISTINCT CASE
+                            WHEN approval.link_id IS NOT NULL THEN link.link_id
+                        END) AS approved_links,
+                        COUNT(DISTINCT CASE
+                            WHEN approval.link_id IS NULL THEN link.link_id
+                        END) AS unapproved_links,
+                        COUNT(DISTINCT CASE
+                            WHEN approval.link_id IS NOT NULL
+                             AND legacy_entity.{primary_key} IS NULL
+                            THEN link.link_id
+                        END) AS approved_targets_missing,
+                        COUNT(DISTINCT CASE
+                            WHEN approval.link_id IS NOT NULL
+                             AND legacy_entity.{primary_key} IS NOT NULL
+                            THEN link.link_id
+                        END) AS approved_links_with_legacy_target
+                    FROM provider_entity_links AS link
+                    LEFT JOIN provider_entity_link_approval_audit AS approval
+                      ON approval.link_id = link.link_id
+                     AND approval.provider = link.provider
+                     AND approval.entity_type = link.entity_type
+                     AND approval.provider_entity_id = link.provider_entity_id
+                     AND approval.canonical_entity_id = link.canonical_entity_id
+                     AND LENGTH(BTRIM(approval.approval_reason)) >= 12
+                    LEFT JOIN {table} AS legacy_entity
+                      ON legacy_entity.{primary_key} = link.canonical_entity_id
+                    WHERE link.provider = %s AND link.entity_type = %s
+                    """,
+                    (provider_name, entity_kind),
+                )
+                row = cursor.fetchone()
+                entity_reports[entity_kind] = {
+                    "total_links": int(row[0] or 0),
+                    "approved_links": int(row[1] or 0),
+                    "unapproved_links": int(row[2] or 0),
+                    "approved_targets_missing": int(row[3] or 0),
+                    "approved_links_with_legacy_target": int(row[4] or 0),
+                }
+
+                cursor.execute(
+                    f"""
+                    SELECT COUNT(*) FROM (
+                        SELECT link.canonical_entity_id
+                        FROM provider_entity_links AS link
+                        INNER JOIN provider_entity_link_approval_audit AS approval
+                          ON approval.link_id = link.link_id
+                         AND approval.provider = link.provider
+                         AND approval.entity_type = link.entity_type
+                         AND approval.provider_entity_id = link.provider_entity_id
+                         AND approval.canonical_entity_id = link.canonical_entity_id
+                         AND LENGTH(BTRIM(approval.approval_reason)) >= 12
+                        WHERE link.provider = %s AND link.entity_type = %s
+                        GROUP BY link.canonical_entity_id
+                        HAVING COUNT(DISTINCT link.provider_entity_id) > 1
+                    ) AS ambiguous_targets
+                    """,
+                    (provider_name, entity_kind),
+                )
+                entity_reports[entity_kind]["ambiguous_canonical_targets"] = int(
+                    cursor.fetchone()[0] or 0
+                )
+
+    totals = {
+        key: sum(report[key] for report in entity_reports.values())
+        for key in (
+            "total_links", "approved_links", "unapproved_links",
+            "approved_targets_missing", "approved_links_with_legacy_target",
+        )
+    }
+    totals["ambiguous_canonical_targets"] = sum(
+        report["ambiguous_canonical_targets"] for report in entity_reports.values()
+    )
+    return {
+        "provider": provider_name,
+        "read_only": True,
+        "entity_types": entity_reports,
+        "totals": totals,
+    }
