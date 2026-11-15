@@ -1,6 +1,6 @@
 {
   "report_name": "priority_b_external_identity_evidence",
-  "generated_at": "2026-11-15T17:10:31.129Z",
+  "generated_at": "2026-11-15T17:12:45.988Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority B single-provider competition identities; official evidence can support competition type, country and season context but does not replace independent provider corroboration or human canonical approval.",
   "safeguards": [
@@ -690,6 +690,136 @@
       "prediction_eligible": false,
       "remaining_evidence": [
         "Obtain broader provider roster and fixture samples.",
+        "Verify provider-specific season boundaries and the meaning of the provider season ID.",
+        "Seek independent provider corroboration."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_017",
+      "name": "Czech First League",
+      "observed_country": "Czech Republic",
+      "provider": "bzzoiro",
+      "provider_competition_id": "99",
+      "provider_season_id": "99::2065",
+      "provider_season_label": "1. Liga 26/27",
+      "raw_observation_count": 5,
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 16,
+        "season": "2026/27"
+      },
+      "external_evidence": [
+        {
+          "publisher": "Football Association of the Czech Republic",
+          "url": "https://www.fotbal.cz/souteze/rozpis-celostatnich-soutezi-2026-27/p82",
+          "supports": "Official 2026/27 national competition schedule and club directories for Chance Liga and Chance Národní Liga."
+        },
+        {
+          "publisher": "Chance Liga",
+          "url": "https://www.chanceliga.cz/clanek/18905-sezona-2026-27-rozlosovana-i-s-karvinou-mistr-hosti-slovacko-brnensky-novacek-vyzve-spartu",
+          "supports": "Official 2026/27 Chance Liga draw and first-round schedule."
+        }
+      ],
+      "assessment": "Official Czech FA and Chance Liga sources corroborate the 2026/27 men's top-flight competition. The provider's five observations are too few to establish a full roster or the meaning of season ID 99::2065.",
+      "review_status": "external_identity_supported_single_provider_roster_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain a broader provider roster and fixture sample.",
+        "Verify provider-specific season boundaries and the meaning of the provider season ID.",
+        "Seek independent provider corroboration."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_018",
+      "name": "Danish Superliga",
+      "observed_country": "Denmark",
+      "provider": "bzzoiro",
+      "provider_competition_id": "84",
+      "provider_season_id": "84::1612",
+      "provider_season_label": "Superliga 26/27",
+      "raw_observation_count": 3,
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 12,
+        "regular_season_rounds": 22,
+        "post_split_rounds": 10,
+        "total_rounds": 32
+      },
+      "external_evidence": [
+        {
+          "publisher": "3F Superliga",
+          "url": "https://superliga.dk/nyheder/kamptidspunkter/2026-2027/kampprogrammet-for-grundspillet-2026-27-er-fastlagt",
+          "supports": "Official 2026/27 ground-round schedule begins 24 July 2026 and lists six fixtures per round."
+        },
+        {
+          "publisher": "3F Superliga",
+          "url": "https://superliga.dk/datoplaner",
+          "supports": "Official 2026/27 date plans identify ground rounds 1–22 and split rounds 23–32."
+        },
+        {
+          "publisher": "3F Superliga",
+          "url": "https://superliga.dk/nyheder/nyhedsbrev/midtvejsstatus-i-grundspillet",
+          "supports": "Official mid-season article confirms the split after 22 rounds and references 12th place in the 12-club league."
+        }
+      ],
+      "assessment": "Official Superliga sources corroborate a 12-club men's top tier for 2026/27, with 22 ground rounds followed by 10 split rounds. Bzzoiro's three observations do not establish full roster coverage or season-ID semantics.",
+      "review_status": "external_identity_supported_single_provider_roster_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain a broader provider roster and fixture sample.",
+        "Verify provider-specific season boundaries and the meaning of the provider season ID.",
+        "Seek independent provider corroboration."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_019",
+      "name": "LigaPro Serie A",
+      "observed_country": "Ecuador",
+      "provider": "bzzoiro",
+      "provider_competition_id": "112",
+      "provider_season_id": "112::2317",
+      "provider_season_label": "LigaPro Primera A 2026",
+      "raw_observation_count": 5,
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026",
+      "official_scope": {
+        "clubs": 16,
+        "regular_phase_matches": 30,
+        "final_phase": "Championship hexagonal, Copa Sudamericana quadrangular and relegation hexagonal"
+      },
+      "external_evidence": [
+        {
+          "publisher": "LigaPro Ecuador",
+          "url": "https://ligapro.ec/wp-content/uploads/2024/07/Reglamento-Competiciones-v2025.pdf",
+          "supports": "Official competition regulations specify 16 clubs in Serie A and the initial/final-phase structure."
+        },
+        {
+          "publisher": "LigaPro Ecuador",
+          "url": "https://ligapro.ec/se-termino-la-espera-volvio-nuestra-liga-ecuabet/",
+          "supports": "Official 2026 season launch confirms 16 teams, 15 home and 15 away matches in the regular phase, followed by final hexagons."
+        },
+        {
+          "publisher": "LigaPro Ecuador",
+          "url": "https://ligapro.ec/tabla-de-posiciones/",
+          "supports": "Official 2026 standings show the initial phase and final groups for Serie A."
+        }
+      ],
+      "assessment": "Official LigaPro sources corroborate the 2026 men's top-tier Serie A with 16 clubs, 30 regular-phase matches and a final group stage. Bzzoiro's five observations are insufficient to verify full roster or season-ID scope.",
+      "review_status": "external_identity_supported_single_provider_roster_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain a broader provider roster and fixture sample.",
         "Verify provider-specific season boundaries and the meaning of the provider season ID.",
         "Seek independent provider corroboration."
       ]
