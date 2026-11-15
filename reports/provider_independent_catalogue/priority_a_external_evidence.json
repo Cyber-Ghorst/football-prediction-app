@@ -1,6 +1,6 @@
 {
   "report_name": "competition_identity_external_evidence_dossier",
-  "generated_at": "2026-11-15T16:45:19.165Z",
+  "generated_at": "2026-11-15T16:47:16.869Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority A only: twelve multi-provider observed competition entries with country context.",
   "interpretation": "External official competition evidence supports the public competition identity and season context. It does not prove that provider-specific IDs or season IDs refer to the same canonical competition or season.",
@@ -147,17 +147,27 @@
       "external_evidence": [
         {
           "publisher": "English Football League",
-          "url": "https://www.efl.com/about-the-efl/our-competitions/",
-          "supports": "EFL identifies the Championship as one of its three divisions and describes its regular-season structure."
+          "url": "https://www.efl.com/competitions/efl-championship/",
+          "supports": "Official 2026/27 Championship competition page and live table showing 24 participating clubs."
         },
         {
           "publisher": "English Football League",
-          "url": "https://www.efl.com/competitions/efl-championship/",
-          "supports": "Official EFL Championship competition page and league table."
+          "url": "https://www.efl.com/news/2026/june/25/the-2026-27-efl-fixtures-are-here/",
+          "supports": "Official 2026/27 fixture release; opening weekend 14–16 August 2026 and Championship final day 1 May 2027."
+        },
+        {
+          "publisher": "English Football League",
+          "url": "https://www.efl.com/news/2026/april/10/efl-fixture-release-day-confirmed-for-2026-27-season/",
+          "supports": "Official announcement of fixture release date and opening weekend."
+        },
+        {
+          "publisher": "English Football League",
+          "url": "https://images.gc.eflservices.co.uk/6a32d710-5b0b-11f0-ad0f-97502a343283.pdf",
+          "supports": "EFL regulations state that the Championship and League One each consist of 24 clubs."
         }
       ],
-      "provider_season_evidence": "No shared parsed season start year in current provider snapshots.",
-      "review_status": "external_identity_supported_provider_season_unverified"
+      "provider_season_evidence": "Both provider labels descriptively identify 2026/27 (Bzzoiro 'Championship 26/27'; OpenFootball '2026-27'). The current raw-observation audit has 45 Bzzoiro observations across 24 teams and 12 unique fixture IDs, all with timezone-aware kickoffs; OpenFootball has 11,040 observations, 552 unique fixtures and 24 teams, but its kickoffs are local date/time values without timezone. No exact UTC cross-provider fixture overlap was established.",
+      "review_status": "external_identity_supported_provider_season_and_fixture_crosswalk_unverified"
     },
     {
       "catalogue_entry_id": "observed_competition_043",
