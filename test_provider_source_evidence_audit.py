@@ -29,6 +29,7 @@ class ProviderSourceEvidenceAuditTests(unittest.TestCase):
         )
         self.assertTrue(report["read_only"])
         self.assertEqual(report["entity_counts"]["competition"]["total"], 2)
+        self.assertEqual(report["entity_counts"]["competition"]["competition_type_known"], 0)
         self.assertEqual(report["entity_counts"]["team"]["total"], 36)
         self.assertEqual(report["team_evidence"]["incomplete_participant_evidence_count"], 36)
         self.assertEqual(report["team_evidence"]["country_missing_count"], 36)
