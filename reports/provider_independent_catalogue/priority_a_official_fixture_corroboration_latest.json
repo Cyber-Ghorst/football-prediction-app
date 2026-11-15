@@ -1,0 +1,421 @@
+{
+  "report_schema_version": 1,
+  "generated_at": "2026-11-15T17:44:58.218Z",
+  "source_audit": "reports/provider_independent_catalogue/priority_a_provider_observation_audit/latest.json",
+  "source_audit_generated_at": "2026-11-15T16:33:44.452995+00:00",
+  "total_exact_cross_provider_overlaps": 20,
+  "official_pair_date_and_kickoff_confirmed": 15,
+  "official_pair_and_date_confirmed_kickoff_basis_unresolved": 5,
+  "competition_season_identity_approved": false,
+  "canonical_identity_approvals_created": 0,
+  "provider_links_created": 0,
+  "fixture_writes": 0,
+  "prediction_writes": 0,
+  "fixture_pairs": [
+    {
+      "competition": "Premier League",
+      "country": "England",
+      "home": "Aston Villa",
+      "away": "Sunderland",
+      "kickoff_utc": "2026-11-21T15:00:00Z",
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ],
+      "status": "official_pair_date_and_kickoff_confirmed",
+      "official_evidence": [
+        {
+          "publisher": "Premier League",
+          "url": "https://www.premierleague.com/en/news/4675097/all-380-fixtures-for-season-2026-27",
+          "supports": "Official 2026/27 fixture list includes Aston Villa v Sunderland on 21 November."
+        },
+        {
+          "publisher": "Premier League",
+          "url": "https://www.premierleague.com/en/news/4725574/fixture-amendments-for-premier-league-matches-in-november",
+          "supports": "Official schedule states all times are GMT and default kickoffs are 15:00 unless otherwise stated."
+        }
+      ]
+    },
+    {
+      "competition": "Premier League",
+      "country": "England",
+      "home": "Hull City",
+      "away": "Brighton & Hove Albion",
+      "kickoff_utc": "2026-11-22T14:00:00Z",
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ],
+      "status": "official_pair_date_and_kickoff_confirmed",
+      "official_evidence": [
+        {
+          "publisher": "Premier League",
+          "url": "https://www.premierleague.com/en/news/4675097/all-380-fixtures-for-season-2026-27",
+          "supports": "Official 2026/27 fixture list explicitly schedules Hull City v Brighton & Hove Albion at 14:00 on 22 November; UK time is GMT."
+        }
+      ]
+    },
+    {
+      "competition": "2. Bundesliga",
+      "country": "Germany",
+      "home": "1. FC Nürnberg",
+      "away": "Eintracht Braunschweig",
+      "kickoff_utc": "2026-11-21T12:00:00Z",
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ],
+      "status": "official_pair_and_date_confirmed_kickoff_timezone_unresolved",
+      "official_evidence": [
+        {
+          "publisher": "DFL/Bundesliga",
+          "url": "https://www.bundesliga.com/en/2bundesliga/matchday",
+          "supports": "Official Matchday 12 page lists Nürnberg v Eintracht Braunschweig on 21 November at 12:00; page does not label the timezone."
+        }
+      ]
+    },
+    {
+      "competition": "2. Bundesliga",
+      "country": "Germany",
+      "home": "Hannover 96",
+      "away": "SpVgg Greuther Fürth",
+      "kickoff_utc": "2026-11-21T12:00:00Z",
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ],
+      "status": "official_pair_and_date_confirmed_kickoff_timezone_unresolved",
+      "official_evidence": [
+        {
+          "publisher": "DFL/Bundesliga",
+          "url": "https://www.bundesliga.com/en/2bundesliga/matchday",
+          "supports": "Official Matchday 12 page lists Hannover 96 v SpVgg Greuther Fürth on 21 November at 12:00; page does not label the timezone."
+        }
+      ]
+    },
+    {
+      "competition": "2. Bundesliga",
+      "country": "Germany",
+      "home": "VfL Wolfsburg",
+      "away": "Holstein Kiel",
+      "kickoff_utc": "2026-11-21T12:00:00Z",
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ],
+      "status": "official_pair_and_date_confirmed_kickoff_timezone_unresolved",
+      "official_evidence": [
+        {
+          "publisher": "DFL/Bundesliga",
+          "url": "https://www.bundesliga.com/en/2bundesliga/matchday",
+          "supports": "Official Matchday 12 page lists VfL Wolfsburg v Holstein Kiel on 21 November at 12:00; page does not label the timezone."
+        }
+      ]
+    },
+    {
+      "competition": "2. Bundesliga",
+      "country": "Germany",
+      "home": "Energie Cottbus",
+      "away": "Hertha BSC",
+      "kickoff_utc": "2026-11-22T12:30:00Z",
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ],
+      "status": "official_pair_and_date_confirmed_kickoff_timezone_unresolved",
+      "official_evidence": [
+        {
+          "publisher": "DFL/Bundesliga",
+          "url": "https://www.bundesliga.com/en/2bundesliga/matchday",
+          "supports": "Official Matchday 12 page lists Energie Cottbus v Hertha BSC on 22 November at 12:30; page does not label the timezone."
+        }
+      ]
+    },
+    {
+      "competition": "2. Bundesliga",
+      "country": "Germany",
+      "home": "Karlsruher SC",
+      "away": "VfL Osnabrück",
+      "kickoff_utc": "2026-11-22T12:30:00Z",
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ],
+      "status": "official_pair_and_date_confirmed_kickoff_timezone_unresolved",
+      "official_evidence": [
+        {
+          "publisher": "DFL/Bundesliga",
+          "url": "https://www.bundesliga.com/en/2bundesliga/matchday",
+          "supports": "Official Matchday 12 page lists Karlsruher SC v VfL Osnabrück on 22 November at 12:30; page does not label the timezone."
+        }
+      ]
+    },
+    {
+      "competition": "Bundesliga",
+      "country": "Germany",
+      "home": "FC Bayern München",
+      "away": "1. FC Köln",
+      "kickoff_utc": "2026-11-20T19:30:00Z",
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ],
+      "status": "official_pair_date_and_kickoff_confirmed",
+      "official_evidence": [
+        {
+          "publisher": "DFL/Bundesliga",
+          "url": "https://products.bundesliga.com/fixtures",
+          "supports": "Official DFL fixtures table explicitly gives 20 November 19:30 UTC."
+        }
+      ]
+    },
+    {
+      "competition": "Bundesliga",
+      "country": "Germany",
+      "home": "1. FC Union Berlin",
+      "away": "RB Leipzig",
+      "kickoff_utc": "2026-11-21T14:30:00Z",
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ],
+      "status": "official_pair_date_and_kickoff_confirmed",
+      "official_evidence": [
+        {
+          "publisher": "DFL/Bundesliga",
+          "url": "https://products.bundesliga.com/fixtures",
+          "supports": "Official DFL fixtures table explicitly gives 21 November 14:30 UTC."
+        }
+      ]
+    },
+    {
+      "competition": "Bundesliga",
+      "country": "Germany",
+      "home": "Bayer 04 Leverkusen",
+      "away": "SC Paderborn 07",
+      "kickoff_utc": "2026-11-21T14:30:00Z",
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ],
+      "status": "official_pair_date_and_kickoff_confirmed",
+      "official_evidence": [
+        {
+          "publisher": "DFL/Bundesliga",
+          "url": "https://products.bundesliga.com/fixtures",
+          "supports": "Official DFL fixtures table explicitly gives 21 November 14:30 UTC."
+        }
+      ]
+    },
+    {
+      "competition": "Bundesliga",
+      "country": "Germany",
+      "home": "Eintracht Frankfurt",
+      "away": "TSG Hoffenheim",
+      "kickoff_utc": "2026-11-21T14:30:00Z",
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ],
+      "status": "official_pair_date_and_kickoff_confirmed",
+      "official_evidence": [
+        {
+          "publisher": "DFL/Bundesliga",
+          "url": "https://products.bundesliga.com/fixtures",
+          "supports": "Official DFL fixtures table explicitly gives 21 November 14:30 UTC."
+        }
+      ]
+    },
+    {
+      "competition": "Bundesliga",
+      "country": "Germany",
+      "home": "SV Elversberg",
+      "away": "Sport-Club Freiburg",
+      "kickoff_utc": "2026-11-21T14:30:00Z",
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ],
+      "status": "official_pair_date_and_kickoff_confirmed",
+      "official_evidence": [
+        {
+          "publisher": "DFL/Bundesliga",
+          "url": "https://products.bundesliga.com/fixtures",
+          "supports": "Official DFL fixtures table explicitly gives 21 November 14:30 UTC."
+        }
+      ]
+    },
+    {
+      "competition": "Bundesliga",
+      "country": "Germany",
+      "home": "FC Schalke 04",
+      "away": "VfB Stuttgart",
+      "kickoff_utc": "2026-11-21T17:30:00Z",
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ],
+      "status": "official_pair_date_and_kickoff_confirmed",
+      "official_evidence": [
+        {
+          "publisher": "DFL/Bundesliga",
+          "url": "https://products.bundesliga.com/fixtures",
+          "supports": "Official DFL fixtures table explicitly gives 21 November 17:30 UTC."
+        }
+      ]
+    },
+    {
+      "competition": "Bundesliga",
+      "country": "Germany",
+      "home": "FC Augsburg",
+      "away": "1. FSV Mainz 05",
+      "kickoff_utc": "2026-11-22T14:30:00Z",
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ],
+      "status": "official_pair_date_and_kickoff_confirmed",
+      "official_evidence": [
+        {
+          "publisher": "DFL/Bundesliga",
+          "url": "https://products.bundesliga.com/fixtures",
+          "supports": "Official DFL fixtures table explicitly gives 22 November 14:30 UTC."
+        }
+      ]
+    },
+    {
+      "competition": "Bundesliga",
+      "country": "Germany",
+      "home": "SV Werder Bremen",
+      "away": "Hamburger SV",
+      "kickoff_utc": "2026-11-22T16:30:00Z",
+      "providers": [
+        "bzzoiro",
+        "openligadb"
+      ],
+      "status": "official_pair_date_and_kickoff_confirmed",
+      "official_evidence": [
+        {
+          "publisher": "DFL/Bundesliga",
+          "url": "https://products.bundesliga.com/fixtures",
+          "supports": "Official DFL fixtures table explicitly gives 22 November 16:30 UTC."
+        }
+      ]
+    },
+    {
+      "competition": "Saudi Pro League",
+      "country": "Saudi Arabia",
+      "home": "Al Ahli",
+      "away": "Al Nassr",
+      "kickoff_utc": "2026-11-20T17:30:00Z",
+      "providers": [
+        "bzzoiro",
+        "livescore_football"
+      ],
+      "status": "official_pair_date_and_kickoff_confirmed",
+      "official_evidence": [
+        {
+          "publisher": "Saudi Pro League",
+          "url": "https://www.spl.com.sa/en/news/rsl-schedule-2026-27",
+          "supports": "Official SPL announcement confirms Al Ahli host Al Nassr on 20 November 2026."
+        },
+        {
+          "publisher": "Saudi Pro League",
+          "url": "https://images.spl.com.sa/image/private/fl_attachment/prd/m54jmnwpd2embhoz8bvb.pdf",
+          "supports": "Official schedule PDF gives kickoff 20:30 Saudi local time, equivalent to 17:30 UTC."
+        }
+      ]
+    },
+    {
+      "competition": "Scottish Premiership",
+      "country": "Scotland",
+      "home": "Celtic",
+      "away": "St. Mirren",
+      "kickoff_utc": "2026-11-21T15:00:00Z",
+      "providers": [
+        "bzzoiro",
+        "livescore_football"
+      ],
+      "status": "official_pair_date_and_kickoff_confirmed",
+      "official_evidence": [
+        {
+          "publisher": "SPFL",
+          "url": "https://spfl.co.uk/league/premiership/fixtures",
+          "supports": "Official Premiership fixtures list Celtic v St. Mirren at 15:00 on 21 November; Scotland is on GMT."
+        }
+      ]
+    },
+    {
+      "competition": "Scottish Premiership",
+      "country": "Scotland",
+      "home": "Hibernian",
+      "away": "Dundee United",
+      "kickoff_utc": "2026-11-21T15:00:00Z",
+      "providers": [
+        "bzzoiro",
+        "livescore_football"
+      ],
+      "status": "official_pair_date_and_kickoff_confirmed",
+      "official_evidence": [
+        {
+          "publisher": "SPFL",
+          "url": "https://spfl.co.uk/league/premiership/fixtures",
+          "supports": "Official Premiership fixtures list Hibernian v Dundee United at 15:00 on 21 November; Scotland is on GMT."
+        }
+      ]
+    },
+    {
+      "competition": "Scottish Premiership",
+      "country": "Scotland",
+      "home": "Kilmarnock",
+      "away": "Aberdeen",
+      "kickoff_utc": "2026-11-21T15:00:00Z",
+      "providers": [
+        "bzzoiro",
+        "livescore_football"
+      ],
+      "status": "official_pair_date_and_kickoff_confirmed",
+      "official_evidence": [
+        {
+          "publisher": "SPFL",
+          "url": "https://spfl.co.uk/league/premiership/fixtures",
+          "supports": "Official Premiership fixtures list Kilmarnock v Aberdeen at 15:00 on 21 November; Scotland is on GMT."
+        }
+      ]
+    },
+    {
+      "competition": "Scottish Premiership",
+      "country": "Scotland",
+      "home": "Motherwell",
+      "away": "Rangers",
+      "kickoff_utc": "2026-11-21T20:00:00Z",
+      "providers": [
+        "bzzoiro",
+        "livescore_football"
+      ],
+      "status": "official_pair_date_and_kickoff_confirmed",
+      "official_evidence": [
+        {
+          "publisher": "SPFL",
+          "url": "https://spfl.co.uk/league/premiership/fixtures",
+          "supports": "Official Premiership fixtures list Motherwell v Rangers at 20:00 on 21 November; Scotland is on GMT."
+        }
+      ]
+    }
+  ],
+  "decisions": {
+    "Premier League": "Two fixtures corroborated against official schedule; provider competition/season identities remain unapproved.",
+    "Bundesliga": "Eight fixtures corroborated against official DFL schedule with explicit UTC kickoffs; provider competition/season identities remain unapproved.",
+    "2. Bundesliga": "Five pairings and dates corroborated against official DFL matchday page; its times are not timezone-labelled. Retain the previously documented possible one-hour UTC/local discrepancy.",
+    "Scottish Premiership": "Four fixtures corroborated against official SPFL schedule; pairings and kickoffs agree.",
+    "Saudi Pro League": "One fixture corroborated against official SPL schedule; local 20:30 equals 17:30 UTC."
+  },
+  "safeguards": {
+    "automatic_identity_approvals": false,
+    "canonical_competition_writes": false,
+    "canonical_season_writes": false,
+    "provider_link_writes": false,
+    "fixture_writes": false,
+    "prediction_writes": false
+  }
+}
