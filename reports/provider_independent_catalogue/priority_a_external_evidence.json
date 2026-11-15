@@ -1,6 +1,6 @@
 {
   "report_name": "competition_identity_external_evidence_dossier",
-  "generated_at": "2026-11-15T16:49:08.989Z",
+  "generated_at": "2026-11-15T16:51:06.534Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority A only: twelve multi-provider observed competition entries with country context.",
   "interpretation": "External official competition evidence supports the public competition identity and season context. It does not prove that provider-specific IDs or season IDs refer to the same canonical competition or season.",
@@ -317,22 +317,27 @@
         "bzzoiro",
         "livescore_football"
       ],
-      "external_competition_type": "men's top-tier professional league spanning the United States and Canada",
-      "external_season": "2026",
+      "external_competition_type": "men's top-flight professional league spanning the United States and Canada",
+      "external_season": "2026 calendar-year season",
       "external_evidence": [
         {
           "publisher": "Major League Soccer",
           "url": "https://www.mlssoccer.com/news/about-major-league-soccer-x4174",
-          "supports": "Official MLS profile identifies MLS as the top-flight professional league in the United States and Canada and describes the 2026 season."
+          "supports": "Official MLS profile identifies MLS as the top-flight professional league in the United States and Canada, with 30 clubs in 2026."
         },
         {
           "publisher": "Major League Soccer",
-          "url": "https://www.mlssoccer.com/league-reports/competition-guidelines/",
-          "supports": "Official 2026 competition guidelines and 30-club competition structure."
+          "url": "https://www.mlssoccer.com/about/competition-guidelines",
+          "supports": "Official 2026 competition guidelines list 30 clubs across two conferences and specify 34 regular-season matches per club."
+        },
+        {
+          "publisher": "Major League Soccer",
+          "url": "https://www.mlssoccer.com/news/mls-unveils-2026-regular-season-schedule",
+          "supports": "Official 2026 regular-season schedule and key dates, including 21 February opening weekend and 7 November Decision Day."
         }
       ],
-      "provider_season_evidence": "Shared 2026 start-year overlap exists in provider snapshots; MLS season is calendar-year rather than European-style 2026/27.",
-      "review_status": "external_identity_supported_provider_ids_and_scope_unverified"
+      "provider_season_evidence": "Both providers identify the 2026 calendar-year season. The current raw-observation audit has 35 Bzzoiro timezone-aware observations across 12 teams and 6 unique fixtures; LiveScoreFootball has 22 timezone-aware observations across 4 teams and 2 unique fixtures. No exact cross-provider fixture overlap was established. The official MLS scope spans the United States and Canada, while current provider country fields only state USA/United States; country-scope representation in the identity queue needs an explicit cross-border convention.",
+      "review_status": "external_identity_supported_provider_ids_roster_and_cross_border_scope_unverified"
     }
   ],
   "next_required_checks": [
