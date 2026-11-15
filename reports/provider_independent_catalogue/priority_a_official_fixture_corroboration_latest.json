@@ -1,11 +1,11 @@
 {
   "report_schema_version": 1,
-  "generated_at": "2026-11-15T17:44:58.218Z",
+  "generated_at": "2026-11-15T18:00:17.791Z",
   "source_audit": "reports/provider_independent_catalogue/priority_a_provider_observation_audit/latest.json",
   "source_audit_generated_at": "2026-11-15T16:33:44.452995+00:00",
   "total_exact_cross_provider_overlaps": 20,
-  "official_pair_date_and_kickoff_confirmed": 15,
-  "official_pair_and_date_confirmed_kickoff_basis_unresolved": 5,
+  "official_pair_date_and_kickoff_confirmed": 20,
+  "official_pair_and_date_confirmed_kickoff_basis_unresolved": 0,
   "competition_season_identity_approved": false,
   "canonical_identity_approvals_created": 0,
   "provider_links_created": 0,
@@ -65,14 +65,21 @@
         "bzzoiro",
         "openligadb"
       ],
-      "status": "official_pair_and_date_confirmed_kickoff_timezone_unresolved",
+      "status": "official_pair_date_and_kickoff_confirmed",
       "official_evidence": [
         {
           "publisher": "DFL/Bundesliga",
           "url": "https://www.bundesliga.com/en/2bundesliga/matchday",
           "supports": "Official Matchday 12 page lists Nürnberg v Eintracht Braunschweig on 21 November at 12:00; page does not label the timezone."
+        },
+        {
+          "publisher": "DFB Datencenter",
+          "url": "https://datencenter.dfb.de/datencenter/2-bundesliga/2026-2027/12",
+          "supports": "Official 2. Bundesliga Matchday 12 schedule lists this pairing at 13:00 CET; Germany is on CET (UTC+1) on this date, which converts to the provider's 12:00 UTC timestamp."
         }
-      ]
+      ],
+      "official_local_kickoff": "13:00 CET",
+      "official_timezone": "CET (UTC+1)"
     },
     {
       "competition": "2. Bundesliga",
@@ -84,14 +91,21 @@
         "bzzoiro",
         "openligadb"
       ],
-      "status": "official_pair_and_date_confirmed_kickoff_timezone_unresolved",
+      "status": "official_pair_date_and_kickoff_confirmed",
       "official_evidence": [
         {
           "publisher": "DFL/Bundesliga",
           "url": "https://www.bundesliga.com/en/2bundesliga/matchday",
           "supports": "Official Matchday 12 page lists Hannover 96 v SpVgg Greuther Fürth on 21 November at 12:00; page does not label the timezone."
+        },
+        {
+          "publisher": "DFB Datencenter",
+          "url": "https://datencenter.dfb.de/datencenter/2-bundesliga/2026-2027/12",
+          "supports": "Official 2. Bundesliga Matchday 12 schedule lists this pairing at 13:00 CET; Germany is on CET (UTC+1) on this date, which converts to the provider's 12:00 UTC timestamp."
         }
-      ]
+      ],
+      "official_local_kickoff": "13:00 CET",
+      "official_timezone": "CET (UTC+1)"
     },
     {
       "competition": "2. Bundesliga",
@@ -103,14 +117,21 @@
         "bzzoiro",
         "openligadb"
       ],
-      "status": "official_pair_and_date_confirmed_kickoff_timezone_unresolved",
+      "status": "official_pair_date_and_kickoff_confirmed",
       "official_evidence": [
         {
           "publisher": "DFL/Bundesliga",
           "url": "https://www.bundesliga.com/en/2bundesliga/matchday",
           "supports": "Official Matchday 12 page lists VfL Wolfsburg v Holstein Kiel on 21 November at 12:00; page does not label the timezone."
+        },
+        {
+          "publisher": "DFB Datencenter",
+          "url": "https://datencenter.dfb.de/datencenter/2-bundesliga/2026-2027/12",
+          "supports": "Official 2. Bundesliga Matchday 12 schedule lists this pairing at 13:00 CET; Germany is on CET (UTC+1) on this date, which converts to the provider's 12:00 UTC timestamp."
         }
-      ]
+      ],
+      "official_local_kickoff": "13:00 CET",
+      "official_timezone": "CET (UTC+1)"
     },
     {
       "competition": "2. Bundesliga",
@@ -122,14 +143,21 @@
         "bzzoiro",
         "openligadb"
       ],
-      "status": "official_pair_and_date_confirmed_kickoff_timezone_unresolved",
+      "status": "official_pair_date_and_kickoff_confirmed",
       "official_evidence": [
         {
           "publisher": "DFL/Bundesliga",
           "url": "https://www.bundesliga.com/en/2bundesliga/matchday",
           "supports": "Official Matchday 12 page lists Energie Cottbus v Hertha BSC on 22 November at 12:30; page does not label the timezone."
+        },
+        {
+          "publisher": "DFB Datencenter",
+          "url": "https://datencenter.dfb.de/datencenter/2-bundesliga/2026-2027/12",
+          "supports": "Official 2. Bundesliga Matchday 12 schedule lists this pairing at 13:30 CET; Germany is on CET (UTC+1) on this date, which converts to the provider's 12:30 UTC timestamp."
         }
-      ]
+      ],
+      "official_local_kickoff": "13:30 CET",
+      "official_timezone": "CET (UTC+1)"
     },
     {
       "competition": "2. Bundesliga",
@@ -141,14 +169,21 @@
         "bzzoiro",
         "openligadb"
       ],
-      "status": "official_pair_and_date_confirmed_kickoff_timezone_unresolved",
+      "status": "official_pair_date_and_kickoff_confirmed",
       "official_evidence": [
         {
           "publisher": "DFL/Bundesliga",
           "url": "https://www.bundesliga.com/en/2bundesliga/matchday",
           "supports": "Official Matchday 12 page lists Karlsruher SC v VfL Osnabrück on 22 November at 12:30; page does not label the timezone."
+        },
+        {
+          "publisher": "DFB Datencenter",
+          "url": "https://datencenter.dfb.de/datencenter/2-bundesliga/2026-2027/12",
+          "supports": "Official 2. Bundesliga Matchday 12 schedule lists this pairing at 13:30 CET; Germany is on CET (UTC+1) on this date, which converts to the provider's 12:30 UTC timestamp."
         }
-      ]
+      ],
+      "official_local_kickoff": "13:30 CET",
+      "official_timezone": "CET (UTC+1)"
     },
     {
       "competition": "Bundesliga",
@@ -406,7 +441,7 @@
   "decisions": {
     "Premier League": "Two fixtures corroborated against official schedule; provider competition/season identities remain unapproved.",
     "Bundesliga": "Eight fixtures corroborated against official DFL schedule with explicit UTC kickoffs; provider competition/season identities remain unapproved.",
-    "2. Bundesliga": "Five pairings and dates corroborated against official DFL matchday page; its times are not timezone-labelled. Retain the previously documented possible one-hour UTC/local discrepancy.",
+    "2. Bundesliga": "All five pairings, dates and kickoff times corroborated against the official DFB Datencenter; 13:00/13:30 CET converts to 12:00/12:30 UTC. Provider competition/season identities remain unapproved.",
     "Scottish Premiership": "Four fixtures corroborated against official SPFL schedule; pairings and kickoffs agree.",
     "Saudi Pro League": "One fixture corroborated against official SPL schedule; local 20:30 equals 17:30 UTC."
   },
