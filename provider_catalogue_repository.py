@@ -98,7 +98,7 @@ def prepare_provider_catalogue(
             "team_id": provider_entity_id(name, raw_id),
             "name": team_name,
             "short_name": _display(row.get("short_name") or row.get("shortName") or row.get("short_code")),
-            "country": _display(row.get("country") or row.get("countryName")) or country,
+            "country": _display(row.get("country") or row.get("countryName")),
             "logo_url": row.get("logo") or row.get("logo_url") or row.get("image_path"),
             "raw_payload": dict(row),
         })

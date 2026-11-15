@@ -37,6 +37,7 @@ class ProviderCatalogueRepositoryTests(unittest.TestCase):
         self.assertEqual(result["season"]["league_id"], "highlightly:52695")
         self.assertEqual([row["team_id"] for row in result["teams"]],
                          ["highlightly:1", "highlightly:2"])
+        self.assertIsNone(result["teams"][0]["country"])
         self.assertEqual(result["fixtures_imported"], 0)
         self.assertEqual(result["cross_provider_links_created"], 0)
 
