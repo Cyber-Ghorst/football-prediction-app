@@ -223,6 +223,8 @@ class OpenScoresMappingVerificationTests(unittest.TestCase):
             "entity_type": "league",
             "provider_entity_id": "os-league-2",
             "canonical_entity_id": "sportmonks:8",
+            "approved_by": "human-reviewer",
+            "approval_reason": "Official competition evidence independently checked.",
         }
         with patch(
             "openscores_sportmonks_reconciliation.ensure_provider_entity_link_verifications"
@@ -230,7 +232,9 @@ class OpenScoresMappingVerificationTests(unittest.TestCase):
             "openscores_sportmonks_reconciliation._connect",
             return_value=connection,
         ):
-            result = write_explicit_openscores_links("postgresql://db", [mapping])
+            result = write_explicit_openscores_links(
+                "postgresql://db", [mapping], explicit_approval=True
+            )
         self.assertEqual(result["status"], "conflict_no_writes")
         self.assertEqual(result["inserted"], 0)
         self.assertEqual(result["verified"], 0)
