@@ -4274,6 +4274,208 @@
         "bzzoiro",
         "livescore_football"
       ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_005",
+      "competition": "Austrian Bundesliga",
+      "country": "Austria",
+      "exact_cross_provider_fixture_overlap_count": 0,
+      "identity_decision": "not_approved",
+      "provider_sources": [
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Austrian Bundesliga"
+          ],
+          "countries": [
+            "Austria"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 0,
+          "eligible_observation_count": 15,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [],
+          "local_date_time_without_timezone": 0,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 0,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 0,
+          "provider": "bzzoiro",
+          "provider_competition_id": "96",
+          "provider_season_id": "96::1999",
+          "raw_observation_count": 15,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "Bundesliga 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "Bundesliga 26/27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "notstarted": 15
+          },
+          "unique_away_teams": 6,
+          "unique_home_teams": 6,
+          "unique_provider_fixture_ids": 6,
+          "unique_teams_combined": 12,
+          "valid_timezone_aware_kickoffs": 15
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Austrian Bundesliga"
+          ],
+          "countries": [
+            "Austria"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 0,
+          "eligible_observation_count": 3,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [],
+          "local_date_time_without_timezone": 0,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 0,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 0,
+          "provider": "livescore_football",
+          "provider_competition_id": "3907",
+          "provider_season_id": "3907::2026",
+          "raw_observation_count": 3,
+          "season_label_year_evidence": [
+            {
+              "end_year": null,
+              "format": "calendar_year",
+              "label": "2026",
+              "normalized_season": "2026",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2026"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "scheduled": 3
+          },
+          "unique_away_teams": 3,
+          "unique_home_teams": 3,
+          "unique_provider_fixture_ids": 3,
+          "unique_teams_combined": 6,
+          "valid_timezone_aware_kickoffs": 3
+        }
+      ],
+      "providers": [
+        "bzzoiro",
+        "livescore_football"
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_073",
+      "competition": "Scottish Premiership",
+      "country": "Scotland",
+      "exact_cross_provider_fixture_overlap_count": 4,
+      "identity_decision": "not_approved",
+      "provider_sources": [
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Scottish Premiership"
+          ],
+          "countries": [
+            "Scotland"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 0,
+          "eligible_observation_count": 24,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [],
+          "local_date_time_without_timezone": 0,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 0,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 0,
+          "provider": "bzzoiro",
+          "provider_competition_id": "13",
+          "provider_season_id": "13::1355",
+          "raw_observation_count": 24,
+          "season_label_year_evidence": [
+            {
+              "end_year": 2027,
+              "format": "two_digit_season_range",
+              "label": "Premiership 26/27",
+              "normalized_season": "2026/2027",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "Premiership 26/27"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "notstarted": 24
+          },
+          "unique_away_teams": 6,
+          "unique_home_teams": 6,
+          "unique_provider_fixture_ids": 6,
+          "unique_teams_combined": 12,
+          "valid_timezone_aware_kickoffs": 24
+        },
+        {
+          "competition_name_matches_queue": true,
+          "competition_names": [
+            "Scottish Premiership"
+          ],
+          "countries": [
+            "Scotland"
+          ],
+          "country_matches_queue": true,
+          "date_only_kickoffs": 0,
+          "eligible_observation_count": 6,
+          "invalid_or_timezone_naive_kickoffs": 0,
+          "kickoff_value_examples": [],
+          "local_date_time_without_timezone": 0,
+          "missing_country_observations": 0,
+          "missing_kickoffs": 0,
+          "missing_team_name_observations": 0,
+          "not_eligible_observations": 0,
+          "provider": "livescore_football",
+          "provider_competition_id": "735",
+          "provider_season_id": "735::2026",
+          "raw_observation_count": 6,
+          "season_label_year_evidence": [
+            {
+              "end_year": null,
+              "format": "calendar_year",
+              "label": "2026",
+              "normalized_season": "2026",
+              "start_year": 2026
+            }
+          ],
+          "season_names": [
+            "2026"
+          ],
+          "status": "raw_observations_found",
+          "status_counts": {
+            "scheduled": 6
+          },
+          "unique_away_teams": 6,
+          "unique_home_teams": 6,
+          "unique_provider_fixture_ids": 6,
+          "unique_teams_combined": 12,
+          "valid_timezone_aware_kickoffs": 6
+        }
+      ],
+      "providers": [
+        "bzzoiro",
+        "livescore_football"
+      ]
     }
   ],
   "exact_cross_provider_fixture_overlaps": [
@@ -4519,9 +4721,9 @@
     }
   ],
   "exact_overlap_count": 20,
-  "generated_at_utc": "2026-11-15T10:34:18.767761+00:00",
+  "generated_at_utc": "2026-11-15T12:13:57.313902+00:00",
   "interpretation": "An exact team-pair and UTC-kickoff overlap is strong fixture-level corroboration, but does not alone approve competition or season identity. Date-level candidates match team pairs on dates within one day where at least one source has a local date/time without timezone; they are manual-review leads only and never count as exact overlaps. Missing observations in selected snapshots mean not observed in this audit window, not that the provider lacks the competition.",
-  "priority_a_entry_count": 10,
+  "priority_a_entry_count": 12,
   "providers_checked": [
     "bzzoiro",
     "football_data_org",
