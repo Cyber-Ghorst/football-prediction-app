@@ -1,0 +1,1408 @@
+{
+  "operation": "sportmonks_catalogue_access_audit",
+  "checked_at_utc": "2026-11-15T14:21:15.031679+00:00",
+  "status": "partial",
+  "read_only": true,
+  "database_touched": false,
+  "entity_links_written": 0,
+  "prediction_model_modified": false,
+  "prediction_ledger_touched": false,
+  "league_catalogue_count": 5,
+  "season_catalogue_count": 15,
+  "targets": [
+    {
+      "name": "Bundesliga",
+      "country": "Germany",
+      "country_code": "DEU",
+      "status": "not_visible_in_account_catalogue",
+      "candidate_count": 0,
+      "candidates": []
+    },
+    {
+      "name": "Ligue 1",
+      "country": "France",
+      "country_code": "FRA",
+      "status": "not_visible_in_account_catalogue",
+      "candidate_count": 0,
+      "candidates": []
+    },
+    {
+      "name": "World Cup",
+      "country": "",
+      "country_code": "",
+      "status": "not_visible_in_account_catalogue",
+      "candidate_count": 0,
+      "candidates": []
+    }
+  ],
+  "my_leagues": {
+    "status": "ok",
+    "http_status": 200,
+    "count": 5,
+    "league_ids": [
+      "24",
+      "384",
+      "564",
+      "567",
+      "8"
+    ]
+  },
+  "country_search_probes": {
+    "Germany": {
+      "status": "ok",
+      "http_status": 200,
+      "count": 1,
+      "countries": [
+        {
+          "id": 11,
+          "name": "Germany",
+          "leagues": [
+            {
+              "id": 2362,
+              "name": "Reg. Cup S\u00fcdbaden"
+            },
+            {
+              "id": 142,
+              "name": "Oberliga: Nordost-Nord"
+            },
+            {
+              "id": 2363,
+              "name": "Reg. Cup S\u00fcdwest"
+            },
+            {
+              "id": 1740,
+              "name": "Google Pixel Frauen-Bundesliga"
+            },
+            {
+              "id": 2350,
+              "name": "Reg. Cup Hamburg"
+            },
+            {
+              "id": 2619,
+              "name": "State Leagues: Bayern - Mitte"
+            },
+            {
+              "id": 2638,
+              "name": "State Leagues: L\u00fcneburg"
+            },
+            {
+              "id": 2641,
+              "name": "State Leagues: Th\u00fcringen"
+            },
+            {
+              "id": 2635,
+              "name": "State Leagues: S\u00fcdbaden"
+            },
+            {
+              "id": 2357,
+              "name": "Reg. Cup Rheinland"
+            },
+            {
+              "id": 2634,
+              "name": "State Leagues: Mecklenburg - Vorpommern"
+            },
+            {
+              "id": 124,
+              "name": "Oberliga: Bremen"
+            },
+            {
+              "id": 2624,
+              "name": "State Leagues: Saarland"
+            },
+            {
+              "id": 136,
+              "name": "Oberliga: Niederrhein"
+            },
+            {
+              "id": 1595,
+              "name": "Regionalliga Playoffs"
+            },
+            {
+              "id": 1879,
+              "name": "2. Bundesliga Women"
+            },
+            {
+              "id": 103,
+              "name": "Regionalliga: S\u00fcdwest"
+            },
+            {
+              "id": 2353,
+              "name": "Reg. Cup Mittelrhein"
+            },
+            {
+              "id": 112,
+              "name": "Oberliga: Baden-Wurttemberg"
+            },
+            {
+              "id": 109,
+              "name": "DFB Pokal"
+            },
+            {
+              "id": 2351,
+              "name": "Reg. Cup Hessen"
+            },
+            {
+              "id": 2621,
+              "name": "State Leagues: Bayern - Nordwest"
+            },
+            {
+              "id": 118,
+              "name": "Oberliga: Bayern S\u00fcd"
+            },
+            {
+              "id": 154,
+              "name": "Oberliga: Schleswig-Holstein"
+            },
+            {
+              "id": 2637,
+              "name": "State Leagues: Hessen - Nord"
+            },
+            {
+              "id": 2636,
+              "name": "State Leagues: S\u00fcdwest"
+            },
+            {
+              "id": 2631,
+              "name": "State Leagues: Sachsen - Anhalt"
+            },
+            {
+              "id": 2625,
+              "name": "State Leagues: Hamburg - Hammonia"
+            },
+            {
+              "id": 2771,
+              "name": "U17 Bundesliga"
+            },
+            {
+              "id": 151,
+              "name": "Oberliga: Rheinland-Pfalz/Saar"
+            },
+            {
+              "id": 1576,
+              "name": "Dfb Pokal Women"
+            },
+            {
+              "id": 2349,
+              "name": "Reg. Cup Bremen"
+            },
+            {
+              "id": 2459,
+              "name": "Regionalliga Women - West"
+            },
+            {
+              "id": 3152,
+              "name": "Play-offs 5/6"
+            },
+            {
+              "id": 2642,
+              "name": "State Leagues: Hannover"
+            },
+            {
+              "id": 2217,
+              "name": "ECN Hannover Hitout T10 League"
+            },
+            {
+              "id": 2219,
+              "name": "European Cricket Series Kummerfeld"
+            },
+            {
+              "id": 2220,
+              "name": "European Cricket Series Frankfurt"
+            },
+            {
+              "id": 2230,
+              "name": "European Cricket Series Dresden"
+            },
+            {
+              "id": 133,
+              "name": "Oberliga: Mittelrhein"
+            },
+            {
+              "id": 1352,
+              "name": "Junioren Bundesliga"
+            },
+            {
+              "id": 2297,
+              "name": "Bayern Ligapokal"
+            },
+            {
+              "id": 2292,
+              "name": "European Cricket Series Kiel"
+            },
+            {
+              "id": 2364,
+              "name": "Reg. Cup Th\u00fcringen"
+            },
+            {
+              "id": 2358,
+              "name": "Reg. Cup Saarland"
+            },
+            {
+              "id": 2356,
+              "name": "Reg. Cup Niedersachsen Amateure"
+            },
+            {
+              "id": 2366,
+              "name": "Reg. Cup W\u00fcrttemberg"
+            },
+            {
+              "id": 2355,
+              "name": "Reg. Cup Niedersachsen"
+            },
+            {
+              "id": 2632,
+              "name": "State Leagues: Weser - Ems"
+            },
+            {
+              "id": 2629,
+              "name": "State Leagues: Braunschweig"
+            },
+            {
+              "id": 160,
+              "name": "Oberliga: Westfalen"
+            },
+            {
+              "id": 2627,
+              "name": "State Leagues: Berlin"
+            },
+            {
+              "id": 2346,
+              "name": "Reg. Cup Bayern"
+            },
+            {
+              "id": 2655,
+              "name": "State Leagues: Westfalen Play-offs"
+            },
+            {
+              "id": 2654,
+              "name": "State Leagues: Baden - W\u00fcrttemberg Play-offs"
+            },
+            {
+              "id": 2652,
+              "name": "State Leagues: Niederrhein - 3"
+            },
+            {
+              "id": 2626,
+              "name": "State Leagues: Hamburg - Hansa"
+            },
+            {
+              "id": 1683,
+              "name": "Oberliga Play-offs"
+            },
+            {
+              "id": 2361,
+              "name": "Reg. Cup Schleswig-Holstein"
+            },
+            {
+              "id": 2285,
+              "name": "European Cricket Series Krefeld"
+            },
+            {
+              "id": 2643,
+              "name": "State Leagues: Rheinland"
+            },
+            {
+              "id": 148,
+              "name": "Oberliga: NRW"
+            },
+            {
+              "id": 121,
+              "name": "Oberliga: Bayern"
+            },
+            {
+              "id": 2466,
+              "name": "Regionalliga Women - S\u00fcd"
+            },
+            {
+              "id": 2623,
+              "name": "State Leagues: Bayern - S\u00fcdwest"
+            },
+            {
+              "id": 2639,
+              "name": "State Leagues: Baden"
+            },
+            {
+              "id": 169,
+              "name": "Super Cup"
+            },
+            {
+              "id": 2628,
+              "name": "State Leagues: Hessen - Mitte"
+            },
+            {
+              "id": 2360,
+              "name": "Reg. Cup Sachsan-Anhalt"
+            },
+            {
+              "id": 2347,
+              "name": "Reg. Cup Brandenburg"
+            },
+            {
+              "id": 3171,
+              "name": "State Leagues: S\u00fcdwest/Rheinland/Saarland -  Promotion"
+            },
+            {
+              "id": 3148,
+              "name": "Play-offs 4/5"
+            },
+            {
+              "id": 100,
+              "name": "Regionalliga: Sud"
+            },
+            {
+              "id": 3368,
+              "name": "State Leagues: Hamburg - Promotion Play-offs"
+            },
+            {
+              "id": 157,
+              "name": "Oberliga: Sudwest"
+            },
+            {
+              "id": 2365,
+              "name": "Reg. Cup Westfalen"
+            },
+            {
+              "id": 3386,
+              "name": "Supercup der Frauen"
+            },
+            {
+              "id": 2630,
+              "name": "State Leagues: Hessen - S\u00fcd"
+            },
+            {
+              "id": 166,
+              "name": "2. Bundesliga Play-offs"
+            },
+            {
+              "id": 2352,
+              "name": "Reg. Cup Mecklenburg-Vorpommern"
+            },
+            {
+              "id": 2007,
+              "name": "Regionalliga Women - Play-offs"
+            },
+            {
+              "id": 85,
+              "name": "2. Bundesliga"
+            },
+            {
+              "id": 163,
+              "name": "Bundesliga Play-offs"
+            },
+            {
+              "id": 2464,
+              "name": "Regionalliga Women - Nord"
+            },
+            {
+              "id": 2465,
+              "name": "Regionalliga Women - Nordost"
+            },
+            {
+              "id": 2653,
+              "name": "State Leagues: Bremen"
+            },
+            {
+              "id": 2468,
+              "name": "Regionalliga Women - S\u00fcdwest"
+            },
+            {
+              "id": 1794,
+              "name": "Reg. Cup Berlin"
+            },
+            {
+              "id": 2354,
+              "name": "Reg. Cup Niederrhein"
+            },
+            {
+              "id": 2620,
+              "name": "State Leagues: Bayern - Nordost"
+            },
+            {
+              "id": 127,
+              "name": "Oberliga: Hamburg"
+            },
+            {
+              "id": 82,
+              "name": "Bundesliga"
+            },
+            {
+              "id": 2622,
+              "name": "State Leagues: Bayern - S\u00fcdost"
+            },
+            {
+              "id": 2650,
+              "name": "State Leagues: Niederrhein - 1"
+            },
+            {
+              "id": 2651,
+              "name": "State Leagues: Niederrhein - 2"
+            },
+            {
+              "id": 2640,
+              "name": "State Leagues: Schleswig - Holstein"
+            },
+            {
+              "id": 88,
+              "name": "3. Liga"
+            },
+            {
+              "id": 2649,
+              "name": "State Leagues: Mittelrhein - 2"
+            },
+            {
+              "id": 2633,
+              "name": "State Leagues: W\u00fcrttemberg"
+            },
+            {
+              "id": 3013,
+              "name": "DFB Junioren Pokal"
+            },
+            {
+              "id": 2647,
+              "name": "State Leagues: Westfalen - 2"
+            },
+            {
+              "id": 2648,
+              "name": "State Leagues: Mittelrhein - 1"
+            },
+            {
+              "id": 2646,
+              "name": "State Leagues: Westfalen - 1"
+            },
+            {
+              "id": 2645,
+              "name": "State Leagues: Brandenburg"
+            },
+            {
+              "id": 97,
+              "name": "Regionalliga: Nordost"
+            },
+            {
+              "id": 2644,
+              "name": "State Leagues: Sachsen"
+            },
+            {
+              "id": 2683,
+              "name": "Reg. Cup Baden"
+            },
+            {
+              "id": 106,
+              "name": "Regionalliga: West"
+            },
+            {
+              "id": 139,
+              "name": "Oberliga: Niedersachsen"
+            },
+            {
+              "id": 130,
+              "name": "Oberliga: Hessen"
+            },
+            {
+              "id": 2359,
+              "name": "Reg. Cup Sachsen"
+            },
+            {
+              "id": 115,
+              "name": "Oberliga: Bayern Nord"
+            },
+            {
+              "id": 91,
+              "name": "Regionalliga: Nord"
+            },
+            {
+              "id": 145,
+              "name": "Oberliga: Nordost-S\u00fcd"
+            },
+            {
+              "id": 94,
+              "name": "Regionalliga: Bayern"
+            },
+            {
+              "id": 1422,
+              "name": "U19 Bundesliga"
+            }
+          ]
+        }
+      ]
+    },
+    "France": {
+      "status": "ok",
+      "http_status": 200,
+      "count": 1,
+      "countries": [
+        {
+          "id": 17,
+          "name": "France",
+          "leagues": [
+            {
+              "id": 3540,
+              "name": "Coupe de la Ligue Women"
+            },
+            {
+              "id": 1637,
+              "name": "National 3: Group B"
+            },
+            {
+              "id": 1180,
+              "name": "CFA Group D"
+            },
+            {
+              "id": 1182,
+              "name": "National 3: Bourgogne-Franche-Comt\u00e9"
+            },
+            {
+              "id": 1181,
+              "name": "National 3: Group K"
+            },
+            {
+              "id": 1187,
+              "name": "National 3: Group G"
+            },
+            {
+              "id": 1176,
+              "name": "Super Cup"
+            },
+            {
+              "id": 3219,
+              "name": "National 3: Group J"
+            },
+            {
+              "id": 3786,
+              "name": "Challenge Espoirs"
+            },
+            {
+              "id": 307,
+              "name": "Coupe de France"
+            },
+            {
+              "id": 2787,
+              "name": "Championnat National U19"
+            },
+            {
+              "id": 1640,
+              "name": "National 3: Group L"
+            },
+            {
+              "id": 1639,
+              "name": "National 3: Paris \u00cele-de-France"
+            },
+            {
+              "id": 304,
+              "name": "Ligue 2"
+            },
+            {
+              "id": 1674,
+              "name": "Ligue 2 Play-offs"
+            },
+            {
+              "id": 1177,
+              "name": "CFA Group A"
+            },
+            {
+              "id": 2850,
+              "name": "Championnat National U17"
+            },
+            {
+              "id": 1183,
+              "name": "National 3: Group E"
+            },
+            {
+              "id": 2008,
+              "name": "National 3: Group D"
+            },
+            {
+              "id": 3027,
+              "name": "Coupe Gambardella"
+            },
+            {
+              "id": 3304,
+              "name": "Feminine Division 3"
+            },
+            {
+              "id": 1575,
+              "name": "Premiere Ligue Women"
+            },
+            {
+              "id": 301,
+              "name": "Ligue 1"
+            },
+            {
+              "id": 310,
+              "name": "Coupe de la Ligue"
+            },
+            {
+              "id": 1186,
+              "name": "National 3: Group G"
+            },
+            {
+              "id": 1185,
+              "name": "National 3: Group I"
+            },
+            {
+              "id": 3248,
+              "name": "Troph\u00e9e des Championnes F\u00e9minin"
+            },
+            {
+              "id": 1673,
+              "name": "Ligue 1 Play-offs"
+            },
+            {
+              "id": 3011,
+              "name": "Coupe de France F\u00e9minine"
+            },
+            {
+              "id": 2015,
+              "name": "Feminine Division 2"
+            },
+            {
+              "id": 1184,
+              "name": "National 3: Group C"
+            },
+            {
+              "id": 1178,
+              "name": "CFA Group B"
+            },
+            {
+              "id": 1179,
+              "name": "CFA Group C"
+            },
+            {
+              "id": 1638,
+              "name": "National 3: Group H"
+            },
+            {
+              "id": 1188,
+              "name": "National 3: Group F"
+            },
+            {
+              "id": 1641,
+              "name": "National 3: Group A"
+            },
+            {
+              "id": 313,
+              "name": "Ligue 3"
+            }
+          ]
+        }
+      ]
+    },
+    "World": {
+      "status": "ok",
+      "http_status": 200,
+      "count": 1,
+      "countries": [
+        {
+          "id": 99474,
+          "name": "World",
+          "leagues": [
+            {
+              "id": 3476,
+              "name": "ICC Womens World Cup Qualifier"
+            },
+            {
+              "id": 3548,
+              "name": "World Legend Pro T20 League"
+            },
+            {
+              "id": 729,
+              "name": "WC Qualification Intercontinental Playoffs"
+            },
+            {
+              "id": 1126,
+              "name": "Olympic Games Women"
+            },
+            {
+              "id": 1125,
+              "name": "Olympic Games"
+            },
+            {
+              "id": 1121,
+              "name": "International Champions Cup"
+            },
+            {
+              "id": 3461,
+              "name": "International Masters League"
+            },
+            {
+              "id": 3487,
+              "name": "FIFA Club World Cup Play-In"
+            },
+            {
+              "id": 2778,
+              "name": "U20 Women's World Cup"
+            },
+            {
+              "id": 1565,
+              "name": "Friendly International U19"
+            },
+            {
+              "id": 1582,
+              "name": "Friendly International U21"
+            },
+            {
+              "id": 1369,
+              "name": "World Cup Women"
+            },
+            {
+              "id": 3509,
+              "name": "World Championship of Legends"
+            },
+            {
+              "id": 1376,
+              "name": "Uafa Cup"
+            },
+            {
+              "id": 1365,
+              "name": "Universiade"
+            },
+            {
+              "id": 1366,
+              "name": "Premier League Asia Trophy"
+            },
+            {
+              "id": 1367,
+              "name": "J.League Cup / Copa Sudamericana Championship"
+            },
+            {
+              "id": 1370,
+              "name": "Universiade Women"
+            },
+            {
+              "id": 1390,
+              "name": "World Cup U17"
+            },
+            {
+              "id": 1398,
+              "name": "Audi Cup"
+            },
+            {
+              "id": 1396,
+              "name": "Emirates Cup"
+            },
+            {
+              "id": 1494,
+              "name": "International Tournament (Cyprus) Women"
+            },
+            {
+              "id": 1495,
+              "name": "Algarve Cup Women"
+            },
+            {
+              "id": 1364,
+              "name": "World Cup U20"
+            },
+            {
+              "id": 1507,
+              "name": "China Cup"
+            },
+            {
+              "id": 1529,
+              "name": "U18 National Team Friendlies"
+            },
+            {
+              "id": 1536,
+              "name": "Mediterranean Games"
+            },
+            {
+              "id": 1537,
+              "name": "Tournament Of Nations Women"
+            },
+            {
+              "id": 1496,
+              "name": "Shebelieves Cup Women"
+            },
+            {
+              "id": 1542,
+              "name": "World Medical Football Championship"
+            },
+            {
+              "id": 1452,
+              "name": "FIFA Intercontinental Cup"
+            },
+            {
+              "id": 1562,
+              "name": "Bangabandhu Gold Cup"
+            },
+            {
+              "id": 1605,
+              "name": "Arena Cup"
+            },
+            {
+              "id": 1612,
+              "name": "World Cup Women Qualification Intercontinental"
+            },
+            {
+              "id": 2296,
+              "name": "Arab Cup"
+            },
+            {
+              "id": 1650,
+              "name": "Friendly International U20"
+            },
+            {
+              "id": 1651,
+              "name": "Friendly International U22"
+            },
+            {
+              "id": 2559,
+              "name": "Non-FIFA Friendlies"
+            },
+            {
+              "id": 2583,
+              "name": "Sud Ladies Cup"
+            },
+            {
+              "id": 1692,
+              "name": "Valentin Granatkin Memorial"
+            },
+            {
+              "id": 1733,
+              "name": "Women's Pan American Games"
+            },
+            {
+              "id": 2692,
+              "name": "U20 National Team Friendlies Women"
+            },
+            {
+              "id": 1566,
+              "name": "Friendly International U18"
+            },
+            {
+              "id": 2965,
+              "name": "U17 National Team Friendlies"
+            },
+            {
+              "id": 3213,
+              "name": "MLS All-Star"
+            },
+            {
+              "id": 1550,
+              "name": "World Cup Women U20"
+            },
+            {
+              "id": 2152,
+              "name": "One Day International"
+            },
+            {
+              "id": 2153,
+              "name": "Twenty20 International"
+            },
+            {
+              "id": 2154,
+              "name": "Test Series"
+            },
+            {
+              "id": 2162,
+              "name": "Ashes Series"
+            },
+            {
+              "id": 2188,
+              "name": "ICC Cricket World Cup League 2"
+            },
+            {
+              "id": 2191,
+              "name": "ICC World Cup Warm-up Matches"
+            },
+            {
+              "id": 2201,
+              "name": "One Day International U19"
+            },
+            {
+              "id": 2207,
+              "name": "ICC U19 World Cup"
+            },
+            {
+              "id": 2208,
+              "name": "Tri-Series U19"
+            },
+            {
+              "id": 2226,
+              "name": "ICC Cricket World Cup Super League"
+            },
+            {
+              "id": 2198,
+              "name": "ICC Men's T20 World Cup Regional Qualifications"
+            },
+            {
+              "id": 3246,
+              "name": "U20 Intercontinental Cup"
+            },
+            {
+              "id": 2242,
+              "name": "Twenty20 International Women"
+            },
+            {
+              "id": 2243,
+              "name": "One Day International Women"
+            },
+            {
+              "id": 3264,
+              "name": "U17 National Team Friendlies Women 1"
+            },
+            {
+              "id": 1726,
+              "name": "Trofeo Joan Gamper"
+            },
+            {
+              "id": 2313,
+              "name": "Test Series Women"
+            },
+            {
+              "id": 2395,
+              "name": "ICC Mens T20 World Cup Warm-up Matches"
+            },
+            {
+              "id": 3279,
+              "name": "U16 National Team Friendlies Women"
+            },
+            {
+              "id": 3313,
+              "name": "Pinatar Cup"
+            },
+            {
+              "id": 1600,
+              "name": "Florida Cup"
+            },
+            {
+              "id": 2537,
+              "name": "Arnold Clark Cup"
+            },
+            {
+              "id": 2546,
+              "name": "Hybrid Friendlies Women"
+            },
+            {
+              "id": 2318,
+              "name": "Arab Championship U20"
+            },
+            {
+              "id": 2605,
+              "name": "Queensland Champions Cup"
+            },
+            {
+              "id": 1812,
+              "name": "U17 Club Friendlies"
+            },
+            {
+              "id": 2575,
+              "name": "Kirin Cup"
+            },
+            {
+              "id": 1708,
+              "name": "Intercontinental Cup"
+            },
+            {
+              "id": 2728,
+              "name": "Trofeo Ramon de Carranza"
+            },
+            {
+              "id": 2733,
+              "name": "Islamic Solidarity Games"
+            },
+            {
+              "id": 2723,
+              "name": "U19 National Team Friendlies Women"
+            },
+            {
+              "id": 2782,
+              "name": "Women's International Champions Cup"
+            },
+            {
+              "id": 2166,
+              "name": "ICC Women's T20 World Cup"
+            },
+            {
+              "id": 2167,
+              "name": "ICC Men's T20 World Cup"
+            },
+            {
+              "id": 2168,
+              "name": "ICC World Cup"
+            },
+            {
+              "id": 2176,
+              "name": "Tri-Series"
+            },
+            {
+              "id": 2177,
+              "name": "ICC Champions Trophy"
+            },
+            {
+              "id": 2721,
+              "name": "U19 Club Friendlies"
+            },
+            {
+              "id": 1731,
+              "name": "Pan American Games"
+            },
+            {
+              "id": 2531,
+              "name": "Commonwealth Games Women's"
+            },
+            {
+              "id": 2985,
+              "name": "U15 Club Friendlies"
+            },
+            {
+              "id": 3007,
+              "name": "Sydney Super Cup"
+            },
+            {
+              "id": 2210,
+              "name": "ICC Women's World Cup"
+            },
+            {
+              "id": 1113,
+              "name": "Confederations Cup"
+            },
+            {
+              "id": 2980,
+              "name": "U23 National Team Friendlies Women"
+            },
+            {
+              "id": 3063,
+              "name": "FFA Cup of Nations"
+            },
+            {
+              "id": 3089,
+              "name": "CONMEBOL/UEFA Women's Finalissima"
+            },
+            {
+              "id": 3147,
+              "name": "Premier League Summer Series"
+            },
+            {
+              "id": 3193,
+              "name": "Women's Ashes"
+            },
+            {
+              "id": 3186,
+              "name": "ICC Cricket World Cup Qualifiers"
+            },
+            {
+              "id": 3187,
+              "name": "ICC Cricket World Cup Qualifier Play-off"
+            },
+            {
+              "id": 3196,
+              "name": "Pan Arab Games"
+            },
+            {
+              "id": 3212,
+              "name": "UEFA/CONMEBOL Club Challenge"
+            },
+            {
+              "id": 3260,
+              "name": "U16 National Team Friendlies 1"
+            },
+            {
+              "id": 3265,
+              "name": "U17 National Team Friendlies Women 2"
+            },
+            {
+              "id": 3261,
+              "name": "U16 National Team Friendlies 2"
+            },
+            {
+              "id": 3288,
+              "name": "U15 National Team Friendlies"
+            },
+            {
+              "id": 3333,
+              "name": "Legends Cricket Trophy"
+            },
+            {
+              "id": 3334,
+              "name": "Asian Legends League"
+            },
+            {
+              "id": 3366,
+              "name": "A-Leagues All Stars Women"
+            },
+            {
+              "id": 3365,
+              "name": "A-Leagues All Stars Men"
+            },
+            {
+              "id": 3360,
+              "name": "Olympics Intercontinental Play-offs"
+            },
+            {
+              "id": 3359,
+              "name": "U15 National Team Friendlies Women"
+            },
+            {
+              "id": 1652,
+              "name": "Friendly International U23"
+            },
+            {
+              "id": 3449,
+              "name": "Lunar New Year Cup"
+            },
+            {
+              "id": 3497,
+              "name": "Club Friendlies"
+            },
+            {
+              "id": 2202,
+              "name": "Quad-Series U19"
+            },
+            {
+              "id": 2203,
+              "name": "ICC Men's T20 World Cup Qualifier"
+            },
+            {
+              "id": 3420,
+              "name": "Global Super League"
+            },
+            {
+              "id": 3412,
+              "name": "FIFA Club World Cup"
+            },
+            {
+              "id": 2182,
+              "name": "Quad-Series"
+            },
+            {
+              "id": 1120,
+              "name": "Gulf Cup of Nations"
+            },
+            {
+              "id": 2693,
+              "name": "AFF U16 Championship"
+            },
+            {
+              "id": 3217,
+              "name": "J. League World Challenge"
+            },
+            {
+              "id": 2990,
+              "name": "U17 Women's World Cup"
+            },
+            {
+              "id": 2440,
+              "name": "International Women's National Team Tournament"
+            },
+            {
+              "id": 2783,
+              "name": "The Women's Cup"
+            },
+            {
+              "id": 2574,
+              "name": "Conmebol - UEFA Cup of Champions"
+            },
+            {
+              "id": 1400,
+              "name": "Cotif Tournament"
+            },
+            {
+              "id": 3525,
+              "name": "FIFA Women's Champions Cup"
+            },
+            {
+              "id": 2558,
+              "name": "Hybrid Friendlies"
+            },
+            {
+              "id": 1363,
+              "name": "Friendly International Women"
+            },
+            {
+              "id": 732,
+              "name": "World Cup"
+            },
+            {
+              "id": 1368,
+              "name": "Tournoi Maurice Revello"
+            },
+            {
+              "id": 2450,
+              "name": "Club Friendlies 2"
+            },
+            {
+              "id": 1082,
+              "name": "Friendly International"
+            },
+            {
+              "id": 2451,
+              "name": "Club Friendlies 3"
+            },
+            {
+              "id": 1703,
+              "name": "Club Friendlies Women"
+            },
+            {
+              "id": 1101,
+              "name": "Club Friendlies 1"
+            },
+            {
+              "id": 2452,
+              "name": "Club Friendlies 4"
+            }
+          ]
+        }
+      ]
+    },
+    "International": {
+      "status": "ok",
+      "http_status": 200,
+      "count": 1,
+      "countries": [
+        {
+          "id": 190324,
+          "name": "International",
+          "leagues": [
+            {
+              "id": 3787,
+              "name": "ICC Women's Emerging Nations Trophy"
+            },
+            {
+              "id": 3788,
+              "name": "ICC Women\u2019s Champions Trophy"
+            },
+            {
+              "id": 3536,
+              "name": "Formula 1 Pre-Season Testing"
+            },
+            {
+              "id": 2196,
+              "name": "ICC World Test Championship"
+            },
+            {
+              "id": 2259,
+              "name": "Road Safety World Series T20"
+            },
+            {
+              "id": 3061,
+              "name": "ICC U19 Women's T20 World Cup"
+            },
+            {
+              "id": 3331,
+              "name": "African Games Men"
+            },
+            {
+              "id": 3468,
+              "name": "Formula 1"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "country_league_endpoint_probes": {
+    "Germany": {
+      "status": "ok",
+      "country_id": 11,
+      "count": 0,
+      "matches": []
+    },
+    "France": {
+      "status": "ok",
+      "country_id": 17,
+      "count": 0,
+      "matches": []
+    },
+    "World": {
+      "status": "ok",
+      "country_id": 99474,
+      "count": 0,
+      "matches": []
+    },
+    "International": {
+      "status": "ok",
+      "country_id": 190324,
+      "count": 0,
+      "matches": []
+    }
+  },
+  "direct_league_id_probes": {
+    "Bundesliga": {
+      "status": "error",
+      "error_type": "SportmonksError",
+      "error": "Sportmonks rejected the request; verify endpoint access and parameters.",
+      "http_status": 200
+    },
+    "Ligue 1": {
+      "status": "error",
+      "error_type": "SportmonksError",
+      "error": "Sportmonks rejected the request; verify endpoint access and parameters.",
+      "http_status": 200
+    },
+    "World Cup": {
+      "status": "error",
+      "error_type": "SportmonksError",
+      "error": "Sportmonks rejected the request; verify endpoint access and parameters.",
+      "http_status": 200
+    }
+  },
+  "name_search_probes": {
+    "Bundesliga": [
+      {
+        "query": "Bundesliga",
+        "status": "ok",
+        "count": 0,
+        "matches": []
+      }
+    ],
+    "Ligue 1": [
+      {
+        "query": "Ligue 1",
+        "status": "ok",
+        "count": 0,
+        "matches": []
+      },
+      {
+        "query": "Ligue",
+        "status": "ok",
+        "count": 0,
+        "matches": []
+      }
+    ],
+    "World Cup": [
+      {
+        "query": "World Cup",
+        "status": "ok",
+        "count": 0,
+        "matches": []
+      },
+      {
+        "query": "FIFA World Cup",
+        "status": "ok",
+        "count": 0,
+        "matches": []
+      }
+    ]
+  },
+  "catalogue_leagues": [
+    {
+      "sportmonks_league_id": "8",
+      "name": "Premier League",
+      "country": "England",
+      "season_count": 3
+    },
+    {
+      "sportmonks_league_id": "24",
+      "name": "FA Cup",
+      "country": "England",
+      "season_count": 3
+    },
+    {
+      "sportmonks_league_id": "384",
+      "name": "Serie A",
+      "country": "Italy",
+      "season_count": 3
+    },
+    {
+      "sportmonks_league_id": "564",
+      "name": "La Liga",
+      "country": "Spain",
+      "season_count": 3
+    },
+    {
+      "sportmonks_league_id": "567",
+      "name": "La Liga 2",
+      "country": "Spain",
+      "season_count": 3
+    }
+  ]
+}
