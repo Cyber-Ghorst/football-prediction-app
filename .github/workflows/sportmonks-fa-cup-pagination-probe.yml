@@ -1,0 +1,47 @@
+name: Sportmonks FA Cup team pagination diagnostic
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "sportmonks_fa_cup_pagination_probe.py"
+      - ".github/workflows/sportmonks-fa-cup-pagination-probe.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: main-report-archive
+  queue: max
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SPORTMONKS_API_TOKEN: ${{ secrets.SPORTMONKS_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Validate token
+        run: test -n "$SPORTMONKS_API_TOKEN"
+      - name: Run read-only four-request pagination probe
+        run: |
+          set -euo pipefail
+          mkdir -p reports/provider_independent_catalogue
+          stamp="$(date -u +%Y%m%dT%H%M%SZ)"
+          python sportmonks_fa_cup_pagination_probe.py | tee "reports/provider_independent_catalogue/sportmonks_fa_cup_pagination_${stamp}.json"
+          cp "reports/provider_independent_catalogue/sportmonks_fa_cup_pagination_${stamp}.json" reports/provider_independent_catalogue/sportmonks_fa_cup_pagination_latest.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/provider_independent_catalogue/sportmonks_fa_cup_pagination_*.json
+          git commit -m "Archive read-only Sportmonks FA Cup pagination diagnostic"
+          git pull --rebase origin main
+          git push origin HEAD:main
