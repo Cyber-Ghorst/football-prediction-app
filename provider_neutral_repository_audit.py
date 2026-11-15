@@ -19,7 +19,7 @@ def main() -> int:
     report["prediction_model_modified"] = False
     report["prediction_ledger_touched"] = False
     Path("provider-neutral-repository-audit.json").write_text(
-        json.dumps(report, indent=2, ensure_ascii=False, default=str) + "\\n",
+        json.dumps(report, indent=2, ensure_ascii=False, default=str) + "\n",
         encoding="utf-8",
     )
     print(json.dumps({
