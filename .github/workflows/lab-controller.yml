@@ -21,6 +21,7 @@ on:
           - sportmonks_catalogue_access_audit
           - provider_league_catalogue_audit
           - provider_season_roster_audit
+          - provider_neutral_repository_audit
           - deployment_redeploy
         default: health_check
       season:
@@ -125,7 +126,7 @@ jobs:
               trigger = json.loads(Path(".agent/trigger.json").read_text(encoding="utf-8"))
               operation = trigger.get("operation", "")
 
-          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync", "tipmaster_refresh_verify", "openscores_connection_check", "openscores_entity_mapping_audit", "openscores_sportmonks_reconciliation", "sportmonks_catalogue_access_audit", "provider_league_catalogue_audit", "provider_season_roster_audit", "learning_audit", "deployment_redeploy"}
+          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync", "tipmaster_refresh_verify", "openscores_connection_check", "openscores_entity_mapping_audit", "openscores_sportmonks_reconciliation", "sportmonks_catalogue_access_audit", "provider_league_catalogue_audit", "provider_season_roster_audit", "provider_neutral_repository_audit", "learning_audit", "deployment_redeploy"}
           if operation not in allowed:
               raise SystemExit("Rejected unsupported or missing operation")
           if operation == "prediction_run":
@@ -491,10 +492,10 @@ jobs:
           python sportmonks_catalogue_access_audit.py
 
       - name: Install provider catalogue audit dependency
-        if: steps.operation.outputs.operation == 'provider_league_catalogue_audit' || steps.operation.outputs.operation == 'provider_season_roster_audit'
+        if: steps.operation.outputs.operation == 'provider_league_catalogue_audit' || steps.operation.outputs.operation == 'provider_season_roster_audit' || steps.operation.outputs.operation == 'provider_neutral_repository_audit'
         run: |
           set -euo pipefail
-          python -m pip install requests
+          python -m pip install requests 'psycopg[binary]'
 
       - name: Audit Highlightly and LiveScoreFootball league catalogues (read-only)
         if: steps.operation.outputs.operation == 'provider_league_catalogue_audit'
@@ -519,6 +520,14 @@ jobs:
         run: |
           set -euo pipefail
           python provider_season_roster_audit.py
+
+      - name: Audit existing repository through provider-neutral read-only facade
+        if: steps.operation.outputs.operation == 'provider_neutral_repository_audit'
+        env:
+          PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
+        run: |
+          set -euo pipefail
+          python provider_neutral_repository_audit.py
 
       - name: Reconcile OpenScores against canonical Sportmonks history
         if: steps.operation.outputs.operation == 'openscores_sportmonks_reconciliation'
@@ -656,6 +665,7 @@ jobs:
               ("sportmonks-catalogue-access-report.json", "Sportmonks account catalogue access audit"),
               ("provider-league-catalogue-audit.json", "Highlightly and LiveScoreFootball league catalogue audit"),
               ("provider-season-roster-audit.json", "Season-scoped provider roster evidence audit"),
+              ("provider-neutral-repository-audit.json", "Read-only provider-neutral repository compatibility audit"),
               ("prediction-run-report.json", "Automated prediction run report"),
               ("learning-readiness-report.json", "Leakage-safe learning readiness report"),
           )
@@ -763,6 +773,7 @@ jobs:
             sportmonks-catalogue-access-report.json
             provider-league-catalogue-audit.json
             provider-season-roster-audit.json
+            provider-neutral-repository-audit.json
             prediction-run-report.json
             learning-readiness-report.json
             watchdog-report.json
