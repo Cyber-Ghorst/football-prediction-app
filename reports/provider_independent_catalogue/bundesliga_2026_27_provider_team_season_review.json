@@ -1,0 +1,189 @@
+{
+  "report_name": "bundesliga_2026_27_provider_team_and_season_review",
+  "generated_at_utc": "2026-11-15T16:00:00Z",
+  "official_identity": {
+    "competition": "Bundesliga",
+    "country": "Germany",
+    "competition_type": "men's top-tier domestic league",
+    "season": "2026/27",
+    "official_club_count": 18,
+    "clubs": [
+      "FC Bayern München",
+      "Borussia Dortmund",
+      "RB Leipzig",
+      "VfB Stuttgart",
+      "TSG Hoffenheim",
+      "Bayer 04 Leverkusen",
+      "Sport-Club Freiburg",
+      "Eintracht Frankfurt",
+      "FC Augsburg",
+      "1. FSV Mainz 05",
+      "1. FC Union Berlin",
+      "Borussia Mönchengladbach",
+      "Hamburger SV",
+      "1. FC Köln",
+      "SV Werder Bremen",
+      "FC Schalke 04",
+      "SV Elversberg",
+      "SC Paderborn 07"
+    ],
+    "sources": [
+      "https://www.bundesliga.com/en/bundesliga/clubs",
+      "https://www.bundesliga.com/en/bundesliga/news/2026-27-fixture-lists-now-available-38068",
+      "https://www.bundesliga.com/en/bundesliga/news/calendar-for-2026-27-season-world-cup-34676"
+    ]
+  },
+  "providers": [
+    {
+      "provider": "bzzoiro",
+      "competition_id": "5",
+      "season_id": "5::1091",
+      "season_label": "Bundesliga 26/27",
+      "raw_observations": 37,
+      "eligible_observations": 37,
+      "timezone_aware_kickoffs": 37,
+      "unique_fixtures": 9,
+      "unique_teams": 18,
+      "roster": "all 18 official clubs observed",
+      "season": "explicit 2026/27 label"
+    },
+    {
+      "provider": "football_data_org",
+      "competition_id": "2002",
+      "season_id": "2002::2522",
+      "season_label": "2026-08-28",
+      "competition_type": "LEAGUE",
+      "raw_observations": 11,
+      "eligible_observations": 11,
+      "unique_fixtures": 7,
+      "unique_teams": 14,
+      "missing_country_observations": 11,
+      "roster": "14/18 observed; FC Augsburg, 1. FSV Mainz 05, Hamburger SV, SV Werder Bremen absent from bounded sample",
+      "season": "2026 start-date evidence; season ID semantics need raw catalogue confirmation"
+    },
+    {
+      "provider": "openfootball",
+      "competition_id": "de.1",
+      "season_id": "de.1::2026-27",
+      "season_label": "2026-27",
+      "raw_observations": 6120,
+      "eligible_observations": 0,
+      "timezone_aware_kickoffs": 0,
+      "local_time_without_timezone": 2160,
+      "unique_fixtures": 306,
+      "unique_teams": 18,
+      "roster": "all 18 official clubs observed",
+      "season": "explicit 2026/27 label"
+    },
+    {
+      "provider": "openligadb",
+      "competition_id": "4937",
+      "season_id": "4937::2026",
+      "season_label": "2026",
+      "raw_observations": 6120,
+      "eligible_observations": 4500,
+      "timezone_aware_kickoffs": 6120,
+      "unique_fixtures": 306,
+      "unique_teams": 18,
+      "roster": "all 18 official clubs observed",
+      "season": "calendar-year label; official schedule supports 2026/27 interpretation but provider ID semantics remain unverified"
+    }
+  ],
+  "name_aliases": [
+    {
+      "from": "Borussia M'gladbach",
+      "to": "Borussia Mönchengladbach"
+    },
+    {
+      "from": "SC Freiburg",
+      "to": "Sport-Club Freiburg"
+    },
+    {
+      "from": "SV 07 Elversberg",
+      "to": "SV Elversberg"
+    },
+    {
+      "from": "TSG 1899 Hoffenheim",
+      "to": "TSG Hoffenheim"
+    }
+  ],
+  "fixture_corroboration": {
+    "providers": [
+      "bzzoiro",
+      "openligadb"
+    ],
+    "exact_utc_overlap_count": 8,
+    "official_schedule_confirmed": true,
+    "official_schedule": "https://products.bundesliga.com/fixtures",
+    "fixtures": [
+      [
+        "FC Bayern München",
+        "1. FC Köln",
+        "2026-11-20T19:30:00Z"
+      ],
+      [
+        "1. FC Union Berlin",
+        "RB Leipzig",
+        "2026-11-21T14:30:00Z"
+      ],
+      [
+        "Bayer 04 Leverkusen",
+        "SC Paderborn 07",
+        "2026-11-21T14:30:00Z"
+      ],
+      [
+        "Eintracht Frankfurt",
+        "TSG Hoffenheim",
+        "2026-11-21T14:30:00Z"
+      ],
+      [
+        "SV Elversberg",
+        "Sport-Club Freiburg",
+        "2026-11-21T14:30:00Z"
+      ],
+      [
+        "FC Schalke 04",
+        "VfB Stuttgart",
+        "2026-11-21T17:30:00Z"
+      ],
+      [
+        "FC Augsburg",
+        "1. FSV Mainz 05",
+        "2026-11-22T14:30:00Z"
+      ],
+      [
+        "SV Werder Bremen",
+        "Hamburger SV",
+        "2026-11-22T16:30:00Z"
+      ]
+    ]
+  },
+  "sportmonks_target": {
+    "public_league_id_candidate": "82",
+    "evidence_url": "https://www.sportmonks.com/blogs/how-many-football-leagues-app-needs/",
+    "current_catalogue_sync": "Bundesliga 2026/27 not present in committed sync report",
+    "season_id": null,
+    "canonical_roster_available": false,
+    "decision": "Do not create canonical link or import; obtain authenticated league, season and roster response first."
+  },
+  "decision": {
+    "official_competition_and_season": "supported",
+    "three_provider_rosters": "18/18 observed",
+    "football_data_org": "14-club partial sample and country evidence missing",
+    "exact_fixture_corroboration": "8 fixtures match official schedule",
+    "provider_competition_ids_approved": false,
+    "provider_season_ids_approved": false,
+    "sportmonks_target_approved": false,
+    "provider_links_created": false,
+    "season_links_created": false,
+    "fixture_ingestion_enabled": false,
+    "prediction_eligible": false
+  },
+  "safeguards": {
+    "canonical_identity_writes": 0,
+    "provider_link_writes": 0,
+    "season_link_writes": 0,
+    "fixture_writes": 0,
+    "prediction_ledger_writes": 0
+  }
+}
