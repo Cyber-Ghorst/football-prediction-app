@@ -205,7 +205,62 @@ def read_provider_neutral_repository(database_url: str) -> dict[str, Any]:
                 "provider", "entity_type", "provider_entity_id", "canonical_entity_id",
             )
             links = [dict(zip(link_columns, values)) for values in cursor.fetchall()]
+            cursor.execute(
+                """SELECT provider, entity_type, COUNT(*)
+                   FROM provider_entity_links
+                   GROUP BY provider, entity_type
+                   ORDER BY provider, entity_type"""
+            )
+            link_breakdown = [
+                {"provider": row[0], "entity_type": row[1], "count": int(row[2])}
+                for row in cursor.fetchall()
+            ]
+            cursor.execute(
+                """SELECT provider, entity_type, COUNT(*)
+                   FROM provider_entity_link_approval_audit
+                   GROUP BY provider, entity_type
+                   ORDER BY provider, entity_type"""
+            )
+            audit_breakdown = [
+                {"provider": row[0], "entity_type": row[1], "audit_rows": int(row[2])}
+                for row in cursor.fetchall()
+            ]
+            cursor.execute(
+                """SELECT l.provider, l.entity_type,
+                          COUNT(DISTINCT l.link_id) AS link_count,
+                          COUNT(DISTINCT a.audit_id) AS audit_count
+                   FROM provider_entity_links l
+                   LEFT JOIN provider_entity_link_approval_audit a
+                     ON a.link_id = l.link_id
+                    AND a.provider = l.provider
+                    AND a.entity_type = l.entity_type
+                    AND a.provider_entity_id = l.provider_entity_id
+                    AND a.canonical_entity_id = l.canonical_entity_id
+                   GROUP BY l.provider, l.entity_type
+                   ORDER BY l.provider, l.entity_type"""
+            )
+            audit_coverage = [
+                {"provider": row[0], "entity_type": row[1],
+                 "link_count": int(row[2]), "matching_audit_rows": int(row[3])}
+                for row in cursor.fetchall()
+            ]
+            cursor.execute(
+                """SELECT provider, entity_type, provider_entity_id, canonical_entity_id
+                   FROM provider_entity_links
+                   WHERE provider = 'openscores'
+                   ORDER BY entity_type, provider_entity_id
+                   LIMIT 30"""
+            )
+            link_samples = [
+                {"provider": row[0], "entity_type": row[1],
+                 "provider_entity_id": row[2], "canonical_entity_id": row[3]}
+                for row in cursor.fetchall()
+            ]
     report = build_provider_neutral_audit(raw, links)
     report["database_read_only"] = True
     report["table_rows_read"] = dict(report["normalized_entity_counts"])
+    report["provider_link_breakdown"] = link_breakdown
+    report["approval_audit_breakdown"] = audit_breakdown
+    report["provider_link_audit_coverage"] = audit_coverage
+    report["openscores_link_samples"] = link_samples
     return report
