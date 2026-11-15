@@ -1,6 +1,6 @@
 {
   "report_name": "priority_b_external_identity_evidence",
-  "generated_at": "2026-11-15T17:15:28.613Z",
+  "generated_at": "2026-11-15T17:18:22.060Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority B single-provider competition identities; official evidence can support competition type, country and season context but does not replace independent provider corroboration or human canonical approval.",
   "safeguards": [
@@ -1150,6 +1150,142 @@
         "Obtain broader provider-specific fixture and roster samples.",
         "Verify provider season boundaries and competition ID semantics.",
         "Seek independent provider corroboration where available."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_029",
+      "name": "League One",
+      "observed_country": "England",
+      "provider": "bzzoiro",
+      "provider_competition_id": "86",
+      "provider_season_id": "86::1655",
+      "provider_season_label": "League One 26/27",
+      "raw_observation_count": 50,
+      "external_competition_type": "men's domestic professional league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 24,
+        "matches_per_club": 46,
+        "regular_season_matches": 552
+      },
+      "external_evidence": [
+        {
+          "publisher": "The English Football League",
+          "url": "https://www.efl.com/news/2026/june/25/the-2026-27-efl-fixtures-are-here/",
+          "supports": "Official EFL release of the 2026/27 Championship, League One and League Two fixture lists."
+        },
+        {
+          "publisher": "The English Football League",
+          "url": "https://www.efl.com/documents/efl-handbook.pdf",
+          "supports": "EFL divisional structure: 72 clubs in three divisions; Championship and League One each consist of 24 clubs."
+        },
+        {
+          "publisher": "The English Football League",
+          "url": "https://www.efl.com/competitions/efl-league-one",
+          "supports": "Official EFL competition page and current division table, corroborating the 2026/27 competition identity and participating club set."
+        }
+      ],
+      "assessment": "Official EFL materials establish League One as an EFL division and publish its 2026/27 fixture list. The EFL structure places 24 clubs in League One; a double round-robin yields 46 matches per club. Bzzoiro's 50 observations do not establish full roster coverage or provider season-ID semantics.",
+      "review_status": "external_identity_supported_single_provider_roster_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain a broader Bzzoiro roster and fixture sample covering the entire division.",
+        "Verify provider-specific season boundaries and the meaning of the provider season ID.",
+        "Seek independent provider corroboration and compare exact fixtures with official schedules."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_030",
+      "name": "League Two",
+      "observed_country": "England",
+      "provider": "bzzoiro",
+      "provider_competition_id": "87",
+      "provider_season_id": "87::1674",
+      "provider_season_label": "League Two 26/27",
+      "raw_observation_count": 48,
+      "external_competition_type": "men's domestic professional league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 24,
+        "matches_per_club": 46,
+        "regular_season_matches": 552
+      },
+      "external_evidence": [
+        {
+          "publisher": "The English Football League",
+          "url": "https://www.efl.com/news/2026/june/25/the-2026-27-efl-fixtures-are-here/",
+          "supports": "Official EFL release of the 2026/27 Championship, League One and League Two fixture lists."
+        },
+        {
+          "publisher": "The English Football League",
+          "url": "https://www.efl.com/documents/efl-handbook.pdf",
+          "supports": "EFL divisional structure: 72 clubs in three divisions; Championship and League One each consist of 24 clubs."
+        },
+        {
+          "publisher": "The English Football League",
+          "url": "https://www.efl.com/competitions/efl-league-two",
+          "supports": "Official EFL competition page and current division table, corroborating the 2026/27 competition identity and participating club set."
+        }
+      ],
+      "assessment": "Official EFL materials establish League Two as an EFL division and publish its 2026/27 fixture list. The EFL comprises 72 clubs across three divisions; with 24 in the Championship and 24 in League One, League Two has 24 clubs. A double round-robin yields 46 matches per club. Bzzoiro's 48 observations do not establish full roster coverage or provider season-ID semantics.",
+      "review_status": "external_identity_supported_single_provider_roster_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain a broader Bzzoiro roster and fixture sample covering the entire division.",
+        "Verify provider-specific season boundaries and the meaning of the provider season ID.",
+        "Seek independent provider corroboration and compare exact fixtures with official schedules."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_031",
+      "name": "National League",
+      "observed_country": "England",
+      "provider": "bzzoiro",
+      "provider_competition_id": "91",
+      "provider_season_id": "91::1903",
+      "provider_season_label": "National League 26/27",
+      "raw_observation_count": 50,
+      "external_competition_type": "men's domestic professional league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 24,
+        "matches_per_club": 46,
+        "regular_season_matches": 552,
+        "level": "Step 1 of National League System"
+      },
+      "external_evidence": [
+        {
+          "publisher": "The Football Association",
+          "url": "https://www.thefa.com/news/2026/may/14/nls-club-allocations-2026-27",
+          "supports": "Official 2026/27 National League System club allocation announcement and allocations for Steps 1–6."
+        },
+        {
+          "publisher": "Altrincham FC (participating club)",
+          "url": "https://altrinchamfc.com/en-us/blogs/news/the-enterprise-national-league-2026-27",
+          "supports": "Published 24-club Enterprise National League 2026/27 roster and confirms season opening on 8 August 2026."
+        },
+        {
+          "publisher": "The National League",
+          "url": "https://www.thenationalleague.org.uk/news/2026/november/13/all-games-available-to-watch-on-dazn-this-weekend-/",
+          "supports": "Official league coverage identifies the Enterprise National League 2026/27 and its 12 scheduled fixtures for the relevant weekend."
+        }
+      ],
+      "assessment": "The FA's 2026/27 National League System allocation and a participating club's published 24-club Enterprise National League roster corroborate the National League as the top non-League division below EFL League Two. A 24-club home-and-away format yields 46 matches per club. Bzzoiro's 50 observations do not establish full roster coverage or provider season-ID semantics.",
+      "review_status": "external_identity_supported_single_provider_roster_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain a broader Bzzoiro roster and fixture sample covering the entire division.",
+        "Verify provider-specific season boundaries and the meaning of the provider season ID.",
+        "Seek independent provider corroboration and compare exact fixtures with official schedules."
       ]
     }
   ]
