@@ -47,3 +47,8 @@ The queue now contains **12 Priority A** and **85 Priority B** identities. All r
 ## Saudi Pro League 2026/27 evidence review — 15 November 2026
 
 The Saudi Pro League entry (Priority A) now has a competition-level evidence review. Official SPL sources confirm the 2026/27 competition and corroborate one exact Bzzoiro/LiveScoreFootball fixture overlap (Al Ahli vs Al Nassr, 20 November 2026). Full roster coverage and provider-specific season-ID equivalence remain unverified; the entry remains unapproved. See [the detailed evidence review](LAYER11_SAUDI_PRO_LEAGUE_IDENTITY_REVIEW_2026-11-15.md).
+
+
+## La Liga 2026/27 evidence review — 15 November 2026
+
+Official LALIGA sources confirm the competition calendar and 20-club roster. OpenFootball's sampled roster contains all 20 clubs but its kickoff timestamps lack timezone information; Bzzoiro's bounded sample contains 18 clubs. No exact UTC overlap is established, so provider-specific season equivalence remains unverified. See [the detailed La Liga review](LAYER11_LA_LIGA_IDENTITY_REVIEW_2026-11-15.md).
