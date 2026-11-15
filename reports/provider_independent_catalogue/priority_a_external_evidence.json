@@ -1,6 +1,6 @@
 {
   "report_name": "competition_identity_external_evidence_dossier",
-  "generated_at": "2026-11-15T16:53:06.826Z",
+  "generated_at": "2026-11-15T16:55:21.782Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority A only: twelve multi-provider observed competition entries with country context.",
   "interpretation": "External official competition evidence supports the public competition identity and season context. It does not prove that provider-specific IDs or season IDs refer to the same canonical competition or season.",
@@ -368,6 +368,31 @@
       ],
       "provider_season_evidence": "Bzzoiro labels the season 'Bundesliga 26/27'; LiveScoreFootball labels its season '2026'. The current audit has 15 Bzzoiro timezone-aware observations across all 12 team names and 6 unique fixtures; LiveScoreFootball has 3 timezone-aware observations across 6 teams and 3 unique fixtures. No exact cross-provider fixture overlap was established. The calendar-year label on LiveScoreFootball is consistent with the 2026 start year but does not prove its season ID covers the same full 2026/27 competition.",
       "review_status": "external_identity_supported_provider_season_and_roster_scope_unverified"
+    },
+    {
+      "catalogue_entry_id": "observed_competition_073",
+      "name": "Scottish Premiership",
+      "observed_country": "Scotland",
+      "providers": [
+        "bzzoiro",
+        "livescore_football"
+      ],
+      "external_competition_type": "men's top-tier domestic league",
+      "external_season": "2026/27",
+      "external_evidence": [
+        {
+          "publisher": "Scottish Professional Football League",
+          "url": "https://spfl.co.uk/league/premiership/fixtures",
+          "supports": "Official Premiership fixture schedule corroborates four exact timezone-aware cross-provider fixture overlaps on 21 November 2026."
+        },
+        {
+          "publisher": "Scottish Professional Football League",
+          "url": "https://spfl.co.uk/league/premiership/results",
+          "supports": "Official Premiership results and standings identify the 12-club competition."
+        }
+      ],
+      "provider_season_evidence": "Bzzoiro (competition 13, season 13::1355) and LiveScoreFootball (competition 735, season 735::2026) each show 12 unique teams and timezone-aware observations. Four exact UTC fixture overlaps on 21 November 2026 match the official SPFL fixture schedule in both pairing and kickoff. This strongly corroborates that the two provider competition-season records describe the same 2026/27 Scottish Premiership scope; it does not approve a canonical provider-independent identity or make provider IDs interchangeable.",
+      "review_status": "provider_pair_strongly_corroborated_canonical_identity_unapproved"
     }
   ],
   "next_required_checks": [
