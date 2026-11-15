@@ -495,7 +495,7 @@ jobs:
         if: steps.operation.outputs.operation == 'provider_league_catalogue_audit' || steps.operation.outputs.operation == 'provider_season_roster_audit' || steps.operation.outputs.operation == 'provider_neutral_repository_audit'
         run: |
           set -euo pipefail
-          python -m pip install requests
+          python -m pip install requests 'psycopg[binary]'
 
       - name: Audit Highlightly and LiveScoreFootball league catalogues (read-only)
         if: steps.operation.outputs.operation == 'provider_league_catalogue_audit'
