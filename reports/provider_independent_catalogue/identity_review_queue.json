@@ -1104,6 +1104,208 @@
     },
     {
       "review_order": 11,
+      "priority": "A",
+      "catalogue_entry_id": "observed_competition_005",
+      "display_names": [
+        "Austrian Bundesliga"
+      ],
+      "countries": [
+        "Austria"
+      ],
+      "providers": [
+        "bzzoiro",
+        "livescore_football"
+      ],
+      "provider_count": 2,
+      "source_records": [
+        {
+          "competition_name": "Austrian Bundesliga",
+          "competition_type": null,
+          "country": "Austria",
+          "observation_count": 12,
+          "provider": "bzzoiro",
+          "provider_competition_id": "96",
+          "seasons": [
+            {
+              "observation_count": 12,
+              "provider": "bzzoiro",
+              "provider_season_id": "96::1999",
+              "season_name": "Bundesliga 26/27",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        },
+        {
+          "competition_name": "Austrian Bundesliga",
+          "competition_type": null,
+          "country": "Austria",
+          "observation_count": 3,
+          "provider": "livescore_football",
+          "provider_competition_id": "3907",
+          "seasons": [
+            {
+              "observation_count": 3,
+              "provider": "livescore_football",
+              "provider_season_id": "3907::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [
+            2026
+          ],
+          "livescore_football": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 12,
+            "provider": "bzzoiro",
+            "provider_season_id": "96::1999",
+            "season_name": "Bundesliga 26/27",
+            "start_years": [
+              2026
+            ]
+          },
+          {
+            "observation_count": 3,
+            "provider": "livescore_football",
+            "provider_season_id": "3907::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [
+          2026
+        ],
+        "status": "cross_provider_start_year_overlap"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "review_disposition": "evidence_reviewed_not_approved",
+      "review_reason": "Independent provider observations and shared 2026 season-year evidence now corroborate this competition/country identity. Official governing-body 2026/27 competition and fixture information was reviewed (Österreichische Fußball-Bundesliga 2026/27 schedule). Provider-specific competition and season IDs, exact scope and canonical target equivalence remain unverified; no canonical mapping or provider link is approved."
+    },
+    {
+      "review_order": 12,
+      "priority": "A",
+      "catalogue_entry_id": "observed_competition_073",
+      "display_names": [
+        "Scottish Premiership"
+      ],
+      "countries": [
+        "Scotland"
+      ],
+      "providers": [
+        "bzzoiro",
+        "livescore_football"
+      ],
+      "provider_count": 2,
+      "source_records": [
+        {
+          "competition_name": "Scottish Premiership",
+          "competition_type": null,
+          "country": "Scotland",
+          "observation_count": 18,
+          "provider": "bzzoiro",
+          "provider_competition_id": "13",
+          "seasons": [
+            {
+              "observation_count": 18,
+              "provider": "bzzoiro",
+              "provider_season_id": "13::1355",
+              "season_name": "Premiership 26/27",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        },
+        {
+          "competition_name": "Scottish Premiership",
+          "competition_type": null,
+          "country": "Scotland",
+          "observation_count": 6,
+          "provider": "livescore_football",
+          "provider_competition_id": "735",
+          "seasons": [
+            {
+              "observation_count": 6,
+              "provider": "livescore_football",
+              "provider_season_id": "735::2026",
+              "season_name": "2026",
+              "start_years": [
+                2026
+              ]
+            }
+          ]
+        }
+      ],
+      "season_evidence": {
+        "provider_start_years": {
+          "bzzoiro": [
+            2026
+          ],
+          "livescore_football": [
+            2026
+          ]
+        },
+        "season_records": [
+          {
+            "observation_count": 18,
+            "provider": "bzzoiro",
+            "provider_season_id": "13::1355",
+            "season_name": "Premiership 26/27",
+            "start_years": [
+              2026
+            ]
+          },
+          {
+            "observation_count": 6,
+            "provider": "livescore_football",
+            "provider_season_id": "735::2026",
+            "season_name": "2026",
+            "start_years": [
+              2026
+            ]
+          }
+        ],
+        "shared_start_years": [
+          2026
+        ],
+        "status": "cross_provider_start_year_overlap"
+      },
+      "competition_type_evidence": {
+        "status": "unknown_not_supplied",
+        "values": []
+      },
+      "identity_status": "unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "review_disposition": "evidence_reviewed_not_approved",
+      "review_reason": "Independent provider observations and shared 2026 season-year evidence now corroborate this competition/country identity. Official governing-body 2026/27 competition and fixture information was reviewed (SPFL William Hill Premiership 2026/27 fixtures). Provider-specific competition and season IDs, exact scope and canonical target equivalence remain unverified; no canonical mapping or provider link is approved."
+    },
+    {
+      "review_order": 13,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_001",
       "display_names": [
@@ -1164,7 +1366,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 12,
+      "review_order": 14,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_002",
       "display_names": [
@@ -1231,7 +1433,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 13,
+      "review_order": 15,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_003",
       "display_names": [
@@ -1298,7 +1500,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 14,
+      "review_order": 16,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_004",
       "display_names": [
@@ -1359,68 +1561,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 15,
-      "priority": "B",
-      "catalogue_entry_id": "observed_competition_005",
-      "display_names": [
-        "Austrian Bundesliga"
-      ],
-      "countries": [
-        "Austria"
-      ],
-      "providers": [
-        "bzzoiro"
-      ],
-      "provider_count": 1,
-      "source_records": [
-        {
-          "competition_name": "Austrian Bundesliga",
-          "competition_type": null,
-          "country": "Austria",
-          "observation_count": 3,
-          "provider": "bzzoiro",
-          "provider_competition_id": "96",
-          "seasons": [
-            {
-              "observation_count": 3,
-              "provider": "bzzoiro",
-              "provider_season_id": "96::1999",
-              "season_name": "Bundesliga 26/27",
-              "start_years": []
-            }
-          ]
-        }
-      ],
-      "season_evidence": {
-        "provider_start_years": {
-          "bzzoiro": []
-        },
-        "season_records": [
-          {
-            "observation_count": 3,
-            "provider": "bzzoiro",
-            "provider_season_id": "96::1999",
-            "season_name": "Bundesliga 26/27",
-            "start_years": []
-          }
-        ],
-        "shared_start_years": [],
-        "status": "insufficient_provider_season_evidence"
-      },
-      "competition_type_evidence": {
-        "status": "unknown_not_supplied",
-        "values": []
-      },
-      "identity_status": "unverified",
-      "canonical_mapping_created": false,
-      "provider_links_created": false,
-      "fixture_ingestion_enabled": false,
-      "prediction_eligible": false,
-      "review_disposition": "held_single_provider",
-      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
-    },
-    {
-      "review_order": 16,
+      "review_order": 18,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_006",
       "display_names": [
@@ -1487,7 +1628,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 17,
+      "review_order": 19,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_007",
       "display_names": [
@@ -1548,7 +1689,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 18,
+      "review_order": 20,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_008",
       "display_names": [
@@ -1609,7 +1750,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 19,
+      "review_order": 21,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_009",
       "display_names": [
@@ -1676,7 +1817,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 20,
+      "review_order": 22,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_010",
       "display_names": [
@@ -1743,7 +1884,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 21,
+      "review_order": 23,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_011",
       "display_names": [
@@ -1810,7 +1951,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 22,
+      "review_order": 24,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_012",
       "display_names": [
@@ -1883,7 +2024,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 23,
+      "review_order": 25,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_013",
       "display_names": [
@@ -1944,7 +2085,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 24,
+      "review_order": 26,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_014",
       "display_names": [
@@ -2011,7 +2152,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 25,
+      "review_order": 27,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_015",
       "display_names": [
@@ -2078,7 +2219,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 26,
+      "review_order": 28,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_016",
       "display_names": [
@@ -2145,7 +2286,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 27,
+      "review_order": 29,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_017",
       "display_names": [
@@ -2206,7 +2347,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 28,
+      "review_order": 30,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_018",
       "display_names": [
@@ -2267,7 +2408,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 29,
+      "review_order": 31,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_019",
       "display_names": [
@@ -2334,7 +2475,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 30,
+      "review_order": 32,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_021",
       "display_names": [
@@ -2401,7 +2542,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 31,
+      "review_order": 33,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_022",
       "display_names": [
@@ -2468,7 +2609,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 32,
+      "review_order": 34,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_023",
       "display_names": [
@@ -2535,7 +2676,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 33,
+      "review_order": 35,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_024",
       "display_names": [
@@ -2602,7 +2743,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 34,
+      "review_order": 36,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_025",
       "display_names": [
@@ -2669,7 +2810,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 35,
+      "review_order": 37,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_026",
       "display_names": [
@@ -2736,7 +2877,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 36,
+      "review_order": 38,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_027",
       "display_names": [
@@ -2803,7 +2944,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 37,
+      "review_order": 39,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_028",
       "display_names": [
@@ -2870,7 +3011,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 38,
+      "review_order": 40,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_029",
       "display_names": [
@@ -2931,7 +3072,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 39,
+      "review_order": 41,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_030",
       "display_names": [
@@ -2992,7 +3133,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 40,
+      "review_order": 42,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_031",
       "display_names": [
@@ -3053,7 +3194,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 41,
+      "review_order": 43,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_033",
       "display_names": [
@@ -3120,7 +3261,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 42,
+      "review_order": 44,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_034",
       "display_names": [
@@ -3187,7 +3328,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 43,
+      "review_order": 45,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_035",
       "display_names": [
@@ -3254,7 +3395,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 44,
+      "review_order": 46,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_036",
       "display_names": [
@@ -3349,7 +3490,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 45,
+      "review_order": 47,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_037",
       "display_names": [
@@ -3410,7 +3551,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 46,
+      "review_order": 48,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_038",
       "display_names": [
@@ -3471,7 +3612,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 47,
+      "review_order": 49,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_039",
       "display_names": [
@@ -3538,7 +3679,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 48,
+      "review_order": 50,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_041",
       "display_names": [
@@ -3599,7 +3740,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 49,
+      "review_order": 51,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_042",
       "display_names": [
@@ -3660,7 +3801,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 50,
+      "review_order": 52,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_044",
       "display_names": [
@@ -3727,7 +3868,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 51,
+      "review_order": 53,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_046",
       "display_names": [
@@ -3794,7 +3935,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 52,
+      "review_order": 54,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_047",
       "display_names": [
@@ -3861,7 +4002,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 53,
+      "review_order": 55,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_048",
       "display_names": [
@@ -3922,7 +4063,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 54,
+      "review_order": 56,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_049",
       "display_names": [
@@ -3989,7 +4130,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 55,
+      "review_order": 57,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_051",
       "display_names": [
@@ -4050,7 +4191,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 56,
+      "review_order": 58,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_052",
       "display_names": [
@@ -4111,7 +4252,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 57,
+      "review_order": 59,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_053",
       "display_names": [
@@ -4172,7 +4313,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 58,
+      "review_order": 60,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_054",
       "display_names": [
@@ -4233,7 +4374,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 59,
+      "review_order": 61,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_055",
       "display_names": [
@@ -4294,7 +4435,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 60,
+      "review_order": 62,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_056",
       "display_names": [
@@ -4361,7 +4502,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 61,
+      "review_order": 63,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_057",
       "display_names": [
@@ -4428,7 +4569,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 62,
+      "review_order": 64,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_058",
       "display_names": [
@@ -4495,7 +4636,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 63,
+      "review_order": 65,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_059",
       "display_names": [
@@ -4556,7 +4697,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 64,
+      "review_order": 66,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_061",
       "display_names": [
@@ -4617,7 +4758,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 65,
+      "review_order": 67,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_062",
       "display_names": [
@@ -4678,7 +4819,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 66,
+      "review_order": 68,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_063",
       "display_names": [
@@ -4745,7 +4886,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 67,
+      "review_order": 69,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_064",
       "display_names": [
@@ -4812,7 +4953,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 68,
+      "review_order": 70,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_065",
       "display_names": [
@@ -4873,7 +5014,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 69,
+      "review_order": 71,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_066",
       "display_names": [
@@ -4934,7 +5075,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 70,
+      "review_order": 72,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_067",
       "display_names": [
@@ -4995,7 +5136,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 71,
+      "review_order": 73,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_068",
       "display_names": [
@@ -5056,7 +5197,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 72,
+      "review_order": 74,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_069",
       "display_names": [
@@ -5123,7 +5264,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 73,
+      "review_order": 75,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_070",
       "display_names": [
@@ -5184,7 +5325,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 74,
+      "review_order": 76,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_071",
       "display_names": [
@@ -5245,68 +5386,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 75,
-      "priority": "B",
-      "catalogue_entry_id": "observed_competition_073",
-      "display_names": [
-        "Scottish Premiership"
-      ],
-      "countries": [
-        "Scotland"
-      ],
-      "providers": [
-        "bzzoiro"
-      ],
-      "provider_count": 1,
-      "source_records": [
-        {
-          "competition_name": "Scottish Premiership",
-          "competition_type": null,
-          "country": "Scotland",
-          "observation_count": 6,
-          "provider": "bzzoiro",
-          "provider_competition_id": "13",
-          "seasons": [
-            {
-              "observation_count": 6,
-              "provider": "bzzoiro",
-              "provider_season_id": "13::1355",
-              "season_name": "Premiership 26/27",
-              "start_years": []
-            }
-          ]
-        }
-      ],
-      "season_evidence": {
-        "provider_start_years": {
-          "bzzoiro": []
-        },
-        "season_records": [
-          {
-            "observation_count": 6,
-            "provider": "bzzoiro",
-            "provider_season_id": "13::1355",
-            "season_name": "Premiership 26/27",
-            "start_years": []
-          }
-        ],
-        "shared_start_years": [],
-        "status": "insufficient_provider_season_evidence"
-      },
-      "competition_type_evidence": {
-        "status": "unknown_not_supplied",
-        "values": []
-      },
-      "identity_status": "unverified",
-      "canonical_mapping_created": false,
-      "provider_links_created": false,
-      "fixture_ingestion_enabled": false,
-      "prediction_eligible": false,
-      "review_disposition": "held_single_provider",
-      "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
-    },
-    {
-      "review_order": 76,
+      "review_order": 78,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_074",
       "display_names": [
@@ -5367,7 +5447,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 77,
+      "review_order": 79,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_075",
       "display_names": [
@@ -5434,7 +5514,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 78,
+      "review_order": 80,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_076",
       "display_names": [
@@ -5501,7 +5581,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 79,
+      "review_order": 81,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_077",
       "display_names": [
@@ -5562,7 +5642,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 80,
+      "review_order": 82,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_079",
       "display_names": [
@@ -5629,7 +5709,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 81,
+      "review_order": 83,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_080",
       "display_names": [
@@ -5690,7 +5770,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 82,
+      "review_order": 84,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_081",
       "display_names": [
@@ -5763,7 +5843,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 83,
+      "review_order": 85,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_082",
       "display_names": [
@@ -5824,7 +5904,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 84,
+      "review_order": 86,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_083",
       "display_names": [
@@ -5891,7 +5971,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 85,
+      "review_order": 87,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_084",
       "display_names": [
@@ -5958,7 +6038,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 86,
+      "review_order": 88,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_085",
       "display_names": [
@@ -6025,7 +6105,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 87,
+      "review_order": 89,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_086",
       "display_names": [
@@ -6092,7 +6172,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 88,
+      "review_order": 90,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_087",
       "display_names": [
@@ -6159,7 +6239,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 89,
+      "review_order": 91,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_088",
       "display_names": [
@@ -6226,7 +6306,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 90,
+      "review_order": 92,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_089",
       "display_names": [
@@ -6293,7 +6373,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 91,
+      "review_order": 93,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_090",
       "display_names": [
@@ -6354,7 +6434,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 92,
+      "review_order": 94,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_091",
       "display_names": [
@@ -6415,7 +6495,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 93,
+      "review_order": 95,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_092",
       "display_names": [
@@ -6476,7 +6556,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 94,
+      "review_order": 96,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_093",
       "display_names": [
@@ -6537,7 +6617,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 95,
+      "review_order": 97,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_095",
       "display_names": [
@@ -6604,7 +6684,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 96,
+      "review_order": 98,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_096",
       "display_names": [
@@ -6671,7 +6751,7 @@
       "review_reason": "Only one provider contributes this exact competition-name/country identity in the approved intake snapshot. Without independent corroboration, competition scope and canonical identity remain unverified; retain the source-scoped record without canonical or provider-link writes."
     },
     {
-      "review_order": 97,
+      "review_order": 99,
       "priority": "B",
       "catalogue_entry_id": "observed_competition_097",
       "display_names": [
@@ -6739,18 +6819,18 @@
     }
   ],
   "priority_counts": {
-    "A": 10,
-    "B": 87,
+    "A": 12,
+    "B": 85,
     "C": 0
   },
   "disposition_summary": {
-    "generated_at_utc": "2026-11-14T15:59:00Z",
+    "generated_at_utc": "2026-11-15T12:30:00Z",
     "priority_a": {
-      "count": 10,
-      "disposition": "evidence_reviewed_not_approved"
+      "count": 12,
+      "disposition": "cross_provider_and_official_evidence_reviewed_not_approved"
     },
     "priority_b": {
-      "count": 87,
+      "count": 85,
       "disposition": "held_single_provider"
     },
     "priority_c": {
