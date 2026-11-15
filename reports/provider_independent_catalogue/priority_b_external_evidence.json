@@ -1,6 +1,6 @@
 {
   "report_name": "priority_b_external_identity_evidence",
-  "generated_at": "2026-11-15T17:37:31.177Z",
+  "generated_at": "2026-11-15T17:39:49.794Z",
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
   "scope": "Priority B single-provider competition identities; official evidence can support competition type, country and season context but does not replace independent provider corroboration or human canonical approval.",
   "safeguards": [
@@ -3306,6 +3306,266 @@
         "Obtain broader provider roster and fixture samples where possible.",
         "Verify provider-specific season boundaries and exact season ID semantics.",
         "Compare exact fixture pairs and kickoff timestamps before proposing cross-provider links."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_090",
+      "name": "Super League",
+      "observed_country": "Switzerland",
+      "provider": "bzzoiro",
+      "provider_competition_id": "15",
+      "provider_season_id": "15::1395",
+      "provider_season_label": "Super League 26/27",
+      "raw_observation_count": 3,
+      "external_competition_type": "men's top-tier domestic professional league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 12,
+        "competition": "Brack Super League"
+      },
+      "external_evidence": [
+        {
+          "publisher": "Swiss Football League",
+          "url": "https://matchcenter-sfl.football.ch/default.aspx?a=mgr&ln=11011&lng=1&ls=25694&oid=2&s=2027&sg=0",
+          "supports": "Official 2026/27 Brack Super League match centre and 12-club phase-one group composition."
+        },
+        {
+          "publisher": "Swiss Football League",
+          "url": "https://matchcenter-sfl.football.ch/",
+          "supports": "Official match centre distinguishes Brack Super League from the second-tier dieci Challenge League."
+        }
+      ],
+      "assessment": "Swiss Football League's official 2026/27 match centre identifies the Brack Super League and lists 12 clubs in the top division. The three Bzzoiro observations are insufficient to verify full roster coverage, the detailed season format or provider season-ID semantics.",
+      "review_status": "external_identity_supported_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples where possible.",
+        "Verify provider-specific season boundaries and exact season ID semantics.",
+        "Compare exact fixture pairs and kickoff timestamps before proposing cross-provider links."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_091",
+      "name": "Tunisian Ligue Professionnelle 1",
+      "observed_country": "Tunisia",
+      "provider": "bzzoiro",
+      "provider_competition_id": "47",
+      "provider_season_id": "47::1634",
+      "provider_season_label": "Ligue 1 26/27",
+      "raw_observation_count": 12,
+      "external_competition_type": "men's top-tier domestic professional league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "tier": "Ligue I Professionnelle; single national top division",
+        "last_officially_verified_season": "2025/26",
+        "clubs_in_last_verified_format": 16
+      },
+      "external_evidence": [
+        {
+          "publisher": "Fédération Tunisienne de Football",
+          "url": "https://www.ftf.org.tn/fr/wp-content/uploads/2025/08/REGLEMENTS-GENERAUX-Juillet2025-1.pdf",
+          "supports": "Official FTF regulations define Ligue I Professionnelle as the top professional division and specify 16 clubs in a single group for 2025/26."
+        }
+      ],
+      "assessment": "The Tunisian Football Federation's published regulations identify Ligue I Professionnelle as the country's top professional division and document a 16-club single-poule home-and-away format for 2025/26. A reliable official 2026/27 format announcement was not located in this review. Bzzoiro's 12 observations and provider label alone do not prove that the 2025/26 structure carried forward or validate season ID 47::1634.",
+      "review_status": "competition_identity_supported_2026_27_scope_not_fully_verified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples where possible.",
+        "Verify provider-specific season boundaries and exact season ID semantics.",
+        "Compare exact fixture pairs and kickoff timestamps before proposing cross-provider links."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_092",
+      "name": "Trendyol 1. Lig",
+      "observed_country": "Turkey",
+      "provider": "bzzoiro",
+      "provider_competition_id": "107",
+      "provider_season_id": "107::2201",
+      "provider_season_label": "1. Lig 26/27",
+      "raw_observation_count": 7,
+      "external_competition_type": "men's second-tier domestic professional league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 20,
+        "rounds": 38,
+        "regular_season_matches": 380
+      },
+      "external_evidence": [
+        {
+          "publisher": "Türkiye Futbol Federasyonu",
+          "url": "https://www.tff.org/default.aspx?pageID=142",
+          "supports": "Official 2026/27 Trendyol 1. Lig table and fixture schedule with 20 clubs and 38 rounds."
+        },
+        {
+          "publisher": "TFF",
+          "url": "https://www.tff.org/Default.aspx?ftxtId=50517&pageId=200",
+          "supports": "Official 2026/27 professional league season planning."
+        }
+      ],
+      "assessment": "TFF's official 2026/27 Trendyol 1. Lig schedule shows 20 clubs and rounds 1–38. Bzzoiro's seven observations do not establish complete roster coverage or season-ID semantics.",
+      "review_status": "external_identity_supported_single_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples where possible.",
+        "Verify provider-specific season boundaries and exact season ID semantics.",
+        "Compare exact fixture pairs and kickoff timestamps before proposing cross-provider links."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_093",
+      "name": "Trendyol Super Lig",
+      "observed_country": "Turkey",
+      "provider": "bzzoiro",
+      "provider_competition_id": "11",
+      "provider_season_id": "11::1539",
+      "provider_season_label": "Super Lig 26/27",
+      "raw_observation_count": 4,
+      "external_competition_type": "men's top-tier domestic professional league",
+      "external_season": "2026/27",
+      "official_scope": {
+        "clubs": 18,
+        "rounds": 34,
+        "regular_season_matches": 306
+      },
+      "external_evidence": [
+        {
+          "publisher": "Türkiye Futbol Federasyonu",
+          "url": "https://www.tff.org/Resources/TFF/Documents/STATULER/2026-2027/2026-2027-sezonu-super-lig-musabakalari-statusu.pdf",
+          "supports": "Official 2026/27 Süper Lig regulations specify 18 clubs and a double round-robin format."
+        },
+        {
+          "publisher": "TFF",
+          "url": "https://www.tff.org/Default.aspx?hafta=27&macId=318081&pageId=198",
+          "supports": "Official 2026/27 fixture list and standings."
+        }
+      ],
+      "assessment": "TFF's official 2026/27 Süper Lig regulations specify 18 clubs playing a double round-robin, with 34 rounds. Bzzoiro's four observations do not establish full roster coverage or provider season-ID semantics.",
+      "review_status": "external_identity_supported_single_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples where possible.",
+        "Verify provider-specific season boundaries and exact season ID semantics.",
+        "Compare exact fixture pairs and kickoff timestamps before proposing cross-provider links."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_095",
+      "name": "NWSL",
+      "observed_country": "USA",
+      "provider": "bzzoiro",
+      "provider_competition_id": "72",
+      "provider_season_id": "72::1540",
+      "provider_season_label": "National Womens Soccer League 2026",
+      "raw_observation_count": 6,
+      "external_competition_type": "women's top-tier domestic professional league",
+      "external_season": "2026 calendar year",
+      "official_scope": {
+        "clubs": 16,
+        "regular_season_matches_per_club": 30,
+        "playoff_qualifiers": 8,
+        "format": "Single table; single-elimination playoffs"
+      },
+      "external_evidence": [
+        {
+          "publisher": "National Women's Soccer League",
+          "url": "https://images.nwslsoccer.com/image/private/t_q-good/prd/tstudhfledlk7z8ygtzd.pdf",
+          "supports": "Official 2026 Competition Rules list all 16 clubs, 30 regular-season games per club and the playoff format."
+        }
+      ],
+      "assessment": "NWSL's official 2026 Competition Rules identify 16 teams, a 30-game regular season per club and an eight-team single-elimination playoff. Bzzoiro's six observations do not establish full roster coverage or provider season-ID semantics.",
+      "review_status": "external_identity_supported_single_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples where possible.",
+        "Verify provider-specific season boundaries and exact season ID semantics.",
+        "Compare exact fixture pairs and kickoff timestamps before proposing cross-provider links."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_096",
+      "name": "USL Championship",
+      "observed_country": "USA",
+      "provider": "bzzoiro",
+      "provider_competition_id": "57",
+      "provider_season_id": "57::1435",
+      "provider_season_label": "USL Championship 2026",
+      "raw_observation_count": 6,
+      "external_competition_type": "men's second-tier professional league",
+      "external_season": "2026 calendar year",
+      "official_scope": {
+        "clubs": 25,
+        "regular_season_matches_per_club": 30,
+        "playoff_qualifiers": 16,
+        "format": "Two conferences; single-elimination playoffs"
+      },
+      "external_evidence": [
+        {
+          "publisher": "USL Championship",
+          "url": "https://www.uslchampionship.com/news_article/show/1351433",
+          "supports": "Official 2026 competition format, 25 clubs, 30-game schedule and 16 playoff places."
+        }
+      ],
+      "assessment": "USL Championship's official 2026 competition-format announcement lists 25 clubs across two conferences and a 30-game regular season per club, with the top eight in each conference qualifying for playoffs. Bzzoiro's six observations do not establish full roster coverage or provider season-ID semantics.",
+      "review_status": "external_identity_supported_single_provider_scope_and_season_id_unverified",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Obtain broader provider roster and fixture samples where possible.",
+        "Verify provider-specific season boundaries and exact season ID semantics.",
+        "Compare exact fixture pairs and kickoff timestamps before proposing cross-provider links."
+      ]
+    },
+    {
+      "catalogue_entry_id": "observed_competition_097",
+      "name": "Club Friendlies",
+      "observed_country": "World",
+      "provider": "bzzoiro",
+      "provider_competition_id": "79",
+      "provider_season_id": "79::1552",
+      "provider_season_label": "Club Friendly Games 2026",
+      "raw_observation_count": 77,
+      "external_competition_type": "fixture category / exhibition-match classification, not a league or cup",
+      "external_season": "2026 calendar year",
+      "official_scope": {
+        "category": "non-competitive club friendly matches",
+        "standings": null,
+        "champion": null
+      },
+      "external_evidence": [
+        {
+          "publisher": "FIFA",
+          "url": "https://www.fifa.com/technical/football-technology/football-regulations",
+          "supports": "FIFA regulations distinguish friendly matches from official competition fixtures; this source supports the classification distinction, not the provider's individual event IDs."
+        }
+      ],
+      "assessment": "Club Friendlies is a broad fixture category covering exhibition matches between clubs, not one organized league or cup with a shared roster, table or season champion. The 77 observations may span many independent friendlies. Preserve as a provider event-type classification; do not create a canonical competition or season identity from this row.",
+      "review_status": "reclassify_as_fixture_category_not_canonical_competition",
+      "canonical_mapping_created": false,
+      "provider_links_created": false,
+      "fixture_ingestion_enabled": false,
+      "prediction_eligible": false,
+      "remaining_evidence": [
+        "Inspect individual observations and classify friendly fixtures by match type and teams rather than treating the aggregate provider ID as a competition.",
+        "Keep the source provider classification only; no canonical league/season mapping is appropriate."
       ]
     }
   ]
