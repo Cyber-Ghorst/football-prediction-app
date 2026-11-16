@@ -1,0 +1,103 @@
+import unittest
+
+from provider_official_team_scope_audit import (
+    OFFICIAL_COMPETITIONS,
+    build_official_team_scope_audit,
+)
+
+
+class OfficialTeamScopeAuditTests(unittest.TestCase):
+    def test_official_lists_cover_five_2026_27_top_flights(self):
+        self.assertEqual(
+            {key: len(value["teams"]) for key, value in OFFICIAL_COMPETITIONS.items()},
+            {
+                "premier_league": 20,
+                "laliga": 20,
+                "serie_a": 20,
+                "bundesliga": 18,
+                "ligue1": 18,
+            },
+        )
+
+    def test_highlightly_complete_standings_produce_senior_first_team_review_candidate(self):
+        report = build_official_team_scope_audit([{
+            "provider": "highlightly",
+            "provider_entity_id": "134391",
+            "name": "Bayern Munich",
+            "raw_payload": {
+                "season_label": "2026",
+                "competition_provider_ids": ["67162"],
+                "source_endpoint": "standings",
+                "source_retrieved_at": "2026-11-16T13:00:00+00:00",
+                "team_evidence_method": "league_season_standings",
+                "roster_observation_complete": True,
+            },
+        }])
+        candidate = report["candidates"][0]
+        self.assertEqual(candidate["official_team_name"], "FC Bayern München")
+        self.assertEqual(candidate["status"], "candidate_review_complete_standings")
+        self.assertEqual(candidate["scope_candidate"], {
+            "team_type": "club",
+            "gender_scope": "male",
+            "age_group": "senior",
+            "squad_scope": "first_team",
+        })
+        self.assertFalse(candidate["promotion_allowed"])
+        self.assertEqual(report["canonical_ids_assigned"], 0)
+        self.assertEqual(report["provider_links_created"], 0)
+
+    def test_livescore_reviewed_alias_remains_incomplete_participant_evidence(self):
+        report = build_official_team_scope_audit([{
+            "provider": "livescore_football",
+            "provider_entity_id": "122",
+            "name": "FC Cologne",
+            "raw_payload": {
+                "season_label": "2026",
+                "competition_provider_ids": ["ger.1"],
+                "source_endpoint": "fixtures",
+                "source_retrieved_at": "2026-11-16T13:00:00+00:00",
+                "team_evidence_method": "season_window_fixture_participants",
+                "team_evidence_complete": False,
+            },
+        }])
+        candidate = report["candidates"][0]
+        self.assertEqual(candidate["official_team_name"], "1. FC Köln")
+        self.assertEqual(candidate["name_match_method"], "reviewed_official_name_alias")
+        self.assertEqual(
+            candidate["status"],
+            "candidate_review_incomplete_or_participant_evidence",
+        )
+        self.assertFalse(candidate["provider_roster_observation_complete"])
+
+    def test_missing_and_wrong_season_are_held(self):
+        report = build_official_team_scope_audit([
+            {
+                "provider": "highlightly", "provider_entity_id": "1", "name": "Bayern Munich",
+                "raw_payload": {"competition_provider_ids": ["67162"]},
+            },
+            {
+                "provider": "highlightly", "provider_entity_id": "2", "name": "Bayern Munich",
+                "raw_payload": {"season_label": "2024", "competition_provider_ids": ["67162"]},
+            },
+        ])
+        self.assertEqual(
+            [row["status"] for row in report["candidates"]],
+            ["held_missing_explicit_2026_27_season", "held_wrong_season"],
+        )
+        self.assertTrue(all(row["scope_candidate"] is None for row in report["candidates"]))
+
+    def test_unmatched_official_name_is_held(self):
+        report = build_official_team_scope_audit([{
+            "provider": "highlightly", "provider_entity_id": "999", "name": "Unknown FC",
+            "raw_payload": {
+                "season_label": "2026", "competition_provider_ids": ["67162"],
+                "team_evidence_method": "league_season_standings",
+                "roster_observation_complete": True,
+            },
+        }])
+        self.assertEqual(report["candidates"][0]["status"], "held_official_team_name_unmatched")
+        self.assertIsNone(report["candidates"][0]["scope_candidate"])
+
+
+if __name__ == "__main__":
+    unittest.main()
