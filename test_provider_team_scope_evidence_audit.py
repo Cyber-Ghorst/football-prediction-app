@@ -31,6 +31,33 @@ class ProviderTeamScopeEvidenceAuditTests(unittest.TestCase):
         self.assertEqual(result["structured_scope_fields"], {"country": "England", "team_type": "club"})
         self.assertIn("no team scope was inferred or approved", result["interpretation"])
 
+    def test_provider_country_id_and_nationality_remain_separate_raw_evidence(self):
+        result = extract_team_scope_evidence({
+            "provider": "sportmonks",
+            "provider_entity_id": "99",
+            "raw_payload": {
+                "raw_payload": {
+                    "country_id": 320,
+                    "nationality": "England",
+                    "national": False,
+                }
+            },
+        })
+        evidence = result["raw_provider_scope_candidates"]
+        self.assertIn(
+            {"field": "country_id", "path": "raw_payload.raw_payload.country_id", "value": 320},
+            evidence,
+        )
+        self.assertIn(
+            {"field": "nationality", "path": "raw_payload.raw_payload.nationality", "value": "England"},
+            evidence,
+        )
+        self.assertIn(
+            {"field": "team_type", "path": "raw_payload.raw_payload.national", "value": False},
+            evidence,
+        )
+        self.assertNotIn("country", result["structured_scope_fields"])
+
     def test_false_boolean_is_preserved_as_explicit_evidence(self):
         result = extract_team_scope_evidence({
             "provider": "api_football",
