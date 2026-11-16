@@ -32,13 +32,15 @@ def _date_value(value: Any) -> str | None:
 def build_identity_candidate_report(
     rows: list[Mapping[str, Any]],
     approved_parent_links: Mapping[tuple[str, str], str] | None = None,
+    approved_team_scope_corroborations: Mapping[tuple[str, str], Mapping[str, Any]] | None = None,
 ) -> dict[str, Any]:
-    """Create candidate keys only where every required identity dimension exists."""
+    """Create candidate keys using source and approved corroborated scope evidence."""
     competition_candidates = []
     seasons = []
     teams = []
     key_groups: dict[str, list[dict[str, str]]] = defaultdict(list)
     approved_parents = dict(approved_parent_links or {})
+    approved_team_scope = dict(approved_team_scope_corroborations or {})
 
     for row in rows:
         provider = str(row.get("provider") or "").strip().casefold()
@@ -135,23 +137,45 @@ def build_identity_candidate_report(
 
         elif entity_type == "team":
             required = ("name", "country", "team_type", "gender_scope", "age_group", "squad_scope")
-            missing = _missing(row, required)
+            effective_row = dict(row)
+            source_missing = _missing(row, required)
+            corroboration = approved_team_scope.get((provider, provider_id), {})
+            corroborated_dimensions = []
+            # Approved corroborations may fill only absent source dimensions.
+            # They never overwrite provider-native values and cannot supply
+            # age-group or squad scope, which remain independently required.
+            for field in ("country", "team_type", "gender_scope"):
+                if str(effective_row.get(field) or "").strip():
+                    continue
+                value = str(corroboration.get(field) or "").strip()
+                if value:
+                    effective_row[field] = value
+                    corroborated_dimensions.append(field)
+            missing = _missing(effective_row, required)
+            evidence_fields = {
+                "source_missing_dimensions": source_missing,
+                "corroborated_dimensions": sorted(corroborated_dimensions),
+                "identity_key_candidate": None,
+            }
+            if corroborated_dimensions:
+                evidence_fields["scope_evidence_source"] = "provider_team_scope_corroborations"
             if missing:
                 result = {
-                    **base, "status": "held_missing_team_scope",
-                    "missing_dimensions": missing, "identity_key_candidate": None,
+                    **base, **evidence_fields, "status": "held_missing_team_scope",
+                    "missing_dimensions": missing,
                 }
             else:
                 try:
                     key = canonical_team_key(
-                        row.get("name"), row.get("country"), row.get("team_type"),
-                        row.get("gender_scope"), row.get("age_group"), row.get("squad_scope"),
+                        effective_row.get("name"), effective_row.get("country"),
+                        effective_row.get("team_type"), effective_row.get("gender_scope"),
+                        effective_row.get("age_group"), effective_row.get("squad_scope"),
                     )
                 except ValueError as exc:
-                    result = {**base, "status": "held_invalid_team_scope",
-                              "reason": str(exc), "identity_key_candidate": None}
+                    result = {**base, **evidence_fields, "status": "held_invalid_team_scope",
+                              "reason": str(exc)}
                 else:
-                    result = {**base, "status": "single_source_identity_candidate",
+                    result = {**base, **evidence_fields, "status": "single_source_identity_candidate",
                               "missing_dimensions": [], "identity_key_candidate": key}
             teams.append(result)
 
@@ -205,6 +229,9 @@ def build_identity_candidate_report(
                 row.get("season_date_range_status") == "incomplete" for row in seasons
             ),
             "team_source_rows": len(teams),
+            "teams_with_approved_scope_corroboration": sum(
+                bool(row.get("corroborated_dimensions")) for row in teams
+            ),
             "teams_held_for_scope_evidence": sum(
                 row.get("status") != "single_source_identity_candidate" for row in teams
             ),
@@ -257,8 +284,39 @@ def audit_provider_neutral_identity_candidates(database_url: str) -> dict[str, A
                 (str(provider).casefold(), str(provider_id)): str(canonical_id)
                 for provider, provider_id, canonical_id in cursor.fetchall()
             }
-    report = build_identity_candidate_report(rows, approved_parent_links)
+            cursor.execute(
+                """SELECT provider, provider_entity_id, country_name, team_type, gender_scope
+                   FROM provider_team_scope_corroborations
+                   WHERE LENGTH(BTRIM(approval_reason)) >= 12
+                   ORDER BY provider, provider_entity_id, corroborating_provider,
+                            corroborating_entity_id, competition_provider_id"""
+            )
+            corroboration_rows = cursor.fetchall()
+    corroboration_values: dict[tuple[str, str], set[tuple[str, str, str]]] = defaultdict(set)
+    for provider, provider_id, country_name, team_type, gender_scope in corroboration_rows:
+        corroboration_values[(str(provider).casefold(), str(provider_id))].add(
+            (str(country_name or "").strip(), str(team_type or "").strip(),
+             str(gender_scope or "").strip())
+        )
+    approved_team_scope_corroborations = {
+        key: {"country": values[0], "team_type": values[1], "gender_scope": values[2]}
+        for key, records in corroboration_values.items()
+        if len(records) == 1
+        for values in [next(iter(records))]
+        if all(values)
+    }
+    conflicting_team_scope_corroborations = [
+        {"provider": key[0], "provider_entity_id": key[1], "record_count": len(records)}
+        for key, records in corroboration_values.items() if len(records) > 1
+    ]
+    report = build_identity_candidate_report(
+        rows, approved_parent_links, approved_team_scope_corroborations
+    )
     report["approved_parent_competition_links_read"] = len(approved_parent_links)
+    report["approved_team_scope_corroborations_read"] = sum(
+        len(records) for records in corroboration_values.values()
+    )
+    report["team_scope_corroboration_conflicts"] = conflicting_team_scope_corroborations
     report["database_read_only"] = True
     report["source_rows_read"] = len(rows)
     report["database_writes"] = False
