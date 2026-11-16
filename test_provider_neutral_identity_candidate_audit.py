@@ -186,6 +186,51 @@ class ProviderNeutralIdentityCandidateAuditTests(unittest.TestCase):
         self.assertEqual(season["season_date_range_status"], "complete")
         self.assertEqual(report["summary"]["seasons_with_complete_date_range"], 1)
 
+    def test_official_2026_27_calendar_fills_missing_dates_in_candidate_view_only(self):
+        report = build_identity_candidate_report([
+            {"provider": "api_ninjas", "entity_type": "season",
+             "provider_entity_id": "epl:2026", "name": "2026/27",
+             "season_label": "2026/27", "parent_competition_provider_id": "epl"},
+            {"provider": "highlightly", "entity_type": "season",
+             "provider_entity_id": "67162:2026", "name": "2026",
+             "season_label": "2026", "parent_competition_provider_id": "67162"},
+        ])
+        for season in report["season_candidates"]:
+            self.assertEqual(season["start_date"], "2026-08-28" if season["provider"] == "highlightly" else "2026-08-21")
+            self.assertEqual(season["end_date"], "2027-05-22" if season["provider"] == "highlightly" else "2027-05-30")
+            self.assertEqual(season["season_date_range_status"], "complete")
+            self.assertEqual(season["season_date_evidence_source"], "official_competition_calendar")
+            self.assertEqual(season["season_date_evidence_season_label"], "2026/27")
+            self.assertEqual(set(season["season_date_source_missing_dimensions"]), {"start_date", "end_date"})
+            self.assertTrue(season["season_date_official_reference_urls"])
+            self.assertEqual(season["status"], "held_until_parent_competition_is_approved")
+        self.assertEqual(report["summary"]["seasons_with_complete_date_range"], 2)
+        self.assertEqual(report["summary"]["seasons_held_for_parent_approval"], 2)
+
+    def test_provider_native_season_dates_are_never_overwritten(self):
+        report = build_identity_candidate_report([{
+            "provider": "highlightly", "entity_type": "season",
+            "provider_entity_id": "67162:2026", "name": "2026",
+            "season_label": "2026", "parent_competition_provider_id": "67162",
+            "start_date": "2026-08-29",
+        }])
+        season = report["season_candidates"][0]
+        self.assertEqual(season["start_date"], "2026-08-29")
+        self.assertEqual(season["end_date"], "2027-05-22")
+        self.assertEqual(season["season_date_source_missing_dimensions"], ["end_date"])
+
+    def test_historical_season_does_not_receive_current_official_dates(self):
+        report = build_identity_candidate_report([{
+            "provider": "api_football", "entity_type": "season",
+            "provider_entity_id": "39:2024", "name": "2024",
+            "season_label": "2024", "parent_competition_provider_id": "39",
+        }])
+        season = report["season_candidates"][0]
+        self.assertIsNone(season["start_date"])
+        self.assertIsNone(season["end_date"])
+        self.assertEqual(season["season_date_range_status"], "incomplete")
+        self.assertNotIn("season_date_evidence_source", season)
+
     def test_season_key_candidate_is_released_only_for_approved_parent(self):
         rows = [
             {"provider": "api_football", "entity_type": "season",
