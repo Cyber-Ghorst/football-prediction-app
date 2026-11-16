@@ -1,6 +1,9 @@
 import unittest
 
-from livescore_team_scope_metadata_audit import (\n    build_scope_report, build_api_football_country_candidates, _competition_slugs,\n    collect_season_standings_observations,\n)
+from livescore_team_scope_metadata_audit import (
+    build_scope_report, build_api_football_country_candidates, _competition_slugs,
+    collect_season_standings_observations,
+)
 
 
 class LiveScoreTeamScopeMetadataAuditTests(unittest.TestCase):
