@@ -56,6 +56,105 @@ def _competition_ids(raw_payload: Any, provider: str) -> set[str]:
     return {str(value).strip() for value in values if str(value or "").strip()}
 
 
+def _api_ninjas_scope_rows(
+    api_rows: list[Mapping[str, Any]],
+) -> tuple[dict[str, list[Mapping[str, Any]]], dict[str, int]]:
+    """Join seasonless scope metadata to standings only by exact provider ID and competition."""
+    catalogues: dict[tuple[str, str], list[Mapping[str, Any]]] = defaultdict(list)
+    standings: dict[tuple[str, str], list[Mapping[str, Any]]] = defaultdict(list)
+    for row in api_rows:
+        raw = _mapping(row.get("raw_payload"))
+        if raw.get("team_evidence_method") == "season_scoped_standings_row":
+            key = (
+                str(raw.get("competition_provider_id") or "").strip(),
+                str(raw.get("provider_team_id") or "").strip(),
+            )
+            if all(key):
+                standings[key].append(row)
+            continue
+        provider_id = str(row.get("provider_entity_id") or "").strip()
+        if not provider_id:
+            continue
+        for competition in _competition_ids(raw, "api_ninjas"):
+            catalogues[(competition, provider_id)].append(row)
+
+    by_competition: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
+    counts = {
+        "catalogue_scope_rows": len(catalogues),
+        "season_standings_rows": sum(len(items) for items in standings.values()),
+        "joined_verified": 0,
+        "missing_standings": 0,
+        "ambiguous_catalogue": 0,
+        "ambiguous_standings": 0,
+        "mismatched_identity_or_scope": 0,
+        "invalid_season_evidence": 0,
+    }
+    counts["orphan_standings"] = sum(
+        len(items) for key, items in standings.items() if key not in catalogues
+    )
+    for (competition, provider_team_id), catalogue_matches in sorted(catalogues.items()):
+        if len(catalogue_matches) != 1:
+            counts["ambiguous_catalogue"] += 1
+            continue
+        catalogue = catalogue_matches[0]
+        catalogue_raw = _mapping(catalogue.get("raw_payload"))
+        season_matches = standings.get((competition, provider_team_id), [])
+        joined = None
+        join_status = "missing_standings"
+        if not season_matches:
+            counts["missing_standings"] += 1
+        elif len(season_matches) != 1:
+            join_status = "ambiguous_standings"
+            counts["ambiguous_standings"] += 1
+        else:
+            season_row = season_matches[0]
+            season_raw = _mapping(season_row.get("raw_payload"))
+            returned_season = season_raw.get("provider_returned_season")
+            returned_label = str(season_raw.get("provider_returned_season_label") or "").strip()
+            normalized_label = explicit_season_label({"season_label": returned_label})
+            checks = {
+                "provider_team_id_matches": str(season_raw.get("provider_team_id") or "").strip() == provider_team_id,
+                "competition_matches": str(season_raw.get("competition_provider_id") or "").strip() == competition,
+                "provider_returned_league_matches": str(season_raw.get("provider_returned_league") or "").strip().casefold() == competition.casefold(),
+                "persisted_team_key_matches": str(season_row.get("provider_entity_id") or "").strip() == f"{competition}:{provider_team_id}",
+                "season_provider_key_matches": str(season_raw.get("season_provider_id") or "").strip() == f"{competition}:2026",
+                "team_name_matches": normalize_entity_name(season_row.get("name")) == normalize_entity_name(catalogue.get("name")),
+                "evidence_method_matches": season_raw.get("team_evidence_method") == "season_scoped_standings_row",
+                "season_year_is_2026": not isinstance(returned_season, bool) and isinstance(returned_season, int) and returned_season == 2026,
+                "season_label_is_2026_27": returned_label in {"2026-27", "2026/27"} and normalized_label == "2026/27",
+            }
+            if all(checks.values()):
+                joined = season_row
+                join_status = "verified"
+                counts["joined_verified"] += 1
+            else:
+                join_status = "invalid_season_evidence" if (
+                    not checks["season_year_is_2026"] or not checks["season_label_is_2026_27"]
+                ) else "mismatched_identity_or_scope"
+                counts[join_status] += 1
+
+        merged = dict(catalogue)
+        merged_raw = dict(catalogue_raw)
+        # A seasonless club catalogue must never contribute an old/stale
+        # season label. Only a validated standings join may add season_label.
+        for season_key in (
+            "season_label", "season_name", "catalogue_season_label",
+            "catalogue_reference_season", "season_year", "season",
+        ):
+            merged_raw.pop(season_key, None)
+        merged_raw["domestic_league_codes"] = [competition]
+        merged_raw["season_evidence_join_status"] = join_status
+        if joined is not None:
+            season_raw = dict(_mapping(joined.get("raw_payload")))
+            merged_raw["season_label"] = "2026/27"
+            merged_raw["season_standings_provider_entity_id"] = str(joined.get("provider_entity_id") or "")
+            merged_raw["season_standings_evidence"] = season_raw
+        merged_raw["catalogue_scope_evidence"] = dict(catalogue_raw)
+        merged["raw_payload"] = merged_raw
+        by_competition[competition].append(merged)
+    return by_competition, counts
+
+
 def build_corroboration_report(
     rows: list[Mapping[str, Any]],
     approved_corroborations: list[Mapping[str, Any]] | None = None,
@@ -66,10 +165,7 @@ def build_corroboration_report(
         row for row in rows
         if str(row.get("provider") or "").casefold() in {"api_football", "highlightly", "livescore_football"}
     ]
-    api_by_comp: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
-    for row in api_rows:
-        for competition in _competition_ids(row.get("raw_payload"), "api_ninjas"):
-            api_by_comp[competition].append(row)
+    api_by_comp, api_season_join_counts = _api_ninjas_scope_rows(api_rows)
 
     reports = []
     all_candidates = []
@@ -104,19 +200,36 @@ def build_corroboration_report(
                 country_code = str(api_row.get("country") or "").strip().upper()
                 team_type = str(api_row.get("team_type") or "").strip().casefold()
                 gender = str(api_row.get("gender_scope") or "").strip().casefold()
+                season_verified, target_label, api_label, season_status = season_match(
+                    source_row.get("raw_payload"), api_row.get("raw_payload")
+                )
+                api_raw = _mapping(api_row.get("raw_payload"))
+                join_status = str(api_raw.get("season_evidence_join_status") or "missing_standings")
+                season_verified = season_verified and join_status == "verified"
+                if join_status != "verified":
+                    season_status = (
+                        "held_missing_explicit_season" if join_status == "missing_standings"
+                        else f"held_api_ninjas_{join_status}"
+                    )
+                scope_complete = bool(
+                    country_code and team_type in {"club", "national"}
+                    and gender in {"men", "women"}
+                )
                 candidate = {
                     "target_provider": provider,
                     "target_provider_team_id": str(source_row.get("provider_entity_id")),
                     "target_provider_team_name": source_row.get("name"),
                     "api_ninjas_team_id": str(api_row.get("provider_entity_id")),
                     "api_ninjas_team_name": api_row.get("name"),
+                    "api_ninjas_season_standings_provider_entity_id": api_raw.get("season_standings_provider_entity_id"),
+                    "api_ninjas_season_evidence_join_status": join_status,
                     "competition_scope": provider_competition,
                     "api_ninjas_domestic_competition": api_competition,
                     "identity_basis": "unique_exact_normalized_team_name_within_same_current_domestic_competition",
-                    "target_season_label": explicit_season_label(source_row.get("raw_payload")),
-                    "api_ninjas_season_label": explicit_season_label(api_row.get("raw_payload")),
-                    "season_match_verified": season_match(source_row.get("raw_payload"), api_row.get("raw_payload"))[0],
-                    "season_gate_status": season_match(source_row.get("raw_payload"), api_row.get("raw_payload"))[3],
+                    "target_season_label": target_label,
+                    "api_ninjas_season_label": api_label,
+                    "season_match_verified": season_verified,
+                    "season_gate_status": season_status,
                     "country_code_iso3166_alpha2": country_code or None,
                     "country_name_from_iso_code": COUNTRY_NAMES.get(country_code),
                     "team_type_from_api_ninjas": team_type or None,
@@ -126,11 +239,8 @@ def build_corroboration_report(
                     ),
                     "status": (
                         "scope_corroboration_candidate"
-                        if country_code and team_type in {"club", "national"}
-                        and gender in {"men", "women"}
-                        and season_match(source_row.get("raw_payload"), api_row.get("raw_payload"))[0]
-                        else season_match(source_row.get("raw_payload"), api_row.get("raw_payload"))[3]
-                        if not season_match(source_row.get("raw_payload"), api_row.get("raw_payload"))[0]
+                        if scope_complete and season_verified
+                        else season_status if not season_verified
                         else "held_api_ninjas_scope_incomplete"
                     ),
                 }
@@ -260,6 +370,7 @@ def build_corroboration_report(
         "provider_scope_fields_updated": 0,
         "target_team_rows_examined": len(target_rows),
         "api_ninjas_team_rows_examined": len(api_rows),
+        "api_ninjas_season_evidence_join": api_season_join_counts,
         "unique_exact_name_candidates": len(all_candidates),
         "scope_complete_candidates": sum(
             row["status"] == "scope_corroboration_candidate" for row in all_candidates
