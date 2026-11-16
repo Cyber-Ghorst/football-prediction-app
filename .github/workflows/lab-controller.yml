@@ -861,24 +861,18 @@ jobs:
                           compact["competitions"] = []
                           for competition in payload.get("competitions", []):
                               compact_competition = {
-                                  key: competition.get(key)
-                                  for key in (
-                                      "target_provider", "target_competition_provider_id",
-                                      "api_ninjas_competition_code", "target_team_rows",
-                                      "api_ninjas_team_rows", "unique_exact_name_candidates",
-                                      "scope_complete_candidates", "approved_exact_corroborations",
-                                      "approved_manual_alias_corroborations",
-                                      "unmatched_target_team_rows",
-                                  )
+                                  "provider": competition.get("target_provider"),
+                                  "competition_provider_id": competition.get("target_competition_provider_id"),
+                                  "api_ninjas_competition_code": competition.get("api_ninjas_competition_code"),
+                                  "target_team_rows": competition.get("target_team_rows"),
+                                  "unmatched_target_team_rows": competition.get("unmatched_target_team_rows"),
                               }
                               compact["competitions"].append(compact_competition)
                           compact["unmatched_team_records"] = [
                               {
-                                  "provider": team.get("provider"),
                                   "provider_entity_id": team.get("provider_entity_id"),
                                   "name": team.get("name"),
                                   "competition_provider_id": team.get("competition_provider_id"),
-                                  "reason": team.get("reason"),
                               }
                               for competition in payload.get("competitions", [])
                               for team in competition.get("unmatched_target_teams", [])
