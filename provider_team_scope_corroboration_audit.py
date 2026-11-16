@@ -179,6 +179,7 @@ def build_corroboration_report(
                             near_matches.append({
                                 "api_ninjas_team_id": str(api_row.get("provider_entity_id") or ""),
                                 "api_ninjas_team_name": api_name,
+                                "season_label": explicit_season_label(api_row.get("raw_payload")),
                                 "normalized_name_similarity": round(score, 3),
                                 "country_code_iso3166_alpha2": str(api_row.get("country") or "").strip().upper() or None,
                                 "country_name_from_iso_code": COUNTRY_NAMES.get(str(api_row.get("country") or "").strip().upper()),
