@@ -11,6 +11,7 @@ from typing import Any, Mapping
 from provider_data_storage import _connect
 from provider_neutral_identity import (
     canonical_competition_key,
+    canonical_season_key,
     canonical_team_key,
 )
 
@@ -19,12 +20,16 @@ def _missing(row: Mapping[str, Any], fields: tuple[str, ...]) -> list[str]:
     return [field for field in fields if not str(row.get(field) or "").strip()]
 
 
-def build_identity_candidate_report(rows: list[Mapping[str, Any]]) -> dict[str, Any]:
+def build_identity_candidate_report(
+    rows: list[Mapping[str, Any]],
+    approved_parent_links: Mapping[tuple[str, str], str] | None = None,
+) -> dict[str, Any]:
     """Create candidate keys only where every required identity dimension exists."""
     competition_candidates = []
     seasons = []
     teams = []
     key_groups: dict[str, list[dict[str, str]]] = defaultdict(list)
+    approved_parents = dict(approved_parent_links or {})
 
     for row in rows:
         provider = str(row.get("provider") or "").strip().casefold()
@@ -56,15 +61,49 @@ def build_identity_candidate_report(rows: list[Mapping[str, Any]]) -> dict[str, 
             competition_candidates.append(result)
 
         elif entity_type == "season":
-            # A provider parent ID is not a canonical competition ID.
-            result = {
-                **base,
-                "provider_parent_competition_id": row.get("parent_competition_provider_id"),
-                "season_label": row.get("season_label") or row.get("name"),
-                "status": "held_until_parent_competition_is_approved",
-                "identity_key_candidate": None,
-                "reason": "A verified canonical competition ID is required before season identity can be keyed.",
-            }
+            # A provider parent ID is not a canonical competition ID. Release
+            # a deterministic season-key candidate only when the exact parent
+            # competition link is already approved or is a Sportmonks native
+            # identity anchor. The key remains a candidate, not a season link.
+            provider_parent_id = str(row.get("parent_competition_provider_id") or "").strip()
+            season_label = row.get("season_label") or row.get("name")
+            canonical_parent_id = approved_parents.get((provider, provider_parent_id))
+            if not canonical_parent_id:
+                result = {
+                    **base,
+                    "provider_parent_competition_id": provider_parent_id or None,
+                    "season_label": season_label,
+                    "status": "held_until_parent_competition_is_approved",
+                    "identity_key_candidate": None,
+                    "reason": "A verified canonical competition ID is required before season identity can be keyed.",
+                }
+            else:
+                try:
+                    season_key = canonical_season_key(canonical_parent_id, season_label)
+                except ValueError as exc:
+                    result = {
+                        **base,
+                        "provider_parent_competition_id": provider_parent_id,
+                        "canonical_parent_competition_id": canonical_parent_id,
+                        "season_label": season_label,
+                        "status": "held_invalid_season_identity",
+                        "identity_key_candidate": None,
+                        "reason": str(exc),
+                    }
+                else:
+                    result = {
+                        **base,
+                        "provider_parent_competition_id": provider_parent_id,
+                        "canonical_parent_competition_id": canonical_parent_id,
+                        "season_label": season_label,
+                        "status": "season_key_candidate_parent_approved_review_required",
+                        "identity_key_candidate": season_key,
+                        "reason": (
+                            "Parent competition is approved; this deterministic season key is "
+                            "only a candidate. Exact season evidence is still required before "
+                            "any season provider link can be approved."
+                        ),
+                    }
             seasons.append(result)
 
         elif entity_type == "team":
@@ -124,7 +163,14 @@ def build_identity_candidate_report(rows: list[Mapping[str, Any]]) -> dict[str, 
             ),
             "shared_competition_identity_candidates": len(shared),
             "duplicate_competition_identity_candidates": len(duplicates),
-            "seasons_held_for_parent_approval": len(seasons),
+            "seasons_held_for_parent_approval": sum(
+                row.get("status") == "held_until_parent_competition_is_approved"
+                for row in seasons
+            ),
+            "seasons_with_approved_parent_candidate": sum(
+                row.get("status") == "season_key_candidate_parent_approved_review_required"
+                for row in seasons
+            ),
             "team_source_rows": len(teams),
             "teams_held_for_scope_evidence": sum(
                 row.get("status") != "single_source_identity_candidate" for row in teams
@@ -154,7 +200,32 @@ def audit_provider_neutral_identity_candidates(database_url: str) -> dict[str, A
                     ORDER BY provider, entity_type, provider_entity_id"""
             )
             rows = [dict(zip(columns, values)) for values in cursor.fetchall()]
-    report = build_identity_candidate_report(rows)
+            cursor.execute(
+                """SELECT link.provider, link.provider_entity_id, link.canonical_entity_id
+                   FROM provider_entity_links AS link
+                   WHERE link.entity_type = 'league'
+                     AND (
+                       (link.provider = 'sportmonks'
+                        AND link.canonical_entity_id = 'sportmonks:' || link.provider_entity_id)
+                       OR EXISTS (
+                         SELECT 1
+                         FROM provider_entity_link_approval_audit AS approval
+                         WHERE approval.link_id = link.link_id
+                           AND approval.provider = link.provider
+                           AND approval.entity_type = link.entity_type
+                           AND approval.provider_entity_id = link.provider_entity_id
+                           AND approval.canonical_entity_id = link.canonical_entity_id
+                           AND LENGTH(BTRIM(approval.approval_reason)) >= 12
+                       )
+                     )
+                   ORDER BY link.provider, link.provider_entity_id"""
+            )
+            approved_parent_links = {
+                (str(provider).casefold(), str(provider_id)): str(canonical_id)
+                for provider, provider_id, canonical_id in cursor.fetchall()
+            }
+    report = build_identity_candidate_report(rows, approved_parent_links)
+    report["approved_parent_competition_links_read"] = len(approved_parent_links)
     report["database_read_only"] = True
     report["source_rows_read"] = len(rows)
     report["database_writes"] = False
