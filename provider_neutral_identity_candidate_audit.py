@@ -346,15 +346,30 @@ def build_identity_candidate_report(
                 )
         if entity_type == "season":
             raw_payload = payload_mapping(row.get("raw_payload"))
-            native_payload_fields = {}
-            for field in (
+            native_fields = (
                 "id", "season_id", "year", "name", "start", "end",
                 "start_date", "end_date", "league_id", "competition_id", "parent_id",
-            ):
+                "current", "is_current",
+            )
+            native_payload_fields = {}
+            for field in native_fields:
                 value = raw_payload.get(field)
-                if value is not None and isinstance(value, (str, int, float)):
+                if value is not None and isinstance(value, (str, int, float, bool)):
                     native_payload_fields[field] = value
+            # Source staging deliberately wraps legacy/provider responses with
+            # provenance metadata. Inspect only the known nested payload keys;
+            # never serialize the unrestricted provider response into the report.
+            for container in ("raw_season", "raw_payload"):
+                nested = payload_mapping(raw_payload.get(container))
+                selected = {}
+                for field in native_fields:
+                    value = nested.get(field)
+                    if value is not None and isinstance(value, (str, int, float, bool)):
+                        selected[field] = value
+                if selected:
+                    native_payload_fields[container] = selected
             base["provider_native_payload_fields"] = native_payload_fields
+            base["provider_native_payload_available"] = bool(native_payload_fields)
         if not provider or not provider_id:
             continue
 
