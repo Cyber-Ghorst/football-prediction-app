@@ -30,7 +30,7 @@ class ProviderRosterIdentityCandidateTests(unittest.TestCase):
     def test_duplicate_normalized_names_are_held_as_ambiguous(self):
         h = roster("Bundesliga", "134391")
         h["teams"].append({"id": "999", "name": "Bayern Munchen"})
-        l = roster("German Bundesliga", "132", "season_window_fixture_participants")
+        l = roster("German Bundesliga", "132", "season_standings")
         result = build_roster_identity_candidates(
             {"competitions": [h]}, {"competitions": [l]},
         )
