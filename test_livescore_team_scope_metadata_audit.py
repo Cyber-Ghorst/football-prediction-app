@@ -78,6 +78,10 @@ class LiveScoreTeamScopeMetadataAuditTests(unittest.TestCase):
         self.assertEqual(france["candidates"][0]["country_from_api_football_team_record"], "Monaco")
         self.assertEqual(france["candidates"][0]["status"], "scope_corroboration_candidate_not_approved")
         self.assertEqual(result["provider_links_created"], 0)
+        self.assertEqual(result["api_football_entity_counts"]["teams"], 2)
+        self.assertEqual(result["api_football_entity_counts"]["competitions"], 2)
+        self.assertEqual(result["api_football_entity_counts"]["seasons"], 2)
+        self.assertEqual(result["api_football_team_counts_by_competition_id"], {"61": 1, "78": 1})
 
     def test_api_football_country_candidates_do_not_use_competition_country_for_team_country(self):
         livescore = [{"provider_entity_id": "10", "name": "Monaco",

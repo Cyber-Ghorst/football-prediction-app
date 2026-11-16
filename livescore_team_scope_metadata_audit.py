@@ -70,6 +70,25 @@ def build_api_football_country_candidates(
     }
     teams = [row for row in api_football_rows if row.get("entity_type") == "team"]
     results = []
+    api_competition_inventory = [
+        {
+            "provider_competition_id": comp_id,
+            "name": comp.get("name"),
+            "country": comp.get("country"),
+            "season_entity_ids": sorted(
+                season_id for season_id, season in seasons.items()
+                if str(season.get("parent_competition_provider_id") or "") == comp_id
+            ),
+        }
+        for comp_id, comp in sorted(competitions.items())
+    ]
+    team_competition_membership: dict[str, int] = {}
+    for team in teams:
+        raw = _mapping(team.get("raw_payload"))
+        comp_ids = raw.get("competition_provider_ids")
+        if isinstance(comp_ids, list):
+            for comp_id in set(str(value) for value in comp_ids):
+                team_competition_membership[comp_id] = team_competition_membership.get(comp_id, 0) + 1
     for target in TARGETS:
         slug = target["slug"]
         ls_rows = [
@@ -149,7 +168,18 @@ def build_api_football_country_candidates(
                 "are transferred into LiveScoreFootball records without approval."
             ),
         })
-    return {"read_only": True, "provider_links_created": 0, "competitions": results}
+    return {
+        "read_only": True,
+        "provider_links_created": 0,
+        "api_football_entity_counts": {
+            "teams": len(teams),
+            "competitions": len(competitions),
+            "seasons": len(seasons),
+        },
+        "api_football_competition_inventory": api_competition_inventory,
+        "api_football_team_counts_by_competition_id": dict(sorted(team_competition_membership.items())),
+        "competitions": results,
+    }
 
 
 def build_scope_report(
