@@ -117,6 +117,7 @@ class ProviderTeamScopeEvidenceAuditTests(unittest.TestCase):
         self.assertEqual(report["providers"]["sportmonks"]["team_rows"], 1)
         self.assertEqual(report["providers"]["api_football"]["structured_scope_field_counts"]["team_type"], 1)
         self.assertEqual(report["providers"]["api_football"]["structured_scope_value_counts"]["team_type"], {"club": 1})
+        self.assertEqual(report["providers"]["api_football"]["source_provenance_value_counts"]["catalogue_reference_season"], {"<missing>": 1})
         self.assertEqual(report["providers"]["sportmonks"]["structured_scope_value_counts"]["country"], {"<missing>": 1})
         self.assertEqual(report["providers"]["api_football"]["raw_provider_candidate_value_counts"]["team_type"], {"False": 1})
 
