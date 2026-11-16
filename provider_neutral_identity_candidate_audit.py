@@ -185,6 +185,69 @@ def _season_date_fields(
     return result
 
 
+# Target scope for the active 2026/27 Layer 12 review. These are
+# provider-native parent competition IDs mapped to the already-reviewed
+# competition names. This classification is diagnostic only; it does not
+# approve parent links or season identities.
+TARGET_2026_27_COMPETITION_PARENTS = {
+    ("api_football", "39"): "Premier League",
+    ("api_football", "140"): "La Liga",
+    ("api_football", "135"): "Serie A",
+    ("api_football", "61"): "Ligue 1",
+    ("api_football", "78"): "Bundesliga",
+    ("api_ninjas", "epl"): "Premier League",
+    ("api_ninjas", "laliga"): "La Liga",
+    ("api_ninjas", "seriea"): "Serie A",
+    ("api_ninjas", "ligue1"): "Ligue 1",
+    ("api_ninjas", "bundesliga"): "Bundesliga",
+    ("highlightly", "33973"): "Premier League",
+    ("highlightly", "119924"): "La Liga",
+    ("highlightly", "115669"): "Serie A",
+    ("highlightly", "52695"): "Ligue 1",
+    ("highlightly", "67162"): "Bundesliga",
+    ("sportmonks", "8"): "Premier League",
+    ("sportmonks", "564"): "La Liga",
+    ("sportmonks", "384"): "Serie A",
+    ("sportmonks", "567"): "La Liga 2",
+}
+TARGET_2026_27_COMPETITION_NAMES = {
+    "premier league", "la liga", "serie a", "ligue 1", "bundesliga"
+}
+
+
+def _target_season_review_fields(
+    provider: str, provider_parent_id: str, season_label: Any,
+) -> dict[str, Any]:
+    """Classify whether a row belongs to the active season and target leagues."""
+    label = str(season_label or "").strip()
+    current_season = label in {"2026", "2026/27", "2026/2027", "2026-27"}
+    competition_name = TARGET_2026_27_COMPETITION_PARENTS.get(
+        (provider, provider_parent_id)
+    )
+    competition_in_scope = bool(
+        competition_name
+        and competition_name.casefold() in TARGET_2026_27_COMPETITION_NAMES
+    )
+    if not current_season:
+        status = "held_outside_target_season"
+    elif not competition_name:
+        status = "held_unverified_target_competition"
+    elif not competition_in_scope:
+        status = "held_outside_target_competition"
+    else:
+        status = "eligible_for_exact_evidence_review"
+    return {
+        "target_season_label": "2026/27",
+        "target_season_scope": "current_target_season" if current_season else "outside_target_season",
+        "target_competition_name_candidate": competition_name,
+        "target_competition_scope": (
+            "in_target_competition" if competition_in_scope
+            else "outside_or_unverified_target_competition"
+        ),
+        "target_season_review_status": status,
+    }
+
+
 def build_identity_candidate_report(
     rows: list[Mapping[str, Any]],
     approved_parent_links: Mapping[tuple[str, str], str] | None = None,
@@ -318,6 +381,9 @@ def build_identity_candidate_report(
                             "any season provider link can be approved."
                         ),
                     }
+            result.update(_target_season_review_fields(
+                provider, provider_parent_id, season_label
+            ))
             seasons.append(result)
 
         elif entity_type == "team":
@@ -416,6 +482,23 @@ def build_identity_candidate_report(
             ),
             "seasons_with_incomplete_date_range": sum(
                 row.get("season_date_range_status") == "incomplete" for row in seasons
+            ),
+            "seasons_current_target_season": sum(
+                row.get("target_season_scope") == "current_target_season" for row in seasons
+            ),
+            "seasons_outside_target_season": sum(
+                row.get("target_season_scope") == "outside_target_season" for row in seasons
+            ),
+            "seasons_in_target_competition_scope": sum(
+                row.get("target_competition_scope") == "in_target_competition" for row in seasons
+            ),
+            "seasons_outside_or_unverified_target_competition": sum(
+                row.get("target_competition_scope") == "outside_or_unverified_target_competition"
+                for row in seasons
+            ),
+            "seasons_eligible_for_exact_evidence_review": sum(
+                row.get("target_season_review_status") == "eligible_for_exact_evidence_review"
+                for row in seasons
             ),
             "team_source_rows": len(teams),
             "teams_with_approved_scope_corroboration": sum(

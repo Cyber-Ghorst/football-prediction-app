@@ -231,6 +231,52 @@ class ProviderNeutralIdentityCandidateAuditTests(unittest.TestCase):
         self.assertEqual(season["season_date_range_status"], "incomplete")
         self.assertNotIn("season_date_evidence_source", season)
 
+    def test_target_season_review_separates_current_top_flight_from_history_and_other_leagues(self):
+        rows = [
+            {"provider": "api_football", "entity_type": "season",
+             "provider_entity_id": "39:2024", "name": "2024",
+             "season_label": "2024", "parent_competition_provider_id": "39",
+             "start_date": "2024-08-16", "end_date": "2025-05-25"},
+            {"provider": "sportmonks", "entity_type": "season",
+             "provider_entity_id": "25583", "name": "2025/2026",
+             "season_label": "2025/2026", "parent_competition_provider_id": "8",
+             "start_date": "2025-08-15", "end_date": "2026-05-24"},
+            {"provider": "sportmonks", "entity_type": "season",
+             "provider_entity_id": "28083", "name": "2026/2027",
+             "season_label": "2026/2027", "parent_competition_provider_id": "8",
+             "start_date": "2026-08-21", "end_date": "2027-05-30"},
+            {"provider": "sportmonks", "entity_type": "season",
+             "provider_entity_id": "28479", "name": "2026/2027",
+             "season_label": "2026/2027", "parent_competition_provider_id": "567",
+             "start_date": "2026-08-14", "end_date": "2027-06-06"},
+            {"provider": "api_ninjas", "entity_type": "season",
+             "provider_entity_id": "epl:2026", "name": "2026/27",
+             "season_label": "2026/27", "parent_competition_provider_id": "epl"},
+        ]
+        report = build_identity_candidate_report(
+            rows, {("api_football", "39"): "sportmonks:8",
+                   ("sportmonks", "8"): "sportmonks:8",
+                   ("sportmonks", "567"): "sportmonks:567"}
+        )
+        by_id = {row["provider_entity_id"]: row for row in report["season_candidates"]}
+        self.assertEqual(by_id["39:2024"]["target_season_review_status"],
+                         "held_outside_target_season")
+        self.assertEqual(by_id["25583"]["target_season_review_status"],
+                         "held_outside_target_season")
+        self.assertEqual(by_id["28083"]["target_season_review_status"],
+                         "eligible_for_exact_evidence_review")
+        self.assertEqual(by_id["28479"]["target_season_review_status"],
+                         "held_outside_target_competition")
+        self.assertEqual(by_id["epl:2026"]["target_season_review_status"],
+                         "eligible_for_exact_evidence_review")
+        self.assertEqual(by_id["epl:2026"]["status"],
+                         "held_until_parent_competition_is_approved")
+        self.assertEqual(report["summary"]["seasons_current_target_season"], 3)
+        self.assertEqual(report["summary"]["seasons_outside_target_season"], 2)
+        self.assertEqual(report["summary"]["seasons_eligible_for_exact_evidence_review"], 2)
+        self.assertEqual(report["canonical_ids_assigned"], 0)
+        self.assertEqual(report["provider_links_created"], 0)
+
     def test_season_key_candidate_is_released_only_for_approved_parent(self):
         rows = [
             {"provider": "api_football", "entity_type": "season",
