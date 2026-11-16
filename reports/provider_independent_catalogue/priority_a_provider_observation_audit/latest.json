@@ -3093,6 +3093,7 @@
             "Arsenal",
             "Brighton & Hove Albion",
             "Crystal Palace",
+            "Everton",
             "Fulham",
             "Ipswich Town",
             "Leeds United",
@@ -3104,10 +3105,12 @@
             "Arsenal",
             "Aston Villa",
             "Bournemouth",
+            "Brentford",
             "Brighton & Hove Albion",
             "Chelsea",
             "Coventry City",
             "Crystal Palace",
+            "Everton",
             "Fulham",
             "Hull City",
             "Ipswich Town",
@@ -3129,10 +3132,11 @@
           ],
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
-          "eligible_observation_count": 30,
+          "eligible_observation_count": 49,
           "home_team_names": [
             "Aston Villa",
             "Bournemouth",
+            "Brentford",
             "Chelsea",
             "Coventry City",
             "Hull City",
@@ -3151,7 +3155,7 @@
           "provider": "bzzoiro",
           "provider_competition_id": "1",
           "provider_season_id": "1::1058",
-          "raw_observation_count": 30,
+          "raw_observation_count": 49,
           "season_label_year_evidence": [
             {
               "end_year": 2027,
@@ -3166,13 +3170,13 @@
           ],
           "status": "raw_observations_found",
           "status_counts": {
-            "notstarted": 30
+            "notstarted": 49
           },
-          "unique_away_teams": 9,
-          "unique_home_teams": 9,
-          "unique_provider_fixture_ids": 9,
-          "unique_teams_combined": 18,
-          "valid_timezone_aware_kickoffs": 30
+          "unique_away_teams": 10,
+          "unique_home_teams": 10,
+          "unique_provider_fixture_ids": 10,
+          "unique_teams_combined": 20,
+          "valid_timezone_aware_kickoffs": 49
         },
         {
           "away_team_names": [
@@ -3454,7 +3458,7 @@
           ],
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
-          "eligible_observation_count": 37,
+          "eligible_observation_count": 55,
           "home_team_names": [
             "1. FC Union Berlin",
             "Bayer 04 Leverkusen",
@@ -3476,7 +3480,7 @@
           "provider": "bzzoiro",
           "provider_competition_id": "5",
           "provider_season_id": "5::1091",
-          "raw_observation_count": 37,
+          "raw_observation_count": 55,
           "season_label_year_evidence": [
             {
               "end_year": 2027,
@@ -3491,18 +3495,20 @@
           ],
           "status": "raw_observations_found",
           "status_counts": {
-            "notstarted": 37
+            "notstarted": 55
           },
           "unique_away_teams": 9,
           "unique_home_teams": 9,
           "unique_provider_fixture_ids": 9,
           "unique_teams_combined": 18,
-          "valid_timezone_aware_kickoffs": 37
+          "valid_timezone_aware_kickoffs": 55
         },
         {
           "away_team_names": [
             "1. FC K\u00f6ln",
+            "1. FSV Mainz 05",
             "Borussia Dortmund",
+            "Hamburger SV",
             "RB Leipzig",
             "SC Freiburg",
             "SC Paderborn 07",
@@ -3512,16 +3518,20 @@
           "combined_team_names": [
             "1. FC K\u00f6ln",
             "1. FC Union Berlin",
+            "1. FSV Mainz 05",
             "Bayer 04 Leverkusen",
             "Borussia Dortmund",
             "Borussia M\u00f6nchengladbach",
             "Eintracht Frankfurt",
+            "FC Augsburg",
             "FC Bayern M\u00fcnchen",
             "FC Schalke 04",
+            "Hamburger SV",
             "RB Leipzig",
             "SC Freiburg",
             "SC Paderborn 07",
             "SV 07 Elversberg",
+            "SV Werder Bremen",
             "TSG 1899 Hoffenheim",
             "VfB Stuttgart"
           ],
@@ -3532,40 +3542,42 @@
           "countries": [],
           "country_matches_queue": false,
           "date_only_kickoffs": 0,
-          "eligible_observation_count": 11,
+          "eligible_observation_count": 27,
           "home_team_names": [
             "1. FC Union Berlin",
             "Bayer 04 Leverkusen",
             "Borussia M\u00f6nchengladbach",
             "Eintracht Frankfurt",
+            "FC Augsburg",
             "FC Bayern M\u00fcnchen",
             "FC Schalke 04",
-            "SV 07 Elversberg"
+            "SV 07 Elversberg",
+            "SV Werder Bremen"
           ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [],
           "local_date_time_without_timezone": 0,
-          "missing_country_observations": 11,
+          "missing_country_observations": 27,
           "missing_kickoffs": 0,
           "missing_team_name_observations": 0,
           "not_eligible_observations": 0,
           "provider": "football_data_org",
           "provider_competition_id": "2002",
           "provider_season_id": "2002::2522",
-          "raw_observation_count": 11,
+          "raw_observation_count": 27,
           "season_label_year_evidence": [],
           "season_names": [
             "2026-08-28"
           ],
           "status": "raw_observations_found",
           "status_counts": {
-            "scheduled": 11
+            "scheduled": 27
           },
-          "unique_away_teams": 7,
-          "unique_home_teams": 7,
-          "unique_provider_fixture_ids": 7,
-          "unique_teams_combined": 14,
-          "valid_timezone_aware_kickoffs": 11
+          "unique_away_teams": 9,
+          "unique_home_teams": 9,
+          "unique_provider_fixture_ids": 9,
+          "unique_teams_combined": 18,
+          "valid_timezone_aware_kickoffs": 27
         },
         {
           "away_team_names": [
@@ -3836,7 +3848,7 @@
           ],
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
-          "eligible_observation_count": 41,
+          "eligible_observation_count": 59,
           "home_team_names": [
             "1. FC Kaiserslautern",
             "1. FC N\u00fcrnberg",
@@ -3858,7 +3870,7 @@
           "provider": "bzzoiro",
           "provider_competition_id": "94",
           "provider_season_id": "94::1967",
-          "raw_observation_count": 41,
+          "raw_observation_count": 59,
           "season_label_year_evidence": [
             {
               "end_year": 2027,
@@ -3873,13 +3885,13 @@
           ],
           "status": "raw_observations_found",
           "status_counts": {
-            "notstarted": 41
+            "notstarted": 59
           },
           "unique_away_teams": 9,
           "unique_home_teams": 9,
           "unique_provider_fixture_ids": 9,
           "unique_teams_combined": 18,
-          "valid_timezone_aware_kickoffs": 41
+          "valid_timezone_aware_kickoffs": 59
         },
         {
           "away_team_names": [
@@ -4031,7 +4043,7 @@
           ],
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
-          "eligible_observation_count": 24,
+          "eligible_observation_count": 36,
           "home_team_names": [
             "Celtic",
             "Dundee FC",
@@ -4050,7 +4062,7 @@
           "provider": "bzzoiro",
           "provider_competition_id": "13",
           "provider_season_id": "13::1355",
-          "raw_observation_count": 24,
+          "raw_observation_count": 36,
           "season_label_year_evidence": [
             {
               "end_year": 2027,
@@ -4065,13 +4077,13 @@
           ],
           "status": "raw_observations_found",
           "status_counts": {
-            "notstarted": 24
+            "notstarted": 36
           },
           "unique_away_teams": 6,
           "unique_home_teams": 6,
           "unique_provider_fixture_ids": 6,
           "unique_teams_combined": 12,
-          "valid_timezone_aware_kickoffs": 24
+          "valid_timezone_aware_kickoffs": 36
         },
         {
           "away_team_names": [
@@ -4105,7 +4117,7 @@
           ],
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
-          "eligible_observation_count": 6,
+          "eligible_observation_count": 18,
           "home_team_names": [
             "Celtic",
             "Dundee",
@@ -4124,7 +4136,7 @@
           "provider": "livescore_football",
           "provider_competition_id": "735",
           "provider_season_id": "735::2026",
-          "raw_observation_count": 6,
+          "raw_observation_count": 18,
           "season_label_year_evidence": [
             {
               "end_year": null,
@@ -4139,13 +4151,13 @@
           ],
           "status": "raw_observations_found",
           "status_counts": {
-            "scheduled": 6
+            "scheduled": 18
           },
           "unique_away_teams": 6,
           "unique_home_teams": 6,
           "unique_provider_fixture_ids": 6,
           "unique_teams_combined": 12,
-          "valid_timezone_aware_kickoffs": 6
+          "valid_timezone_aware_kickoffs": 18
         }
       ],
       "providers": [
@@ -4202,7 +4214,7 @@
           ],
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
-          "eligible_observation_count": 11,
+          "eligible_observation_count": 13,
           "home_team_names": [
             "Al-Ahli",
             "Al-Fayha",
@@ -4220,11 +4232,11 @@
           "missing_country_observations": 0,
           "missing_kickoffs": 0,
           "missing_team_name_observations": 0,
-          "not_eligible_observations": 99,
+          "not_eligible_observations": 117,
           "provider": "bzzoiro",
           "provider_competition_id": "17",
           "provider_season_id": "17::1631",
-          "raw_observation_count": 110,
+          "raw_observation_count": 130,
           "season_label_year_evidence": [
             {
               "end_year": 2027,
@@ -4239,14 +4251,14 @@
           ],
           "status": "raw_observations_found",
           "status_counts": {
-            "notstarted": 11,
-            "postponed": 99
+            "notstarted": 13,
+            "postponed": 117
           },
           "unique_away_teams": 10,
           "unique_home_teams": 9,
           "unique_provider_fixture_ids": 10,
           "unique_teams_combined": 18,
-          "valid_timezone_aware_kickoffs": 110
+          "valid_timezone_aware_kickoffs": 130
         },
         {
           "away_team_names": [
@@ -4265,7 +4277,7 @@
           ],
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
-          "eligible_observation_count": 11,
+          "eligible_observation_count": 13,
           "home_team_names": [
             "Al Ahli"
           ],
@@ -4279,7 +4291,7 @@
           "provider": "livescore_football",
           "provider_competition_id": "21231",
           "provider_season_id": "21231::2026",
-          "raw_observation_count": 11,
+          "raw_observation_count": 13,
           "season_label_year_evidence": [
             {
               "end_year": null,
@@ -4294,13 +4306,13 @@
           ],
           "status": "raw_observations_found",
           "status_counts": {
-            "scheduled": 11
+            "scheduled": 13
           },
           "unique_away_teams": 1,
           "unique_home_teams": 1,
           "unique_provider_fixture_ids": 1,
           "unique_teams_combined": 2,
-          "valid_timezone_aware_kickoffs": 11
+          "valid_timezone_aware_kickoffs": 13
         }
       ],
       "providers": [
@@ -4320,6 +4332,7 @@
             "Atl\u00e9tico Madrid",
             "Celta Vigo",
             "Deportivo de A Coru\u00f1a",
+            "Elche",
             "Espanyol",
             "M\u00e1laga CF",
             "Real Betis",
@@ -4333,9 +4346,11 @@
             "Celta Vigo",
             "Deportivo Alav\u00e9s",
             "Deportivo de A Coru\u00f1a",
+            "Elche",
             "Espanyol",
             "FC Barcelona",
             "Getafe",
+            "Levante UD",
             "M\u00e1laga CF",
             "Osasuna",
             "Rayo Vallecano",
@@ -4356,12 +4371,13 @@
           ],
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
-          "eligible_observation_count": 31,
+          "eligible_observation_count": 50,
           "home_team_names": [
             "Athletic Club",
             "Deportivo Alav\u00e9s",
             "FC Barcelona",
             "Getafe",
+            "Levante UD",
             "Osasuna",
             "Rayo Vallecano",
             "Real Madrid",
@@ -4378,7 +4394,7 @@
           "provider": "bzzoiro",
           "provider_competition_id": "3",
           "provider_season_id": "3::1307",
-          "raw_observation_count": 31,
+          "raw_observation_count": 50,
           "season_label_year_evidence": [
             {
               "end_year": 2027,
@@ -4393,13 +4409,13 @@
           ],
           "status": "raw_observations_found",
           "status_counts": {
-            "notstarted": 31
+            "notstarted": 50
           },
-          "unique_away_teams": 9,
-          "unique_home_teams": 9,
-          "unique_provider_fixture_ids": 9,
-          "unique_teams_combined": 18,
-          "valid_timezone_aware_kickoffs": 31
+          "unique_away_teams": 10,
+          "unique_home_teams": 10,
+          "unique_provider_fixture_ids": 10,
+          "unique_teams_combined": 20,
+          "valid_timezone_aware_kickoffs": 50
         },
         {
           "away_team_names": [
@@ -4532,6 +4548,7 @@
           "away_team_names": [
             "AS Roma",
             "Cagliari",
+            "Fiorentina",
             "Frosinone",
             "Genoa",
             "Inter",
@@ -4547,12 +4564,14 @@
             "Bologna",
             "Cagliari",
             "Como",
+            "Fiorentina",
             "Frosinone",
             "Genoa",
             "Inter",
             "Juventus",
             "Lazio",
             "Lecce",
+            "Monza",
             "Parma",
             "SSC Napoli",
             "Sassuolo",
@@ -4569,7 +4588,7 @@
           ],
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
-          "eligible_observation_count": 21,
+          "eligible_observation_count": 40,
           "home_team_names": [
             "AC Milan",
             "Atalanta",
@@ -4577,6 +4596,7 @@
             "Como",
             "Juventus",
             "Lazio",
+            "Monza",
             "Parma",
             "SSC Napoli",
             "Sassuolo"
@@ -4591,7 +4611,7 @@
           "provider": "bzzoiro",
           "provider_competition_id": "4",
           "provider_season_id": "4::1375",
-          "raw_observation_count": 21,
+          "raw_observation_count": 40,
           "season_label_year_evidence": [
             {
               "end_year": 2027,
@@ -4606,13 +4626,13 @@
           ],
           "status": "raw_observations_found",
           "status_counts": {
-            "notstarted": 21
+            "notstarted": 40
           },
-          "unique_away_teams": 9,
-          "unique_home_teams": 9,
-          "unique_provider_fixture_ids": 9,
-          "unique_teams_combined": 18,
-          "valid_timezone_aware_kickoffs": 21
+          "unique_away_teams": 10,
+          "unique_home_teams": 10,
+          "unique_provider_fixture_ids": 10,
+          "unique_teams_combined": 20,
+          "valid_timezone_aware_kickoffs": 40
         },
         {
           "away_team_names": [
@@ -4782,7 +4802,7 @@
           ],
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
-          "eligible_observation_count": 34,
+          "eligible_observation_count": 52,
           "home_team_names": [
             "AS Monaco",
             "LOSC Lille",
@@ -4804,7 +4824,7 @@
           "provider": "bzzoiro",
           "provider_competition_id": "6",
           "provider_season_id": "6::1311",
-          "raw_observation_count": 34,
+          "raw_observation_count": 52,
           "season_label_year_evidence": [
             {
               "end_year": 2027,
@@ -4819,35 +4839,44 @@
           ],
           "status": "raw_observations_found",
           "status_counts": {
-            "notstarted": 34
+            "notstarted": 52
           },
           "unique_away_teams": 9,
           "unique_home_teams": 9,
           "unique_provider_fixture_ids": 9,
           "unique_teams_combined": 18,
-          "valid_timezone_aware_kickoffs": 34
+          "valid_timezone_aware_kickoffs": 52
         },
         {
           "away_team_names": [
             "AJ Auxerre",
+            "Angers SCO",
             "Le Havre AC",
+            "Le Mans FC",
             "Olympique Lyonnais",
             "Paris Saint-Germain FC",
             "Stade Brestois 29",
+            "Stade Rennais FC 1901",
             "Toulouse FC"
           ],
           "combined_team_names": [
             "AJ Auxerre",
             "AS Monaco FC",
+            "Angers SCO",
             "ES Troyes AC",
+            "FC Lorient",
             "Le Havre AC",
+            "Le Mans FC",
             "Lille OSC",
             "OGC Nice",
             "Olympique Lyonnais",
+            "Olympique de Marseille",
+            "Paris FC",
             "Paris Saint-Germain FC",
             "RC Strasbourg Alsace",
             "Racing Club de Lens",
             "Stade Brestois 29",
+            "Stade Rennais FC 1901",
             "Toulouse FC"
           ],
           "competition_name_matches_queue": true,
@@ -4857,39 +4886,42 @@
           "countries": [],
           "country_matches_queue": false,
           "date_only_kickoffs": 0,
-          "eligible_observation_count": 10,
+          "eligible_observation_count": 25,
           "home_team_names": [
             "AS Monaco FC",
             "ES Troyes AC",
+            "FC Lorient",
             "Lille OSC",
             "OGC Nice",
+            "Olympique de Marseille",
+            "Paris FC",
             "RC Strasbourg Alsace",
             "Racing Club de Lens"
           ],
           "invalid_or_timezone_naive_kickoffs": 0,
           "kickoff_value_examples": [],
           "local_date_time_without_timezone": 0,
-          "missing_country_observations": 10,
+          "missing_country_observations": 25,
           "missing_kickoffs": 0,
           "missing_team_name_observations": 0,
           "not_eligible_observations": 0,
           "provider": "football_data_org",
           "provider_competition_id": "2015",
           "provider_season_id": "2015::2497",
-          "raw_observation_count": 10,
+          "raw_observation_count": 25,
           "season_label_year_evidence": [],
           "season_names": [
             "2026-08-22"
           ],
           "status": "raw_observations_found",
           "status_counts": {
-            "scheduled": 10
+            "scheduled": 25
           },
-          "unique_away_teams": 6,
-          "unique_home_teams": 6,
-          "unique_provider_fixture_ids": 6,
-          "unique_teams_combined": 12,
-          "valid_timezone_aware_kickoffs": 10
+          "unique_away_teams": 9,
+          "unique_home_teams": 9,
+          "unique_provider_fixture_ids": 9,
+          "unique_teams_combined": 18,
+          "valid_timezone_aware_kickoffs": 25
         },
         {
           "away_team_names": [
@@ -5063,7 +5095,7 @@
           ],
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
-          "eligible_observation_count": 45,
+          "eligible_observation_count": 69,
           "home_team_names": [
             "Bolton Wanderers",
             "Burnley",
@@ -5088,7 +5120,7 @@
           "provider": "bzzoiro",
           "provider_competition_id": "12",
           "provider_season_id": "12::1111",
-          "raw_observation_count": 45,
+          "raw_observation_count": 69,
           "season_label_year_evidence": [
             {
               "end_year": 2027,
@@ -5103,13 +5135,13 @@
           ],
           "status": "raw_observations_found",
           "status_counts": {
-            "notstarted": 45
+            "notstarted": 69
           },
           "unique_away_teams": 12,
           "unique_home_teams": 12,
           "unique_provider_fixture_ids": 12,
           "unique_teams_combined": 24,
-          "valid_timezone_aware_kickoffs": 45
+          "valid_timezone_aware_kickoffs": 69
         },
         {
           "away_team_names": [
@@ -5291,7 +5323,7 @@
           ],
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
-          "eligible_observation_count": 24,
+          "eligible_observation_count": 42,
           "home_team_names": [
             "AFC Ajax",
             "FC Groningen",
@@ -5313,7 +5345,7 @@
           "provider": "bzzoiro",
           "provider_competition_id": "10",
           "provider_season_id": "10::1268",
-          "raw_observation_count": 24,
+          "raw_observation_count": 42,
           "season_label_year_evidence": [
             {
               "end_year": 2027,
@@ -5328,13 +5360,13 @@
           ],
           "status": "raw_observations_found",
           "status_counts": {
-            "notstarted": 24
+            "notstarted": 42
           },
           "unique_away_teams": 9,
           "unique_home_teams": 9,
           "unique_provider_fixture_ids": 9,
           "unique_teams_combined": 18,
-          "valid_timezone_aware_kickoffs": 24
+          "valid_timezone_aware_kickoffs": 42
         },
         {
           "away_team_names": [
@@ -5489,7 +5521,7 @@
           ],
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
-          "eligible_observation_count": 35,
+          "eligible_observation_count": 47,
           "home_team_names": [
             "Chicago Fire",
             "FC Dallas",
@@ -5508,20 +5540,20 @@
           "provider": "bzzoiro",
           "provider_competition_id": "18",
           "provider_season_id": "18::158",
-          "raw_observation_count": 35,
+          "raw_observation_count": 47,
           "season_label_year_evidence": [],
           "season_names": [
             "MLS 2026"
           ],
           "status": "raw_observations_found",
           "status_counts": {
-            "notstarted": 35
+            "notstarted": 47
           },
           "unique_away_teams": 6,
           "unique_home_teams": 6,
           "unique_provider_fixture_ids": 6,
           "unique_teams_combined": 12,
-          "valid_timezone_aware_kickoffs": 35
+          "valid_timezone_aware_kickoffs": 47
         },
         {
           "away_team_names": [
@@ -5543,7 +5575,7 @@
           ],
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
-          "eligible_observation_count": 22,
+          "eligible_observation_count": 26,
           "home_team_names": [
             "Orlando City SC",
             "Seattle Sounders FC"
@@ -5558,7 +5590,7 @@
           "provider": "livescore_football",
           "provider_competition_id": "770",
           "provider_season_id": "770::2026",
-          "raw_observation_count": 22,
+          "raw_observation_count": 26,
           "season_label_year_evidence": [
             {
               "end_year": null,
@@ -5573,13 +5605,13 @@
           ],
           "status": "raw_observations_found",
           "status_counts": {
-            "scheduled": 22
+            "scheduled": 26
           },
           "unique_away_teams": 2,
           "unique_home_teams": 2,
           "unique_provider_fixture_ids": 2,
           "unique_teams_combined": 4,
-          "valid_timezone_aware_kickoffs": 22
+          "valid_timezone_aware_kickoffs": 26
         }
       ],
       "providers": [
@@ -5626,7 +5658,7 @@
           ],
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
-          "eligible_observation_count": 15,
+          "eligible_observation_count": 27,
           "home_team_names": [
             "FK Austria Wien",
             "Grazer AK 1902",
@@ -5645,7 +5677,7 @@
           "provider": "bzzoiro",
           "provider_competition_id": "96",
           "provider_season_id": "96::1999",
-          "raw_observation_count": 15,
+          "raw_observation_count": 27,
           "season_label_year_evidence": [
             {
               "end_year": 2027,
@@ -5660,13 +5692,13 @@
           ],
           "status": "raw_observations_found",
           "status_counts": {
-            "notstarted": 15
+            "notstarted": 27
           },
           "unique_away_teams": 6,
           "unique_home_teams": 6,
           "unique_provider_fixture_ids": 6,
           "unique_teams_combined": 12,
-          "valid_timezone_aware_kickoffs": 15
+          "valid_timezone_aware_kickoffs": 27
         },
         {
           "away_team_names": [
@@ -5691,7 +5723,7 @@
           ],
           "country_matches_queue": true,
           "date_only_kickoffs": 0,
-          "eligible_observation_count": 3,
+          "eligible_observation_count": 9,
           "home_team_names": [
             "Grazer AK",
             "LASK Linz",
@@ -5707,7 +5739,7 @@
           "provider": "livescore_football",
           "provider_competition_id": "3907",
           "provider_season_id": "3907::2026",
-          "raw_observation_count": 3,
+          "raw_observation_count": 9,
           "season_label_year_evidence": [
             {
               "end_year": null,
@@ -5722,13 +5754,13 @@
           ],
           "status": "raw_observations_found",
           "status_counts": {
-            "scheduled": 3
+            "scheduled": 9
           },
           "unique_away_teams": 3,
           "unique_home_teams": 3,
           "unique_provider_fixture_ids": 3,
           "unique_teams_combined": 6,
-          "valid_timezone_aware_kickoffs": 3
+          "valid_timezone_aware_kickoffs": 9
         }
       ],
       "providers": [
@@ -5980,7 +6012,7 @@
     }
   ],
   "exact_overlap_count": 20,
-  "generated_at_utc": "2026-11-15T16:33:44.452995+00:00",
+  "generated_at_utc": "2026-11-16T09:23:41.290833+00:00",
   "interpretation": "An exact team-pair and UTC-kickoff overlap is strong fixture-level corroboration, but does not alone approve competition or season identity. Date-level candidates match team pairs on dates within one day where at least one source has a local date/time without timezone; they are manual-review leads only and never count as exact overlaps. Missing observations in selected snapshots mean not observed in this audit window, not that the provider lacks the competition.",
   "priority_a_entry_count": 12,
   "providers_checked": [
@@ -6004,12 +6036,12 @@
   "snapshot_counts_by_provider_resource": {
     "bzzoiro:future_fixture_observations": 20,
     "football_data_org:future_fixture_observations": 5,
-    "football_data_org:independent_data_observations": 10,
+    "football_data_org:independent_data_observations": 12,
     "livescore_football:future_fixture_observations": 20,
     "openfootball:future_fixture_observations": 20,
     "openligadb:future_fixture_observations": 20
   },
   "snapshot_limit_per_provider_resource": 20,
   "source_queue": "reports/provider_independent_catalogue/identity_review_queue.json",
-  "total_raw_observations_examined": 166037
+  "total_raw_observations_examined": 166947
 }
