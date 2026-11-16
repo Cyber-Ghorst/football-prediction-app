@@ -10,7 +10,7 @@ from datetime import date
 from typing import Any, Mapping
 
 from provider_data_storage import _connect
-from provider_season_provenance import is_verified_2026_27_snapshot
+from provider_season_provenance import explicit_season_label, is_verified_2026_27_snapshot, payload_mapping
 from provider_neutral_identity import (
     canonical_competition_key,
     canonical_season_key,
@@ -130,6 +130,21 @@ OFFICIAL_2026_27_SEASON_DATE_EVIDENCE = {
         "start_date": "2026-08-22", "end_date": "2027-05-30",
         "official_reference_urls": ("https://en.legaseriea.it/serie-a/news/looking-forward-to-the-2026-27-serie-a-fixture-list",),
     },
+    ("sportmonks", "8"): {
+        "start_date": "2026-08-21", "end_date": "2027-05-30",
+        "official_reference_urls": ("https://www.premierleague.com/en/news/4468487/dates-for-202627-premier-league-season-confirmed",),
+    },
+    ("sportmonks", "564"): {
+        "start_date": "2026-08-14", "end_date": "2027-05-30",
+        "official_reference_urls": (
+            "https://www.laliga.com/noticias/ya-se-conoce-el-calendario-al-completo-de-laliga-easports-2026-27",
+            "https://en.atleticodemadrid.com/noticias/our-2026-27-league-fixture-list-has-been-confirmed",
+        ),
+    },
+    ("sportmonks", "384"): {
+        "start_date": "2026-08-22", "end_date": "2027-05-30",
+        "official_reference_urls": ("https://en.legaseriea.it/serie-a/news/looking-forward-to-the-2026-27-serie-a-fixture-list",),
+    },
     ("api_ninjas", "bundesliga"): {
         "start_date": "2026-08-28", "end_date": "2027-05-22",
         "official_reference_urls": ("https://www.bundesliga.com/en/bundesliga/news/calendar-for-2026-27-season-world-cup-34676",),
@@ -162,7 +177,7 @@ def _season_date_fields(
         "provider_native_end_date": source_end,
     }
     label = str(season_label or "").strip()
-    is_2026_27 = label in {"2026", "2026/27", "2026/2027", "2026-27"}
+    is_2026_27 = explicit_season_label({"season_label": label}) == "2026/27"
     evidence = (
         OFFICIAL_2026_27_SEASON_DATE_EVIDENCE.get((provider, provider_parent_id), {})
         if is_2026_27 else {}
@@ -272,7 +287,7 @@ def _target_season_review_fields(
 ) -> dict[str, Any]:
     """Classify whether a row belongs to the active season and target leagues."""
     label = str(season_label or "").strip()
-    current_season = label in {"2026", "2026/27", "2026/2027", "2026-27"}
+    current_season = explicit_season_label({"season_label": label}) == "2026/27"
     competition_name = TARGET_2026_27_COMPETITION_PARENTS.get(
         (provider, provider_parent_id)
     )
@@ -322,6 +337,24 @@ def build_identity_candidate_report(
             "provider_entity_id": provider_id,
             "name": row.get("name"),
         }
+        for timestamp_field in ("provider_updated_at", "first_seen_at", "last_seen_at"):
+            timestamp_value = row.get(timestamp_field)
+            if timestamp_value is not None:
+                base[timestamp_field] = (
+                    timestamp_value.isoformat()
+                    if hasattr(timestamp_value, "isoformat") else str(timestamp_value)
+                )
+        if entity_type == "season":
+            raw_payload = payload_mapping(row.get("raw_payload"))
+            native_payload_fields = {}
+            for field in (
+                "id", "season_id", "year", "name", "start", "end",
+                "start_date", "end_date", "league_id", "competition_id", "parent_id",
+            ):
+                value = raw_payload.get(field)
+                if value is not None and isinstance(value, (str, int, float)):
+                    native_payload_fields[field] = value
+            base["provider_native_payload_fields"] = native_payload_fields
         if not provider or not provider_id:
             continue
 
@@ -564,6 +597,7 @@ def audit_provider_neutral_identity_candidates(database_url: str) -> dict[str, A
         "provider", "entity_type", "provider_entity_id", "name", "country",
         "competition_type", "parent_competition_provider_id", "season_label",
         "start_date", "end_date", "team_type", "gender_scope", "age_group", "squad_scope",
+        "provider_updated_at", "first_seen_at", "last_seen_at", "raw_payload",
     )
     with _connect(database_url) as connection:
         with connection.cursor() as cursor:

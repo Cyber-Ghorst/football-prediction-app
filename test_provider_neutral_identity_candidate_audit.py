@@ -482,5 +482,83 @@ class ProviderNeutralIdentityCandidateAuditTests(unittest.TestCase):
                          "held_provider_date_order_conflict")
 
 
+
+    def test_sportmonks_2026_27_native_dates_are_checked_against_official_calendars(self):
+        rows = [
+            {"provider": "sportmonks", "entity_type": "season",
+             "provider_entity_id": "28083", "name": "2026/2027",
+             "season_label": "2026/2027", "parent_competition_provider_id": "8",
+             "start_date": "2026-08-21", "end_date": "2027-05-30"},
+            {"provider": "sportmonks", "entity_type": "season",
+             "provider_entity_id": "27965", "name": "2026/2027",
+             "season_label": "2026/2027", "parent_competition_provider_id": "564",
+             "start_date": "2026-08-15", "end_date": "2027-05-30"},
+            {"provider": "sportmonks", "entity_type": "season",
+             "provider_entity_id": "27895", "name": "2026/2027",
+             "season_label": "2026/2027", "parent_competition_provider_id": "384",
+             "start_date": "2026-08-22", "end_date": "2027-05-30"},
+        ]
+        report = build_identity_candidate_report(rows, {
+            ("sportmonks", "8"): "sportmonks:8",
+            ("sportmonks", "564"): "sportmonks:564",
+            ("sportmonks", "384"): "sportmonks:384",
+        })
+        by_id = {row["provider_entity_id"]: row for row in report["season_candidates"]}
+        self.assertEqual(by_id["28083"]["season_date_consistency_status"],
+                         "provider_dates_match_official_calendar")
+        self.assertEqual(by_id["27895"]["season_date_consistency_status"],
+                         "provider_dates_match_official_calendar")
+        self.assertEqual(by_id["27965"]["season_date_conflicting_dimensions"], ["start_date"])
+        self.assertEqual(by_id["27965"]["start_date"], "2026-08-15")
+        self.assertEqual(by_id["27965"]["provider_native_start_date"], "2026-08-15")
+        self.assertEqual(by_id["27965"]["season_date_consistency_status"],
+                         "held_provider_dates_conflict_official_calendar")
+
+    def test_shared_strict_season_parser_controls_target_season_classification(self):
+        report = build_identity_candidate_report([
+            {"provider": "sportmonks", "entity_type": "season",
+             "provider_entity_id": "s1", "name": "2026/2027",
+             "season_label": "2026/2027", "parent_competition_provider_id": "8"},
+            {"provider": "sportmonks", "entity_type": "season",
+             "provider_entity_id": "s2", "name": "2026/28",
+             "season_label": "2026/28", "parent_competition_provider_id": "8"},
+        ], {("sportmonks", "8"): "sportmonks:8"})
+        by_id = {row["provider_entity_id"]: row for row in report["season_candidates"]}
+        self.assertEqual(by_id["s1"]["target_season_scope"], "current_target_season")
+        self.assertEqual(by_id["s1"]["season_label"], "2026/2027")
+        self.assertEqual(by_id["s2"]["target_season_scope"], "outside_target_season")
+        self.assertEqual(by_id["s2"]["target_season_review_status"],
+                         "held_outside_target_season")
+
+    @patch("provider_neutral_identity_candidate_audit._connect")
+    def test_season_audit_exposes_timestamps_and_whitelisted_native_payload(self, connect):
+        source_row = (
+            "sportmonks", "season", "28083", "2026/2027", None, None, "8",
+            "2026/2027", "2026-08-21", "2027-05-30", None, None, None, None,
+            "2026-07-01T10:00:00+00:00", "2026-06-01T10:00:00+00:00",
+            "2026-07-02T10:00:00+00:00",
+            {"id": 28083, "league_id": 8, "year": "2026/2027",
+             "secret_provider_token": "must-not-appear"},
+        )
+        cursor = Mock()
+        cursor.fetchall.side_effect = [[source_row], [("sportmonks", "8", "sportmonks:8")], []]
+        connection = Mock()
+        connection.__enter__ = Mock(return_value=connection)
+        connection.__exit__ = Mock(return_value=False)
+        connection.cursor.return_value.__enter__ = Mock(return_value=cursor)
+        connection.cursor.return_value.__exit__ = Mock(return_value=False)
+        connect.return_value = connection
+
+        report = audit_provider_neutral_identity_candidates("postgresql://readonly")
+        season = report["season_candidates"][0]
+        self.assertEqual(season["provider_updated_at"], "2026-07-01T10:00:00+00:00")
+        self.assertEqual(season["first_seen_at"], "2026-06-01T10:00:00+00:00")
+        self.assertEqual(season["last_seen_at"], "2026-07-02T10:00:00+00:00")
+        self.assertEqual(season["provider_native_payload_fields"],
+                         {"id": 28083, "year": "2026/2027", "league_id": 8})
+        self.assertNotIn("secret_provider_token", str(season))
+        self.assertTrue(report["database_read_only"])
+        self.assertFalse(report["database_writes"])
+
 if __name__ == "__main__":
     unittest.main()
