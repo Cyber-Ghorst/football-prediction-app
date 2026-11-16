@@ -61,6 +61,23 @@ class ProviderNeutralIdentityCandidateAuditTests(unittest.TestCase):
         )
         self.assertEqual(report["summary"]["teams_held_for_scope_evidence"], 1)
 
+    def test_date_range_derives_season_label_without_overwriting_provider_label(self):
+        report = build_identity_candidate_report([
+            {"provider": "api_football", "entity_type": "season",
+             "provider_entity_id": "39:2024", "name": "2024",
+             "season_label": "2024", "parent_competition_provider_id": "39",
+             "start_date": "2024-08-16", "end_date": "2025-05-25"},
+        ], {("api_football", "39"): "sportmonks:8"})
+        season = report["season_candidates"][0]
+        self.assertEqual(season["season_label"], "2024")
+        self.assertEqual(season["date_normalized_season_label_candidate"], "2024/2025")
+        self.assertTrue(
+            season["date_normalized_identity_key_candidate"].startswith("season_v1_")
+        )
+        self.assertEqual(
+            report["summary"]["seasons_with_date_label_requiring_normalization"], 1
+        )
+
     def test_date_objects_are_serialized_to_iso_strings(self):
         from datetime import date
         report = build_identity_candidate_report([
