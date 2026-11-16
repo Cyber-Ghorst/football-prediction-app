@@ -102,12 +102,15 @@ The similarity-only audit suggested API Ninjas **Stade Rennais** as a near-name 
 - [Provider-neutral identity candidate audit — controller run #430](https://github.com/Cyber-Ghorst/football-prediction-app/actions/runs/43908598483)
 - [Scope corroboration write — controller run #438](https://github.com/Cyber-Ghorst/football-prediction-app/actions/runs/43911085721)
 - [Post-write scope corroboration audit — controller run #439](https://github.com/Cyber-Ghorst/football-prediction-app/actions/runs/43911467932)
+- [Combined official scope audit — controller run #445](https://github.com/Cyber-Ghorst/football-prediction-app/actions/runs/43915371523)
+- [Official scope evidence staging — controller run #446](https://github.com/Cyber-Ghorst/football-prediction-app/actions/runs/43915565223)
 
 ## 5. Disposition and safety
 
 - 25 Highlightly–LiveScore exact-name pairs: provider-local details confirmed; remain unapproved cross-provider candidates.
 - 21 Highlightly–API Ninjas non-exact-name pairs: official roster variants reviewed and recorded as manual scope corroborations.
-- 132 scope corroboration records were written to the dedicated review table: 111 exact-name corroborations and 21 manual official-name aliases (96 Highlightly and 36 LiveScoreFootball).
+- 132 domestic scope corroboration records were written to the dedicated review table: 111 exact-name corroborations and 21 manual official-name aliases (96 Highlightly and 36 LiveScoreFootball).
+- The official-scope audit now covers 201 review records: 132 domestic senior first-team candidates, 48 FIFA World Cup national-team candidates, and 21 held legacy API-Football records. All 201 were staged in the separate official scope review table with `promotion_allowed=false`.
 - No canonical identity or cross-provider provider link was approved or created. Provider source rows and their country/type/gender fields were not updated.
 - No fixture, prediction, model-weight, TVD or prediction-ledger changes.
 - No source rows were overwritten or deleted.
