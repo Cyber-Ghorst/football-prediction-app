@@ -21,7 +21,10 @@ COLUMNS = (
 )
 FIELD_KEYS = {
     "country": {"country", "country_name", "countryname", "team_country_from_provider"},
-    "team_type": {"team_type", "teamtype", "national", "is_national"},
+    # Preserve provider-native IDs separately; they are not country-name labels.
+    "country_id": {"country_id", "countryid"},
+    "nationality": {"nationality"},
+    "team_type": {"team_type", "teamtype", "national", "is_national", "national_team", "is_national_team"},
     "gender_scope": {"gender", "gender_scope", "genderscope", "gender_name", "gendername"},
     "age_group": {"age_group", "agegroup", "age_group_name", "agegroupname", "age"},
     "squad_scope": {"squad_scope", "squadscope", "squad", "team_scope", "teamscope"},
