@@ -73,6 +73,12 @@ def build_identity_candidate_report(
                     **base,
                     "provider_parent_competition_id": provider_parent_id or None,
                     "season_label": season_label,
+                    "start_date": row.get("start_date"),
+                    "end_date": row.get("end_date"),
+                    "season_date_range_status": (
+                        "complete" if row.get("start_date") and row.get("end_date")
+                        else "incomplete"
+                    ),
                     "status": "held_until_parent_competition_is_approved",
                     "identity_key_candidate": None,
                     "reason": "A verified canonical competition ID is required before season identity can be keyed.",
@@ -86,6 +92,12 @@ def build_identity_candidate_report(
                         "provider_parent_competition_id": provider_parent_id,
                         "canonical_parent_competition_id": canonical_parent_id,
                         "season_label": season_label,
+                        "start_date": row.get("start_date"),
+                        "end_date": row.get("end_date"),
+                        "season_date_range_status": (
+                            "complete" if row.get("start_date") and row.get("end_date")
+                            else "incomplete"
+                        ),
                         "status": "held_invalid_season_identity",
                         "identity_key_candidate": None,
                         "reason": str(exc),
@@ -96,6 +108,12 @@ def build_identity_candidate_report(
                         "provider_parent_competition_id": provider_parent_id,
                         "canonical_parent_competition_id": canonical_parent_id,
                         "season_label": season_label,
+                        "start_date": row.get("start_date"),
+                        "end_date": row.get("end_date"),
+                        "season_date_range_status": (
+                            "complete" if row.get("start_date") and row.get("end_date")
+                            else "incomplete"
+                        ),
                         "status": "season_key_candidate_parent_approved_review_required",
                         "identity_key_candidate": season_key,
                         "reason": (
@@ -171,6 +189,12 @@ def build_identity_candidate_report(
                 row.get("status") == "season_key_candidate_parent_approved_review_required"
                 for row in seasons
             ),
+            "seasons_with_complete_date_range": sum(
+                row.get("season_date_range_status") == "complete" for row in seasons
+            ),
+            "seasons_with_incomplete_date_range": sum(
+                row.get("season_date_range_status") == "incomplete" for row in seasons
+            ),
             "team_source_rows": len(teams),
             "teams_held_for_scope_evidence": sum(
                 row.get("status") != "single_source_identity_candidate" for row in teams
@@ -189,7 +213,7 @@ def audit_provider_neutral_identity_candidates(database_url: str) -> dict[str, A
     columns = (
         "provider", "entity_type", "provider_entity_id", "name", "country",
         "competition_type", "parent_competition_provider_id", "season_label",
-        "team_type", "gender_scope", "age_group", "squad_scope",
+        "start_date", "end_date", "team_type", "gender_scope", "age_group", "squad_scope",
     )
     with _connect(database_url) as connection:
         with connection.cursor() as cursor:
