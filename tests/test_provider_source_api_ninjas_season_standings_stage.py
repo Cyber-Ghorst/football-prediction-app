@@ -112,6 +112,14 @@ class APINinjasSeasonStandingsEvidenceTests(unittest.TestCase):
             {row["raw_payload"]["competition_provider_id"] for row in team_rows},
             {"epl", "laliga"},
         )
+        self.assertEqual(
+            {row["provider_entity_id"] for row in team_rows},
+            {"epl:soccer-arsenal", "laliga:soccer-arsenal"},
+        )
+        self.assertEqual(
+            {row["raw_payload"]["provider_team_id"] for row in team_rows},
+            {"soccer-arsenal"},
+        )
 
     def test_unverified_season_does_not_create_season_entity(self):
         entities, held = build_source_entities(
