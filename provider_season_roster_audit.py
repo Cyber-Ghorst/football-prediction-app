@@ -227,6 +227,7 @@ def build_roster_identity_candidates(
             comparisons.append({
                 "competition": highlightly_name,
                 "status": "held_missing_or_ambiguous_roster",
+                "candidate_count": 0, "ambiguous_count": 0,
                 "candidates": [], "ambiguous": [], "unmatched_highlightly": [],
                 "unmatched_livescore": [],
             })
