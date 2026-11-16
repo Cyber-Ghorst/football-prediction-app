@@ -38,6 +38,22 @@ MANUAL_ALIAS_APPROVALS = (
     ("highlightly", "52695", "80778", "Rennes FC", "soccer-stade-rennais", "Stade Rennais", "FR", "France", "ligue1", ("https://ligue1.com/fr/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released",)),
     ("highlightly", "52695", "90990", "Stade Brestois 29", "soccer-brest", "Brest", "FR", "France", "ligue1", ("https://ligue1.com/fr/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released",)),
     ("highlightly", "67162", "140348", "FSV Mainz 05", "soccer-mainz", "Mainz", "DE", "Germany", "bundesliga", ("https://www.bundesliga.com/en/bundesliga/clubs",)),
+    # API-Football 2026 league-roster variants, verified against the official 2026/27 league club lists.
+    ("api_football", "39", "35", "Bournemouth", "soccer-afc-bournemouth", "AFC Bournemouth", "GB", "United Kingdom", "epl", ("https://www.premierleague.com/en/news/4365156",)),
+    ("api_football", "39", "51", "Brighton", "soccer-brighton-hove-albion", "Brighton & Hove Albion", "GB", "United Kingdom", "epl", ("https://www.premierleague.com/en/news/4365156",)),
+    ("api_football", "39", "57", "Ipswich", "soccer-ipswich-town", "Ipswich Town", "GB", "United Kingdom", "epl", ("https://www.premierleague.com/en/news/4365156",)),
+    ("api_football", "39", "34", "Newcastle", "soccer-newcastle-united", "Newcastle United", "GB", "United Kingdom", "epl", ("https://www.premierleague.com/en/news/4365156",)),
+    ("api_football", "39", "47", "Tottenham", "soccer-tottenham-hotspur", "Tottenham Hotspur", "GB", "United Kingdom", "epl", ("https://www.premierleague.com/en/news/4365156",)),
+    ("api_football", "78", "167", "1899 Hoffenheim", "soccer-tsg-hoffenheim", "TSG Hoffenheim", "DE", "Germany", "bundesliga", ("https://www.bundesliga.com/en/bundesliga/clubs",)),
+    ("api_football", "78", "157", "Bayern München", "soccer-bayern-munich", "Bayern Munich", "DE", "Germany", "bundesliga", ("https://www.bundesliga.com/en/bundesliga/clubs",)),
+    ("api_football", "78", "164", "FSV Mainz 05", "soccer-mainz", "Mainz", "DE", "Germany", "bundesliga", ("https://www.bundesliga.com/en/bundesliga/clubs",)),
+    ("api_football", "78", "182", "Union Berlin", "soccer-1-fc-union-berlin", "1. FC Union Berlin", "DE", "Germany", "bundesliga", ("https://www.bundesliga.com/en/bundesliga/clubs",)),
+    ("api_football", "135", "505", "Inter", "soccer-internazionale", "Internazionale", "IT", "Italy", "seriea", ("https://www.figc.it/en/figc/news/season-2026-2027-uefa-licences-granted-to-18-serie-a-clubs-erpug9sv",)),
+    ("api_football", "61", "108", "Auxerre", "soccer-aj-auxerre", "AJ Auxerre", "FR", "France", "ligue1", ("https://ligue1.com/fr/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released",)),
+    ("api_football", "61", "111", "Le Havre", "soccer-le-havre-ac", "Le Havre AC", "FR", "France", "ligue1", ("https://ligue1.com/fr/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released",)),
+    ("api_football", "61", "91", "Monaco", "soccer-as-monaco", "AS Monaco", "FR", "France", "ligue1", ("https://ligue1.com/fr/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released",)),
+    ("api_football", "61", "94", "Rennes", "soccer-stade-rennais", "Stade Rennais", "FR", "France", "ligue1", ("https://ligue1.com/fr/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released",)),
+    ("api_football", "61", "106", "Stade Brestois 29", "soccer-brest", "Brest", "FR", "France", "ligue1", ("https://ligue1.com/fr/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released",)),
 )
 TABLE_SQL = """
 CREATE TABLE IF NOT EXISTS provider_team_scope_corroborations (
