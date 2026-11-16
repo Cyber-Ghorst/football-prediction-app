@@ -847,6 +847,32 @@ jobs:
                               for child in value:
                                   collect_times(child, key)
                       collect_times(payload)
+                      if filename == "provider-team-scope-corroboration-audit.json":
+                          compact = {
+                              key: payload.get(key)
+                              for key in (
+                                  "checked_at", "read_only", "target_team_rows_examined",
+                                  "api_ninjas_team_rows_examined", "unique_exact_name_candidates",
+                                  "scope_complete_candidates", "approved_scope_corroborations",
+                                  "approved_by_provider", "approved_by_match_method",
+                                  "provider_links_created", "provider_scope_fields_updated",
+                              )
+                          }
+                          compact["competitions"] = [
+                              {
+                                  key: competition.get(key)
+                                  for key in (
+                                      "target_provider", "target_competition_provider_id",
+                                      "api_ninjas_competition_code", "target_team_rows",
+                                      "api_ninjas_team_rows", "unique_exact_name_candidates",
+                                      "scope_complete_candidates", "approved_exact_corroborations",
+                                      "approved_manual_alias_corroborations",
+                                      "unmatched_target_team_rows", "unmatched_target_teams",
+                                  )
+                              }
+                              for competition in payload.get("competitions", [])
+                          ]
+                          content = json.dumps(compact, indent=2, ensure_ascii=False)
                   except (json.JSONDecodeError, TypeError):
                       pass
               if "Ran " in content and " tests " in content:
