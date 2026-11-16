@@ -1,3 +1,5 @@
 {
-  "operation": "full_check"
+  "operation": "provider_source_repository_audit",
+  "safety_scope": "read_only_database_audit",
+  "focus_provider": "api_ninjas"
 }
