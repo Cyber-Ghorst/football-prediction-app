@@ -224,6 +224,17 @@ def build_catalogue_report(client_factory=SportmonksClient) -> dict[str, Any]:
                 "name": league.get("name"),
                 "country": _country_name(league),
                 "season_count": season_counts.get(str(league.get("id")), 0),
+                "seasons": [
+                    {
+                        "sportmonks_season_id": str(season.get("id")),
+                        "league_id": str(season.get("league_id")),
+                        "name": season.get("name"),
+                        "starting_at": season.get("starting_at"),
+                        "ending_at": season.get("ending_at"),
+                    }
+                    for season in seasons
+                    if str(season.get("league_id")) == str(league.get("id"))
+                ],
             }
             for league in leagues
         ]

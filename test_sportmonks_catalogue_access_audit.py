@@ -60,8 +60,10 @@ class FakeSportmonks:
         ]
     def available_seasons(self):
         return [
-            {"id": 1001, "league_id": 82, "name": "2025/2026"},
-            {"id": 1002, "league_id": 301, "name": "2025/2026"},
+            {"id": 1001, "league_id": 82, "name": "2025/2026",
+             "starting_at": "2025-08-22", "ending_at": "2026-05-16"},
+            {"id": 1002, "league_id": 301, "name": "2025/2026",
+             "starting_at": "2025-08-15", "ending_at": "2026-05-17"},
         ]
 
 
@@ -82,6 +84,12 @@ class SportmonksCatalogueAuditTests(unittest.TestCase):
             ["unique_exact_catalogue_match"] * 3,
         )
         self.assertEqual(report["targets"][0]["candidates"][0]["season_count"], 1)
+        catalogue = {row["sportmonks_league_id"]: row for row in report["catalogue_leagues"]}
+        self.assertEqual(catalogue["82"]["seasons"], [{
+            "sportmonks_season_id": "1001", "league_id": "82",
+            "name": "2025/2026", "starting_at": "2025-08-22",
+            "ending_at": "2026-05-16",
+        }])
 
     def test_missing_competition_is_not_fabricated(self):
         class MissingWorldCup(FakeSportmonks):
