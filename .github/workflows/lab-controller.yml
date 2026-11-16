@@ -732,8 +732,6 @@ jobs:
 
       - name: Audit Highlightly FIFA World Cup 2026 official national-team roster (read-only)
         if: steps.operation.outputs.operation == 'highlightly_world_cup_official_roster_audit'
-        env:
-          HIGHLIGHTLY_API_KEY: ${{ secrets.HIGHLIGHTLY_API_KEY }}
         run: |
           set -euo pipefail
           python highlightly_world_cup_official_roster_audit.py
