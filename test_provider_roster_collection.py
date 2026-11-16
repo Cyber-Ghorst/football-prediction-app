@@ -34,6 +34,16 @@ class ProviderRosterCollectionTests(unittest.TestCase):
         self.assertTrue(result["team_evidence_complete"])
         self.assertEqual(result["fixtures_imported"], 0)
 
+    def test_team_record_preserves_explicit_gender_and_type(self):
+        from provider_roster_collection import _team_record
+        record = _team_record({
+            "id": 10, "name": "Team A", "type": "domestic",
+            "gender": "male", "country": "Germany",
+        })
+        self.assertEqual(record["type"], "domestic")
+        self.assertEqual(record["gender"], "male")
+        self.assertEqual(record["raw"]["gender"], "male")
+
     def test_highlightly_rejects_missing_country(self):
         with self.assertRaises(ValueError):
             collect_highlightly_season_roster(
