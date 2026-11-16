@@ -1,7 +1,9 @@
 import unittest
 
+from highlightly import HighlightlyError
 from highlightly_livescore_team_detail_audit import (
     _highlightly_team_record,
+    _safe_highlightly_request_failure,
     _verify_highlightly_detail,
     _verify_livescore_detail,
     build_exact_candidates,
@@ -82,6 +84,36 @@ class HighlightlyLiveScoreTeamDetailAuditTests(unittest.TestCase):
         self.assertIsNone(result["country_value"])
         wrong_id = _verify_livescore_detail("999", "Bayer Leverkusen", payload)
         self.assertEqual(wrong_id["status"], "held_detail_mismatch")
+
+    def test_highlightly_failure_records_safe_http_status_and_quota_metadata(self):
+        class Client:
+            last_metadata = {
+                "http_status": 429,
+                "requests_limit": "1000",
+                "requests_remaining": "0",
+                "authorization": "must-not-be-recorded",
+            }
+
+        detail = _safe_highlightly_request_failure(
+            HighlightlyError("Highlightly rate limit or daily quota reached (HTTP 429)."),
+            Client(),
+        )
+        self.assertEqual(detail["status"], "provider_request_failed")
+        self.assertEqual(detail["safe_error"], "Highlightly rate limit or daily quota reached (HTTP 429).")
+        self.assertEqual(detail["response_metadata"], {
+            "http_status": 429, "requests_limit": "1000", "requests_remaining": "0",
+        })
+        self.assertNotIn("authorization", detail["response_metadata"])
+
+    def test_non_adapter_exception_does_not_persist_arbitrary_message(self):
+        class Client:
+            last_metadata = {}
+
+        detail = _safe_highlightly_request_failure(
+            RuntimeError("sensitive request detail"), Client(),
+        )
+        self.assertEqual(detail["error_type"], "RuntimeError")
+        self.assertNotIn("safe_error", detail)
 
 
 if __name__ == "__main__":
