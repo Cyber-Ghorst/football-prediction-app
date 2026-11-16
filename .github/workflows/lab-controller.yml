@@ -30,6 +30,7 @@ on:
           - provider_neutral_identity_candidate_audit
           - provider_team_scope_evidence_audit
           - provider_team_scope_corroboration_audit
+          - provider_team_scope_corroboration_approval
           - livescore_team_scope_metadata_audit
           - provider_link_approval_evidence_audit
           - provider_source_highlightly_roster_stage
@@ -140,7 +141,7 @@ jobs:
               trigger = json.loads(Path(".agent/trigger.json").read_text(encoding="utf-8"))
               operation = trigger.get("operation", "")
 
-          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync", "tipmaster_refresh_verify", "openscores_connection_check", "openscores_entity_mapping_audit", "openscores_sportmonks_reconciliation", "sportmonks_catalogue_access_audit", "sportmonks_team_scope_metadata_audit", "sportmonks_team_scope_metadata_stage", "provider_league_catalogue_audit", "provider_season_roster_audit", "provider_neutral_repository_audit", "provider_source_roster_stage", "provider_source_repository_audit", "provider_source_legacy_catalogue_stage", "provider_neutral_identity_candidate_audit", "provider_source_highlightly_roster_stage", "provider_source_api_football_roster_stage", "provider_source_api_ninjas_team_scope_stage", "provider_competition_identity_approval", "provider_team_scope_evidence_audit", "provider_team_scope_corroboration_audit", "livescore_team_scope_metadata_audit", "provider_link_approval_evidence_audit", "learning_audit", "deployment_redeploy"}
+          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync", "tipmaster_refresh_verify", "openscores_connection_check", "openscores_entity_mapping_audit", "openscores_sportmonks_reconciliation", "sportmonks_catalogue_access_audit", "sportmonks_team_scope_metadata_audit", "sportmonks_team_scope_metadata_stage", "provider_league_catalogue_audit", "provider_season_roster_audit", "provider_neutral_repository_audit", "provider_source_roster_stage", "provider_source_repository_audit", "provider_source_legacy_catalogue_stage", "provider_neutral_identity_candidate_audit", "provider_source_highlightly_roster_stage", "provider_source_api_football_roster_stage", "provider_source_api_ninjas_team_scope_stage", "provider_competition_identity_approval", "provider_team_scope_evidence_audit", "provider_team_scope_corroboration_audit", "provider_team_scope_corroboration_approval", "livescore_team_scope_metadata_audit", "provider_link_approval_evidence_audit", "learning_audit", "deployment_redeploy"}
           if operation not in allowed:
               raise SystemExit("Rejected unsupported or missing operation")
           if operation == "prediction_run":
@@ -532,7 +533,7 @@ jobs:
           python sportmonks_team_scope_metadata_audit.py
 
       - name: Install provider catalogue audit dependency
-        if: steps.operation.outputs.operation == 'provider_league_catalogue_audit' || steps.operation.outputs.operation == 'provider_season_roster_audit' || steps.operation.outputs.operation == 'provider_neutral_repository_audit' || steps.operation.outputs.operation == 'provider_source_roster_stage' || steps.operation.outputs.operation == 'provider_source_repository_audit' || steps.operation.outputs.operation == 'provider_source_legacy_catalogue_stage' || steps.operation.outputs.operation == 'provider_neutral_identity_candidate_audit' || steps.operation.outputs.operation == 'provider_source_highlightly_roster_stage' || steps.operation.outputs.operation == 'provider_source_api_football_roster_stage' || steps.operation.outputs.operation == 'provider_source_api_ninjas_team_scope_stage' || steps.operation.outputs.operation == 'provider_competition_identity_approval' || steps.operation.outputs.operation == 'provider_team_scope_evidence_audit' || steps.operation.outputs.operation == 'provider_team_scope_corroboration_audit' || steps.operation.outputs.operation == 'livescore_team_scope_metadata_audit' || steps.operation.outputs.operation == 'provider_link_approval_evidence_audit'
+        if: steps.operation.outputs.operation == 'provider_league_catalogue_audit' || steps.operation.outputs.operation == 'provider_season_roster_audit' || steps.operation.outputs.operation == 'provider_neutral_repository_audit' || steps.operation.outputs.operation == 'provider_source_roster_stage' || steps.operation.outputs.operation == 'provider_source_repository_audit' || steps.operation.outputs.operation == 'provider_source_legacy_catalogue_stage' || steps.operation.outputs.operation == 'provider_neutral_identity_candidate_audit' || steps.operation.outputs.operation == 'provider_source_highlightly_roster_stage' || steps.operation.outputs.operation == 'provider_source_api_football_roster_stage' || steps.operation.outputs.operation == 'provider_source_api_ninjas_team_scope_stage' || steps.operation.outputs.operation == 'provider_competition_identity_approval' || steps.operation.outputs.operation == 'provider_team_scope_evidence_audit' || steps.operation.outputs.operation == 'provider_team_scope_corroboration_audit' || steps.operation.outputs.operation == 'provider_team_scope_corroboration_approval' || steps.operation.outputs.operation == 'livescore_team_scope_metadata_audit' || steps.operation.outputs.operation == 'provider_link_approval_evidence_audit'
         run: |
           set -euo pipefail
           python -m pip install requests 'psycopg[binary]'
@@ -622,6 +623,14 @@ jobs:
         run: |
           set -euo pipefail
           python provider_neutral_identity_candidate_audit_report.py
+
+      - name: Approve exact API Ninjas team scope corroborations
+        if: steps.operation.outputs.operation == 'provider_team_scope_corroboration_approval'
+        env:
+          PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
+        run: |
+          set -euo pipefail
+          python provider_team_scope_corroboration_approval.py
 
       - name: Audit API Ninjas team scope corroboration candidates (read-only)
         if: steps.operation.outputs.operation == 'provider_team_scope_corroboration_audit'
@@ -929,6 +938,7 @@ jobs:
             provider-neutral-identity-candidate-audit.json
             provider-team-scope-evidence-audit.json
             provider-team-scope-corroboration-audit.json
+            provider-team-scope-corroboration-approval-report.json
             sportmonks-team-scope-metadata-audit.json
             sportmonks-team-scope-metadata-stage-report.json
             livescore-team-scope-metadata-audit.json
