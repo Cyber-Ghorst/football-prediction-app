@@ -153,6 +153,7 @@ def upsert_openscores_observations(
                         raw_payload = excluded.raw_payload,
                         reconciliation_status = CASE
                             WHEN provider_fixture_observations.canonical_fixture_id IS NOT NULL
+                              OR provider_fixture_observations.reconciliation_status = 'discarded_by_operator'
                             THEN provider_fixture_observations.reconciliation_status
                             ELSE excluded.reconciliation_status
                         END,
@@ -181,12 +182,187 @@ def mark_outside_upcoming_window_observations(
                     reconciliation_note = 'Retained as provider history; outside the current seven-day window'
                 WHERE provider = 'openscores'
                   AND canonical_fixture_id IS NULL
-                  AND reconciliation_status <> 'matched'
+                  AND reconciliation_status NOT IN ('matched', 'discarded_by_operator')
                   AND (kickoff_utc < %s OR kickoff_utc > %s)
                 """,
                 (window_start, window_end),
             )
             return int(getattr(cursor, "rowcount", 0) or 0)
+
+
+EXPECTED_PENDING_OPENSCORES_GROUPS = {
+    ("4", "4"): 50,  # Germany Bundesliga 2025/26
+    ("6", "6"): 50,  # France Ligue 1 2025/26
+    ("7", "7"): 50,  # FIFA World Cup 2026
+}
+
+
+def _openscores_observation_snapshot(cursor) -> dict[str, Any]:
+    cursor.execute(
+        """SELECT reconciliation_status, COUNT(*)
+           FROM provider_fixture_observations
+           WHERE provider = 'openscores'
+           GROUP BY reconciliation_status
+           ORDER BY reconciliation_status"""
+    )
+    status_counts = {
+        str(status): int(count or 0) for status, count in cursor.fetchall()
+    }
+    cursor.execute(
+        """SELECT provider_league_id, provider_season_id, COUNT(*)
+           FROM provider_fixture_observations
+           WHERE provider = 'openscores'
+             AND reconciliation_status = 'pending_entity_mapping'
+             AND canonical_fixture_id IS NULL
+           GROUP BY provider_league_id, provider_season_id
+           ORDER BY provider_league_id, provider_season_id"""
+    )
+    pending_groups = {
+        (str(league_id), str(season_id)): int(count or 0)
+        for league_id, season_id, count in cursor.fetchall()
+    }
+    cursor.execute(
+        """SELECT entity_type, COUNT(*)
+           FROM provider_entity_links
+           WHERE provider = 'openscores'
+           GROUP BY entity_type
+           ORDER BY entity_type"""
+    )
+    link_counts = {
+        str(entity_type): int(count or 0)
+        for entity_type, count in cursor.fetchall()
+    }
+    cursor.execute(
+        """SELECT COUNT(*)
+           FROM provider_fixture_observations
+           WHERE provider = 'openscores'"""
+    )
+    total_observations = int(cursor.fetchone()[0] or 0)
+    return {
+        "total_observations": total_observations,
+        "status_counts": status_counts,
+        "pending_entity_mapping": status_counts.get("pending_entity_mapping", 0),
+        "matched": status_counts.get("matched", 0),
+        "discarded_by_operator": status_counts.get("discarded_by_operator", 0),
+        "pending_groups": [
+            {"league_id": key[0], "season_id": key[1], "count": value}
+            for key, value in sorted(pending_groups.items())
+        ],
+        "pending_group_map": pending_groups,
+        "openscores_provider_link_counts": link_counts,
+    }
+
+
+def audit_pending_openscores_observations(database_url: str) -> dict[str, Any]:
+    """Read-only preflight for the exact pending OpenScores cohort."""
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required")
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            snapshot = _openscores_observation_snapshot(cursor)
+    expected = dict(EXPECTED_PENDING_OPENSCORES_GROUPS)
+    actual = dict(snapshot.pop("pending_group_map"))
+    return {
+        "read_only": True,
+        **snapshot,
+        "expected_pending_total": sum(expected.values()),
+        "expected_pending_groups": [
+            {"league_id": key[0], "season_id": key[1], "count": value}
+            for key, value in sorted(expected.items())
+        ],
+        "preflight_passed": (
+            snapshot["pending_entity_mapping"] == sum(expected.values())
+            and actual == expected
+            and snapshot["matched"] == 150
+            and snapshot["total_observations"] == 300
+        ),
+    }
+
+
+def discard_pending_openscores_observations(
+    database_url: str, *, expected_total: int = 150,
+    expected_groups: dict[tuple[str, str], int] | None = None,
+) -> dict[str, Any]:
+    """Mark only the operator-rejected pending cohort; preserve all raw rows.
+
+    The matched 150 observations, 66 league/season/team links and 150 matched
+    fixture links are not modified. This operation never deletes raw payloads.
+    """
+    if not database_url:
+        raise ValueError("PROVIDER_DATABASE_URL is required")
+    expected = dict(expected_groups or EXPECTED_PENDING_OPENSCORES_GROUPS)
+    if sum(expected.values()) != expected_total:
+        raise ValueError("expected_total must equal the sum of expected_groups")
+    with _connect(database_url) as connection:
+        with connection.cursor() as cursor:
+            before = _openscores_observation_snapshot(cursor)
+            actual_groups = dict(before.pop("pending_group_map"))
+            if (
+                before["pending_entity_mapping"] == 0
+                and before["discarded_by_operator"] == expected_total
+            ):
+                discarded_groups = {
+                    (row["league_id"], row["season_id"]): row["count"]
+                    for row in before["status_counts"].get("discarded_groups", [])
+                }
+                return {
+                    "status": "already_discarded",
+                    "updated": 0,
+                    "before": before,
+                    "after": before,
+                    "raw_records_retained": True,
+                    "provider_links_unchanged": True,
+                }
+            if (
+                before["pending_entity_mapping"] != expected_total
+                or actual_groups != expected
+                or before["matched"] != 150
+                or before["total_observations"] != 300
+            ):
+                raise RuntimeError(
+                    "Fail-closed: pending OpenScores cohort does not match the exact "
+                    "150-row / 50-per-competition approval scope."
+                )
+            cursor.execute(
+                """UPDATE provider_fixture_observations
+                   SET reconciliation_status = 'discarded_by_operator',
+                       reconciliation_note = %s
+                   WHERE provider = 'openscores'
+                     AND reconciliation_status = 'pending_entity_mapping'
+                     AND canonical_fixture_id IS NULL""",
+                (
+                    "Discarded by operator per explicit user instruction dated 2026-11-10; "
+                    "raw provider observation retained for audit and excluded from reconciliation.",
+                ),
+            )
+            updated = int(getattr(cursor, "rowcount", 0) or 0)
+            after = _openscores_observation_snapshot(cursor)
+            after_groups = dict(after.pop("pending_group_map"))
+            if (
+                updated != expected_total
+                or after["pending_entity_mapping"] != 0
+                or after["discarded_by_operator"] != expected_total
+                or after["matched"] != before["matched"]
+                or after["total_observations"] != before["total_observations"]
+                or after["openscores_provider_link_counts"] != before["openscores_provider_link_counts"]
+                or after_groups
+            ):
+                raise RuntimeError(
+                    "Post-update verification failed; transaction will roll back."
+                )
+    return {
+        "status": "discarded_by_operator",
+        "updated": updated,
+        "before": before,
+        "after": after,
+        "raw_records_retained": True,
+        "provider_links_unchanged": True,
+        "canonical_fixtures_modified": 0,
+        "canonical_ids_assigned": 0,
+        "provider_links_created": 0,
+        "prediction_model_modified": False,
+        "prediction_ledger_touched": False,
+    }
 
 
 def reconcile_openscores_observations(
@@ -225,7 +401,7 @@ def reconcile_openscores_observations(
                        kickoff_utc, reconciliation_status
                 FROM provider_fixture_observations
                 WHERE provider = 'openscores'
-                  AND reconciliation_status NOT IN ('matched')
+                  AND reconciliation_status NOT IN ('matched', 'discarded_by_operator')
                   AND (%s OR reconciliation_status <> 'outside_upcoming_window')
                 ORDER BY kickoff_utc
                 LIMIT %s
