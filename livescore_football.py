@@ -84,6 +84,25 @@ class LiveScoreFootballClient:
             raise LiveScoreFootballError("League catalog response has no leagues array.")
         return [row for row in rows if isinstance(row, dict)]
 
+    def clubs(self, league: str) -> dict[str, Any]:
+        """Return the stored club catalogue and its provenance metadata for a league."""
+        payload = self._get(f"get/soccer/{quote(str(league), safe='')}/clubs")
+        if not isinstance(payload, dict) or not isinstance(payload.get("clubs"), list):
+            raise LiveScoreFootballError("Club catalogue response has no clubs array.")
+        return {
+            **payload,
+            "clubs": [row for row in payload["clubs"] if isinstance(row, dict)],
+        }
+
+    def club(self, league: str, club_id: str | int) -> dict[str, Any]:
+        """Return a stored club detail record without inferring missing fields."""
+        payload = self._get(
+            f"get/soccer/{quote(str(league), safe='')}/clubs/{quote(str(club_id), safe='')}"
+        )
+        if not isinstance(payload, dict) or not isinstance(payload.get("club"), dict):
+            raise LiveScoreFootballError("Club detail response has no club object.")
+        return payload
+
     def fixtures(self, league: str, *, status: str = "all",
                  date_from: str | None = None, date_to: str | None = None,
                  max_pages: int = 20, page_size: int = 200) -> list[dict[str, Any]]:
