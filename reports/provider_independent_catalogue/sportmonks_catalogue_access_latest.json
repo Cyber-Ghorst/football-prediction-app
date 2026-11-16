@@ -1,6 +1,6 @@
 {
   "operation": "sportmonks_catalogue_access_audit",
-  "checked_at_utc": "2026-11-15T14:34:30.790695+00:00",
+  "checked_at_utc": "2026-11-16T18:32:53.895972+00:00",
   "status": "partial",
   "read_only": true,
   "database_touched": false,
@@ -66,6 +66,14 @@
               "name": "Oberliga: Nordost-Nord"
             },
             {
+              "id": 2352,
+              "name": "Reg. Cup Mecklenburg-Vorpommern"
+            },
+            {
+              "id": 2347,
+              "name": "Reg. Cup Brandenburg"
+            },
+            {
               "id": 2363,
               "name": "Reg. Cup S\u00fcdwest"
             },
@@ -102,16 +110,16 @@
               "name": "State Leagues: Mecklenburg - Vorpommern"
             },
             {
+              "id": 2459,
+              "name": "Regionalliga Women - West"
+            },
+            {
               "id": 124,
               "name": "Oberliga: Bremen"
             },
             {
               "id": 2624,
               "name": "State Leagues: Saarland"
-            },
-            {
-              "id": 136,
-              "name": "Oberliga: Niederrhein"
             },
             {
               "id": 1595,
@@ -186,8 +194,8 @@
               "name": "Reg. Cup Bremen"
             },
             {
-              "id": 2459,
-              "name": "Regionalliga Women - West"
+              "id": 136,
+              "name": "Oberliga: Niederrhein"
             },
             {
               "id": 3152,
@@ -212,10 +220,6 @@
             {
               "id": 2230,
               "name": "European Cricket Series Dresden"
-            },
-            {
-              "id": 133,
-              "name": "Oberliga: Mittelrhein"
             },
             {
               "id": 1352,
@@ -250,20 +254,12 @@
               "name": "Reg. Cup Niedersachsen"
             },
             {
-              "id": 2632,
-              "name": "State Leagues: Weser - Ems"
-            },
-            {
-              "id": 2629,
-              "name": "State Leagues: Braunschweig"
-            },
-            {
-              "id": 160,
-              "name": "Oberliga: Westfalen"
-            },
-            {
               "id": 2627,
               "name": "State Leagues: Berlin"
+            },
+            {
+              "id": 133,
+              "name": "Oberliga: Mittelrhein"
             },
             {
               "id": 2346,
@@ -280,6 +276,10 @@
             {
               "id": 2652,
               "name": "State Leagues: Niederrhein - 3"
+            },
+            {
+              "id": 160,
+              "name": "Oberliga: Westfalen"
             },
             {
               "id": 2626,
@@ -326,16 +326,20 @@
               "name": "Super Cup"
             },
             {
+              "id": 2632,
+              "name": "State Leagues: Weser - Ems"
+            },
+            {
+              "id": 2629,
+              "name": "State Leagues: Braunschweig"
+            },
+            {
               "id": 2628,
               "name": "State Leagues: Hessen - Mitte"
             },
             {
               "id": 2360,
               "name": "Reg. Cup Sachsan-Anhalt"
-            },
-            {
-              "id": 2347,
-              "name": "Reg. Cup Brandenburg"
             },
             {
               "id": 3171,
@@ -372,10 +376,6 @@
             {
               "id": 166,
               "name": "2. Bundesliga Play-offs"
-            },
-            {
-              "id": 2352,
-              "name": "Reg. Cup Mecklenburg-Vorpommern"
             },
             {
               "id": 2007,
@@ -486,12 +486,12 @@
               "name": "Reg. Cup Baden"
             },
             {
-              "id": 106,
-              "name": "Regionalliga: West"
-            },
-            {
               "id": 139,
               "name": "Oberliga: Niedersachsen"
+            },
+            {
+              "id": 106,
+              "name": "Regionalliga: West"
             },
             {
               "id": 130,
@@ -571,14 +571,6 @@
               "name": "Challenge Espoirs"
             },
             {
-              "id": 307,
-              "name": "Coupe de France"
-            },
-            {
-              "id": 2787,
-              "name": "Championnat National U19"
-            },
-            {
               "id": 1640,
               "name": "National 3: Group L"
             },
@@ -591,16 +583,20 @@
               "name": "Ligue 2"
             },
             {
+              "id": 2787,
+              "name": "Championnat National U19"
+            },
+            {
+              "id": 307,
+              "name": "Coupe de France"
+            },
+            {
               "id": 1674,
               "name": "Ligue 2 Play-offs"
             },
             {
               "id": 1177,
               "name": "CFA Group A"
-            },
-            {
-              "id": 2850,
-              "name": "Championnat National U17"
             },
             {
               "id": 1183,
@@ -625,6 +621,10 @@
             {
               "id": 301,
               "name": "Ligue 1"
+            },
+            {
+              "id": 2850,
+              "name": "Championnat National U17"
             },
             {
               "id": 310,
@@ -1324,9 +1324,9 @@
       "provider_metadata": {
         "request_path": "leagues/82",
         "http_status": 200,
-        "request_seconds": 0.366,
+        "request_seconds": 0.672,
         "rate_limit": "2000",
-        "rate_remaining": "1981",
+        "rate_remaining": "1976",
         "provider_message": "No result(s) found matching your request. Either the query did not return any results or you don't have access to it via your current subscription."
       }
     },
@@ -1338,9 +1338,9 @@
       "provider_metadata": {
         "request_path": "leagues/301",
         "http_status": 200,
-        "request_seconds": 0.379,
+        "request_seconds": 0.309,
         "rate_limit": "2000",
-        "rate_remaining": "1980",
+        "rate_remaining": "1974",
         "provider_message": "No result(s) found matching your request. Either the query did not return any results or you don't have access to it via your current subscription."
       }
     },
@@ -1352,9 +1352,9 @@
       "provider_metadata": {
         "request_path": "leagues/732",
         "http_status": 200,
-        "request_seconds": 0.39,
+        "request_seconds": 0.627,
         "rate_limit": "2000",
-        "rate_remaining": "1979",
+        "rate_remaining": "1970",
         "provider_message": "No result(s) found matching your request. Either the query did not return any results or you don't have access to it via your current subscription."
       }
     }
@@ -1402,31 +1402,146 @@
       "sportmonks_league_id": "8",
       "name": "Premier League",
       "country": "England",
-      "season_count": 3
+      "season_count": 3,
+      "seasons": [
+        {
+          "sportmonks_season_id": "23614",
+          "league_id": "8",
+          "name": "2024/2025",
+          "starting_at": "2024-08-16",
+          "ending_at": "2025-05-25"
+        },
+        {
+          "sportmonks_season_id": "25583",
+          "league_id": "8",
+          "name": "2025/2026",
+          "starting_at": "2025-08-15",
+          "ending_at": "2026-05-24"
+        },
+        {
+          "sportmonks_season_id": "28083",
+          "league_id": "8",
+          "name": "2026/2027",
+          "starting_at": "2026-08-21",
+          "ending_at": "2027-05-30"
+        }
+      ]
     },
     {
       "sportmonks_league_id": "24",
       "name": "FA Cup",
       "country": "England",
-      "season_count": 3
+      "season_count": 3,
+      "seasons": [
+        {
+          "sportmonks_season_id": "23787",
+          "league_id": "24",
+          "name": "2024/2025",
+          "starting_at": "2024-08-02",
+          "ending_at": "2025-05-17"
+        },
+        {
+          "sportmonks_season_id": "25919",
+          "league_id": "24",
+          "name": "2025/2026",
+          "starting_at": "2025-08-01",
+          "ending_at": "2026-05-17"
+        },
+        {
+          "sportmonks_season_id": "28020",
+          "league_id": "24",
+          "name": "2026/2027",
+          "starting_at": "2026-08-07",
+          "ending_at": "2026-12-07"
+        }
+      ]
     },
     {
       "sportmonks_league_id": "384",
       "name": "Serie A",
       "country": "Italy",
-      "season_count": 3
+      "season_count": 3,
+      "seasons": [
+        {
+          "sportmonks_season_id": "23746",
+          "league_id": "384",
+          "name": "2024/2025",
+          "starting_at": "2024-08-17",
+          "ending_at": "2025-05-25"
+        },
+        {
+          "sportmonks_season_id": "25533",
+          "league_id": "384",
+          "name": "2025/2026",
+          "starting_at": "2025-08-23",
+          "ending_at": "2026-05-24"
+        },
+        {
+          "sportmonks_season_id": "27895",
+          "league_id": "384",
+          "name": "2026/2027",
+          "starting_at": "2026-08-22",
+          "ending_at": "2027-05-30"
+        }
+      ]
     },
     {
       "sportmonks_league_id": "564",
       "name": "La Liga",
       "country": "Spain",
-      "season_count": 3
+      "season_count": 3,
+      "seasons": [
+        {
+          "sportmonks_season_id": "23621",
+          "league_id": "564",
+          "name": "2024/2025",
+          "starting_at": "2024-08-15",
+          "ending_at": "2025-05-25"
+        },
+        {
+          "sportmonks_season_id": "25659",
+          "league_id": "564",
+          "name": "2025/2026",
+          "starting_at": "2025-08-15",
+          "ending_at": "2026-05-24"
+        },
+        {
+          "sportmonks_season_id": "27965",
+          "league_id": "564",
+          "name": "2026/2027",
+          "starting_at": "2026-08-15",
+          "ending_at": "2027-05-30"
+        }
+      ]
     },
     {
       "sportmonks_league_id": "567",
       "name": "La Liga 2",
       "country": "Spain",
-      "season_count": 3
+      "season_count": 3,
+      "seasons": [
+        {
+          "sportmonks_season_id": "23676",
+          "league_id": "567",
+          "name": "2024/2025",
+          "starting_at": "2024-08-15",
+          "ending_at": "2025-06-21"
+        },
+        {
+          "sportmonks_season_id": "25673",
+          "league_id": "567",
+          "name": "2025/2026",
+          "starting_at": "2025-08-15",
+          "ending_at": "2026-06-20"
+        },
+        {
+          "sportmonks_season_id": "28479",
+          "league_id": "567",
+          "name": "2026/2027",
+          "starting_at": "2026-08-14",
+          "ending_at": "2027-06-06"
+        }
+      ]
     }
   ]
 }
