@@ -71,7 +71,7 @@ class OpenScoresPendingDispositionTests(unittest.TestCase):
         self.assertTrue(report["read_only"])
         self.assertTrue(report["preflight_passed"])
         self.assertEqual(report["unresolved_unlinked_observations"], 150)
-        self.assertEqual(report["matched"], 150)
+        self.assertEqual(report["linked_observations"], 150)
         self.assertEqual(report["total_observations"], 300)
 
     def test_discard_updates_only_pending_rows_and_preserves_links_and_raw_rows(self):
@@ -93,7 +93,9 @@ class OpenScoresPendingDispositionTests(unittest.TestCase):
         self.assertEqual(len(cursor.statements), 1)
         sql, params = cursor.statements[0]
         self.assertIn("reconciliation_status = 'discarded_by_operator'", sql)
-        self.assertIn("reconciliation_status = 'pending_entity_mapping'", sql)
+        self.assertIn("NOT EXISTS", sql)
+        self.assertIn("l.entity_type = 'fixture'", sql)
+        self.assertIn("reconciliation_status <> 'discarded_by_operator'", sql)
         self.assertIn("canonical_fixture_id IS NULL", sql)
         self.assertIn("raw provider observation retained for audit", params[0])
 
