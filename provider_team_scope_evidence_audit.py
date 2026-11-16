@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from provider_data_storage import _connect
+from provider_season_provenance import explicit_season_label
 
 REPORT = Path("provider-team-scope-evidence-audit.json")
 COLUMNS = (
@@ -89,7 +90,11 @@ def extract_team_scope_evidence(row: Mapping[str, Any]) -> dict[str, Any]:
         "name": row.get("name"),
         "source_provenance": {
             "catalogue_reference_season": _scalar(raw.get("catalogue_reference_season")),
+            "explicit_season_label": explicit_season_label(raw),
             "team_evidence_method": _scalar(raw.get("team_evidence_method")),
+            "source_endpoint": _scalar(raw.get("source_endpoint")),
+            "source_retrieved_at": _scalar(raw.get("source_retrieved_at")),
+            "season_window": _scalar(raw.get("season_window")),
             "competition_provider_ids": list(raw.get("competition_provider_ids")) if isinstance(raw.get("competition_provider_ids"), list) else _scalar(raw.get("competition_provider_ids")),
         },
         "structured_scope_fields": structured,
@@ -110,8 +115,12 @@ def build_team_scope_evidence_audit(rows: list[Mapping[str, Any]], sample_limit:
         provider = record["provider"]
         by_provider[provider].append(record)
         for field, value in record["source_provenance"].items():
-            if field == "catalogue_reference_season":
+            if field in {"catalogue_reference_season", "explicit_season_label", "source_endpoint"}:
                 provenance_values[provider][field]["<missing>" if value is None else str(value)] += 1
+            elif field == "source_retrieved_at":
+                provenance_values[provider]["source_retrieved_at_coverage"][
+                    "present" if value else "missing"
+                ] += 1
         for field in STRUCTURED_FIELDS:
             value = row.get(field)
             if value is None or str(value).strip() == "":
