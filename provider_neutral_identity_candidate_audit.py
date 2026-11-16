@@ -20,6 +20,15 @@ def _missing(row: Mapping[str, Any], fields: tuple[str, ...]) -> list[str]:
     return [field for field in fields if not str(row.get(field) or "").strip()]
 
 
+def _date_value(value: Any) -> str | None:
+    if value is None:
+        return None
+    if hasattr(value, "isoformat"):
+        return value.isoformat()
+    text = str(value).strip()
+    return text or None
+
+
 def build_identity_candidate_report(
     rows: list[Mapping[str, Any]],
     approved_parent_links: Mapping[tuple[str, str], str] | None = None,
@@ -73,8 +82,8 @@ def build_identity_candidate_report(
                     **base,
                     "provider_parent_competition_id": provider_parent_id or None,
                     "season_label": season_label,
-                    "start_date": row.get("start_date"),
-                    "end_date": row.get("end_date"),
+                    "start_date": _date_value(row.get("start_date")),
+                    "end_date": _date_value(row.get("end_date")),
                     "season_date_range_status": (
                         "complete" if row.get("start_date") and row.get("end_date")
                         else "incomplete"
@@ -92,8 +101,8 @@ def build_identity_candidate_report(
                         "provider_parent_competition_id": provider_parent_id,
                         "canonical_parent_competition_id": canonical_parent_id,
                         "season_label": season_label,
-                        "start_date": row.get("start_date"),
-                        "end_date": row.get("end_date"),
+                        "start_date": _date_value(row.get("start_date")),
+                        "end_date": _date_value(row.get("end_date")),
                         "season_date_range_status": (
                             "complete" if row.get("start_date") and row.get("end_date")
                             else "incomplete"
@@ -108,8 +117,8 @@ def build_identity_candidate_report(
                         "provider_parent_competition_id": provider_parent_id,
                         "canonical_parent_competition_id": canonical_parent_id,
                         "season_label": season_label,
-                        "start_date": row.get("start_date"),
-                        "end_date": row.get("end_date"),
+                        "start_date": _date_value(row.get("start_date")),
+                        "end_date": _date_value(row.get("end_date")),
                         "season_date_range_status": (
                             "complete" if row.get("start_date") and row.get("end_date")
                             else "incomplete"
