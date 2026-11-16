@@ -871,17 +871,18 @@ jobs:
                                       "unmatched_target_team_rows",
                                   )
                               }
-                              compact_competition["unmatched_target_teams"] = [
-                                  {
-                                      key: team.get(key)
-                                      for key in (
-                                          "provider", "provider_entity_id", "name",
-                                          "competition_provider_id", "reason",
-                                      )
-                                  }
-                                  for team in competition.get("unmatched_target_teams", [])
-                              ]
                               compact["competitions"].append(compact_competition)
+                          compact["unmatched_team_records"] = [
+                              {
+                                  "provider": team.get("provider"),
+                                  "provider_entity_id": team.get("provider_entity_id"),
+                                  "name": team.get("name"),
+                                  "competition_provider_id": team.get("competition_provider_id"),
+                                  "reason": team.get("reason"),
+                              }
+                              for competition in payload.get("competitions", [])
+                              for team in competition.get("unmatched_target_teams", [])
+                          ]
                           content = json.dumps(compact, indent=2, ensure_ascii=False)
                   except (json.JSONDecodeError, TypeError):
                       pass
