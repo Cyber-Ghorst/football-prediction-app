@@ -110,9 +110,11 @@ def build_api_football_country_candidates(
             af_by_name.setdefault(_norm(row.get("name")), []).append(row)
         candidates = []
         ambiguous = []
+        ambiguous_livescore_count = 0
         for name_key in sorted(set(ls_by_name) & set(af_by_name)):
             left, right = ls_by_name[name_key], af_by_name[name_key]
             if len(left) != 1 or len(right) != 1:
+                ambiguous_livescore_count += len(left)
                 ambiguous.append({
                     "normalized_name": name_key,
                     "livescore_count": len(left),
@@ -138,8 +140,9 @@ def build_api_football_country_candidates(
             "api_football_team_count": len(af_rows),
             "exact_unique_name_candidates": len(candidates),
             "ambiguous_name_groups": ambiguous,
+            "ambiguous_livescore_team_count": ambiguous_livescore_count,
             "candidates": candidates,
-            "unmatched_livescore_team_count": len(ls_rows) - len(candidates) - len(ambiguous),
+            "unmatched_livescore_team_count": len(ls_rows) - len(candidates) - ambiguous_livescore_count,
             "interpretation": (
                 "API-Football team country/type values are explicit provider observations. "
                 "Exact-name cross-provider matches are candidates only; no IDs or scope values "
