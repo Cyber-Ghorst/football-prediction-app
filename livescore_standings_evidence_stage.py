@@ -88,6 +88,40 @@ def build_standings_observation_rows(
         or not any(label in str(child_label) for label in expected_labels)
     ):
         raise ValueError("Returned competition, unique child label and standings season provenance must agree.")
+    # Re-validate the retained raw response rather than trusting detached metadata.
+    if payload.get("season") is None or str(payload.get("season")) != requested:
+        raise ValueError("Original response top-level season does not match the requested season.")
+    children = payload.get("children")
+    if not isinstance(children, list):
+        raise ValueError("Original response has no competition-season children.")
+    matching_children = []
+    expected_labels = (f"{SEASON_YEAR}/{str(SEASON_YEAR + 1)[-2:]}", f"{SEASON_YEAR}-{str(SEASON_YEAR + 1)[-2:]}")
+    for child in children:
+        if not isinstance(child, Mapping) or str(child.get("id")) != str(child_id):
+            continue
+        child_label_raw = " ".join(str(child.get(key) or "") for key in ("name", "abbreviation"))
+        standings_raw = child.get("standings")
+        if (
+            any(label in child_label_raw for label in expected_labels)
+            and isinstance(standings_raw, Mapping)
+            and str(standings_raw.get("season")) == requested
+        ):
+            matching_children.append((child, standings_raw))
+    if len(matching_children) != 1:
+        raise ValueError("Original response must contain exactly one matching season child.")
+    raw_entries = matching_children[0][1].get("entries")
+    if not isinstance(raw_entries, list):
+        raise ValueError("Original response standings entries are missing.")
+    raw_teams = []
+    for entry in raw_entries:
+        if not isinstance(entry, Mapping):
+            continue
+        team = entry.get("team")
+        if isinstance(team, Mapping):
+            raw_teams.append({
+                "id": str(team.get("id") or ""),
+                "name": str(team.get("name") or "").strip().casefold(),
+            })
     teams = observation.get("teams") or []
     if len(teams) != 18:
         raise ValueError("Expected exactly 18 unique standings teams for each target competition.")
@@ -95,6 +129,16 @@ def build_standings_observation_rows(
     names = [str(team.get("name") or "").strip().casefold() for team in teams]
     if any(not value for value in ids + names) or len(set(ids)) != 18 or len(set(names)) != 18:
         raise ValueError("Standings roster contains missing or duplicate team identities.")
+    raw_ids = [team["id"] for team in raw_teams]
+    raw_names = [team["name"] for team in raw_teams]
+    if (
+        len(raw_teams) != 18
+        or len(set(raw_ids)) != 18
+        or len(set(raw_names)) != 18
+        or set(raw_ids) != set(ids)
+        or set(raw_names) != set(names)
+    ):
+        raise ValueError("Expanded team rows do not match the 18 teams in the preserved raw response.")
     provenance = {
         "provider_competition_id": competition_id,
         "provider_competition_slug": str(league.get("id") or ""),
