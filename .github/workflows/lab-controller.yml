@@ -17,6 +17,8 @@ on:
           - tipmaster_refresh_verify
           - openscores_connection_check
           - openscores_entity_mapping_audit
+          - openscores_pending_disposition_audit
+          - openscores_discard_pending_observations
           - openscores_sportmonks_reconciliation
           - sportmonks_catalogue_access_audit
           - sportmonks_team_scope_metadata_audit
@@ -151,7 +153,7 @@ jobs:
               trigger = json.loads(Path(".agent/trigger.json").read_text(encoding="utf-8"))
               operation = trigger.get("operation", "")
 
-          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync", "tipmaster_refresh_verify", "openscores_connection_check", "openscores_entity_mapping_audit", "openscores_sportmonks_reconciliation", "sportmonks_catalogue_access_audit", "sportmonks_team_scope_metadata_audit", "sportmonks_team_scope_metadata_stage", "provider_league_catalogue_audit", "provider_season_roster_audit", "provider_neutral_repository_audit", "provider_source_roster_stage", "provider_source_repository_audit", "provider_source_legacy_catalogue_stage", "provider_neutral_identity_candidate_audit", "provider_official_team_scope_audit", "provider_official_team_scope_stage", "provider_source_highlightly_roster_stage", "provider_source_api_football_roster_stage", "provider_source_api_ninjas_team_scope_stage", "provider_source_api_ninjas_season_standings_stage", "livescore_standings_evidence_stage", "provider_competition_identity_approval", "provider_team_scope_evidence_audit", "provider_team_scope_corroboration_audit", "provider_api_football_season_membership_audit", "provider_team_scope_weekly_audit", "provider_team_scope_corroboration_approval", "livescore_team_scope_metadata_audit", "highlightly_livescore_team_detail_audit", "highlightly_world_cup_official_roster_audit", "provider_link_approval_evidence_audit", "learning_audit", "deployment_redeploy"}
+          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync", "tipmaster_refresh_verify", "openscores_connection_check", "openscores_entity_mapping_audit", "openscores_pending_disposition_audit", "openscores_discard_pending_observations", "openscores_sportmonks_reconciliation", "sportmonks_catalogue_access_audit", "sportmonks_team_scope_metadata_audit", "sportmonks_team_scope_metadata_stage", "provider_league_catalogue_audit", "provider_season_roster_audit", "provider_neutral_repository_audit", "provider_source_roster_stage", "provider_source_repository_audit", "provider_source_legacy_catalogue_stage", "provider_neutral_identity_candidate_audit", "provider_official_team_scope_audit", "provider_official_team_scope_stage", "provider_source_highlightly_roster_stage", "provider_source_api_football_roster_stage", "provider_source_api_ninjas_team_scope_stage", "provider_source_api_ninjas_season_standings_stage", "livescore_standings_evidence_stage", "provider_competition_identity_approval", "provider_team_scope_evidence_audit", "provider_team_scope_corroboration_audit", "provider_api_football_season_membership_audit", "provider_team_scope_weekly_audit", "provider_team_scope_corroboration_approval", "livescore_team_scope_metadata_audit", "highlightly_livescore_team_detail_audit", "highlightly_world_cup_official_roster_audit", "provider_link_approval_evidence_audit", "learning_audit", "deployment_redeploy"}
           if operation not in allowed:
               raise SystemExit("Rejected unsupported or missing operation")
           if operation == "prediction_run":
@@ -344,7 +346,7 @@ jobs:
           PY
 
       - name: Install health-check dependencies
-        if: steps.operation.outputs.operation == 'health_check' || steps.operation.outputs.operation == 'full_check' || steps.operation.outputs.operation == 'deployment_redeploy' || steps.operation.outputs.operation == 'result_sync' || steps.operation.outputs.operation == 'learning_audit' || steps.operation.outputs.operation == 'tipmaster_refresh_verify' || steps.operation.outputs.operation == 'openscores_connection_check' || steps.operation.outputs.operation == 'openscores_entity_mapping_audit' || steps.operation.outputs.operation == 'openscores_sportmonks_reconciliation' || steps.operation.outputs.operation == 'provider_source_api_ninjas_team_scope_stage' || steps.operation.outputs.operation == 'provider_source_api_ninjas_season_standings_stage'
+        if: steps.operation.outputs.operation == 'health_check' || steps.operation.outputs.operation == 'full_check' || steps.operation.outputs.operation == 'deployment_redeploy' || steps.operation.outputs.operation == 'result_sync' || steps.operation.outputs.operation == 'learning_audit' || steps.operation.outputs.operation == 'tipmaster_refresh_verify' || steps.operation.outputs.operation == 'openscores_connection_check' || steps.operation.outputs.operation == 'openscores_entity_mapping_audit' || steps.operation.outputs.operation == 'openscores_pending_disposition_audit' || steps.operation.outputs.operation == 'openscores_discard_pending_observations' || steps.operation.outputs.operation == 'openscores_sportmonks_reconciliation' || steps.operation.outputs.operation == 'provider_source_api_ninjas_team_scope_stage' || steps.operation.outputs.operation == 'provider_source_api_ninjas_season_standings_stage'
         run: |
           exec > >(tee -a controller-report.txt) 2>&1
           python -m pip install --upgrade pip
@@ -780,6 +782,22 @@ jobs:
           set -euo pipefail
           python openscores_entity_mapping_audit.py
 
+      - name: Audit pending OpenScores observation disposition (read-only)
+        if: steps.operation.outputs.operation == 'openscores_pending_disposition_audit'
+        env:
+          PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
+        run: |
+          set -euo pipefail
+          python openscores_pending_observation_disposition.py audit
+
+      - name: Discard exactly 150 pending OpenScores observations by operator instruction
+        if: steps.operation.outputs.operation == 'openscores_discard_pending_observations'
+        env:
+          PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
+        run: |
+          set -euo pipefail
+          python openscores_pending_observation_disposition.py discard
+
       - name: Refresh TipMaster and verify Neon persistence
         if: steps.operation.outputs.operation == 'tipmaster_refresh_verify'
         env:
@@ -892,6 +910,7 @@ jobs:
               ("integration-smoke-report.json", "Live integration report"),
               ("openscores-connection-report.json", "OpenScores connection check"),
               ("openscores-entity-mapping-audit.json", "OpenScores entity mapping candidate audit"),
+              ("openscores-pending-observation-disposition-report.json", "OpenScores pending observation disposition audit or discard"),
               ("openscores-sportmonks-reconciliation-report.json", "OpenScores to Sportmonks reconciliation"),
               ("sportmonks-catalogue-access-report.json", "Sportmonks account catalogue access audit"),
               ("provider-league-catalogue-audit.json", "Highlightly and LiveScoreFootball league catalogue audit"),
@@ -1044,6 +1063,7 @@ jobs:
             integration-smoke-report.json
             openscores-connection-report.json
             openscores-entity-mapping-audit.json
+            openscores-pending-observation-disposition-report.json
             openscores-sportmonks-reconciliation-report.json
             sportmonks-catalogue-access-report.json
             provider-league-catalogue-audit.json
