@@ -136,7 +136,7 @@ def build_source_entities(competitions: list[Mapping[str, Any]]) -> list[dict[st
 def collect_competitions() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     client = APIFootballClient()
     outcomes = []
-    collected = []
+    catalogue_rows = []
     try:
         rows = client.leagues(season=CATALOGUE_REFERENCE_SEASON)
         for target in TARGETS:
@@ -152,21 +152,30 @@ def collect_competitions() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
                 outcomes.append({"target": target, "status": "season_not_listed",
                                  "competition_provider_id": league.get("id")})
                 continue
+            # Preserve the independently valid competition/season catalogue
+            # even when the provider denies or fails the separate team endpoint.
+            staged_catalogue = {**selected, "teams": []}
+            catalogue_rows.append(staged_catalogue)
             try:
                 team_rows = client.teams(int(league["id"]), CATALOGUE_REFERENCE_SEASON)
             except Exception as exc:
                 outcomes.append({"target": target, "status": "team_roster_error",
                                  "competition_provider_id": league.get("id"),
+                                 "season_year": CATALOGUE_REFERENCE_SEASON,
+                                 "catalogue_evidence_retained": True,
+                                 "roster_evidence_available": False,
                                  "reason": str(exc)[:250]})
                 continue
-            collected.append({**selected, "teams": team_rows})
+            staged_catalogue["teams"] = team_rows
             outcomes.append({"target": target, "status": "collected",
                              "competition_provider_id": league.get("id"),
                              "season_year": CATALOGUE_REFERENCE_SEASON,
+                             "catalogue_evidence_retained": True,
+                             "roster_evidence_available": True,
                              "team_count": len(team_rows)})
     finally:
         client.session.close()
-    return collected, outcomes
+    return catalogue_rows, outcomes
 
 
 def main() -> int:
