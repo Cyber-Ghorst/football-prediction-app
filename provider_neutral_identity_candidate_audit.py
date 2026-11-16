@@ -29,6 +29,21 @@ def _date_value(value: Any) -> str | None:
     return text or None
 
 
+def _date_normalized_season_label(start_date: Any, end_date: Any) -> str | None:
+    start = _date_value(start_date)
+    end = _date_value(end_date)
+    if not start or not end:
+        return None
+    try:
+        start_year = int(start[:4])
+        end_year = int(end[:4])
+    except (TypeError, ValueError):
+        return None
+    if end_year < start_year:
+        return None
+    return f"{start_year}/{end_year}" if end_year != start_year else str(start_year)
+
+
 def build_identity_candidate_report(
     rows: list[Mapping[str, Any]],
     approved_parent_links: Mapping[tuple[str, str], str] | None = None,
@@ -76,12 +91,16 @@ def build_identity_candidate_report(
             # identity anchor. The key remains a candidate, not a season link.
             provider_parent_id = str(row.get("parent_competition_provider_id") or "").strip()
             season_label = row.get("season_label") or row.get("name")
+            date_label_candidate = _date_normalized_season_label(
+                row.get("start_date"), row.get("end_date")
+            )
             canonical_parent_id = approved_parents.get((provider, provider_parent_id))
             if not canonical_parent_id:
                 result = {
                     **base,
                     "provider_parent_competition_id": provider_parent_id or None,
                     "season_label": season_label,
+                    "date_normalized_season_label_candidate": date_label_candidate,
                     "start_date": _date_value(row.get("start_date")),
                     "end_date": _date_value(row.get("end_date")),
                     "season_date_range_status": (
@@ -101,6 +120,7 @@ def build_identity_candidate_report(
                         "provider_parent_competition_id": provider_parent_id,
                         "canonical_parent_competition_id": canonical_parent_id,
                         "season_label": season_label,
+                        "date_normalized_season_label_candidate": date_label_candidate,
                         "start_date": _date_value(row.get("start_date")),
                         "end_date": _date_value(row.get("end_date")),
                         "season_date_range_status": (
@@ -117,6 +137,7 @@ def build_identity_candidate_report(
                         "provider_parent_competition_id": provider_parent_id,
                         "canonical_parent_competition_id": canonical_parent_id,
                         "season_label": season_label,
+                        "date_normalized_season_label_candidate": date_label_candidate,
                         "start_date": _date_value(row.get("start_date")),
                         "end_date": _date_value(row.get("end_date")),
                         "season_date_range_status": (
@@ -125,6 +146,10 @@ def build_identity_candidate_report(
                         ),
                         "status": "season_key_candidate_parent_approved_review_required",
                         "identity_key_candidate": season_key,
+                        "date_normalized_identity_key_candidate": (
+                            canonical_season_key(canonical_parent_id, date_label_candidate)
+                            if date_label_candidate else None
+                        ),
                         "reason": (
                             "Parent competition is approved; this deterministic season key is "
                             "only a candidate. Exact season evidence is still required before "
@@ -203,6 +228,11 @@ def build_identity_candidate_report(
             ),
             "seasons_with_incomplete_date_range": sum(
                 row.get("season_date_range_status") == "incomplete" for row in seasons
+            ),
+            "seasons_with_date_label_requiring_normalization": sum(
+                row.get("date_normalized_season_label_candidate")
+                and str(row.get("season_label")) != str(row.get("date_normalized_season_label_candidate"))
+                for row in seasons
             ),
             "team_source_rows": len(teams),
             "teams_held_for_scope_evidence": sum(
