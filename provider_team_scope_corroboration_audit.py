@@ -125,13 +125,10 @@ def build_corroboration_report(rows: list[Mapping[str, Any]]) -> dict[str, Any]:
                     row["status"] == "scope_corroboration_candidate" for row in candidates
                 ),
                 "ambiguous_name_groups": ambiguous,
-                "unmatched_target_team_rows": len(source) - sum(len(v) for k, v in source_by_name.items()
-                                                                 if k in api_by_name) + sum(
-                    len(source_by_name[k]) for k in set(source_by_name) & set(api_by_name)
-                    if len(source_by_name[k]) != 1 or len(api_by_name[k]) != 1
-                ) - sum(
-                    1 for row in candidates if row["status"] == "scope_corroboration_candidate"
-                    or row["status"] == "held_api_ninjas_scope_incomplete"
+                "unmatched_target_team_rows": len(source) - len(candidates) - sum(
+                    len(source_by_name[key])
+                    for key in set(source_by_name) & set(api_by_name)
+                    if len(source_by_name[key]) != 1 or len(api_by_name[key]) != 1
                 ),
                 "candidates": candidates,
                 "interpretation": (
