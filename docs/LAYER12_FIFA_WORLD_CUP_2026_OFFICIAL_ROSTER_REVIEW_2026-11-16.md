@@ -3,7 +3,7 @@
 **Review date:** 2026-11-16  
 **Competition:** FIFA World Cup 2026 (men's senior tournament)  
 **Highlightly competition:** `World Cup`, provider competition ID `1635`, season `2026`  
-**Disposition:** 48/48 participant names match FIFA's completed official roster. This is independent competition/participant scope evidence only; no cross-provider identity approval.
+**Disposition:** 48/48 participant names match FIFA's completed official roster and 48 non-promotable national-team scope evidence rows have been staged in the separate official scope review table. No cross-provider identity approval.
 
 ## 1. Evidence and provenance
 
@@ -15,6 +15,8 @@ FIFA's official qualification article confirms that all 48 places were filled an
 - [FIFA — World Cup 2026 line-up complete as Iraq claim final spot](https://inside.fifa.com/organisation/news/world-cup-2026-line-up-complete-as-iraq-bolivia-play-off-fixtures)
 - [Highlightly provider roster source — controller run #43760784223](https://github.com/Cyber-Ghorst/football-prediction-app/actions/runs/43760784223)
 - [FIFA roster comparison report — controller run #444](https://github.com/Cyber-Ghorst/football-prediction-app/actions/runs/43914509175)
+- [Combined official scope audit — controller run #445](https://github.com/Cyber-Ghorst/football-prediction-app/actions/runs/43915371523)
+- [Official scope evidence staging — controller run #446](https://github.com/Cyber-Ghorst/football-prediction-app/actions/runs/43915565223)
 
 ## 2. Comparison result
 
@@ -94,7 +96,7 @@ The Highlightly API documentation defines the team `type` field as `club` or `na
 
 ## 4. Disposition
 
-- 48 teams have official FIFA roster matches and are eligible for a separate national-team scope review.
+- 48 teams have official FIFA roster matches and 48 national-team scope candidates are staged in `provider_official_team_scope_evidence`.
 - All 48 remain `promotion_allowed=false`.
 - No canonical IDs assigned; no provider links created; no fixture or prediction data changed.
 - LiveScoreFootball's audited catalogue has no World Cup team catalogue, so no second-provider World Cup team IDs are available.
