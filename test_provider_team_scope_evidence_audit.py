@@ -30,12 +30,18 @@ class ProviderTeamScopeEvidenceAuditTests(unittest.TestCase):
             "raw_payload": {
                 **row["raw_payload"],
                 "catalogue_reference_season": 2024,
+                "season_label": "2026",
                 "team_evidence_method": "provider_league_season_team_catalogue",
+                "source_endpoint": "standings",
+                "source_retrieved_at": "2026-11-16T13:00:00+00:00",
                 "competition_provider_ids": ["39"],
             },
         })
         fields = {item["field"] for item in result["raw_provider_scope_candidates"]}
         self.assertEqual(result["source_provenance"]["catalogue_reference_season"], 2024)
+        self.assertEqual(result["source_provenance"]["explicit_season_label"], "2026/27")
+        self.assertEqual(result["source_provenance"]["source_endpoint"], "standings")
+        self.assertEqual(result["source_provenance"]["source_retrieved_at"], "2026-11-16T13:00:00+00:00")
         self.assertEqual(result["source_provenance"]["team_evidence_method"], "provider_league_season_team_catalogue")
         self.assertEqual(result["source_provenance"]["competition_provider_ids"], ["39"])
         self.assertTrue({"country", "team_type", "gender_scope", "age_group", "squad_scope"} <= fields)
@@ -118,6 +124,7 @@ class ProviderTeamScopeEvidenceAuditTests(unittest.TestCase):
         self.assertEqual(report["providers"]["api_football"]["structured_scope_field_counts"]["team_type"], 1)
         self.assertEqual(report["providers"]["api_football"]["structured_scope_value_counts"]["team_type"], {"club": 1})
         self.assertEqual(report["providers"]["api_football"]["source_provenance_value_counts"]["catalogue_reference_season"], {"<missing>": 1})
+        self.assertEqual(report["providers"]["api_football"]["source_provenance_value_counts"]["explicit_season_label"], {"<missing>": 1})
         self.assertEqual(report["providers"]["sportmonks"]["structured_scope_value_counts"]["country"], {"<missing>": 1})
         self.assertEqual(report["providers"]["api_football"]["raw_provider_candidate_value_counts"]["team_type"], {"False": 1})
 
