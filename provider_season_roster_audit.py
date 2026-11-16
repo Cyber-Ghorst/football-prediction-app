@@ -149,7 +149,6 @@ def audit_livescore_rosters() -> dict[str, Any]:
                     retrieved_at=datetime.now(timezone.utc).isoformat(),
                 )
                 results.append({
-                    "target": target,
                     **standings_roster,
                     "target": target,
                     "league_id": standings_roster["league"]["id"],
