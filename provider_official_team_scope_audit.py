@@ -181,7 +181,11 @@ def _resolve_official_team(
     return None, "held_official_team_name_unmatched"
 
 
-def build_official_team_scope_audit(rows: list[Mapping[str, Any]]) -> dict[str, Any]:
+def build_official_team_scope_audit(
+    rows: list[Mapping[str, Any]],
+    *,
+    existing_api_football_scope_pairs: set[tuple[str, str]] | None = None,
+) -> dict[str, Any]:
     provider_competition_index = {
         provider_id: (competition_key, competition)
         for competition_key, competition in OFFICIAL_COMPETITIONS.items()
@@ -201,7 +205,12 @@ def build_official_team_scope_audit(rows: list[Mapping[str, Any]]) -> dict[str, 
             counts[provider]["held_missing_competition_id"] += 1
             continue
         for provider_competition_id in provider_ids:
-            key = (provider, str(provider_competition_id))
+            competition_id = str(provider_competition_id)
+            if provider == "api_football" and (
+                str(row.get("provider_entity_id") or ""), competition_id
+            ) in (existing_api_football_scope_pairs or set()):
+                continue
+            key = (provider, competition_id)
             selected = provider_competition_index.get(key)
             if not selected:
                 continue
@@ -303,26 +312,27 @@ def audit_official_team_scope(database_url: str) -> dict[str, Any]:
         with connection.cursor() as cursor:
             cursor.execute("SET TRANSACTION READ ONLY")
             cursor.execute(
-                """SELECT e.provider, e.provider_entity_id, e.name, e.raw_payload
-                   FROM provider_source_entities e
-                   WHERE e.entity_type = 'team'
-                     AND e.provider IN ('highlightly', 'livescore_football')
-                   UNION ALL
-                   SELECT e.provider, e.provider_entity_id, e.name, e.raw_payload
-                   FROM provider_source_entities e
-                   WHERE e.entity_type = 'team'
-                     AND e.provider = 'api_football'
-                     AND NOT EXISTS (
-                         SELECT 1
-                         FROM provider_team_scope_corroborations c
-                         WHERE c.provider = 'api_football'
-                           AND c.provider_entity_id = e.provider_entity_id
-                     )
+                """SELECT provider_entity_id, competition_provider_id
+                   FROM provider_team_scope_corroborations
+                   WHERE provider = 'api_football'"""
+            )
+            existing_api_football_scope_pairs = {
+                (str(provider_entity_id), str(competition_provider_id))
+                for provider_entity_id, competition_provider_id in cursor.fetchall()
+            }
+            cursor.execute(
+                """SELECT provider, provider_entity_id, name, raw_payload
+                   FROM provider_source_entities
+                   WHERE entity_type = 'team'
+                     AND provider IN ('highlightly', 'livescore_football', 'api_football')
                    ORDER BY provider, provider_entity_id"""
             )
             columns = ("provider", "provider_entity_id", "name", "raw_payload")
             rows = [dict(zip(columns, values)) for values in cursor.fetchall()]
-    report = build_official_team_scope_audit(rows)
+    report = build_official_team_scope_audit(
+        rows, existing_api_football_scope_pairs=existing_api_football_scope_pairs
+    )
+    report["api_football_existing_scope_pairs_excluded"] = len(existing_api_football_scope_pairs)
     report["database_read_only"] = True
     return report
 
