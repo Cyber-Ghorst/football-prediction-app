@@ -58,6 +58,17 @@ class ProviderTeamScopeEvidenceAuditTests(unittest.TestCase):
         )
         self.assertNotIn("country", result["structured_scope_fields"])
 
+    def test_sportmonks_documented_type_field_is_preserved(self):
+        result = extract_team_scope_evidence({
+            "provider": "sportmonks",
+            "provider_entity_id": "99",
+            "raw_payload": {"raw_payload": {"type": "domestic"}},
+        })
+        self.assertIn(
+            {"field": "team_type", "path": "raw_payload.raw_payload.type", "value": "domestic"},
+            result["raw_provider_scope_candidates"],
+        )
+
     def test_false_boolean_is_preserved_as_explicit_evidence(self):
         result = extract_team_scope_evidence({
             "provider": "api_football",
