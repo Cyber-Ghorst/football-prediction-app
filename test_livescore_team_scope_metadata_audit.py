@@ -1,6 +1,6 @@
 import unittest
 
-from livescore_team_scope_metadata_audit import build_scope_report, _competition_slugs
+from livescore_team_scope_metadata_audit import build_scope_report, build_api_football_country_candidates, _competition_slugs
 
 
 class LiveScoreTeamScopeMetadataAuditTests(unittest.TestCase):
@@ -41,6 +41,62 @@ class LiveScoreTeamScopeMetadataAuditTests(unittest.TestCase):
                       germany["team_type_evidence"]["scope"])
         self.assertFalse(report["database_writes"])
         self.assertEqual(report["provider_links_created"], 0)
+
+    def test_api_football_country_candidates_require_exact_team_competition_and_season(self):
+        livescore = [
+            {"provider_entity_id": "10", "name": "Bayern Munich",
+             "raw_payload": {"competition_provider_ids": ["ger.1"]}},
+            {"provider_entity_id": "11", "name": "AS Monaco",
+             "raw_payload": {"competition_provider_ids": ["fra.1"]}},
+        ]
+        api = [
+            {"entity_type": "competition", "provider_entity_id": "78",
+             "name": "Bundesliga", "country": "Germany",
+             "raw_payload": {"raw_league": {"name": "Bundesliga"}}},
+            {"entity_type": "season", "provider_entity_id": "78:2026",
+             "name": "2026", "parent_competition_provider_id": "78",
+             "raw_payload": {}},
+            {"entity_type": "team", "provider_entity_id": "157",
+             "name": "Bayern Munich", "country": "Germany", "team_type": "club",
+             "raw_payload": {"competition_provider_ids": ["78"],
+                             "catalogue_reference_season": 2026}},
+            {"entity_type": "competition", "provider_entity_id": "61",
+             "name": "Ligue 1", "country": "France", "raw_payload": {}},
+            {"entity_type": "season", "provider_entity_id": "61:2026",
+             "name": "2026", "parent_competition_provider_id": "61",
+             "raw_payload": {}},
+            {"entity_type": "team", "provider_entity_id": "91",
+             "name": "AS Monaco", "country": "Monaco", "team_type": "club",
+             "raw_payload": {"competition_provider_ids": ["61"],
+                             "catalogue_reference_season": 2026}},
+        ]
+        result = build_api_football_country_candidates(livescore, api)
+        germany, france = result["competitions"]
+        self.assertEqual(germany["exact_unique_name_candidates"], 1)
+        self.assertEqual(germany["candidates"][0]["country_from_api_football_team_record"], "Germany")
+        self.assertEqual(france["exact_unique_name_candidates"], 1)
+        self.assertEqual(france["candidates"][0]["country_from_api_football_team_record"], "Monaco")
+        self.assertEqual(france["candidates"][0]["status"], "scope_corroboration_candidate_not_approved")
+        self.assertEqual(result["provider_links_created"], 0)
+
+    def test_api_football_country_candidates_do_not_use_competition_country_for_team_country(self):
+        livescore = [{"provider_entity_id": "10", "name": "Monaco",
+                      "raw_payload": {"competition_provider_ids": ["fra.1"]}}]
+        api = [
+            {"entity_type": "competition", "provider_entity_id": "61",
+             "name": "Ligue 1", "country": "France", "raw_payload": {}},
+            {"entity_type": "season", "provider_entity_id": "61:2026",
+             "name": "2026", "parent_competition_provider_id": "61", "raw_payload": {}},
+            {"entity_type": "team", "provider_entity_id": "91",
+             "name": "Monaco", "country": "Monaco", "team_type": "club",
+             "raw_payload": {"competition_provider_ids": ["61"],
+                             "catalogue_reference_season": 2026}},
+        ]
+        result = build_api_football_country_candidates(livescore, api)
+        self.assertEqual(result["competitions"][1]["candidates"][0]
+                         ["country_from_api_football_team_record"], "Monaco")
+        self.assertNotEqual(result["competitions"][1]["candidates"][0]
+                            ["country_from_api_football_team_record"], "France")
 
     def test_empty_country_is_not_inferred_from_competition(self):
         report = build_scope_report(
