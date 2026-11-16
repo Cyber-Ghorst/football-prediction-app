@@ -1,6 +1,6 @@
 import unittest
 
-from livescore_team_scope_metadata_audit import build_scope_report, build_api_football_country_candidates, _competition_slugs
+from livescore_team_scope_metadata_audit import (\n    build_scope_report, build_api_football_country_candidates, _competition_slugs,\n    collect_season_standings_observations,\n)
 
 
 class LiveScoreTeamScopeMetadataAuditTests(unittest.TestCase):
@@ -101,6 +101,37 @@ class LiveScoreTeamScopeMetadataAuditTests(unittest.TestCase):
                          ["country_from_api_football_team_record"], "Monaco")
         self.assertNotEqual(result["competitions"][1]["candidates"][0]
                             ["country_from_api_football_team_record"], "France")
+
+    def test_standings_audit_requests_explicit_2026_and_preserves_provider_payload(self):
+        class FakeClient:
+            def __init__(self):
+                self.calls = []
+
+            def standings(self, league, season=None):
+                self.calls.append((league, season))
+                return {
+                    "season": {"year": 2026, "name": "2026/27"},
+                    "standings": [{"team": {"id": "club-1", "name": "Example FC"}}],
+                }
+
+        client = FakeClient()
+        result = collect_season_standings_observations(client)
+        self.assertEqual(client.calls, [("ger.1", 2026), ("fra.1", 2026)])
+        self.assertEqual(result["ger.1"]["status"], "ok")
+        self.assertEqual(result["ger.1"]["requested_season_parameter"], 2026)
+        self.assertEqual(result["ger.1"]["provider_payload"]["season"]["name"], "2026/27")
+        self.assertIn("does not itself prove the returned season",
+                      result["ger.1"]["interpretation"])
+
+    def test_standings_failure_is_held_without_fabricating_roster_evidence(self):
+        class FailingClient:
+            def standings(self, league, season=None):
+                raise RuntimeError("unavailable")
+
+        result = collect_season_standings_observations(FailingClient())
+        self.assertEqual(result["ger.1"]["status"], "error")
+        self.assertEqual(result["ger.1"]["error_type"], "RuntimeError")
+        self.assertIn("all team scope remains held", result["ger.1"]["interpretation"])
 
     def test_empty_country_is_not_inferred_from_competition(self):
         report = build_scope_report(
