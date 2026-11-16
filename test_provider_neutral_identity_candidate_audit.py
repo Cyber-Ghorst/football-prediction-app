@@ -561,6 +561,31 @@ class ProviderNeutralIdentityCandidateAuditTests(unittest.TestCase):
         self.assertFalse(report["database_writes"])
 
 
+    def test_missing_provider_update_timestamp_is_explicitly_unavailable(self):
+        report = build_identity_candidate_report([{
+            "provider": "api_football", "entity_type": "season",
+            "provider_entity_id": "39:2026", "name": "2026",
+            "season_label": "2026", "parent_competition_provider_id": "39",
+            "raw_payload": {
+                "provider_native_season_year": 2026,
+                "provider_native_parent_competition_id": "39",
+                "provider_entity_id_kind": "competition_scoped_composite",
+                "raw_season": {"year": 2026, "start": "2026-08-14",
+                               "end": "2027-05-30", "current": True},
+            },
+            "first_seen_at": "2026-06-01T10:00:00+00:00",
+            "last_seen_at": "2026-07-02T10:00:00+00:00",
+            "provider_updated_at": None,
+        }], {("api_football", "39"): "sportmonks:8"})
+        season = report["season_candidates"][0]
+        self.assertIsNone(season["provider_updated_at"])
+        self.assertEqual(
+            season["provider_updated_at_status"], "not_present_in_source_record"
+        )
+        self.assertEqual(season["first_seen_at"], "2026-06-01T10:00:00+00:00")
+        self.assertEqual(season["last_seen_at"], "2026-07-02T10:00:00+00:00")
+        self.assertNotEqual(season["provider_updated_at"], season["last_seen_at"])
+
     def test_nested_provider_season_payload_is_whitelisted_without_dumping_wrapper(self):
         report = build_identity_candidate_report([{
             "provider": "api_football", "entity_type": "season",
