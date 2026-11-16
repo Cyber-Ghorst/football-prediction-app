@@ -20,6 +20,7 @@ TARGETS = (
     {"slug": "ger.1", "name": "German Bundesliga", "country": "Germany"},
     {"slug": "fra.1", "name": "French Ligue 1", "country": "France"},
 )
+SEASON_YEAR = 2026
 REPORT = Path("livescore-team-scope-metadata-audit.json")
 COLUMNS = ("provider_entity_id", "name", "raw_payload")
 API_COLUMNS = ("entity_type", "provider_entity_id", "name", "country", "parent_competition_provider_id", "team_type", "raw_payload")
@@ -259,6 +260,41 @@ def build_scope_report(
     }
 
 
+
+def collect_season_standings_observations(
+    client: Any,
+    *,
+    targets: tuple[Mapping[str, str], ...] = TARGETS,
+    season_year: int = SEASON_YEAR,
+) -> dict[str, Any]:
+    """Capture provider-returned season standings without promoting team scope."""
+    observations: dict[str, Any] = {}
+    for target in targets:
+        slug = str(target["slug"])
+        try:
+            payload = client.standings(slug, season=season_year)
+            observations[slug] = {
+                "status": "ok",
+                "source_endpoint": f"/get/soccer/{slug}/standings",
+                "requested_season_parameter": season_year,
+                "provider_payload": payload,
+                "interpretation": (
+                    "Raw provider response retained for inspection. The request parameter "
+                    "does not itself prove the returned season; only explicit provider-returned "
+                    "season metadata and row-level provenance may be used for verification."
+                ),
+            }
+        except Exception as exc:
+            observations[slug] = {
+                "status": "error",
+                "source_endpoint": f"/get/soccer/{slug}/standings",
+                "requested_season_parameter": season_year,
+                "error_type": type(exc).__name__,
+                "interpretation": "No standings evidence available; all team scope remains held.",
+            }
+    return observations
+
+
 def audit_livescore_team_scope(database_url: str, client_factory=LiveScoreFootballClient) -> dict[str, Any]:
     if not database_url:
         raise ValueError("PROVIDER_DATABASE_URL is required.")
@@ -296,7 +332,9 @@ def audit_livescore_team_scope(database_url: str, client_factory=LiveScoreFootba
                     "status": "error",
                     "error_type": type(exc).__name__,
                 }
+        standings_observations = collect_season_standings_observations(client)
     report = build_scope_report(staged_rows, catalogues)
+    report["season_standings_observations"] = standings_observations
     report["api_football_scope_candidates"] = build_api_football_country_candidates(
         staged_rows, api_football_rows
     )
