@@ -1,6 +1,7 @@
 import unittest
 
 from livescore_standings_evidence_stage import build_standings_observation_rows
+from provider_roster_collection import collect_livescore_season_standings
 
 
 def observation(slug, label, team_prefix):
@@ -68,6 +69,44 @@ class LiveScoreStandingsEvidenceStageTests(unittest.TestCase):
         item["team_evidence_method"] = "season_window_fixture_participants"
         self.assertEqual(build_standings_observation_rows(item), [])
 
+
+
+    def test_staging_rejects_wrong_requested_season(self):
+        item = observation("ger.1", "2026-27 German Bundesliga", "ger-")
+        item["requested_season_parameter"] = 2025
+        with self.assertRaises(ValueError):
+            build_standings_observation_rows(item)
+
+    def test_staging_rejects_unrecognized_child_label(self):
+        item = observation("fra.1", "Ligue 1 2025/26", "fra-")
+        with self.assertRaises(ValueError):
+            build_standings_observation_rows(item)
+
+    def test_collector_holds_ambiguous_matching_children(self):
+        class FakeClient:
+            def standings(self, slug, season):
+                child = {
+                    "id": "season-child",
+                    "name": "Ligue 1 2026/27",
+                    "standings": {
+                        "season": 2026,
+                        "entries": [{
+                            "team": {"id": f"team-{i}", "name": f"Club {i}"}
+                        } for i in range(18)],
+                    },
+                }
+                return {"season": 2026, "children": [child, {**child, "id": "duplicate-child"}]}
+
+        result = collect_livescore_season_standings(
+            FakeClient(),
+            league={"id": "fra.1", "name": "Ligue 1", "country": "France"},
+            season_year=2026,
+            retrieved_at="2026-11-16T12:00:00+00:00",
+        )
+        self.assertEqual(result["status"], "held_ambiguous_returned_season")
+        self.assertFalse(result["team_evidence_complete"])
+        self.assertEqual(result["teams"], [])
+        self.assertEqual(result["provider_returned_season"]["matching_child_count"], 2)
 
 if __name__ == "__main__":
     unittest.main()
