@@ -94,20 +94,40 @@ def build_team_scope_evidence_audit(rows: list[Mapping[str, Any]], sample_limit:
     by_provider: dict[str, list[dict[str, Any]]] = defaultdict(list)
     field_counts: dict[str, Counter] = defaultdict(Counter)
     structured_counts: dict[str, Counter] = defaultdict(Counter)
+    structured_values: dict[str, dict[str, Counter]] = defaultdict(lambda: defaultdict(Counter))
+    raw_values: dict[str, dict[str, Counter]] = defaultdict(lambda: defaultdict(Counter))
     for row in rows:
         record = extract_team_scope_evidence(row)
         provider = record["provider"]
         by_provider[provider].append(record)
-        for field in record["structured_scope_fields"]:
-            structured_counts[provider][field] += 1
+        for field in STRUCTURED_FIELDS:
+            value = row.get(field)
+            if value is None or str(value).strip() == "":
+                structured_values[provider][field]["<missing>"] += 1
+            else:
+                structured_counts[provider][field] += 1
+                structured_values[provider][field][str(_scalar(value))] += 1
         for item in record["raw_provider_scope_candidates"]:
             field_counts[provider][item["field"]] += 1
+            value = item["value"]
+            if value is None or str(value).strip() == "":
+                raw_values[provider][item["field"]]["<empty_or_null>"] += 1
+            else:
+                raw_values[provider][item["field"]][str(value)] += 1
     providers = {}
     for provider, records in sorted(by_provider.items()):
         providers[provider] = {
             "team_rows": len(records),
             "structured_scope_field_counts": dict(sorted(structured_counts[provider].items())),
+            "structured_scope_value_counts": {
+                field: dict(sorted(values.items()))
+                for field, values in sorted(structured_values[provider].items())
+            },
             "raw_provider_candidate_field_counts": dict(sorted(field_counts[provider].items())),
+            "raw_provider_candidate_value_counts": {
+                field: dict(sorted(values.items()))
+                for field, values in sorted(raw_values[provider].items())
+            },
             "sample_records": records[:sample_limit],
         }
     return {
