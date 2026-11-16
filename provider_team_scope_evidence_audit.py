@@ -90,7 +90,7 @@ def extract_team_scope_evidence(row: Mapping[str, Any]) -> dict[str, Any]:
         "source_provenance": {
             "catalogue_reference_season": _scalar(raw.get("catalogue_reference_season")),
             "team_evidence_method": _scalar(raw.get("team_evidence_method")),
-            "competition_provider_ids": _scalar(raw.get("competition_provider_ids")),
+            "competition_provider_ids": list(raw.get("competition_provider_ids")) if isinstance(raw.get("competition_provider_ids"), list) else _scalar(raw.get("competition_provider_ids")),
         },
         "structured_scope_fields": structured,
         "raw_provider_scope_candidates": evidence,
