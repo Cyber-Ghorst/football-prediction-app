@@ -31,6 +31,7 @@ on:
           - provider_team_scope_evidence_audit
           - provider_team_scope_corroboration_audit
           - provider_api_football_season_membership_audit
+          - provider_team_scope_weekly_audit
           - provider_team_scope_corroboration_approval
           - livescore_team_scope_metadata_audit
           - provider_link_approval_evidence_audit
@@ -66,6 +67,7 @@ on:
     types: [created]
   schedule:
     - cron: "13 */6 * * *"
+    - cron: "17 5 * * 1"
 
 permissions:
   actions: write
@@ -100,6 +102,7 @@ jobs:
         id: operation
         env:
           EVENT_NAME: ${{ github.event_name }}
+          SCHEDULE_CRON: ${{ github.event.schedule }}
           DISPATCH_OPERATION: ${{ inputs.operation }}
           DISPATCH_SEASON: ${{ inputs.season }}
           DISPATCH_COMPETITION: ${{ inputs.competition }}
@@ -122,7 +125,11 @@ jobs:
                   "away_team": os.environ.get("DISPATCH_AWAY_TEAM", ""),
               }
           elif os.environ["EVENT_NAME"] == "schedule":
-              operation = "health_check"
+              operation = (
+                  "provider_team_scope_weekly_audit"
+                  if os.environ.get("SCHEDULE_CRON") == "17 5 * * 1"
+                  else "health_check"
+              )
           elif os.environ["EVENT_NAME"] == "issue_comment":
               event = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text(encoding="utf-8"))
               body = event.get("comment", {}).get("body", "").strip()
@@ -142,7 +149,7 @@ jobs:
               trigger = json.loads(Path(".agent/trigger.json").read_text(encoding="utf-8"))
               operation = trigger.get("operation", "")
 
-          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync", "tipmaster_refresh_verify", "openscores_connection_check", "openscores_entity_mapping_audit", "openscores_sportmonks_reconciliation", "sportmonks_catalogue_access_audit", "sportmonks_team_scope_metadata_audit", "sportmonks_team_scope_metadata_stage", "provider_league_catalogue_audit", "provider_season_roster_audit", "provider_neutral_repository_audit", "provider_source_roster_stage", "provider_source_repository_audit", "provider_source_legacy_catalogue_stage", "provider_neutral_identity_candidate_audit", "provider_source_highlightly_roster_stage", "provider_source_api_football_roster_stage", "provider_source_api_ninjas_team_scope_stage", "provider_competition_identity_approval", "provider_team_scope_evidence_audit", "provider_team_scope_corroboration_audit", "provider_api_football_season_membership_audit", "provider_team_scope_corroboration_approval", "livescore_team_scope_metadata_audit", "provider_link_approval_evidence_audit", "learning_audit", "deployment_redeploy"}
+          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync", "tipmaster_refresh_verify", "openscores_connection_check", "openscores_entity_mapping_audit", "openscores_sportmonks_reconciliation", "sportmonks_catalogue_access_audit", "sportmonks_team_scope_metadata_audit", "sportmonks_team_scope_metadata_stage", "provider_league_catalogue_audit", "provider_season_roster_audit", "provider_neutral_repository_audit", "provider_source_roster_stage", "provider_source_repository_audit", "provider_source_legacy_catalogue_stage", "provider_neutral_identity_candidate_audit", "provider_source_highlightly_roster_stage", "provider_source_api_football_roster_stage", "provider_source_api_ninjas_team_scope_stage", "provider_competition_identity_approval", "provider_team_scope_evidence_audit", "provider_team_scope_corroboration_audit", "provider_api_football_season_membership_audit", "provider_team_scope_weekly_audit", "provider_team_scope_corroboration_approval", "livescore_team_scope_metadata_audit", "provider_link_approval_evidence_audit", "learning_audit", "deployment_redeploy"}
           if operation not in allowed:
               raise SystemExit("Rejected unsupported or missing operation")
           if operation == "prediction_run":
@@ -534,7 +541,7 @@ jobs:
           python sportmonks_team_scope_metadata_audit.py
 
       - name: Install provider catalogue audit dependency
-        if: steps.operation.outputs.operation == 'provider_league_catalogue_audit' || steps.operation.outputs.operation == 'provider_season_roster_audit' || steps.operation.outputs.operation == 'provider_neutral_repository_audit' || steps.operation.outputs.operation == 'provider_source_roster_stage' || steps.operation.outputs.operation == 'provider_source_repository_audit' || steps.operation.outputs.operation == 'provider_source_legacy_catalogue_stage' || steps.operation.outputs.operation == 'provider_neutral_identity_candidate_audit' || steps.operation.outputs.operation == 'provider_source_highlightly_roster_stage' || steps.operation.outputs.operation == 'provider_source_api_football_roster_stage' || steps.operation.outputs.operation == 'provider_source_api_ninjas_team_scope_stage' || steps.operation.outputs.operation == 'provider_competition_identity_approval' || steps.operation.outputs.operation == 'provider_team_scope_evidence_audit' || steps.operation.outputs.operation == 'provider_team_scope_corroboration_audit' || steps.operation.outputs.operation == 'provider_api_football_season_membership_audit' || steps.operation.outputs.operation == 'provider_team_scope_corroboration_approval' || steps.operation.outputs.operation == 'livescore_team_scope_metadata_audit' || steps.operation.outputs.operation == 'provider_link_approval_evidence_audit'
+        if: steps.operation.outputs.operation == 'provider_league_catalogue_audit' || steps.operation.outputs.operation == 'provider_season_roster_audit' || steps.operation.outputs.operation == 'provider_neutral_repository_audit' || steps.operation.outputs.operation == 'provider_source_roster_stage' || steps.operation.outputs.operation == 'provider_source_repository_audit' || steps.operation.outputs.operation == 'provider_source_legacy_catalogue_stage' || steps.operation.outputs.operation == 'provider_neutral_identity_candidate_audit' || steps.operation.outputs.operation == 'provider_source_highlightly_roster_stage' || steps.operation.outputs.operation == 'provider_source_api_football_roster_stage' || steps.operation.outputs.operation == 'provider_source_api_ninjas_team_scope_stage' || steps.operation.outputs.operation == 'provider_competition_identity_approval' || steps.operation.outputs.operation == 'provider_team_scope_evidence_audit' || steps.operation.outputs.operation == 'provider_team_scope_corroboration_audit' || steps.operation.outputs.operation == 'provider_api_football_season_membership_audit' || steps.operation.outputs.operation == 'provider_team_scope_weekly_audit' || steps.operation.outputs.operation == 'provider_team_scope_corroboration_approval' || steps.operation.outputs.operation == 'livescore_team_scope_metadata_audit' || steps.operation.outputs.operation == 'provider_link_approval_evidence_audit'
         run: |
           set -euo pipefail
           python -m pip install requests 'psycopg[binary]'
@@ -639,6 +646,15 @@ jobs:
           PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
         run: |
           set -euo pipefail
+          python provider_team_scope_corroboration_audit.py
+
+      - name: Run weekly provider team-scope audits (read-only)
+        if: steps.operation.outputs.operation == 'provider_team_scope_weekly_audit'
+        env:
+          PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
+        run: |
+          set -euo pipefail
+          python provider_team_scope_evidence_audit.py
           python provider_team_scope_corroboration_audit.py
 
       - name: Audit API-Football live season membership (read-only)
