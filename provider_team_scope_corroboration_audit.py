@@ -192,6 +192,22 @@ def build_corroboration_report(
                 "api_ninjas_competition_code": api_competition,
                 "target_team_rows": len(source),
                 "api_ninjas_team_rows": len(api_comp),
+                "api_ninjas_team_catalogue": [
+                    {
+                        "provider_entity_id": str(row.get("provider_entity_id") or ""),
+                        "name": row.get("name"),
+                        "country_code": str(row.get("country") or "").strip().upper() or None,
+                        "team_type": str(row.get("team_type") or "").strip().casefold() or None,
+                        "gender_scope": str(row.get("gender_scope") or "").strip().casefold() or None,
+                    }
+                    for row in sorted(
+                        api_comp,
+                        key=lambda item: (
+                            str(item.get("name") or "").casefold(),
+                            str(item.get("provider_entity_id") or ""),
+                        ),
+                    )
+                ],
                 "unique_exact_name_candidates": len(candidates),
                 "scope_complete_candidates": sum(
                     row["status"] == "scope_corroboration_candidate" for row in candidates
