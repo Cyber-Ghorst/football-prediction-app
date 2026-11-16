@@ -46,6 +46,37 @@ class OfficialTeamScopeAuditTests(unittest.TestCase):
         self.assertEqual(report["canonical_ids_assigned"], 0)
         self.assertEqual(report["provider_links_created"], 0)
 
+    def test_complete_livescore_standings_admit_all_36_roster_candidates_without_promotion(self):
+        rows = []
+        for competition_key, competition_id in (("bundesliga", "ger.1"), ("ligue1", "fra.1")):
+            for index, team_name in enumerate(OFFICIAL_COMPETITIONS[competition_key]["teams"]):
+                rows.append({
+                    "provider": "livescore_football",
+                    "provider_entity_id": f"{competition_key}-{index}",
+                    "name": team_name,
+                    "raw_payload": {
+                        "season_label": "2026/27",
+                        "competition_provider_ids": [competition_id],
+                        "source_endpoint": f"/get/soccer/{competition_id}/standings",
+                        "source_retrieved_at": "2026-11-16T13:00:00+00:00",
+                        "team_evidence_method": "season_standings",
+                        "team_evidence_complete": True,
+                    },
+                })
+        report = build_official_team_scope_audit(rows)
+        self.assertEqual(len(report["candidates"]), 36)
+        self.assertTrue(all(
+            row["status"] == "candidate_review_complete_standings"
+            and row["promotion_allowed"] is False
+            and row["scope_candidate"] == {
+                "team_type": "club", "gender_scope": "male",
+                "age_group": "senior", "squad_scope": "first_team",
+            }
+            for row in report["candidates"]
+        ))
+        self.assertEqual(report["canonical_ids_assigned"], 0)
+        self.assertEqual(report["provider_links_created"], 0)
+
     def test_livescore_reviewed_alias_remains_incomplete_participant_evidence(self):
         report = build_official_team_scope_audit([{
             "provider": "livescore_football",

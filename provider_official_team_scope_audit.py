@@ -237,7 +237,11 @@ def build_official_team_scope_audit(
             else:
                 method = str(raw.get("team_evidence_method") or "")
                 complete = bool(raw.get("roster_observation_complete") or raw.get("team_evidence_complete"))
-                if provider == "highlightly" and method == "league_season_standings" and complete:
+                if (
+                    provider in {"highlightly", "livescore_football"}
+                    and method in {"league_season_standings", "season_standings"}
+                    and complete
+                ):
                     status = "candidate_review_complete_standings"
                 else:
                     status = "candidate_review_incomplete_or_participant_evidence"
@@ -253,7 +257,9 @@ def build_official_team_scope_audit(
                 "source_endpoint": raw.get("source_endpoint"),
                 "source_retrieved_at": raw.get("source_retrieved_at"),
                 "team_evidence_method": raw.get("team_evidence_method"),
-                "provider_roster_observation_complete": bool(raw.get("roster_observation_complete")),
+                "provider_roster_observation_complete": bool(
+                    raw.get("roster_observation_complete") or raw.get("team_evidence_complete")
+                ),
                 "official_team_name": official_name,
                 "name_match_method": name_method,
                 "official_reference_url": competition["official_reference_url"],
@@ -329,10 +335,90 @@ def audit_official_team_scope(database_url: str) -> dict[str, Any]:
             )
             columns = ("provider", "provider_entity_id", "name", "raw_payload")
             rows = [dict(zip(columns, values)) for values in cursor.fetchall()]
+            cursor.execute(
+                """SELECT EXISTS (
+                       SELECT 1 FROM information_schema.tables
+                       WHERE table_schema = current_schema()
+                         AND table_name = 'provider_source_team_evidence_observations'
+                   )"""
+            )
+            standings_table_exists = bool(cursor.fetchone()[0])
+            standings_observation_count = 0
+            standings_identity_pairs: set[tuple[str, str]] = set()
+            participant_observations_preserved: list[dict[str, Any]] = []
+            if standings_table_exists:
+                cursor.execute(
+                    """SELECT competition_provider_id, provider_team_id, team_name,
+                              season_label, evidence_complete, source_endpoint,
+                              source_retrieved_at, provenance, raw_response
+                       FROM provider_source_team_evidence_observations
+                       WHERE provider = 'livescore_football'
+                         AND evidence_method = 'season_standings'
+                       ORDER BY competition_provider_id, provider_team_id"""
+                )
+                for (
+                    competition_id, team_id, team_name, season_label, complete,
+                    endpoint, retrieved_at, provenance, raw_response,
+                ) in cursor.fetchall():
+                    provenance = dict(provenance or {})
+                    raw = {
+                        "competition_provider_ids": [str(competition_id)],
+                        "season_label": str(season_label),
+                        "source_endpoint": endpoint,
+                        "source_retrieved_at": retrieved_at.isoformat() if retrieved_at else None,
+                        "team_evidence_method": "season_standings",
+                        "team_evidence_complete": bool(complete),
+                        "standings_provenance": provenance,
+                        "original_standings_response": raw_response,
+                    }
+                    rows.append({
+                        "provider": "livescore_football",
+                        "provider_entity_id": str(team_id),
+                        "name": str(team_name),
+                        "raw_payload": raw,
+                    })
+                    standings_identity_pairs.add((str(team_id), str(competition_id)))
+                    standings_observation_count += 1
+            if standings_identity_pairs:
+                # Prefer the complete standings observation for this provider/team/scope.
+                # Participant evidence remains preserved in its original source row/table.
+                filtered_rows = []
+                for row in rows:
+                    if str(row.get("provider") or "").casefold() != "livescore_football":
+                        filtered_rows.append(row)
+                        continue
+                    raw_row = payload_mapping(row.get("raw_payload"))
+                    raw_competitions = raw_row.get("competition_provider_ids")
+                    if not isinstance(raw_competitions, list):
+                        raw_competitions = [raw_competitions] if raw_competitions else []
+                    identity = str(row.get("provider_entity_id") or "")
+                    overlapping_competitions = [
+                        str(cid) for cid in raw_competitions
+                        if (identity, str(cid)) in standings_identity_pairs
+                    ]
+                    if overlapping_competitions:
+                        participant_observations_preserved.append({
+                            "provider": "livescore_football",
+                            "provider_entity_id": identity,
+                            "provider_team_name": str(row.get("name") or ""),
+                            "competition_provider_ids": overlapping_competitions,
+                            "evidence_method": raw_row.get("team_evidence_method"),
+                            "source_endpoint": raw_row.get("source_endpoint"),
+                            "source_retrieved_at": raw_row.get("source_retrieved_at"),
+                            "retained_in_source_repository": True,
+                            "excluded_from_duplicate_scope_candidates": True,
+                        })
+                        continue
+                    filtered_rows.append(row)
+                rows = filtered_rows
     report = build_official_team_scope_audit(
         rows, existing_api_football_scope_pairs=existing_api_football_scope_pairs
     )
     report["api_football_existing_scope_pairs_excluded"] = len(existing_api_football_scope_pairs)
+    report["livescore_standings_observations_examined"] = standings_observation_count
+    report["livescore_standings_table_available"] = standings_table_exists
+    report["livescore_participant_observations_preserved"] = participant_observations_preserved
+    report["livescore_participant_observations_preserved_count"] = len(participant_observations_preserved)
     report["database_read_only"] = True
     return report
 
