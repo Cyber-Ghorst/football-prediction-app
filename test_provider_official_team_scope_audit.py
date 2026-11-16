@@ -4,6 +4,7 @@ from provider_official_team_scope_audit import (
     OFFICIAL_COMPETITIONS,
     build_official_team_scope_audit,
     filter_duplicate_livescore_participant_rows,
+    build_world_cup_official_scope_candidates,
 )
 
 
@@ -262,6 +263,28 @@ class OfficialTeamScopeAuditTests(unittest.TestCase):
         )
         self.assertEqual(filtered, [participant])
         self.assertEqual(preserved, [])
+
+
+    def test_world_cup_official_roster_adds_48_non_promotable_national_scope_candidates(self):
+        rows = build_world_cup_official_scope_candidates()
+        self.assertEqual(len(rows), 48)
+        self.assertEqual(len({row["provider_entity_id"] for row in rows}), 48)
+        self.assertTrue(all(row["scope_candidate"] is not None for row in rows))
+        self.assertTrue(all(row["promotion_allowed"] is False for row in rows))
+        self.assertTrue(all(
+            row["scope_candidate"]["team_type_scope"] == "national"
+            and row["scope_candidate"]["gender_scope"] == "male"
+            and row["scope_candidate"]["age_group"] == "senior"
+            and row["scope_candidate"]["squad_scope"] == "national_team"
+            and row["scope_candidate"]["provider_team_type_field_confirmed"] is False
+            for row in rows
+        ))
+        self.assertTrue(all(
+            row["competition_provider_id"] == "1635"
+            and row["competition_key"] == "fifa_world_cup_2026"
+            and row["season_label"] == "2026"
+            for row in rows
+        ))
 
 
 
