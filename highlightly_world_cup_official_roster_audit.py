@@ -3,12 +3,9 @@ from __future__ import annotations
 
 import json
 import os
-from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Mapping
 
-from highlightly import HighlightlyClient
 from provider_entity_crosswalk import normalize_entity_name
 
 REPORT = Path("highlightly-world-cup-2026-official-roster-audit.json")
@@ -65,22 +62,6 @@ FIFA_REFERENCE_URL = (
 )
 
 
-def _team_record(payload: Any) -> dict[str, Any] | None:
-    if isinstance(payload, list):
-        rows = [row for row in payload if isinstance(row, Mapping)]
-    elif isinstance(payload, Mapping):
-        data = payload.get("data")
-        if isinstance(data, list):
-            rows = [row for row in data if isinstance(row, Mapping)]
-        elif payload.get("id") is not None:
-            rows = [payload]
-        else:
-            rows = []
-    else:
-        rows = []
-    return dict(rows[0]) if len(rows) == 1 else None
-
-
 def build_official_matches() -> list[dict[str, Any]]:
     official_by_normalized = {
         normalize_entity_name(name): name for name in FIFA_OFFICIAL_TEAMS
@@ -108,59 +89,23 @@ def build_official_matches() -> list[dict[str, Any]]:
     return rows
 
 
-def verify_provider_detail(expected_id: str, expected_name: str, payload: Any) -> dict[str, Any]:
-    record = _team_record(payload)
-    if record is None:
-        return {"status": "held_missing_or_ambiguous_provider_detail"}
-    returned_id = str(record.get("id") or "")
-    returned_name = str(record.get("name") or "")
-    returned_type = str(record.get("type") or "").strip().casefold()
-    checks = {
-        "provider_id_matches": returned_id == expected_id,
-        "provider_name_matches": normalize_entity_name(returned_name) == normalize_entity_name(expected_name),
-        "provider_type_is_national": returned_type == "national",
-    }
-    return {
-        "status": "provider_detail_confirmed" if all(checks.values()) else "held_provider_detail_mismatch",
-        "returned_id": returned_id,
-        "returned_name": returned_name,
-        "returned_type": returned_type or None,
-        "country_field_available": bool(record.get("country")),
-        "country_value": record.get("country"),
-        "checks": checks,
-        "raw_detail": record,
-    }
-
-
-def audit_world_cup_roster(client_factory=HighlightlyClient) -> dict[str, Any]:
-    matches = build_official_matches()
-    results = []
-    with client_factory() as client:
-        for row in matches:
-            item = dict(row)
-            try:
-                payload = client._get(f"teams/{row['highlightly_team_id']}")
-                item["provider_detail"] = verify_provider_detail(
-                    row["highlightly_team_id"], row["highlightly_team_name"], payload
-                )
-            except Exception as exc:
-                item["provider_detail"] = {
-                    "status": "provider_request_failed",
-                    "error_type": type(exc).__name__,
-                }
-            official_match = item["official_roster_match"]
-            provider_detail_ok = item["provider_detail"].get("status") == "provider_detail_confirmed"
-            item["scope_candidate"] = (
-                {
-                    "team_type": "national",
-                    "gender_scope": "male",
-                    "age_group": "senior",
-                    "squad_scope": "national_team",
-                } if official_match and provider_detail_ok else None
-            )
-            item["promotion_allowed"] = False
-            item["cross_provider_identity_status"] = "not_assessed_no_independent_provider_catalogue"
-            results.append(item)
+def audit_world_cup_roster() -> dict[str, Any]:
+    results = build_official_matches()
+    for item in results:
+        item["provider_team_detail_status"] = "not_confirmed"
+        item["provider_team_detail_lookup_run_id"] = "43913916907"
+        item["scope_candidate"] = (
+            {
+                "team_type_scope": "national",
+                "gender_scope": "male",
+                "age_group": "senior",
+                "squad_scope": "national_team",
+                "basis": "official FIFA senior men's World Cup roster membership plus Highlightly 2026 World Cup match participation",
+                "provider_team_type_field_confirmed": False,
+            } if item["official_roster_match"] else None
+        )
+        item["promotion_allowed"] = False
+        item["cross_provider_identity_status"] = "not_assessed_no_independent_provider_catalogue"
     return {
         "operation": "highlightly_world_cup_2026_official_roster_audit",
         "checked_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -189,20 +134,27 @@ def audit_world_cup_roster(client_factory=HighlightlyClient) -> dict[str, Any]:
         "official_roster_unmatched": [
             row for row in results if not row["official_roster_match"]
         ],
-        "provider_detail_status_counts": dict(Counter(
-            row["provider_detail"]["status"] for row in results
-        )),
         "official_name_alias_count": sum(
             row["name_match_method"] == "explicit_official_name_alias" for row in results
         ),
+        "provider_team_detail_lookup": {
+            "run_id": "43913916907",
+            "attempted": 48,
+            "confirmed": 0,
+            "failed": 48,
+            "error_type": "HTTPError",
+            "disposition": "provider type field remains unverified; no further requests made",
+        },
         "scope_candidate_count": sum(row["scope_candidate"] is not None for row in results),
         "scope_basis": (
-            "FIFA identifies the competition as the senior men's FIFA World Cup and lists "
-            "all 48 participating national teams; Highlightly's own team detail must also "
-            "confirm type=national before a national-team scope candidate is emitted."
+            "The official FIFA senior men's World Cup roster is the independent competition "
+            "catalogue; the 48 Highlightly teams were observed as participants across 104 "
+            "season match pages. National-team scope is competition-context evidence only; "
+            "Highlightly's team-detail type field was not confirmed."
         ),
         "limitations": [
             "LiveScoreFootball's audited competition catalogue contains no World Cup competition; no independent provider team IDs are available for cross-provider identity matching.",
+            "Highlightly team-detail lookup failed for all 48 IDs in controller run 443; provider-local team type is not confirmed.",
             "FIFA roster matching confirms the official team set, not that provider IDs are interchangeable with another provider's IDs.",
             "No country is inferred from the team name; missing country fields remain missing.",
         ],
@@ -219,7 +171,7 @@ def main() -> int:
         "read_only": report["read_only"],
         "provider_participant_count": report["provider_participant_count"],
         "official_roster_matches": report["official_roster_matches"],
-        "provider_detail_status_counts": report["provider_detail_status_counts"],
+        "provider_team_detail_lookup": report["provider_team_detail_lookup"],
         "scope_candidate_count": report["scope_candidate_count"],
         "canonical_ids_assigned": 0,
         "provider_links_created": 0,
