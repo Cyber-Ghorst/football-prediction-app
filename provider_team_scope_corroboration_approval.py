@@ -168,11 +168,13 @@ def build_approved_records(report: Mapping[str, Any]) -> list[dict[str, Any]]:
                 candidate = {
                     **candidate,
                     "country_code_iso3166_alpha2": candidate.get("country_code"),
-                    "country_name_from_iso_code": (
-                        "France" if candidate.get("country_code") == "FR"
-                        else "Germany" if candidate.get("country_code") == "DE"
-                        else None
-                    ),
+                    "country_name_from_iso_code": {
+                        "DE": "Germany",
+                        "FR": "France",
+                        "GB": "United Kingdom",
+                        "IT": "Italy",
+                        "ES": "Spain",
+                    }.get(str(candidate.get("country_code") or "").strip().upper()),
                     "team_type_from_api_ninjas": candidate.get("team_type"),
                     "gender_from_api_ninjas": candidate.get("gender_scope"),
                     "api_ninjas_domestic_competition": competition.get("api_ninjas_competition_code"),
