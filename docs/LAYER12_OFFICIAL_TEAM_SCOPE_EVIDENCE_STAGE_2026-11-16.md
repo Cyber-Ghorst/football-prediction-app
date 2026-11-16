@@ -6,7 +6,7 @@
 
 ## Staged review table
 
-<badge color="success">201 records staged</badge>
+**201 records staged successfully.**
 
 | Evidence class | Records | Status |
 |---|---:|---|
