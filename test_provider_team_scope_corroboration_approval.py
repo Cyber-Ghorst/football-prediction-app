@@ -133,6 +133,59 @@ class TeamScopeCorroborationApprovalTests(unittest.TestCase):
             .startswith("https://ligue1.com/")
         )
 
+
+    def test_approves_all_ten_new_highlightly_aliases_only_with_official_evidence(self):
+        aliases = [
+            ("33973", "30569", "Bournemouth", "soccer-afc-bournemouth", "AFC Bournemouth", "GB", "epl"),
+            ("33973", "44185", "Brighton", "soccer-brighton-hove-albion", "Brighton & Hove Albion", "GB", "epl"),
+            ("33973", "1146230", "Coventry", "soccer-coventry-city", "Coventry City", "GB", "epl"),
+            ("33973", "49291", "Ipswich", "soccer-ipswich-town", "Ipswich Town", "GB", "epl"),
+            ("33973", "54397", "Leeds", "soccer-leeds-united", "Leeds United", "GB", "epl"),
+            ("33973", "40781", "Tottenham", "soccer-tottenham-hotspur", "Tottenham Hotspur", "GB", "epl"),
+            ("119924", "458622", "Celta de Vigo", "soccer-celta-vigo", "Celta Vigo", "ES", "laliga"),
+            ("119924", "463728", "Deportivo La Coruña", "soccer-deportivo", "Deportivo", "ES", "laliga"),
+            ("119924", "456920", "Sevilla FC", "soccer-sevilla", "Sevilla", "ES", "laliga"),
+            ("115669", "430539", "Inter", "soccer-internazionale", "Internazionale", "IT", "seriea"),
+        ]
+        competitions = {}
+        for competition_id, target_id, target_name, api_id, api_name, country, code in aliases:
+            competition = competitions.setdefault(competition_id, {
+                "target_provider": "highlightly",
+                "target_competition_provider_id": competition_id,
+                "api_ninjas_competition_code": code,
+                "api_ninjas_team_catalogue": [],
+                "unmatched_target_teams": [],
+            })
+            competition["api_ninjas_team_catalogue"].append({
+                "provider_entity_id": api_id,
+                "name": api_name,
+                "country_code": country,
+                "team_type": "club",
+                "gender_scope": "men",
+            })
+            competition["unmatched_target_teams"].append({
+                "provider_entity_id": target_id,
+                "name": target_name,
+                "near_name_candidates": [],
+            })
+
+        rows = build_approved_records({"competitions": list(competitions.values())})
+        aliases_written = [
+            row for row in rows
+            if row["provider"] == "highlightly"
+            and row["match_method"] == "manual_official_competition_alias_review"
+        ]
+        self.assertEqual(len(aliases_written), 10)
+        self.assertEqual(
+            {row["provider_entity_id"]: row["corroborating_entity_id"] for row in aliases_written},
+            {target_id: api_id for _, target_id, _, api_id, _, _, _ in aliases},
+        )
+        for row in aliases_written:
+            self.assertTrue(row["evidence_snapshot"]["official_reference_urls"])
+            self.assertIn(row["country_code"], {"GB", "ES", "IT"})
+            self.assertEqual(row["team_type"], "club")
+            self.assertEqual(row["gender_scope"], "male")
+
     def test_wrong_api_id_does_not_pass_manual_alias_allowlist(self):
         report = {"competitions": [{
             "target_provider": "highlightly",
