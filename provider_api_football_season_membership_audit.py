@@ -73,8 +73,9 @@ def build_season_membership_report(
         returned = [row for row in suspect_records if row["returned_by_requested_season_endpoint"]]
         missing = [row for row in suspect_records if not row["returned_by_requested_season_endpoint"]]
         error = errors.get(league_id)
-        total_returned += len(returned)
-        total_missing += len(missing) if not error else 0
+        successful_response = league_id in responses and not error
+        total_returned += len(returned) if successful_response else 0
+        total_missing += len(missing) if successful_response else 0
         total_confirmed += len(suspect_records)
         competitions.append({
             "competition": target["name"],
@@ -83,9 +84,10 @@ def build_season_membership_report(
             "provider_team_rows_returned": len(rows),
             "suspect_team_rows_expected": len(suspect_records),
             "suspect_ids_returned": returned,
-            "suspect_ids_absent_from_response": missing if not error else [],
+            "suspect_ids_absent_from_response": missing if successful_response else [],
             "status": (
                 "provider_request_error" if error else
+                "not_queried" if not successful_response else
                 "suspect_records_returned_by_requested_season_endpoint" if returned else
                 "suspect_records_absent_from_requested_season_endpoint"
             ),
