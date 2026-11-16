@@ -151,7 +151,7 @@ jobs:
               trigger = json.loads(Path(".agent/trigger.json").read_text(encoding="utf-8"))
               operation = trigger.get("operation", "")
 
-          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync", "tipmaster_refresh_verify", "openscores_connection_check", "openscores_entity_mapping_audit", "openscores_sportmonks_reconciliation", "sportmonks_catalogue_access_audit", "sportmonks_team_scope_metadata_audit", "sportmonks_team_scope_metadata_stage", "provider_league_catalogue_audit", "provider_season_roster_audit", "provider_neutral_repository_audit", "provider_source_roster_stage", "provider_source_repository_audit", "provider_source_legacy_catalogue_stage", "provider_neutral_identity_candidate_audit", "provider_official_team_scope_audit", "provider_official_team_scope_stage", "provider_source_highlightly_roster_stage", "provider_source_api_football_roster_stage", "provider_source_api_ninjas_team_scope_stage", "provider_source_api_ninjas_season_standings_stage", "livescore_standings_evidence_stage", "provider_competition_identity_approval", "provider_team_scope_evidence_audit", "provider_team_scope_corroboration_audit", "provider_api_football_season_membership_audit", "provider_team_scope_weekly_audit", "provider_team_scope_corroboration_approval", "livescore_team_scope_metadata_audit", "highlightly_livescore_team_detail_audit", "provider_link_approval_evidence_audit", "learning_audit", "deployment_redeploy"}
+          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync", "tipmaster_refresh_verify", "openscores_connection_check", "openscores_entity_mapping_audit", "openscores_sportmonks_reconciliation", "sportmonks_catalogue_access_audit", "sportmonks_team_scope_metadata_audit", "sportmonks_team_scope_metadata_stage", "provider_league_catalogue_audit", "provider_season_roster_audit", "provider_neutral_repository_audit", "provider_source_roster_stage", "provider_source_repository_audit", "provider_source_legacy_catalogue_stage", "provider_neutral_identity_candidate_audit", "provider_official_team_scope_audit", "provider_official_team_scope_stage", "provider_source_highlightly_roster_stage", "provider_source_api_football_roster_stage", "provider_source_api_ninjas_team_scope_stage", "provider_source_api_ninjas_season_standings_stage", "livescore_standings_evidence_stage", "provider_competition_identity_approval", "provider_team_scope_evidence_audit", "provider_team_scope_corroboration_audit", "provider_api_football_season_membership_audit", "provider_team_scope_weekly_audit", "provider_team_scope_corroboration_approval", "livescore_team_scope_metadata_audit", "highlightly_livescore_team_detail_audit", "highlightly_world_cup_official_roster_audit", "provider_link_approval_evidence_audit", "learning_audit", "deployment_redeploy"}
           if operation not in allowed:
               raise SystemExit("Rejected unsupported or missing operation")
           if operation == "prediction_run":
@@ -543,7 +543,7 @@ jobs:
           python sportmonks_team_scope_metadata_audit.py
 
       - name: Install provider catalogue audit dependency
-        if: steps.operation.outputs.operation == 'provider_league_catalogue_audit' || steps.operation.outputs.operation == 'provider_season_roster_audit' || steps.operation.outputs.operation == 'provider_neutral_repository_audit' || steps.operation.outputs.operation == 'provider_source_roster_stage' || steps.operation.outputs.operation == 'provider_source_repository_audit' || steps.operation.outputs.operation == 'provider_source_legacy_catalogue_stage' || steps.operation.outputs.operation == 'provider_neutral_identity_candidate_audit' || steps.operation.outputs.operation == 'provider_source_highlightly_roster_stage' || steps.operation.outputs.operation == 'provider_source_api_football_roster_stage' || steps.operation.outputs.operation == 'provider_source_api_ninjas_team_scope_stage' || steps.operation.outputs.operation == 'provider_competition_identity_approval' || steps.operation.outputs.operation == 'provider_team_scope_evidence_audit' || steps.operation.outputs.operation == 'provider_team_scope_corroboration_audit' || steps.operation.outputs.operation == 'provider_api_football_season_membership_audit' || steps.operation.outputs.operation == 'provider_team_scope_weekly_audit' || steps.operation.outputs.operation == 'provider_team_scope_corroboration_approval' || steps.operation.outputs.operation == 'livescore_team_scope_metadata_audit' || steps.operation.outputs.operation == 'highlightly_livescore_team_detail_audit' || steps.operation.outputs.operation == 'provider_link_approval_evidence_audit' || steps.operation.outputs.operation == 'provider_official_team_scope_audit' || steps.operation.outputs.operation == 'provider_official_team_scope_stage' || steps.operation.outputs.operation == 'livescore_standings_evidence_stage'
+        if: steps.operation.outputs.operation == 'provider_league_catalogue_audit' || steps.operation.outputs.operation == 'provider_season_roster_audit' || steps.operation.outputs.operation == 'provider_neutral_repository_audit' || steps.operation.outputs.operation == 'provider_source_roster_stage' || steps.operation.outputs.operation == 'provider_source_repository_audit' || steps.operation.outputs.operation == 'provider_source_legacy_catalogue_stage' || steps.operation.outputs.operation == 'provider_neutral_identity_candidate_audit' || steps.operation.outputs.operation == 'provider_source_highlightly_roster_stage' || steps.operation.outputs.operation == 'provider_source_api_football_roster_stage' || steps.operation.outputs.operation == 'provider_source_api_ninjas_team_scope_stage' || steps.operation.outputs.operation == 'provider_competition_identity_approval' || steps.operation.outputs.operation == 'provider_team_scope_evidence_audit' || steps.operation.outputs.operation == 'provider_team_scope_corroboration_audit' || steps.operation.outputs.operation == 'provider_api_football_season_membership_audit' || steps.operation.outputs.operation == 'provider_team_scope_weekly_audit' || steps.operation.outputs.operation == 'provider_team_scope_corroboration_approval' || steps.operation.outputs.operation == 'livescore_team_scope_metadata_audit' || steps.operation.outputs.operation == 'highlightly_livescore_team_detail_audit' || steps.operation.outputs.operation == 'highlightly_world_cup_official_roster_audit' || steps.operation.outputs.operation == 'provider_link_approval_evidence_audit' || steps.operation.outputs.operation == 'provider_official_team_scope_audit' || steps.operation.outputs.operation == 'provider_official_team_scope_stage' || steps.operation.outputs.operation == 'livescore_standings_evidence_stage'
         run: |
           set -euo pipefail
           python -m pip install requests 'psycopg[binary]'
@@ -730,6 +730,14 @@ jobs:
           set -euo pipefail
           python highlightly_livescore_team_detail_audit.py
 
+      - name: Audit Highlightly FIFA World Cup 2026 official national-team roster (read-only)
+        if: steps.operation.outputs.operation == 'highlightly_world_cup_official_roster_audit'
+        env:
+          HIGHLIGHTLY_API_KEY: ${{ secrets.HIGHLIGHTLY_API_KEY }}
+        run: |
+          set -euo pipefail
+          python highlightly_world_cup_official_roster_audit.py
+
       - name: Audit provider-link approval evidence coverage (read-only)
         if: steps.operation.outputs.operation == 'provider_link_approval_evidence_audit'
         env:
@@ -902,6 +910,7 @@ jobs:
               ("sportmonks-team-scope-metadata-stage-report.json", "Sportmonks verified team country/type staging report"),
               ("livescore-team-scope-metadata-audit.json", "LiveScoreFootball club catalogue team scope audit"),
               ("highlightly-livescore-team-detail-audit.json", "Highlightly and LiveScoreFootball provider-native team detail audit"),
+              ("highlightly-world-cup-2026-official-roster-audit.json", "Highlightly FIFA World Cup 2026 official national-team roster audit"),
               ("provider-link-approval-evidence-audit.json", "Provider-link approval evidence coverage audit"),
               ("prediction-run-report.json", "Automated prediction run report"),
               ("learning-readiness-report.json", "Leakage-safe learning readiness report"),
@@ -1057,6 +1066,7 @@ jobs:
             sportmonks-team-scope-metadata-stage-report.json
             livescore-team-scope-metadata-audit.json
             highlightly-livescore-team-detail-audit.json
+            highlightly-world-cup-2026-official-roster-audit.json
             provider-link-approval-evidence-audit.json
             provider-source-highlightly-roster-stage-report.json
             provider-source-api-football-roster-stage-report.json
