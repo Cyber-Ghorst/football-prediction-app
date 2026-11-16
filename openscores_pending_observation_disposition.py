@@ -49,8 +49,8 @@ def main() -> int:
     print(json.dumps({
         "status": report["status"],
         "mode": mode,
-        "pending_entity_mapping": report.get("pending_entity_mapping"),
-        "matched": report.get("matched"),
+        "unresolved_unlinked_observations": report.get("unresolved_unlinked_observations"),
+        "linked_observations": report.get("linked_observations"),
         "discarded_by_operator": report.get("discarded_by_operator"),
         "updated": report.get("updated", 0),
         "raw_records_deleted": 0,
