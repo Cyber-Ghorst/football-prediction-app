@@ -129,6 +129,54 @@ class ProviderNeutralIdentityCandidateAuditTests(unittest.TestCase):
         self.assertEqual(report["shared_competition_candidates"], [])
         self.assertEqual(len(report["duplicate_competition_candidates"]), 1)
 
+
+    def test_approved_scope_corroborations_fill_only_missing_dimensions(self):
+        rows = [
+            {"provider": "highlightly", "entity_type": "team",
+             "provider_entity_id": "h-1", "name": "Lyon",
+             "country": None, "team_type": None, "gender_scope": None,
+             "age_group": None, "squad_scope": None},
+            {"provider": "api_football", "entity_type": "team",
+             "provider_entity_id": "a-1", "name": "Arsenal",
+             "country": "England", "team_type": "club", "gender_scope": None,
+             "age_group": None, "squad_scope": None},
+        ]
+        corroborations = {
+            ("highlightly", "h-1"): {
+                "country": "France", "team_type": "club", "gender_scope": "male",
+            },
+            ("api_football", "a-1"): {
+                "country": "United Kingdom", "team_type": "club", "gender_scope": "male",
+            },
+        }
+        report = build_identity_candidate_report(
+            rows, approved_team_scope_corroborations=corroborations
+        )
+        highlightly = next(row for row in report["team_candidates"]
+                           if row["provider"] == "highlightly")
+        api_football = next(row for row in report["team_candidates"]
+                            if row["provider"] == "api_football")
+
+        self.assertEqual(
+            highlightly["corroborated_dimensions"],
+            ["country", "gender_scope", "team_type"],
+        )
+        self.assertEqual(
+            highlightly["missing_dimensions"], ["age_group", "squad_scope"]
+        )
+        self.assertEqual(
+            highlightly["source_missing_dimensions"],
+            ["country", "team_type", "gender_scope", "age_group", "squad_scope"],
+        )
+        self.assertEqual(api_football["corroborated_dimensions"], ["gender_scope"])
+        self.assertEqual(api_football["missing_dimensions"], ["age_group", "squad_scope"])
+        self.assertEqual(api_football["source_missing_dimensions"],
+                         ["gender_scope", "age_group", "squad_scope"])
+        self.assertEqual(highlightly["status"], "held_missing_team_scope")
+        self.assertIsNone(highlightly["identity_key_candidate"])
+        self.assertEqual(report["summary"]["teams_with_approved_scope_corroboration"], 2)
+        self.assertEqual(report["summary"]["teams_held_for_scope_evidence"], 2)
+
     @patch("provider_neutral_identity_candidate_audit._connect")
     def test_database_audit_is_select_only(self, connect):
         cursor = Mock()
@@ -136,6 +184,7 @@ class ProviderNeutralIdentityCandidateAuditTests(unittest.TestCase):
             [("sportmonks", "competition", "8", "Premier League", "England",
               "league", None, None, None, None, None, None, None, None)],
             [("sportmonks", "8", "sportmonks:8")],
+            [],
         ]
         connection = Mock()
         connection.__enter__ = Mock(return_value=connection)
@@ -146,6 +195,7 @@ class ProviderNeutralIdentityCandidateAuditTests(unittest.TestCase):
         report = audit_provider_neutral_identity_candidates("postgresql://readonly")
         self.assertTrue(report["database_read_only"])
         self.assertFalse(report["database_writes"])
+        self.assertEqual(report["approved_team_scope_corroborations_read"], 0)
         statements = [str(call.args[0]).strip().upper()
                       for call in cursor.execute.call_args_list]
         self.assertTrue(statements[0].startswith("SET TRANSACTION READ ONLY"))
