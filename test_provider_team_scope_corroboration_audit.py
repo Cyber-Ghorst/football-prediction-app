@@ -27,6 +27,33 @@ class ProviderTeamScopeCorroborationAuditTests(unittest.TestCase):
         self.assertEqual(report["provider_links_created"], 0)
         self.assertEqual(report["provider_scope_fields_updated"], 0)
 
+    def test_reports_unmatched_target_team_ids_without_guessing_aliases(self):
+        rows = [
+            {"provider": "api_ninjas", "provider_entity_id": "soccer-bayern",
+             "name": "Bayern Munich", "country": "DE", "team_type": "club",
+             "gender_scope": "men",
+             "raw_payload": {"domestic_league_codes": ["bundesliga"]}},
+            {"provider": "livescore_football", "provider_entity_id": "ger-1",
+             "name": "Bayern Munich",
+             "raw_payload": {"competition_provider_ids": ["ger.1"]}},
+            {"provider": "livescore_football", "provider_entity_id": "ger-2",
+             "name": "Unmatched FC",
+             "raw_payload": {"competition_provider_ids": ["ger.1"]}},
+        ]
+        report = build_corroboration_report(rows)
+        competition = next(row for row in report["competitions"]
+                           if row["target_provider"] == "livescore_football"
+                           and row["target_competition_provider_id"] == "ger.1")
+        self.assertEqual(competition["unmatched_target_team_rows"], 1)
+        self.assertEqual(
+            competition["unmatched_target_teams"][0]["provider_entity_id"],
+            "ger-2",
+        )
+        self.assertEqual(
+            competition["unmatched_target_teams"][0]["reason"],
+            "no_unique_exact_normalized_name_match_in_api_ninjas_competition",
+        )
+
     def test_does_not_match_across_competitions_or_ambiguous_names(self):
         rows = [
             {"provider": "api_ninjas", "provider_entity_id": "a1",
