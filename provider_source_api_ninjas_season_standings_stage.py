@@ -128,6 +128,14 @@ def build_source_entities(
                 "promotion_allowed": False,
             },
         }
+        teams, held = validate_standings_rows(
+            rows, requested_league=league, retrieved_at=retrieved_at,
+        )
+        held_all.extend({"requested_league": league, **item} for item in held)
+        # Do not create even a provisional season entity unless at least one
+        # row independently proves the requested season and competition.
+        if not teams:
+            continue
         season_id = f"{league}:{TARGET_SEASON}"
         entities[("season", season_id)] = {
             "entity_type": "season",
@@ -144,16 +152,12 @@ def build_source_entities(
                 "provider_returned_season_values": sorted({
                     _text(row.get("season_label")) for row in rows
                     if isinstance(row, Mapping) and row.get("season") == TARGET_SEASON
-                    and _text(row.get("season_label"))
+                    and _text(row.get("season_label")) in ACCEPTED_LABELS
                 }),
                 "season_evidence_is_row_validated": True,
                 "promotion_allowed": False,
             },
         }
-        teams, held = validate_standings_rows(
-            rows, requested_league=league, retrieved_at=retrieved_at,
-        )
-        held_all.extend({"requested_league": league, **item} for item in held)
         for team in teams:
             team["raw_payload"]["competition_provider_id"] = competition_id
             team["raw_payload"]["season_provider_id"] = season_id
