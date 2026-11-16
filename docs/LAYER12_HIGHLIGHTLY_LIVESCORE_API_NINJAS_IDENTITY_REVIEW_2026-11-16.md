@@ -2,7 +2,7 @@
 
 **Review date:** 2026-11-16  
 **Season:** 2026/27  
-**Disposition:** provider-native details confirmed for 25 exact-name pairs; 21 additional Highlightly/API Ninjas alias candidates reviewed against official rosters. All remain unapproved review candidates.
+**Disposition:** provider-native details confirmed for 25 exact-name pairs; 21 additional Highlightly/API Ninjas aliases reviewed against official rosters and recorded as scope corroborations. None is approved as a canonical cross-provider identity.
 
 ## 1. Exact Highlightly–LiveScore candidates
 
@@ -56,7 +56,7 @@ For every pair:
 
 The read-only API Ninjas corroboration audit found 75 unique exact-name candidates and 21 non-exact-name Highlightly roster entries across the five domestic competitions. The API Ninjas seasonless catalogue rows joined to their 2026/27 standings rows for all 96 teams (96/96 exact provider-ID/competition joins, no missing or ambiguous standings rows). The API Ninjas records below carry 2026/27 season evidence, country, `team_type=club`, and `gender=men`.
 
-Official competition rosters support the display-name variants below. These are manual alias candidates only; they are not approved identity links.
+Official competition rosters support the display-name variants below. These 21 manual aliases were recorded in the dedicated `provider_team_scope_corroborations` table with per-pair rationale and official references. They are scope corroborations only, not approved identity links.
 
 | Competition | Highlightly ID and name | API Ninjas ID and name | Official 2026/27 roster display name |
 |---|---|---|---|
@@ -100,14 +100,16 @@ The similarity-only audit suggested API Ninjas **Stade Rennais** as a near-name 
 - [API Ninjas corroboration audit — controller run #433](https://github.com/Cyber-Ghorst/football-prediction-app/actions/runs/43909144446)
 - [LiveScore club-catalogue metadata audit — controller run #432](https://github.com/Cyber-Ghorst/football-prediction-app/actions/runs/43908950082)
 - [Provider-neutral identity candidate audit — controller run #430](https://github.com/Cyber-Ghorst/football-prediction-app/actions/runs/43908598483)
+- [Scope corroboration write — controller run #438](https://github.com/Cyber-Ghorst/football-prediction-app/actions/runs/43911085721)
+- [Post-write scope corroboration audit — controller run #439](https://github.com/Cyber-Ghorst/football-prediction-app/actions/runs/43911467932)
 
 ## 5. Disposition and safety
 
 - 25 Highlightly–LiveScore exact-name pairs: provider-local details confirmed; remain unapproved cross-provider candidates.
-- 21 Highlightly–API Ninjas non-exact-name pairs: official roster variants reviewed; remain manual alias candidates.
-- No candidate is marked approved.
-- No canonical IDs assigned; no provider links created; no team scope fields updated.
+- 21 Highlightly–API Ninjas non-exact-name pairs: official roster variants reviewed and recorded as manual scope corroborations.
+- 132 scope corroboration records were written to the dedicated review table: 111 exact-name corroborations and 21 manual official-name aliases (96 Highlightly and 36 LiveScoreFootball).
+- No canonical identity or cross-provider provider link was approved or created. Provider source rows and their country/type/gender fields were not updated.
 - No fixture, prediction, model-weight, TVD or prediction-ledger changes.
 - No source rows were overwritten or deleted.
 
-A future mapping approval must be explicit and recorded per pair with reviewer, rationale, provider-native detail evidence, competition/season context and official reference. Until then, all IDs remain namespaced and `promotion_allowed=false`.
+A future canonical identity mapping approval must be explicit and recorded per pair with reviewer, rationale, provider-native detail evidence, competition/season context and official reference. The 132 scope corroborations do not authorize canonical identity promotion; all IDs remain namespaced and `promotion_allowed=false`.
