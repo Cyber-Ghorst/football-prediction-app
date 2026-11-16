@@ -13,6 +13,7 @@ class ProviderSourceEvidenceAuditTests(unittest.TestCase):
                 ("competition", 2, 2, 0, 0, 0, 0, 0, 0),
                 ("team", 36, 0, 0, 0, 0, 0, 0, 0),
             ],
+            [],
             [
                 ({"raw_team": {"country": "France", "gender": "men", "age_group": None}},),
                 ({"raw_team": {"type": "club", "squad": {"name": "first"}}},),
@@ -37,6 +38,7 @@ class ProviderSourceEvidenceAuditTests(unittest.TestCase):
         self.assertEqual(report["entity_counts"]["competition"]["total"], 2)
         self.assertEqual(report["entity_counts"]["competition"]["competition_type_known"], 0)
         self.assertEqual(report["entity_counts"]["team"]["total"], 36)
+        self.assertEqual(report["season_source_evidence"]["rows"], [])
         self.assertEqual(report["team_evidence"]["incomplete_participant_evidence_count"], 36)
         self.assertEqual(report["team_evidence"]["country_missing_count"], 36)
         self.assertEqual(report["raw_team_payload_rows_scanned"], 2)
