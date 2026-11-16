@@ -10,7 +10,11 @@ The 21 unmatched API-Football team rows are not age-group teams or unknown clubs
 
 This explains why exact current top-flight catalogue corroboration is absent. It does **not** justify linking them to another club or approving them as current top-flight participants.
 
-The API-Football source stage is configured with `CATALOGUE_REFERENCE_SEASON = 2026` and calls `/teams` with both `league` and `season`. API-Football documents that the season parameter filters team membership and that team IDs persist across seasons. The database payload's local `catalogue_reference_season=2026` marker therefore conflicts with the independently verified 2026/27 lower-division membership for these rows. The next step must verify the provider's raw season-specific response and staging provenance; do not treat the local marker alone as proof that the provider returned correct 2026/27 membership.
+The API-Football source stage is configured with `CATALOGUE_REFERENCE_SEASON = 2026` and calls `/teams` with both `league` and `season`. API-Football documents that the season parameter filters team membership and that team IDs persist across seasons.
+
+A fresh live audit on 2026-11-16 attempted all five `/teams?league=...&season=2026` requests. **All five were rejected** with the provider response: `Free plans do not have access to this season, try from 2022 to 2024.` The successful workflow report is [here](https://github.com/Cyber-Ghorst/football-prediction-app/actions/runs/43856310971). No live 2026/27 API-Football roster was returned, so the 21 persisted source rows cannot be treated as verified 2026/27 top-flight membership. The local `catalogue_reference_season=2026` marker is not sufficient evidence of the provider's actual response season.
+
+The most likely explanation is that these team rows are legacy season memberships retained in the provider-source table because the current free plan cannot refresh the 2026 roster. The 21 records remain valid senior clubs, but the independent official 2026/27 sources place them outside the corresponding top-flight competitions. Do not delete the provider team entities; hold only their current top-flight membership and cross-provider association.
 
 ## Record-by-record disposition
 
@@ -63,7 +67,7 @@ The API-Football source stage is configured with `CATALOGUE_REFERENCE_SEASON = 2
 2. Classify their club nature as senior first-team clubs based on official professional-league participation; do not label them age-group or reserve teams.
 3. Do not delete their provider team entities: the clubs are real and have valid persistent provider IDs.
 4. Do not copy API Ninjas country/gender values to these rows without direct identity corroboration.
-5. Run a fresh read-only API-Football `/teams?league=...&season=2026` request for each affected competition and compare the raw response to the official 2026/27 rosters. If the API response itself contains these lower-division teams, record a provider season-membership defect. If the API response is correct but the stored source rows are stale, repair only the season-scoped source associations.
-6. Keep the 21 records held until that raw-response provenance check is complete.
+5. Do not retry the same 2026 requests on the current free plan. First determine whether API-Football access changes or whether another permitted source can verify current season membership. If access remains unavailable, preserve the 21 rows as historical provider entities and exclude them from current top-flight membership decisions.
+6. Keep the 21 records held for cross-provider linking; their senior-club status is independently supported, but their API-Football current-season membership is not.
 
 **Audit invariants:** 0 canonical IDs assigned; 0 provider links created; 0 source scope fields updated; prediction model and prediction ledger untouched.
