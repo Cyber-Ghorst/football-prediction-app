@@ -69,6 +69,34 @@ class OfficialTeamScopeAuditTests(unittest.TestCase):
         )
         self.assertFalse(candidate["provider_roster_observation_complete"])
 
+
+    def test_laliga_provider_name_variants_match_official_club_list(self):
+        rows = [
+            ("679031", "Elche", "Elche CF"),
+            ("465430", "Getafe", "Getafe CF"),
+            ("467132", "Villarreal", "Villarreal CF"),
+        ]
+        report = build_official_team_scope_audit([
+            {
+                "provider": "highlightly",
+                "provider_entity_id": provider_id,
+                "name": name,
+                "raw_payload": {
+                    "season_label": "2026",
+                    "competition_provider_ids": ["119924"],
+                    "team_evidence_method": "league_season_standings",
+                    "roster_observation_complete": True,
+                },
+            }
+            for provider_id, name, _ in rows
+        ])
+        self.assertEqual(
+            {candidate["official_team_name"] for candidate in report["candidates"]},
+            {official_name for _, _, official_name in rows},
+        )
+        self.assertTrue(all(candidate["status"] == "candidate_review_complete_standings"
+                            for candidate in report["candidates"]))
+
     def test_missing_and_wrong_season_are_held(self):
         report = build_official_team_scope_audit([
             {
