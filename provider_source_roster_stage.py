@@ -25,7 +25,7 @@ TARGETS = (
 REPORT = Path("provider-source-roster-stage-report.json")
 
 
-def build_source_entities(rosters: list[Mapping[str, Any]]) -> list[dict[str, Any]]:
+def build_source_entities(rosters: list[Mapping[str, Any]], *, retrieved_at: str | None = None) -> list[dict[str, Any]]:
     """Convert observed catalogue/roster records into provider-native source rows."""
     entities: dict[tuple[str, str], dict[str, Any]] = {}
     team_competitions: dict[str, set[str]] = {}
@@ -45,6 +45,9 @@ def build_source_entities(rosters: list[Mapping[str, Any]]) -> list[dict[str, An
             "competition_type": league.get("type"),
             "raw_payload": {
                 "source": "LiveScoreFootball competition catalogue",
+                "source_endpoint": "leagues",
+                "season_label": str(season.get("name") or season.get("year") or season.get("id") or SEASON_YEAR),
+                "source_retrieved_at": retrieved_at,
                 "season_window": {"year": SEASON_YEAR, "from": SEASON_START, "to": SEASON_END},
             },
         }
@@ -64,6 +67,9 @@ def build_source_entities(rosters: list[Mapping[str, Any]]) -> list[dict[str, An
                 "gender_scope": team.get("gender") or team.get("gender_scope"),
                 "raw_payload": {
                     "source": "LiveScoreFootball season-window fixture participants",
+                    "source_endpoint": "fixtures",
+                    "season_label": str(season.get("name") or season.get("year") or season.get("id") or SEASON_YEAR),
+                    "source_retrieved_at": retrieved_at,
                     "competition_provider_ids": [],
                     "season_window": {"year": SEASON_YEAR, "from": SEASON_START, "to": SEASON_END},
                     "team_evidence_method": roster.get("team_evidence_method"),
@@ -119,7 +125,8 @@ def main() -> int:
     if not database_url:
         raise SystemExit("PROVIDER_DATABASE_URL is not configured.")
     rosters = collect_rosters()
-    entities = build_source_entities(rosters)
+    retrieved_at = datetime.now(timezone.utc).isoformat()
+    entities = build_source_entities(rosters, retrieved_at=retrieved_at)
     counts = store_provider_source_bundle(
         database_url, "livescore_football", entities=entities,
         write_scope="provider_source_evidence_only",
@@ -128,6 +135,7 @@ def main() -> int:
         "checked_at": datetime.now(timezone.utc).isoformat(),
         "provider": "livescore_football",
         "season_window": {"year": SEASON_YEAR, "from": SEASON_START, "to": SEASON_END},
+        "source_retrieved_at": retrieved_at,
         "competition_count": len(rosters),
         "observed_team_counts": {
             str((row.get("league") or {}).get("id")): len(row.get("teams") or [])
