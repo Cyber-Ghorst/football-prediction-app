@@ -110,6 +110,44 @@ class ProviderSourceRepositoryTests(unittest.TestCase):
         self.assertEqual(cursor.execute.call_count, 2)
 
     @patch("provider_source_repository._connect")
+    def test_source_audit_reports_season_metadata_without_exposing_raw_values(self, connect):
+        from provider_source_repository import audit_provider_source_evidence
+
+        cursor = Mock()
+        cursor.fetchall.side_effect = [
+            [("season", 1, 0, 0, 1, 0, 0, 0, 0)],
+            [("2026", "2026/27", "league-1", "2026/27",
+              datetime(2026, 8, 1).date(), datetime(2027, 5, 31).date(),
+              datetime(2026, 7, 1, tzinfo=timezone.utc),
+              datetime(2026, 7, 1, tzinfo=timezone.utc),
+              datetime(2026, 11, 1, tzinfo=timezone.utc),
+              {"season": {"id": 2026, "name": "2026/27"}, "secret_token": "do-not-report"})],
+            [],
+        ]
+        cursor.fetchone.side_effect = [(0, 0, 0), (0,), (0,)]
+        connection = Mock()
+        connection.__enter__ = Mock(return_value=connection)
+        connection.__exit__ = Mock(return_value=False)
+        connection.cursor.return_value.__enter__ = Mock(return_value=cursor)
+        connection.cursor.return_value.__exit__ = Mock(return_value=False)
+        connect.return_value = connection
+
+        result = audit_provider_source_evidence("postgresql://unused", "sportmonks")
+        evidence = result["season_source_evidence"]
+        self.assertEqual(len(evidence["rows"]), 1)
+        row = evidence["rows"][0]
+        self.assertEqual(row["provider_entity_id"], "2026")
+        self.assertEqual(row["parent_competition_provider_id"], "league-1")
+        self.assertEqual(row["season_label"], "2026/27")
+        self.assertIn("season.id", row["raw_payload_key_paths"])
+        self.assertIn("season.name", row["raw_payload_key_paths"])
+        self.assertNotIn("secret_token", row["raw_payload_key_paths"])
+        self.assertNotIn("raw_payload", row)
+        self.assertEqual(evidence["rows_with_provider_updated_at"], 1)
+        self.assertEqual(evidence["rows_with_complete_date_range"], 1)
+        self.assertFalse(result["database_writes"])
+
+    @patch("provider_source_repository._connect")
     def test_schema_is_additive_and_creates_only_source_evidence_tables(self, connect):
         cursor = Mock()
         cursor.fetchall.return_value = [
