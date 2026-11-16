@@ -50,7 +50,7 @@ def _select_competition(rows: list[dict[str, Any]], target: Mapping[str, Any]) -
     return matches[0], "unique_exact_name_country"
 
 
-def build_source_entities(rosters: list[Mapping[str, Any]]) -> list[dict[str, Any]]:
+def build_source_entities(rosters: list[Mapping[str, Any]], *, retrieved_at: str | None = None) -> list[dict[str, Any]]:
     entities: dict[tuple[str, str], dict[str, Any]] = {}
     team_competitions: dict[str, set[str]] = {}
     for roster in rosters:
@@ -90,6 +90,9 @@ def build_source_entities(rosters: list[Mapping[str, Any]]) -> list[dict[str, An
                 "end_date": season.get("end_date"),
                 "raw_payload": {
                     "source": "Highlightly league season record",
+                    "source_endpoint": "league catalogue seasons",
+                    "season_label": str(season.get("name") or season.get("season") or native_season_id),
+                    "source_retrieved_at": retrieved_at,
                     "provider_native_season_id": native_season_id,
                     "provider_entity_id_kind": "competition_scoped_composite",
                     "raw_season": dict(season),
@@ -110,9 +113,13 @@ def build_source_entities(rosters: list[Mapping[str, Any]]) -> list[dict[str, An
                 "gender_scope": team.get("gender") or team.get("gender_scope"),
                 "raw_payload": {
                     "source": "Highlightly league-season standings",
+                    "source_endpoint": "standings",
+                    "season_label": str(season.get("name") or season.get("season") or native_season_id),
+                    "source_retrieved_at": retrieved_at,
                     "competition_provider_id": competition_id,
                     "season_provider_id": season_id or None,
                     "provider_native_season_id": native_season_id or None,
+                    "season_window": {"from": season.get("start_date"), "to": season.get("end_date")},
                     "team_evidence_method": roster.get("team_evidence_method"),
                     "roster_observation_complete": bool(roster.get("team_evidence_complete")),
                     "team_evidence_complete": False,
@@ -193,7 +200,8 @@ def main() -> int:
     if not database_url:
         raise SystemExit("PROVIDER_DATABASE_URL is not configured.")
     rosters, outcomes = collect_rosters()
-    entities = build_source_entities(rosters)
+    retrieved_at = datetime.now(timezone.utc).isoformat()
+    entities = build_source_entities(rosters, retrieved_at=retrieved_at)
     counts = {"entities": 0, "fixtures": 0, "statistics": 0}
     if entities:
         counts = store_provider_source_bundle(
@@ -204,6 +212,7 @@ def main() -> int:
         "checked_at": datetime.now(timezone.utc).isoformat(),
         "provider": "highlightly",
         "season": SEASON_YEAR,
+        "source_retrieved_at": retrieved_at,
         "competition_outcomes": outcomes,
         "source_entities_written": counts["entities"],
         "source_fixtures_written": counts["fixtures"],
