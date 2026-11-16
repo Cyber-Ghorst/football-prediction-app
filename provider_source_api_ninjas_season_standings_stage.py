@@ -7,7 +7,6 @@ from __future__ import annotations
 
 import json
 import os
-from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping
@@ -124,6 +123,14 @@ def build_source_entities(
             held_all.append({"requested_league": league, "reason": "unexpected_competition"})
             continue
         competition_id = league
+        teams, held = validate_standings_rows(
+            rows, requested_league=league, retrieved_at=retrieved_at,
+        )
+        held_all.extend({"requested_league": league, **item} for item in held)
+        # Empty, failed, or wholly unverified responses must not create even
+        # a provisional competition record.
+        if not teams:
+            continue
         entities[("competition", competition_id)] = {
             "entity_type": "competition",
             "provider_entity_id": competition_id,
@@ -133,17 +140,10 @@ def build_source_entities(
                 "source_endpoint": "/v1/soccerstandings",
                 "source_retrieved_at": retrieved_at,
                 "requested_league": league,
+                "competition_evidence_method": "validated_season_standings_rows",
                 "promotion_allowed": False,
             },
         }
-        teams, held = validate_standings_rows(
-            rows, requested_league=league, retrieved_at=retrieved_at,
-        )
-        held_all.extend({"requested_league": league, **item} for item in held)
-        # Do not create even a provisional season entity unless at least one
-        # row independently proves the requested season and competition.
-        if not teams:
-            continue
         season_id = f"{league}:{TARGET_SEASON}"
         entities[("season", season_id)] = {
             "entity_type": "season",
@@ -167,9 +167,15 @@ def build_source_entities(
             },
         }
         for team in teams:
+            raw_provider_team_id = team["provider_entity_id"]
+            # The source repository primary key is provider + entity_type +
+            # provider_entity_id. Namespace the persisted key by competition
+            # while retaining the exact provider ID in provenance.
+            team["provider_entity_id"] = f"{league}:{raw_provider_team_id}"
+            team["raw_payload"]["provider_team_id"] = raw_provider_team_id
             team["raw_payload"]["competition_provider_id"] = competition_id
             team["raw_payload"]["season_provider_id"] = season_id
-            entities[("team", f"{league}:{team['provider_entity_id']}")] = team
+            entities[("team", team["provider_entity_id"])] = team
     return list(entities.values()), held_all
 
 
