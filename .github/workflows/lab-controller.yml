@@ -1004,6 +1004,7 @@ jobs:
             provider-source-repository-audit.json
             provider-source-legacy-catalogue-stage-report.json
             provider-neutral-identity-candidate-audit.json
+            provider-official-team-scope-audit.json
             provider-team-scope-evidence-audit.json
             provider-team-scope-corroboration-audit.json
             provider-api-football-season-membership-audit.json
