@@ -70,6 +70,8 @@ def build_standings_observation_rows(
     payload = observation.get("provider_payload")
     if not all((competition_id, season, requested, endpoint, retrieved_at)):
         raise ValueError("Standings provenance is incomplete.")
+    if requested != str(SEASON_YEAR) or season != requested:
+        raise ValueError("Only explicitly requested 2026/27 standings evidence may be staged.")
     if not isinstance(payload, Mapping):
         raise ValueError("Original LiveScoreFootball response is missing.")
     if observation.get("status") != "collected" or observation.get("team_evidence_complete") is not True:
@@ -78,8 +80,14 @@ def build_standings_observation_rows(
     child_label = returned.get("child_label")
     competition_season = returned.get("competition_season")
     standings_season = returned.get("standings_season")
-    if child_id is None or not child_label or str(competition_season) != requested or str(standings_season) != requested:
-        raise ValueError("Returned competition, child and standings season provenance must agree.")
+    expected_labels = (f"{SEASON_YEAR}/{str(SEASON_YEAR + 1)[-2:]}", f"{SEASON_YEAR}-{str(SEASON_YEAR + 1)[-2:]}")
+    if (
+        child_id is None or not child_label
+        or str(competition_season) != requested
+        or str(standings_season) != requested
+        or not any(label in str(child_label) for label in expected_labels)
+    ):
+        raise ValueError("Returned competition, unique child label and standings season provenance must agree.")
     teams = observation.get("teams") or []
     if len(teams) != 18:
         raise ValueError("Expected exactly 18 unique standings teams for each target competition.")
