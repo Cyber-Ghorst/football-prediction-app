@@ -27,7 +27,7 @@ def explicit_season_label(value: Any) -> str | None:
         if item is None or isinstance(item, (list, dict, bool)):
             continue
         label = str(item).strip()
-        match = re.fullmatch(r"(20\d{2})\\s*(?:/|-|–)\\s*(\d{2}|20\d{2})", label)
+        match = re.fullmatch(r"(20\d{2})\s*(?:/|-|–)\s*(\d{2}|20\d{2})", label)
         if match:
             start = int(match.group(1))
             end = match.group(2)
