@@ -1,8 +1,8 @@
 """Season-scoped provider roster collection without cross-provider inference.
 
-Highlightly rosters come from league-season standings. LiveScoreFootball
-rosters are observed from fixtures within an explicitly supplied season date
-window; those are participant observations, not a claim of complete squads.
+Highlightly and LiveScoreFootball standings can provide season-roster evidence
+when their returned season metadata validates. LiveScore fixture participants
+remain a separate, incomplete observation method.
 """
 from __future__ import annotations
 
