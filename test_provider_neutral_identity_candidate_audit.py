@@ -433,11 +433,11 @@ class ProviderNeutralIdentityCandidateAuditTests(unittest.TestCase):
 
     def test_approved_parent_season_branch_uses_official_date_evidence(self):
         report = build_identity_candidate_report([{
-            "provider": "sportmonks", "entity_type": "season",
-            "provider_entity_id": "28083", "name": "2026/2027",
-            "season_label": "2026/2027", "parent_competition_provider_id": "8",
+            "provider": "api_ninjas", "entity_type": "season",
+            "provider_entity_id": "epl:2026", "name": "2026/2027",
+            "season_label": "2026/2027", "parent_competition_provider_id": "epl",
             "start_date": "2026-08-21", "end_date": "2027-05-30",
-        }], {("sportmonks", "8"): "sportmonks:8"})
+        }], {("api_ninjas", "epl"): "sportmonks:8"})
         season = report["season_candidates"][0]
         self.assertEqual(season["provider_native_start_date"], "2026-08-21")
         self.assertEqual(season["provider_native_end_date"], "2027-05-30")
