@@ -3,6 +3,7 @@ import unittest
 from provider_official_team_scope_audit import (
     OFFICIAL_COMPETITIONS,
     build_official_team_scope_audit,
+    filter_duplicate_livescore_participant_rows,
 )
 
 
@@ -212,6 +213,56 @@ class OfficialTeamScopeAuditTests(unittest.TestCase):
         }])
         self.assertEqual(report["candidates"][0]["status"], "held_official_team_name_unmatched")
         self.assertIsNone(report["candidates"][0]["scope_candidate"])
+
+    def test_filter_preserves_only_real_participant_rows_and_keeps_standings_candidates(self):
+        participant = {
+            "provider": "livescore_football",
+            "provider_entity_id": "131",
+            "name": "Bayer Leverkusen",
+            "source_repository_row": True,
+            "raw_payload": {
+                "competition_provider_ids": ["ger.1"],
+                "team_evidence_method": "season_window_fixture_participants",
+                "source_endpoint": "fixtures",
+            },
+        }
+        standings = {
+            "provider": "livescore_football",
+            "provider_entity_id": "131",
+            "name": "Bayer Leverkusen",
+            "source_repository_row": False,
+            "raw_payload": {
+                "competition_provider_ids": ["ger.1"],
+                "season_label": "2026/27",
+                "team_evidence_method": "season_standings",
+                "source_endpoint": "/get/soccer/ger.1/standings",
+            },
+        }
+        filtered, preserved = filter_duplicate_livescore_participant_rows(
+            [participant, standings], {("131", "ger.1")}
+        )
+        self.assertEqual(filtered, [standings])
+        self.assertEqual(len(preserved), 1)
+        self.assertEqual(preserved[0]["evidence_method"], "season_window_fixture_participants")
+        self.assertTrue(preserved[0]["retained_in_source_repository"])
+
+    def test_non_overlapping_participant_rows_remain_available_as_fallback(self):
+        participant = {
+            "provider": "livescore_football",
+            "provider_entity_id": "999",
+            "name": "New Club",
+            "source_repository_row": True,
+            "raw_payload": {
+                "competition_provider_ids": ["fra.1"],
+                "team_evidence_method": "season_window_fixture_participants",
+            },
+        }
+        filtered, preserved = filter_duplicate_livescore_participant_rows(
+            [participant], {("131", "ger.1")}
+        )
+        self.assertEqual(filtered, [participant])
+        self.assertEqual(preserved, [])
+
 
 
 if __name__ == "__main__":
