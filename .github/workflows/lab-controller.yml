@@ -820,6 +820,7 @@ jobs:
               ("provider-source-repository-audit.json", "Provider-native source evidence audit"),
               ("provider-neutral-identity-candidate-audit.json", "Provider-neutral identity candidate audit"),
               ("provider-team-scope-evidence-audit.json", "Provider team-scope evidence audit"),
+              ("provider-team-scope-corroboration-audit.json", "Provider team-scope corroboration audit"),
               ("sportmonks-team-scope-metadata-audit.json", "Sportmonks team country/type metadata audit"),
               ("sportmonks-team-scope-metadata-stage-report.json", "Sportmonks verified team country/type staging report"),
               ("livescore-team-scope-metadata-audit.json", "LiveScoreFootball club catalogue team scope audit"),
