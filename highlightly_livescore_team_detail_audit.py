@@ -17,6 +17,7 @@ from highlightly import HighlightlyClient
 from livescore_football import LiveScoreFootballClient
 from provider_data_storage import _connect
 from provider_entity_crosswalk import normalize_entity_name
+from provider_season_provenance import explicit_season_label
 
 REPORT = Path("highlightly-livescore-team-detail-audit.json")
 SEASON_YEAR = "2026"
@@ -74,7 +75,7 @@ def build_exact_candidates(
                 str(x) for x in raw.get("competition_provider_ids", [])
             }:
                 continue
-            if str(raw.get("season_label") or "") != SEASON_LABEL:
+            if explicit_season_label(raw) != SEASON_LABEL:
                 continue
             name_key = normalize_entity_name(row.get("name"))
             if name_key:
@@ -255,7 +256,7 @@ def audit_team_details(database_url: str, highlightly_factory=HighlightlyClient,
         "expected_candidate_pairs": 25,
         "highlightly_source_rows_read": len(highlightly_rows),
         "highlightly_rows_with_2026_27_label": sum(
-            str(_mapping(row.get("raw_payload")).get("season_label") or "") == SEASON_LABEL
+            explicit_season_label(_mapping(row.get("raw_payload"))) == SEASON_LABEL
             for row in highlightly_rows
         ),
         "highlightly_competition_id_counts": dict(Counter(
