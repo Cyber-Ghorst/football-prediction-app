@@ -19,9 +19,9 @@ from provider_neutral_identity import (
 
 
 # Reviewed official 2026/27 competition references for source rows whose
-# provider payload omits competition_type. This is candidate-view evidence
-# only; provider source rows and identity links remain unchanged.
-OFFICIAL_COMPETITION_TYPE_EVIDENCE = {
+# provider payload omits country and/or competition_type. This is candidate-view
+# evidence only; provider source rows and identity links remain unchanged.
+OFFICIAL_COMPETITION_IDENTITY_EVIDENCE = {
     ("highlightly", "33973"): {
         "competition_type": "league",
         "official_reference_urls": ("https://www.premierleague.com/en/news/4365156",),
@@ -124,7 +124,7 @@ def build_identity_candidate_report(
             required = ("name", "country", "competition_type")
             effective_row = dict(row)
             source_missing = _missing(row, required)
-            evidence = OFFICIAL_COMPETITION_TYPE_EVIDENCE.get((provider, provider_id), {})
+            evidence = OFFICIAL_COMPETITION_IDENTITY_EVIDENCE.get((provider, provider_id), {})
             corroborated_dimensions = []
             if not str(effective_row.get("competition_type") or "").strip():
                 value = str(evidence.get("competition_type") or "").strip()
