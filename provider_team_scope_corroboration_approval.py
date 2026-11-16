@@ -18,7 +18,7 @@ from psycopg.types.json import Jsonb
 
 from provider_data_storage import _connect
 from provider_team_scope_corroboration_audit import audit_team_scope_corroboration
-from provider_season_provenance import season_match
+from provider_season_provenance import is_verified_2026_27_snapshot, season_match
 
 REPORT = Path("provider-team-scope-corroboration-approval-report.json")
 APPROVAL_REASON = (
@@ -261,13 +261,17 @@ def approve_team_scope_corroborations(database_url: str) -> dict[str, Any]:
             for row in records:
                 cursor.execute(
                     """SELECT country_code, country_name, team_type, gender_scope,
-                              corroborating_entity_id
+                              corroborating_entity_id, evidence_snapshot
                        FROM provider_team_scope_corroborations
                        WHERE provider = %s AND provider_entity_id = %s
                        ORDER BY approved_at DESC""",
                     (row["provider"], row["provider_entity_id"]),
                 )
-                existing = cursor.fetchall()
+                existing_rows = cursor.fetchall()
+                existing = [
+                    value[:5] for value in existing_rows
+                    if is_verified_2026_27_snapshot(value[5])
+                ]
                 conflicting = [
                     value for value in existing
                     if (
@@ -306,7 +310,25 @@ def approve_team_scope_corroborations(database_url: str) -> dict[str, Any]:
                        ON CONFLICT (
                            provider, provider_entity_id, corroborating_provider,
                            corroborating_entity_id, competition_provider_id
-                       ) DO NOTHING""",
+                       ) DO UPDATE SET
+                           country_code = EXCLUDED.country_code,
+                           country_name = EXCLUDED.country_name,
+                           team_type = EXCLUDED.team_type,
+                           gender_scope = EXCLUDED.gender_scope,
+                           match_method = EXCLUDED.match_method,
+                           approval_reason = EXCLUDED.approval_reason,
+                           evidence_snapshot = jsonb_set(
+                               EXCLUDED.evidence_snapshot,
+                               '{legacy_provisional_snapshot}',
+                               provider_team_scope_corroborations.evidence_snapshot,
+                               true
+                           ),
+                           approved_at = NOW()
+                       WHERE NOT (
+                           COALESCE(provider_team_scope_corroborations.evidence_snapshot->>'season_match_verified', 'false') = 'true'
+                           AND provider_team_scope_corroborations.evidence_snapshot->>'target_season_label' = '2026/27'
+                           AND provider_team_scope_corroborations.evidence_snapshot->>'api_ninjas_season_label' = '2026/27'
+                       )""",
                     (
                         corroboration_id, row["provider"], row["provider_entity_id"],
                         row["corroborating_provider"], row["corroborating_entity_id"],

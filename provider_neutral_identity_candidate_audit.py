@@ -9,6 +9,7 @@ from collections import defaultdict
 from typing import Any, Mapping
 
 from provider_data_storage import _connect
+from provider_season_provenance import is_verified_2026_27_snapshot
 from provider_neutral_identity import (
     canonical_competition_key,
     canonical_season_key,
@@ -352,7 +353,8 @@ def audit_provider_neutral_identity_candidates(database_url: str) -> dict[str, A
                 for provider, provider_id, canonical_id in cursor.fetchall()
             }
             cursor.execute(
-                """SELECT provider, provider_entity_id, country_name, team_type, gender_scope
+                """SELECT provider, provider_entity_id, country_name, team_type,
+                          gender_scope, evidence_snapshot
                    FROM provider_team_scope_corroborations
                    WHERE LENGTH(BTRIM(approval_reason)) >= 12
                    ORDER BY provider, provider_entity_id, corroborating_provider,
@@ -360,7 +362,13 @@ def audit_provider_neutral_identity_candidates(database_url: str) -> dict[str, A
             )
             corroboration_rows = cursor.fetchall()
     corroboration_values: dict[tuple[str, str], set[tuple[str, str, str]]] = defaultdict(set)
-    for provider, provider_id, country_name, team_type, gender_scope in corroboration_rows:
+    legacy_provisional_scope_corroborations_ignored = 0
+    verified_scope_corroborations_read = 0
+    for provider, provider_id, country_name, team_type, gender_scope, evidence_snapshot in corroboration_rows:
+        if not is_verified_2026_27_snapshot(evidence_snapshot):
+            legacy_provisional_scope_corroborations_ignored += 1
+            continue
+        verified_scope_corroborations_read += 1
         corroboration_values[(str(provider).casefold(), str(provider_id))].add(
             (str(country_name or "").strip(), str(team_type or "").strip(),
              str(gender_scope or "").strip())
@@ -380,8 +388,9 @@ def audit_provider_neutral_identity_candidates(database_url: str) -> dict[str, A
         rows, approved_parent_links, approved_team_scope_corroborations
     )
     report["approved_parent_competition_links_read"] = len(approved_parent_links)
-    report["approved_team_scope_corroborations_read"] = sum(
-        len(records) for records in corroboration_values.values()
+    report["approved_team_scope_corroborations_read"] = verified_scope_corroborations_read
+    report["legacy_provisional_scope_corroborations_ignored"] = (
+        legacy_provisional_scope_corroborations_ignored
     )
     report["team_scope_corroboration_conflicts"] = conflicting_team_scope_corroborations
     report["database_read_only"] = True
