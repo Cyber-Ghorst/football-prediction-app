@@ -29,7 +29,7 @@ class HighlightlySourceRosterStageTests(unittest.TestCase):
                 },
                 "season": {"id": 2026, "name": "2026"},
                 "teams": [{
-                    "id": 1, "name": "Bayern Munich", "country": None, "type": None,
+                    "id": 1, "name": "Bayern Munich", "country": None, "type": "domestic", "gender": "male",
                     "raw": {"id": 1, "name": "Bayern Munich"},
                 }],
                 "team_evidence_method": "league_season_standings",
