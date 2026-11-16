@@ -59,7 +59,7 @@ def build_standings_observation_rows(
     if observation.get("provider") != "livescore_football":
         raise ValueError("Only LiveScoreFootball standings observations are accepted.")
     if observation.get("team_evidence_method") != "season_standings":
-        raise ValueError("Evidence method must be season_standings.")
+        return []
     league = observation.get("league") or {}
     returned = observation.get("provider_returned_season") or {}
     season = str(observation.get("season") or "")
