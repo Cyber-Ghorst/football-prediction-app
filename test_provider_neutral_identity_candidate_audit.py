@@ -25,7 +25,7 @@ class ProviderNeutralIdentityCandidateAuditTests(unittest.TestCase):
         self.assertEqual(report["shared_competition_candidates"], [])
 
 
-    def test_official_competition_references_fill_only_missing_competition_type(self):
+    def test_official_competition_references_fill_only_missing_identity_dimensions(self):
         api_football_anchors = [
             ("39", "Premier League", "England"),
             ("140", "La Liga", "Spain"),
@@ -59,16 +59,44 @@ class ProviderNeutralIdentityCandidateAuditTests(unittest.TestCase):
              "provider_entity_id": "fra.1", "name": "French Ligue 1",
              "country": "France", "competition_type": None},
         ])
+        for provider_id, name in [
+            ("epl", "Premier League"),
+            ("laliga", "La Liga"),
+            ("seriea", "Serie A"),
+            ("bundesliga", "Bundesliga"),
+            ("ligue1", "Ligue 1"),
+        ]:
+            rows.append({
+                "provider": "api_ninjas", "entity_type": "competition",
+                "provider_entity_id": provider_id, "name": name,
+                "country": None, "competition_type": None,
+            })
         report = build_identity_candidate_report(rows)
 
         official_rows = [
             row for row in report["competition_candidates"]
-            if row["provider"] in {"highlightly", "livescore_football"}
+            if row["provider"] in {"highlightly", "livescore_football", "api_ninjas"}
         ]
-        self.assertEqual(len(official_rows), 7)
+        self.assertEqual(len(official_rows), 12)
         self.assertTrue(all(row["identity_key_candidate"] for row in official_rows))
+        self.assertTrue(all(row["missing_dimensions"] == [] for row in official_rows))
+        ninjas = {row["provider_entity_id"]: row for row in official_rows
+                  if row["provider"] == "api_ninjas"}
+        self.assertEqual(set(ninjas), {"epl", "laliga", "seriea", "bundesliga", "ligue1"})
+        self.assertTrue(all(row["source_missing_dimensions"] == ["country", "competition_type"]
+                            for row in ninjas.values()))
+        highlightly_rows = [row for row in official_rows if row["provider"] == "highlightly"]
+        livescore_rows = [row for row in official_rows if row["provider"] == "livescore_football"]
         self.assertTrue(all(row["source_missing_dimensions"] == ["competition_type"]
-                            for row in official_rows))
+                            for row in highlightly_rows + livescore_rows))
+        self.assertTrue(all(row["country"] for row in official_rows))
+        self.assertTrue(all(set(row["corroborated_dimensions"]) == {"country", "competition_type"}
+                            for row in ninjas.values()))
+        self.assertEqual(ninjas["epl"]["country"], "England")
+        self.assertEqual(ninjas["laliga"]["country"], "Spain")
+        self.assertEqual(ninjas["seriea"]["country"], "Italy")
+        self.assertEqual(ninjas["ligue1"]["country"], "France")
+        self.assertEqual(ninjas["bundesliga"]["country"], "Germany")
         self.assertTrue(all(row["corroborated_dimensions"] and
                             row["scope_evidence_source"] == "official_competition_reference" and
                             row["official_reference_urls"]
@@ -77,10 +105,23 @@ class ProviderNeutralIdentityCandidateAuditTests(unittest.TestCase):
                      if row["provider"] == "livescore_football"}
         self.assertEqual(livescore["ger.1"]["identity_name_candidate"], "Bundesliga")
         self.assertEqual(livescore["fra.1"]["identity_name_candidate"], "Ligue 1")
-        self.assertEqual(report["summary"]["competitions_with_official_type_corroboration"], 7)
+        self.assertEqual(report["summary"]["competitions_with_official_type_corroboration"], 12)
         self.assertEqual(len(report["shared_competition_candidates"]), 5)
+        for group in report["shared_competition_candidates"]:
+            self.assertIn("api_ninjas", {source["provider"] for source in group["source_entities"]})
         self.assertEqual(report["canonical_ids_assigned"], 0)
         self.assertEqual(report["provider_links_created"], 0)
+
+    def test_unknown_api_ninjas_competition_slug_remains_held(self):
+        report = build_identity_candidate_report([{
+            "provider": "api_ninjas", "entity_type": "competition",
+            "provider_entity_id": "unknown", "name": "Unknown Competition",
+            "country": None, "competition_type": None,
+        }])
+        candidate = report["competition_candidates"][0]
+        self.assertEqual(candidate["status"], "held_missing_identity_dimensions")
+        self.assertEqual(candidate["missing_dimensions"], ["country", "competition_type"])
+        self.assertIsNone(candidate["identity_key_candidate"])
 
     def test_exact_cross_provider_competition_identity_is_candidate_not_approved_link(self):
         report = build_identity_candidate_report([

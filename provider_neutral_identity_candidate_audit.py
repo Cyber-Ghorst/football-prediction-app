@@ -19,9 +19,9 @@ from provider_neutral_identity import (
 
 
 # Reviewed official 2026/27 competition references for source rows whose
-# provider payload omits competition_type. This is candidate-view evidence
-# only; provider source rows and identity links remain unchanged.
-OFFICIAL_COMPETITION_TYPE_EVIDENCE = {
+# provider payload omits country and/or competition_type. This is candidate-view
+# evidence only; provider source rows and identity links remain unchanged.
+OFFICIAL_COMPETITION_IDENTITY_EVIDENCE = {
     ("highlightly", "33973"): {
         "competition_type": "league",
         "official_reference_urls": ("https://www.premierleague.com/en/news/4365156",),
@@ -51,6 +51,34 @@ OFFICIAL_COMPETITION_TYPE_EVIDENCE = {
         "competition_type": "league",
         "identity_name": "Ligue 1",
         "official_reference_urls": ("https://ligue1.com/en/articles/l1_article_5292-",),
+    },
+    # API Ninjas exposes these provider-native competition slugs without
+    # country/type metadata. The explicit slug-to-official-reference mapping
+    # is used only to build review candidates; it does not approve a link.
+    ("api_ninjas", "epl"): {
+        "country": "England",
+        "competition_type": "league",
+        "official_reference_urls": ("https://www.premierleague.com/en/tables/premier-league/2026-27?ha=H",),
+    },
+    ("api_ninjas", "laliga"): {
+        "country": "Spain",
+        "competition_type": "league",
+        "official_reference_urls": ("https://www.laliga.com/en-ES/laliga-easports/standing",),
+    },
+    ("api_ninjas", "seriea"): {
+        "country": "Italy",
+        "competition_type": "league",
+        "official_reference_urls": ("https://en.legaseriea.it/serie-a/standings?app_v1=true",),
+    },
+    ("api_ninjas", "ligue1"): {
+        "country": "France",
+        "competition_type": "league",
+        "official_reference_urls": ("https://ligue1.com/fr?seasonId=13C03A251F7A47EBB850BCAD920E9E51",),
+    },
+    ("api_ninjas", "bundesliga"): {
+        "country": "Germany",
+        "competition_type": "league",
+        "official_reference_urls": ("https://www.bundesliga.com/en/bundesliga/table",),
     },
 }
 
@@ -96,13 +124,18 @@ def build_identity_candidate_report(
             required = ("name", "country", "competition_type")
             effective_row = dict(row)
             source_missing = _missing(row, required)
-            evidence = OFFICIAL_COMPETITION_TYPE_EVIDENCE.get((provider, provider_id), {})
+            evidence = OFFICIAL_COMPETITION_IDENTITY_EVIDENCE.get((provider, provider_id), {})
             corroborated_dimensions = []
             if not str(effective_row.get("competition_type") or "").strip():
                 value = str(evidence.get("competition_type") or "").strip()
                 if value:
                     effective_row["competition_type"] = value
                     corroborated_dimensions.append("competition_type")
+            if not str(effective_row.get("country") or "").strip():
+                value = str(evidence.get("country") or "").strip()
+                if value:
+                    effective_row["country"] = value
+                    corroborated_dimensions.append("country")
             identity_name = str(evidence.get("identity_name") or effective_row.get("name") or "").strip()
             if evidence.get("identity_name"):
                 corroborated_dimensions.append("name_variant")
