@@ -114,6 +114,35 @@ class OfficialTeamScopeAuditTests(unittest.TestCase):
         )
         self.assertTrue(all(row["scope_candidate"] is None for row in report["candidates"]))
 
+
+    def test_api_football_stale_season_name_match_is_not_current_membership_approval(self):
+        report = build_official_team_scope_audit([
+            {
+                "provider": "api_football", "provider_entity_id": "35", "name": "Bournemouth",
+                "raw_payload": {
+                    "season_label": "2024", "competition_provider_ids": ["39"],
+                },
+            },
+            {
+                "provider": "api_football", "provider_entity_id": "46", "name": "Leicester",
+                "raw_payload": {
+                    "season_label": "2024", "competition_provider_ids": ["39"],
+                },
+            },
+        ])
+        current_name_match, not_current_member = report["candidates"]
+        self.assertEqual(
+            current_name_match["status"],
+            "candidate_name_matches_official_roster_but_provider_season_stale",
+        )
+        self.assertEqual(current_name_match["official_team_name"], "AFC Bournemouth")
+        self.assertIsNone(current_name_match["scope_candidate"])
+        self.assertEqual(not_current_member["status"], "held_not_in_official_2026_27_roster")
+        self.assertIsNone(not_current_member["official_team_name"])
+        self.assertIsNone(not_current_member["scope_candidate"])
+        self.assertEqual(report["canonical_ids_assigned"], 0)
+        self.assertEqual(report["provider_links_created"], 0)
+
     def test_unmatched_official_name_is_held(self):
         report = build_official_team_scope_audit([{
             "provider": "highlightly", "provider_entity_id": "999", "name": "Unknown FC",
