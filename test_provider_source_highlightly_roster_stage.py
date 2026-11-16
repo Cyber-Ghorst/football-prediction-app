@@ -3,10 +3,22 @@ import unittest
 from provider_source_highlightly_roster_stage import (
     build_source_entities,
     _select_competition,
+    TARGETS,
 )
 
 
 class HighlightlySourceRosterStageTests(unittest.TestCase):
+    def test_targets_cover_five_domestic_top_flights_only(self):
+        self.assertEqual(
+            {(row["name"], row["country"]) for row in TARGETS},
+            {
+                ("Premier League", "England"),
+                ("La Liga", "Spain"),
+                ("Serie A", "Italy"),
+                ("Bundesliga", "Germany"),
+                ("Ligue 1", "France"),
+            },
+        )
     def test_builds_competition_scoped_season_ids_and_keeps_team_country_explicit(self):
         rows = build_source_entities([
             {
