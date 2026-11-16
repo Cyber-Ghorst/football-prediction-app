@@ -61,6 +61,20 @@ class ProviderNeutralIdentityCandidateAuditTests(unittest.TestCase):
         )
         self.assertEqual(report["summary"]["teams_held_for_scope_evidence"], 1)
 
+    def test_season_date_range_is_reported_without_rewriting_provider_label(self):
+        report = build_identity_candidate_report([
+            {"provider": "api_football", "entity_type": "season",
+             "provider_entity_id": "39:2024", "name": "2024",
+             "season_label": "2024", "parent_competition_provider_id": "39",
+             "start_date": "2024-08-16", "end_date": "2025-05-25"},
+        ], {("api_football", "39"): "sportmonks:8"})
+        season = report["season_candidates"][0]
+        self.assertEqual(season["season_label"], "2024")
+        self.assertEqual(season["start_date"], "2024-08-16")
+        self.assertEqual(season["end_date"], "2025-05-25")
+        self.assertEqual(season["season_date_range_status"], "complete")
+        self.assertEqual(report["summary"]["seasons_with_complete_date_range"], 1)
+
     def test_season_key_candidate_is_released_only_for_approved_parent(self):
         rows = [
             {"provider": "api_football", "entity_type": "season",
@@ -108,7 +122,7 @@ class ProviderNeutralIdentityCandidateAuditTests(unittest.TestCase):
         cursor = Mock()
         cursor.fetchall.side_effect = [
             [("sportmonks", "competition", "8", "Premier League", "England",
-              "league", None, None, None, None, None, None)],
+              "league", None, None, None, None, None, None, None, None)],
             [("sportmonks", "8", "sportmonks:8")],
         ]
         connection = Mock()
