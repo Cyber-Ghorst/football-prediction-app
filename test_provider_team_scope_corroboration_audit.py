@@ -77,6 +77,35 @@ class ProviderTeamScopeCorroborationAuditTests(unittest.TestCase):
         )
         self.assertEqual(competition["scope_complete_candidates"], 0)
 
+    def test_reports_persisted_manual_alias_approvals_separately_from_unmatched(self):
+        rows = [
+            {"provider": "api_ninjas", "provider_entity_id": "soccer-aj-auxerre",
+             "name": "AJ Auxerre", "country": "FR", "team_type": "club",
+             "gender_scope": "men",
+             "raw_payload": {"domestic_league_codes": ["ligue1"]}},
+            {"provider": "highlightly", "provider_entity_id": "92692",
+             "name": "Auxerre",
+             "raw_payload": {"competition_provider_ids": ["52695"]}},
+        ]
+        approved = [{
+            "provider": "highlightly", "provider_entity_id": "92692",
+            "corroborating_entity_id": "soccer-aj-auxerre",
+            "competition_provider_id": "52695",
+            "match_method": "manual_official_competition_alias_review",
+            "country_name": "France", "team_type": "club", "gender_scope": "male",
+        }]
+        report = build_corroboration_report(rows, approved)
+        competition = next(row for row in report["competitions"]
+                           if row["target_provider"] == "highlightly"
+                           and row["target_competition_provider_id"] == "52695")
+        self.assertEqual(competition["approved_manual_alias_corroborations"], 1)
+        self.assertEqual(competition["unmatched_target_team_rows"], 0)
+        self.assertEqual(report["approved_scope_corroborations"], 1)
+        self.assertEqual(
+            report["approved_by_match_method"]["manual_official_competition_alias_review"],
+            1,
+        )
+
     def test_does_not_match_across_competitions_or_ambiguous_names(self):
         rows = [
             {"provider": "api_ninjas", "provider_entity_id": "a1",
