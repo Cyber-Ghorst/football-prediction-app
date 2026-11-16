@@ -14,7 +14,7 @@ from typing import Any, Mapping
 from api_football import APIFootballClient
 from provider_source_repository import store_provider_source_bundle
 
-CATALOGUE_REFERENCE_SEASON = 2024
+CATALOGUE_REFERENCE_SEASON = 2026
 TARGETS = (
     {"name": "Premier League", "country": "England"},
     {"name": "La Liga", "country": "Spain"},
