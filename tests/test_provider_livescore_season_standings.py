@@ -12,11 +12,13 @@ class LiveScoreSeasonStandingsTests(unittest.TestCase):
         }
 
     def test_explicit_returned_season_admits_roster_and_preserves_provenance(self):
+        payload = self.payload
+
         class Client:
             def standings(self, league, season=None):
-                self.assertEqual(league, "ger.1")
-                self.assertEqual(season, 2026)
-                return self.payload
+                if league != "ger.1" or season != 2026:
+                    raise AssertionError("unexpected standings request")
+                return payload
 
         result = collect_livescore_season_standings(
             Client(), league=self.league, season_year=2026,
