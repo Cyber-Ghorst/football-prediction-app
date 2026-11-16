@@ -143,6 +143,33 @@ class OfficialTeamScopeAuditTests(unittest.TestCase):
         self.assertEqual(report["canonical_ids_assigned"], 0)
         self.assertEqual(report["provider_links_created"], 0)
 
+
+    def test_api_football_existing_scope_filter_is_competition_scoped(self):
+        report = build_official_team_scope_audit(
+            [
+                {
+                    "provider": "api_football", "provider_entity_id": "39", "name": "Bournemouth",
+                    "raw_payload": {
+                        "season_label": "2024", "competition_provider_ids": ["39"],
+                    },
+                },
+                {
+                    "provider": "api_football", "provider_entity_id": "505", "name": "Inter",
+                    "raw_payload": {
+                        "season_label": "2024", "competition_provider_ids": ["135"],
+                    },
+                },
+            ],
+            existing_api_football_scope_pairs={("39", "39")},
+        )
+        self.assertEqual(len(report["candidates"]), 1)
+        self.assertEqual(report["candidates"][0]["provider_entity_id"], "505")
+        self.assertEqual(report["candidates"][0]["competition_key"], "serie_a")
+        self.assertEqual(
+            report["candidates"][0]["status"],
+            "candidate_name_matches_official_roster_but_provider_season_stale",
+        )
+
     def test_unmatched_official_name_is_held(self):
         report = build_official_team_scope_audit([{
             "provider": "highlightly", "provider_entity_id": "999", "name": "Unknown FC",
