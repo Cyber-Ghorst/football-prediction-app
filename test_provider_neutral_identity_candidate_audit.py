@@ -61,6 +61,36 @@ class ProviderNeutralIdentityCandidateAuditTests(unittest.TestCase):
         )
         self.assertEqual(report["summary"]["teams_held_for_scope_evidence"], 1)
 
+    def test_season_key_candidate_is_released_only_for_approved_parent(self):
+        rows = [
+            {"provider": "api_football", "entity_type": "season",
+             "provider_entity_id": "39:2024", "name": "2024",
+             "season_label": "2024", "parent_competition_provider_id": "39"},
+            {"provider": "highlightly", "entity_type": "season",
+             "provider_entity_id": "67162:2026", "name": "2026",
+             "season_label": "2026", "parent_competition_provider_id": "67162"},
+        ]
+        report = build_identity_candidate_report(
+            rows, {("api_football", "39"): "sportmonks:8"}
+        )
+        api_season = next(row for row in report["season_candidates"]
+                          if row["provider"] == "api_football")
+        highlightly_season = next(row for row in report["season_candidates"]
+                                  if row["provider"] == "highlightly")
+        self.assertEqual(
+            api_season["status"],
+            "season_key_candidate_parent_approved_review_required",
+        )
+        self.assertTrue(api_season["identity_key_candidate"].startswith("season_v1_"))
+        self.assertEqual(
+            highlightly_season["status"],
+            "held_until_parent_competition_is_approved",
+        )
+        self.assertEqual(
+            report["summary"]["seasons_with_approved_parent_candidate"], 1
+        )
+        self.assertEqual(report["summary"]["seasons_held_for_parent_approval"], 1)
+
     def test_same_provider_duplicate_is_not_misreported_as_cross_provider_match(self):
         report = build_identity_candidate_report([
             {"provider": "sportmonks", "entity_type": "competition",
@@ -76,9 +106,10 @@ class ProviderNeutralIdentityCandidateAuditTests(unittest.TestCase):
     @patch("provider_neutral_identity_candidate_audit._connect")
     def test_database_audit_is_select_only(self, connect):
         cursor = Mock()
-        cursor.fetchall.return_value = [
-            ("sportmonks", "competition", "8", "Premier League", "England",
-             "league", None, None, None, None, None, None)
+        cursor.fetchall.side_effect = [
+            [("sportmonks", "competition", "8", "Premier League", "England",
+              "league", None, None, None, None, None, None)],
+            [("sportmonks", "8", "sportmonks:8")],
         ]
         connection = Mock()
         connection.__enter__ = Mock(return_value=connection)
