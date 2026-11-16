@@ -1,3 +1,4 @@
 {
-  "operation": "full_check"
+  "operation": "provider_official_team_scope_stage",
+  "safety_scope": "separate_review_table_only_no_promotion"
 }
