@@ -292,6 +292,7 @@ def audit_pending_openscores_observations(database_url: str) -> dict[str, Any]:
             snapshot["pending_entity_mapping"] == sum(expected.values())
             and actual == expected
             and snapshot["matched"] == 150
+            and snapshot["discarded_by_operator"] == 0
             and snapshot["total_observations"] == 300
         ),
     }
@@ -333,6 +334,8 @@ def discard_pending_openscores_observations(
                 before["pending_entity_mapping"] != expected_total
                 or actual_groups != expected
                 or before["matched"] != 150
+                or before["discarded_by_operator"] != 0
+                or actual_discarded_groups
                 or before["total_observations"] != 300
             ):
                 raise RuntimeError(
