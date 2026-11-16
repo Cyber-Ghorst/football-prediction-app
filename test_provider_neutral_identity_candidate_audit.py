@@ -560,5 +560,32 @@ class ProviderNeutralIdentityCandidateAuditTests(unittest.TestCase):
         self.assertTrue(report["database_read_only"])
         self.assertFalse(report["database_writes"])
 
+
+    def test_nested_provider_season_payload_is_whitelisted_without_dumping_wrapper(self):
+        report = build_identity_candidate_report([{
+            "provider": "api_football", "entity_type": "season",
+            "provider_entity_id": "39:2026", "name": "2026",
+            "season_label": "2026", "parent_competition_provider_id": "39",
+            "raw_payload": {
+                "source": "API-Football league season catalogue",
+                "provider_native_season_year": 2026,
+                "provider_entity_id_kind": "competition_scoped_composite",
+                "raw_season": {
+                    "year": 2026, "start": "2026-08-14", "end": "2027-05-30",
+                    "current": True, "private_extra": "must-not-appear",
+                },
+                "private_wrapper_value": "must-not-appear",
+            },
+        }], {("api_football", "39"): "sportmonks:8"})
+        season = report["season_candidates"][0]
+        self.assertTrue(season["provider_native_payload_available"])
+        self.assertEqual(
+            season["provider_native_payload_fields"]["raw_season"],
+            {"year": 2026, "start": "2026-08-14", "end": "2027-05-30",
+             "current": True},
+        )
+        self.assertNotIn("private_extra", str(season))
+        self.assertNotIn("private_wrapper_value", str(season))
+
 if __name__ == "__main__":
     unittest.main()
