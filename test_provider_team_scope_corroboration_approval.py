@@ -59,6 +59,31 @@ class TeamScopeCorroborationApprovalTests(unittest.TestCase):
         self.assertEqual(alias["corroborating_entity_id"], "soccer-aj-auxerre")
         self.assertTrue(alias["evidence_snapshot"]["official_reference_urls"])
 
+    def test_approves_catalogue_verified_alias_without_fuzzy_suggestion(self):
+        report = {"competitions": [{
+            "target_provider": "highlightly",
+            "target_competition_provider_id": "52695",
+            "api_ninjas_competition_code": "ligue1",
+            "api_ninjas_team_catalogue": [{
+                "provider_entity_id": "soccer-brest",
+                "name": "Brest",
+                "country_code": "FR",
+                "team_type": "club",
+                "gender_scope": "men",
+            }],
+            "unmatched_target_teams": [{
+                "provider_entity_id": "90990",
+                "name": "Stade Brestois 29",
+                "near_name_candidates": [],
+            }],
+        }]}
+        rows = build_approved_records(report)
+        alias = next(row for row in rows
+                     if row["match_method"] == "manual_official_competition_alias_review")
+        self.assertEqual(alias["provider_entity_id"], "90990")
+        self.assertEqual(alias["corroborating_entity_id"], "soccer-brest")
+        self.assertEqual(alias["evidence_snapshot"]["country_name_from_iso_code"], "France")
+
     def test_wrong_api_id_does_not_pass_manual_alias_allowlist(self):
         report = {"competitions": [{
             "target_provider": "highlightly",
