@@ -1,3 +1,4 @@
 {
-  "operation": "full_check"
+  "operation": "provider_api_football_season_membership_audit",
+  "safety_scope": "read_only_api_football_season_membership_no_writes"
 }
