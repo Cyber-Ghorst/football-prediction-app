@@ -1,8 +1,10 @@
 import unittest
+from unittest.mock import Mock, patch
 
 from provider_source_api_football_roster_stage import (
     build_source_entities,
     _select_competition,
+    collect_competitions,
 )
 
 
@@ -46,6 +48,38 @@ class APIFootballSourceRosterStageTests(unittest.TestCase):
         team = next(row for row in rows if row["entity_type"] == "team")
         self.assertIsNone(team["country"])
         self.assertIsNone(team["team_type"])
+
+    def test_catalogue_season_is_retained_when_team_endpoint_is_denied(self):
+        response = {
+            "league": {"id": 39, "name": "Premier League", "type": "League"},
+            "country": {"name": "England"},
+            "seasons": [{"year": 2026, "start": "2026-08-01", "end": "2027-05-31"}],
+        }
+        client = Mock()
+        client.leagues.return_value = [response]
+        client.teams.side_effect = RuntimeError("Free plans do not have access to this season")
+        with patch(
+            "provider_source_api_football_roster_stage.APIFootballClient",
+            return_value=client,
+        ):
+            catalogue, outcomes = collect_competitions()
+
+        self.assertEqual(len(catalogue), 1)
+        self.assertEqual(catalogue[0]["league"]["id"], 39)
+        self.assertEqual(catalogue[0]["seasons"][0]["year"], 2026)
+        self.assertEqual(catalogue[0]["teams"], [])
+        retained = next(row for row in outcomes if row["status"] == "team_roster_error")
+        self.assertTrue(retained["catalogue_evidence_retained"])
+        self.assertFalse(retained["roster_evidence_available"])
+
+        entities = build_source_entities(catalogue)
+        season = next(row for row in entities if row["entity_type"] == "season")
+        self.assertEqual(season["provider_entity_id"], "39:2026")
+        self.assertEqual(season["parent_competition_provider_id"], "39")
+        self.assertEqual(
+            season["raw_payload"]["provider_native_parent_competition_id"], "39"
+        )
+        self.assertFalse(any(row["entity_type"] == "team" for row in entities))
 
     def test_competition_selection_requires_exact_name_and_country(self):
         rows = [
