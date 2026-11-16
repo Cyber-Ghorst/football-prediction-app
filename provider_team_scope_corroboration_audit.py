@@ -8,14 +8,18 @@ from __future__ import annotations
 
 import json
 from difflib import SequenceMatcher
-from collections import defaultdict
+from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping
 
 from provider_data_storage import _connect
 from provider_entity_crosswalk import normalize_entity_name
-from provider_season_provenance import explicit_season_label, season_match
+from provider_season_provenance import (
+    explicit_season_label,
+    is_verified_2026_27_snapshot,
+    season_match,
+)
 
 REPORT = Path("provider-team-scope-corroboration-audit.json")
 COMPETITION_MAP = {
@@ -159,7 +163,23 @@ def build_corroboration_report(
     rows: list[Mapping[str, Any]],
     approved_corroborations: list[Mapping[str, Any]] | None = None,
 ) -> dict[str, Any]:
-    approved_rows = list(approved_corroborations or [])
+    all_approval_rows = list(approved_corroborations or [])
+    # Match the provider-neutral identity audit: only snapshots explicitly
+    # verified on both sides for 2026/27 count as approved scope evidence.
+    approved_rows = [
+        row for row in all_approval_rows
+        if is_verified_2026_27_snapshot(row.get("evidence_snapshot"))
+    ]
+    legacy_provisional_rows = [
+        row for row in all_approval_rows
+        if not is_verified_2026_27_snapshot(row.get("evidence_snapshot"))
+    ]
+    approved_by_provider = Counter(
+        str(row.get("provider") or "").casefold() for row in approved_rows
+    )
+    approved_by_match_method = Counter(
+        str(row.get("match_method") or "") for row in approved_rows
+    )
     api_rows = [row for row in rows if str(row.get("provider") or "").casefold() == "api_ninjas"]
     target_rows = [
         row for row in rows
@@ -375,14 +395,20 @@ def build_corroboration_report(
         "scope_complete_candidates": sum(
             row["status"] == "scope_corroboration_candidate" for row in all_candidates
         ),
-        "approved_scope_corroborations": 0,
-        "legacy_provisional_scope_corroborations": len(approved_rows),
+        "approved_scope_corroborations": len(approved_rows),
+        "legacy_provisional_scope_corroborations": len(legacy_provisional_rows),
         "approved_by_provider": {
-            provider: 0 for provider in ("api_football", "highlightly", "livescore_football")
+            provider: approved_by_provider.get(provider, 0)
+            for provider in ("api_football", "highlightly", "livescore_football")
         },
         "approved_by_match_method": {
-            "unique_exact_normalized_team_name_within_same_current_domestic_competition": 0,
-            "manual_official_competition_alias_review": 0,
+            "unique_exact_normalized_team_name_within_same_current_domestic_competition":
+                approved_by_match_method.get(
+                    "unique_exact_normalized_team_name_within_same_current_domestic_competition", 0
+                ),
+            "manual_official_competition_alias_review": approved_by_match_method.get(
+                "manual_official_competition_alias_review", 0
+            ),
         },
         "competitions": reports,
         "interpretation": (
