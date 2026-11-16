@@ -9,7 +9,7 @@ from pathlib import Path
 from provider_source_repository import audit_provider_source_evidence
 
 REPORT = Path("provider-source-repository-audit.json")
-PROVIDERS = ("api_football", "highlightly", "livescore_football", "sportmonks")
+PROVIDERS = ("api_football", "api_ninjas", "highlightly", "livescore_football", "sportmonks")
 
 
 def main() -> int:
