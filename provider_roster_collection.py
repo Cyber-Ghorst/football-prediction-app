@@ -1,8 +1,8 @@
 """Season-scoped provider roster collection without cross-provider inference.
 
-Highlightly rosters come from league-season standings. LiveScoreFootball
-rosters are observed from fixtures within an explicitly supplied season date
-window; those are participant observations, not a claim of complete squads.
+Highlightly and LiveScoreFootball standings can provide season-roster evidence
+when their returned season metadata validates. LiveScore fixture participants
+remain a separate, incomplete observation method.
 """
 from __future__ import annotations
 
@@ -267,7 +267,7 @@ def collect_highlightly_season_match_participants(
 
 
 def _livescore_standing_teams(payload: Any) -> list[dict[str, Any]]:
-    """Extract explicit team objects from provider standings rows."""
+    """Extract explicit team objects from nested LiveScore standings entries."""
     found: list[dict[str, Any]] = []
 
     def visit(node: Any) -> None:
@@ -282,7 +282,7 @@ def _livescore_standing_teams(payload: Any) -> list[dict[str, Any]]:
             record = _team_record(team)
             if record:
                 found.append(record)
-        for key in ("standings", "groups", "rows", "table", "data", "items"):
+        for key in ("standings", "groups", "rows", "table", "data", "items", "entries", "children"):
             child = node.get(key)
             if isinstance(child, (list, Mapping)):
                 visit(child)
@@ -298,52 +298,95 @@ def collect_livescore_season_standings(
     season_year: int,
     retrieved_at: str,
 ) -> dict[str, Any]:
-    """Capture a standings roster only when returned metadata proves the season."""
+    """Capture a standings roster only when nested returned metadata proves the season."""
     slug = str(league.get("slug") or league.get("id") or "").strip()
     name = str(league.get("name") or "").strip()
     country = str(league.get("country") or "").strip()
     if not slug or not name or not country:
         raise ValueError("Exact LiveScore competition slug, name and country are required.")
     payload = client.standings(slug, season=season_year)
-    season = payload.get("season") if isinstance(payload, Mapping) else None
-    if not isinstance(season, Mapping):
-        return {
-            "provider": "livescore_football", "league": {"id": slug, "name": name, "country": country},
-            "season": str(season_year), "teams": [], "team_evidence_method": "season_standings",
-            "team_evidence_complete": False, "status": "held_missing_returned_season",
-            "source_endpoint": f"/get/soccer/{slug}/standings",
-            "requested_season_parameter": season_year, "provider_payload": payload,
-            "source_retrieved_at": retrieved_at,
-        }
-    returned_year = season.get("year")
-    returned_label = str(season.get("name") or season.get("label") or "").strip()
-    verified = (
-        not isinstance(returned_year, bool)
-        and str(returned_year) == str(season_year)
-        and returned_label in {f"{season_year}/{str(season_year + 1)[-2:]}", f"{season_year}-{str(season_year + 1)[-2:]}"}
-    )
-    teams = _livescore_standing_teams(payload)
-    ids = [str(team["id"]) for team in teams]
-    names = [team["name"].casefold() for team in teams]
-    unique_rows = len(ids) == len(set(ids)) and len(names) == len(set(names))
-    complete = bool(verified and teams and unique_rows)
-    return {
+    base = {
         "provider": "livescore_football",
         "league": {"id": slug, "name": name, "country": country},
         "season": str(season_year),
-        "teams": teams if complete else [],
         "team_evidence_method": "season_standings",
-        "team_evidence_complete": complete,
-        "status": "collected" if complete else (
-            "held_invalid_roster" if verified else "held_returned_season_mismatch"
-        ),
         "source_endpoint": f"/get/soccer/{slug}/standings",
         "requested_season_parameter": season_year,
-        "provider_returned_season": dict(season),
         "source_retrieved_at": retrieved_at,
         "provider_payload": payload,
-        "duplicate_team_ids": len(ids) != len(set(ids)),
-        "duplicate_team_names": len(names) != len(set(names)),
         "fixtures_imported": 0,
         "cross_provider_links_created": 0,
+    }
+    if not isinstance(payload, Mapping):
+        return {
+            **base, "teams": [], "team_evidence_complete": False,
+            "status": "held_invalid_response_schema",
+        }
+
+    returned_year = payload.get("season")
+    top_level_year_matches = (
+        not isinstance(returned_year, bool)
+        and str(returned_year) == str(season_year)
+    )
+    expected_labels = (
+        f"{season_year}/{str(season_year + 1)[-2:]}",
+        f"{season_year}-{str(season_year + 1)[-2:]}",
+    )
+    children = payload.get("children")
+    matching_children = []
+    if isinstance(children, list):
+        for child in children:
+            if not isinstance(child, Mapping):
+                continue
+            standings = child.get("standings")
+            if not isinstance(standings, Mapping):
+                continue
+            standings_year = standings.get("season")
+            label_text = " ".join(
+                str(child.get(key) or "") for key in ("name", "abbreviation")
+            )
+            label_matches = any(label in label_text for label in expected_labels)
+            if (
+                not isinstance(standings_year, bool)
+                and str(standings_year) == str(season_year)
+                and label_matches
+            ):
+                matching_children.append((child, standings, label_text.strip()))
+
+    if not top_level_year_matches or len(matching_children) != 1:
+        return {
+            **base,
+            "teams": [],
+            "team_evidence_complete": False,
+            "status": (
+                "held_returned_season_mismatch"
+                if not top_level_year_matches or not matching_children
+                else "held_ambiguous_returned_season"
+            ),
+            "provider_returned_season": {
+                "competition_season": returned_year,
+                "matching_child_count": len(matching_children),
+            },
+        }
+
+    child, standings, returned_label = matching_children[0]
+    teams = _livescore_standing_teams({"entries": standings.get("entries", [])})
+    ids = [str(team["id"]) for team in teams]
+    names = [team["name"].casefold() for team in teams]
+    duplicate_ids = len(ids) != len(set(ids))
+    duplicate_names = len(names) != len(set(names))
+    complete = bool(teams and not duplicate_ids and not duplicate_names)
+    return {
+        **base,
+        "teams": teams if complete else [],
+        "team_evidence_complete": complete,
+        "status": "collected" if complete else "held_invalid_roster",
+        "provider_returned_season": {
+            "competition_season": returned_year,
+            "standings_season": standings.get("season"),
+            "child_id": child.get("id"),
+            "child_label": returned_label,
+        },
+        "duplicate_team_ids": duplicate_ids,
+        "duplicate_team_names": duplicate_names,
     }
