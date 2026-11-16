@@ -14,7 +14,7 @@ class ProviderSourceRosterStageTests(unittest.TestCase):
                 "id": "10388", "name": "SV Elversberg", "country": None, "type": "domestic", "gender": "male",
                 "raw": {"id": "10388", "name": "SV Elversberg", "country": ""},
             }],
-        }])
+        }], retrieved_at="2026-11-16T13:00:00+00:00")
         competition = next(row for row in rows if row["entity_type"] == "competition")
         team = next(row for row in rows if row["entity_type"] == "team")
         self.assertEqual(competition["provider_entity_id"], "ger.1")
@@ -27,6 +27,9 @@ class ProviderSourceRosterStageTests(unittest.TestCase):
         self.assertEqual(team["raw_payload"]["gender_from_provider"], "male")
         self.assertEqual(team["raw_payload"]["competition_provider_ids"], ["ger.1"])
         self.assertFalse(team["raw_payload"]["team_evidence_complete"])
+        self.assertEqual(team["raw_payload"]["season_label"], "2026")
+        self.assertEqual(team["raw_payload"]["source_endpoint"], "fixtures")
+        self.assertEqual(team["raw_payload"]["source_retrieved_at"], "2026-11-16T13:00:00+00:00")
         self.assertNotIn("parent_competition_provider_id", team)
 
     def test_shared_provider_team_is_one_identity_with_multiple_competition_observations(self):
