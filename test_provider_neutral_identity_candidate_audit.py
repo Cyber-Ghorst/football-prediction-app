@@ -235,6 +235,44 @@ class ProviderNeutralIdentityCandidateAuditTests(unittest.TestCase):
         self.assertEqual(report["summary"]["teams_with_approved_scope_corroboration"], 2)
         self.assertEqual(report["summary"]["teams_held_for_scope_evidence"], 2)
 
+
+    @patch("provider_neutral_identity_candidate_audit._connect")
+    def test_legacy_provisional_scope_rows_are_ignored(self, connect):
+        source_row = (
+            "highlightly", "team", "h-1", "Lyon", None,
+            None, None, None, None, None, None, None, None, None,
+        )
+        legacy_snapshot = {
+            "season_match_verified": False,
+            "target_season_label": "2026/27",
+            "api_ninjas_season_label": None,
+        }
+        verified_snapshot = {
+            "season_match_verified": True,
+            "target_season_label": "2026/27",
+            "api_ninjas_season_label": "2026/27",
+        }
+        corroborations = [
+            ("highlightly", "h-1", "Wrongland", "club", "male", legacy_snapshot),
+            ("highlightly", "h-1", "France", "club", "male", verified_snapshot),
+        ]
+        cursor = Mock()
+        cursor.fetchall.side_effect = [[source_row], [], corroborations]
+        connection = Mock()
+        connection.__enter__ = Mock(return_value=connection)
+        connection.__exit__ = Mock(return_value=False)
+        connection.cursor.return_value.__enter__ = Mock(return_value=cursor)
+        connection.cursor.return_value.__exit__ = Mock(return_value=False)
+        connect.return_value = connection
+
+        report = audit_provider_neutral_identity_candidates("postgresql://readonly")
+        team = report["team_candidates"][0]
+        self.assertEqual(report["approved_team_scope_corroborations_read"], 1)
+        self.assertEqual(report["legacy_provisional_scope_corroborations_ignored"], 1)
+        self.assertEqual(team["corroborated_dimensions"], ["country", "gender_scope", "team_type"])
+        self.assertEqual(team["missing_dimensions"], ["age_group", "squad_scope"])
+        self.assertEqual(team["scope_evidence_source"], "provider_team_scope_corroborations")
+
     @patch("provider_neutral_identity_candidate_audit._connect")
     def test_database_audit_is_select_only(self, connect):
         cursor = Mock()
