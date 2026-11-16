@@ -31,6 +31,33 @@ class ProviderTeamScopeCorroborationAuditTests(unittest.TestCase):
         self.assertEqual(report["provider_links_created"], 0)
         self.assertEqual(report["provider_scope_fields_updated"], 0)
 
+    def test_api_football_exact_match_is_scoped_to_the_same_domestic_competition(self):
+        rows = [
+            {"provider": "api_ninjas", "provider_entity_id": "soccer-arsenal",
+             "name": "Arsenal", "country": "GB", "team_type": "club",
+             "gender_scope": "men",
+             "raw_payload": {"domestic_league_codes": ["epl"]}},
+            {"provider": "api_football", "provider_entity_id": "42",
+             "name": "Arsenal", "country": "England", "team_type": "club",
+             "raw_payload": {"competition_provider_ids": ["39"]}},
+            {"provider": "api_football", "provider_entity_id": "999",
+             "name": "Arsenal", "country": "Spain", "team_type": "club",
+             "raw_payload": {"competition_provider_ids": ["140"]}},
+        ]
+        report = build_corroboration_report(rows)
+        premier = next(row for row in report["competitions"]
+                       if row["target_provider"] == "api_football"
+                       and row["target_competition_provider_id"] == "39")
+        la_liga = next(row for row in report["competitions"]
+                       if row["target_provider"] == "api_football"
+                       and row["target_competition_provider_id"] == "140")
+        self.assertEqual(premier["unique_exact_name_candidates"], 1)
+        self.assertEqual(
+            premier["candidates"][0]["gender_scope_normalized_candidate"], "male"
+        )
+        self.assertEqual(la_liga["unique_exact_name_candidates"], 0)
+        self.assertEqual(la_liga["unmatched_target_teams"][0]["provider_entity_id"], "999")
+
     def test_reports_unmatched_target_team_ids_without_guessing_aliases(self):
         rows = [
             {"provider": "api_ninjas", "provider_entity_id": "soccer-bayern",
