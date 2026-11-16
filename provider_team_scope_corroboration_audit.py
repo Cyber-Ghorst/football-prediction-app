@@ -15,6 +15,7 @@ from typing import Any, Mapping
 
 from provider_data_storage import _connect
 from provider_entity_crosswalk import normalize_entity_name
+from provider_season_provenance import explicit_season_label, season_match
 
 REPORT = Path("provider-team-scope-corroboration-audit.json")
 COMPETITION_MAP = {
@@ -112,6 +113,10 @@ def build_corroboration_report(
                     "competition_scope": provider_competition,
                     "api_ninjas_domestic_competition": api_competition,
                     "identity_basis": "unique_exact_normalized_team_name_within_same_current_domestic_competition",
+                    "target_season_label": explicit_season_label(source_row.get("raw_payload")),
+                    "api_ninjas_season_label": explicit_season_label(api_row.get("raw_payload")),
+                    "season_match_verified": season_match(source_row.get("raw_payload"), api_row.get("raw_payload"))[0],
+                    "season_gate_status": season_match(source_row.get("raw_payload"), api_row.get("raw_payload"))[3],
                     "country_code_iso3166_alpha2": country_code or None,
                     "country_name_from_iso_code": COUNTRY_NAMES.get(country_code),
                     "team_type_from_api_ninjas": team_type or None,
@@ -121,7 +126,11 @@ def build_corroboration_report(
                     ),
                     "status": (
                         "scope_corroboration_candidate"
-                        if country_code and team_type in {"club", "national"} and gender in {"men", "women"}
+                        if country_code and team_type in {"club", "national"}
+                        and gender in {"men", "women"}
+                        and season_match(source_row.get("raw_payload"), api_row.get("raw_payload"))[0]
+                        else season_match(source_row.get("raw_payload"), api_row.get("raw_payload"))[3]
+                        if not season_match(source_row.get("raw_payload"), api_row.get("raw_payload"))[0]
                         else "held_api_ninjas_scope_incomplete"
                     ),
                 }
@@ -191,6 +200,7 @@ def build_corroboration_report(
                         "name": row.get("name"),
                         "normalized_name": key,
                         "competition_provider_id": provider_competition,
+                        "source_season_label": explicit_season_label(row.get("raw_payload")),
                         "reason": "no_unique_exact_normalized_name_match_in_api_ninjas_competition",
                         "near_name_candidates": near_matches[:3],
                     })
@@ -204,9 +214,11 @@ def build_corroboration_report(
                     {
                         "provider_entity_id": str(row.get("provider_entity_id") or ""),
                         "name": row.get("name"),
+                        "season_label": explicit_season_label(row.get("raw_payload")),
                         "country_code": str(row.get("country") or "").strip().upper() or None,
                         "team_type": str(row.get("team_type") or "").strip().casefold() or None,
                         "gender_scope": str(row.get("gender_scope") or "").strip().casefold() or None,
+                        "season_label": explicit_season_label(row.get("raw_payload")),
                     }
                     for row in sorted(
                         api_comp,
@@ -247,7 +259,8 @@ def build_corroboration_report(
         "scope_complete_candidates": sum(
             row["status"] == "scope_corroboration_candidate" for row in all_candidates
         ),
-        "approved_scope_corroborations": len(approved_rows),
+        "approved_scope_corroborations": 0,
+        "legacy_provisional_scope_corroborations": len(approved_rows),
         "approved_by_provider": {
             provider: sum(str(row.get("provider") or "").casefold() == provider for row in approved_rows)
             for provider in ("api_football", "highlightly", "livescore_football")
@@ -261,7 +274,8 @@ def build_corroboration_report(
         },
         "competitions": reports,
         "interpretation": (
-            "This audit identifies exact-name candidates within mapped current domestic competitions. "
+            "This audit identifies exact-name candidates within mapped domestic competitions. "
+            "Only explicit matching 2026/27 labels on both source records pass the season gate. "
             "It does not approve cross-provider identity, transfer country/type/gender values, or "
             "infer age-group or squad scope."
         ),
