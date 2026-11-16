@@ -569,6 +569,7 @@ class ProviderNeutralIdentityCandidateAuditTests(unittest.TestCase):
             "raw_payload": {
                 "source": "API-Football league season catalogue",
                 "provider_native_season_year": 2026,
+                "provider_native_parent_competition_id": "39",
                 "provider_entity_id_kind": "competition_scoped_composite",
                 "raw_season": {
                     "year": 2026, "start": "2026-08-14", "end": "2027-05-30",
@@ -579,6 +580,15 @@ class ProviderNeutralIdentityCandidateAuditTests(unittest.TestCase):
         }], {("api_football", "39"): "sportmonks:8"})
         season = report["season_candidates"][0]
         self.assertTrue(season["provider_native_payload_available"])
+        self.assertEqual(season["provider_native_payload_fields"]["provider_native_season_year"], 2026)
+        self.assertEqual(
+            season["provider_native_payload_fields"]["provider_native_parent_competition_id"],
+            "39",
+        )
+        self.assertEqual(
+            season["provider_native_payload_fields"]["provider_entity_id_kind"],
+            "competition_scoped_composite",
+        )
         self.assertEqual(
             season["provider_native_payload_fields"]["raw_season"],
             {"year": 2026, "start": "2026-08-14", "end": "2027-05-30",

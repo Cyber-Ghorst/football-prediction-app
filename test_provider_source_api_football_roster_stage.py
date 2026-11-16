@@ -26,6 +26,12 @@ class APIFootballSourceRosterStageTests(unittest.TestCase):
         self.assertEqual(competition["country"], "England")
         self.assertEqual(season["provider_entity_id"], "39:2026")
         self.assertEqual(season["parent_competition_provider_id"], "39")
+        self.assertEqual(
+            season["raw_payload"]["provider_native_parent_competition_id"], "39"
+        )
+        self.assertEqual(
+            season["raw_payload"]["provider_native_season_year"], 2026
+        )
         self.assertEqual(teams["42"]["team_type"], "club")
         self.assertEqual(teams["99"]["team_type"], "national_team")
         self.assertFalse(teams["42"]["raw_payload"]["team_evidence_complete"])
