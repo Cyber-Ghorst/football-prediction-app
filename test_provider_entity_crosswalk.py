@@ -7,6 +7,7 @@ from provider_entity_crosswalk import (
     normalize_entity_name,
     load_provider_entity_links_by_type,
     save_explicit_provider_entity_links,
+    SUPPORTED_PROVIDERS,
 )
 
 
@@ -55,6 +56,9 @@ class FakeConnection:
 
 
 class ProviderEntityCrosswalkTests(unittest.TestCase):
+    def test_api_football_is_supported_for_explicit_approved_crosswalks(self):
+        self.assertIn("api_football", SUPPORTED_PROVIDERS)
+
     def test_loads_all_provider_link_types_in_one_query(self):
         cursor = FakeCursor()
         cursor.rows = [
