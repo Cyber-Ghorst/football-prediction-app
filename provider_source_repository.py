@@ -314,6 +314,39 @@ def store_provider_source_bundle(
     return counts
 
 
+
+_RAW_SCOPE_KEY_CATEGORIES = {
+    "country": {"country", "country_name", "countryname", "country_code", "country_code_iso3166_alpha2"},
+    "team_type": {"team_type", "teamtype", "type"},
+    "gender_scope": {"gender", "gender_scope", "gender_type"},
+    "age_group": {"age_group", "agegroup", "age_category", "age_category_name", "age"},
+    "squad_scope": {"squad_scope", "squad", "squad_type", "squad_name", "team_scope"},
+}
+
+
+def _raw_scope_key_paths(payload: Any) -> dict[str, set[str]]:
+    """Inventory raw payload key paths only; never interpret or promote their values."""
+    found: dict[str, set[str]] = {category: set() for category in _RAW_SCOPE_KEY_CATEGORIES}
+
+    def visit(value: Any, prefix: str = "") -> None:
+        if isinstance(value, Mapping):
+            for raw_key, child in value.items():
+                key = str(raw_key)
+                normalized = key.strip().casefold().replace("-", "_").replace(" ", "_")
+                path = f"{prefix}.{key}" if prefix else key
+                if child is not None and child != "" and child != [] and child != {}:
+                    for category, aliases in _RAW_SCOPE_KEY_CATEGORIES.items():
+                        if normalized in aliases:
+                            found[category].add(path)
+                visit(child, path)
+        elif isinstance(value, list):
+            for child in value:
+                visit(child, f"{prefix}[]")
+
+    visit(payload)
+    return found
+
+
 def audit_provider_source_evidence(database_url: str, provider: str) -> dict[str, Any]:
     """Read-only audit of provider-native staging rows; no canonical data is consulted."""
     if not database_url:
@@ -346,6 +379,13 @@ def audit_provider_source_evidence(database_url: str, provider: str) -> dict[str
                     "squad_scope_known": int(squad_scope_known or 0),
                 }
             cursor.execute(
+                """SELECT raw_payload FROM provider_source_entities
+                   WHERE provider = %s AND entity_type = 'team'
+                   ORDER BY provider_entity_id""",
+                (source,),
+            )
+            raw_payload_rows = cursor.fetchall()
+            cursor.execute(
                 """SELECT
                      COUNT(*) FILTER (WHERE raw_payload->>'team_evidence_complete' = 'false'),
                      COUNT(*) FILTER (WHERE jsonb_typeof(raw_payload->'competition_provider_ids') = 'array'),
@@ -365,11 +405,24 @@ def audit_provider_source_evidence(database_url: str, provider: str) -> dict[str
                 (source,),
             )
             statistic_count = int((cursor.fetchone() or (0,))[0] or 0)
+    raw_scope_paths: dict[str, dict[str, int]] = {
+        category: {} for category in _RAW_SCOPE_KEY_CATEGORIES
+    }
+    for row in raw_payload_rows:
+        payload = row[0] if isinstance(row, (tuple, list)) and row else row
+        for category, paths in _raw_scope_key_paths(payload).items():
+            for path in paths:
+                raw_scope_paths[category][path] = raw_scope_paths[category].get(path, 0) + 1
     return {
         "provider": source,
         "read_only": True,
         "database_writes": False,
         "entity_counts": entity_counts,
+        "raw_team_payload_rows_scanned": len(raw_payload_rows),
+        "raw_scope_key_path_counts": {
+            category: dict(sorted(paths.items()))
+            for category, paths in raw_scope_paths.items()
+        },
         "team_evidence": {
             "incomplete_participant_evidence_count": int(team_row[0] or 0),
             "competition_context_array_count": int(team_row[1] or 0),
