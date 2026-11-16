@@ -48,3 +48,13 @@ def season_match(target_payload: Any, corroborating_payload: Any) -> tuple[bool,
     if target != "2026/27":
         return False, target, corroborating, "held_not_target_2026_27_season"
     return True, target, corroborating, "verified_2026_27_season_match"
+
+
+def is_verified_2026_27_snapshot(value: Any) -> bool:
+    """Return true only for persisted evidence explicitly verified on both sides."""
+    snapshot = payload_mapping(value)
+    return (
+        snapshot.get("season_match_verified") is True
+        and snapshot.get("target_season_label") == "2026/27"
+        and snapshot.get("api_ninjas_season_label") == "2026/27"
+    )
