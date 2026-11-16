@@ -78,6 +78,15 @@ class ProviderTeamScopeCorroborationAuditTests(unittest.TestCase):
         self.assertEqual(candidate["api_ninjas_season_evidence_join_status"], "missing_standings")
         self.assertEqual(report["approved_scope_corroborations"], 0)
 
+    def test_catalogue_season_label_alone_cannot_verify_season(self):
+        rows = self._rows(include_standings=False)
+        catalogue = next(row for row in rows if row["provider"] == "api_ninjas")
+        catalogue["raw_payload"]["season_label"] = "2026/27"
+        report = build_corroboration_report(rows)
+        candidate = self._competition(report)["candidates"][0]
+        self.assertEqual(candidate["status"], "held_missing_explicit_season")
+        self.assertFalse(candidate["season_match_verified"])
+
     def test_exact_provider_id_and_competition_join_verifies_2026_27(self):
         report = build_corroboration_report(self._rows())
         candidate = self._competition(report)["candidates"][0]
