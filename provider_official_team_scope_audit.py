@@ -345,6 +345,7 @@ def audit_official_team_scope(database_url: str) -> dict[str, Any]:
             standings_table_exists = bool(cursor.fetchone()[0])
             standings_observation_count = 0
             standings_identity_pairs: set[tuple[str, str]] = set()
+            participant_observations_preserved: list[dict[str, Any]] = []
             if standings_table_exists:
                 cursor.execute(
                     """SELECT competition_provider_id, provider_team_id, team_name,
@@ -391,7 +392,22 @@ def audit_official_team_scope(database_url: str) -> dict[str, Any]:
                     if not isinstance(raw_competitions, list):
                         raw_competitions = [raw_competitions] if raw_competitions else []
                     identity = str(row.get("provider_entity_id") or "")
-                    if any((identity, str(cid)) in standings_identity_pairs for cid in raw_competitions):
+                    overlapping_competitions = [
+                        str(cid) for cid in raw_competitions
+                        if (identity, str(cid)) in standings_identity_pairs
+                    ]
+                    if overlapping_competitions:
+                        participant_observations_preserved.append({
+                            "provider": "livescore_football",
+                            "provider_entity_id": identity,
+                            "provider_team_name": str(row.get("name") or ""),
+                            "competition_provider_ids": overlapping_competitions,
+                            "evidence_method": raw_row.get("team_evidence_method"),
+                            "source_endpoint": raw_row.get("source_endpoint"),
+                            "source_retrieved_at": raw_row.get("source_retrieved_at"),
+                            "retained_in_source_repository": True,
+                            "excluded_from_duplicate_scope_candidates": True,
+                        })
                         continue
                     filtered_rows.append(row)
                 rows = filtered_rows
@@ -401,6 +417,8 @@ def audit_official_team_scope(database_url: str) -> dict[str, Any]:
     report["api_football_existing_scope_pairs_excluded"] = len(existing_api_football_scope_pairs)
     report["livescore_standings_observations_examined"] = standings_observation_count
     report["livescore_standings_table_available"] = standings_table_exists
+    report["livescore_participant_observations_preserved"] = participant_observations_preserved
+    report["livescore_participant_observations_preserved_count"] = len(participant_observations_preserved)
     report["database_read_only"] = True
     return report
 
