@@ -1,8 +1,8 @@
 """Read-only cross-provider team-scope corroboration candidates.
 
-Matches current API Ninjas club records to 2026-season Highlightly and
-LiveScoreFootball participants by unique normalized team name within an
-explicitly mapped domestic competition. It never writes scope values or links.
+Matches current API Ninjas club records to 2026-season API-Football,
+Highlightly and LiveScoreFootball participants by unique normalized team name
+within an explicitly mapped domestic competition. It never writes scope values or links.
 """
 from __future__ import annotations
 
@@ -18,12 +18,17 @@ from provider_entity_crosswalk import normalize_entity_name
 
 REPORT = Path("provider-team-scope-corroboration-audit.json")
 COMPETITION_MAP = {
+    ("api_football", "39"): "epl",
+    ("api_football", "140"): "laliga",
+    ("api_football", "135"): "seriea",
+    ("api_football", "78"): "bundesliga",
+    ("api_football", "61"): "ligue1",
     ("livescore_football", "ger.1"): "bundesliga",
     ("livescore_football", "fra.1"): "ligue1",
     ("highlightly", "67162"): "bundesliga",
     ("highlightly", "52695"): "ligue1",
 }
-COUNTRY_NAMES = {"DE": "Germany", "FR": "France"}
+COUNTRY_NAMES = {"DE": "Germany", "FR": "France", "GB": "United Kingdom", "ES": "Spain", "IT": "Italy"}
 
 
 def _mapping(value: Any) -> Mapping[str, Any]:
@@ -55,7 +60,7 @@ def build_corroboration_report(
     api_rows = [row for row in rows if str(row.get("provider") or "").casefold() == "api_ninjas"]
     target_rows = [
         row for row in rows
-        if str(row.get("provider") or "").casefold() in {"highlightly", "livescore_football"}
+        if str(row.get("provider") or "").casefold() in {"api_football", "highlightly", "livescore_football"}
     ]
     api_by_comp: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
     for row in api_rows:
@@ -64,7 +69,7 @@ def build_corroboration_report(
 
     reports = []
     all_candidates = []
-    for provider in ("highlightly", "livescore_football"):
+    for provider in ("api_football", "highlightly", "livescore_football"):
         for provider_competition, api_competition in sorted(
             (key[1], value) for key, value in COMPETITION_MAP.items() if key[0] == provider
         ):
@@ -242,7 +247,7 @@ def build_corroboration_report(
         "approved_scope_corroborations": len(approved_rows),
         "approved_by_provider": {
             provider: sum(str(row.get("provider") or "").casefold() == provider for row in approved_rows)
-            for provider in ("highlightly", "livescore_football")
+            for provider in ("api_football", "highlightly", "livescore_football")
         },
         "approved_by_match_method": {
             method: sum(row.get("match_method") == method for row in approved_rows)
@@ -272,7 +277,7 @@ def audit_team_scope_corroboration(database_url: str) -> dict[str, Any]:
                           gender_scope, raw_payload
                    FROM provider_source_entities
                    WHERE entity_type = 'team'
-                     AND provider IN ('api_ninjas', 'highlightly', 'livescore_football')
+                     AND provider IN ('api_ninjas', 'api_football', 'highlightly', 'livescore_football')
                    ORDER BY provider, provider_entity_id"""
             )
             rows = [dict(zip(columns, values)) for values in cursor.fetchall()]
