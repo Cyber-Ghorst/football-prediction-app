@@ -84,6 +84,55 @@ class TeamScopeCorroborationApprovalTests(unittest.TestCase):
         self.assertEqual(alias["corroborating_entity_id"], "soccer-brest")
         self.assertEqual(alias["evidence_snapshot"]["country_name_from_iso_code"], "France")
 
+    def test_api_football_manual_aliases_require_official_2026_27_competition_evidence(self):
+        report = {"competitions": [
+            {
+                "target_provider": "api_football",
+                "target_competition_provider_id": "39",
+                "api_ninjas_competition_code": "epl",
+                "api_ninjas_team_catalogue": [{
+                    "provider_entity_id": "soccer-afc-bournemouth",
+                    "name": "AFC Bournemouth", "country_code": "GB",
+                    "team_type": "club", "gender_scope": "men",
+                }],
+                "unmatched_target_teams": [{
+                    "provider_entity_id": "35", "name": "Bournemouth",
+                    "near_name_candidates": [],
+                }],
+            },
+            {
+                "target_provider": "api_football",
+                "target_competition_provider_id": "61",
+                "api_ninjas_competition_code": "ligue1",
+                "api_ninjas_team_catalogue": [{
+                    "provider_entity_id": "soccer-aj-auxerre",
+                    "name": "AJ Auxerre", "country_code": "FR",
+                    "team_type": "club", "gender_scope": "men",
+                }],
+                "unmatched_target_teams": [{
+                    "provider_entity_id": "108", "name": "Auxerre",
+                    "near_name_candidates": [],
+                }],
+            },
+        ]}
+        rows = build_approved_records(report)
+        aliases = [row for row in rows
+                   if row["match_method"] == "manual_official_competition_alias_review"]
+        self.assertEqual(len(aliases), 2)
+        by_target = {row["provider_entity_id"]: row for row in aliases}
+        self.assertEqual(by_target["35"]["corroborating_entity_id"],
+                         "soccer-afc-bournemouth")
+        self.assertEqual(by_target["108"]["corroborating_entity_id"],
+                         "soccer-aj-auxerre")
+        self.assertTrue(
+            by_target["35"]["evidence_snapshot"]["official_reference_urls"][0]
+            .startswith("https://www.premierleague.com/")
+        )
+        self.assertTrue(
+            by_target["108"]["evidence_snapshot"]["official_reference_urls"][0]
+            .startswith("https://ligue1.com/")
+        )
+
     def test_wrong_api_id_does_not_pass_manual_alias_allowlist(self):
         report = {"competitions": [{
             "target_provider": "highlightly",
