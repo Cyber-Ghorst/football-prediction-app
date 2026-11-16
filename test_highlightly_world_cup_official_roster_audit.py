@@ -4,7 +4,7 @@ from highlightly_world_cup_official_roster_audit import (
     FIFA_OFFICIAL_TEAMS,
     HIGHLIGHTLY_PARTICIPANTS,
     build_official_matches,
-    verify_provider_detail,
+    audit_world_cup_roster,
 )
 
 
@@ -32,25 +32,18 @@ class HighlightlyWorldCupOfficialRosterAuditTests(unittest.TestCase):
             },
         )
 
-    def test_provider_detail_requires_id_name_and_national_type(self):
-        result = verify_provider_detail(
-            "10145", "Panama",
-            [{"id": 10145, "name": "Panama", "type": "national"}],
-        )
-        self.assertEqual(result["status"], "provider_detail_confirmed")
-        wrong_type = verify_provider_detail(
-            "10145", "Panama",
-            {"id": 10145, "name": "Panama", "type": "club"},
-        )
-        self.assertEqual(wrong_type["status"], "held_provider_detail_mismatch")
-
-    def test_provider_detail_does_not_infer_country(self):
-        result = verify_provider_detail(
-            "10145", "Panama",
-            {"id": 10145, "name": "Panama", "type": "national"},
-        )
-        self.assertFalse(result["country_field_available"])
-        self.assertIsNone(result["country_value"])
+    def test_official_roster_context_produces_non_promotable_national_scope_candidates(self):
+        report = audit_world_cup_roster()
+        self.assertEqual(report["official_roster_matches"], 48)
+        self.assertEqual(report["scope_candidate_count"], 48)
+        self.assertEqual(report["provider_team_detail_lookup"]["confirmed"], 0)
+        self.assertEqual(report["provider_team_detail_lookup"]["failed"], 48)
+        self.assertTrue(all(row["scope_candidate"] is not None for row in report["results"]))
+        self.assertTrue(all(row["promotion_allowed"] is False for row in report["results"]))
+        self.assertTrue(all(
+            row["scope_candidate"]["provider_team_type_field_confirmed"] is False
+            for row in report["results"]
+        ))
 
     def test_duplicate_provider_ids_fail_closed(self):
         import highlightly_world_cup_official_roster_audit as audit
