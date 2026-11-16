@@ -30,7 +30,7 @@ def _team_record(value: Any) -> dict[str, Any] | None:
 
 def _highlightly_standing_teams(payload: Any) -> list[dict[str, Any]]:
     """Extract only explicit team objects nested in standings rows/groups."""
-    found: dict[str, dict[str, Any]] = {}
+    found: list[dict[str, Any]] = []
 
     def visit(node: Any) -> None:
         if isinstance(node, list):
@@ -281,14 +281,14 @@ def _livescore_standing_teams(payload: Any) -> list[dict[str, Any]]:
         if isinstance(team, Mapping):
             record = _team_record(team)
             if record:
-                found.setdefault(str(record["id"]), record)
+                found.append(record)
         for key in ("standings", "groups", "rows", "table", "data", "items"):
             child = node.get(key)
             if isinstance(child, (list, Mapping)):
                 visit(child)
 
     visit(payload)
-    return [found[key] for key in sorted(found)]
+    return found
 
 
 def collect_livescore_season_standings(
