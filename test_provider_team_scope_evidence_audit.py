@@ -25,8 +25,19 @@ class ProviderTeamScopeEvidenceAuditTests(unittest.TestCase):
                 },
             },
         }
-        result = extract_team_scope_evidence(row)
+        result = extract_team_scope_evidence({
+            **row,
+            "raw_payload": {
+                **row["raw_payload"],
+                "catalogue_reference_season": 2024,
+                "team_evidence_method": "provider_league_season_team_catalogue",
+                "competition_provider_ids": ["39"],
+            },
+        })
         fields = {item["field"] for item in result["raw_provider_scope_candidates"]}
+        self.assertEqual(result["source_provenance"]["catalogue_reference_season"], 2024)
+        self.assertEqual(result["source_provenance"]["team_evidence_method"], "provider_league_season_team_catalogue")
+        self.assertEqual(result["source_provenance"]["competition_provider_ids"], ["39"])
         self.assertTrue({"country", "team_type", "gender_scope", "age_group", "squad_scope"} <= fields)
         self.assertEqual(result["structured_scope_fields"], {"country": "England", "team_type": "club"})
         self.assertIn("no team scope was inferred or approved", result["interpretation"])
