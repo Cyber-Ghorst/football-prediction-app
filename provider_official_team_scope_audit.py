@@ -15,6 +15,11 @@ from typing import Any, Mapping
 
 from provider_data_storage import _connect
 from provider_entity_crosswalk import normalize_entity_name
+from highlightly_world_cup_official_roster_audit import (
+    FIFA_REFERENCE_URL, HIGHLIGHTLY_COMPETITION_ID, SEASON as WORLD_CUP_SEASON,
+    SOURCE_MATCHES_EXAMINED, SOURCE_ROSTER_CHECKED_AT, SOURCE_ROSTER_RUN_ID,
+    build_official_matches,
+)
 from provider_season_provenance import explicit_season_label, payload_mapping
 
 REPORT = Path("provider-official-team-scope-audit.json")
@@ -357,6 +362,68 @@ def filter_duplicate_livescore_participant_rows(
     return filtered_rows, participant_observations_preserved
 
 
+def build_world_cup_official_scope_candidates() -> list[dict[str, Any]]:
+    """Build non-promotable national-team scope candidates from FIFA's official roster."""
+    rows = []
+    for participant in build_official_matches():
+        matched = bool(participant.get("official_roster_match"))
+        scope_candidate = None
+        status = "held_not_in_fifa_official_roster"
+        if matched:
+            scope_candidate = {
+                "team_type_scope": "national",
+                "gender_scope": "male",
+                "age_group": "senior",
+                "squad_scope": "national_team",
+                "country_context": "international",
+                "provider_team_type_field_confirmed": False,
+                "evidence_basis": (
+                    "FIFA senior men's World Cup official roster membership plus "
+                    "Highlightly 2026 World Cup match participation"
+                ),
+            }
+            status = "candidate_review_official_fifa_roster_context_provider_type_unverified"
+        rows.append({
+            "provider": "highlightly",
+            "provider_entity_id": participant["highlightly_team_id"],
+            "provider_team_name": participant["highlightly_team_name"],
+            "name": participant["highlightly_team_name"],
+            "competition_provider_id": HIGHLIGHTLY_COMPETITION_ID,
+            "competition_key": "fifa_world_cup_2026",
+            "competition_name": "FIFA World Cup 2026",
+            "season_label": WORLD_CUP_SEASON,
+            "official_team_name": participant.get("fifa_official_team_name"),
+            "scope_candidate": scope_candidate,
+            "official_reference_url": FIFA_REFERENCE_URL,
+            "source_endpoint": (
+                "Highlightly 2026 World Cup season match participants "
+                f"({SOURCE_MATCHES_EXAMINED} match pages)"
+            ),
+            "source_retrieved_at": SOURCE_ROSTER_CHECKED_AT,
+            "team_evidence_method": "season_match_participants",
+            "provider_roster_observation_complete": matched,
+            "status": status,
+            "promotion_allowed": False,
+            "evidence_snapshot": {
+                **participant,
+                "official_competition": "FIFA World Cup 2026",
+                "official_reference_url": FIFA_REFERENCE_URL,
+                "source_roster_run_id": SOURCE_ROSTER_RUN_ID,
+                "source_matches_examined": SOURCE_MATCHES_EXAMINED,
+                "provider_team_detail_lookup": {
+                    "run_id": "43913916907",
+                    "attempted": 48,
+                    "confirmed": 0,
+                    "failed": 48,
+                    "error_type": "HTTPError",
+                },
+                "provider_team_type_field_confirmed": False,
+                "promotion_allowed": False,
+            },
+        })
+    return rows
+
+
 def audit_official_team_scope(database_url: str) -> dict[str, Any]:
     if not database_url:
         raise ValueError("PROVIDER_DATABASE_URL is required.")
@@ -443,6 +510,18 @@ def audit_official_team_scope(database_url: str) -> dict[str, Any]:
     report["livescore_standings_table_available"] = standings_table_exists
     report["livescore_participant_observations_preserved"] = participant_observations_preserved
     report["livescore_participant_observations_preserved_count"] = len(participant_observations_preserved)
+    world_cup_candidates = build_world_cup_official_scope_candidates()
+    report["candidates"].extend(world_cup_candidates)
+    report["candidate_count"] += len(world_cup_candidates)
+    report["provider_candidate_counts"].setdefault("highlightly", {})[
+        "candidate_review_official_fifa_roster_context_provider_type_unverified"
+    ] = sum(row["scope_candidate"] is not None for row in world_cup_candidates)
+    report["world_cup_official_roster_participant_candidates"] = len(world_cup_candidates)
+    report["world_cup_fifa_roster_matches"] = sum(
+        row["scope_candidate"] is not None for row in world_cup_candidates
+    )
+    report["world_cup_provider_type_field_confirmed"] = 0
+    report["world_cup_provider_team_detail_lookup_run_id"] = "43913916907"
     report["database_read_only"] = True
     return report
 
