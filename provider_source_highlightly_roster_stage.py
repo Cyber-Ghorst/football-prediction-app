@@ -15,10 +15,15 @@ from highlightly import HighlightlyClient
 from provider_roster_collection import collect_highlightly_season_roster
 from provider_source_repository import store_provider_source_bundle
 
+# Keep this collector focused on the five men's domestic top-flight
+# competitions used by the provider-neutral team-scope review. International
+# tournaments are intentionally excluded from club-roster evidence.
 TARGETS = (
+    {"name": "Premier League", "country": "England"},
+    {"name": "La Liga", "country": "Spain"},
+    {"name": "Serie A", "country": "Italy"},
     {"name": "Bundesliga", "country": "Germany"},
     {"name": "Ligue 1", "country": "France"},
-    {"name": "World Cup", "country": None},
 )
 SEASON_YEAR = 2026
 REPORT = Path("provider-source-highlightly-roster-stage-report.json")
