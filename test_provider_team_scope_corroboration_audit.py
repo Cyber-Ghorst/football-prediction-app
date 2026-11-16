@@ -4,6 +4,24 @@ from provider_team_scope_corroboration_audit import build_corroboration_report
 
 
 class ProviderTeamScopeCorroborationAuditTests(unittest.TestCase):
+    def test_highlightly_five_domestic_competition_ids_are_mapped(self):
+        rows = []
+        report = build_corroboration_report(rows)
+        highlightly = {
+            row["target_competition_provider_id"]: row["api_ninjas_competition_code"]
+            for row in report["competitions"]
+            if row["target_provider"] == "highlightly"
+        }
+        self.assertEqual(
+            highlightly,
+            {
+                "33973": "epl",
+                "119924": "laliga",
+                "115669": "seriea",
+                "67162": "bundesliga",
+                "52695": "ligue1",
+            },
+        )
     def test_exact_unique_name_in_same_competition_is_candidate_only(self):
         rows = [
             {"provider": "api_ninjas", "provider_entity_id": "soccer-bayern",
