@@ -22,7 +22,7 @@ TARGETS = (
 )
 REPORT = Path("livescore-team-scope-metadata-audit.json")
 COLUMNS = ("provider_entity_id", "name", "raw_payload")
-API_COLUMNS = ("entity_type", "provider_entity_id", "name", "country", "team_type", "raw_payload")
+API_COLUMNS = ("entity_type", "provider_entity_id", "name", "country", "parent_competition_provider_id", "team_type", "raw_payload")
 
 
 def _mapping(value: Any) -> Mapping[str, Any]:
@@ -273,7 +273,8 @@ def audit_livescore_team_scope(database_url: str, client_factory=LiveScoreFootba
             )
             staged_rows = [dict(zip(COLUMNS, values)) for values in cursor.fetchall()]
             cursor.execute(
-                """SELECT entity_type, provider_entity_id, name, country, team_type, raw_payload
+                """SELECT entity_type, provider_entity_id, name, country,
+                          parent_competition_provider_id, team_type, raw_payload
                    FROM provider_source_entities
                    WHERE provider = 'api_football'
                      AND entity_type IN ('team', 'competition', 'season')
