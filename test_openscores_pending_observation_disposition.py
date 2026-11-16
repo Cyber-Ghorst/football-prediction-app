@@ -10,12 +10,12 @@ LINKS = {"fixture": 150, "league": 3, "season": 3, "team": 60}
 
 def snapshot(*, unresolved=150, linked=150, discarded=0, unresolved_groups=None, discarded_groups=None):
     outside = 300 - discarded
+    status_counts = {"outside_upcoming_window": outside}
+    if discarded:
+        status_counts["discarded_by_operator"] = discarded
     return {
         "total_observations": 300,
-        "status_counts": {
-            "outside_upcoming_window": outside,
-            "discarded_by_operator": discarded,
-        },
+        "status_counts": status_counts,
         "unresolved_unlinked_observations": unresolved,
         "linked_observations": linked,
         "discarded_by_operator": discarded,
@@ -62,7 +62,7 @@ class FakeConnection:
 
 
 class OpenScoresPendingDispositionTests(unittest.TestCase):
-    def test_read_only_preflight_requires_exact_150_pending_rows(self):
+    def test_read_only_preflight_requires_exact_150_unlinked_rows(self):
         with patch.object(
             store, "_openscores_observation_snapshot",
             return_value=snapshot(unresolved_groups=EXPECTED),
@@ -74,7 +74,7 @@ class OpenScoresPendingDispositionTests(unittest.TestCase):
         self.assertEqual(report["linked_observations"], 150)
         self.assertEqual(report["total_observations"], 300)
 
-    def test_discard_updates_only_pending_rows_and_preserves_links_and_raw_rows(self):
+    def test_discard_updates_only_unlinked_rows_and_preserves_links_and_raw_rows(self):
         cursor = FakeCursor()
         before = snapshot(unresolved_groups=EXPECTED)
         after = snapshot(
