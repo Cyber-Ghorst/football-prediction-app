@@ -6,6 +6,7 @@ approves links, or compares provider IDs as if they were globally unique.
 from __future__ import annotations
 
 from collections import defaultdict
+from datetime import date
 from typing import Any, Mapping
 
 from provider_data_storage import _connect
@@ -151,37 +152,88 @@ OFFICIAL_2026_27_SEASON_DATE_EVIDENCE = {
 def _season_date_fields(
     row: Mapping[str, Any], provider: str, provider_parent_id: str, season_label: Any,
 ) -> dict[str, Any]:
+    """Return provider dates plus separately attributed calendar corroboration."""
     source_start = _date_value(row.get("start_date"))
     source_end = _date_value(row.get("end_date"))
-    result = {"start_date": source_start, "end_date": source_end}
+    result = {
+        "start_date": source_start,
+        "end_date": source_end,
+        "provider_native_start_date": source_start,
+        "provider_native_end_date": source_end,
+    }
     label = str(season_label or "").strip()
     is_2026_27 = label in {"2026", "2026/27", "2026/2027", "2026-27"}
     evidence = (
         OFFICIAL_2026_27_SEASON_DATE_EVIDENCE.get((provider, provider_parent_id), {})
         if is_2026_27 else {}
     )
+    missing_source_dimensions = [
+        field for field, value in (("start_date", source_start), ("end_date", source_end))
+        if not value
+    ]
+    malformed_source_dimensions = []
+    parsed_source = {}
+    for field, value in (("start_date", source_start), ("end_date", source_end)):
+        if value is None:
+            continue
+        try:
+            parsed_source[field] = date.fromisoformat(value)
+        except (TypeError, ValueError):
+            malformed_source_dimensions.append(field)
+
+    if malformed_source_dimensions:
+        result["season_date_range_status"] = "malformed"
+        result["season_date_consistency_status"] = "held_malformed_provider_dates"
+        result["season_date_malformed_dimensions"] = malformed_source_dimensions
+        return result
+
+    if "start_date" in parsed_source and "end_date" in parsed_source:
+        if parsed_source["start_date"] > parsed_source["end_date"]:
+            result["season_date_range_status"] = "invalid_order"
+            result["season_date_consistency_status"] = "held_provider_date_order_conflict"
+            return result
+
     if not evidence:
         result["season_date_range_status"] = (
             "complete" if source_start and source_end else "incomplete"
         )
+        result["season_date_consistency_status"] = (
+            "provider_dates_present_unverified" if not missing_source_dimensions
+            else "held_missing_provider_dates"
+        )
         return result
-    missing_source_dimensions = []
+
+    expected = {
+        "start_date": evidence["start_date"],
+        "end_date": evidence["end_date"],
+    }
+    conflicts = [
+        field for field, actual in (("start_date", source_start), ("end_date", source_end))
+        if actual is not None and actual != expected[field]
+    ]
+    # Official calendar values fill only absent provider dimensions. Existing
+    # provider-native values, including conflicting ones, are never replaced.
     if not source_start:
-        result["start_date"] = evidence["start_date"]
-        missing_source_dimensions.append("start_date")
+        result["start_date"] = expected["start_date"]
     if not source_end:
-        result["end_date"] = evidence["end_date"]
-        missing_source_dimensions.append("end_date")
+        result["end_date"] = expected["end_date"]
+
     result["season_date_range_status"] = (
         "complete" if result["start_date"] and result["end_date"] else "incomplete"
     )
-    if missing_source_dimensions:
+    result["season_date_expected_official_start"] = expected["start_date"]
+    result["season_date_expected_official_end"] = expected["end_date"]
+    result["season_date_official_reference_urls"] = list(evidence["official_reference_urls"])
+    result["season_date_source_missing_dimensions"] = missing_source_dimensions
+    result["season_date_conflicting_dimensions"] = conflicts
+    if conflicts:
+        result["season_date_consistency_status"] = "held_provider_dates_conflict_official_calendar"
+    elif missing_source_dimensions:
+        result["season_date_consistency_status"] = "official_calendar_corroborates_missing_provider_dates"
         result["season_date_evidence_source"] = "official_competition_calendar"
         result["season_date_evidence_season_label"] = "2026/27"
-        result["season_date_source_missing_dimensions"] = missing_source_dimensions
-        result["season_date_official_reference_urls"] = list(
-            evidence["official_reference_urls"]
-        )
+    else:
+        result["season_date_consistency_status"] = "provider_dates_match_official_calendar"
     return result
 
 
@@ -351,12 +403,7 @@ def build_identity_candidate_report(
                         "provider_parent_competition_id": provider_parent_id,
                         "canonical_parent_competition_id": canonical_parent_id,
                         "season_label": season_label,
-                        "start_date": _date_value(row.get("start_date")),
-                        "end_date": _date_value(row.get("end_date")),
-                        "season_date_range_status": (
-                            "complete" if row.get("start_date") and row.get("end_date")
-                            else "incomplete"
-                        ),
+                        **season_date_fields,
                         "status": "held_invalid_season_identity",
                         "identity_key_candidate": None,
                         "reason": str(exc),
@@ -367,12 +414,7 @@ def build_identity_candidate_report(
                         "provider_parent_competition_id": provider_parent_id,
                         "canonical_parent_competition_id": canonical_parent_id,
                         "season_label": season_label,
-                        "start_date": _date_value(row.get("start_date")),
-                        "end_date": _date_value(row.get("end_date")),
-                        "season_date_range_status": (
-                            "complete" if row.get("start_date") and row.get("end_date")
-                            else "incomplete"
-                        ),
+                        **season_date_fields,
                         "status": "season_key_candidate_parent_approved_review_required",
                         "identity_key_candidate": season_key,
                         "reason": (

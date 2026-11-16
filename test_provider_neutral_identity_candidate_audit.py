@@ -430,5 +430,57 @@ class ProviderNeutralIdentityCandidateAuditTests(unittest.TestCase):
         self.assertTrue(all(statement.startswith("SELECT") for statement in statements[1:]))
 
 
+
+    def test_approved_parent_season_branch_uses_official_date_evidence(self):
+        report = build_identity_candidate_report([{
+            "provider": "api_ninjas", "entity_type": "season",
+            "provider_entity_id": "epl:2026", "name": "2026/2027",
+            "season_label": "2026/2027", "parent_competition_provider_id": "epl",
+            "start_date": "2026-08-21", "end_date": "2027-05-30",
+        }], {("api_ninjas", "epl"): "sportmonks:8"})
+        season = report["season_candidates"][0]
+        self.assertEqual(season["provider_native_start_date"], "2026-08-21")
+        self.assertEqual(season["provider_native_end_date"], "2027-05-30")
+        self.assertEqual(season["season_date_consistency_status"],
+                         "provider_dates_match_official_calendar")
+        self.assertEqual(season["status"],
+                         "season_key_candidate_parent_approved_review_required")
+
+    def test_provider_native_date_conflict_is_reported_without_overwrite(self):
+        report = build_identity_candidate_report([{
+            "provider": "highlightly", "entity_type": "season",
+            "provider_entity_id": "67162:2026", "name": "2026",
+            "season_label": "2026", "parent_competition_provider_id": "67162",
+            "start_date": "2026-08-29", "end_date": "2027-05-22",
+        }])
+        season = report["season_candidates"][0]
+        self.assertEqual(season["start_date"], "2026-08-29")
+        self.assertEqual(season["provider_native_start_date"], "2026-08-29")
+        self.assertEqual(season["season_date_conflicting_dimensions"], ["start_date"])
+        self.assertEqual(season["season_date_consistency_status"],
+                         "held_provider_dates_conflict_official_calendar")
+
+    def test_malformed_and_reversed_provider_dates_are_held(self):
+        malformed = build_identity_candidate_report([{
+            "provider": "api_football", "entity_type": "season",
+            "provider_entity_id": "39:2026", "name": "2026",
+            "season_label": "2026", "parent_competition_provider_id": "39",
+            "start_date": "2026-99-99", "end_date": "2027-05-30",
+        }], {("api_football", "39"): "sportmonks:8"})["season_candidates"][0]
+        self.assertEqual(malformed["season_date_range_status"], "malformed")
+        self.assertEqual(malformed["season_date_consistency_status"],
+                         "held_malformed_provider_dates")
+
+        reversed_dates = build_identity_candidate_report([{
+            "provider": "api_football", "entity_type": "season",
+            "provider_entity_id": "39:2026", "name": "2026",
+            "season_label": "2026", "parent_competition_provider_id": "39",
+            "start_date": "2027-05-30", "end_date": "2026-08-21",
+        }], {("api_football", "39"): "sportmonks:8"})["season_candidates"][0]
+        self.assertEqual(reversed_dates["season_date_range_status"], "invalid_order")
+        self.assertEqual(reversed_dates["season_date_consistency_status"],
+                         "held_provider_date_order_conflict")
+
+
 if __name__ == "__main__":
     unittest.main()
