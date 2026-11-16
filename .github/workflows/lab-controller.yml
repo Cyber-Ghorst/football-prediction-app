@@ -19,6 +19,7 @@ on:
           - openscores_entity_mapping_audit
           - openscores_sportmonks_reconciliation
           - sportmonks_catalogue_access_audit
+          - sportmonks_team_scope_metadata_audit
           - provider_league_catalogue_audit
           - provider_season_roster_audit
           - provider_neutral_repository_audit
@@ -134,7 +135,7 @@ jobs:
               trigger = json.loads(Path(".agent/trigger.json").read_text(encoding="utf-8"))
               operation = trigger.get("operation", "")
 
-          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync", "tipmaster_refresh_verify", "openscores_connection_check", "openscores_entity_mapping_audit", "openscores_sportmonks_reconciliation", "sportmonks_catalogue_access_audit", "provider_league_catalogue_audit", "provider_season_roster_audit", "provider_neutral_repository_audit", "provider_source_roster_stage", "provider_source_repository_audit", "provider_source_legacy_catalogue_stage", "provider_neutral_identity_candidate_audit", "provider_source_highlightly_roster_stage", "provider_source_api_football_roster_stage", "provider_team_scope_evidence_audit", "provider_link_approval_evidence_audit", "learning_audit", "deployment_redeploy"}
+          allowed = {"health_check", "test_suite", "full_check", "prediction_run", "result_sync", "tipmaster_refresh_verify", "openscores_connection_check", "openscores_entity_mapping_audit", "openscores_sportmonks_reconciliation", "sportmonks_catalogue_access_audit", "sportmonks_team_scope_metadata_audit", "provider_league_catalogue_audit", "provider_season_roster_audit", "provider_neutral_repository_audit", "provider_source_roster_stage", "provider_source_repository_audit", "provider_source_legacy_catalogue_stage", "provider_neutral_identity_candidate_audit", "provider_source_highlightly_roster_stage", "provider_source_api_football_roster_stage", "provider_team_scope_evidence_audit", "provider_link_approval_evidence_audit", "learning_audit", "deployment_redeploy"}
           if operation not in allowed:
               raise SystemExit("Rejected unsupported or missing operation")
           if operation == "prediction_run":
@@ -499,6 +500,22 @@ jobs:
           set -euo pipefail
           python sportmonks_catalogue_access_audit.py
 
+      - name: Install Sportmonks team-scope metadata audit dependencies
+        if: steps.operation.outputs.operation == 'sportmonks_team_scope_metadata_audit'
+        run: |
+          set -euo pipefail
+          python -m pip install requests 'psycopg[binary]'
+
+      - name: Audit Sportmonks team country and type metadata (read-only)
+        if: steps.operation.outputs.operation == 'sportmonks_team_scope_metadata_audit'
+        env:
+          SPORTMONKS_API_TOKEN: ${{ secrets.SPORTMONKS_API_TOKEN }}
+          SPORTMONKS_API_KEY: ${{ secrets.SPORTMONKS_API_KEY }}
+          PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
+        run: |
+          set -euo pipefail
+          python sportmonks_team_scope_metadata_audit.py
+
       - name: Install provider catalogue audit dependency
         if: steps.operation.outputs.operation == 'provider_league_catalogue_audit' || steps.operation.outputs.operation == 'provider_season_roster_audit' || steps.operation.outputs.operation == 'provider_neutral_repository_audit' || steps.operation.outputs.operation == 'provider_source_roster_stage' || steps.operation.outputs.operation == 'provider_source_repository_audit' || steps.operation.outputs.operation == 'provider_source_legacy_catalogue_stage' || steps.operation.outputs.operation == 'provider_neutral_identity_candidate_audit' || steps.operation.outputs.operation == 'provider_source_highlightly_roster_stage' || steps.operation.outputs.operation == 'provider_source_api_football_roster_stage' || steps.operation.outputs.operation == 'provider_team_scope_evidence_audit' || steps.operation.outputs.operation == 'provider_link_approval_evidence_audit'
         run: |
@@ -746,6 +763,7 @@ jobs:
               ("provider-source-repository-audit.json", "Provider-native source evidence audit"),
               ("provider-neutral-identity-candidate-audit.json", "Provider-neutral identity candidate audit"),
               ("provider-team-scope-evidence-audit.json", "Provider team-scope evidence audit"),
+              ("sportmonks-team-scope-metadata-audit.json", "Sportmonks team country/type metadata audit"),
               ("provider-link-approval-evidence-audit.json", "Provider-link approval evidence coverage audit"),
               ("prediction-run-report.json", "Automated prediction run report"),
               ("learning-readiness-report.json", "Leakage-safe learning readiness report"),
@@ -860,6 +878,7 @@ jobs:
             provider-source-legacy-catalogue-stage-report.json
             provider-neutral-identity-candidate-audit.json
             provider-team-scope-evidence-audit.json
+            sportmonks-team-scope-metadata-audit.json
             provider-link-approval-evidence-audit.json
             provider-source-highlightly-roster-stage-report.json
             provider-source-api-football-roster-stage-report.json
