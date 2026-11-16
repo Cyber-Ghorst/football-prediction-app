@@ -1,3 +1,4 @@
 {
-  "operation": "full_check"
+  "operation": "provider_team_scope_corroboration_audit",
+  "safety_scope": "read_only_season_gated_corroboration"
 }
