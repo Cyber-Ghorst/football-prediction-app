@@ -30,7 +30,7 @@ def _team_record(value: Any) -> dict[str, Any] | None:
 
 def _highlightly_standing_teams(payload: Any) -> list[dict[str, Any]]:
     """Extract only explicit team objects nested in standings rows/groups."""
-    found: list[dict[str, Any]] = []
+    found: dict[str, dict[str, Any]] = {}
 
     def visit(node: Any) -> None:
         if isinstance(node, list):
