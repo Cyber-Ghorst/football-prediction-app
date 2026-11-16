@@ -54,6 +54,29 @@ class ProviderTeamScopeCorroborationAuditTests(unittest.TestCase):
             "no_unique_exact_normalized_name_match_in_api_ninjas_competition",
         )
 
+    def test_near_name_candidates_are_review_only_and_never_exact_matches(self):
+        rows = [
+            {"provider": "api_ninjas", "provider_entity_id": "soccer-union",
+             "name": "1. FC Union Berlin", "country": "DE", "team_type": "club",
+             "gender_scope": "men",
+             "raw_payload": {"domestic_league_codes": ["bundesliga"]}},
+            {"provider": "livescore_football", "provider_entity_id": "ger-1",
+             "name": "Union Berlin",
+             "raw_payload": {"competition_provider_ids": ["ger.1"]}},
+        ]
+        report = build_corroboration_report(rows)
+        competition = next(row for row in report["competitions"]
+                           if row["target_provider"] == "livescore_football"
+                           and row["target_competition_provider_id"] == "ger.1")
+        self.assertEqual(competition["unique_exact_name_candidates"], 0)
+        unmatched = competition["unmatched_target_teams"][0]
+        self.assertTrue(unmatched["near_name_candidates"])
+        self.assertEqual(
+            unmatched["near_name_candidates"][0]["review_status"],
+            "manual_review_only_not_an_identity_match",
+        )
+        self.assertEqual(competition["scope_complete_candidates"], 0)
+
     def test_does_not_match_across_competitions_or_ambiguous_names(self):
         rows = [
             {"provider": "api_ninjas", "provider_entity_id": "a1",

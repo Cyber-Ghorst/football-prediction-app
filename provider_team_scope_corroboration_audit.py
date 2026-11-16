@@ -7,6 +7,7 @@ explicitly mapped domestic competition. It never writes scope values or links.
 from __future__ import annotations
 
 import json
+from difflib import SequenceMatcher
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -118,19 +119,40 @@ def build_corroboration_report(rows: list[Mapping[str, Any]]) -> dict[str, Any]:
                 key for key in set(source_by_name) & set(api_by_name)
                 if len(source_by_name[key]) != 1 or len(api_by_name[key]) != 1
             }
-            unmatched = [
-                {
-                    "provider": provider,
-                    "provider_entity_id": str(row.get("provider_entity_id") or ""),
-                    "name": row.get("name"),
-                    "normalized_name": normalize_entity_name(row.get("name")),
-                    "competition_provider_id": provider_competition,
-                    "reason": "no_unique_exact_normalized_name_match_in_api_ninjas_competition",
-                }
-                for key, rows_for_name in sorted(source_by_name.items())
-                if key not in api_by_name and key not in ambiguous_keys
-                for row in rows_for_name
-            ]
+            unmatched = []
+            for key, rows_for_name in sorted(source_by_name.items()):
+                if key in api_by_name or key in ambiguous_keys:
+                    continue
+                for row in rows_for_name:
+                    near_matches = []
+                    for api_row in api_comp:
+                        api_name = str(api_row.get("name") or "")
+                        score = SequenceMatcher(
+                            None, key, normalize_entity_name(api_name)
+                        ).ratio()
+                        if score >= 0.60:
+                            near_matches.append({
+                                "api_ninjas_team_id": str(api_row.get("provider_entity_id") or ""),
+                                "api_ninjas_team_name": api_name,
+                                "normalized_name_similarity": round(score, 3),
+                                "review_status": "manual_review_only_not_an_identity_match",
+                            })
+                    near_matches.sort(
+                        key=lambda item: (
+                            -item["normalized_name_similarity"],
+                            item["api_ninjas_team_name"],
+                            item["api_ninjas_team_id"],
+                        )
+                    )
+                    unmatched.append({
+                        "provider": provider,
+                        "provider_entity_id": str(row.get("provider_entity_id") or ""),
+                        "name": row.get("name"),
+                        "normalized_name": key,
+                        "competition_provider_id": provider_competition,
+                        "reason": "no_unique_exact_normalized_name_match_in_api_ninjas_competition",
+                        "near_name_candidates": near_matches[:3],
+                    })
             reports.append({
                 "target_provider": provider,
                 "target_competition_provider_id": provider_competition,
