@@ -24,6 +24,64 @@ class ProviderNeutralIdentityCandidateAuditTests(unittest.TestCase):
         self.assertEqual(held["missing_dimensions"], ["competition_type"])
         self.assertEqual(report["shared_competition_candidates"], [])
 
+
+    def test_official_competition_references_fill_only_missing_competition_type(self):
+        api_football_anchors = [
+            ("39", "Premier League", "England"),
+            ("140", "La Liga", "Spain"),
+            ("135", "Serie A", "Italy"),
+            ("78", "Bundesliga", "Germany"),
+            ("61", "Ligue 1", "France"),
+        ]
+        rows = [
+            {"provider": "api_football", "entity_type": "competition",
+             "provider_entity_id": provider_id, "name": name,
+             "country": country, "competition_type": "League"}
+            for provider_id, name, country in api_football_anchors
+        ]
+        for provider_id, name, country in [
+            ("33973", "Premier League", "England"),
+            ("119924", "La Liga", "Spain"),
+            ("115669", "Serie A", "Italy"),
+            ("67162", "Bundesliga", "Germany"),
+            ("52695", "Ligue 1", "France"),
+        ]:
+            rows.append({
+                "provider": "highlightly", "entity_type": "competition",
+                "provider_entity_id": provider_id, "name": name,
+                "country": country, "competition_type": None,
+            })
+        rows.extend([
+            {"provider": "livescore_football", "entity_type": "competition",
+             "provider_entity_id": "ger.1", "name": "German Bundesliga",
+             "country": "Germany", "competition_type": None},
+            {"provider": "livescore_football", "entity_type": "competition",
+             "provider_entity_id": "fra.1", "name": "French Ligue 1",
+             "country": "France", "competition_type": None},
+        ])
+        report = build_identity_candidate_report(rows)
+
+        official_rows = [
+            row for row in report["competition_candidates"]
+            if row["provider"] in {"highlightly", "livescore_football"}
+        ]
+        self.assertEqual(len(official_rows), 7)
+        self.assertTrue(all(row["identity_key_candidate"] for row in official_rows))
+        self.assertTrue(all(row["source_missing_dimensions"] == ["competition_type"]
+                            for row in official_rows))
+        self.assertTrue(all(row["corroborated_dimensions"] and
+                            row["scope_evidence_source"] == "official_competition_reference" and
+                            row["official_reference_urls"]
+                            for row in official_rows))
+        livescore = {row["provider_entity_id"]: row for row in official_rows
+                     if row["provider"] == "livescore_football"}
+        self.assertEqual(livescore["ger.1"]["identity_name_candidate"], "Bundesliga")
+        self.assertEqual(livescore["fra.1"]["identity_name_candidate"], "Ligue 1")
+        self.assertEqual(report["summary"]["competitions_with_official_type_corroboration"], 7)
+        self.assertEqual(len(report["shared_competition_candidates"]), 5)
+        self.assertEqual(report["canonical_ids_assigned"], 0)
+        self.assertEqual(report["provider_links_created"], 0)
+
     def test_exact_cross_provider_competition_identity_is_candidate_not_approved_link(self):
         report = build_identity_candidate_report([
             {"provider": "sportmonks", "entity_type": "competition",
