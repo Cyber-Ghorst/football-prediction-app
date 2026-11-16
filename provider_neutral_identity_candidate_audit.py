@@ -349,7 +349,8 @@ def build_identity_candidate_report(
             native_fields = (
                 "id", "season_id", "year", "name", "start", "end",
                 "start_date", "end_date", "league_id", "competition_id", "parent_id",
-                "current", "is_current",
+                "current", "is_current", "provider_native_season_year",
+                "provider_native_parent_competition_id", "provider_entity_id_kind",
             )
             native_payload_fields = {}
             for field in native_fields:
