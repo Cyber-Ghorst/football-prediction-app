@@ -137,6 +137,9 @@ def build_approved_records(report: Mapping[str, Any]) -> list[dict[str, Any]]:
                 "team_type_from_api_ninjas": team_type,
                 "gender_from_api_ninjas": gender_raw,
                 "gender_scope_normalized_candidate": gender_scope,
+                "target_season_label": candidate.get("target_season_label"),
+                "api_ninjas_season_label": candidate.get("api_ninjas_season_label"),
+                "season_match_verified": True,
             }
             records.append({
                 "provider": provider,
