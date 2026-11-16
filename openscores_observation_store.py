@@ -222,6 +222,18 @@ def _openscores_observation_snapshot(cursor) -> dict[str, Any]:
         for league_id, season_id, count in cursor.fetchall()
     }
     cursor.execute(
+        """SELECT provider_league_id, provider_season_id, COUNT(*)
+           FROM provider_fixture_observations
+           WHERE provider = 'openscores'
+             AND reconciliation_status = 'discarded_by_operator'
+           GROUP BY provider_league_id, provider_season_id
+           ORDER BY provider_league_id, provider_season_id"""
+    )
+    discarded_groups = {
+        (str(league_id), str(season_id)): int(count or 0)
+        for league_id, season_id, count in cursor.fetchall()
+    }
+    cursor.execute(
         """SELECT entity_type, COUNT(*)
            FROM provider_entity_links
            WHERE provider = 'openscores'
@@ -249,6 +261,11 @@ def _openscores_observation_snapshot(cursor) -> dict[str, Any]:
             for key, value in sorted(pending_groups.items())
         ],
         "pending_group_map": pending_groups,
+        "discarded_groups": [
+            {"league_id": key[0], "season_id": key[1], "count": value}
+            for key, value in sorted(discarded_groups.items())
+        ],
+        "discarded_group_map": discarded_groups,
         "openscores_provider_link_counts": link_counts,
     }
 
@@ -262,6 +279,7 @@ def audit_pending_openscores_observations(database_url: str) -> dict[str, Any]:
             snapshot = _openscores_observation_snapshot(cursor)
     expected = dict(EXPECTED_PENDING_OPENSCORES_GROUPS)
     actual = dict(snapshot.pop("pending_group_map"))
+    snapshot.pop("discarded_group_map")
     return {
         "read_only": True,
         **snapshot,
@@ -297,14 +315,12 @@ def discard_pending_openscores_observations(
         with connection.cursor() as cursor:
             before = _openscores_observation_snapshot(cursor)
             actual_groups = dict(before.pop("pending_group_map"))
+            actual_discarded_groups = dict(before.pop("discarded_group_map"))
             if (
                 before["pending_entity_mapping"] == 0
                 and before["discarded_by_operator"] == expected_total
+                and actual_discarded_groups == expected
             ):
-                discarded_groups = {
-                    (row["league_id"], row["season_id"]): row["count"]
-                    for row in before["status_counts"].get("discarded_groups", [])
-                }
                 return {
                     "status": "already_discarded",
                     "updated": 0,
@@ -338,6 +354,7 @@ def discard_pending_openscores_observations(
             updated = int(getattr(cursor, "rowcount", 0) or 0)
             after = _openscores_observation_snapshot(cursor)
             after_groups = dict(after.pop("pending_group_map"))
+            after_discarded_groups = dict(after.pop("discarded_group_map"))
             if (
                 updated != expected_total
                 or after["pending_entity_mapping"] != 0
@@ -345,6 +362,7 @@ def discard_pending_openscores_observations(
                 or after["matched"] != before["matched"]
                 or after["total_observations"] != before["total_observations"]
                 or after["openscores_provider_link_counts"] != before["openscores_provider_link_counts"]
+                or after_discarded_groups != expected
                 or after_groups
             ):
                 raise RuntimeError(
