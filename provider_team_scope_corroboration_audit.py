@@ -25,6 +25,9 @@ COMPETITION_MAP = {
     ("api_football", "61"): "ligue1",
     ("livescore_football", "ger.1"): "bundesliga",
     ("livescore_football", "fra.1"): "ligue1",
+    ("highlightly", "33973"): "epl",
+    ("highlightly", "119924"): "laliga",
+    ("highlightly", "115669"): "seriea",
     ("highlightly", "67162"): "bundesliga",
     ("highlightly", "52695"): "ligue1",
 }
