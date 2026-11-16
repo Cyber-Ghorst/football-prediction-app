@@ -309,7 +309,7 @@ def _openscores_observation_snapshot(cursor) -> dict[str, Any]:
 
 
 def audit_pending_openscores_observations(database_url: str) -> dict[str, Any]:
-    """Read-only preflight for the 150 OpenScores observations with no fixture link."""
+    """Read-only preflight or post-disposition verification for OpenScores observations."""
     if not database_url:
         raise ValueError("PROVIDER_DATABASE_URL is required")
     with _connect(database_url) as connection:
@@ -317,7 +317,28 @@ def audit_pending_openscores_observations(database_url: str) -> dict[str, Any]:
             snapshot = _openscores_observation_snapshot(cursor)
     expected = dict(EXPECTED_PENDING_OPENSCORES_GROUPS)
     actual = dict(snapshot.pop("unresolved_group_map"))
-    snapshot.pop("discarded_group_map")
+    actual_discarded_groups = dict(snapshot.pop("discarded_group_map"))
+    preflight_passed = (
+        snapshot["unresolved_unlinked_observations"] == sum(expected.values())
+        and actual == expected
+        and snapshot["linked_observations"] == 150
+        and snapshot["discarded_by_operator"] == 0
+        and snapshot["status_counts"] == {"outside_upcoming_window": 300}
+        and snapshot["total_observations"] == 300
+        and snapshot["openscores_provider_link_counts"] == EXPECTED_OPENSCORES_LINK_COUNTS
+    )
+    post_discard_passed = (
+        snapshot["unresolved_unlinked_observations"] == 0
+        and snapshot["linked_observations"] == 150
+        and snapshot["discarded_by_operator"] == sum(expected.values())
+        and actual_discarded_groups == expected
+        and snapshot["status_counts"] == {
+            "outside_upcoming_window": 150,
+            "discarded_by_operator": 150,
+        }
+        and snapshot["total_observations"] == 300
+        and snapshot["openscores_provider_link_counts"] == EXPECTED_OPENSCORES_LINK_COUNTS
+    )
     return {
         "read_only": True,
         **snapshot,
@@ -326,14 +347,13 @@ def audit_pending_openscores_observations(database_url: str) -> dict[str, Any]:
             {"league_id": key[0], "season_id": key[1], "count": value}
             for key, value in sorted(expected.items())
         ],
-        "preflight_passed": (
-            snapshot["unresolved_unlinked_observations"] == sum(expected.values())
-            and actual == expected
-            and snapshot["linked_observations"] == 150
-            and snapshot["discarded_by_operator"] == 0
-            and snapshot["status_counts"] == {"outside_upcoming_window": 300}
-            and snapshot["total_observations"] == 300
-            and snapshot["openscores_provider_link_counts"] == EXPECTED_OPENSCORES_LINK_COUNTS
+        "discarded_group_map": actual_discarded_groups,
+        "preflight_passed": preflight_passed,
+        "post_discard_passed": post_discard_passed,
+        "audit_status": (
+            "preflight_passed" if preflight_passed
+            else "post_discard_verified" if post_discard_passed
+            else "blocked"
         ),
     }
 
