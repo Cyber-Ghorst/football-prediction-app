@@ -95,6 +95,96 @@ def _date_value(value: Any) -> str | None:
     return text or None
 
 
+# Official 2026/27 first/last matchday boundaries. These fill missing
+# season dates in the read-only candidate view only; provider source rows
+# and canonical season links remain unchanged.
+OFFICIAL_2026_27_SEASON_DATE_EVIDENCE = {
+    ("api_ninjas", "epl"): {
+        "start_date": "2026-08-21", "end_date": "2027-05-30",
+        "official_reference_urls": ("https://www.premierleague.com/en/news/4468487/dates-for-202627-premier-league-season-confirmed",),
+    },
+    ("highlightly", "33973"): {
+        "start_date": "2026-08-21", "end_date": "2027-05-30",
+        "official_reference_urls": ("https://www.premierleague.com/en/news/4468487/dates-for-202627-premier-league-season-confirmed",),
+    },
+    ("api_ninjas", "laliga"): {
+        "start_date": "2026-08-14", "end_date": "2027-05-30",
+        "official_reference_urls": (
+            "https://www.laliga.com/noticias/ya-se-conoce-el-calendario-al-completo-de-laliga-easports-2026-27",
+            "https://en.atleticodemadrid.com/noticias/our-2026-27-league-fixture-list-has-been-confirmed",
+        ),
+    },
+    ("highlightly", "119924"): {
+        "start_date": "2026-08-14", "end_date": "2027-05-30",
+        "official_reference_urls": (
+            "https://www.laliga.com/noticias/ya-se-conoce-el-calendario-al-completo-de-laliga-easports-2026-27",
+            "https://en.atleticodemadrid.com/noticias/our-2026-27-league-fixture-list-has-been-confirmed",
+        ),
+    },
+    ("api_ninjas", "seriea"): {
+        "start_date": "2026-08-22", "end_date": "2027-05-30",
+        "official_reference_urls": ("https://en.legaseriea.it/serie-a/news/looking-forward-to-the-2026-27-serie-a-fixture-list",),
+    },
+    ("highlightly", "115669"): {
+        "start_date": "2026-08-22", "end_date": "2027-05-30",
+        "official_reference_urls": ("https://en.legaseriea.it/serie-a/news/looking-forward-to-the-2026-27-serie-a-fixture-list",),
+    },
+    ("api_ninjas", "bundesliga"): {
+        "start_date": "2026-08-28", "end_date": "2027-05-22",
+        "official_reference_urls": ("https://www.bundesliga.com/en/bundesliga/news/calendar-for-2026-27-season-world-cup-34676",),
+    },
+    ("highlightly", "67162"): {
+        "start_date": "2026-08-28", "end_date": "2027-05-22",
+        "official_reference_urls": ("https://www.bundesliga.com/en/bundesliga/news/calendar-for-2026-27-season-world-cup-34676",),
+    },
+    ("api_ninjas", "ligue1"): {
+        "start_date": "2026-08-21", "end_date": "2027-05-29",
+        "official_reference_urls": ("https://ligue1.com/en/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released",),
+    },
+    ("highlightly", "52695"): {
+        "start_date": "2026-08-21", "end_date": "2027-05-29",
+        "official_reference_urls": ("https://ligue1.com/en/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released",),
+    },
+}
+
+
+def _season_date_fields(
+    row: Mapping[str, Any], provider: str, provider_parent_id: str, season_label: Any,
+) -> dict[str, Any]:
+    source_start = _date_value(row.get("start_date"))
+    source_end = _date_value(row.get("end_date"))
+    result = {"start_date": source_start, "end_date": source_end}
+    label = str(season_label or "").strip()
+    is_2026_27 = label in {"2026", "2026/27", "2026/2027", "2026-27"}
+    evidence = (
+        OFFICIAL_2026_27_SEASON_DATE_EVIDENCE.get((provider, provider_parent_id), {})
+        if is_2026_27 else {}
+    )
+    if not evidence:
+        result["season_date_range_status"] = (
+            "complete" if source_start and source_end else "incomplete"
+        )
+        return result
+    missing_source_dimensions = []
+    if not source_start:
+        result["start_date"] = evidence["start_date"]
+        missing_source_dimensions.append("start_date")
+    if not source_end:
+        result["end_date"] = evidence["end_date"]
+        missing_source_dimensions.append("end_date")
+    result["season_date_range_status"] = (
+        "complete" if result["start_date"] and result["end_date"] else "incomplete"
+    )
+    if missing_source_dimensions:
+        result["season_date_evidence_source"] = "official_competition_calendar"
+        result["season_date_evidence_season_label"] = "2026/27"
+        result["season_date_source_missing_dimensions"] = missing_source_dimensions
+        result["season_date_official_reference_urls"] = list(
+            evidence["official_reference_urls"]
+        )
+    return result
+
+
 def build_identity_candidate_report(
     rows: list[Mapping[str, Any]],
     approved_parent_links: Mapping[tuple[str, str], str] | None = None,
@@ -175,18 +265,16 @@ def build_identity_candidate_report(
             # identity anchor. The key remains a candidate, not a season link.
             provider_parent_id = str(row.get("parent_competition_provider_id") or "").strip()
             season_label = row.get("season_label") or row.get("name")
+            season_date_fields = _season_date_fields(
+                row, provider, provider_parent_id, season_label
+            )
             canonical_parent_id = approved_parents.get((provider, provider_parent_id))
             if not canonical_parent_id:
                 result = {
                     **base,
                     "provider_parent_competition_id": provider_parent_id or None,
                     "season_label": season_label,
-                    "start_date": _date_value(row.get("start_date")),
-                    "end_date": _date_value(row.get("end_date")),
-                    "season_date_range_status": (
-                        "complete" if row.get("start_date") and row.get("end_date")
-                        else "incomplete"
-                    ),
+                    **season_date_fields,
                     "status": "held_until_parent_competition_is_approved",
                     "identity_key_candidate": None,
                     "reason": "A verified canonical competition ID is required before season identity can be keyed.",
