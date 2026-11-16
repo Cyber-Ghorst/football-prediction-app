@@ -135,6 +135,11 @@ def build_corroboration_report(rows: list[Mapping[str, Any]]) -> dict[str, Any]:
                                 "api_ninjas_team_id": str(api_row.get("provider_entity_id") or ""),
                                 "api_ninjas_team_name": api_name,
                                 "normalized_name_similarity": round(score, 3),
+                                "country_code_iso3166_alpha2": str(api_row.get("country") or "").strip().upper() or None,
+                                "country_name_from_iso_code": COUNTRY_NAMES.get(str(api_row.get("country") or "").strip().upper()),
+                                "team_type_from_api_ninjas": str(api_row.get("team_type") or "").strip().casefold() or None,
+                                "gender_from_api_ninjas": str(api_row.get("gender_scope") or "").strip().casefold() or None,
+                                "api_ninjas_domestic_competition": api_competition,
                                 "review_status": "manual_review_only_not_an_identity_match",
                             })
                     near_matches.sort(
