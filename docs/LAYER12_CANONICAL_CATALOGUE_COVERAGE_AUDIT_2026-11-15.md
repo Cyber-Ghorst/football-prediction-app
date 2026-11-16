@@ -1,4 +1,7 @@
-# Layer 12 — canonical catalogue coverage audit (2026-11-15)
+# Layer 12 — canonical catalogue coverage audit
+
+> **Disposition update (2026-11-16):** The 150 unresolved OpenScores observations described in this historical report were subsequently marked `discarded_by_operator` per the user's instruction. Raw observations were retained; 150 existing fixture-linked observations and 66 league/season/team links were left unchanged. See [the disposition report](LAYER12_OPENSCORES_PENDING_OBSERVATION_DISPOSITION_2026-11-16.md) for the verified final state.
+ (2026-11-15)
 
 ## Scope and safety
 
