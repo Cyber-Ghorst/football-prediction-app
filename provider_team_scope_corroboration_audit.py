@@ -149,6 +149,9 @@ def build_corroboration_report(
                 str(row.get("provider_entity_id")): row
                 for row in approved_for_competition
                 if row.get("match_method") == "manual_official_competition_alias_review"
+                and _mapping(row.get("evidence_snapshot")).get("season_match_verified") is True
+                and _mapping(row.get("evidence_snapshot")).get("target_season_label") == "2026/27"
+                and _mapping(row.get("evidence_snapshot")).get("api_ninjas_season_label") == "2026/27"
             }
             approved_aliases = []
             unmatched = []
@@ -234,7 +237,8 @@ def build_corroboration_report(
                     row["status"] == "scope_corroboration_candidate" for row in candidates
                 ),
                 "ambiguous_name_groups": ambiguous,
-                "approved_exact_corroborations": sum(
+                "approved_exact_corroborations": 0,
+                "legacy_provisional_exact_corroborations": sum(
                     row.get("match_method") == "unique_exact_normalized_team_name_within_same_current_domestic_competition"
                     for row in approved_for_competition
                 ),
@@ -263,15 +267,11 @@ def build_corroboration_report(
         "approved_scope_corroborations": 0,
         "legacy_provisional_scope_corroborations": len(approved_rows),
         "approved_by_provider": {
-            provider: sum(str(row.get("provider") or "").casefold() == provider for row in approved_rows)
-            for provider in ("api_football", "highlightly", "livescore_football")
+            provider: 0 for provider in ("api_football", "highlightly", "livescore_football")
         },
         "approved_by_match_method": {
-            method: sum(row.get("match_method") == method for row in approved_rows)
-            for method in (
-                "unique_exact_normalized_team_name_within_same_current_domestic_competition",
-                "manual_official_competition_alias_review",
-            )
+            "unique_exact_normalized_team_name_within_same_current_domestic_competition": 0,
+            "manual_official_competition_alias_review": 0,
         },
         "competitions": reports,
         "interpretation": (
@@ -302,14 +302,14 @@ def audit_team_scope_corroboration(database_url: str) -> dict[str, Any]:
             cursor.execute(
                 """SELECT provider, provider_entity_id, corroborating_entity_id,
                           competition_provider_id, match_method, country_name,
-                          team_type, gender_scope
+                          team_type, gender_scope, evidence_snapshot
                    FROM provider_team_scope_corroborations
                    ORDER BY provider, provider_entity_id, corroborating_entity_id"""
             )
             approved_columns = (
                 "provider", "provider_entity_id", "corroborating_entity_id",
                 "competition_provider_id", "match_method", "country_name",
-                "team_type", "gender_scope",
+                "team_type", "gender_scope", "evidence_snapshot",
             )
             approved_rows = [
                 dict(zip(approved_columns, values)) for values in cursor.fetchall()
