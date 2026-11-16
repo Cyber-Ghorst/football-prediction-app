@@ -21,7 +21,7 @@
 | Sportmonks / league | 4 | 0 | 4 provider-native identity anchors |
 | Sportmonks / season | 7 | 0 | 7 provider-native identity anchors |
 | Sportmonks / team | 88 | 0 | 88 provider-native identity anchors |
-| **Total** | **2,229** | **3** | **2,166 links have one of the separately reported evidence paths above** |
+| **Total** | **2,229** | **3** | **2,226 links have one of the separately reported evidence paths above** |
 
 No link had a link-ID-only approval record with a mismatched tuple or insufficient rationale. No orphan approval records were found.
 
@@ -29,7 +29,7 @@ No link had a link-ID-only approval record with a mismatched tuple or insufficie
 
 The audit deliberately requires the full identity tuple for an approval record: `link_id`, provider, entity type, provider entity ID and canonical entity ID, with a rationale of at least 12 characters.
 
-The 2,166 links with separate supporting evidence are not all equivalent:
+The 2,226 links with separate supporting evidence are not all equivalent:
 - OpenScores fixture links are supported by exact reconciled fixture observations.
 - OpenScores league, season and team links have exact verified-link evidence.
 - Sportmonks links are namespaced provider-native identity anchors (`sportmonks:<provider_id>`), not cross-provider equivalence claims.
