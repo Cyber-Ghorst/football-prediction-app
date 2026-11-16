@@ -74,6 +74,22 @@ class OpenScoresPendingDispositionTests(unittest.TestCase):
         self.assertEqual(report["linked_observations"], 150)
         self.assertEqual(report["total_observations"], 300)
 
+    def test_read_only_audit_verifies_completed_disposition(self):
+        completed = snapshot(
+            unresolved=0, linked=150, discarded=150,
+            unresolved_groups={}, discarded_groups=EXPECTED,
+        )
+        with patch.object(
+            store, "_openscores_observation_snapshot", return_value=completed,
+        ), patch.object(store, "_connect"):
+            report = store.audit_pending_openscores_observations("postgres://test")
+        self.assertTrue(report["read_only"])
+        self.assertTrue(report["post_discard_passed"])
+        self.assertEqual(report["audit_status"], "post_discard_verified")
+        self.assertEqual(report["unresolved_unlinked_observations"], 0)
+        self.assertEqual(report["discarded_by_operator"], 150)
+        self.assertEqual(report["linked_observations"], 150)
+
     def test_discard_updates_only_unlinked_rows_and_preserves_links_and_raw_rows(self):
         cursor = FakeCursor()
         before = snapshot(unresolved_groups=EXPECTED)
