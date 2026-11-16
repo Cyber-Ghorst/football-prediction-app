@@ -47,7 +47,11 @@ def _competition_ids(raw_payload: Any, provider: str) -> set[str]:
     return {str(value).strip() for value in values if str(value or "").strip()}
 
 
-def build_corroboration_report(rows: list[Mapping[str, Any]]) -> dict[str, Any]:
+def build_corroboration_report(
+    rows: list[Mapping[str, Any]],
+    approved_corroborations: list[Mapping[str, Any]] | None = None,
+) -> dict[str, Any]:
+    approved_rows = list(approved_corroborations or [])
     api_rows = [row for row in rows if str(row.get("provider") or "").casefold() == "api_ninjas"]
     target_rows = [
         row for row in rows
@@ -119,11 +123,35 @@ def build_corroboration_report(rows: list[Mapping[str, Any]]) -> dict[str, Any]:
                 key for key in set(source_by_name) & set(api_by_name)
                 if len(source_by_name[key]) != 1 or len(api_by_name[key]) != 1
             }
+            approved_for_competition = [
+                row for row in approved_rows
+                if str(row.get("provider") or "").casefold() == provider
+                and str(row.get("competition_provider_id") or "") == provider_competition
+            ]
+            approved_alias_by_target = {
+                str(row.get("provider_entity_id")): row
+                for row in approved_for_competition
+                if row.get("match_method") == "manual_official_competition_alias_review"
+            }
+            approved_aliases = []
             unmatched = []
             for key, rows_for_name in sorted(source_by_name.items()):
                 if key in api_by_name or key in ambiguous_keys:
                     continue
                 for row in rows_for_name:
+                    target_id = str(row.get("provider_entity_id") or "")
+                    approved_alias = approved_alias_by_target.get(target_id)
+                    if approved_alias:
+                        approved_aliases.append({
+                            "provider_entity_id": target_id,
+                            "target_team_name": row.get("name"),
+                            "api_ninjas_team_id": approved_alias.get("corroborating_entity_id"),
+                            "match_method": approved_alias.get("match_method"),
+                            "country_name": approved_alias.get("country_name"),
+                            "team_type": approved_alias.get("team_type"),
+                            "gender_scope": approved_alias.get("gender_scope"),
+                        })
+                        continue
                     near_matches = []
                     for api_row in api_comp:
                         api_name = str(api_row.get("name") or "")
@@ -169,6 +197,12 @@ def build_corroboration_report(rows: list[Mapping[str, Any]]) -> dict[str, Any]:
                     row["status"] == "scope_corroboration_candidate" for row in candidates
                 ),
                 "ambiguous_name_groups": ambiguous,
+                "approved_exact_corroborations": sum(
+                    row.get("match_method") == "unique_exact_normalized_team_name_within_same_current_domestic_competition"
+                    for row in approved_for_competition
+                ),
+                "approved_manual_alias_corroborations": len(approved_aliases),
+                "approved_manual_aliases": approved_aliases,
                 "unmatched_target_team_rows": len(unmatched),
                 "unmatched_target_teams": unmatched,
                 "candidates": candidates,
@@ -189,6 +223,18 @@ def build_corroboration_report(rows: list[Mapping[str, Any]]) -> dict[str, Any]:
         "scope_complete_candidates": sum(
             row["status"] == "scope_corroboration_candidate" for row in all_candidates
         ),
+        "approved_scope_corroborations": len(approved_rows),
+        "approved_by_provider": {
+            provider: sum(str(row.get("provider") or "").casefold() == provider for row in approved_rows)
+            for provider in ("highlightly", "livescore_football")
+        },
+        "approved_by_match_method": {
+            method: sum(row.get("match_method") == method for row in approved_rows)
+            for method in (
+                "unique_exact_normalized_team_name_within_same_current_domestic_competition",
+                "manual_official_competition_alias_review",
+            )
+        },
         "competitions": reports,
         "interpretation": (
             "This audit identifies exact-name candidates within mapped current domestic competitions. "
@@ -214,7 +260,22 @@ def audit_team_scope_corroboration(database_url: str) -> dict[str, Any]:
                    ORDER BY provider, provider_entity_id"""
             )
             rows = [dict(zip(columns, values)) for values in cursor.fetchall()]
-    report = build_corroboration_report(rows)
+            cursor.execute(
+                """SELECT provider, provider_entity_id, corroborating_entity_id,
+                          competition_provider_id, match_method, country_name,
+                          team_type, gender_scope
+                   FROM provider_team_scope_corroborations
+                   ORDER BY provider, provider_entity_id, corroborating_entity_id"""
+            )
+            approved_columns = (
+                "provider", "provider_entity_id", "corroborating_entity_id",
+                "competition_provider_id", "match_method", "country_name",
+                "team_type", "gender_scope",
+            )
+            approved_rows = [
+                dict(zip(approved_columns, values)) for values in cursor.fetchall()
+            ]
+    report = build_corroboration_report(rows, approved_rows)
     report["database_read_only"] = True
     report["source_rows_read"] = len(rows)
     return report
