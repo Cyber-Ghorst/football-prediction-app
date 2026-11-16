@@ -23,6 +23,7 @@ def _team_record(value: Any) -> dict[str, Any] | None:
         "country": value.get("country") or value.get("countryName"),
         "logo": value.get("logo") or value.get("logoUrl"),
         "type": value.get("type"),
+        "gender": value.get("gender") or value.get("genderScope") or value.get("gender_scope"),
         "raw": dict(value),
     }
 
