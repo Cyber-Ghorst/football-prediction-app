@@ -16,6 +16,43 @@ from provider_neutral_identity import (
 )
 
 
+
+# Reviewed official 2026/27 competition references for source rows whose
+# provider payload omits competition_type. This is candidate-view evidence
+# only; provider source rows and identity links remain unchanged.
+OFFICIAL_COMPETITION_TYPE_EVIDENCE = {
+    ("highlightly", "33973"): {
+        "competition_type": "league",
+        "official_reference_urls": ("https://www.premierleague.com/en/news/4365156",),
+    },
+    ("highlightly", "119924"): {
+        "competition_type": "league",
+        "official_reference_urls": ("https://www.laliga.com/en-US/laliga-easports/clubs",),
+    },
+    ("highlightly", "115669"): {
+        "competition_type": "league",
+        "official_reference_urls": ("https://www.legaseriea.it/serie-a/statistiche/clubs",),
+    },
+    ("highlightly", "67162"): {
+        "competition_type": "league",
+        "official_reference_urls": ("https://www.bundesliga.com/en/bundesliga/clubs",),
+    },
+    ("highlightly", "52695"): {
+        "competition_type": "league",
+        "official_reference_urls": ("https://ligue1.com/en/articles/l1_article_5292-",),
+    },
+    ("livescore_football", "ger.1"): {
+        "competition_type": "league",
+        "identity_name": "Bundesliga",
+        "official_reference_urls": ("https://www.bundesliga.com/en/bundesliga/clubs",),
+    },
+    ("livescore_football", "fra.1"): {
+        "competition_type": "league",
+        "identity_name": "Ligue 1",
+        "official_reference_urls": ("https://ligue1.com/en/articles/l1_article_5292-",),
+    },
+}
+
 def _missing(row: Mapping[str, Any], fields: tuple[str, ...]) -> list[str]:
     return [field for field in fields if not str(row.get(field) or "").strip()]
 
@@ -56,16 +93,42 @@ def build_identity_candidate_report(
 
         if entity_type == "competition":
             required = ("name", "country", "competition_type")
-            missing = _missing(row, required)
+            effective_row = dict(row)
+            source_missing = _missing(row, required)
+            evidence = OFFICIAL_COMPETITION_TYPE_EVIDENCE.get((provider, provider_id), {})
+            corroborated_dimensions = []
+            if not str(effective_row.get("competition_type") or "").strip():
+                value = str(evidence.get("competition_type") or "").strip()
+                if value:
+                    effective_row["competition_type"] = value
+                    corroborated_dimensions.append("competition_type")
+            identity_name = str(evidence.get("identity_name") or effective_row.get("name") or "").strip()
+            if evidence.get("identity_name"):
+                corroborated_dimensions.append("name_variant")
+            missing = _missing(effective_row, required)
+            evidence_fields = {
+                "source_missing_dimensions": source_missing,
+                "corroborated_dimensions": sorted(corroborated_dimensions),
+                "identity_key_candidate": None,
+            }
+            if corroborated_dimensions:
+                evidence_fields["scope_evidence_source"] = "official_competition_reference"
+                evidence_fields["official_reference_urls"] = list(
+                    evidence.get("official_reference_urls", ())
+                )
+                evidence_fields["identity_name_candidate"] = identity_name
             if missing:
-                result = {**base, "status": "held_missing_identity_dimensions",
-                          "missing_dimensions": missing, "identity_key_candidate": None}
+                result = {**base, **evidence_fields,
+                          "status": "held_missing_identity_dimensions",
+                          "missing_dimensions": missing}
             else:
                 key = canonical_competition_key(
-                    row.get("name"), row.get("country"), row.get("competition_type")
+                    identity_name, effective_row.get("country"),
+                    effective_row.get("competition_type")
                 )
-                result = {**base, "country": row.get("country"),
-                          "competition_type": row.get("competition_type"),
+                result = {**base, **evidence_fields,
+                          "country": effective_row.get("country"),
+                          "competition_type": effective_row.get("competition_type"),
                           "status": "single_source_identity_candidate",
                           "missing_dimensions": [], "identity_key_candidate": key}
                 key_groups[key].append({"provider": provider, "provider_entity_id": provider_id})
@@ -211,6 +274,10 @@ def build_identity_candidate_report(
             "competition_source_rows": len(competition_candidates),
             "competition_identity_keys_candidate": sum(
                 bool(row.get("identity_key_candidate")) for row in competition_candidates
+            ),
+            "competitions_with_official_type_corroboration": sum(
+                "competition_type" in row.get("corroborated_dimensions", [])
+                for row in competition_candidates
             ),
             "shared_competition_identity_candidates": len(shared),
             "duplicate_competition_identity_candidates": len(duplicates),
