@@ -87,6 +87,11 @@ def extract_team_scope_evidence(row: Mapping[str, Any]) -> dict[str, Any]:
         "provider": str(row.get("provider") or "unknown").casefold(),
         "provider_entity_id": str(row.get("provider_entity_id") or ""),
         "name": row.get("name"),
+        "source_provenance": {
+            "catalogue_reference_season": _scalar(raw.get("catalogue_reference_season")),
+            "team_evidence_method": _scalar(raw.get("team_evidence_method")),
+            "competition_provider_ids": list(raw.get("competition_provider_ids")) if isinstance(raw.get("competition_provider_ids"), list) else _scalar(raw.get("competition_provider_ids")),
+        },
         "structured_scope_fields": structured,
         "raw_provider_scope_candidates": evidence,
         "interpretation": "raw candidates are observations only; no team scope was inferred or approved",
