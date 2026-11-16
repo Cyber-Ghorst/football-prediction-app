@@ -1,3 +1,4 @@
 {
-  "operation": "full_check"
+  "operation": "provider_season_roster_audit",
+  "safety_scope": "read_only_season_roster_evidence_no_identity_promotion"
 }
