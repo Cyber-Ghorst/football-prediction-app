@@ -35,6 +35,9 @@ MANUAL_ALIAS_APPROVALS = (
     ("highlightly", "67162", "148858", "FC Schalke 04", "soccer-schalke-04", "Schalke 04", "DE", "Germany", "bundesliga", ("https://www.bundesliga.com/en/bundesliga/clubs",)),
     ("highlightly", "67162", "149709", "Hamburger SV", "soccer-hamburg-sv", "Hamburg SV", "DE", "Germany", "bundesliga", ("https://www.bundesliga.com/en/bundesliga/clubs",)),
     ("highlightly", "67162", "155666", "Union Berlin", "soccer-1-fc-union-berlin", "1. FC Union Berlin", "DE", "Germany", "bundesliga", ("https://www.bundesliga.com/en/bundesliga/clubs",)),
+    ("highlightly", "52695", "80778", "Rennes FC", "soccer-stade-rennais", "Stade Rennais", "FR", "France", "ligue1", ("https://ligue1.com/fr/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released",)),
+    ("highlightly", "52695", "90990", "Stade Brestois 29", "soccer-brest", "Brest", "FR", "France", "ligue1", ("https://ligue1.com/fr/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released",)),
+    ("highlightly", "67162", "140348", "FSV Mainz 05", "soccer-mainz", "Mainz", "DE", "Germany", "bundesliga", ("https://www.bundesliga.com/en/bundesliga/clubs",)),
 )
 TABLE_SQL = """
 CREATE TABLE IF NOT EXISTS provider_team_scope_corroborations (
@@ -139,6 +142,25 @@ def build_approved_records(report: Mapping[str, Any]) -> list[dict[str, Any]]:
             if str(item.get("api_ninjas_team_id")) == api_id
             and str(item.get("api_ninjas_team_name")) == api_name
         ), None)
+        if not candidate:
+            candidate = next((
+                item for item in competition.get("api_ninjas_team_catalogue") or []
+                if str(item.get("provider_entity_id")) == api_id
+                and str(item.get("name")) == api_name
+            ), None)
+            if candidate:
+                candidate = {
+                    **candidate,
+                    "country_code_iso3166_alpha2": candidate.get("country_code"),
+                    "country_name_from_iso_code": (
+                        "France" if candidate.get("country_code") == "FR"
+                        else "Germany" if candidate.get("country_code") == "DE"
+                        else None
+                    ),
+                    "team_type_from_api_ninjas": candidate.get("team_type"),
+                    "gender_from_api_ninjas": candidate.get("gender_scope"),
+                    "api_ninjas_domestic_competition": competition.get("api_ninjas_competition_code"),
+                }
         if not candidate or (
             candidate.get("country_code_iso3166_alpha2") != country_code
             or candidate.get("country_name_from_iso_code") != country_name
