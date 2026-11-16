@@ -89,6 +89,9 @@ def _api_ninjas_scope_rows(
         "mismatched_identity_or_scope": 0,
         "invalid_season_evidence": 0,
     }
+    counts["orphan_standings"] = sum(
+        len(items) for key, items in standings.items() if key not in catalogues
+    )
     for (competition, provider_team_id), catalogue_matches in sorted(catalogues.items()):
         if len(catalogue_matches) != 1:
             counts["ambiguous_catalogue"] += 1
@@ -132,6 +135,13 @@ def _api_ninjas_scope_rows(
 
         merged = dict(catalogue)
         merged_raw = dict(catalogue_raw)
+        # A seasonless club catalogue must never contribute an old/stale
+        # season label. Only a validated standings join may add season_label.
+        for season_key in (
+            "season_label", "season_name", "catalogue_season_label",
+            "catalogue_reference_season", "season_year", "season",
+        ):
+            merged_raw.pop(season_key, None)
         merged_raw["domestic_league_codes"] = [competition]
         merged_raw["season_evidence_join_status"] = join_status
         if joined is not None:
