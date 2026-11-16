@@ -8,9 +8,15 @@ class ProviderSourceEvidenceAuditTests(unittest.TestCase):
     @patch("provider_source_repository._connect")
     def test_audit_reports_staged_roster_evidence_read_only(self, connect):
         cursor = Mock()
-        cursor.fetchall.return_value = [
-            ("competition", 2, 2, 0, 0, 0, 0, 0, 0),
-            ("team", 36, 0, 0, 0, 0, 0, 0, 0),
+        cursor.fetchall.side_effect = [
+            [
+                ("competition", 2, 2, 0, 0, 0, 0, 0, 0),
+                ("team", 36, 0, 0, 0, 0, 0, 0, 0),
+            ],
+            [
+                ({"raw_team": {"country": "France", "gender": "men", "age_group": None}},),
+                ({"raw_team": {"type": "club", "squad": {"name": "first"}}},),
+            ],
         ]
         cursor.fetchone.side_effect = [
             (36, 36, 36),
@@ -33,6 +39,12 @@ class ProviderSourceEvidenceAuditTests(unittest.TestCase):
         self.assertEqual(report["entity_counts"]["team"]["total"], 36)
         self.assertEqual(report["team_evidence"]["incomplete_participant_evidence_count"], 36)
         self.assertEqual(report["team_evidence"]["country_missing_count"], 36)
+        self.assertEqual(report["raw_team_payload_rows_scanned"], 2)
+        self.assertEqual(report["raw_scope_key_path_counts"]["country"], {"raw_team.country": 1})
+        self.assertEqual(report["raw_scope_key_path_counts"]["team_type"], {"raw_team.type": 1})
+        self.assertEqual(report["raw_scope_key_path_counts"]["gender_scope"], {"raw_team.gender": 1})
+        self.assertEqual(report["raw_scope_key_path_counts"]["age_group"], {})
+        self.assertEqual(report["raw_scope_key_path_counts"]["squad_scope"], {"raw_team.squad": 1})
         self.assertEqual(report["fixture_rows"], 0)
         self.assertEqual(report["statistic_rows"], 0)
         self.assertEqual(report["canonical_entities_created"], 0)
