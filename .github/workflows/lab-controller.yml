@@ -33,6 +33,7 @@ on:
           - provider_link_approval_evidence_audit
           - provider_source_highlightly_roster_stage
           - provider_source_api_football_roster_stage
+          - provider_source_api_ninjas_team_scope_stage
           - deployment_redeploy
         default: health_check
       season:
@@ -584,6 +585,15 @@ jobs:
           set -euo pipefail
           python provider_source_api_football_roster_stage.py
 
+      - name: Stage API Ninjas current team scope source evidence only
+        if: steps.operation.outputs.operation == 'provider_source_api_ninjas_team_scope_stage'
+        env:
+          API_NINJAS_API_KEY: ${{ secrets.API_NINJAS_API_KEY }}
+          PROVIDER_DATABASE_URL: ${{ secrets.PROVIDER_DATABASE_URL }}
+        run: |
+          set -euo pipefail
+          python provider_source_api_ninjas_team_scope_stage.py
+
       - name: Stage Highlightly competition and standings roster source evidence only
         if: steps.operation.outputs.operation == 'provider_source_highlightly_roster_stage'
         env:
@@ -906,6 +916,7 @@ jobs:
             provider-link-approval-evidence-audit.json
             provider-source-highlightly-roster-stage-report.json
             provider-source-api-football-roster-stage-report.json
+            provider-source-api-ninjas-team-scope-stage-report.json
             prediction-run-report.json
             learning-readiness-report.json
             watchdog-report.json
