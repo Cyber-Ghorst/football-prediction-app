@@ -41,6 +41,12 @@ class FakeCursor:
     def execute(self, sql, params=None):
         self.statements.append((sql, params))
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        return False
+
 
 class FakeConnection:
     def __init__(self, cursor):
