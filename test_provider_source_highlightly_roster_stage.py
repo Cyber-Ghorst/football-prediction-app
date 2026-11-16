@@ -1,5 +1,6 @@
 import unittest
 
+from provider_season_provenance import explicit_season_label
 from provider_source_highlightly_roster_stage import (
     build_source_entities,
     _select_competition,
@@ -62,6 +63,7 @@ class HighlightlySourceRosterStageTests(unittest.TestCase):
         self.assertEqual(teams[0]["gender_scope"], "male")
         self.assertFalse(teams[0]["raw_payload"]["team_evidence_complete"])
         self.assertEqual(teams[0]["raw_payload"]["season_label"], "2026")
+        self.assertEqual(explicit_season_label(teams[0]["raw_payload"]), "2026/27")
         self.assertEqual(teams[0]["raw_payload"]["source_endpoint"], "standings")
         self.assertEqual(teams[0]["raw_payload"]["source_retrieved_at"], "2026-11-16T13:00:00+00:00")
         self.assertEqual(
