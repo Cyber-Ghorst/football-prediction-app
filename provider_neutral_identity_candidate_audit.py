@@ -101,8 +101,8 @@ def build_identity_candidate_report(
                         "provider_parent_competition_id": provider_parent_id,
                         "canonical_parent_competition_id": canonical_parent_id,
                         "season_label": season_label,
-                        "start_date": row.get("start_date"),
-                        "end_date": row.get("end_date"),
+                        "start_date": _date_value(row.get("start_date")),
+                        "end_date": _date_value(row.get("end_date")),
                         "season_date_range_status": (
                             "complete" if row.get("start_date") and row.get("end_date")
                             else "incomplete"
@@ -117,8 +117,8 @@ def build_identity_candidate_report(
                         "provider_parent_competition_id": provider_parent_id,
                         "canonical_parent_competition_id": canonical_parent_id,
                         "season_label": season_label,
-                        "start_date": row.get("start_date"),
-                        "end_date": row.get("end_date"),
+                        "start_date": _date_value(row.get("start_date")),
+                        "end_date": _date_value(row.get("end_date")),
                         "season_date_range_status": (
                             "complete" if row.get("start_date") and row.get("end_date")
                             else "incomplete"
