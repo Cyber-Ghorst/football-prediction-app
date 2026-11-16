@@ -34,7 +34,7 @@ def main() -> int:
     try:
         if mode == "audit":
             report.update(audit_pending_openscores_observations(database_url))
-            report["status"] = "pass" if report.get("preflight_passed") else "blocked"
+            report["status"] = "pass" if (report.get("preflight_passed") or report.get("post_discard_passed")) else "blocked"
         elif mode == "discard":
             report.update(discard_pending_openscores_observations(database_url))
             report["status"] = report.get("status", "discarded_by_operator")
