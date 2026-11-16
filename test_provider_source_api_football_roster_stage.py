@@ -11,7 +11,7 @@ class APIFootballSourceRosterStageTests(unittest.TestCase):
         rows = build_source_entities([{
             "league": {"id": 39, "name": "Premier League", "type": "League"},
             "country": {"name": "England"},
-            "seasons": [{"year": 2024, "start": "2024-08-01", "end": "2025-05-31"}],
+            "seasons": [{"year": 2026, "start": "2026-08-01", "end": "2027-05-31"}],
             "teams": [
                 {"team": {"id": 42, "name": "Arsenal", "country": "England",
                           "national": False}},
@@ -24,7 +24,7 @@ class APIFootballSourceRosterStageTests(unittest.TestCase):
         teams = {row["provider_entity_id"]: row for row in rows if row["entity_type"] == "team"}
         self.assertEqual(competition["competition_type"], "League")
         self.assertEqual(competition["country"], "England")
-        self.assertEqual(season["provider_entity_id"], "39:2024")
+        self.assertEqual(season["provider_entity_id"], "39:2026")
         self.assertEqual(season["parent_competition_provider_id"], "39")
         self.assertEqual(teams["42"]["team_type"], "club")
         self.assertEqual(teams["99"]["team_type"], "national_team")
@@ -34,7 +34,7 @@ class APIFootballSourceRosterStageTests(unittest.TestCase):
         rows = build_source_entities([{
             "league": {"id": 61, "name": "Ligue 1", "type": "League"},
             "country": {"name": "France"},
-            "seasons": [{"year": 2024}],
+            "seasons": [{"year": 2026}],
             "teams": [{"team": {"id": 1, "name": "Example FC", "country": None}}],
         }])
         team = next(row for row in rows if row["entity_type"] == "team")
