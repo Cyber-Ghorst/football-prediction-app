@@ -49,7 +49,7 @@ from provider_data_storage import _connect
 
 SUPPORTED_PROVIDERS = {
     "openligadb", "openfootball", "open_matchday",
-    "livescore_football", "bzzoiro", "highlightly", "api_ninjas",
+    "livescore_football", "bzzoiro", "highlightly", "api_ninjas", "api_football",
     "football_data_org",
 }
 ENTITY_TABLES = {
