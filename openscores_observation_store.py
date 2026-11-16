@@ -347,7 +347,6 @@ def audit_pending_openscores_observations(database_url: str) -> dict[str, Any]:
             {"league_id": key[0], "season_id": key[1], "count": value}
             for key, value in sorted(expected.items())
         ],
-        "discarded_group_map": actual_discarded_groups,
         "preflight_passed": preflight_passed,
         "post_discard_passed": post_discard_passed,
         "audit_status": (
