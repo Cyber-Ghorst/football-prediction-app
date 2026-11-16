@@ -167,7 +167,7 @@ def audit_livescore_team_scope(database_url: str, client_factory=LiveScoreFootba
 
 def main() -> int:
     report = audit_livescore_team_scope(os.getenv("PROVIDER_DATABASE_URL", "").strip())
-    REPORT.write_text(json.dumps(report, indent=2, ensure_ascii=False, default=str) + "\\n",
+    REPORT.write_text(json.dumps(report, indent=2, ensure_ascii=False, default=str) + "\n",
                       encoding="utf-8")
     print(json.dumps({
         "checked_at_utc": report["checked_at_utc"],
