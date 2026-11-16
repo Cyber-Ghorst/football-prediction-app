@@ -38,6 +38,7 @@ def validate_standings_rows(
     """Convert only explicit, internally consistent provider rows to source entities."""
     accepted: dict[str, dict[str, Any]] = {}
     held: list[dict[str, Any]] = []
+    conflicted_ids: set[str] = set()
     for index, row in enumerate(rows):
         if not isinstance(row, Mapping):
             held.append({"row_index": index, "reason": "row_not_object"})
@@ -62,8 +63,8 @@ def validate_standings_rows(
             reasons.append("provider_team_id_missing")
         if not name:
             reasons.append("provider_team_name_missing")
-        if _text(row.get("sport")).casefold() not in {"", "soccer"}:
-            reasons.append("provider_sport_mismatch")
+        if _text(row.get("sport")).casefold() != "soccer":
+            reasons.append("provider_sport_missing_or_mismatched")
         if reasons:
             held.append({
                 "row_index": index, "provider_team_id": team_id or None,
@@ -90,9 +91,16 @@ def validate_standings_rows(
                 "raw_standing": dict(row),
             },
         }
+        if team_id in conflicted_ids:
+            held.append({
+                "provider_team_id": team_id,
+                "reason": "team_id_already_conflicted_in_competition",
+            })
+            continue
         previous = accepted.get(team_id)
         if previous and previous["name"] != name:
             accepted.pop(team_id, None)
+            conflicted_ids.add(team_id)
             held.append({
                 "provider_team_id": team_id,
                 "reason": "conflicting_duplicate_team_id_within_competition",
