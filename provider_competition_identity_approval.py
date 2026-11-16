@@ -13,7 +13,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping
 
-from canonical_data import ensure_football_repository
+from football_repository import ensure_football_repository
 from provider_data_storage import _connect
 from provider_entity_crosswalk import save_explicit_provider_entity_links
 from provider_neutral_identity import canonical_competition_key
