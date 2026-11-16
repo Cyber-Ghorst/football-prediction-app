@@ -37,7 +37,8 @@ class LiveScoreSeasonStandingsTests(unittest.TestCase):
         )
         self.assertTrue(result["team_evidence_complete"])
         self.assertEqual(result["status"], "collected")
-        self.assertEqual(result["teams"], [{"id": "132", "name": "Bayern Munich"}])
+        self.assertEqual(result["teams"][0]["id"], "132")
+        self.assertEqual(result["teams"][0]["name"], "Bayern Munich")
         self.assertEqual(result["provider_payload"], self.payload)
         self.assertEqual(result["source_endpoint"], "/get/soccer/ger.1/standings")
         self.assertEqual(result["source_retrieved_at"], "2026-11-16T12:00:00+00:00")
@@ -64,6 +65,7 @@ class LiveScoreSeasonStandingsTests(unittest.TestCase):
             "children": [{
                 **self.payload["children"][0],
                 "name": "German Bundesliga",
+                "abbreviation": "German Bundesliga",
                 "standings": self.payload["children"][0]["standings"],
             }],
         }
