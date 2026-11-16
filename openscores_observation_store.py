@@ -195,6 +195,12 @@ EXPECTED_PENDING_OPENSCORES_GROUPS = {
     ("6", "6"): 50,  # France Ligue 1 2025/26
     ("7", "7"): 50,  # FIFA World Cup 2026
 }
+EXPECTED_OPENSCORES_LINK_COUNTS = {
+    "fixture": 150,
+    "league": 3,
+    "season": 3,
+    "team": 60,
+}
 
 
 def _openscores_observation_snapshot(cursor) -> dict[str, Any]:
@@ -209,18 +215,50 @@ def _openscores_observation_snapshot(cursor) -> dict[str, Any]:
         str(status): int(count or 0) for status, count in cursor.fetchall()
     }
     cursor.execute(
-        """SELECT provider_league_id, provider_season_id, COUNT(*)
-           FROM provider_fixture_observations
-           WHERE provider = 'openscores'
-             AND reconciliation_status = 'pending_entity_mapping'
-             AND canonical_fixture_id IS NULL
-           GROUP BY provider_league_id, provider_season_id
-           ORDER BY provider_league_id, provider_season_id"""
+        """SELECT o.provider_league_id, o.provider_season_id, COUNT(*)
+           FROM provider_fixture_observations AS o
+           WHERE o.provider = 'openscores'
+             AND o.canonical_fixture_id IS NULL
+             AND o.reconciliation_status <> 'discarded_by_operator'
+             AND NOT EXISTS (
+                 SELECT 1 FROM provider_entity_links AS l
+                 WHERE l.provider = 'openscores'
+                   AND l.entity_type = 'fixture'
+                   AND l.provider_entity_id = o.provider_fixture_id
+             )
+           GROUP BY o.provider_league_id, o.provider_season_id
+           ORDER BY o.provider_league_id, o.provider_season_id"""
     )
-    pending_groups = {
+    unresolved_groups = {
         (str(league_id), str(season_id)): int(count or 0)
         for league_id, season_id, count in cursor.fetchall()
     }
+    cursor.execute(
+        """SELECT COUNT(*)
+           FROM provider_fixture_observations AS o
+           WHERE o.provider = 'openscores'
+             AND EXISTS (
+                 SELECT 1 FROM provider_entity_links AS l
+                 WHERE l.provider = 'openscores'
+                   AND l.entity_type = 'fixture'
+                   AND l.provider_entity_id = o.provider_fixture_id
+             )"""
+    )
+    linked_observations = int(cursor.fetchone()[0] or 0)
+    cursor.execute(
+        """SELECT COUNT(*)
+           FROM provider_fixture_observations AS o
+           WHERE o.provider = 'openscores'
+             AND o.canonical_fixture_id IS NULL
+             AND o.reconciliation_status <> 'discarded_by_operator'
+             AND NOT EXISTS (
+                 SELECT 1 FROM provider_entity_links AS l
+                 WHERE l.provider = 'openscores'
+                   AND l.entity_type = 'fixture'
+                   AND l.provider_entity_id = o.provider_fixture_id
+             )"""
+    )
+    unresolved_unlinked = int(cursor.fetchone()[0] or 0)
     cursor.execute(
         """SELECT provider_league_id, provider_season_id, COUNT(*)
            FROM provider_fixture_observations
@@ -253,14 +291,14 @@ def _openscores_observation_snapshot(cursor) -> dict[str, Any]:
     return {
         "total_observations": total_observations,
         "status_counts": status_counts,
-        "pending_entity_mapping": status_counts.get("pending_entity_mapping", 0),
-        "matched": status_counts.get("matched", 0),
+        "unresolved_unlinked_observations": unresolved_unlinked,
+        "linked_observations": linked_observations,
         "discarded_by_operator": status_counts.get("discarded_by_operator", 0),
-        "pending_groups": [
+        "unresolved_groups": [
             {"league_id": key[0], "season_id": key[1], "count": value}
-            for key, value in sorted(pending_groups.items())
+            for key, value in sorted(unresolved_groups.items())
         ],
-        "pending_group_map": pending_groups,
+        "unresolved_group_map": unresolved_groups,
         "discarded_groups": [
             {"league_id": key[0], "season_id": key[1], "count": value}
             for key, value in sorted(discarded_groups.items())
@@ -271,29 +309,30 @@ def _openscores_observation_snapshot(cursor) -> dict[str, Any]:
 
 
 def audit_pending_openscores_observations(database_url: str) -> dict[str, Any]:
-    """Read-only preflight for the exact pending OpenScores cohort."""
+    """Read-only preflight for the 150 OpenScores observations with no fixture link."""
     if not database_url:
         raise ValueError("PROVIDER_DATABASE_URL is required")
     with _connect(database_url) as connection:
         with connection.cursor() as cursor:
             snapshot = _openscores_observation_snapshot(cursor)
     expected = dict(EXPECTED_PENDING_OPENSCORES_GROUPS)
-    actual = dict(snapshot.pop("pending_group_map"))
+    actual = dict(snapshot.pop("unresolved_group_map"))
     snapshot.pop("discarded_group_map")
     return {
         "read_only": True,
         **snapshot,
-        "expected_pending_total": sum(expected.values()),
-        "expected_pending_groups": [
+        "expected_unresolved_total": sum(expected.values()),
+        "expected_unresolved_groups": [
             {"league_id": key[0], "season_id": key[1], "count": value}
             for key, value in sorted(expected.items())
         ],
         "preflight_passed": (
-            snapshot["pending_entity_mapping"] == sum(expected.values())
+            snapshot["unresolved_unlinked_observations"] == sum(expected.values())
             and actual == expected
-            and snapshot["matched"] == 150
+            and snapshot["linked_observations"] == 150
             and snapshot["discarded_by_operator"] == 0
             and snapshot["total_observations"] == 300
+            and snapshot["openscores_provider_link_counts"] == EXPECTED_OPENSCORES_LINK_COUNTS
         ),
     }
 
@@ -302,11 +341,7 @@ def discard_pending_openscores_observations(
     database_url: str, *, expected_total: int = 150,
     expected_groups: dict[tuple[str, str], int] | None = None,
 ) -> dict[str, Any]:
-    """Mark only the operator-rejected pending cohort; preserve all raw rows.
-
-    The matched 150 observations, 66 league/season/team links and 150 matched
-    fixture links are not modified. This operation never deletes raw payloads.
-    """
+    """Mark only the 150 unlinked observations as discarded; preserve raw rows and links."""
     if not database_url:
         raise ValueError("PROVIDER_DATABASE_URL is required")
     expected = dict(expected_groups or EXPECTED_PENDING_OPENSCORES_GROUPS)
@@ -315,12 +350,13 @@ def discard_pending_openscores_observations(
     with _connect(database_url) as connection:
         with connection.cursor() as cursor:
             before = _openscores_observation_snapshot(cursor)
-            actual_groups = dict(before.pop("pending_group_map"))
+            actual_groups = dict(before.pop("unresolved_group_map"))
             actual_discarded_groups = dict(before.pop("discarded_group_map"))
             if (
-                before["pending_entity_mapping"] == 0
+                before["unresolved_unlinked_observations"] == 0
                 and before["discarded_by_operator"] == expected_total
                 and actual_discarded_groups == expected
+                and before["linked_observations"] == 150
             ):
                 return {
                     "status": "already_discarded",
@@ -331,24 +367,31 @@ def discard_pending_openscores_observations(
                     "provider_links_unchanged": True,
                 }
             if (
-                before["pending_entity_mapping"] != expected_total
+                before["unresolved_unlinked_observations"] != expected_total
                 or actual_groups != expected
-                or before["matched"] != 150
+                or before["linked_observations"] != 150
                 or before["discarded_by_operator"] != 0
                 or actual_discarded_groups
                 or before["total_observations"] != 300
+                or before["openscores_provider_link_counts"] != EXPECTED_OPENSCORES_LINK_COUNTS
             ):
                 raise RuntimeError(
-                    "Fail-closed: pending OpenScores cohort does not match the exact "
-                    "150-row / 50-per-competition approval scope."
+                    "Fail-closed: unlinked OpenScores cohort does not match the exact "
+                    "150-row / 50-per-competition disposition scope."
                 )
             cursor.execute(
-                """UPDATE provider_fixture_observations
+                """UPDATE provider_fixture_observations AS o
                    SET reconciliation_status = 'discarded_by_operator',
                        reconciliation_note = %s
-                   WHERE provider = 'openscores'
-                     AND reconciliation_status = 'pending_entity_mapping'
-                     AND canonical_fixture_id IS NULL""",
+                   WHERE o.provider = 'openscores'
+                     AND o.canonical_fixture_id IS NULL
+                     AND o.reconciliation_status <> 'discarded_by_operator'
+                     AND NOT EXISTS (
+                         SELECT 1 FROM provider_entity_links AS l
+                         WHERE l.provider = 'openscores'
+                           AND l.entity_type = 'fixture'
+                           AND l.provider_entity_id = o.provider_fixture_id
+                     )""",
                 (
                     "Discarded by operator per explicit user instruction dated 2026-11-10; "
                     "raw provider observation retained for audit and excluded from reconciliation.",
@@ -356,13 +399,13 @@ def discard_pending_openscores_observations(
             )
             updated = int(getattr(cursor, "rowcount", 0) or 0)
             after = _openscores_observation_snapshot(cursor)
-            after_groups = dict(after.pop("pending_group_map"))
+            after_groups = dict(after.pop("unresolved_group_map"))
             after_discarded_groups = dict(after.pop("discarded_group_map"))
             if (
                 updated != expected_total
-                or after["pending_entity_mapping"] != 0
+                or after["unresolved_unlinked_observations"] != 0
                 or after["discarded_by_operator"] != expected_total
-                or after["matched"] != before["matched"]
+                or after["linked_observations"] != before["linked_observations"]
                 or after["total_observations"] != before["total_observations"]
                 or after["openscores_provider_link_counts"] != before["openscores_provider_link_counts"]
                 or after_discarded_groups != expected
