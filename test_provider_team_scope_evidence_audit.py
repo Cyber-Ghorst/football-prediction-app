@@ -113,7 +113,11 @@ class ProviderTeamScopeEvidenceAuditTests(unittest.TestCase):
 
     def test_report_counts_each_provider_without_creating_identities(self):
         report = build_team_scope_evidence_audit([
-            {"provider": "sportmonks", "provider_entity_id": "1", "raw_payload": {"raw_team": {"country": "Italy"}}},
+            {"provider": "sportmonks", "provider_entity_id": "1", "raw_payload": {
+                "season_label": "2026", "source_endpoint": "standings",
+                "source_retrieved_at": "2026-11-16T13:00:00+00:00",
+                "raw_team": {"country": "Italy"},
+            }},
             {"provider": "api_football", "provider_entity_id": "2", "team_type": "club", "raw_payload": {"raw_team": {"national": False}}},
         ])
         self.assertTrue(report["read_only"])
@@ -121,6 +125,9 @@ class ProviderTeamScopeEvidenceAuditTests(unittest.TestCase):
         self.assertEqual(report["provider_links_created"], 0)
         self.assertEqual(report["team_rows_examined"], 2)
         self.assertEqual(report["providers"]["sportmonks"]["team_rows"], 1)
+        self.assertEqual(report["providers"]["sportmonks"]["source_provenance_value_counts"]["explicit_season_label"], {"2026/27": 1})
+        self.assertEqual(report["providers"]["sportmonks"]["source_provenance_value_counts"]["source_endpoint"], {"standings": 1})
+        self.assertEqual(report["providers"]["sportmonks"]["source_provenance_value_counts"]["source_retrieved_at_coverage"], {"present": 1})
         self.assertEqual(report["providers"]["api_football"]["structured_scope_field_counts"]["team_type"], 1)
         self.assertEqual(report["providers"]["api_football"]["structured_scope_value_counts"]["team_type"], {"club": 1})
         self.assertEqual(report["providers"]["api_football"]["source_provenance_value_counts"]["catalogue_reference_season"], {"<missing>": 1})
