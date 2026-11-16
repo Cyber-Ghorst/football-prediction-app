@@ -54,6 +54,19 @@ MANUAL_ALIAS_APPROVALS = (
     ("api_football", "61", "91", "Monaco", "soccer-as-monaco", "AS Monaco", "FR", "France", "ligue1", ("https://ligue1.com/fr/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released",)),
     ("api_football", "61", "94", "Rennes", "soccer-stade-rennais", "Stade Rennais", "FR", "France", "ligue1", ("https://ligue1.com/fr/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released",)),
     ("api_football", "61", "106", "Stade Brestois 29", "soccer-brest", "Brest", "FR", "France", "ligue1", ("https://ligue1.com/fr/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released",)),
+    # Highlightly 2026/27 Premier League variants, checked against the official club list.
+    ("highlightly", "33973", "30569", "Bournemouth", "soccer-afc-bournemouth", "AFC Bournemouth", "GB", "United Kingdom", "epl", ("https://www.premierleague.com/en/news/4365156",)),
+    ("highlightly", "33973", "44185", "Brighton", "soccer-brighton-hove-albion", "Brighton & Hove Albion", "GB", "United Kingdom", "epl", ("https://www.premierleague.com/en/news/4365156",)),
+    ("highlightly", "33973", "1146230", "Coventry", "soccer-coventry-city", "Coventry City", "GB", "United Kingdom", "epl", ("https://www.premierleague.com/en/news/4365156",)),
+    ("highlightly", "33973", "49291", "Ipswich", "soccer-ipswich-town", "Ipswich Town", "GB", "United Kingdom", "epl", ("https://www.premierleague.com/en/news/4365156",)),
+    ("highlightly", "33973", "54397", "Leeds", "soccer-leeds-united", "Leeds United", "GB", "United Kingdom", "epl", ("https://www.premierleague.com/en/news/4365156",)),
+    ("highlightly", "33973", "40781", "Tottenham", "soccer-tottenham-hotspur", "Tottenham Hotspur", "GB", "United Kingdom", "epl", ("https://www.premierleague.com/en/news/4365156",)),
+    # Highlightly 2026/27 LaLiga variants, checked against official LALIGA club pages.
+    ("highlightly", "119924", "458622", "Celta de Vigo", "soccer-celta-vigo", "Celta Vigo", "ES", "Spain", "laliga", ("https://www.laliga.com/en-ES/clubs/rc-celta", "https://www.laliga.com/en-US/laliga-easports/clubs")),
+    ("highlightly", "119924", "463728", "Deportivo La Coruña", "soccer-deportivo", "Deportivo", "ES", "Spain", "laliga", ("https://www.laliga.com/en-US/clubs/rc-deportivo/next-matches", "https://www.laliga.com/en-US/laliga-easports/clubs")),
+    ("highlightly", "119924", "456920", "Sevilla FC", "soccer-sevilla", "Sevilla", "ES", "Spain", "laliga", ("https://www.laliga.com/en-US/clubs/sevilla-fc", "https://www.laliga.com/en-US/laliga-easports/clubs")),
+    # Highlightly 2026/27 Serie A variant, checked against the official league and club pages.
+    ("highlightly", "115669", "430539", "Inter", "soccer-internazionale", "Internazionale", "IT", "Italy", "seriea", ("https://www.legaseriea.it/serie-a/statistiche/clubs", "https://www.inter.it/en")),
 )
 TABLE_SQL = """
 CREATE TABLE IF NOT EXISTS provider_team_scope_corroborations (
