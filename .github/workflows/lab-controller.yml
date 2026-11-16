@@ -858,8 +858,9 @@ jobs:
                                   "provider_links_created", "provider_scope_fields_updated",
                               )
                           }
-                          compact["competitions"] = [
-                              {
+                          compact["competitions"] = []
+                          for competition in payload.get("competitions", []):
+                              compact_competition = {
                                   key: competition.get(key)
                                   for key in (
                                       "target_provider", "target_competition_provider_id",
@@ -867,11 +868,20 @@ jobs:
                                       "api_ninjas_team_rows", "unique_exact_name_candidates",
                                       "scope_complete_candidates", "approved_exact_corroborations",
                                       "approved_manual_alias_corroborations",
-                                      "unmatched_target_team_rows", "unmatched_target_teams",
+                                      "unmatched_target_team_rows",
                                   )
                               }
-                              for competition in payload.get("competitions", [])
-                          ]
+                              compact_competition["unmatched_target_teams"] = [
+                                  {
+                                      key: team.get(key)
+                                      for key in (
+                                          "provider", "provider_entity_id", "name",
+                                          "competition_provider_id", "reason",
+                                      )
+                                  }
+                                  for team in competition.get("unmatched_target_teams", [])
+                              ]
+                              compact["competitions"].append(compact_competition)
                           content = json.dumps(compact, indent=2, ensure_ascii=False)
                   except (json.JSONDecodeError, TypeError):
                       pass
