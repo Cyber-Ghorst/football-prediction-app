@@ -344,6 +344,7 @@ def audit_official_team_scope(database_url: str) -> dict[str, Any]:
             )
             standings_table_exists = bool(cursor.fetchone()[0])
             standings_observation_count = 0
+            standings_identity_pairs: set[tuple[str, str]] = set()
             if standings_table_exists:
                 cursor.execute(
                     """SELECT competition_provider_id, provider_team_id, team_name,
@@ -375,7 +376,25 @@ def audit_official_team_scope(database_url: str) -> dict[str, Any]:
                         "name": str(team_name),
                         "raw_payload": raw,
                     })
+                    standings_identity_pairs.add((str(team_id), str(competition_id)))
                     standings_observation_count += 1
+            if standings_identity_pairs:
+                # Prefer the complete standings observation for this provider/team/scope.
+                # Participant evidence remains preserved in its original source row/table.
+                filtered_rows = []
+                for row in rows:
+                    if str(row.get("provider") or "").casefold() != "livescore_football":
+                        filtered_rows.append(row)
+                        continue
+                    raw_row = payload_mapping(row.get("raw_payload"))
+                    raw_competitions = raw_row.get("competition_provider_ids")
+                    if not isinstance(raw_competitions, list):
+                        raw_competitions = [raw_competitions] if raw_competitions else []
+                    identity = str(row.get("provider_entity_id") or "")
+                    if any((identity, str(cid)) in standings_identity_pairs for cid in raw_competitions):
+                        continue
+                    filtered_rows.append(row)
+                rows = filtered_rows
     report = build_official_team_scope_audit(
         rows, existing_api_football_scope_pairs=existing_api_football_scope_pairs
     )
