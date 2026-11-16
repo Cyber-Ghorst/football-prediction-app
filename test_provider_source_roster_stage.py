@@ -1,5 +1,6 @@
 import unittest
 
+from provider_season_provenance import explicit_season_label
 from provider_source_roster_stage import build_source_entities
 
 
@@ -28,6 +29,7 @@ class ProviderSourceRosterStageTests(unittest.TestCase):
         self.assertEqual(team["raw_payload"]["competition_provider_ids"], ["ger.1"])
         self.assertFalse(team["raw_payload"]["team_evidence_complete"])
         self.assertEqual(team["raw_payload"]["season_label"], "2026")
+        self.assertEqual(explicit_season_label(team["raw_payload"]), "2026/27")
         self.assertEqual(team["raw_payload"]["source_endpoint"], "fixtures")
         self.assertEqual(team["raw_payload"]["source_retrieved_at"], "2026-11-16T13:00:00+00:00")
         self.assertNotIn("parent_competition_provider_id", team)
