@@ -22,6 +22,51 @@ class ProviderTeamScopeCorroborationAuditTests(unittest.TestCase):
                 "52695": "ligue1",
             },
         )
+
+    def test_highlightly_scope_audit_covers_all_five_domestic_competitions(self):
+        rows = [
+            {"provider": "api_ninjas", "provider_entity_id": "soccer-arsenal",
+             "name": "Arsenal", "country": "GB", "team_type": "club",
+             "gender_scope": "men",
+             "raw_payload": {"domestic_league_codes": ["epl"]}},
+            {"provider": "api_ninjas", "provider_entity_id": "soccer-real-madrid",
+             "name": "Real Madrid", "country": "ES", "team_type": "club",
+             "gender_scope": "men",
+             "raw_payload": {"domestic_league_codes": ["laliga"]}},
+            {"provider": "api_ninjas", "provider_entity_id": "soccer-ac-milan",
+             "name": "AC Milan", "country": "IT", "team_type": "club",
+             "gender_scope": "men",
+             "raw_payload": {"domestic_league_codes": ["seriea"]}},
+            {"provider": "highlightly", "provider_entity_id": "33973-1",
+             "name": "Arsenal",
+             "raw_payload": {"competition_provider_ids": ["33973"]}},
+            {"provider": "highlightly", "provider_entity_id": "119924-1",
+             "name": "Real Madrid",
+             "raw_payload": {"competition_provider_ids": ["119924"]}},
+            {"provider": "highlightly", "provider_entity_id": "115669-1",
+             "name": "AC Milan",
+             "raw_payload": {"competition_provider_ids": ["115669"]}},
+        ]
+        report = build_corroboration_report(rows)
+        expected = {
+            "33973": ("epl", "Arsenal"),
+            "119924": ("laliga", "Real Madrid"),
+            "115669": ("seriea", "AC Milan"),
+        }
+        for competition_id, (api_code, team_name) in expected.items():
+            competition = next(
+                row for row in report["competitions"]
+                if row["target_provider"] == "highlightly"
+                and row["target_competition_provider_id"] == competition_id
+            )
+            self.assertEqual(competition["api_ninjas_competition_code"], api_code)
+            self.assertEqual(competition["target_team_rows"], 1)
+            self.assertEqual(competition["unique_exact_name_candidates"], 1)
+            self.assertEqual(competition["candidates"][0]["target_provider_team_name"], team_name)
+        self.assertEqual(report["unique_exact_name_candidates"], 3)
+        self.assertEqual(report["scope_complete_candidates"], 3)
+        self.assertEqual(report["provider_links_created"], 0)
+
     def test_exact_unique_name_in_same_competition_is_candidate_only(self):
         rows = [
             {"provider": "api_ninjas", "provider_entity_id": "soccer-bayern",
