@@ -89,6 +89,7 @@ def build_source_entities(competitions: list[Mapping[str, Any]]) -> list[dict[st
             "raw_payload": {
                 "source": "API-Football league season catalogue",
                 "provider_native_season_year": season.get("year"),
+                "provider_native_parent_competition_id": competition_id,
                 "provider_entity_id_kind": "competition_scoped_composite",
                 "raw_season": dict(season),
             },
