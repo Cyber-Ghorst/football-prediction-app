@@ -503,7 +503,7 @@ jobs:
           python sportmonks_catalogue_access_audit.py
 
       - name: Install Sportmonks team-scope metadata audit dependencies
-        if: steps.operation.outputs.operation == 'sportmonks_team_scope_metadata_audit'
+        if: steps.operation.outputs.operation == 'sportmonks_team_scope_metadata_audit' || steps.operation.outputs.operation == 'sportmonks_team_scope_metadata_stage'
         run: |
           set -euo pipefail
           python -m pip install requests 'psycopg[binary]'
