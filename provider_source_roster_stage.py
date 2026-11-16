@@ -60,6 +60,8 @@ def build_source_entities(rosters: list[Mapping[str, Any]]) -> list[dict[str, An
                 "provider_entity_id": team_id,
                 "name": team_name,
                 "country": team_country,
+                "team_type": team.get("type"),
+                "gender_scope": team.get("gender") or team.get("gender_scope"),
                 "raw_payload": {
                     "source": "LiveScoreFootball season-window fixture participants",
                     "competition_provider_ids": [],
@@ -67,7 +69,9 @@ def build_source_entities(rosters: list[Mapping[str, Any]]) -> list[dict[str, An
                     "team_evidence_method": roster.get("team_evidence_method"),
                     "team_evidence_complete": False,
                     "team_type": team.get("type"),
+                    "gender_scope": team.get("gender") or team.get("gender_scope"),
                     "team_country_from_provider": team_country,
+                    "gender_from_provider": team.get("gender") or team.get("gender_scope"),
                     "raw_team": team.get("raw") or team,
                 },
             }

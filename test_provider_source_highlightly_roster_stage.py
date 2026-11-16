@@ -16,7 +16,7 @@ class HighlightlySourceRosterStageTests(unittest.TestCase):
                 },
                 "season": {"id": 2026, "name": "2026", "start_date": "2026-08-01"},
                 "teams": [{
-                    "id": 1, "name": "Bayern Munich", "country": None, "type": None,
+                    "id": 1, "name": "Bayern Munich", "country": None, "type": "domestic", "gender": "male",
                     "raw": {"id": 1, "name": "Bayern Munich"},
                 }],
                 "team_evidence_method": "league_season_standings",
@@ -29,7 +29,7 @@ class HighlightlySourceRosterStageTests(unittest.TestCase):
                 },
                 "season": {"id": 2026, "name": "2026"},
                 "teams": [{
-                    "id": 1, "name": "Bayern Munich", "country": None, "type": None,
+                    "id": 1, "name": "Bayern Munich", "country": None, "type": "domestic", "gender": "male",
                     "raw": {"id": 1, "name": "Bayern Munich"},
                 }],
                 "team_evidence_method": "league_season_standings",
@@ -46,6 +46,8 @@ class HighlightlySourceRosterStageTests(unittest.TestCase):
         teams = [row for row in rows if row["entity_type"] == "team"]
         self.assertEqual(len(teams), 1)
         self.assertIsNone(teams[0]["country"])
+        self.assertEqual(teams[0]["team_type"], "domestic")
+        self.assertEqual(teams[0]["gender_scope"], "male")
         self.assertFalse(teams[0]["raw_payload"]["team_evidence_complete"])
         self.assertEqual(
             teams[0]["raw_payload"]["competition_provider_ids"],

@@ -11,7 +11,7 @@ class ProviderSourceRosterStageTests(unittest.TestCase):
             "season": {"year": 2026},
             "team_evidence_method": "season_window_fixture_participants",
             "teams": [{
-                "id": "10388", "name": "SV Elversberg", "country": None,
+                "id": "10388", "name": "SV Elversberg", "country": None, "type": "domestic", "gender": "male",
                 "raw": {"id": "10388", "name": "SV Elversberg", "country": ""},
             }],
         }])
@@ -22,6 +22,9 @@ class ProviderSourceRosterStageTests(unittest.TestCase):
         self.assertIsNone(competition["competition_type"])
         self.assertEqual(team["provider_entity_id"], "10388")
         self.assertIsNone(team["country"])
+        self.assertEqual(team["team_type"], "domestic")
+        self.assertEqual(team["gender_scope"], "male")
+        self.assertEqual(team["raw_payload"]["gender_from_provider"], "male")
         self.assertEqual(team["raw_payload"]["competition_provider_ids"], ["ger.1"])
         self.assertFalse(team["raw_payload"]["team_evidence_complete"])
         self.assertNotIn("parent_competition_provider_id", team)
@@ -29,7 +32,7 @@ class ProviderSourceRosterStageTests(unittest.TestCase):
     def test_shared_provider_team_is_one_identity_with_multiple_competition_observations(self):
         rosters = [
             {"league": {"id": "ger.1", "name": "German Bundesliga", "country": "Germany"},
-             "teams": [{"id": "same-team", "name": "Shared FC", "country": None}]},
+             "teams": [{"id": "same-team", "name": "Shared FC", "country": None, "type": "domestic", "gender": "male"}]},
             {"league": {"id": "cup.de", "name": "German Cup", "country": "Germany"},
              "teams": [{"id": "same-team", "name": "Shared FC", "country": None}]},
         ]

@@ -102,6 +102,7 @@ def build_source_entities(rosters: list[Mapping[str, Any]]) -> list[dict[str, An
                 "name": team_name,
                 "country": team_country,
                 "team_type": team.get("type"),
+                "gender_scope": team.get("gender") or team.get("gender_scope"),
                 "raw_payload": {
                     "source": "Highlightly league-season standings",
                     "competition_provider_id": competition_id,
@@ -111,6 +112,7 @@ def build_source_entities(rosters: list[Mapping[str, Any]]) -> list[dict[str, An
                     "roster_observation_complete": bool(roster.get("team_evidence_complete")),
                     "team_evidence_complete": False,
                     "team_country_from_provider": team_country,
+                    "gender_from_provider": team.get("gender") or team.get("gender_scope"),
                     "raw_team": team.get("raw") or dict(team),
                 },
             }
