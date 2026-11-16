@@ -331,6 +331,7 @@ def audit_pending_openscores_observations(database_url: str) -> dict[str, Any]:
             and actual == expected
             and snapshot["linked_observations"] == 150
             and snapshot["discarded_by_operator"] == 0
+            and snapshot["status_counts"] == {"outside_upcoming_window": 300}
             and snapshot["total_observations"] == 300
             and snapshot["openscores_provider_link_counts"] == EXPECTED_OPENSCORES_LINK_COUNTS
         ),
@@ -355,6 +356,10 @@ def discard_pending_openscores_observations(
             if (
                 before["unresolved_unlinked_observations"] == 0
                 and before["discarded_by_operator"] == expected_total
+                and before["status_counts"] == {
+                    "outside_upcoming_window": 150,
+                    "discarded_by_operator": 150,
+                }
                 and actual_discarded_groups == expected
                 and before["linked_observations"] == 150
             ):
@@ -371,6 +376,7 @@ def discard_pending_openscores_observations(
                 or actual_groups != expected
                 or before["linked_observations"] != 150
                 or before["discarded_by_operator"] != 0
+                or before["status_counts"] != {"outside_upcoming_window": 300}
                 or actual_discarded_groups
                 or before["total_observations"] != 300
                 or before["openscores_provider_link_counts"] != EXPECTED_OPENSCORES_LINK_COUNTS
@@ -405,6 +411,10 @@ def discard_pending_openscores_observations(
                 updated != expected_total
                 or after["unresolved_unlinked_observations"] != 0
                 or after["discarded_by_operator"] != expected_total
+                or after["status_counts"] != {
+                    "outside_upcoming_window": 150,
+                    "discarded_by_operator": 150,
+                }
                 or after["linked_observations"] != before["linked_observations"]
                 or after["total_observations"] != before["total_observations"]
                 or after["openscores_provider_link_counts"] != before["openscores_provider_link_counts"]
