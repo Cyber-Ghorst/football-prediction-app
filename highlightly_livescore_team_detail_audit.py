@@ -13,7 +13,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping
 
-from highlightly import HighlightlyClient
+from highlightly import HighlightlyClient, HighlightlyError
 from livescore_football import LiveScoreFootballClient
 from provider_data_storage import _connect
 from provider_entity_crosswalk import normalize_entity_name
@@ -58,6 +58,28 @@ def _highlightly_team_record(payload: Any) -> dict[str, Any] | None:
     else:
         rows = []
     return dict(rows[0]) if len(rows) == 1 else None
+
+
+def _safe_highlightly_request_failure(exc: Exception, client: Any) -> dict[str, Any]:
+    """Expose only sanitized adapter errors and allow-listed response metadata."""
+    detail: dict[str, Any] = {
+        "status": "provider_request_failed",
+        "error_type": type(exc).__name__,
+    }
+    if isinstance(exc, HighlightlyError):
+        # HighlightlyError messages are deliberately sanitized by the adapter;
+        # they contain status/reason only, never credentials or response bodies.
+        detail["safe_error"] = str(exc)
+    metadata = getattr(client, "last_metadata", {})
+    if isinstance(metadata, Mapping):
+        safe_metadata = {
+            key: metadata[key]
+            for key in ("http_status", "requests_limit", "requests_remaining")
+            if metadata.get(key) is not None
+        }
+        if safe_metadata:
+            detail["response_metadata"] = safe_metadata
+    return detail
 
 
 def build_exact_candidates(
@@ -218,9 +240,7 @@ def audit_team_details(database_url: str, highlightly_factory=HighlightlyClient,
                     candidate["highlightly_team_id"], candidate["highlightly_team_name"], payload
                 )
             except Exception as exc:
-                item["highlightly_detail"] = {
-                    "status": "provider_request_failed", "error_type": type(exc).__name__,
-                }
+                item["highlightly_detail"] = _safe_highlightly_request_failure(exc, highlightly)
             try:
                 payload = livescore.club(
                     candidate["livescore_competition_id"], candidate["livescore_team_id"]
@@ -244,6 +264,11 @@ def audit_team_details(database_url: str, highlightly_factory=HighlightlyClient,
         "provider_native_details_confirmed" if row["provider_native_details_confirmed"]
         else "held_detail_or_request_mismatch"
         for row in results
+    )
+    highlightly_failure_counts = Counter(
+        str(row.get("highlightly_detail", {}).get("safe_error", "unknown"))
+        for row in results
+        if row.get("highlightly_detail", {}).get("status") == "provider_request_failed"
     )
     return {
         "operation": "highlightly_livescore_team_detail_audit",
@@ -278,6 +303,7 @@ def audit_team_details(database_url: str, highlightly_factory=HighlightlyClient,
             row["competition"] for row in candidates
         )),
         "detail_status_counts": dict(counts),
+        "highlightly_request_failure_counts": dict(highlightly_failure_counts),
         "country_context_source": "competition/season provenance; not inferred from missing team country fields",
         "highlightly_documented_detail_fields": ["id", "name", "type", "logo"],
         "limitations": [
@@ -306,6 +332,7 @@ def main() -> int:
         "candidate_pairs": report["candidate_pairs"],
         "candidate_counts_by_competition": report["candidate_counts_by_competition"],
         "detail_status_counts": report["detail_status_counts"],
+        "highlightly_request_failure_counts": report["highlightly_request_failure_counts"],
         "canonical_ids_assigned": 0,
         "provider_links_created": 0,
         "report": str(REPORT),
