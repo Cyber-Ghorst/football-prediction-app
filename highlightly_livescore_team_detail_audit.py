@@ -183,24 +183,29 @@ def audit_team_details(database_url: str, highlightly_factory=HighlightlyClient,
             cursor.execute(
                 """SELECT competition_provider_id, provider_team_id, team_name,
                           season_label, evidence_complete, source_endpoint,
-                          source_retrieved_at
+                          source_retrieved_at, evidence_method,
+                          requested_season_parameter
                    FROM provider_source_team_evidence_observations
                    WHERE provider = 'livescore_football'
-                     AND evidence_method = 'season_standings'
-                     AND requested_season_parameter = %s
-                     AND season_label = %s
-                     AND evidence_complete = TRUE
-                   ORDER BY competition_provider_id, provider_team_id""",
-                (SEASON_YEAR, SEASON_LABEL),
+                   ORDER BY competition_provider_id, provider_team_id"""
             )
             livescore_rows = [
                 dict(zip(
                     ("competition_provider_id", "provider_team_id", "team_name",
                      "season_label", "evidence_complete", "source_endpoint",
-                     "source_retrieved_at"), values
+                     "source_retrieved_at", "evidence_method",
+                     "requested_season_parameter"), values
                 ))
                 for values in cursor.fetchall()
             ]
+    all_livescore_evidence_rows = livescore_rows
+    livescore_rows = [
+        row for row in all_livescore_evidence_rows
+        if row.get("evidence_method") == "season_standings"
+        and str(row.get("requested_season_parameter") or "") == SEASON_YEAR
+        and str(row.get("season_label") or "") == SEASON_LABEL
+        and row.get("evidence_complete") is True
+    ]
     candidates = build_exact_candidates(highlightly_rows, livescore_rows)
     results = []
     with highlightly_factory() as highlightly, livescore_factory() as livescore:
@@ -248,6 +253,26 @@ def audit_team_details(database_url: str, highlightly_factory=HighlightlyClient,
         "database_writes": False,
         "candidate_pairs": len(candidates),
         "expected_candidate_pairs": 25,
+        "highlightly_source_rows_read": len(highlightly_rows),
+        "highlightly_rows_with_2026_27_label": sum(
+            str(_mapping(row.get("raw_payload")).get("season_label") or "") == SEASON_LABEL
+            for row in highlightly_rows
+        ),
+        "highlightly_competition_id_counts": dict(Counter(
+            str(cid) for row in highlightly_rows
+            for cid in _mapping(row.get("raw_payload")).get("competition_provider_ids", [])
+        )),
+        "livescore_evidence_rows_read": len(all_livescore_evidence_rows),
+        "livescore_filtered_standings_rows": len(livescore_rows),
+        "livescore_raw_method_counts": dict(Counter(
+            str(row.get("evidence_method") or "") for row in all_livescore_evidence_rows
+        )),
+        "livescore_raw_season_labels": dict(Counter(
+            str(row.get("season_label") or "") for row in all_livescore_evidence_rows
+        )),
+        "livescore_raw_requested_seasons": dict(Counter(
+            str(row.get("requested_season_parameter") or "") for row in all_livescore_evidence_rows
+        )),
         "candidate_counts_by_competition": dict(Counter(
             row["competition"] for row in candidates
         )),
