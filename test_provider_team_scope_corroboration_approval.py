@@ -35,6 +35,52 @@ class TeamScopeCorroborationApprovalTests(unittest.TestCase):
         self.assertEqual(rows[0]["gender_scope"], "male")
         self.assertEqual(rows[0]["corroborating_provider"], "api_ninjas")
 
+    def test_approves_allowlisted_alias_only_after_exact_scope_revalidation(self):
+        report = {"competitions": [{
+            "target_provider": "highlightly",
+            "target_competition_provider_id": "52695",
+            "unmatched_target_teams": [{
+                "provider_entity_id": "92692", "name": "Auxerre",
+                "near_name_candidates": [{
+                    "api_ninjas_team_id": "soccer-aj-auxerre",
+                    "api_ninjas_team_name": "AJ Auxerre",
+                    "country_code_iso3166_alpha2": "FR",
+                    "country_name_from_iso_code": "France",
+                    "team_type_from_api_ninjas": "club",
+                    "gender_from_api_ninjas": "men",
+                    "api_ninjas_domestic_competition": "ligue1",
+                }],
+            }],
+        }]}
+        rows = build_approved_records(report)
+        alias = next(row for row in rows
+                     if row["match_method"] == "manual_official_competition_alias_review")
+        self.assertEqual(alias["provider_entity_id"], "92692")
+        self.assertEqual(alias["corroborating_entity_id"], "soccer-aj-auxerre")
+        self.assertTrue(alias["evidence_snapshot"]["official_reference_urls"])
+
+    def test_wrong_api_id_does_not_pass_manual_alias_allowlist(self):
+        report = {"competitions": [{
+            "target_provider": "highlightly",
+            "target_competition_provider_id": "52695",
+            "unmatched_target_teams": [{
+                "provider_entity_id": "92692", "name": "Auxerre",
+                "near_name_candidates": [{
+                    "api_ninjas_team_id": "wrong-id",
+                    "api_ninjas_team_name": "AJ Auxerre",
+                    "country_code_iso3166_alpha2": "FR",
+                    "country_name_from_iso_code": "France",
+                    "team_type_from_api_ninjas": "club",
+                    "gender_from_api_ninjas": "men",
+                    "api_ninjas_domestic_competition": "ligue1",
+                }],
+            }],
+        }]}
+        self.assertFalse(any(
+            row["match_method"] == "manual_official_competition_alias_review"
+            for row in build_approved_records(report)
+        ))
+
     def test_does_not_approve_ambiguous_or_incomplete_candidates(self):
         candidate = {
             "target_provider": "highlightly",

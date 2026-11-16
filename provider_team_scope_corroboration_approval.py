@@ -26,6 +26,16 @@ APPROVAL_REASON = (
     "active club, ISO country code and men's gender. This is scope evidence only, "
     "not a canonical team identity or provider link."
 )
+MANUAL_ALIAS_APPROVALS = (
+    ("highlightly", "52695", "92692", "Auxerre", "soccer-aj-auxerre", "AJ Auxerre", "FR", "France", "ligue1", ("https://ligue1.com/fr/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released",)),
+    ("highlightly", "52695", "94394", "Estac Troyes", "soccer-troyes", "Troyes", "FR", "France", "ligue1", ("https://www.estac.fr/", "https://ligue1.com/fr/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released")),
+    ("highlightly", "52695", "78225", "Monaco", "soccer-as-monaco", "AS Monaco", "FR", "France", "ligue1", ("https://www.asmonaco.com/en/club/statuts", "https://ligue1.com/fr/articles/l1_article_5292-the-2026-27-ligue-1-mc-donald-s-calendar-is-released")),
+    ("highlightly", "67162", "142901", "1899 Hoffenheim", "soccer-tsg-hoffenheim", "TSG Hoffenheim", "DE", "Germany", "bundesliga", ("https://www.bundesliga.com/en/bundesliga/clubs",)),
+    ("highlightly", "67162", "164176", "FC Koln", "soccer-fc-cologne", "FC Cologne", "DE", "Germany", "bundesliga", ("https://www.bundesliga.com/en/bundesliga/clubs", "https://fc.de/en/teams/international-talent-program")),
+    ("highlightly", "67162", "148858", "FC Schalke 04", "soccer-schalke-04", "Schalke 04", "DE", "Germany", "bundesliga", ("https://www.bundesliga.com/en/bundesliga/clubs",)),
+    ("highlightly", "67162", "149709", "Hamburger SV", "soccer-hamburg-sv", "Hamburg SV", "DE", "Germany", "bundesliga", ("https://www.bundesliga.com/en/bundesliga/clubs",)),
+    ("highlightly", "67162", "155666", "Union Berlin", "soccer-1-fc-union-berlin", "1. FC Union Berlin", "DE", "Germany", "bundesliga", ("https://www.bundesliga.com/en/bundesliga/clubs",)),
+)
 TABLE_SQL = """
 CREATE TABLE IF NOT EXISTS provider_team_scope_corroborations (
     corroboration_id TEXT PRIMARY KEY,
@@ -105,6 +115,67 @@ def build_approved_records(report: Mapping[str, Any]) -> list[dict[str, Any]]:
                 "approval_reason": APPROVAL_REASON,
                 "evidence_snapshot": snapshot,
             })
+    for (
+        provider, competition_id, target_id, target_name,
+        api_id, api_name, country_code, country_name, competition_code,
+        official_urls,
+    ) in MANUAL_ALIAS_APPROVALS:
+        competition = next((
+            item for item in report.get("competitions") or []
+            if item.get("target_provider") == provider
+            and str(item.get("target_competition_provider_id")) == competition_id
+        ), None)
+        if not competition:
+            continue
+        unmatched = next((
+            item for item in competition.get("unmatched_target_teams") or []
+            if str(item.get("provider_entity_id")) == target_id
+            and str(item.get("name")) == target_name
+        ), None)
+        if not unmatched:
+            continue
+        candidate = next((
+            item for item in unmatched.get("near_name_candidates") or []
+            if str(item.get("api_ninjas_team_id")) == api_id
+            and str(item.get("api_ninjas_team_name")) == api_name
+        ), None)
+        if not candidate or (
+            candidate.get("country_code_iso3166_alpha2") != country_code
+            or candidate.get("country_name_from_iso_code") != country_name
+            or candidate.get("team_type_from_api_ninjas") != "club"
+            or candidate.get("gender_from_api_ninjas") != "men"
+            or candidate.get("api_ninjas_domestic_competition") != competition_code
+        ):
+            continue
+        reason = (
+            "Layer 12 manual official-name alias review: exact provider IDs and names "
+            "were revalidated in the same current domestic competition; official "
+            "competition/club references confirm the club-name variant. API Ninjas "
+            "explicitly reports active club, ISO country and men's gender. Scope "
+            "evidence only; not a canonical team identity or provider link."
+        )
+        snapshot = {
+            "target_provider": provider, "target_provider_team_id": target_id,
+            "target_provider_team_name": target_name,
+            "api_ninjas_team_id": api_id, "api_ninjas_team_name": api_name,
+            "api_ninjas_competition_code": competition_code,
+            "competition_provider_id": competition_id,
+            "identity_basis": "explicit_manual_alias_review_with_official_2026_27_competition_reference",
+            "country_code_iso3166_alpha2": country_code,
+            "country_name_from_iso_code": country_name,
+            "team_type_from_api_ninjas": "club", "gender_from_api_ninjas": "men",
+            "official_reference_urls": list(official_urls),
+        }
+        records.append({
+            "provider": provider, "provider_entity_id": target_id,
+            "corroborating_provider": "api_ninjas", "corroborating_entity_id": api_id,
+            "competition_provider_id": competition_id,
+            "corroborating_competition_code": competition_code,
+            "country_code": country_code, "country_name": country_name,
+            "team_type": "club", "gender_scope": "male",
+            "match_method": "manual_official_competition_alias_review",
+            "approval_reason": reason, "evidence_snapshot": snapshot,
+        })
     return records
 
 
@@ -183,6 +254,8 @@ def approve_team_scope_corroborations(database_url: str) -> dict[str, Any]:
         "operation": "provider_team_scope_corroboration_approval",
         "write_scope": "provider_team_scope_corroborations_table_only",
         "candidate_records": len(records),
+        "exact_name_corroborations": sum(row["match_method"] == "unique_exact_normalized_team_name_within_same_current_domestic_competition" for row in records),
+        "manual_official_alias_corroborations": sum(row["match_method"] == "manual_official_competition_alias_review" for row in records),
         "new_corroborations_written": inserted,
         "already_present": already_present,
         "held_conflicts": held_conflicts,
