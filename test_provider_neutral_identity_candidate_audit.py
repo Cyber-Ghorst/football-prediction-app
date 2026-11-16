@@ -25,7 +25,7 @@ class ProviderNeutralIdentityCandidateAuditTests(unittest.TestCase):
         self.assertEqual(report["shared_competition_candidates"], [])
 
 
-    def test_official_competition_references_fill_only_missing_competition_type(self):
+    def test_official_competition_references_fill_only_missing_identity_dimensions(self):
         api_football_anchors = [
             ("39", "Premier League", "England"),
             ("140", "La Liga", "Spain"),
@@ -85,6 +85,11 @@ class ProviderNeutralIdentityCandidateAuditTests(unittest.TestCase):
         self.assertEqual(set(ninjas), {"epl", "laliga", "seriea", "bundesliga", "ligue1"})
         self.assertTrue(all(row["source_missing_dimensions"] == ["country", "competition_type"]
                             for row in ninjas.values()))
+        highlightly_rows = [row for row in official_rows if row["provider"] == "highlightly"]
+        livescore_rows = [row for row in official_rows if row["provider"] == "livescore_football"]
+        self.assertTrue(all(row["source_missing_dimensions"] == ["competition_type"]
+                            for row in highlightly_rows + livescore_rows))
+        self.assertTrue(all(row["country"] for row in official_rows))
         self.assertTrue(all(set(row["corroborated_dimensions"]) == {"country", "competition_type"}
                             for row in ninjas.values()))
         self.assertEqual(ninjas["epl"]["country"], "England")
