@@ -114,6 +114,23 @@ def build_corroboration_report(rows: list[Mapping[str, Any]]) -> dict[str, Any]:
                 }
                 candidates.append(candidate)
                 all_candidates.append(candidate)
+            ambiguous_keys = {
+                key for key in set(source_by_name) & set(api_by_name)
+                if len(source_by_name[key]) != 1 or len(api_by_name[key]) != 1
+            }
+            unmatched = [
+                {
+                    "provider": provider,
+                    "provider_entity_id": str(row.get("provider_entity_id") or ""),
+                    "name": row.get("name"),
+                    "normalized_name": normalize_entity_name(row.get("name")),
+                    "competition_provider_id": provider_competition,
+                    "reason": "no_unique_exact_normalized_name_match_in_api_ninjas_competition",
+                }
+                for key, rows_for_name in sorted(source_by_name.items())
+                if key not in api_by_name and key not in ambiguous_keys
+                for row in rows_for_name
+            ]
             reports.append({
                 "target_provider": provider,
                 "target_competition_provider_id": provider_competition,
@@ -125,11 +142,8 @@ def build_corroboration_report(rows: list[Mapping[str, Any]]) -> dict[str, Any]:
                     row["status"] == "scope_corroboration_candidate" for row in candidates
                 ),
                 "ambiguous_name_groups": ambiguous,
-                "unmatched_target_team_rows": len(source) - len(candidates) - sum(
-                    len(source_by_name[key])
-                    for key in set(source_by_name) & set(api_by_name)
-                    if len(source_by_name[key]) != 1 or len(api_by_name[key]) != 1
-                ),
+                "unmatched_target_team_rows": len(unmatched),
+                "unmatched_target_teams": unmatched,
                 "candidates": candidates,
                 "interpretation": (
                     "Candidates are read-only corroboration leads. API Ninjas scope values are not "
