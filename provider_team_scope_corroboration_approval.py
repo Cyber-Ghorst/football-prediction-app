@@ -18,6 +18,7 @@ from psycopg.types.json import Jsonb
 
 from provider_data_storage import _connect
 from provider_team_scope_corroboration_audit import audit_team_scope_corroboration
+from provider_season_provenance import season_match
 
 REPORT = Path("provider-team-scope-corroboration-approval-report.json")
 APPROVAL_REASON = (
@@ -99,7 +100,12 @@ def build_approved_records(report: Mapping[str, Any]) -> list[dict[str, Any]]:
     records = []
     for competition in report.get("competitions") or []:
         for candidate in competition.get("candidates") or []:
-            if candidate.get("status") != "scope_corroboration_candidate":
+            if (
+                candidate.get("status") != "scope_corroboration_candidate"
+                or candidate.get("season_match_verified") is not True
+                or candidate.get("target_season_label") != "2026/27"
+                or candidate.get("api_ninjas_season_label") != "2026/27"
+            ):
                 continue
             country_code = str(candidate.get("country_code_iso3166_alpha2") or "").strip().upper()
             country_name = str(candidate.get("country_name_from_iso_code") or "").strip()
@@ -192,8 +198,11 @@ def build_approved_records(report: Mapping[str, Any]) -> list[dict[str, Any]]:
                     "gender_from_api_ninjas": candidate.get("gender_scope"),
                     "api_ninjas_domestic_competition": competition.get("api_ninjas_competition_code"),
                 }
-        if not candidate or (
-            candidate.get("country_code_iso3166_alpha2") != country_code
+        if (
+            not candidate
+            or unmatched.get("source_season_label") != "2026/27"
+            or candidate.get("season_label") != "2026/27"
+            or candidate.get("country_code_iso3166_alpha2") != country_code
             or candidate.get("country_name_from_iso_code") != country_name
             or candidate.get("team_type_from_api_ninjas") != "club"
             or candidate.get("gender_from_api_ninjas") != "men"
@@ -214,6 +223,9 @@ def build_approved_records(report: Mapping[str, Any]) -> list[dict[str, Any]]:
             "api_ninjas_competition_code": competition_code,
             "competition_provider_id": competition_id,
             "identity_basis": "explicit_manual_alias_review_with_official_2026_27_competition_reference",
+            "target_season_label": unmatched.get("source_season_label"),
+            "api_ninjas_season_label": candidate.get("season_label"),
+            "season_match_verified": True,
             "country_code_iso3166_alpha2": country_code,
             "country_name_from_iso_code": country_name,
             "team_type_from_api_ninjas": "club", "gender_from_api_ninjas": "men",
