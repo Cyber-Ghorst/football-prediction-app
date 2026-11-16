@@ -208,6 +208,7 @@ TARGET_2026_27_COMPETITION_PARENTS = {
     ("sportmonks", "8"): "Premier League",
     ("sportmonks", "564"): "La Liga",
     ("sportmonks", "384"): "Serie A",
+    ("sportmonks", "567"): "La Liga 2",
 }
 TARGET_2026_27_COMPETITION_NAMES = {
     "premier league", "la liga", "serie a", "ligue 1", "bundesliga"
