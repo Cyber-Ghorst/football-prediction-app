@@ -20,6 +20,10 @@ class ProviderTeamScopeCorroborationAuditTests(unittest.TestCase):
                            if row["target_provider"] == "livescore_football"
                            and row["target_competition_provider_id"] == "ger.1")
         self.assertEqual(competition["scope_complete_candidates"], 1)
+        self.assertEqual(
+            competition["api_ninjas_team_catalogue"][0]["provider_entity_id"],
+            "soccer-bayern",
+        )
         candidate = competition["candidates"][0]
         self.assertEqual(candidate["country_name_from_iso_code"], "Germany")
         self.assertEqual(candidate["gender_scope_normalized_candidate"], "male")
