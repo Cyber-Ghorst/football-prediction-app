@@ -104,10 +104,14 @@ def build_team_scope_evidence_audit(rows: list[Mapping[str, Any]], sample_limit:
     structured_counts: dict[str, Counter] = defaultdict(Counter)
     structured_values: dict[str, dict[str, Counter]] = defaultdict(lambda: defaultdict(Counter))
     raw_values: dict[str, dict[str, Counter]] = defaultdict(lambda: defaultdict(Counter))
+    provenance_values: dict[str, dict[str, Counter]] = defaultdict(lambda: defaultdict(Counter))
     for row in rows:
         record = extract_team_scope_evidence(row)
         provider = record["provider"]
         by_provider[provider].append(record)
+        for field, value in record["source_provenance"].items():
+            if field == "catalogue_reference_season":
+                provenance_values[provider][field]["<missing>" if value is None else str(value)] += 1
         for field in STRUCTURED_FIELDS:
             value = row.get(field)
             if value is None or str(value).strip() == "":
@@ -132,6 +136,10 @@ def build_team_scope_evidence_audit(rows: list[Mapping[str, Any]], sample_limit:
                 for field, values in sorted(structured_values[provider].items())
             },
             "raw_provider_candidate_field_counts": dict(sorted(field_counts[provider].items())),
+            "source_provenance_value_counts": {
+                field: dict(sorted(values.items()))
+                for field, values in sorted(provenance_values[provider].items())
+            },
             "raw_provider_candidate_value_counts": {
                 field: dict(sorted(values.items()))
                 for field, values in sorted(raw_values[provider].items())
