@@ -268,7 +268,7 @@ def collect_highlightly_season_match_participants(
 
 def _livescore_standing_teams(payload: Any) -> list[dict[str, Any]]:
     """Extract explicit team objects from provider standings rows."""
-    found: dict[str, dict[str, Any]] = {}
+    found: list[dict[str, Any]] = []
 
     def visit(node: Any) -> None:
         if isinstance(node, list):
