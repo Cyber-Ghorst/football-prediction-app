@@ -345,6 +345,15 @@ def build_identity_candidate_report(
                     if hasattr(timestamp_value, "isoformat") else str(timestamp_value)
                 )
         if entity_type == "season":
+            # Keep an absent provider timestamp explicit. Repository observation
+            # timestamps must never be substituted for provider update time.
+            base["provider_updated_at_status"] = (
+                "present_in_source_record"
+                if row.get("provider_updated_at") is not None
+                else "not_present_in_source_record"
+            )
+            if row.get("provider_updated_at") is None:
+                base["provider_updated_at"] = None
             raw_payload = payload_mapping(row.get("raw_payload"))
             native_fields = (
                 "id", "season_id", "year", "name", "start", "end",
