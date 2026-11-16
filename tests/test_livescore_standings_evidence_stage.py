@@ -18,7 +18,10 @@ def observation(slug, label, team_prefix):
         "provider_payload": {
             "season": 2026,
             "children": [{"id": f"{slug}-child", "name": label,
-                          "standings": {"season": 2026, "entries": []}}],
+                          "standings": {"season": 2026, "entries": [
+                              {"team": {"id": team["id"], "name": team["name"]}}
+                              for team in teams
+                          ]}}],
         },
         "provider_returned_season": {
             "competition_season": 2026,
@@ -70,6 +73,13 @@ class LiveScoreStandingsEvidenceStageTests(unittest.TestCase):
         self.assertEqual(build_standings_observation_rows(item), [])
 
 
+
+
+    def test_raw_response_team_mismatch_is_rejected(self):
+        item = observation("ger.1", "2026-27 German Bundesliga", "ger-")
+        item["provider_payload"]["children"][0]["standings"]["entries"][0]["team"]["id"] = "other-id"
+        with self.assertRaises(ValueError):
+            build_standings_observation_rows(item)
 
     def test_staging_rejects_wrong_requested_season(self):
         item = observation("ger.1", "2026-27 German Bundesliga", "ger-")
