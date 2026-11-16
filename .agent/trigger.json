@@ -1,3 +1,4 @@
 {
-  "operation": "full_check"
+  "operation": "provider_official_team_scope_audit",
+  "safety_scope": "read_only_official_scope_candidate_audit"
 }
