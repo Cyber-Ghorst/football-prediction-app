@@ -1,5 +1,8 @@
 import unittest
-from provider_team_scope_corroboration_approval import build_approved_records
+from unittest.mock import Mock, patch
+from provider_team_scope_corroboration_approval import (
+    approve_team_scope_corroborations, build_approved_records,
+)
 
 class TeamScopeCorroborationApprovalTests(unittest.TestCase):
     def _candidate(self, target_season=None, api_season=None, verified=False):
@@ -33,6 +36,34 @@ class TeamScopeCorroborationApprovalTests(unittest.TestCase):
         self.assertEqual(len(rows), 1)
         self.assertEqual(rows[0]["evidence_snapshot"]["target_season_label"], "2026/27")
         self.assertEqual(rows[0]["evidence_snapshot"]["api_ninjas_season_label"], "2026/27")
+
+
+    @patch("provider_team_scope_corroboration_approval.audit_team_scope_corroboration")
+    @patch("provider_team_scope_corroboration_approval._connect")
+    def test_verified_approval_upgrades_legacy_row_and_preserves_snapshot(self, connect, audit):
+        candidate = self._candidate("2026/27", "2026/27", True)
+        audit.return_value = self._report(candidate)
+        cursor = Mock()
+        cursor.fetchall.return_value = [
+            ("DE", "Germany", "club", "male", "soccer-bayern",
+             {"season_match_verified": False, "legacy": "provisional"}),
+        ]
+        cursor.rowcount = 1
+        connection = Mock()
+        connection.__enter__ = Mock(return_value=connection)
+        connection.__exit__ = Mock(return_value=False)
+        connection.cursor.return_value.__enter__ = Mock(return_value=cursor)
+        connection.cursor.return_value.__exit__ = Mock(return_value=False)
+        connect.return_value = connection
+
+        report = approve_team_scope_corroborations("postgresql://test")
+        self.assertEqual(report["new_corroborations_written"], 1)
+        statements = [str(call.args[0]) for call in cursor.execute.call_args_list]
+        existing_query = next(sql for sql in statements if "SELECT country_code" in sql)
+        upsert = next(sql for sql in statements if "INSERT INTO provider_team_scope_corroborations" in sql)
+        self.assertIn("evidence_snapshot", existing_query)
+        self.assertIn("legacy_provisional_snapshot", upsert)
+        self.assertIn("season_match_verified", upsert)
 
     def test_manual_alias_without_explicit_season_is_held(self):
         report = {"competitions":[{"target_provider":"highlightly",
