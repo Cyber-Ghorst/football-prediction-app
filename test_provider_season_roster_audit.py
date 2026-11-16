@@ -38,9 +38,10 @@ class ProviderSeasonRosterAuditTests(unittest.TestCase):
         self.assertEqual(status, "not_found")
 
     @patch("provider_season_roster_audit.collect_livescore_season_participants")
+    @patch("provider_season_roster_audit.collect_livescore_season_standings")
     @patch("provider_season_roster_audit.LiveScoreFootballClient")
     def test_livescore_audit_uses_full_catalogue_then_applies_active_data_gates(
-        self, client_class, collect,
+        self, client_class, collect_standings, collect_participants,
     ):
         client = Mock()
         client_class.return_value = client
@@ -50,7 +51,14 @@ class ProviderSeasonRosterAuditTests(unittest.TestCase):
             {"slug": "fra.1", "name": "French Ligue 1", "country": "France",
              "active": True, "coverage": {"hasData": True}},
         ]
-        collect.side_effect = lambda _client, *, league, **kwargs: {
+        collect_standings.side_effect = lambda _client, *, league, **kwargs: {
+            "teams": [{"id": "1", "name": "Example"}],
+            "league": {"id": league["slug"]},
+            "team_evidence_method": "season_standings",
+            "team_evidence_complete": True,
+            "status": "collected",
+        }
+        collect_participants.side_effect = lambda _client, *, league, **kwargs: {
             "teams": [{"id": "1", "name": "Example"}],
             "fixtures_examined": 10,
             "league": {"id": league["slug"]},
@@ -58,9 +66,18 @@ class ProviderSeasonRosterAuditTests(unittest.TestCase):
         }
         result = audit_livescore_rosters()
         client.leagues.assert_called_once_with(kind="all", available=False)
-        self.assertEqual([row["status"] for row in result["competitions"]],
-                         ["collected", "collected"])
-        self.assertEqual([row["team_count"] for row in result["competitions"]], [1, 1])
+        self.assertEqual(
+            [row["team_evidence_method"] for row in result["competitions"]],
+            ["season_standings", "season_window_fixture_participants"] * 2,
+        )
+        self.assertEqual(
+            [row["team_evidence_complete"] for row in result["competitions"]],
+            [True, False, True, False],
+        )
+        self.assertEqual(
+            [row["team_count"] for row in result["competitions"] if "team_count" in row],
+            [1, 1, 1, 1],
+        )
 
 
 if __name__ == "__main__":

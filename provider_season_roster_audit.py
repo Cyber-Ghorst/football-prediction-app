@@ -19,6 +19,7 @@ from provider_roster_collection import (
     collect_highlightly_season_roster,
     collect_highlightly_season_match_participants,
     collect_livescore_season_participants,
+    collect_livescore_season_standings,
 )
 
 REPORT = Path("provider-season-roster-audit.json")
@@ -143,6 +144,24 @@ def audit_livescore_rosters() -> dict[str, Any]:
                 continue
             league = matches[0]
             try:
+                standings_roster = collect_livescore_season_standings(
+                    client, league=league, season_year=SEASON_YEAR,
+                    retrieved_at=datetime.now(timezone.utc).isoformat(),
+                )
+                results.append({
+                    **standings_roster,
+                    "target": target,
+                    "league_id": standings_roster["league"]["id"],
+                    "team_count": len(standings_roster["teams"]),
+                })
+            except Exception as exc:
+                results.append({
+                    "target": target, "status": "error",
+                    "team_evidence_method": "season_standings",
+                    "reason": str(exc)[:250], "teams": [],
+                    "team_evidence_complete": False,
+                })
+            try:
                 roster = collect_livescore_season_participants(
                     client, league=league, season={"year": SEASON_YEAR},
                     date_from=SEASON_START, date_to=SEASON_END,
@@ -201,11 +220,14 @@ def build_roster_identity_candidates(
             row for row in livescore.get("competitions", [])
             if row.get("target", {}).get("name") == livescore_name
             and row.get("status") == "collected"
+            and row.get("team_evidence_method") == "season_standings"
+            and row.get("team_evidence_complete") is True
         ]
         if len(h_rows) != 1 or len(l_rows) != 1:
             comparisons.append({
                 "competition": highlightly_name,
                 "status": "held_missing_or_ambiguous_roster",
+                "candidate_count": 0, "ambiguous_count": 0,
                 "candidates": [], "ambiguous": [], "unmatched_highlightly": [],
                 "unmatched_livescore": [],
             })
