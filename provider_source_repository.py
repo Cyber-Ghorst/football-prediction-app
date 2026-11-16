@@ -347,6 +347,34 @@ def _raw_scope_key_paths(payload: Any) -> dict[str, set[str]]:
     return found
 
 
+_SEASON_METADATA_KEYS = {
+    "id", "season_id", "name", "season_name", "label", "season", "year",
+    "start", "start_date", "end", "end_date", "league", "league_id",
+    "competition", "competition_id", "updated_at", "provider_updated_at",
+}
+
+
+def _season_payload_key_paths(payload: Any) -> list[str]:
+    """Expose season-metadata key paths, never raw payload values."""
+    found: set[str] = set()
+
+    def visit(value: Any, prefix: str = "") -> None:
+        if isinstance(value, Mapping):
+            for raw_key, child in value.items():
+                key = str(raw_key)
+                normalized = key.strip().casefold().replace("-", "_").replace(" ", "_")
+                path = f"{prefix}.{key}" if prefix else key
+                if normalized in _SEASON_METADATA_KEYS and child is not None and child != "":
+                    found.add(path)
+                visit(child, path)
+        elif isinstance(value, list):
+            for child in value:
+                visit(child, f"{prefix}[]")
+
+    visit(payload)
+    return sorted(found)
+
+
 def audit_provider_source_evidence(database_url: str, provider: str) -> dict[str, Any]:
     """Read-only audit of provider-native staging rows; no canonical data is consulted."""
     if not database_url:
@@ -378,6 +406,16 @@ def audit_provider_source_evidence(database_url: str, provider: str) -> dict[str
                     "age_group_known": int(age_group_known or 0),
                     "squad_scope_known": int(squad_scope_known or 0),
                 }
+            cursor.execute(
+                """SELECT provider_entity_id, name, parent_competition_provider_id,
+                          season_label, start_date, end_date, provider_updated_at,
+                          first_seen_at, last_seen_at, raw_payload
+                   FROM provider_source_entities
+                   WHERE provider = %s AND entity_type = 'season'
+                   ORDER BY provider_entity_id""",
+                (source,),
+            )
+            season_source_rows = cursor.fetchall()
             cursor.execute(
                 """SELECT raw_payload FROM provider_source_entities
                    WHERE provider = %s AND entity_type = 'team'
@@ -413,11 +451,32 @@ def audit_provider_source_evidence(database_url: str, provider: str) -> dict[str
         for category, paths in _raw_scope_key_paths(payload).items():
             for path in paths:
                 raw_scope_paths[category][path] = raw_scope_paths[category].get(path, 0) + 1
+    season_evidence_rows = []
+    for row in season_source_rows:
+        (provider_entity_id, name, parent_id, season_label, start_date, end_date,
+         provider_updated_at, first_seen_at, last_seen_at, raw_payload) = row
+        season_evidence_rows.append({
+            "provider_entity_id": str(provider_entity_id),
+            "name": name,
+            "parent_competition_provider_id": str(parent_id) if parent_id is not None else None,
+            "season_label": season_label,
+            "start_date": start_date.isoformat() if hasattr(start_date, "isoformat") else start_date,
+            "end_date": end_date.isoformat() if hasattr(end_date, "isoformat") else end_date,
+            "provider_updated_at": provider_updated_at.isoformat() if hasattr(provider_updated_at, "isoformat") else provider_updated_at,
+            "first_seen_at": first_seen_at.isoformat() if hasattr(first_seen_at, "isoformat") else first_seen_at,
+            "last_seen_at": last_seen_at.isoformat() if hasattr(last_seen_at, "isoformat") else last_seen_at,
+            "raw_payload_key_paths": _season_payload_key_paths(raw_payload),
+        })
     return {
         "provider": source,
         "read_only": True,
         "database_writes": False,
         "entity_counts": entity_counts,
+        "season_source_evidence": {
+            "rows": season_evidence_rows,
+            "rows_with_provider_updated_at": sum(bool(row["provider_updated_at"]) for row in season_evidence_rows),
+            "rows_with_complete_date_range": sum(bool(row["start_date"] and row["end_date"]) for row in season_evidence_rows),
+        },
         "raw_team_payload_rows_scanned": len(raw_payload_rows),
         "raw_scope_key_path_counts": {
             category: dict(sorted(paths.items()))
