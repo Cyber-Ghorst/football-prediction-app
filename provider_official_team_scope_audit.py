@@ -311,6 +311,52 @@ def build_official_team_scope_audit(
     }
 
 
+def filter_duplicate_livescore_participant_rows(
+    rows: list[Mapping[str, Any]],
+    standings_identity_pairs: set[tuple[str, str]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Exclude only legacy participant source rows when complete standings evidence exists.
+
+    Standings rows appended from provider_source_team_evidence_observations are
+    deliberately retained as official-scope candidates. They are not rows from
+    provider_source_entities and must never be mislabeled as preserved fixture
+    participant observations.
+    """
+    filtered_rows: list[dict[str, Any]] = []
+    participant_observations_preserved: list[dict[str, Any]] = []
+    for row in rows:
+        if str(row.get("provider") or "").casefold() != "livescore_football":
+            filtered_rows.append(dict(row))
+            continue
+        if row.get("source_repository_row") is False:
+            filtered_rows.append(dict(row))
+            continue
+        raw_row = payload_mapping(row.get("raw_payload"))
+        raw_competitions = raw_row.get("competition_provider_ids")
+        if not isinstance(raw_competitions, list):
+            raw_competitions = [raw_competitions] if raw_competitions else []
+        identity = str(row.get("provider_entity_id") or "")
+        overlapping_competitions = [
+            str(cid) for cid in raw_competitions
+            if (identity, str(cid)) in standings_identity_pairs
+        ]
+        if overlapping_competitions:
+            participant_observations_preserved.append({
+                "provider": "livescore_football",
+                "provider_entity_id": identity,
+                "provider_team_name": str(row.get("name") or ""),
+                "competition_provider_ids": overlapping_competitions,
+                "evidence_method": raw_row.get("team_evidence_method"),
+                "source_endpoint": raw_row.get("source_endpoint"),
+                "source_retrieved_at": raw_row.get("source_retrieved_at"),
+                "retained_in_source_repository": True,
+                "excluded_from_duplicate_scope_candidates": True,
+            })
+            continue
+        filtered_rows.append(dict(row))
+    return filtered_rows, participant_observations_preserved
+
+
 def audit_official_team_scope(database_url: str) -> dict[str, Any]:
     if not database_url:
         raise ValueError("PROVIDER_DATABASE_URL is required.")
@@ -334,7 +380,10 @@ def audit_official_team_scope(database_url: str) -> dict[str, Any]:
                    ORDER BY provider, provider_entity_id"""
             )
             columns = ("provider", "provider_entity_id", "name", "raw_payload")
-            rows = [dict(zip(columns, values)) for values in cursor.fetchall()]
+            rows = [
+                {**dict(zip(columns, values)), "source_repository_row": True}
+                for values in cursor.fetchall()
+            ]
             cursor.execute(
                 """SELECT EXISTS (
                        SELECT 1 FROM information_schema.tables
@@ -376,41 +425,16 @@ def audit_official_team_scope(database_url: str) -> dict[str, Any]:
                         "provider_entity_id": str(team_id),
                         "name": str(team_name),
                         "raw_payload": raw,
+                        "source_repository_row": False,
                     })
                     standings_identity_pairs.add((str(team_id), str(competition_id)))
                     standings_observation_count += 1
             if standings_identity_pairs:
-                # Prefer the complete standings observation for this provider/team/scope.
-                # Participant evidence remains preserved in its original source row/table.
-                filtered_rows = []
-                for row in rows:
-                    if str(row.get("provider") or "").casefold() != "livescore_football":
-                        filtered_rows.append(row)
-                        continue
-                    raw_row = payload_mapping(row.get("raw_payload"))
-                    raw_competitions = raw_row.get("competition_provider_ids")
-                    if not isinstance(raw_competitions, list):
-                        raw_competitions = [raw_competitions] if raw_competitions else []
-                    identity = str(row.get("provider_entity_id") or "")
-                    overlapping_competitions = [
-                        str(cid) for cid in raw_competitions
-                        if (identity, str(cid)) in standings_identity_pairs
-                    ]
-                    if overlapping_competitions:
-                        participant_observations_preserved.append({
-                            "provider": "livescore_football",
-                            "provider_entity_id": identity,
-                            "provider_team_name": str(row.get("name") or ""),
-                            "competition_provider_ids": overlapping_competitions,
-                            "evidence_method": raw_row.get("team_evidence_method"),
-                            "source_endpoint": raw_row.get("source_endpoint"),
-                            "source_retrieved_at": raw_row.get("source_retrieved_at"),
-                            "retained_in_source_repository": True,
-                            "excluded_from_duplicate_scope_candidates": True,
-                        })
-                        continue
-                    filtered_rows.append(row)
-                rows = filtered_rows
+                # Prefer complete standings evidence but retain the appended
+                # standings rows themselves as review candidates.
+                rows, participant_observations_preserved = (
+                    filter_duplicate_livescore_participant_rows(rows, standings_identity_pairs)
+                )
     report = build_official_team_scope_audit(
         rows, existing_api_football_scope_pairs=existing_api_football_scope_pairs
     )
