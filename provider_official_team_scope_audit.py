@@ -23,7 +23,7 @@ OFFICIAL_COMPETITIONS: dict[str, dict[str, Any]] = {
     "premier_league": {
         "name": "Premier League",
         "country": "England",
-        "provider_ids": {("highlightly", "33973")},
+        "provider_ids": {("highlightly", "33973"), ("api_football", "39")},
         "official_reference_url": "https://www.premierleague.com/en/news/4365156",
         "official_scope_basis": "2026/27 highest level of men's professional football; official 20-club competition list",
         "teams": (
@@ -38,7 +38,7 @@ OFFICIAL_COMPETITIONS: dict[str, dict[str, Any]] = {
     "laliga": {
         "name": "LALIGA EA SPORTS",
         "country": "Spain",
-        "provider_ids": {("highlightly", "119924")},
+        "provider_ids": {("highlightly", "119924"), ("api_football", "140")},
         "official_reference_url": "https://www.laliga.com/en-US/laliga-easports/clubs",
         "official_scope_basis": "2026/27 LALIGA EA SPORTS senior top-flight club list, distinct from Liga F and LALIGA HYPERMOTION",
         "teams": (
@@ -53,7 +53,7 @@ OFFICIAL_COMPETITIONS: dict[str, dict[str, Any]] = {
     "serie_a": {
         "name": "Serie A",
         "country": "Italy",
-        "provider_ids": {("highlightly", "115669")},
+        "provider_ids": {("highlightly", "115669"), ("api_football", "135")},
         "official_reference_url": "https://en.legaseriea.it/serie-a/standings?app_v1=true",
         "official_scope_basis": "Lega Serie A official 2026/2027 senior league standings and club list",
         "teams": (
@@ -67,7 +67,7 @@ OFFICIAL_COMPETITIONS: dict[str, dict[str, Any]] = {
         "name": "Bundesliga",
         "country": "Germany",
         "provider_ids": {
-            ("highlightly", "67162"), ("livescore_football", "ger.1"),
+            ("highlightly", "67162"), ("livescore_football", "ger.1"), ("api_football", "78"),
         },
         "official_reference_url": "https://www.bundesliga.com/en/bundesliga/clubs",
         "official_scope_basis": "Official Bundesliga 2026/27 season club list and standings",
@@ -85,7 +85,7 @@ OFFICIAL_COMPETITIONS: dict[str, dict[str, Any]] = {
         "name": "Ligue 1 McDonald's",
         "country": "France",
         "provider_ids": {
-            ("highlightly", "52695"), ("livescore_football", "fra.1"),
+            ("highlightly", "52695"), ("livescore_football", "fra.1"), ("api_football", "61"),
         },
         "official_reference_url": "https://ligue1.com/en?type_classement=EXT",
         "official_scope_basis": "Official 2026/27 Ligue 1 McDonald's senior league standings and 18-club competition list",
@@ -106,6 +106,7 @@ TEAM_NAME_ALIASES = {
     ("premier_league", "brighton"): "Brighton & Hove Albion",
     ("premier_league", "coventry"): "Coventry City",
     ("premier_league", "ipswich"): "Ipswich Town",
+    ("premier_league", "newcastle"): "Newcastle United",
     ("premier_league", "leeds"): "Leeds United",
     ("premier_league", "tottenham"): "Tottenham Hotspur",
     ("laliga", "atletico madrid"): "Atlético de Madrid",
@@ -125,6 +126,7 @@ TEAM_NAME_ALIASES = {
     ("serie_a", "ac milan"): "Milan",
     ("serie_a", "as roma"): "Roma",
     ("bundesliga", "bayern munich"): "FC Bayern München",
+    ("bundesliga", "bayern munchen"): "FC Bayern München",
     ("bundesliga", "werder bremen"): "SV Werder Bremen",
     ("bundesliga", "fsv mainz 05"): "1. FSV Mainz 05",
     ("bundesliga", "mainz"): "1. FSV Mainz 05",
@@ -139,6 +141,7 @@ TEAM_NAME_ALIASES = {
     ("ligue1", "angers"): "Angers SCO",
     ("ligue1", "le mans"): "Le Mans FC",
     ("ligue1", "le havre ac"): "Havre AC",
+    ("ligue1", "le havre"): "Havre AC",
     ("ligue1", "lille"): "LOSC Lille",
     ("ligue1", "lyon"): "Olympique Lyonnais",
     ("ligue1", "marseille"): "Olympique de Marseille",
@@ -188,7 +191,7 @@ def build_official_team_scope_audit(rows: list[Mapping[str, Any]]) -> dict[str, 
     counts: dict[str, Counter] = defaultdict(Counter)
     for row in rows:
         provider = str(row.get("provider") or "").strip().casefold()
-        if provider not in {"highlightly", "livescore_football"}:
+        if provider not in {"highlightly", "livescore_football", "api_football"}:
             continue
         raw = payload_mapping(row.get("raw_payload"))
         provider_ids = raw.get("competition_provider_ids")
@@ -208,7 +211,14 @@ def build_official_team_scope_audit(rows: list[Mapping[str, Any]]) -> dict[str, 
             official_name, name_method = _resolve_official_team(
                 competition_key, team_name, _official_team_lookup(competition)
             )
-            if season_label != "2026/27":
+            if provider == "api_football":
+                if not official_name:
+                    status = "held_not_in_official_2026_27_roster"
+                elif season_label == "2026/27":
+                    status = "candidate_review_current_season_provider_evidence"
+                else:
+                    status = "candidate_name_matches_official_roster_but_provider_season_stale"
+            elif season_label != "2026/27":
                 status = (
                     "held_missing_explicit_2026_27_season"
                     if not season_label else "held_wrong_season"
@@ -245,7 +255,8 @@ def build_official_team_scope_audit(rows: list[Mapping[str, Any]]) -> dict[str, 
                         "gender_scope": "male",
                         "age_group": "senior",
                         "squad_scope": "first_team",
-                    } if status.startswith("candidate_review_") else None
+                    } if status.startswith("candidate_review_")
+                    and provider != "api_football" else None
                 ),
                 "status": status,
                 "promotion_allowed": False,
@@ -277,7 +288,9 @@ def build_official_team_scope_audit(rows: list[Mapping[str, Any]]) -> dict[str, 
         "interpretation": (
             "Official competition membership supports senior men's first-team scope candidates "
             "only for explicit 2026/27 provider records whose team name matches the official "
-            "competition list. These are review candidates, not approvals; no source rows, "
+            "competition list. API-Football legacy-season rows are separately classified as "
+            "name-only matches or non-members and never receive current-season scope. These are "
+            "review candidates, not approvals; no source rows, "
             "canonical identities or provider links are changed."
         ),
     }
@@ -290,10 +303,21 @@ def audit_official_team_scope(database_url: str) -> dict[str, Any]:
         with connection.cursor() as cursor:
             cursor.execute("SET TRANSACTION READ ONLY")
             cursor.execute(
-                """SELECT provider, provider_entity_id, name, raw_payload
-                   FROM provider_source_entities
-                   WHERE entity_type = 'team'
-                     AND provider IN ('highlightly', 'livescore_football')
+                """SELECT e.provider, e.provider_entity_id, e.name, e.raw_payload
+                   FROM provider_source_entities e
+                   WHERE e.entity_type = 'team'
+                     AND e.provider IN ('highlightly', 'livescore_football')
+                   UNION ALL
+                   SELECT e.provider, e.provider_entity_id, e.name, e.raw_payload
+                   FROM provider_source_entities e
+                   WHERE e.entity_type = 'team'
+                     AND e.provider = 'api_football'
+                     AND NOT EXISTS (
+                         SELECT 1
+                         FROM provider_team_scope_corroborations c
+                         WHERE c.provider = 'api_football'
+                           AND c.provider_entity_id = e.provider_entity_id
+                     )
                    ORDER BY provider, provider_entity_id"""
             )
             columns = ("provider", "provider_entity_id", "name", "raw_payload")
