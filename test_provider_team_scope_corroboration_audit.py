@@ -181,11 +181,38 @@ class ProviderTeamScopeCorroborationAuditTests(unittest.TestCase):
         self.assertEqual(candidate["status"], "held_api_ninjas_scope_incomplete")
         self.assertTrue(candidate["season_match_verified"])
 
-    def test_existing_approvals_are_reported_as_legacy_provisional(self):
-        approved = [{"provider": "highlightly", "provider_entity_id": "1"}]
+    def test_existing_approvals_without_verified_2026_27_snapshot_are_legacy(self):
+        approved = [{"provider": "highlightly", "provider_entity_id": "1",
+                     "evidence_snapshot": {"season_match_verified": False}}]
         report = build_corroboration_report([], approved)
         self.assertEqual(report["approved_scope_corroborations"], 0)
         self.assertEqual(report["legacy_provisional_scope_corroborations"], 1)
+
+    def test_verified_2026_27_approval_is_counted_as_approved(self):
+        approved = [{
+            "provider": "highlightly",
+            "provider_entity_id": "92692",
+            "corroborating_entity_id": "soccer-aj-auxerre",
+            "competition_provider_id": "52695",
+            "match_method": "manual_official_competition_alias_review",
+            "evidence_snapshot": {
+                "target_provider": "highlightly",
+                "target_provider_team_id": "92692",
+                "api_ninjas_team_id": "soccer-aj-auxerre",
+                "competition_provider_id": "52695",
+                "season_match_verified": True,
+                "target_season_label": "2026/27",
+                "api_ninjas_season_label": "2026/27",
+            },
+        }]
+        report = build_corroboration_report([], approved)
+        self.assertEqual(report["approved_scope_corroborations"], 1)
+        self.assertEqual(report["legacy_provisional_scope_corroborations"], 0)
+        self.assertEqual(report["approved_by_provider"]["highlightly"], 1)
+        self.assertEqual(
+            report["approved_by_match_method"]["manual_official_competition_alias_review"],
+            1,
+        )
 
 
 if __name__ == "__main__":
