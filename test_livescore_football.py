@@ -31,6 +31,32 @@ class LiveScoreFootballAdapterTests(unittest.TestCase):
         self.assertEqual(args[0], "https://example.test/get/soccer/leagues")
         self.assertEqual(kwargs["params"], {"kind": "club", "available": "true"})
 
+    def test_clubs_reads_documented_club_catalogue_envelope(self):
+        client, session = self.make_client({
+            "clubs": [{"id": "10", "country": "England"}],
+            "meta": {"dedicatedCatalogCount": 1, "matchSnapshotFallback": False},
+        })
+        result = client.clubs("eng.1")
+        self.assertEqual(result["clubs"], [{"id": "10", "country": "England"}])
+        args, _ = session.get.call_args
+        self.assertEqual(args[0], "https://example.test/get/soccer/eng.1/clubs")
+
+    def test_club_reads_documented_detail_envelope(self):
+        client, session = self.make_client({
+            "club": {"id": "10", "country": "England"},
+            "roster": [],
+            "meta": {"catalogSource": "club-catalog"},
+        })
+        result = client.club("eng.1", "10")
+        self.assertEqual(result["club"]["id"], "10")
+        args, _ = session.get.call_args
+        self.assertEqual(args[0], "https://example.test/get/soccer/eng.1/clubs/10")
+
+    def test_bad_club_catalogue_envelope_fails_closed(self):
+        client, _ = self.make_client({"data": []})
+        with self.assertRaises(LiveScoreFootballError):
+            client.clubs("eng.1")
+
     def test_fixtures_reads_documented_events_envelope(self):
         client, _ = self.make_client({
             "events": [{"id": "match-1"}], "pageCount": 1
