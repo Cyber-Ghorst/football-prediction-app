@@ -343,7 +343,7 @@ jobs:
           PY
 
       - name: Install health-check dependencies
-        if: steps.operation.outputs.operation == 'health_check' || steps.operation.outputs.operation == 'full_check' || steps.operation.outputs.operation == 'deployment_redeploy' || steps.operation.outputs.operation == 'result_sync' || steps.operation.outputs.operation == 'learning_audit' || steps.operation.outputs.operation == 'tipmaster_refresh_verify' || steps.operation.outputs.operation == 'openscores_connection_check' || steps.operation.outputs.operation == 'openscores_entity_mapping_audit' || steps.operation.outputs.operation == 'openscores_sportmonks_reconciliation'
+        if: steps.operation.outputs.operation == 'health_check' || steps.operation.outputs.operation == 'full_check' || steps.operation.outputs.operation == 'deployment_redeploy' || steps.operation.outputs.operation == 'result_sync' || steps.operation.outputs.operation == 'learning_audit' || steps.operation.outputs.operation == 'tipmaster_refresh_verify' || steps.operation.outputs.operation == 'openscores_connection_check' || steps.operation.outputs.operation == 'openscores_entity_mapping_audit' || steps.operation.outputs.operation == 'openscores_sportmonks_reconciliation' || steps.operation.outputs.operation == 'provider_source_api_ninjas_team_scope_stage' || steps.operation.outputs.operation == 'provider_source_api_ninjas_season_standings_stage'
         run: |
           exec > >(tee -a controller-report.txt) 2>&1
           python -m pip install --upgrade pip
