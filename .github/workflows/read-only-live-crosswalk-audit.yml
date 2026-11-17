@@ -51,10 +51,12 @@ jobs:
           stamp="$(date -u +%Y%m%dT%H%M%SZ)"
           python free_fixture_crosswalk_audit.py
           python -m json.tool reports/free_fixture_crosswalk_audit/latest.json >/dev/null
+          python competition_readiness_audit.py
+          python -m json.tool reports/competition_readiness/latest.json >/dev/null
           cp reports/free_fixture_crosswalk_audit/latest.json "reports/free_fixture_crosswalk_audit/archive/${stamp}.json"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add reports/free_fixture_crosswalk_audit
+          git add reports/free_fixture_crosswalk_audit reports/competition_readiness
           if ! git diff --cached --quiet; then
             git commit -m "Archive read-only live crosswalk audit ${stamp}"
             git pull --rebase origin main
