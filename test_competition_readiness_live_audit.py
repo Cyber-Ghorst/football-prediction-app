@@ -42,15 +42,18 @@ class LiveReadinessEvidenceTests(unittest.TestCase):
     def test_only_exact_approved_links_can_verify_entities_and_fixture(self):
         links = [
             {"provider": "sportmonks", "entity_type": "league",
-             "provider_entity_id": "8", "canonical_entity_id": "sportmonks:8"},
+             "provider_entity_id": "8", "canonical_entity_id": "sportmonks:8",
+             "target_parent_id": None},
             {"provider": "sportmonks", "entity_type": "season",
-             "provider_entity_id": "28083", "canonical_entity_id": "sportmonks:28083"},
+             "provider_entity_id": "28083", "canonical_entity_id": "sportmonks:28083",
+             "target_parent_id": "sportmonks:8"},
             {"provider": "sportmonks", "entity_type": "team",
              "provider_entity_id": "10", "canonical_entity_id": "sportmonks:10"},
             {"provider": "sportmonks", "entity_type": "team",
              "provider_entity_id": "11", "canonical_entity_id": "sportmonks:11"},
             {"provider": "sportmonks", "entity_type": "fixture",
-             "provider_entity_id": "1001", "canonical_entity_id": "sportmonks:1001"},
+             "provider_entity_id": "1001", "canonical_entity_id": "sportmonks:1001",
+             "target_parent_id": None},
         ]
         records = build_live_readiness_records(
             self.leagues, self.seasons, self.fixtures, links, now=NOW,
@@ -64,6 +67,27 @@ class LiveReadinessEvidenceTests(unittest.TestCase):
         self.assertEqual(record["teams"]["statistics_complete_by_team"],
                          {"sportmonks:10": False, "sportmonks:11": False})
         self.assertEqual(record["teams"]["tactical_components_by_team"], {})
+
+    def test_season_mapping_to_different_competition_is_rejected(self):
+        links = [
+            {"provider": "sportmonks", "entity_type": "league",
+             "provider_entity_id": "8", "canonical_entity_id": "sportmonks:8"},
+            {"provider": "sportmonks", "entity_type": "season",
+             "provider_entity_id": "28083", "canonical_entity_id": "sportmonks:28083",
+             "target_parent_id": "sportmonks:999"},
+        ]
+        record = build_live_readiness_records(
+            self.leagues, self.seasons, self.fixtures, links, now=NOW,
+        )[0]
+        self.assertFalse(record["season"]["identity_verified"])
+        self.assertFalse(record["fixture"]["upcoming_valid"])
+
+    def test_future_provider_timestamp_is_not_fresh(self):
+        self.fixtures[0]["provider_updated_at"] = datetime(2026, 11, 18, 10, tzinfo=timezone.utc)
+        record = build_live_readiness_records(
+            self.leagues, self.seasons, self.fixtures, [], now=NOW,
+        )[0]
+        self.assertEqual(record["fixture"]["source_freshness"], "stale")
 
     def test_missing_fixture_freshness_fails_closed(self):
         self.fixtures[0]["provider_updated_at"] = None
