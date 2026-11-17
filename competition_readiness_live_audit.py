@@ -329,16 +329,18 @@ def read_live_repository_evidence(database_url: str) -> dict[str, Any]:
         "fixture_statistics": len(statistics), "audited_approved_links": len(approved_links),
     }
     report["competitions"] = [
-        {**result, **{
-            key: record[key] for key in (
-                "source_provider", "source_competition_id", "source_season_id",
-                "stored_fixture_count", "participating_team_count",
-                "approved_team_mapping_count", "completed_fixture_count",
-                "upcoming_fixture_candidates", "verified_upcoming_fixtures",
-                "statistics_contract_status", "tactical_evidence_status",
-            )}
+        {**result, **(
+            {
+                key: record[key] for key in (
+                    "source_provider", "source_competition_id", "source_season_id",
+                    "stored_fixture_count", "participating_team_count",
+                    "approved_team_mapping_count", "completed_fixture_count",
+                    "upcoming_fixture_candidates", "verified_upcoming_fixtures",
+                    "statistics_contract_status", "tactical_evidence_status",
+                )
+            }
             | {"statistics_diagnostics_by_team": record["teams"].get("statistics_diagnostics_by_team", {})}
-        }}
+        )}
         for result, record in zip(report["competitions"], sorted(
             records, key=lambda row: (
                 str(row["competition"].get("country") or "").casefold(),
