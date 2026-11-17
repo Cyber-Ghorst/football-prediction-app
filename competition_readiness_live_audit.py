@@ -68,7 +68,26 @@ def build_live_readiness_records(
         season_source_id = split_provider_identity(season_id, season.get("source_provider")).get("provider_entity_id")
         league_approved = league_source_id in approved.get(f"{provider}:league", set())
         season_provider = str(season.get("source_provider") or provider).casefold()
-        season_approved = season_source_id in approved.get(f"{season_provider}:season", set())
+        canonical_league = next(
+            (str(row.get("canonical_entity_id")) for row in approved_links
+             if str(row.get("provider") or "").casefold() == provider
+             and row.get("entity_type") == "league"
+             and str(row.get("provider_entity_id")) == str(league_source_id)),
+            None,
+        )
+        season_link = next(
+            (row for row in approved_links
+             if str(row.get("provider") or "").casefold() == season_provider
+             and row.get("entity_type") == "season"
+             and str(row.get("provider_entity_id")) == str(season_source_id)),
+            None,
+        )
+        season_approved = bool(
+            season_link
+            and canonical_league
+            and str(season_link.get("target_parent_id") or "") == canonical_league
+            and season_source_id in approved.get(f"{season_provider}:season", set())
+        )
 
         season_fixtures = fixtures_by_season.get(season_id, [])
         participating: set[str] = set()
@@ -121,7 +140,7 @@ def build_live_readiness_records(
                 stamp = stamp.astimezone(timezone.utc)
                 freshest = stamp if freshest is None or stamp > freshest else freshest
         freshness = (
-            "fresh" if freshest and now.astimezone(timezone.utc) - freshest <= FRESHNESS_WINDOW
+            "fresh" if freshest and timedelta(0) <= now.astimezone(timezone.utc) - freshest <= FRESHNESS_WINDOW
             else "stale" if freshest else "unknown"
         )
 
@@ -215,10 +234,11 @@ def read_live_repository_evidence(database_url: str) -> dict[str, Any]:
                  AND approval.canonical_entity_id = link.canonical_entity_id
                  AND LENGTH(BTRIM(approval.approval_reason)) >= 12
                 INNER JOIN (
-                    SELECT 'league' AS entity_type, league_id AS entity_id FROM football_leagues
-                    UNION ALL SELECT 'season', season_id FROM football_seasons
-                    UNION ALL SELECT 'team', team_id FROM football_teams
-                    UNION ALL SELECT 'fixture', fixture_id FROM football_fixtures
+                    SELECT 'league' AS entity_type, league_id AS entity_id,
+                           NULL::TEXT AS parent_entity_id FROM football_leagues
+                    UNION ALL SELECT 'season', season_id, league_id FROM football_seasons
+                    UNION ALL SELECT 'team', team_id, NULL::TEXT FROM football_teams
+                    UNION ALL SELECT 'fixture', fixture_id, NULL::TEXT FROM football_fixtures
                 ) AS target
                   ON target.entity_type = link.entity_type
                  AND target.entity_id = link.canonical_entity_id
