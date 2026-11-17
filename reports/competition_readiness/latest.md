@@ -1,6 +1,6 @@
 # Live competition readiness audit
 
-Generated: 2026-11-17T04:30:14.272151+00:00
+Generated: 2026-11-17T04:41:08.299359+00:00
 
 | Status | Competition-seasons |
 |---|---:|
