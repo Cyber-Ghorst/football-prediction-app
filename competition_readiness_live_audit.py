@@ -126,6 +126,7 @@ def build_live_readiness_records(
             if str(row.get("fixture_id") or "") in season_fixture_ids
         ]
         statistics_complete_by_team: dict[str, bool] = {}
+        statistics_diagnostics_by_team: dict[str, dict[str, Any]] = {}
         tactical_components_by_team: dict[str, dict[str, Any]] = {}
         for team_id in team_ids:
             team_row = teams_by_id.get(team_id)
@@ -138,7 +139,18 @@ def build_live_readiness_records(
                 statistics=season_statistics, limit=10,
             )
             quality = profile.get("data_quality") or {}
+            coverage = profile.get("statistics_coverage") or {}
             valid_history_count = int(quality.get("matches_returned") or 0)
+            statistics_diagnostics_by_team[team_id] = {
+                "matches_checked": coverage.get("fixtures_checked", 0),
+                "metrics": coverage.get("metrics", []),
+                "matches_with_any_statistics": quality.get("statistics_matches", 0),
+                "matches_with_complete_core_statistics": quality.get("matches_with_complete_core_statistics", 0),
+                "normalized_observations": quality.get("statistics_observations", 0),
+                "unmapped_observations": quality.get("statistics_unmapped_observations", 0),
+                "invalid_observations": quality.get("statistics_invalid_values", 0),
+                "conflicts": quality.get("statistics_conflicts", 0),
+            }
             history[team_id] = valid_history_count
             statistics_complete_by_team[team_id] = bool(
                 valid_history_count >= 10
@@ -209,6 +221,7 @@ def build_live_readiness_records(
                 # No authoritative completeness contract currently exists in
                 # this repository; unknown is intentionally represented as false.
                 "statistics_complete_by_team": statistics_complete_by_team,
+                "statistics_diagnostics_by_team": statistics_diagnostics_by_team,
                 "tactical_components_by_team": tactical_components_by_team,
             },
             "fixture": {
@@ -268,6 +281,13 @@ def read_live_repository_evidence(database_url: str) -> dict[str, Any]:
                 FROM football_fixture_statistics
                 ORDER BY fixture_id, team_id, statistic_type
             """)
+            statistic_type_inventory = _rows(cursor, """
+                SELECT source_provider, statistic_type, COUNT(*) AS observation_count,
+                       COUNT(DISTINCT fixture_id) AS fixture_count
+                FROM football_fixture_statistics
+                GROUP BY source_provider, statistic_type
+                ORDER BY source_provider, statistic_type
+            """)
             approved_links = _rows(cursor, """
                 SELECT DISTINCT link.provider, link.entity_type,
                        link.provider_entity_id, link.canonical_entity_id,
@@ -302,21 +322,25 @@ def read_live_repository_evidence(database_url: str) -> dict[str, Any]:
         "Read-only audit; no identities, mappings, fixtures, predictions or model settings are written."
     )
     report["database_read_only"] = True
+    report["statistic_type_inventory"] = statistic_type_inventory
     report["database_rows_read"] = {
         "competitions": len(leagues), "seasons": len(seasons),
         "fixtures": len(fixtures), "teams": len(team_rows),
         "fixture_statistics": len(statistics), "audited_approved_links": len(approved_links),
     }
     report["competitions"] = [
-        {**result, **{
-            key: record[key] for key in (
-                "source_provider", "source_competition_id", "source_season_id",
-                "stored_fixture_count", "participating_team_count",
-                "approved_team_mapping_count", "completed_fixture_count",
-                "upcoming_fixture_candidates", "verified_upcoming_fixtures",
-                "statistics_contract_status", "tactical_evidence_status",
-            )
-        }}
+        {**result, **(
+            {
+                key: record[key] for key in (
+                    "source_provider", "source_competition_id", "source_season_id",
+                    "stored_fixture_count", "participating_team_count",
+                    "approved_team_mapping_count", "completed_fixture_count",
+                    "upcoming_fixture_candidates", "verified_upcoming_fixtures",
+                    "statistics_contract_status", "tactical_evidence_status",
+                )
+            }
+            | {"statistics_diagnostics_by_team": record["teams"].get("statistics_diagnostics_by_team", {})}
+        )}
         for result, record in zip(report["competitions"], sorted(
             records, key=lambda row: (
                 str(row["competition"].get("country") or "").casefold(),
