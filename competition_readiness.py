@@ -112,7 +112,8 @@ def evaluate_competition_readiness(
     if len(history_counts) < participating:
         improvement_blockers.append("history_evidence_missing_for_participating_teams")
 
-    stats_complete = True
+    # An empty evidence map is unknown, never a successful completeness result.
+    stats_complete = participating > 0 and len(stats) >= participating
     for team_id in sorted(str(key) for key in stats):
         if stats.get(team_id) is not True:
             stats_complete = False
@@ -121,7 +122,7 @@ def evaluate_competition_readiness(
         stats_complete = False
         improvement_blockers.append("statistics_evidence_missing_for_participating_teams")
 
-    tactical_complete = True
+    tactical_complete = participating > 0 and len(tactical) >= participating
     for team_id in sorted(str(key) for key in tactical):
         components = tactical.get(team_id)
         if not isinstance(components, Mapping):
