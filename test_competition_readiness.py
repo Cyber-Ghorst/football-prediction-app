@@ -105,6 +105,21 @@ class CompetitionReadinessTests(unittest.TestCase):
         self.assertEqual(result["status"], "partially_ready")
         self.assertFalse(result["tactical_components_complete"])
 
+    def test_no_team_evidence_never_reports_statistics_or_tactics_complete(self):
+        evidence = ready_evidence()
+        evidence["teams"] = {
+            "participating_count": 0,
+            "approved_mapping_count": 0,
+            "history_by_team": {},
+            "statistics_complete_by_team": {},
+            "tactical_components_by_team": {},
+        }
+        result = evaluate_competition_readiness(evidence, now=NOW)
+        self.assertEqual(result["status"], "not_ready")
+        self.assertFalse(result["statistics_complete"])
+        self.assertFalse(result["tactical_components_complete"])
+        self.assertIn("participating_team_count_invalid", result["hard_blockers"])
+
     def test_stale_fixture_data_prevents_full_readiness(self):
         evidence = ready_evidence()
         evidence["fixture"]["source_freshness"] = "stale"
