@@ -97,6 +97,49 @@ class LiveReadinessEvidenceTests(unittest.TestCase):
         )[0]
         self.assertEqual(record["fixture"]["source_freshness"], "unknown")
 
+    def test_statistics_and_tactical_evidence_use_layer2_profile_builder(self):
+        teams = [
+            {"team_id": "sportmonks:10", "name": "Home FC"},
+            {"team_id": "sportmonks:11", "name": "Away FC"},
+        ]
+        fixtures = []
+        statistics = []
+        metrics = {
+            "Ball Possession": 55, "Passes %": 85, "Total Shots": 12,
+            "Shots on Target": 5, "Tackles": 16, "Interceptions": 8,
+            "Blocked Shots": 3, "Corner Kicks": 6,
+        }
+        for index in range(10):
+            fixture_id = f"sportmonks:{2000 + index}"
+            fixtures.append({
+                "fixture_id": fixture_id, "season_id": "sportmonks:28083",
+                "league_id": "sportmonks:8", "home_team_id": "sportmonks:10",
+                "away_team_id": "sportmonks:11",
+                "starting_at": datetime(2026, 10, 1 + index, 18, tzinfo=timezone.utc),
+                "status": "FT", "home_goals": 2, "away_goals": 1,
+                "source_provider": "sportmonks",
+                "provider_updated_at": datetime(2026, 11, 17, 10, tzinfo=timezone.utc),
+            })
+            for team_id in ("sportmonks:10", "sportmonks:11"):
+                for metric, value in metrics.items():
+                    statistics.append({
+                        "fixture_id": fixture_id, "team_id": team_id,
+                        "statistic_type": metric, "statistic_value": value,
+                        "source_provider": "sportmonks",
+                    })
+        records = build_live_readiness_records(
+            self.leagues, self.seasons, fixtures, [], now=NOW,
+            team_rows=teams, statistics=statistics,
+        )
+        record = records[0]
+        self.assertEqual(record["teams"]["history_by_team"]["sportmonks:10"], 10)
+        self.assertTrue(record["teams"]["statistics_complete_by_team"]["sportmonks:10"])
+        self.assertTrue(record["teams"]["statistics_complete_by_team"]["sportmonks:11"])
+        self.assertTrue(all(
+            record["teams"]["tactical_components_by_team"]["sportmonks:10"][key] is not None
+            for key in ("playing_style", "defensive_structure", "attacking_approach")
+        ))
+
     def test_completed_history_requires_terminal_status_and_both_scores(self):
         self.fixtures.append({
             **self.fixtures[0], "fixture_id": "sportmonks:1002",
