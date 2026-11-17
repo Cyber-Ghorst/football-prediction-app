@@ -224,7 +224,8 @@ def read_live_repository_evidence(database_url: str) -> dict[str, Any]:
             """)
             approved_links = _rows(cursor, """
                 SELECT DISTINCT link.provider, link.entity_type,
-                       link.provider_entity_id, link.canonical_entity_id
+                       link.provider_entity_id, link.canonical_entity_id,
+                       target.parent_entity_id AS target_parent_id
                 FROM provider_entity_links AS link
                 INNER JOIN provider_entity_link_approval_audit AS approval
                   ON approval.link_id = link.link_id
