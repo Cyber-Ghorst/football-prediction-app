@@ -6,8 +6,8 @@
       "competition_type": "league",
       "completed_fixture_count": 0,
       "country": "England",
-      "evaluated_at": "2026-11-17T04:17:26.965916+00:00",
-      "evidence_generated_at": "2026-11-17T04:17:26.965916+00:00",
+      "evaluated_at": "2026-11-17T04:21:02.630967+00:00",
+      "evidence_generated_at": "2026-11-17T04:21:02.630967+00:00",
       "hard_blockers": [
         "competition_identity_not_explicitly_verified",
         "no_verified_upcoming_fixture",
@@ -107,8 +107,8 @@
       "competition_type": "league",
       "completed_fixture_count": 100,
       "country": "England",
-      "evaluated_at": "2026-11-17T04:17:26.965916+00:00",
-      "evidence_generated_at": "2026-11-17T04:17:26.965916+00:00",
+      "evaluated_at": "2026-11-17T04:21:02.630967+00:00",
+      "evidence_generated_at": "2026-11-17T04:21:02.630967+00:00",
       "hard_blockers": [
         "competition_identity_not_explicitly_verified",
         "no_verified_upcoming_fixture",
@@ -187,8 +187,8 @@
       "competition_type": "league",
       "completed_fixture_count": 0,
       "country": "Italy",
-      "evaluated_at": "2026-11-17T04:17:26.965916+00:00",
-      "evidence_generated_at": "2026-11-17T04:17:26.965916+00:00",
+      "evaluated_at": "2026-11-17T04:21:02.630967+00:00",
+      "evidence_generated_at": "2026-11-17T04:21:02.630967+00:00",
       "hard_blockers": [
         "competition_identity_not_explicitly_verified",
         "no_verified_upcoming_fixture",
@@ -288,8 +288,8 @@
       "competition_type": "league",
       "completed_fixture_count": 0,
       "country": "Italy",
-      "evaluated_at": "2026-11-17T04:17:26.965916+00:00",
-      "evidence_generated_at": "2026-11-17T04:17:26.965916+00:00",
+      "evaluated_at": "2026-11-17T04:21:02.630967+00:00",
+      "evidence_generated_at": "2026-11-17T04:21:02.630967+00:00",
       "hard_blockers": [
         "competition_identity_not_explicitly_verified",
         "no_verified_upcoming_fixture",
@@ -326,8 +326,8 @@
       "competition_type": "league",
       "completed_fixture_count": 0,
       "country": "Spain",
-      "evaluated_at": "2026-11-17T04:17:26.965916+00:00",
-      "evidence_generated_at": "2026-11-17T04:17:26.965916+00:00",
+      "evaluated_at": "2026-11-17T04:21:02.630967+00:00",
+      "evidence_generated_at": "2026-11-17T04:21:02.630967+00:00",
       "hard_blockers": [
         "competition_identity_not_explicitly_verified",
         "no_verified_upcoming_fixture",
@@ -427,8 +427,8 @@
       "competition_type": "league",
       "completed_fixture_count": 0,
       "country": "Spain",
-      "evaluated_at": "2026-11-17T04:17:26.965916+00:00",
-      "evidence_generated_at": "2026-11-17T04:17:26.965916+00:00",
+      "evaluated_at": "2026-11-17T04:21:02.630967+00:00",
+      "evidence_generated_at": "2026-11-17T04:21:02.630967+00:00",
       "hard_blockers": [
         "competition_identity_not_explicitly_verified",
         "no_verified_upcoming_fixture",
@@ -527,8 +527,8 @@
       "competition_type": "league",
       "completed_fixture_count": 0,
       "country": "Spain",
-      "evaluated_at": "2026-11-17T04:17:26.965916+00:00",
-      "evidence_generated_at": "2026-11-17T04:17:26.965916+00:00",
+      "evaluated_at": "2026-11-17T04:21:02.630967+00:00",
+      "evidence_generated_at": "2026-11-17T04:21:02.630967+00:00",
       "hard_blockers": [
         "competition_identity_not_explicitly_verified",
         "no_verified_upcoming_fixture",
@@ -635,7 +635,7 @@
     "fixtures": 1911,
     "seasons": 7
   },
-  "generated_at_utc": "2026-11-17T04:17:26.965916+00:00",
+  "generated_at_utc": "2026-11-17T04:21:02.630967+00:00",
   "policy": {
     "canonical_identity_or_fixture_writes": false,
     "history_target_per_team": 10,
