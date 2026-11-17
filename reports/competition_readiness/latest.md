@@ -1,357 +1,308 @@
-# Competition readiness audit
+# Live competition readiness audit
 
-Generated: 2026-11-17T04:14:22.270998+00:00
-Source crosswalk audit: 2026-11-17T04:14:22.058901+00:00
+Generated: 2026-11-17T04:17:26.965916+00:00
 
 | Status | Competition-seasons |
 |---|---:|
-| not_ready | 35 |
+| not_ready | 7 |
 | partially_ready | 0 |
 | prediction_ready | 0 |
 
-## Candidate blockers
+## Competition-season blockers
 
-### Girabola — Angola
+### Premier League — England (2025/2026)
 - competition_identity_not_explicitly_verified
-- competition_name_country_or_type_missing
 - no_verified_upcoming_fixture
-- participating_team_count_invalid
+- not_all_participating_teams_have_approved_mappings
 - season_identity_missing
 - season_identity_not_explicitly_verified
 - season_not_confirmed_active
+- core_statistics_incomplete:sportmonks:1
+- core_statistics_incomplete:sportmonks:11
+- core_statistics_incomplete:sportmonks:13
+- core_statistics_incomplete:sportmonks:14
+- core_statistics_incomplete:sportmonks:15
+- core_statistics_incomplete:sportmonks:18
+- core_statistics_incomplete:sportmonks:19
+- core_statistics_incomplete:sportmonks:20
+- core_statistics_incomplete:sportmonks:236
+- core_statistics_incomplete:sportmonks:27
+- core_statistics_incomplete:sportmonks:29
+- core_statistics_incomplete:sportmonks:3
+- core_statistics_incomplete:sportmonks:51
+- core_statistics_incomplete:sportmonks:52
+- core_statistics_incomplete:sportmonks:6
+- core_statistics_incomplete:sportmonks:63
+- core_statistics_incomplete:sportmonks:71
+- core_statistics_incomplete:sportmonks:78
+- core_statistics_incomplete:sportmonks:8
+- core_statistics_incomplete:sportmonks:9
 - fixture_source_not_confirmed_fresh
+- insufficient_history:sportmonks:1
+- insufficient_history:sportmonks:11
+- insufficient_history:sportmonks:13
+- insufficient_history:sportmonks:14
+- insufficient_history:sportmonks:15
+- insufficient_history:sportmonks:18
+- insufficient_history:sportmonks:19
+- insufficient_history:sportmonks:20
+- insufficient_history:sportmonks:236
+- insufficient_history:sportmonks:27
+- insufficient_history:sportmonks:29
+- insufficient_history:sportmonks:3
+- insufficient_history:sportmonks:51
+- insufficient_history:sportmonks:52
+- insufficient_history:sportmonks:6
+- insufficient_history:sportmonks:63
+- insufficient_history:sportmonks:71
+- insufficient_history:sportmonks:78
+- insufficient_history:sportmonks:8
+- insufficient_history:sportmonks:9
+- tactical_evidence_missing_for_participating_teams
+- Stored fixtures: 380; participants: 20; verified upcoming fixtures: 0
 
-### Austrian Bundesliga — Austria
+### Premier League — England (2026/2027)
 - competition_identity_not_explicitly_verified
-- competition_name_country_or_type_missing
 - no_verified_upcoming_fixture
-- participating_team_count_invalid
+- not_all_participating_teams_have_approved_mappings
+- season_identity_missing
+- season_identity_not_explicitly_verified
+- core_statistics_incomplete:sportmonks:11
+- core_statistics_incomplete:sportmonks:116
+- core_statistics_incomplete:sportmonks:117
+- core_statistics_incomplete:sportmonks:13
+- core_statistics_incomplete:sportmonks:14
+- core_statistics_incomplete:sportmonks:15
+- core_statistics_incomplete:sportmonks:18
+- core_statistics_incomplete:sportmonks:19
+- core_statistics_incomplete:sportmonks:20
+- core_statistics_incomplete:sportmonks:22
+- core_statistics_incomplete:sportmonks:236
+- core_statistics_incomplete:sportmonks:3
+- core_statistics_incomplete:sportmonks:51
+- core_statistics_incomplete:sportmonks:52
+- core_statistics_incomplete:sportmonks:6
+- core_statistics_incomplete:sportmonks:63
+- core_statistics_incomplete:sportmonks:71
+- core_statistics_incomplete:sportmonks:78
+- core_statistics_incomplete:sportmonks:8
+- core_statistics_incomplete:sportmonks:9
+- fixture_source_not_confirmed_fresh
+- tactical_evidence_missing_for_participating_teams
+- Stored fixtures: 380; participants: 20; verified upcoming fixtures: 0
+
+### Serie A — Italy (2025/2026)
+- competition_identity_not_explicitly_verified
+- no_verified_upcoming_fixture
+- not_all_participating_teams_have_approved_mappings
 - season_identity_missing
 - season_identity_not_explicitly_verified
 - season_not_confirmed_active
+- core_statistics_incomplete:sportmonks:102
+- core_statistics_incomplete:sportmonks:1072
+- core_statistics_incomplete:sportmonks:10722
+- core_statistics_incomplete:sportmonks:109
+- core_statistics_incomplete:sportmonks:1123
+- core_statistics_incomplete:sportmonks:113
+- core_statistics_incomplete:sportmonks:268
+- core_statistics_incomplete:sportmonks:2714
+- core_statistics_incomplete:sportmonks:2930
+- core_statistics_incomplete:sportmonks:346
+- core_statistics_incomplete:sportmonks:37
+- core_statistics_incomplete:sportmonks:398
+- core_statistics_incomplete:sportmonks:43
+- core_statistics_incomplete:sportmonks:585
+- core_statistics_incomplete:sportmonks:597
+- core_statistics_incomplete:sportmonks:613
+- core_statistics_incomplete:sportmonks:625
+- core_statistics_incomplete:sportmonks:708
+- core_statistics_incomplete:sportmonks:7790
+- core_statistics_incomplete:sportmonks:8513
 - fixture_source_not_confirmed_fresh
+- insufficient_history:sportmonks:102
+- insufficient_history:sportmonks:1072
+- insufficient_history:sportmonks:10722
+- insufficient_history:sportmonks:109
+- insufficient_history:sportmonks:1123
+- insufficient_history:sportmonks:113
+- insufficient_history:sportmonks:268
+- insufficient_history:sportmonks:2714
+- insufficient_history:sportmonks:2930
+- insufficient_history:sportmonks:346
+- insufficient_history:sportmonks:37
+- insufficient_history:sportmonks:398
+- insufficient_history:sportmonks:43
+- insufficient_history:sportmonks:585
+- insufficient_history:sportmonks:597
+- insufficient_history:sportmonks:613
+- insufficient_history:sportmonks:625
+- insufficient_history:sportmonks:708
+- insufficient_history:sportmonks:7790
+- insufficient_history:sportmonks:8513
+- tactical_evidence_missing_for_participating_teams
+- Stored fixtures: 380; participants: 20; verified upcoming fixtures: 0
 
-### Challenger Pro League — Belgium
-- competition_identity_not_explicitly_verified
-- competition_name_country_or_type_missing
-- no_verified_upcoming_fixture
-- participating_team_count_invalid
-- season_identity_missing
-- season_identity_not_explicitly_verified
-- season_not_confirmed_active
-- fixture_source_not_confirmed_fresh
-
-### Copa Colombia — Colombia
-- competition_identity_not_explicitly_verified
-- competition_name_country_or_type_missing
-- no_verified_upcoming_fixture
-- participating_team_count_invalid
-- season_identity_missing
-- season_identity_not_explicitly_verified
-- season_not_confirmed_active
-- fixture_source_not_confirmed_fresh
-
-### Championship — England
-- competition_identity_not_explicitly_verified
-- no_verified_upcoming_fixture
-- participating_team_count_invalid
-- season_identity_missing
-- season_identity_not_explicitly_verified
-- season_not_confirmed_active
-- fixture_source_not_confirmed_fresh
-
-### League One — England
-- competition_identity_not_explicitly_verified
-- competition_name_country_or_type_missing
-- no_verified_upcoming_fixture
-- participating_team_count_invalid
-- season_identity_missing
-- season_identity_not_explicitly_verified
-- season_not_confirmed_active
-- fixture_source_not_confirmed_fresh
-
-### League Two — England
-- competition_identity_not_explicitly_verified
-- competition_name_country_or_type_missing
-- no_verified_upcoming_fixture
-- participating_team_count_invalid
-- season_identity_missing
-- season_identity_not_explicitly_verified
-- season_not_confirmed_active
-- fixture_source_not_confirmed_fresh
-
-### National League — England
-- competition_identity_not_explicitly_verified
-- competition_name_country_or_type_missing
-- no_verified_upcoming_fixture
-- participating_team_count_invalid
-- season_identity_missing
-- season_identity_not_explicitly_verified
-- season_not_confirmed_active
-- fixture_source_not_confirmed_fresh
-
-### Premier League — England
-- competition_identity_not_explicitly_verified
-- no_verified_upcoming_fixture
-- participating_team_count_invalid
-- season_identity_missing
-- season_identity_not_explicitly_verified
-- season_not_confirmed_active
-- fixture_source_not_confirmed_fresh
-
-### Ligue 1 — France
-- competition_identity_not_explicitly_verified
-- no_verified_upcoming_fixture
-- participating_team_count_invalid
-- season_identity_missing
-- season_identity_not_explicitly_verified
-- season_not_confirmed_active
-- fixture_source_not_confirmed_fresh
-
-### Ligue 2 — France
-- competition_identity_not_explicitly_verified
-- competition_name_country_or_type_missing
-- no_verified_upcoming_fixture
-- participating_team_count_invalid
-- season_identity_missing
-- season_identity_not_explicitly_verified
-- season_not_confirmed_active
-- fixture_source_not_confirmed_fresh
-
-### 2. Bundesliga — Germany
-- competition_identity_not_explicitly_verified
-- competition_name_country_or_type_missing
-- no_verified_upcoming_fixture
-- participating_team_count_invalid
-- season_identity_missing
-- season_identity_not_explicitly_verified
-- season_not_confirmed_active
-- fixture_source_not_confirmed_fresh
-
-### 3. Liga — Germany
-- competition_identity_not_explicitly_verified
-- competition_name_country_or_type_missing
-- no_verified_upcoming_fixture
-- participating_team_count_invalid
-- season_identity_missing
-- season_identity_not_explicitly_verified
-- season_not_confirmed_active
-- fixture_source_not_confirmed_fresh
-
-### Bundesliga — Germany
-- competition_identity_not_explicitly_verified
-- no_verified_upcoming_fixture
-- participating_team_count_invalid
-- season_identity_missing
-- season_identity_not_explicitly_verified
-- season_not_confirmed_active
-- fixture_source_not_confirmed_fresh
-
-### Serie A — Italy
+### Serie A — Italy (2026/2027)
 - competition_identity_not_explicitly_verified
 - no_verified_upcoming_fixture
 - participating_team_count_invalid
 - season_identity_missing
 - season_identity_not_explicitly_verified
-- season_not_confirmed_active
 - fixture_source_not_confirmed_fresh
+- Stored fixtures: 0; participants: 0; verified upcoming fixtures: 0
 
-### Serie B — Italy
+### La Liga — Spain (2025/2026)
 - competition_identity_not_explicitly_verified
-- competition_name_country_or_type_missing
 - no_verified_upcoming_fixture
-- participating_team_count_invalid
+- not_all_participating_teams_have_approved_mappings
 - season_identity_missing
 - season_identity_not_explicitly_verified
 - season_not_confirmed_active
+- core_statistics_incomplete:sportmonks:106
+- core_statistics_incomplete:sportmonks:1099
+- core_statistics_incomplete:sportmonks:13258
+- core_statistics_incomplete:sportmonks:214
+- core_statistics_incomplete:sportmonks:231
+- core_statistics_incomplete:sportmonks:2975
+- core_statistics_incomplete:sportmonks:3457
+- core_statistics_incomplete:sportmonks:3468
+- core_statistics_incomplete:sportmonks:3477
+- core_statistics_incomplete:sportmonks:36
+- core_statistics_incomplete:sportmonks:377
+- core_statistics_incomplete:sportmonks:459
+- core_statistics_incomplete:sportmonks:485
+- core_statistics_incomplete:sportmonks:528
+- core_statistics_incomplete:sportmonks:594
+- core_statistics_incomplete:sportmonks:645
+- core_statistics_incomplete:sportmonks:676
+- core_statistics_incomplete:sportmonks:7980
+- core_statistics_incomplete:sportmonks:83
+- core_statistics_incomplete:sportmonks:93
 - fixture_source_not_confirmed_fresh
+- insufficient_history:sportmonks:106
+- insufficient_history:sportmonks:1099
+- insufficient_history:sportmonks:13258
+- insufficient_history:sportmonks:214
+- insufficient_history:sportmonks:231
+- insufficient_history:sportmonks:2975
+- insufficient_history:sportmonks:3457
+- insufficient_history:sportmonks:3468
+- insufficient_history:sportmonks:3477
+- insufficient_history:sportmonks:36
+- insufficient_history:sportmonks:377
+- insufficient_history:sportmonks:459
+- insufficient_history:sportmonks:485
+- insufficient_history:sportmonks:528
+- insufficient_history:sportmonks:594
+- insufficient_history:sportmonks:645
+- insufficient_history:sportmonks:676
+- insufficient_history:sportmonks:7980
+- insufficient_history:sportmonks:83
+- insufficient_history:sportmonks:93
+- tactical_evidence_missing_for_participating_teams
+- Stored fixtures: 380; participants: 20; verified upcoming fixtures: 0
 
-### J1 League — Japan
+### La Liga — Spain (2026/2027)
 - competition_identity_not_explicitly_verified
-- competition_name_country_or_type_missing
 - no_verified_upcoming_fixture
-- participating_team_count_invalid
+- not_all_participating_teams_have_approved_mappings
 - season_identity_missing
 - season_identity_not_explicitly_verified
-- season_not_confirmed_active
+- core_statistics_incomplete:sportmonks:106
+- core_statistics_incomplete:sportmonks:1099
+- core_statistics_incomplete:sportmonks:126
+- core_statistics_incomplete:sportmonks:13258
+- core_statistics_incomplete:sportmonks:214
+- core_statistics_incomplete:sportmonks:2975
+- core_statistics_incomplete:sportmonks:3457
+- core_statistics_incomplete:sportmonks:3468
+- core_statistics_incomplete:sportmonks:3477
+- core_statistics_incomplete:sportmonks:36
+- core_statistics_incomplete:sportmonks:377
+- core_statistics_incomplete:sportmonks:429
+- core_statistics_incomplete:sportmonks:459
+- core_statistics_incomplete:sportmonks:485
+- core_statistics_incomplete:sportmonks:528
+- core_statistics_incomplete:sportmonks:594
+- core_statistics_incomplete:sportmonks:676
+- core_statistics_incomplete:sportmonks:7980
+- core_statistics_incomplete:sportmonks:83
+- core_statistics_incomplete:sportmonks:9818
 - fixture_source_not_confirmed_fresh
+- insufficient_history:sportmonks:106
+- insufficient_history:sportmonks:1099
+- insufficient_history:sportmonks:126
+- insufficient_history:sportmonks:13258
+- insufficient_history:sportmonks:214
+- insufficient_history:sportmonks:2975
+- insufficient_history:sportmonks:3457
+- insufficient_history:sportmonks:3468
+- insufficient_history:sportmonks:3477
+- insufficient_history:sportmonks:36
+- insufficient_history:sportmonks:377
+- insufficient_history:sportmonks:429
+- insufficient_history:sportmonks:459
+- insufficient_history:sportmonks:485
+- insufficient_history:sportmonks:528
+- insufficient_history:sportmonks:594
+- insufficient_history:sportmonks:676
+- insufficient_history:sportmonks:7980
+- insufficient_history:sportmonks:83
+- insufficient_history:sportmonks:9818
+- tactical_evidence_missing_for_participating_teams
+- Stored fixtures: 380; participants: 20; verified upcoming fixtures: 0
 
-### Eerste Divisie — Netherlands
+### La Liga 2 — Spain (2026/2027)
 - competition_identity_not_explicitly_verified
-- competition_name_country_or_type_missing
 - no_verified_upcoming_fixture
-- participating_team_count_invalid
+- not_all_participating_teams_have_approved_mappings
 - season_identity_missing
 - season_identity_not_explicitly_verified
-- season_not_confirmed_active
+- core_statistics_incomplete:sportmonks:10008
+- core_statistics_incomplete:sportmonks:1012
+- core_statistics_incomplete:sportmonks:103
+- core_statistics_incomplete:sportmonks:12330
+- core_statistics_incomplete:sportmonks:1888
+- core_statistics_incomplete:sportmonks:231
+- core_statistics_incomplete:sportmonks:238115
+- core_statistics_incomplete:sportmonks:2921
+- core_statistics_incomplete:sportmonks:3169
+- core_statistics_incomplete:sportmonks:344
+- core_statistics_incomplete:sportmonks:361
+- core_statistics_incomplete:sportmonks:384
+- core_statistics_incomplete:sportmonks:60
+- core_statistics_incomplete:sportmonks:618
+- core_statistics_incomplete:sportmonks:645
+- core_statistics_incomplete:sportmonks:6827
+- core_statistics_incomplete:sportmonks:758
+- core_statistics_incomplete:sportmonks:8366
+- core_statistics_incomplete:sportmonks:844
+- core_statistics_incomplete:sportmonks:93
+- core_statistics_incomplete:sportmonks:931
+- core_statistics_incomplete:sportmonks:9656
 - fixture_source_not_confirmed_fresh
-
-### Eredivisie — Netherlands
-- competition_identity_not_explicitly_verified
-- no_verified_upcoming_fixture
-- participating_team_count_invalid
-- season_identity_missing
-- season_identity_not_explicitly_verified
-- season_not_confirmed_active
-- fixture_source_not_confirmed_fresh
-
-### Eliteserien — Norway
-- competition_identity_not_explicitly_verified
-- competition_name_country_or_type_missing
-- no_verified_upcoming_fixture
-- participating_team_count_invalid
-- season_identity_missing
-- season_identity_not_explicitly_verified
-- season_not_confirmed_active
-- fixture_source_not_confirmed_fresh
-
-### Ekstraklasa — Poland
-- competition_identity_not_explicitly_verified
-- competition_name_country_or_type_missing
-- no_verified_upcoming_fixture
-- participating_team_count_invalid
-- season_identity_missing
-- season_identity_not_explicitly_verified
-- season_not_confirmed_active
-- fixture_source_not_confirmed_fresh
-
-### Liga 3 — Portugal
-- competition_identity_not_explicitly_verified
-- competition_name_country_or_type_missing
-- no_verified_upcoming_fixture
-- participating_team_count_invalid
-- season_identity_missing
-- season_identity_not_explicitly_verified
-- season_not_confirmed_active
-- fixture_source_not_confirmed_fresh
-
-### Liga Portugal 2 — Portugal
-- competition_identity_not_explicitly_verified
-- competition_name_country_or_type_missing
-- no_verified_upcoming_fixture
-- participating_team_count_invalid
-- season_identity_missing
-- season_identity_not_explicitly_verified
-- season_not_confirmed_active
-- fixture_source_not_confirmed_fresh
-
-### Taça de Portugal — Portugal
-- competition_identity_not_explicitly_verified
-- competition_name_country_or_type_missing
-- no_verified_upcoming_fixture
-- participating_team_count_invalid
-- season_identity_missing
-- season_identity_not_explicitly_verified
-- season_not_confirmed_active
-- fixture_source_not_confirmed_fresh
-
-### Saudi Pro League — Saudi Arabia
-- competition_identity_not_explicitly_verified
-- competition_name_country_or_type_missing
-- no_verified_upcoming_fixture
-- participating_team_count_invalid
-- season_identity_missing
-- season_identity_not_explicitly_verified
-- season_not_confirmed_active
-- fixture_source_not_confirmed_fresh
-
-### Scottish Premiership — Scotland
-- competition_identity_not_explicitly_verified
-- competition_name_country_or_type_missing
-- no_verified_upcoming_fixture
-- participating_team_count_invalid
-- season_identity_missing
-- season_identity_not_explicitly_verified
-- season_not_confirmed_active
-- fixture_source_not_confirmed_fresh
-
-### K League 1 — South Korea
-- competition_identity_not_explicitly_verified
-- competition_name_country_or_type_missing
-- no_verified_upcoming_fixture
-- participating_team_count_invalid
-- season_identity_missing
-- season_identity_not_explicitly_verified
-- season_not_confirmed_active
-- fixture_source_not_confirmed_fresh
-
-### Copa del Rey — Spain
-- competition_identity_not_explicitly_verified
-- competition_name_country_or_type_missing
-- no_verified_upcoming_fixture
-- participating_team_count_invalid
-- season_identity_missing
-- season_identity_not_explicitly_verified
-- season_not_confirmed_active
-- fixture_source_not_confirmed_fresh
-
-### La Liga — Spain
-- competition_identity_not_explicitly_verified
-- competition_name_country_or_type_missing
-- no_verified_upcoming_fixture
-- participating_team_count_invalid
-- season_identity_missing
-- season_identity_not_explicitly_verified
-- season_not_confirmed_active
-- fixture_source_not_confirmed_fresh
-
-### Segunda División — Spain
-- competition_identity_not_explicitly_verified
-- competition_name_country_or_type_missing
-- no_verified_upcoming_fixture
-- participating_team_count_invalid
-- season_identity_missing
-- season_identity_not_explicitly_verified
-- season_not_confirmed_active
-- fixture_source_not_confirmed_fresh
-
-### Allsvenskan — Sweden
-- competition_identity_not_explicitly_verified
-- competition_name_country_or_type_missing
-- no_verified_upcoming_fixture
-- participating_team_count_invalid
-- season_identity_missing
-- season_identity_not_explicitly_verified
-- season_not_confirmed_active
-- fixture_source_not_confirmed_fresh
-
-### Superettan — Sweden
-- competition_identity_not_explicitly_verified
-- competition_name_country_or_type_missing
-- no_verified_upcoming_fixture
-- participating_team_count_invalid
-- season_identity_missing
-- season_identity_not_explicitly_verified
-- season_not_confirmed_active
-- fixture_source_not_confirmed_fresh
-
-### Super League — Switzerland
-- competition_identity_not_explicitly_verified
-- competition_name_country_or_type_missing
-- no_verified_upcoming_fixture
-- participating_team_count_invalid
-- season_identity_missing
-- season_identity_not_explicitly_verified
-- season_not_confirmed_active
-- fixture_source_not_confirmed_fresh
-
-### MLS — United States
-- competition_identity_not_explicitly_verified
-- competition_name_country_or_type_missing
-- no_verified_upcoming_fixture
-- participating_team_count_invalid
-- season_identity_missing
-- season_identity_not_explicitly_verified
-- season_not_confirmed_active
-- fixture_source_not_confirmed_fresh
-
-### USL Championship — USA
-- competition_identity_not_explicitly_verified
-- competition_name_country_or_type_missing
-- no_verified_upcoming_fixture
-- participating_team_count_invalid
-- season_identity_missing
-- season_identity_not_explicitly_verified
-- season_not_confirmed_active
-- fixture_source_not_confirmed_fresh
+- insufficient_history:sportmonks:10008
+- insufficient_history:sportmonks:1012
+- insufficient_history:sportmonks:103
+- insufficient_history:sportmonks:12330
+- insufficient_history:sportmonks:1888
+- insufficient_history:sportmonks:231
+- insufficient_history:sportmonks:238115
+- insufficient_history:sportmonks:2921
+- insufficient_history:sportmonks:3169
+- insufficient_history:sportmonks:344
+- insufficient_history:sportmonks:361
+- insufficient_history:sportmonks:384
+- insufficient_history:sportmonks:60
+- insufficient_history:sportmonks:618
+- insufficient_history:sportmonks:645
+- insufficient_history:sportmonks:6827
+- insufficient_history:sportmonks:758
+- insufficient_history:sportmonks:8366
+- insufficient_history:sportmonks:844
+- insufficient_history:sportmonks:93
+- insufficient_history:sportmonks:931
+- insufficient_history:sportmonks:9656
+- tactical_evidence_missing_for_participating_teams
+- Stored fixtures: 11; participants: 22; verified upcoming fixtures: 0
 
