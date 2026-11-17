@@ -1,6 +1,6 @@
 # Live competition readiness audit
 
-Generated: 2026-11-17T04:21:02.630967+00:00
+Generated: 2026-11-17T04:30:14.272151+00:00
 
 | Status | Competition-seasons |
 |---|---:|
@@ -38,27 +38,26 @@ Generated: 2026-11-17T04:21:02.630967+00:00
 - core_statistics_incomplete:sportmonks:8
 - core_statistics_incomplete:sportmonks:9
 - fixture_source_not_confirmed_fresh
-- insufficient_history:sportmonks:1
-- insufficient_history:sportmonks:11
-- insufficient_history:sportmonks:13
-- insufficient_history:sportmonks:14
-- insufficient_history:sportmonks:15
-- insufficient_history:sportmonks:18
-- insufficient_history:sportmonks:19
-- insufficient_history:sportmonks:20
-- insufficient_history:sportmonks:236
-- insufficient_history:sportmonks:27
-- insufficient_history:sportmonks:29
-- insufficient_history:sportmonks:3
-- insufficient_history:sportmonks:51
-- insufficient_history:sportmonks:52
-- insufficient_history:sportmonks:6
-- insufficient_history:sportmonks:63
-- insufficient_history:sportmonks:71
-- insufficient_history:sportmonks:78
-- insufficient_history:sportmonks:8
-- insufficient_history:sportmonks:9
-- tactical_evidence_missing_for_participating_teams
+- tactical_components_missing:sportmonks:11:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:13:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:14:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:15:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:18:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:19:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:1:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:20:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:236:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:27:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:29:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:3:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:51:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:52:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:63:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:6:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:71:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:78:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:8:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:9:playing_style,defensive_structure,attacking_approach
 - Stored fixtures: 380; participants: 20; verified upcoming fixtures: 0
 
 ### Premier League — England (2026/2027)
@@ -88,7 +87,6 @@ Generated: 2026-11-17T04:21:02.630967+00:00
 - core_statistics_incomplete:sportmonks:8
 - core_statistics_incomplete:sportmonks:9
 - fixture_source_not_confirmed_fresh
-- tactical_evidence_missing_for_participating_teams
 - Stored fixtures: 380; participants: 20; verified upcoming fixtures: 0
 
 ### Serie A — Italy (2025/2026)
@@ -119,27 +117,26 @@ Generated: 2026-11-17T04:21:02.630967+00:00
 - core_statistics_incomplete:sportmonks:7790
 - core_statistics_incomplete:sportmonks:8513
 - fixture_source_not_confirmed_fresh
-- insufficient_history:sportmonks:102
-- insufficient_history:sportmonks:1072
-- insufficient_history:sportmonks:10722
-- insufficient_history:sportmonks:109
-- insufficient_history:sportmonks:1123
-- insufficient_history:sportmonks:113
-- insufficient_history:sportmonks:268
-- insufficient_history:sportmonks:2714
-- insufficient_history:sportmonks:2930
-- insufficient_history:sportmonks:346
-- insufficient_history:sportmonks:37
-- insufficient_history:sportmonks:398
-- insufficient_history:sportmonks:43
-- insufficient_history:sportmonks:585
-- insufficient_history:sportmonks:597
-- insufficient_history:sportmonks:613
-- insufficient_history:sportmonks:625
-- insufficient_history:sportmonks:708
-- insufficient_history:sportmonks:7790
-- insufficient_history:sportmonks:8513
-- tactical_evidence_missing_for_participating_teams
+- tactical_components_missing:sportmonks:102:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:10722:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:1072:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:109:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:1123:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:113:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:268:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:2714:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:2930:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:346:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:37:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:398:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:43:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:585:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:597:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:613:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:625:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:708:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:7790:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:8513:playing_style,defensive_structure,attacking_approach
 - Stored fixtures: 380; participants: 20; verified upcoming fixtures: 0
 
 ### Serie A — Italy (2026/2027)
@@ -179,27 +176,26 @@ Generated: 2026-11-17T04:21:02.630967+00:00
 - core_statistics_incomplete:sportmonks:83
 - core_statistics_incomplete:sportmonks:93
 - fixture_source_not_confirmed_fresh
-- insufficient_history:sportmonks:106
-- insufficient_history:sportmonks:1099
-- insufficient_history:sportmonks:13258
-- insufficient_history:sportmonks:214
-- insufficient_history:sportmonks:231
-- insufficient_history:sportmonks:2975
-- insufficient_history:sportmonks:3457
-- insufficient_history:sportmonks:3468
-- insufficient_history:sportmonks:3477
-- insufficient_history:sportmonks:36
-- insufficient_history:sportmonks:377
-- insufficient_history:sportmonks:459
-- insufficient_history:sportmonks:485
-- insufficient_history:sportmonks:528
-- insufficient_history:sportmonks:594
-- insufficient_history:sportmonks:645
-- insufficient_history:sportmonks:676
-- insufficient_history:sportmonks:7980
-- insufficient_history:sportmonks:83
-- insufficient_history:sportmonks:93
-- tactical_evidence_missing_for_participating_teams
+- tactical_components_missing:sportmonks:106:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:1099:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:13258:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:214:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:231:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:2975:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:3457:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:3468:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:3477:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:36:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:377:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:459:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:485:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:528:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:594:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:645:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:676:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:7980:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:83:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:93:playing_style,defensive_structure,attacking_approach
 - Stored fixtures: 380; participants: 20; verified upcoming fixtures: 0
 
 ### La Liga — Spain (2026/2027)
@@ -229,27 +225,6 @@ Generated: 2026-11-17T04:21:02.630967+00:00
 - core_statistics_incomplete:sportmonks:83
 - core_statistics_incomplete:sportmonks:9818
 - fixture_source_not_confirmed_fresh
-- insufficient_history:sportmonks:106
-- insufficient_history:sportmonks:1099
-- insufficient_history:sportmonks:126
-- insufficient_history:sportmonks:13258
-- insufficient_history:sportmonks:214
-- insufficient_history:sportmonks:2975
-- insufficient_history:sportmonks:3457
-- insufficient_history:sportmonks:3468
-- insufficient_history:sportmonks:3477
-- insufficient_history:sportmonks:36
-- insufficient_history:sportmonks:377
-- insufficient_history:sportmonks:429
-- insufficient_history:sportmonks:459
-- insufficient_history:sportmonks:485
-- insufficient_history:sportmonks:528
-- insufficient_history:sportmonks:594
-- insufficient_history:sportmonks:676
-- insufficient_history:sportmonks:7980
-- insufficient_history:sportmonks:83
-- insufficient_history:sportmonks:9818
-- tactical_evidence_missing_for_participating_teams
 - Stored fixtures: 380; participants: 20; verified upcoming fixtures: 0
 
 ### La Liga 2 — Spain (2026/2027)
@@ -303,6 +278,27 @@ Generated: 2026-11-17T04:21:02.630967+00:00
 - insufficient_history:sportmonks:93
 - insufficient_history:sportmonks:931
 - insufficient_history:sportmonks:9656
-- tactical_evidence_missing_for_participating_teams
+- tactical_components_missing:sportmonks:10008:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:1012:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:103:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:12330:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:1888:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:231:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:238115:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:2921:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:3169:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:344:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:361:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:384:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:60:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:618:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:645:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:6827:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:758:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:8366:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:844:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:931:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:93:playing_style,defensive_structure,attacking_approach
+- tactical_components_missing:sportmonks:9656:playing_style,defensive_structure,attacking_approach
 - Stored fixtures: 11; participants: 22; verified upcoming fixtures: 0
 
