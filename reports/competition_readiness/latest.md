@@ -1,7 +1,7 @@
 # Competition readiness audit
 
-Generated: 2026-11-17T04:00:56.463222+00:00
-Source crosswalk audit: 2026-11-17T04:00:56.259439+00:00
+Generated: 2026-11-17T04:14:22.270998+00:00
+Source crosswalk audit: 2026-11-17T04:14:22.058901+00:00
 
 | Status | Competition-seasons |
 |---|---:|
