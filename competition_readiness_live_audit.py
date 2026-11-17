@@ -15,6 +15,7 @@ from typing import Any, Mapping
 from competition_readiness import build_competition_readiness_report
 from provider_data_storage import _connect
 from provider_neutral_repository import split_provider_identity
+from provider_neutral_profiles import build_provider_neutral_team_profile
 
 FRESHNESS_WINDOW = timedelta(hours=24)
 UPCOMING_STATUSES = {"scheduled", "not started", "not_started", "ns", "upcoming", "fixture"}
@@ -45,11 +46,15 @@ def build_live_readiness_records(
     approved_links: list[Mapping[str, Any]],
     *,
     now: datetime,
+    team_rows: list[Mapping[str, Any]] | None = None,
+    statistics: list[Mapping[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
     """Build conservative per-season evidence records from normalized DB rows."""
     if now.tzinfo is None:
         raise ValueError("now must be timezone-aware")
     approved = _approved_source_ids([dict(row) for row in approved_links])
+    teams_by_id = {str(row.get("team_id")): dict(row) for row in (team_rows or [])}
+    statistic_rows = [dict(row) for row in (statistics or [])]
     league_by_id = {str(row.get("league_id")): dict(row) for row in leagues}
     fixtures_by_season: dict[str, list[dict[str, Any]]] = {}
     for fixture in fixtures:
@@ -112,6 +117,37 @@ def build_live_readiness_records(
                     upcoming.append(fixture)
 
         team_ids = sorted(participating)
+        # Reuse the production Layer 2 profile builder so coverage uses the
+        # same aliases, invalid-value handling, conflict rejection and 60/40
+        # tactical calculations as prediction diagnostics.
+        season_fixture_ids = {str(row.get("fixture_id")) for row in season_fixtures}
+        season_statistics = [
+            row for row in statistic_rows
+            if str(row.get("fixture_id") or "") in season_fixture_ids
+        ]
+        statistics_complete_by_team: dict[str, bool] = {}
+        tactical_components_by_team: dict[str, dict[str, Any]] = {}
+        for team_id in team_ids:
+            team_row = teams_by_id.get(team_id)
+            if not team_row:
+                statistics_complete_by_team[team_id] = False
+                tactical_components_by_team[team_id] = {}
+                continue
+            profile = build_provider_neutral_team_profile(
+                team_row, season_fixtures, season_id=season_id,
+                statistics=season_statistics, limit=10,
+            )
+            quality = profile.get("data_quality") or {}
+            valid_history_count = int(quality.get("matches_returned") or 0)
+            history[team_id] = valid_history_count
+            statistics_complete_by_team[team_id] = bool(
+                valid_history_count >= 10
+                and int(quality.get("matches_with_complete_core_statistics") or 0) >= 10
+            )
+            tactical_components_by_team[team_id] = {
+                key: profile.get(key)
+                for key in ("playing_style", "defensive_structure", "attacking_approach")
+            }
         team_mapped = 0
         for team_id in team_ids:
             team_source_id = split_provider_identity(team_id, provider).get("provider_entity_id")
@@ -172,8 +208,8 @@ def build_live_readiness_records(
                 },
                 # No authoritative completeness contract currently exists in
                 # this repository; unknown is intentionally represented as false.
-                "statistics_complete_by_team": {team_id: False for team_id in team_ids},
-                "tactical_components_by_team": {},
+                "statistics_complete_by_team": statistics_complete_by_team,
+                "tactical_components_by_team": tactical_components_by_team,
             },
             "fixture": {
                 "upcoming_valid": bool(verified_upcoming),
@@ -193,8 +229,8 @@ def build_live_readiness_records(
             ),
             "upcoming_fixture_candidates": len(upcoming),
             "verified_upcoming_fixtures": len(verified_upcoming),
-            "statistics_contract_status": "not_defined_fail_closed",
-            "tactical_evidence_status": "not_stored_fail_closed",
+            "statistics_contract_status": "layer2_profile_10_match_core_metric_validation",
+            "tactical_evidence_status": "layer2_profile_60_40_components",
         })
     return output
 
@@ -222,6 +258,16 @@ def read_live_repository_evidence(database_url: str) -> dict[str, Any]:
                        provider_updated_at, collected_at
                 FROM football_fixtures ORDER BY season_id, starting_at
             """)
+            team_rows = _rows(cursor, """
+                SELECT team_id, name, logo_url, source_provider
+                FROM football_teams ORDER BY team_id
+            """)
+            statistics = _rows(cursor, """
+                SELECT fixture_id, team_id, statistic_type, statistic_value,
+                       source_provider, provider_statistic_id, provider_updated_at, collected_at
+                FROM football_fixture_statistics
+                ORDER BY fixture_id, team_id, statistic_type
+            """)
             approved_links = _rows(cursor, """
                 SELECT DISTINCT link.provider, link.entity_type,
                        link.provider_entity_id, link.canonical_entity_id,
@@ -248,6 +294,7 @@ def read_live_repository_evidence(database_url: str) -> dict[str, Any]:
     now = datetime.now(timezone.utc)
     records = build_live_readiness_records(
         leagues, seasons, fixtures, approved_links, now=now,
+        team_rows=team_rows, statistics=statistics,
     )
     report = build_competition_readiness_report(records, now=now)
     report["report_scope"] = (
@@ -257,7 +304,8 @@ def read_live_repository_evidence(database_url: str) -> dict[str, Any]:
     report["database_read_only"] = True
     report["database_rows_read"] = {
         "competitions": len(leagues), "seasons": len(seasons),
-        "fixtures": len(fixtures), "audited_approved_links": len(approved_links),
+        "fixtures": len(fixtures), "teams": len(team_rows),
+        "fixture_statistics": len(statistics), "audited_approved_links": len(approved_links),
     }
     report["competitions"] = [
         {**result, **{
