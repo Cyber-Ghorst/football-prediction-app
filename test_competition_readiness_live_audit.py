@@ -66,7 +66,8 @@ class LiveReadinessEvidenceTests(unittest.TestCase):
         # A valid fixture alone cannot make a competition prediction-ready.
         self.assertEqual(record["teams"]["statistics_complete_by_team"],
                          {"sportmonks:10": False, "sportmonks:11": False})
-        self.assertEqual(record["teams"]["tactical_components_by_team"], {})
+        self.assertEqual(record["teams"]["tactical_components_by_team"],
+                         {"sportmonks:10": {}, "sportmonks:11": {}})
 
     def test_season_mapping_to_different_competition_is_rejected(self):
         links = [
