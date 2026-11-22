@@ -4,8 +4,8 @@
     "duplicate_fixture_records_excluded": 0,
     "eligible_records_before_deduplication": 0,
     "excluded_reasons": {
-      "missing_feature_snapshot": 14,
-      "missing_or_invalid_result_verification_timestamp": 52,
+      "missing_feature_snapshot": 16,
+      "missing_or_invalid_result_verification_timestamp": 50,
       "prediction_not_pre_kickoff": 4,
       "unsupported_fixture_provider": 4
     },
@@ -13,7 +13,7 @@
     "records_received": 74,
     "unique_verified_fixtures": 0
   },
-  "generated_at_utc": "2026-11-21T19:14:34.402525+00:00",
+  "generated_at_utc": "2026-11-22T06:45:16.393307+00:00",
   "ledger_record_count": 74,
   "offline_experiment": {
     "candidate_training_prior_pct": null,
