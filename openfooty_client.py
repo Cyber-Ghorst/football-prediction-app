@@ -12,6 +12,7 @@ import time
 import zipfile
 from datetime import date, datetime, timezone
 from typing import Any
+from urllib.parse import urlparse
 
 import requests
 
@@ -146,9 +147,13 @@ class OpenFootyTriggerClient:
         )
         if not artifact or not artifact.get("archive_download_url"):
             raise OpenFootyTriggerError("OpenFooty request response artifact is missing or expired.")
-        archive = self._request(
-            "GET", artifact["archive_download_url"], expected=(200,)
-        )
+        archive_url = artifact["archive_download_url"]
+        parsed_url = urlparse(archive_url)
+        if parsed_url.scheme != "https" or parsed_url.hostname != "api.github.com":
+            raise OpenFootyTriggerError("OpenFooty returned an unexpected artifact download host.")
+        archive = self._request("GET", archive_url, expected=(200,))
+        if len(archive.content) > 2_000_000:
+            raise OpenFootyTriggerError("OpenFooty response ZIP exceeds the allowed download size.")
         try:
             with zipfile.ZipFile(io.BytesIO(archive.content)) as bundle:
                 matches = [
@@ -164,6 +169,14 @@ class OpenFootyTriggerClient:
             raise OpenFootyTriggerError("OpenFooty response artifact is not valid JSON ZIP data.") from error
         if result.get("request_id") != request_id:
             raise OpenFootyTriggerError("OpenFooty response request_id does not match this request.")
+        if result.get("request_status") not in {
+            "BLOCKED_NOT_PREDICTION_READY",
+            "READY_FOR_QUALIFIED_COLLECTION",
+            "REJECTED_INVALID_REQUEST",
+        }:
+            raise OpenFootyTriggerError("OpenFooty returned an unknown request status.")
+        if result.get("data_returned") is not False or result.get("provider_requests_attempted") != 0:
+            raise OpenFootyTriggerError("Preflight response unexpectedly contains data or provider activity.")
         result["workflow_run"] = {
             "id": run_id,
             "url": run.get("html_url"),
