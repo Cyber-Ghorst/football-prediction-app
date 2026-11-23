@@ -93,9 +93,9 @@ def test_artifact_reader_verifies_request_id():
                 return Response(body={"artifacts": [{
                     "name": "prediction-request-123",
                     "expired": False,
-                    "archive_download_url": "https://artifact.example/download",
+                    "archive_download_url": "https://api.github.com/repos/example/repo/actions/artifacts/123/zip",
                 }]})
-            if url == "https://artifact.example/download":
+            if url.endswith("/actions/artifacts/123/zip"):
                 return Response(content=stream.getvalue())
             raise AssertionError(url)
 
