@@ -90,11 +90,11 @@ class FreeFixtureObservationPipelineTests(unittest.TestCase):
         client.base_url = "https://worldcup26.ir"
         client.leagues.return_value = [{
             "id": "league-1", "slug": "league-1", "name": "Premier League",
-            "country": "England", "lastSyncedAt": "2026-11-11T01:30:00Z",
+            "country": "England", "lastSyncedAt": "2026-11-23T01:30:00Z",
         }]
         client.fixtures.return_value = [{
             "id": "event-9",
-            "date": "2026-11-15T19:00:00+00:00",
+            "date": "2026-11-26T19:00:00+00:00",
             "status": {"type": {"name": "STATUS_SCHEDULED"}},
             "season": {"id": "season-26"},
             "competitions": [{"id": "league-1", "competitors": [
@@ -103,17 +103,17 @@ class FreeFixtureObservationPipelineTests(unittest.TestCase):
             ]}],
         }]
         result = collect_livescore_observations(
-            "provider-db", ["league-1"], date_from="2026-11-11", date_to="2026-11-18",
+            "provider-db", ["league-1"], date_from="2026-11-24", date_to="2026-11-30",
             client=client,
         )
         client.fixtures.assert_called_once_with(
-            "league-1", status="scheduled", date_from="20261111", date_to="20261118"
+            "league-1", status="scheduled", date_from="20261124", date_to="20261130"
         )
-        self.assertEqual(archive.call_args.kwargs["request_params"]["date_from"], "2026-11-11")
-        self.assertEqual(archive.call_args.kwargs["request_params"]["api_date_from"], "20261111")
+        self.assertEqual(archive.call_args.kwargs["request_params"]["date_from"], "2026-11-24")
+        self.assertEqual(archive.call_args.kwargs["request_params"]["api_date_from"], "20261124")
         self.assertEqual(result["eligible_for_review_count"], 1)
         self.assertEqual(archive.call_args.kwargs["observations"][0]["provider_fixture_id"], "event-9")
-        self.assertEqual(archive.call_args.kwargs["observations"][0]["source_sync_at"], "2026-11-11T01:30:00Z")
+        self.assertEqual(archive.call_args.kwargs["observations"][0]["source_sync_at"], "2026-11-23T01:30:00Z")
         self.assertEqual(archive.call_args.kwargs["observations"][0]["competition_name"], "Premier League")
         self.assertEqual(archive.call_args.kwargs["observations"][0]["raw_payload"]["country"], "England")
         client.leagues.assert_called_once_with(kind="all", available=True)
