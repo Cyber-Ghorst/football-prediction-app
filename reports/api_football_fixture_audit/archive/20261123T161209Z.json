@@ -1,0 +1,60 @@
+{
+  "competition_counts": {},
+  "daily_fixture_counts_utc": {
+    "2026-11-23": 0,
+    "2026-11-24": 0,
+    "2026-11-25": 0,
+    "2026-11-26": 0,
+    "2026-11-27": 0,
+    "2026-11-28": 0,
+    "2026-11-29": 0,
+    "2026-11-30": 0
+  },
+  "daily_target": 90,
+  "daily_target_shortfalls_utc": {
+    "2026-11-23": 90,
+    "2026-11-24": 90,
+    "2026-11-25": 90,
+    "2026-11-26": 90,
+    "2026-11-27": 90,
+    "2026-11-28": 90,
+    "2026-11-29": 90
+  },
+  "duplicate_fixture_ids": 0,
+  "errors": [],
+  "future_fixture_count": 0,
+  "generated_at_utc": "2026-11-23T16:12:09.712498+00:00",
+  "partial_boundary_days_utc": [
+    "2026-11-30"
+  ],
+  "prediction_ready_fixture_count": 0,
+  "provider": "api_football_v3",
+  "rejected_fixture_counts": {},
+  "requests_limit_daily": null,
+  "requests_made": 0,
+  "requests_remaining_before": null,
+  "requests_used_before": null,
+  "sample_fixtures": [],
+  "skip_reason": "APISPORTS_DATA_USE_ALLOWED_CONFIRMED is required before collecting future fixture data; review API-SPORTS terms and any rights-holder licensing obligations that apply to the app's intended use.",
+  "status": "skipped",
+  "subscription_plan": null,
+  "target_dates_utc": [
+    "2026-11-23",
+    "2026-11-24",
+    "2026-11-25",
+    "2026-11-26",
+    "2026-11-27",
+    "2026-11-28",
+    "2026-11-29"
+  ],
+  "target_met": false,
+  "target_shortfall_total": 630,
+  "window_days": 7,
+  "window_end_utc": "2026-11-30T16:12:09.712498+00:00",
+  "window_start_utc": "2026-11-23T16:12:09.712498+00:00",
+  "writes": {
+    "canonical_fixture_writes": 0,
+    "prediction_ledger_writes": 0,
+    "temporary_fixture_inserts": 0
+  }
+}
