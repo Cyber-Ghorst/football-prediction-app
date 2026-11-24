@@ -1,7 +1,7 @@
 {
   "automatic_mapping_approvals": 0,
   "canonical_fixture_writes": 0,
-  "generated_at_utc": "2026-11-23T13:18:13.199453+00:00",
+  "generated_at_utc": "2026-11-24T00:00:13.257629+00:00",
   "prediction_ledger_writes": 0,
   "provider_independent_catalogue": {
     "automatic_mapping_approvals": 0,
@@ -39,7 +39,7 @@
           },
           "season_records": [
             {
-              "observation_count": 32,
+              "observation_count": 28,
               "provider": "bzzoiro",
               "provider_season_id": "98::2037",
               "season_name": "Girabola 26/27",
@@ -67,12 +67,12 @@
             "competition_name": "Girabola",
             "competition_type": null,
             "country": "Angola",
-            "observation_count": 32,
+            "observation_count": 28,
             "provider": "bzzoiro",
             "provider_competition_id": "98",
             "seasons": [
               {
-                "observation_count": 32,
+                "observation_count": 28,
                 "provider": "bzzoiro",
                 "provider_season_id": "98::2037",
                 "season_name": "Girabola 26/27",
@@ -135,7 +135,7 @@
           },
           "season_records": [
             {
-              "observation_count": 25,
+              "observation_count": 23,
               "provider": "bzzoiro",
               "provider_season_id": "97::2018",
               "season_name": "Challenger Pro League 26/27",
@@ -163,12 +163,12 @@
             "competition_name": "Challenger Pro League",
             "competition_type": null,
             "country": "Belgium",
-            "observation_count": 25,
+            "observation_count": 23,
             "provider": "bzzoiro",
             "provider_competition_id": "97",
             "seasons": [
               {
-                "observation_count": 25,
+                "observation_count": 23,
                 "provider": "bzzoiro",
                 "provider_season_id": "97::2018",
                 "season_name": "Challenger Pro League 26/27",
@@ -245,7 +245,7 @@
           },
           "season_records": [
             {
-              "observation_count": 74,
+              "observation_count": 73,
               "provider": "bzzoiro",
               "provider_season_id": "12::1111",
               "season_name": "Championship 26/27",
@@ -291,12 +291,12 @@
             "competition_name": "Championship",
             "competition_type": null,
             "country": "England",
-            "observation_count": 74,
+            "observation_count": 73,
             "provider": "bzzoiro",
             "provider_competition_id": "12",
             "seasons": [
               {
-                "observation_count": 74,
+                "observation_count": 73,
                 "provider": "bzzoiro",
                 "provider_season_id": "12::1111",
                 "season_name": "Championship 26/27",
@@ -703,7 +703,7 @@
           },
           "season_records": [
             {
-              "observation_count": 37,
+              "observation_count": 35,
               "provider": "bzzoiro",
               "provider_season_id": "1::1058",
               "season_name": "Premier League 26/27",
@@ -758,12 +758,12 @@
             "competition_name": "Premier League",
             "competition_type": null,
             "country": "England",
-            "observation_count": 37,
+            "observation_count": 35,
             "provider": "bzzoiro",
             "provider_competition_id": "1",
             "seasons": [
               {
-                "observation_count": 37,
+                "observation_count": 35,
                 "provider": "bzzoiro",
                 "provider_season_id": "1::1058",
                 "season_name": "Premier League 26/27",
@@ -1315,7 +1315,7 @@
           },
           "season_records": [
             {
-              "observation_count": 33,
+              "observation_count": 30,
               "provider": "bzzoiro",
               "provider_season_id": "6::1311",
               "season_name": "Ligue 1 26/27",
@@ -1361,12 +1361,12 @@
             "competition_name": "Ligue 1",
             "competition_type": null,
             "country": "France",
-            "observation_count": 33,
+            "observation_count": 30,
             "provider": "bzzoiro",
             "provider_competition_id": "6",
             "seasons": [
               {
-                "observation_count": 33,
+                "observation_count": 30,
                 "provider": "bzzoiro",
                 "provider_season_id": "6::1311",
                 "season_name": "Ligue 1 26/27",
@@ -1567,7 +1567,7 @@
           },
           "season_records": [
             {
-              "observation_count": 33,
+              "observation_count": 30,
               "provider": "bzzoiro",
               "provider_season_id": "94::1967",
               "season_name": "2. Bundesliga 26/27",
@@ -1604,12 +1604,12 @@
             "competition_name": "2. Bundesliga",
             "competition_type": null,
             "country": "Germany",
-            "observation_count": 33,
+            "observation_count": 30,
             "provider": "bzzoiro",
             "provider_competition_id": "94",
             "seasons": [
               {
-                "observation_count": 33,
+                "observation_count": 30,
                 "provider": "bzzoiro",
                 "provider_season_id": "94::1967",
                 "season_name": "2. Bundesliga 26/27",
@@ -1805,7 +1805,7 @@
           },
           "season_records": [
             {
-              "observation_count": 31,
+              "observation_count": 29,
               "provider": "bzzoiro",
               "provider_season_id": "5::1091",
               "season_name": "Bundesliga 26/27",
@@ -1860,12 +1860,12 @@
             "competition_name": "Bundesliga",
             "competition_type": null,
             "country": "Germany",
-            "observation_count": 31,
+            "observation_count": 29,
             "provider": "bzzoiro",
             "provider_competition_id": "5",
             "seasons": [
               {
-                "observation_count": 31,
+                "observation_count": 29,
                 "provider": "bzzoiro",
                 "provider_season_id": "5::1091",
                 "season_name": "Bundesliga 26/27",
@@ -1999,7 +1999,7 @@
           },
           "season_records": [
             {
-              "observation_count": 39,
+              "observation_count": 36,
               "provider": "bzzoiro",
               "provider_season_id": "4::1375",
               "season_name": "Serie A 26/27",
@@ -2045,12 +2045,12 @@
             "competition_name": "Serie A",
             "competition_type": null,
             "country": "Italy",
-            "observation_count": 39,
+            "observation_count": 36,
             "provider": "bzzoiro",
             "provider_competition_id": "4",
             "seasons": [
               {
-                "observation_count": 39,
+                "observation_count": 36,
                 "provider": "bzzoiro",
                 "provider_season_id": "4::1375",
                 "season_name": "Serie A 26/27",
@@ -2151,7 +2151,7 @@
           },
           "season_records": [
             {
-              "observation_count": 62,
+              "observation_count": 61,
               "provider": "bzzoiro",
               "provider_season_id": "100::2084",
               "season_name": "Serie B 26/27",
@@ -2179,12 +2179,12 @@
             "competition_name": "Serie B",
             "competition_type": null,
             "country": "Italy",
-            "observation_count": 62,
+            "observation_count": 61,
             "provider": "bzzoiro",
             "provider_competition_id": "100",
             "seasons": [
               {
-                "observation_count": 62,
+                "observation_count": 61,
                 "provider": "bzzoiro",
                 "provider_season_id": "100::2084",
                 "season_name": "Serie B 26/27",
@@ -2451,7 +2451,7 @@
           },
           "season_records": [
             {
-              "observation_count": 35,
+              "observation_count": 31,
               "provider": "bzzoiro",
               "provider_season_id": "10::1268",
               "season_name": "Eredivisie 26/27",
@@ -2497,12 +2497,12 @@
             "competition_name": "Eredivisie",
             "competition_type": null,
             "country": "Netherlands",
-            "observation_count": 35,
+            "observation_count": 31,
             "provider": "bzzoiro",
             "provider_competition_id": "10",
             "seasons": [
               {
-                "observation_count": 35,
+                "observation_count": 31,
                 "provider": "bzzoiro",
                 "provider_season_id": "10::1268",
                 "season_name": "Eredivisie 26/27",
@@ -2603,7 +2603,7 @@
           },
           "season_records": [
             {
-              "observation_count": 33,
+              "observation_count": 30,
               "provider": "bzzoiro",
               "provider_season_id": "54::1230",
               "season_name": "Eliteserien 2026",
@@ -2631,12 +2631,12 @@
             "competition_name": "Eliteserien",
             "competition_type": null,
             "country": "Norway",
-            "observation_count": 33,
+            "observation_count": 30,
             "provider": "bzzoiro",
             "provider_competition_id": "54",
             "seasons": [
               {
-                "observation_count": 33,
+                "observation_count": 30,
                 "provider": "bzzoiro",
                 "provider_season_id": "54::1230",
                 "season_name": "Eliteserien 2026",
@@ -2699,7 +2699,7 @@
           },
           "season_records": [
             {
-              "observation_count": 34,
+              "observation_count": 32,
               "provider": "bzzoiro",
               "provider_season_id": "25::1229",
               "season_name": "Ekstraklasa 26/27",
@@ -2727,12 +2727,12 @@
             "competition_name": "Ekstraklasa",
             "competition_type": null,
             "country": "Poland",
-            "observation_count": 34,
+            "observation_count": 32,
             "provider": "bzzoiro",
             "provider_competition_id": "25",
             "seasons": [
               {
-                "observation_count": 34,
+                "observation_count": 32,
                 "provider": "bzzoiro",
                 "provider_season_id": "25::1229",
                 "season_name": "Ekstraklasa 26/27",
@@ -3121,7 +3121,7 @@
           },
           "season_records": [
             {
-              "observation_count": 16,
+              "observation_count": 8,
               "provider": "bzzoiro",
               "provider_season_id": "92::1922",
               "season_name": "Taca de Portugal 26/27",
@@ -3149,12 +3149,12 @@
             "competition_name": "Ta\u00e7a de Portugal",
             "competition_type": null,
             "country": "Portugal",
-            "observation_count": 16,
+            "observation_count": 8,
             "provider": "bzzoiro",
             "provider_competition_id": "92",
             "seasons": [
               {
-                "observation_count": 16,
+                "observation_count": 8,
                 "provider": "bzzoiro",
                 "provider_season_id": "92::1922",
                 "season_name": "Taca de Portugal 26/27",
@@ -3226,7 +3226,7 @@
               ]
             },
             {
-              "observation_count": 11,
+              "observation_count": 13,
               "provider": "livescore_football",
               "provider_season_id": "21231::2026",
               "season_name": "2026",
@@ -3264,12 +3264,12 @@
             "competition_name": "Saudi Pro League",
             "competition_type": null,
             "country": "Saudi Arabia",
-            "observation_count": 11,
+            "observation_count": 13,
             "provider": "livescore_football",
             "provider_competition_id": "21231",
             "seasons": [
               {
-                "observation_count": 11,
+                "observation_count": 13,
                 "provider": "livescore_football",
                 "provider_season_id": "21231::2026",
                 "season_name": "2026",
@@ -3511,7 +3511,7 @@
           },
           "season_records": [
             {
-              "observation_count": 22,
+              "observation_count": 20,
               "provider": "bzzoiro",
               "provider_season_id": "50::1288",
               "season_name": "K-League 1 2026",
@@ -3539,12 +3539,12 @@
             "competition_name": "K League 1",
             "competition_type": null,
             "country": "South Korea",
-            "observation_count": 22,
+            "observation_count": 20,
             "provider": "bzzoiro",
             "provider_competition_id": "50",
             "seasons": [
               {
-                "observation_count": 22,
+                "observation_count": 20,
                 "provider": "bzzoiro",
                 "provider_season_id": "50::1288",
                 "season_name": "K-League 1 2026",
@@ -3611,7 +3611,7 @@
           },
           "season_records": [
             {
-              "observation_count": 39,
+              "observation_count": 36,
               "provider": "bzzoiro",
               "provider_season_id": "3::1307",
               "season_name": "LaLiga 26/27",
@@ -3648,12 +3648,12 @@
             "competition_name": "La Liga",
             "competition_type": null,
             "country": "Spain",
-            "observation_count": 39,
+            "observation_count": 36,
             "provider": "bzzoiro",
             "provider_competition_id": "3",
             "seasons": [
               {
-                "observation_count": 39,
+                "observation_count": 36,
                 "provider": "bzzoiro",
                 "provider_season_id": "3::1307",
                 "season_name": "LaLiga 26/27",
@@ -3735,7 +3735,7 @@
           },
           "season_records": [
             {
-              "observation_count": 44,
+              "observation_count": 40,
               "provider": "bzzoiro",
               "provider_season_id": "38::1356",
               "season_name": "LaLiga 2 26/27",
@@ -3763,12 +3763,12 @@
             "competition_name": "Segunda Divisi\u00f3n",
             "competition_type": null,
             "country": "Spain",
-            "observation_count": 44,
+            "observation_count": 40,
             "provider": "bzzoiro",
             "provider_competition_id": "38",
             "seasons": [
               {
-                "observation_count": 44,
+                "observation_count": 40,
                 "provider": "bzzoiro",
                 "provider_season_id": "38::1356",
                 "season_name": "LaLiga 2 26/27",
@@ -3831,7 +3831,7 @@
           },
           "season_records": [
             {
-              "observation_count": 39,
+              "observation_count": 36,
               "provider": "bzzoiro",
               "provider_season_id": "26::9",
               "season_name": "Allsvenskan 2026",
@@ -3859,12 +3859,12 @@
             "competition_name": "Allsvenskan",
             "competition_type": null,
             "country": "Sweden",
-            "observation_count": 39,
+            "observation_count": 36,
             "provider": "bzzoiro",
             "provider_competition_id": "26",
             "seasons": [
               {
-                "observation_count": 39,
+                "observation_count": 36,
                 "provider": "bzzoiro",
                 "provider_season_id": "26::9",
                 "season_name": "Allsvenskan 2026",
@@ -4023,7 +4023,7 @@
           },
           "season_records": [
             {
-              "observation_count": 24,
+              "observation_count": 21,
               "provider": "bzzoiro",
               "provider_season_id": "15::1395",
               "season_name": "Super League 26/27",
@@ -4051,12 +4051,12 @@
             "competition_name": "Super League",
             "competition_type": null,
             "country": "Switzerland",
-            "observation_count": 24,
+            "observation_count": 21,
             "provider": "bzzoiro",
             "provider_competition_id": "15",
             "seasons": [
               {
-                "observation_count": 24,
+                "observation_count": 21,
                 "provider": "bzzoiro",
                 "provider_season_id": "15::1395",
                 "season_name": "Super League 26/27",
@@ -4119,7 +4119,7 @@
           },
           "season_records": [
             {
-              "observation_count": 37,
+              "observation_count": 35,
               "provider": "bzzoiro",
               "provider_season_id": "18::158",
               "season_name": "MLS 2026",
@@ -4128,7 +4128,7 @@
               ]
             },
             {
-              "observation_count": 3,
+              "observation_count": 4,
               "provider": "livescore_football",
               "provider_season_id": "770::2026",
               "season_name": "2026",
@@ -4147,12 +4147,12 @@
             "competition_name": "MLS",
             "competition_type": null,
             "country": "USA",
-            "observation_count": 37,
+            "observation_count": 35,
             "provider": "bzzoiro",
             "provider_competition_id": "18",
             "seasons": [
               {
-                "observation_count": 37,
+                "observation_count": 35,
                 "provider": "bzzoiro",
                 "provider_season_id": "18::158",
                 "season_name": "MLS 2026",
@@ -4166,12 +4166,12 @@
             "competition_name": "MLS",
             "competition_type": null,
             "country": "United States",
-            "observation_count": 3,
+            "observation_count": 4,
             "provider": "livescore_football",
             "provider_competition_id": "770",
             "seasons": [
               {
-                "observation_count": 3,
+                "observation_count": 4,
                 "provider": "livescore_football",
                 "provider_season_id": "770::2026",
                 "season_name": "2026",
@@ -4185,7 +4185,7 @@
         "status": "eligible_for_manual_canonical_seed_review"
       }
     ],
-    "competition_count": 382,
+    "competition_count": 381,
     "competitions": [
       {
         "canonical_mapping_created": false,
@@ -4534,7 +4534,7 @@
           },
           "season_records": [
             {
-              "observation_count": 32,
+              "observation_count": 28,
               "provider": "bzzoiro",
               "provider_season_id": "98::2037",
               "season_name": "Girabola 26/27",
@@ -4562,12 +4562,12 @@
             "competition_name": "Girabola",
             "competition_type": null,
             "country": "Angola",
-            "observation_count": 32,
+            "observation_count": 28,
             "provider": "bzzoiro",
             "provider_competition_id": "98",
             "seasons": [
               {
-                "observation_count": 32,
+                "observation_count": 28,
                 "provider": "bzzoiro",
                 "provider_season_id": "98::2037",
                 "season_name": "Girabola 26/27",
@@ -4753,7 +4753,7 @@
           },
           "season_records": [
             {
-              "observation_count": 17,
+              "observation_count": 16,
               "provider": "bzzoiro",
               "provider_season_id": "85::1635",
               "season_name": "Primera LPF 2026",
@@ -4770,12 +4770,12 @@
             "competition_name": "Liga Profesional de F\u00fatbol",
             "competition_type": null,
             "country": "Argentina",
-            "observation_count": 17,
+            "observation_count": 16,
             "provider": "bzzoiro",
             "provider_competition_id": "85",
             "seasons": [
               {
-                "observation_count": 17,
+                "observation_count": 16,
                 "provider": "bzzoiro",
                 "provider_season_id": "85::1635",
                 "season_name": "Primera LPF 2026",
@@ -5257,7 +5257,7 @@
           },
           "season_records": [
             {
-              "observation_count": 11,
+              "observation_count": 10,
               "provider": "bzzoiro",
               "provider_season_id": "104::2144",
               "season_name": "A-League 26/27",
@@ -5274,12 +5274,12 @@
             "competition_name": "A-League Men",
             "competition_type": null,
             "country": "Australia",
-            "observation_count": 11,
+            "observation_count": 10,
             "provider": "bzzoiro",
             "provider_competition_id": "104",
             "seasons": [
               {
-                "observation_count": 11,
+                "observation_count": 10,
                 "provider": "bzzoiro",
                 "provider_season_id": "104::2144",
                 "season_name": "A-League 26/27",
@@ -5509,7 +5509,7 @@
           },
           "season_records": [
             {
-              "observation_count": 24,
+              "observation_count": 21,
               "provider": "bzzoiro",
               "provider_season_id": "96::1999",
               "season_name": "Bundesliga 26/27",
@@ -5526,12 +5526,12 @@
             "competition_name": "Austrian Bundesliga",
             "competition_type": null,
             "country": "Austria",
-            "observation_count": 24,
+            "observation_count": 21,
             "provider": "bzzoiro",
             "provider_competition_id": "96",
             "seasons": [
               {
-                "observation_count": 24,
+                "observation_count": 21,
                 "provider": "bzzoiro",
                 "provider_season_id": "96::1999",
                 "season_name": "Bundesliga 26/27",
@@ -6017,7 +6017,7 @@
           },
           "season_records": [
             {
-              "observation_count": 25,
+              "observation_count": 23,
               "provider": "bzzoiro",
               "provider_season_id": "97::2018",
               "season_name": "Challenger Pro League 26/27",
@@ -6045,12 +6045,12 @@
             "competition_name": "Challenger Pro League",
             "competition_type": null,
             "country": "Belgium",
-            "observation_count": 25,
+            "observation_count": 23,
             "provider": "bzzoiro",
             "provider_competition_id": "97",
             "seasons": [
               {
-                "observation_count": 25,
+                "observation_count": 23,
                 "provider": "bzzoiro",
                 "provider_season_id": "97::2018",
                 "season_name": "Challenger Pro League 26/27",
@@ -6173,7 +6173,7 @@
           },
           "season_records": [
             {
-              "observation_count": 35,
+              "observation_count": 31,
               "provider": "bzzoiro",
               "provider_season_id": "14::1327",
               "season_name": "Pro League 26/27",
@@ -6190,12 +6190,12 @@
             "competition_name": "Pro League",
             "competition_type": null,
             "country": "Belgium",
-            "observation_count": 35,
+            "observation_count": 31,
             "provider": "bzzoiro",
             "provider_competition_id": "14",
             "seasons": [
               {
-                "observation_count": 35,
+                "observation_count": 31,
                 "provider": "bzzoiro",
                 "provider_season_id": "14::1327",
                 "season_name": "Pro League 26/27",
@@ -6803,7 +6803,7 @@
           },
           "season_records": [
             {
-              "observation_count": 50,
+              "observation_count": 46,
               "provider": "bzzoiro",
               "provider_season_id": "9::28",
               "season_name": "Brasileiro Serie A 2026",
@@ -6820,12 +6820,12 @@
             "competition_name": "Brasileir\u00e3o Serie A",
             "competition_type": null,
             "country": "Brazil",
-            "observation_count": 50,
+            "observation_count": 46,
             "provider": "bzzoiro",
             "provider_competition_id": "9",
             "seasons": [
               {
-                "observation_count": 50,
+                "observation_count": 46,
                 "provider": "bzzoiro",
                 "provider_season_id": "9::28",
                 "season_name": "Brasileiro Serie A 2026",
@@ -6866,7 +6866,7 @@
           },
           "season_records": [
             {
-              "observation_count": 10,
+              "observation_count": 8,
               "provider": "bzzoiro",
               "provider_season_id": "34::52",
               "season_name": "Brasileiro Serie B 2026",
@@ -6883,12 +6883,12 @@
             "competition_name": "Brasileir\u00e3o Serie B",
             "competition_type": null,
             "country": "Brazil",
-            "observation_count": 10,
+            "observation_count": 8,
             "provider": "bzzoiro",
             "provider_competition_id": "34",
             "seasons": [
               {
-                "observation_count": 10,
+                "observation_count": 8,
                 "provider": "bzzoiro",
                 "provider_season_id": "34::52",
                 "season_name": "Brasileiro Serie B 2026",
@@ -6929,7 +6929,7 @@
           },
           "season_records": [
             {
-              "observation_count": 2,
+              "observation_count": 3,
               "provider": "livescore_football",
               "provider_season_id": "630::2026",
               "season_name": "2026",
@@ -6946,12 +6946,12 @@
             "competition_name": "Brazilian Serie A",
             "competition_type": null,
             "country": "Brazil",
-            "observation_count": 2,
+            "observation_count": 3,
             "provider": "livescore_football",
             "provider_competition_id": "630",
             "seasons": [
               {
-                "observation_count": 2,
+                "observation_count": 3,
                 "provider": "livescore_football",
                 "provider_season_id": "630::2026",
                 "season_name": "2026",
@@ -8195,7 +8195,7 @@
           },
           "season_records": [
             {
-              "observation_count": 30,
+              "observation_count": 27,
               "provider": "bzzoiro",
               "provider_season_id": "22::1326",
               "season_name": "Parva Liga 26/27",
@@ -8212,12 +8212,12 @@
             "competition_name": "Parva Liga",
             "competition_type": null,
             "country": "Bulgaria",
-            "observation_count": 30,
+            "observation_count": 27,
             "provider": "bzzoiro",
             "provider_competition_id": "22",
             "seasons": [
               {
-                "observation_count": 30,
+                "observation_count": 27,
                 "provider": "bzzoiro",
                 "provider_season_id": "22::1326",
                 "season_name": "Parva Liga 26/27",
@@ -8762,7 +8762,7 @@
           },
           "season_records": [
             {
-              "observation_count": 30,
+              "observation_count": 27,
               "provider": "bzzoiro",
               "provider_season_id": "111::2305",
               "season_name": "Primera Division 2026",
@@ -8779,12 +8779,12 @@
             "competition_name": "Liga de Primera",
             "competition_type": null,
             "country": "Chile",
-            "observation_count": 30,
+            "observation_count": 27,
             "provider": "bzzoiro",
             "provider_competition_id": "111",
             "seasons": [
               {
-                "observation_count": 30,
+                "observation_count": 27,
                 "provider": "bzzoiro",
                 "provider_season_id": "111::2305",
                 "season_name": "Primera Division 2026",
@@ -9140,7 +9140,7 @@
           },
           "season_records": [
             {
-              "observation_count": 26,
+              "observation_count": 25,
               "provider": "bzzoiro",
               "provider_season_id": "80::1570",
               "season_name": "Liga DIMAYOR 2026",
@@ -9157,12 +9157,12 @@
             "competition_name": "Categor\u00eda Primera A",
             "competition_type": null,
             "country": "Colombia",
-            "observation_count": 26,
+            "observation_count": 25,
             "provider": "bzzoiro",
             "provider_competition_id": "80",
             "seasons": [
               {
-                "observation_count": 26,
+                "observation_count": 25,
                 "provider": "bzzoiro",
                 "provider_season_id": "80::1570",
                 "season_name": "Liga DIMAYOR 2026",
@@ -9896,7 +9896,7 @@
           },
           "season_records": [
             {
-              "observation_count": 30,
+              "observation_count": 27,
               "provider": "bzzoiro",
               "provider_season_id": "99::2065",
               "season_name": "1. Liga 26/27",
@@ -9913,12 +9913,12 @@
             "competition_name": "Czech First League",
             "competition_type": null,
             "country": "Czech Republic",
-            "observation_count": 30,
+            "observation_count": 27,
             "provider": "bzzoiro",
             "provider_competition_id": "99",
             "seasons": [
               {
-                "observation_count": 30,
+                "observation_count": 27,
                 "provider": "bzzoiro",
                 "provider_season_id": "99::2065",
                 "season_name": "1. Liga 26/27",
@@ -10211,7 +10211,7 @@
           },
           "season_records": [
             {
-              "observation_count": 27,
+              "observation_count": 24,
               "provider": "bzzoiro",
               "provider_season_id": "84::1612",
               "season_name": "Superliga 26/27",
@@ -10228,12 +10228,12 @@
             "competition_name": "Danish Superliga",
             "competition_type": null,
             "country": "Denmark",
-            "observation_count": 27,
+            "observation_count": 24,
             "provider": "bzzoiro",
             "provider_competition_id": "84",
             "seasons": [
               {
-                "observation_count": 27,
+                "observation_count": 24,
                 "provider": "bzzoiro",
                 "provider_season_id": "84::1612",
                 "season_name": "Superliga 26/27",
@@ -10526,7 +10526,7 @@
           },
           "season_records": [
             {
-              "observation_count": 24,
+              "observation_count": 21,
               "provider": "bzzoiro",
               "provider_season_id": "112::2317",
               "season_name": "LigaPro Primera A 2026",
@@ -10543,12 +10543,12 @@
             "competition_name": "LigaPro Serie A",
             "competition_type": null,
             "country": "Ecuador",
-            "observation_count": 24,
+            "observation_count": 21,
             "provider": "bzzoiro",
             "provider_competition_id": "112",
             "seasons": [
               {
-                "observation_count": 24,
+                "observation_count": 21,
                 "provider": "bzzoiro",
                 "provider_season_id": "112::2317",
                 "season_name": "LigaPro Primera A 2026",
@@ -10733,7 +10733,7 @@
           },
           "season_records": [
             {
-              "observation_count": 74,
+              "observation_count": 73,
               "provider": "bzzoiro",
               "provider_season_id": "12::1111",
               "season_name": "Championship 26/27",
@@ -10779,12 +10779,12 @@
             "competition_name": "Championship",
             "competition_type": null,
             "country": "England",
-            "observation_count": 74,
+            "observation_count": 73,
             "provider": "bzzoiro",
             "provider_competition_id": "12",
             "seasons": [
               {
-                "observation_count": 74,
+                "observation_count": 73,
                 "provider": "bzzoiro",
                 "provider_season_id": "12::1111",
                 "season_name": "Championship 26/27",
@@ -11008,7 +11008,7 @@
           },
           "season_records": [
             {
-              "observation_count": 8,
+              "observation_count": 16,
               "provider": "livescore_football",
               "provider_season_id": "3914::2026",
               "season_name": "2026",
@@ -11025,12 +11025,12 @@
             "competition_name": "English League Championship",
             "competition_type": null,
             "country": "England",
-            "observation_count": 8,
+            "observation_count": 16,
             "provider": "livescore_football",
             "provider_competition_id": "3914",
             "seasons": [
               {
-                "observation_count": 8,
+                "observation_count": 16,
                 "provider": "livescore_football",
                 "provider_season_id": "3914::2026",
                 "season_name": "2026",
@@ -11285,69 +11285,6 @@
                 "observation_count": 30,
                 "provider": "livescore_football",
                 "provider_season_id": "700::2026",
-                "season_name": "2026",
-                "start_years": [
-                  2026
-                ]
-              }
-            ]
-          }
-        ],
-        "status": "single_provider_only"
-      },
-      {
-        "canonical_mapping_created": false,
-        "competition_names": [
-          "English Women's FA Cup"
-        ],
-        "competition_type_evidence": {
-          "status": "unknown_not_supplied",
-          "values": []
-        },
-        "countries": [
-          "England"
-        ],
-        "identity_candidate_key": null,
-        "identity_candidate_key_status": "blocked_without_corroborated_competition_type",
-        "normalized_country": "england",
-        "normalized_name": "english women s fa cup",
-        "provider_count": 1,
-        "providers": [
-          "livescore_football"
-        ],
-        "season_evidence": {
-          "provider_start_years": {
-            "livescore_football": [
-              2026
-            ]
-          },
-          "season_records": [
-            {
-              "observation_count": 1,
-              "provider": "livescore_football",
-              "provider_season_id": "20226::2026",
-              "season_name": "2026",
-              "start_years": [
-                2026
-              ]
-            }
-          ],
-          "shared_start_years": [],
-          "status": "insufficient_provider_season_evidence"
-        },
-        "sources": [
-          {
-            "competition_name": "English Women's FA Cup",
-            "competition_type": null,
-            "country": "England",
-            "observation_count": 1,
-            "provider": "livescore_football",
-            "provider_competition_id": "20226",
-            "seasons": [
-              {
-                "observation_count": 1,
-                "provider": "livescore_football",
-                "provider_season_id": "20226::2026",
                 "season_name": "2026",
                 "start_years": [
                   2026
@@ -11825,7 +11762,7 @@
           },
           "season_records": [
             {
-              "observation_count": 37,
+              "observation_count": 35,
               "provider": "bzzoiro",
               "provider_season_id": "1::1058",
               "season_name": "Premier League 26/27",
@@ -11880,12 +11817,12 @@
             "competition_name": "Premier League",
             "competition_type": null,
             "country": "England",
-            "observation_count": 37,
+            "observation_count": 35,
             "provider": "bzzoiro",
             "provider_competition_id": "1",
             "seasons": [
               {
-                "observation_count": 37,
+                "observation_count": 35,
                 "provider": "bzzoiro",
                 "provider_season_id": "1::1058",
                 "season_name": "Premier League 26/27",
@@ -13261,7 +13198,7 @@
           },
           "season_records": [
             {
-              "observation_count": 33,
+              "observation_count": 30,
               "provider": "bzzoiro",
               "provider_season_id": "6::1311",
               "season_name": "Ligue 1 26/27",
@@ -13307,12 +13244,12 @@
             "competition_name": "Ligue 1",
             "competition_type": null,
             "country": "France",
-            "observation_count": 33,
+            "observation_count": 30,
             "provider": "bzzoiro",
             "provider_competition_id": "6",
             "seasons": [
               {
-                "observation_count": 33,
+                "observation_count": 30,
                 "provider": "bzzoiro",
                 "provider_season_id": "6::1311",
                 "season_name": "Ligue 1 26/27",
@@ -13767,7 +13704,7 @@
           },
           "season_records": [
             {
-              "observation_count": 33,
+              "observation_count": 30,
               "provider": "bzzoiro",
               "provider_season_id": "94::1967",
               "season_name": "2. Bundesliga 26/27",
@@ -13804,12 +13741,12 @@
             "competition_name": "2. Bundesliga",
             "competition_type": null,
             "country": "Germany",
-            "observation_count": 33,
+            "observation_count": 30,
             "provider": "bzzoiro",
             "provider_competition_id": "94",
             "seasons": [
               {
-                "observation_count": 33,
+                "observation_count": 30,
                 "provider": "bzzoiro",
                 "provider_season_id": "94::1967",
                 "season_name": "2. Bundesliga 26/27",
@@ -14070,7 +14007,7 @@
           },
           "season_records": [
             {
-              "observation_count": 31,
+              "observation_count": 29,
               "provider": "bzzoiro",
               "provider_season_id": "5::1091",
               "season_name": "Bundesliga 26/27",
@@ -14125,12 +14062,12 @@
             "competition_name": "Bundesliga",
             "competition_type": null,
             "country": "Germany",
-            "observation_count": 31,
+            "observation_count": 29,
             "provider": "bzzoiro",
             "provider_competition_id": "5",
             "seasons": [
               {
-                "observation_count": 31,
+                "observation_count": 29,
                 "provider": "bzzoiro",
                 "provider_season_id": "5::1091",
                 "season_name": "Bundesliga 26/27",
@@ -14625,7 +14562,7 @@
           },
           "season_records": [
             {
-              "observation_count": 34,
+              "observation_count": 29,
               "provider": "bzzoiro",
               "provider_season_id": "24::1569",
               "season_name": "Super League 26/27",
@@ -14642,12 +14579,12 @@
             "competition_name": "Stoiximan Super League",
             "competition_type": null,
             "country": "Greece",
-            "observation_count": 34,
+            "observation_count": 29,
             "provider": "bzzoiro",
             "provider_competition_id": "24",
             "seasons": [
               {
-                "observation_count": 34,
+                "observation_count": 29,
                 "provider": "bzzoiro",
                 "provider_season_id": "24::1569",
                 "season_name": "Super League 26/27",
@@ -16029,7 +15966,7 @@
           },
           "season_records": [
             {
-              "observation_count": 39,
+              "observation_count": 36,
               "provider": "bzzoiro",
               "provider_season_id": "4::1375",
               "season_name": "Serie A 26/27",
@@ -16075,12 +16012,12 @@
             "competition_name": "Serie A",
             "competition_type": null,
             "country": "Italy",
-            "observation_count": 39,
+            "observation_count": 36,
             "provider": "bzzoiro",
             "provider_competition_id": "4",
             "seasons": [
               {
-                "observation_count": 39,
+                "observation_count": 36,
                 "provider": "bzzoiro",
                 "provider_season_id": "4::1375",
                 "season_name": "Serie A 26/27",
@@ -16245,7 +16182,7 @@
           },
           "season_records": [
             {
-              "observation_count": 62,
+              "observation_count": 61,
               "provider": "bzzoiro",
               "provider_season_id": "100::2084",
               "season_name": "Serie B 26/27",
@@ -16273,12 +16210,12 @@
             "competition_name": "Serie B",
             "competition_type": null,
             "country": "Italy",
-            "observation_count": 62,
+            "observation_count": 61,
             "provider": "bzzoiro",
             "provider_competition_id": "100",
             "seasons": [
               {
-                "observation_count": 62,
+                "observation_count": 61,
                 "provider": "bzzoiro",
                 "provider_season_id": "100::2084",
                 "season_name": "Serie B 26/27",
@@ -16338,7 +16275,7 @@
           },
           "season_records": [
             {
-              "observation_count": 43,
+              "observation_count": 38,
               "provider": "bzzoiro",
               "provider_season_id": "101::2103",
               "season_name": "Serie C, Group A 26/27",
@@ -16355,12 +16292,12 @@
             "competition_name": "Serie C, Girone A",
             "competition_type": null,
             "country": "Italy",
-            "observation_count": 43,
+            "observation_count": 38,
             "provider": "bzzoiro",
             "provider_competition_id": "101",
             "seasons": [
               {
-                "observation_count": 43,
+                "observation_count": 38,
                 "provider": "bzzoiro",
                 "provider_season_id": "101::2103",
                 "season_name": "Serie C, Group A 26/27",
@@ -16401,7 +16338,7 @@
           },
           "season_records": [
             {
-              "observation_count": 42,
+              "observation_count": 39,
               "provider": "bzzoiro",
               "provider_season_id": "103::2130",
               "season_name": "Serie C, Group B 26/27",
@@ -16418,12 +16355,12 @@
             "competition_name": "Serie C, Girone B",
             "competition_type": null,
             "country": "Italy",
-            "observation_count": 42,
+            "observation_count": 39,
             "provider": "bzzoiro",
             "provider_competition_id": "103",
             "seasons": [
               {
-                "observation_count": 42,
+                "observation_count": 39,
                 "provider": "bzzoiro",
                 "provider_season_id": "103::2130",
                 "season_name": "Serie C, Group B 26/27",
@@ -16464,7 +16401,7 @@
           },
           "season_records": [
             {
-              "observation_count": 41,
+              "observation_count": 37,
               "provider": "bzzoiro",
               "provider_season_id": "102::2116",
               "season_name": "Serie C, Group C 26/27",
@@ -16481,12 +16418,12 @@
             "competition_name": "Serie C, Girone C",
             "competition_type": null,
             "country": "Italy",
-            "observation_count": 41,
+            "observation_count": 37,
             "provider": "bzzoiro",
             "provider_competition_id": "102",
             "seasons": [
               {
-                "observation_count": 41,
+                "observation_count": 37,
                 "provider": "bzzoiro",
                 "provider_season_id": "102::2116",
                 "season_name": "Serie C, Group C 26/27",
@@ -18575,7 +18512,7 @@
           },
           "season_records": [
             {
-              "observation_count": 9,
+              "observation_count": 6,
               "provider": "bzzoiro",
               "provider_season_id": "19::1309",
               "season_name": "Liga MX, Apertura 2026",
@@ -18592,12 +18529,12 @@
             "competition_name": "Liga MX Apertura",
             "competition_type": null,
             "country": "Mexico",
-            "observation_count": 9,
+            "observation_count": 6,
             "provider": "bzzoiro",
             "provider_competition_id": "19",
             "seasons": [
               {
-                "observation_count": 9,
+                "observation_count": 6,
                 "provider": "bzzoiro",
                 "provider_season_id": "19::1309",
                 "season_name": "Liga MX, Apertura 2026",
@@ -19509,7 +19446,7 @@
           },
           "season_records": [
             {
-              "observation_count": 35,
+              "observation_count": 31,
               "provider": "bzzoiro",
               "provider_season_id": "10::1268",
               "season_name": "Eredivisie 26/27",
@@ -19555,12 +19492,12 @@
             "competition_name": "Eredivisie",
             "competition_type": null,
             "country": "Netherlands",
-            "observation_count": 35,
+            "observation_count": 31,
             "provider": "bzzoiro",
             "provider_competition_id": "10",
             "seasons": [
               {
-                "observation_count": 35,
+                "observation_count": 31,
                 "provider": "bzzoiro",
                 "provider_season_id": "10::1268",
                 "season_name": "Eredivisie 26/27",
@@ -19847,7 +19784,7 @@
           },
           "season_records": [
             {
-              "observation_count": 45,
+              "observation_count": 39,
               "provider": "bzzoiro",
               "provider_season_id": "28::1901",
               "season_name": "Premier League 26/27",
@@ -19864,12 +19801,12 @@
             "competition_name": "Nigeria Premier Football League",
             "competition_type": null,
             "country": "Nigeria",
-            "observation_count": 45,
+            "observation_count": 39,
             "provider": "bzzoiro",
             "provider_competition_id": "28",
             "seasons": [
               {
-                "observation_count": 45,
+                "observation_count": 39,
                 "provider": "bzzoiro",
                 "provider_season_id": "28::1901",
                 "season_name": "Premier League 26/27",
@@ -20229,7 +20166,7 @@
           },
           "season_records": [
             {
-              "observation_count": 33,
+              "observation_count": 30,
               "provider": "bzzoiro",
               "provider_season_id": "54::1230",
               "season_name": "Eliteserien 2026",
@@ -20257,12 +20194,12 @@
             "competition_name": "Eliteserien",
             "competition_type": null,
             "country": "Norway",
-            "observation_count": 33,
+            "observation_count": 30,
             "provider": "bzzoiro",
             "provider_competition_id": "54",
             "seasons": [
               {
-                "observation_count": 33,
+                "observation_count": 30,
                 "provider": "bzzoiro",
                 "provider_season_id": "54::1230",
                 "season_name": "Eliteserien 2026",
@@ -20889,7 +20826,7 @@
           },
           "season_records": [
             {
-              "observation_count": 4,
+              "observation_count": 2,
               "provider": "bzzoiro",
               "provider_season_id": "113::2286",
               "season_name": "Liga 1 2026",
@@ -20906,12 +20843,12 @@
             "competition_name": "Liga 1",
             "competition_type": null,
             "country": "Peru",
-            "observation_count": 4,
+            "observation_count": 2,
             "provider": "bzzoiro",
             "provider_competition_id": "113",
             "seasons": [
               {
-                "observation_count": 4,
+                "observation_count": 2,
                 "provider": "bzzoiro",
                 "provider_season_id": "113::2286",
                 "season_name": "Liga 1 2026",
@@ -21334,7 +21271,7 @@
           },
           "season_records": [
             {
-              "observation_count": 34,
+              "observation_count": 32,
               "provider": "bzzoiro",
               "provider_season_id": "25::1229",
               "season_name": "Ekstraklasa 26/27",
@@ -21362,12 +21299,12 @@
             "competition_name": "Ekstraklasa",
             "competition_type": null,
             "country": "Poland",
-            "observation_count": 34,
+            "observation_count": 32,
             "provider": "bzzoiro",
             "provider_competition_id": "25",
             "seasons": [
               {
-                "observation_count": 34,
+                "observation_count": 32,
                 "provider": "bzzoiro",
                 "provider_season_id": "25::1229",
                 "season_name": "Ekstraklasa 26/27",
@@ -21553,7 +21490,7 @@
           },
           "season_records": [
             {
-              "observation_count": 86,
+              "observation_count": 85,
               "provider": "bzzoiro",
               "provider_season_id": "95::1986",
               "season_name": "Campeonato de Portugal 26/27",
@@ -21570,12 +21507,12 @@
             "competition_name": "Campeonato de Portugal",
             "competition_type": null,
             "country": "Portugal",
-            "observation_count": 86,
+            "observation_count": 85,
             "provider": "bzzoiro",
             "provider_competition_id": "95",
             "seasons": [
               {
-                "observation_count": 86,
+                "observation_count": 85,
                 "provider": "bzzoiro",
                 "provider_season_id": "95::1986",
                 "season_name": "Campeonato de Portugal 26/27",
@@ -21873,7 +21810,7 @@
           },
           "season_records": [
             {
-              "observation_count": 23,
+              "observation_count": 25,
               "provider": "bzzoiro",
               "provider_season_id": "2::1310",
               "season_name": "Liga Portugal 26/27",
@@ -21890,12 +21827,12 @@
             "competition_name": "Liga Portugal Betclic",
             "competition_type": null,
             "country": "Portugal",
-            "observation_count": 23,
+            "observation_count": 25,
             "provider": "bzzoiro",
             "provider_competition_id": "2",
             "seasons": [
               {
-                "observation_count": 23,
+                "observation_count": 25,
                 "provider": "bzzoiro",
                 "provider_season_id": "2::1310",
                 "season_name": "Liga Portugal 26/27",
@@ -22138,7 +22075,7 @@
           },
           "season_records": [
             {
-              "observation_count": 16,
+              "observation_count": 8,
               "provider": "bzzoiro",
               "provider_season_id": "92::1922",
               "season_name": "Taca de Portugal 26/27",
@@ -22166,12 +22103,12 @@
             "competition_name": "Ta\u00e7a de Portugal",
             "competition_type": null,
             "country": "Portugal",
-            "observation_count": 16,
+            "observation_count": 8,
             "provider": "bzzoiro",
             "provider_competition_id": "92",
             "seasons": [
               {
-                "observation_count": 16,
+                "observation_count": 8,
                 "provider": "bzzoiro",
                 "provider_season_id": "92::1922",
                 "season_name": "Taca de Portugal 26/27",
@@ -22546,7 +22483,7 @@
           },
           "season_records": [
             {
-              "observation_count": 29,
+              "observation_count": 28,
               "provider": "bzzoiro",
               "provider_season_id": "23::1396",
               "season_name": "Superliga 26/27",
@@ -22563,12 +22500,12 @@
             "competition_name": "Superliga",
             "competition_type": null,
             "country": "Romania",
-            "observation_count": 29,
+            "observation_count": 28,
             "provider": "bzzoiro",
             "provider_competition_id": "23",
             "seasons": [
               {
-                "observation_count": 29,
+                "observation_count": 28,
                 "provider": "bzzoiro",
                 "provider_season_id": "23::1396",
                 "season_name": "Superliga 26/27",
@@ -23189,7 +23126,7 @@
               ]
             },
             {
-              "observation_count": 11,
+              "observation_count": 13,
               "provider": "livescore_football",
               "provider_season_id": "21231::2026",
               "season_name": "2026",
@@ -23227,12 +23164,12 @@
             "competition_name": "Saudi Pro League",
             "competition_type": null,
             "country": "Saudi Arabia",
-            "observation_count": 11,
+            "observation_count": 13,
             "provider": "livescore_football",
             "provider_competition_id": "21231",
             "seasons": [
               {
-                "observation_count": 11,
+                "observation_count": 13,
                 "provider": "livescore_football",
                 "provider_season_id": "21231::2026",
                 "season_name": "2026",
@@ -24126,7 +24063,7 @@
           },
           "season_records": [
             {
-              "observation_count": 22,
+              "observation_count": 20,
               "provider": "bzzoiro",
               "provider_season_id": "109::2243",
               "season_name": "Superliga 26/27",
@@ -24143,12 +24080,12 @@
             "competition_name": "Nik\u00e9 liga",
             "competition_type": null,
             "country": "Slovakia",
-            "observation_count": 22,
+            "observation_count": 20,
             "provider": "bzzoiro",
             "provider_competition_id": "109",
             "seasons": [
               {
-                "observation_count": 22,
+                "observation_count": 20,
                 "provider": "bzzoiro",
                 "provider_season_id": "109::2243",
                 "season_name": "Superliga 26/27",
@@ -24800,7 +24737,7 @@
           },
           "season_records": [
             {
-              "observation_count": 22,
+              "observation_count": 20,
               "provider": "bzzoiro",
               "provider_season_id": "50::1288",
               "season_name": "K-League 1 2026",
@@ -24828,12 +24765,12 @@
             "competition_name": "K League 1",
             "competition_type": null,
             "country": "South Korea",
-            "observation_count": 22,
+            "observation_count": 20,
             "provider": "bzzoiro",
             "provider_competition_id": "50",
             "seasons": [
               {
-                "observation_count": 22,
+                "observation_count": 20,
                 "provider": "bzzoiro",
                 "provider_season_id": "50::1288",
                 "season_name": "K-League 1 2026",
@@ -25027,7 +24964,7 @@
           },
           "season_records": [
             {
-              "observation_count": 39,
+              "observation_count": 36,
               "provider": "bzzoiro",
               "provider_season_id": "3::1307",
               "season_name": "LaLiga 26/27",
@@ -25064,12 +25001,12 @@
             "competition_name": "La Liga",
             "competition_type": null,
             "country": "Spain",
-            "observation_count": 39,
+            "observation_count": 36,
             "provider": "bzzoiro",
             "provider_competition_id": "3",
             "seasons": [
               {
-                "observation_count": 39,
+                "observation_count": 36,
                 "provider": "bzzoiro",
                 "provider_season_id": "3::1307",
                 "season_name": "LaLiga 26/27",
@@ -25148,7 +25085,7 @@
           },
           "season_records": [
             {
-              "observation_count": 11,
+              "observation_count": 7,
               "provider": "bzzoiro",
               "provider_season_id": "36::1308",
               "season_name": "Primera Division Women 26/27",
@@ -25165,12 +25102,12 @@
             "competition_name": "Liga F",
             "competition_type": null,
             "country": "Spain",
-            "observation_count": 11,
+            "observation_count": 7,
             "provider": "bzzoiro",
             "provider_competition_id": "36",
             "seasons": [
               {
-                "observation_count": 11,
+                "observation_count": 7,
                 "provider": "bzzoiro",
                 "provider_season_id": "36::1308",
                 "season_name": "Primera Division Women 26/27",
@@ -25347,7 +25284,7 @@
           },
           "season_records": [
             {
-              "observation_count": 44,
+              "observation_count": 40,
               "provider": "bzzoiro",
               "provider_season_id": "38::1356",
               "season_name": "LaLiga 2 26/27",
@@ -25375,12 +25312,12 @@
             "competition_name": "Segunda Divisi\u00f3n",
             "competition_type": null,
             "country": "Spain",
-            "observation_count": 44,
+            "observation_count": 40,
             "provider": "bzzoiro",
             "provider_competition_id": "38",
             "seasons": [
               {
-                "observation_count": 44,
+                "observation_count": 40,
                 "provider": "bzzoiro",
                 "provider_season_id": "38::1356",
                 "season_name": "LaLiga 2 26/27",
@@ -25503,7 +25440,7 @@
           },
           "season_records": [
             {
-              "observation_count": 37,
+              "observation_count": 32,
               "provider": "livescore_football",
               "provider_season_id": "740::2026",
               "season_name": "2026",
@@ -25520,12 +25457,12 @@
             "competition_name": "Spanish LALIGA",
             "competition_type": null,
             "country": "Spain",
-            "observation_count": 37,
+            "observation_count": 32,
             "provider": "livescore_football",
             "provider_competition_id": "740",
             "seasons": [
               {
-                "observation_count": 37,
+                "observation_count": 32,
                 "provider": "livescore_football",
                 "provider_season_id": "740::2026",
                 "season_name": "2026",
@@ -25633,7 +25570,7 @@
           },
           "season_records": [
             {
-              "observation_count": 39,
+              "observation_count": 36,
               "provider": "bzzoiro",
               "provider_season_id": "26::9",
               "season_name": "Allsvenskan 2026",
@@ -25661,12 +25598,12 @@
             "competition_name": "Allsvenskan",
             "competition_type": null,
             "country": "Sweden",
-            "observation_count": 39,
+            "observation_count": 36,
             "provider": "bzzoiro",
             "provider_competition_id": "26",
             "seasons": [
               {
-                "observation_count": 39,
+                "observation_count": 36,
                 "provider": "bzzoiro",
                 "provider_season_id": "26::9",
                 "season_name": "Allsvenskan 2026",
@@ -26079,7 +26016,7 @@
           },
           "season_records": [
             {
-              "observation_count": 24,
+              "observation_count": 21,
               "provider": "bzzoiro",
               "provider_season_id": "15::1395",
               "season_name": "Super League 26/27",
@@ -26107,12 +26044,12 @@
             "competition_name": "Super League",
             "competition_type": null,
             "country": "Switzerland",
-            "observation_count": 24,
+            "observation_count": 21,
             "provider": "bzzoiro",
             "provider_competition_id": "15",
             "seasons": [
               {
-                "observation_count": 24,
+                "observation_count": 21,
                 "provider": "bzzoiro",
                 "provider_season_id": "15::1395",
                 "season_name": "Super League 26/27",
@@ -26550,7 +26487,7 @@
           },
           "season_records": [
             {
-              "observation_count": 4,
+              "observation_count": 2,
               "provider": "bzzoiro",
               "provider_season_id": "47::1634",
               "season_name": "Ligue 1 26/27",
@@ -26567,12 +26504,12 @@
             "competition_name": "Tunisian Ligue Professionnelle 1",
             "competition_type": null,
             "country": "Tunisia",
-            "observation_count": 4,
+            "observation_count": 2,
             "provider": "bzzoiro",
             "provider_competition_id": "47",
             "seasons": [
               {
-                "observation_count": 4,
+                "observation_count": 2,
                 "provider": "bzzoiro",
                 "provider_season_id": "47::1634",
                 "season_name": "Ligue 1 26/27",
@@ -26802,7 +26739,7 @@
           },
           "season_records": [
             {
-              "observation_count": 41,
+              "observation_count": 37,
               "provider": "bzzoiro",
               "provider_season_id": "107::2201",
               "season_name": "1. Lig 26/27",
@@ -26819,12 +26756,12 @@
             "competition_name": "Trendyol 1. Lig",
             "competition_type": null,
             "country": "Turkey",
-            "observation_count": 41,
+            "observation_count": 37,
             "provider": "bzzoiro",
             "provider_competition_id": "107",
             "seasons": [
               {
-                "observation_count": 41,
+                "observation_count": 37,
                 "provider": "bzzoiro",
                 "provider_season_id": "107::2201",
                 "season_name": "1. Lig 26/27",
@@ -26865,7 +26802,7 @@
           },
           "season_records": [
             {
-              "observation_count": 34,
+              "observation_count": 32,
               "provider": "bzzoiro",
               "provider_season_id": "11::1539",
               "season_name": "Super Lig 26/27",
@@ -26882,12 +26819,12 @@
             "competition_name": "Trendyol Super Lig",
             "competition_type": null,
             "country": "Turkey",
-            "observation_count": 34,
+            "observation_count": 32,
             "provider": "bzzoiro",
             "provider_competition_id": "11",
             "seasons": [
               {
-                "observation_count": 34,
+                "observation_count": 32,
                 "provider": "bzzoiro",
                 "provider_season_id": "11::1539",
                 "season_name": "Super Lig 26/27",
@@ -27626,7 +27563,7 @@
           },
           "season_records": [
             {
-              "observation_count": 37,
+              "observation_count": 35,
               "provider": "bzzoiro",
               "provider_season_id": "18::158",
               "season_name": "MLS 2026",
@@ -27635,7 +27572,7 @@
               ]
             },
             {
-              "observation_count": 3,
+              "observation_count": 4,
               "provider": "livescore_football",
               "provider_season_id": "770::2026",
               "season_name": "2026",
@@ -27654,12 +27591,12 @@
             "competition_name": "MLS",
             "competition_type": null,
             "country": "USA",
-            "observation_count": 37,
+            "observation_count": 35,
             "provider": "bzzoiro",
             "provider_competition_id": "18",
             "seasons": [
               {
-                "observation_count": 37,
+                "observation_count": 35,
                 "provider": "bzzoiro",
                 "provider_season_id": "18::158",
                 "season_name": "MLS 2026",
@@ -27673,12 +27610,12 @@
             "competition_name": "MLS",
             "competition_type": null,
             "country": "United States",
-            "observation_count": 3,
+            "observation_count": 4,
             "provider": "livescore_football",
             "provider_competition_id": "770",
             "seasons": [
               {
-                "observation_count": 3,
+                "observation_count": 4,
                 "provider": "livescore_football",
                 "provider_season_id": "770::2026",
                 "season_name": "2026",
@@ -27719,7 +27656,7 @@
           },
           "season_records": [
             {
-              "observation_count": 2,
+              "observation_count": 1,
               "provider": "bzzoiro",
               "provider_season_id": "72::1540",
               "season_name": "National Womens Soccer League 2026",
@@ -27736,12 +27673,12 @@
             "competition_name": "NWSL",
             "competition_type": null,
             "country": "USA",
-            "observation_count": 2,
+            "observation_count": 1,
             "provider": "bzzoiro",
             "provider_competition_id": "72",
             "seasons": [
               {
-                "observation_count": 2,
+                "observation_count": 1,
                 "provider": "bzzoiro",
                 "provider_season_id": "72::1540",
                 "season_name": "National Womens Soccer League 2026",
@@ -29105,7 +29042,7 @@
           },
           "season_records": [
             {
-              "observation_count": 8,
+              "observation_count": 11,
               "provider": "bzzoiro",
               "provider_season_id": "79::1552",
               "season_name": "Club Friendly Games 2026",
@@ -29122,12 +29059,12 @@
             "competition_name": "Club Friendlies",
             "competition_type": null,
             "country": "World",
-            "observation_count": 8,
+            "observation_count": 11,
             "provider": "bzzoiro",
             "provider_competition_id": "79",
             "seasons": [
               {
-                "observation_count": 8,
+                "observation_count": 11,
                 "provider": "bzzoiro",
                 "provider_season_id": "79::1552",
                 "season_name": "Club Friendly Games 2026",
@@ -30707,7 +30644,7 @@
     "method": "exact_normalized_competition_name_and_country",
     "provider_count": 6,
     "provider_links_created": 0,
-    "single_provider_competition_count": 345
+    "single_provider_competition_count": 344
   },
   "providers": {
     "api_ninjas": {
@@ -31533,7 +31470,7 @@
           }
         },
         "teams": {
-          "candidate_count": 1055,
+          "candidate_count": 1057,
           "candidates": [
             {
               "canonical_entity_id": "sportmonks:113",
@@ -32920,7 +32857,7 @@
           "manual_review_candidate_count": 67,
           "status_counts": {
             "candidate_requires_manual_approval": 67,
-            "no_exact_contextual_match": 988
+            "no_exact_contextual_match": 990
           }
         }
       },
@@ -32929,12 +32866,12 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 2213,
+      "observation_count": 2087,
       "snapshot_count": 3,
       "source_entity_counts": {
         "leagues": 67,
         "seasons": 67,
-        "teams": 1055
+        "teams": 1057
       },
       "status": "ok"
     },
@@ -35649,7 +35586,7 @@
     "livescore_football": {
       "categories": {
         "leagues": {
-          "candidate_count": 20,
+          "candidate_count": 19,
           "candidates": [
             {
               "canonical_entity_id": "sportmonks:567",
@@ -35781,21 +35718,6 @@
               "provider_country": "England",
               "provider_entity_id": "700",
               "provider_name": "English Premier League",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "No exact name plus country/parent-context match; no link is proposed.",
-              "status": "no_exact_contextual_match"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "league",
-              "match_method": null,
-              "provider": "livescore_football",
-              "provider_country": "England",
-              "provider_entity_id": "20226",
-              "provider_name": "English Women's FA Cup",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "No exact name plus country/parent-context match; no link is proposed.",
@@ -35956,11 +35878,11 @@
           "manual_review_candidate_count": 1,
           "status_counts": {
             "candidate_requires_manual_approval": 1,
-            "no_exact_contextual_match": 19
+            "no_exact_contextual_match": 18
           }
         },
         "seasons": {
-          "candidate_count": 20,
+          "candidate_count": 19,
           "candidates": [
             {
               "canonical_entity_id": null,
@@ -35974,21 +35896,6 @@
               "provider_name": "2026",
               "provider_parent_id": "18481",
               "provider_parent_name": "English EFL Trophy",
-              "reason": "A verified provider-competition to canonical-competition link is required first.",
-              "status": "parent_competition_unmapped"
-            },
-            {
-              "canonical_entity_id": null,
-              "canonical_name": null,
-              "canonical_parent_id": null,
-              "entity_type": "season",
-              "match_method": null,
-              "provider": "livescore_football",
-              "provider_country": null,
-              "provider_entity_id": "20226::2026",
-              "provider_name": "2026",
-              "provider_parent_id": "20226",
-              "provider_parent_name": "English Women's FA Cup",
               "reason": "A verified provider-competition to canonical-competition link is required first.",
               "status": "parent_competition_unmapped"
             },
@@ -36266,11 +36173,11 @@
           "candidates_truncated": false,
           "manual_review_candidate_count": 0,
           "status_counts": {
-            "parent_competition_unmapped": 20
+            "parent_competition_unmapped": 19
           }
         },
         "teams": {
-          "candidate_count": 152,
+          "candidate_count": 154,
           "candidates": [
             {
               "canonical_entity_id": "sportmonks:52",
@@ -37252,7 +37159,7 @@
           "manual_review_candidate_count": 40,
           "status_counts": {
             "candidate_requires_manual_approval": 40,
-            "no_exact_contextual_match": 112
+            "no_exact_contextual_match": 114
           }
         }
       },
@@ -37261,12 +37168,12 @@
         "seasons": 0,
         "teams": 0
       },
-      "observation_count": 189,
+      "observation_count": 195,
       "snapshot_count": 3,
       "source_entity_counts": {
-        "leagues": 20,
-        "seasons": 20,
-        "teams": 152
+        "leagues": 19,
+        "seasons": 19,
+        "teams": 154
       },
       "status": "ok"
     },
@@ -38366,21 +38273,6 @@
               "status": "candidate_requires_manual_approval"
             },
             {
-              "canonical_entity_id": "sportmonks:15",
-              "canonical_name": "Aston Villa",
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "openligadb",
-              "provider_country": "England",
-              "provider_entity_id": "438",
-              "provider_name": "Aston Villa",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
-            },
-            {
               "canonical_entity_id": "sportmonks:78",
               "canonical_name": "Brighton & Hove Albion",
               "canonical_parent_id": null,
@@ -38450,21 +38342,6 @@
               "provider_country": "England",
               "provider_entity_id": "8792",
               "provider_name": "Leeds United",
-              "provider_parent_id": null,
-              "provider_parent_name": null,
-              "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
-              "status": "candidate_requires_manual_approval"
-            },
-            {
-              "canonical_entity_id": "sportmonks:9",
-              "canonical_name": "Manchester City",
-              "canonical_parent_id": null,
-              "entity_type": "team",
-              "match_method": "exact_name_and_country_or_parent",
-              "provider": "openligadb",
-              "provider_country": "England",
-              "provider_entity_id": "4244",
-              "provider_name": "Manchester City",
               "provider_parent_id": null,
               "provider_parent_name": null,
               "reason": "Exact normalized name and required country/parent context match; explicit review is still mandatory.",
@@ -38877,10 +38754,10 @@
             }
           ],
           "candidates_truncated": true,
-          "manual_review_candidate_count": 10,
+          "manual_review_candidate_count": 8,
           "status_counts": {
-            "candidate_requires_manual_approval": 10,
-            "no_exact_contextual_match": 454
+            "candidate_requires_manual_approval": 8,
+            "no_exact_contextual_match": 456
           }
         }
       },
