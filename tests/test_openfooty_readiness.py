@@ -127,3 +127,112 @@ class OpenFootyReadinessTests(unittest.TestCase):
         )
         self.assertIn("engine_diagnostics:conflicts", report["blockers"])
         self.assertEqual(report["status"], "blocked")
+
+    def test_stale_fixture_evidence_is_blocked(self):
+        payload = _payload()
+        payload["fixture"]["source_provenance"][0]["retrieved_at_utc"] = (
+            "2026-11-20T07:45:00Z"
+        )
+        report = assess_openfooty_readiness(
+            payload,
+            expected_request_id=payload["request_id"],
+            now_utc="2026-11-28T08:00:00Z",
+            freshness_limits_hours={"fixture": 36, "availability": 24},
+        )
+        self.assertIn("fixture:stale_evidence[0]", report["blockers"])
+        self.assertEqual(report["status"], "blocked")
+
+    def test_future_dated_fixture_evidence_is_blocked(self):
+        payload = _payload()
+        payload["fixture"]["source_provenance"][0]["retrieved_at_utc"] = (
+            "2026-11-28T09:00:00Z"
+        )
+        report = assess_openfooty_readiness(
+            payload,
+            expected_request_id=payload["request_id"],
+            now_utc="2026-11-28T08:00:00Z",
+            freshness_limits_hours={"fixture": 36, "availability": 24},
+        )
+        self.assertIn("fixture:future_retrieval_timestamp[0]", report["blockers"])
+        self.assertEqual(report["status"], "blocked")
+
+    def test_unknown_fixture_lifecycle_is_blocked(self):
+        payload = _payload()
+        payload["fixture"]["status"] = "unknown"
+        report = assess_openfooty_readiness(
+            payload,
+            expected_request_id=payload["request_id"],
+            now_utc="2026-11-28T08:00:00Z",
+            freshness_limits_hours={"fixture": 36, "availability": 24},
+        )
+        self.assertIn(
+            "fixture:lifecycle_not_scheduled:unknown", report["blockers"]
+        )
+        self.assertEqual(report["status"], "blocked")
+
+    def test_missing_opponent_strength_stays_missing(self):
+        payload = _payload()
+        payload["team_profiles"]["home"]["recent_matches"][0][
+            "opponent_strength"
+        ] = None
+        report = assess_openfooty_readiness(
+            payload,
+            expected_request_id=payload["request_id"],
+            now_utc="2026-11-28T08:00:00Z",
+            freshness_limits_hours={"fixture": 36, "availability": 24},
+        )
+        self.assertEqual(
+            report["teams"]["home"]["opponent_strength_observation_count"], 0
+        )
+        self.assertIn(
+            "opponent_strength_evidence_insufficient",
+            report["teams"]["home"]["blockers"],
+        )
+        self.assertEqual(report["status"], "blocked")
+
+    def test_invalid_fixture_utc_is_rejected_by_contract(self):
+        payload = _payload()
+        payload["fixture"]["kickoff_at_utc"] = "2026-11-29T15:00:00+03:00"
+        with self.assertRaisesRegex(OpenFootyContractError, "UTC"):
+            assess_openfooty_readiness(
+                payload,
+                expected_request_id=payload["request_id"],
+                now_utc="2026-11-28T08:00:00Z",
+                freshness_limits_hours={"fixture": 36, "availability": 24},
+            )
+
+    def test_verified_availability_is_not_an_impact_score(self):
+        payload = _payload()
+        evidence = {
+            "source_id": "club-announcement",
+            "source_record_id": "availability-001",
+            "source_url": "https://example.invalid/availability",
+            "retrieved_at_utc": "2026-11-28T07:30:00Z",
+            "source_updated_at_utc": None,
+            "payload_sha256": None,
+            "parser_version": "test-v1",
+            "validation_status": "verified",
+            "raw_evidence_ref": "artifact://availability/001",
+        }
+        profile = payload["team_profiles"]["home"]
+        profile["availability"] = {
+            "status": "verified",
+            "players": [{"player_id": "player-1", "status": "injured"}],
+            "source_provenance": [evidence],
+        }
+        report = assess_openfooty_readiness(
+            payload,
+            expected_request_id=payload["request_id"],
+            now_utc="2026-11-28T08:00:00Z",
+            freshness_limits_hours={"fixture": 36, "availability": 24},
+        )
+        self.assertTrue(report["teams"]["home"]["availability_evidence_verified"])
+        self.assertFalse(
+            report["teams"]["home"]["top_level_components"]["player_availability"]
+        )
+        self.assertIn(
+            "availability_impact_score_not_defined_in_v1",
+            report["teams"]["home"]["blockers"],
+        )
+        self.assertEqual(report["status"], "blocked")
+
