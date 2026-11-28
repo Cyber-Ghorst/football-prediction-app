@@ -22,7 +22,7 @@ to dispatch a workflow and read its run/artifact. Do not reuse or expose
 provider API keys. Never commit the token.
 
 The client calls only the dedicated workflow:
-jacksonader003-ship-it/OpenFooty-Data-Engine
+OpenFooty-Data-Engine/OpenFooty-Data-Engine
 .github/workflows/prediction-fixture-request.yml
 
 It does not invoke the scheduled collector and does not call football
