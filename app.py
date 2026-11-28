@@ -4042,6 +4042,7 @@ try:
         feature_snapshot = build_prediction_feature_snapshot(
             home, away, result, tactical_compatibility=overrides,
             captured_at=prediction_captured_at,
+            fixture_context=prediction_fixture,
         )
         prediction_row = build_prediction_record(
             competition=str(selected_league_row.get("name") or selected_league.split(" — ")[0]),

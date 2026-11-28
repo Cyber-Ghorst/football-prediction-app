@@ -20,10 +20,12 @@ class PredictionEngineTests(unittest.TestCase):
             captured_at="2026-11-10T10:00:00+00:00",
         )
 
-        self.assertEqual(snapshot["schema_version"], "prediction-features-v1")
+        self.assertEqual(snapshot["schema_version"], "prediction-features-v2")
         self.assertEqual(snapshot["captured_at"], "2026-11-10T10:00:00+00:00")
         self.assertEqual(len(snapshot["teams"]["home"]["recent_matches"]), 10)
-        self.assertEqual(snapshot["teams"]["home"]["tactical_compatibility"], 75.0)
+        self.assertEqual(snapshot["teams"]["home"]["recent_matches"][0]["observations"]["goals_for"]["status"], "observed")
+        self.assertEqual(snapshot["teams"]["home"]["tactical_compatibility"]["value"], 75.0)
+        self.assertEqual(snapshot["teams"]["home"]["tactical_compatibility"]["status"], "observed")
         self.assertEqual(snapshot["calculated"]["model_weights"], result["model_weights"])
         self.assertEqual(snapshot["calculated"]["probabilities"], result["probabilities"])
         self.assertEqual(snapshot["recency_policy"], "latest_5_60pct_previous_5_40pct")
@@ -35,7 +37,57 @@ class PredictionEngineTests(unittest.TestCase):
         away = dict(self.teams["Chelsea"])
         home["player_availability"] = None
         snapshot = build_prediction_feature_snapshot(home, away, {})
-        self.assertIsNone(snapshot["teams"]["home"]["player_availability"])
+        self.assertEqual(snapshot["teams"]["home"]["player_availability"]["status"], "missing")
+
+
+    def test_feature_snapshot_v2_retains_match_identity_and_source_provenance(self):
+        from engine import build_prediction_feature_snapshot
+
+        home = dict(self.teams["Arsenal"])
+        away = dict(self.teams["Chelsea"])
+        home["matches"] = [dict(match) for match in home["matches"]]
+        home["matches"][0].update({
+            "fixture_id": "fixture-123",
+            "date": "2026-11-20T17:00:00+00:00",
+            "venue": "home",
+            "source_provider": "provider-x",
+            "provider_updated_at": "2026-11-20T18:00:00+00:00",
+            "collection_fetched_at": "2026-11-20T18:05:00+00:00",
+            "source_fixture_id": "upstream-456",
+        })
+        result = predict_match(home, away)
+        snapshot = build_prediction_feature_snapshot(home, away, result)
+        match = snapshot["teams"]["home"]["recent_matches"][0]
+        self.assertEqual(match["identity"]["fixture_id"], "fixture-123")
+        self.assertEqual(match["identity"]["kickoff_at"], "2026-11-20T17:00:00+00:00")
+        self.assertEqual(match["identity"]["venue"], "home")
+        self.assertEqual(match["source_provenance"]["source_provider"], "provider-x")
+        self.assertEqual(match["source_provenance"]["source_fixture_id"], "upstream-456")
+        self.assertEqual(match["source_provenance"]["provider_updated_at"], "2026-11-20T18:00:00+00:00")
+
+    def test_feature_snapshot_v2_distinguishes_invalid_from_missing(self):
+        from engine import build_prediction_feature_snapshot
+
+        home = dict(self.teams["Arsenal"])
+        away = dict(self.teams["Chelsea"])
+        home["matches"] = [dict(match) for match in home["matches"]]
+        home["matches"][0]["opponent_strength"] = "not-a-number"
+        snapshot = build_prediction_feature_snapshot(home, away, {})
+        observation = snapshot["teams"]["home"]["recent_matches"][0]["observations"]["opponent_strength"]
+        self.assertEqual(observation["status"], "invalid")
+        self.assertEqual(observation["raw_value"], "not-a-number")
+        self.assertEqual(snapshot["provenance_contract"]["missing_and_invalid_distinguished"], True)
+
+    def test_feature_snapshot_v2_records_target_fixture_context(self):
+        from engine import build_prediction_feature_snapshot
+
+        snapshot = build_prediction_feature_snapshot(
+            self.teams["Arsenal"], self.teams["Chelsea"], {},
+            fixture_context={"id": 987, "starting_at": "2026-12-01T19:00:00Z", "home_team_id": 1},
+        )
+        self.assertEqual(snapshot["target_fixture"]["id"], 987)
+        self.assertEqual(snapshot["target_fixture"]["identity_status"], "identified")
+
 
     def test_strict_readiness_accepts_complete_profiles(self):
         from engine import build_prediction_component_readiness
