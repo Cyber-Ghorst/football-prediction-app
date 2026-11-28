@@ -2,6 +2,7 @@ import io
 import json
 import unittest
 import zipfile
+from pathlib import Path
 
 from openfooty_client import OpenFootyTriggerClient, OpenFootyTriggerError
 
@@ -112,3 +113,119 @@ class OpenFootyClientTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+
+    def test_data_response_artifact_validates_contract_and_correlation(self):
+        request_id = request()["request_id"]
+        preflight = {
+            "request_id": request_id,
+            "request_status": "BLOCKED_NOT_PREDICTION_READY",
+            "data_returned": False,
+            "prediction_ready": False,
+            "provider_requests_attempted": 0,
+        }
+        data_payload = json.loads(
+            (Path(__file__).parent / "contracts" / "examples" /
+             "prediction-data-response.v1.example.json").read_text(encoding="utf-8")
+        )
+        data_payload["request_id"] = request_id
+        stream = io.BytesIO()
+        with zipfile.ZipFile(stream, "w") as bundle:
+            bundle.writestr("prediction_request_response.json", json.dumps(preflight))
+            bundle.writestr("prediction_data_response.json", json.dumps(data_payload))
+
+        class Response:
+            def __init__(self, body=None, content=b""):
+                self.status_code = 200
+                self._body = body or {}
+                self.content = content
+
+            def json(self):
+                return self._body
+
+        class Session:
+            def __init__(self):
+                self.headers = {}
+
+            def request(self, method, url, **kwargs):
+                if url.endswith("/artifacts"):
+                    return Response(body={"artifacts": [{
+                        "name": "prediction-request-123",
+                        "expired": False,
+                        "archive_download_url": "https://api.github.com/repos/example/repo/actions/artifacts/123/zip",
+                    }]})
+                if url.endswith("/actions/artifacts/123/zip"):
+                    return Response(content=stream.getvalue())
+                raise AssertionError(url)
+
+            def close(self):
+                pass
+
+        client = OpenFootyTriggerClient("test-token", session=Session())
+        result = client._download_data_responses(
+            {"id": 123, "html_url": "https://github.com/run", "conclusion": "success"},
+            request_id,
+        )
+        self.assertEqual(result["data_response"]["contract_version"], "openfooty-prediction-data-v1")
+        self.assertEqual(result["data_response"]["request_id"], request_id)
+        self.assertFalse(result["preflight_response"]["prediction_ready"])
+        self.assertEqual(result["workflow_run"]["id"], 123)
+
+    def test_data_response_artifact_rejects_wrong_contract_version(self):
+        request_id = request()["request_id"]
+        preflight = {
+            "request_id": request_id,
+            "request_status": "BLOCKED_NOT_PREDICTION_READY",
+            "data_returned": False,
+            "prediction_ready": False,
+            "provider_requests_attempted": 0,
+        }
+        data_payload = {
+            "contract_version": "openfooty-prediction-data-v2",
+            "request_id": request_id,
+            "generated_at_utc": "2026-11-28T08:00:00Z",
+            "response_status": "ERROR",
+            "fixture": None,
+            "team_profiles": {"home": None, "away": None},
+            "diagnostics": {
+                "missing_fields": [], "invalid_observations": [],
+                "conflicts": [], "warnings": []
+            },
+        }
+        stream = io.BytesIO()
+        with zipfile.ZipFile(stream, "w") as bundle:
+            bundle.writestr("prediction_request_response.json", json.dumps(preflight))
+            bundle.writestr("prediction_data_response.json", json.dumps(data_payload))
+
+        class Response:
+            status_code = 200
+
+            def __init__(self, body=None, content=b""):
+                self._body = body or {}
+                self.content = content
+
+            def json(self):
+                return self._body
+
+        class Session:
+            headers = {}
+
+            def request(self, method, url, **kwargs):
+                if url.endswith("/artifacts"):
+                    return Response(body={"artifacts": [{
+                        "name": "prediction-request-123", "expired": False,
+                        "archive_download_url": "https://api.github.com/repos/example/repo/actions/artifacts/123/zip",
+                    }]})
+                if url.endswith("/actions/artifacts/123/zip"):
+                    return Response(content=stream.getvalue())
+                raise AssertionError(url)
+
+            def close(self):
+                pass
+
+        client = OpenFootyTriggerClient("test-token", session=Session())
+        with self.assertRaisesRegex(OpenFootyTriggerError, "contract validation"):
+            client._download_data_responses(
+                {"id": 123, "conclusion": "success"}, request_id
+            )
