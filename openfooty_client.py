@@ -1,4 +1,4 @@
-"""Read-only GitHub Actions client for OpenFooty fixture-request preflight.
+"""Read-only GitHub Actions client for OpenFooty stored fixture data responses.
 
 This client dispatches only the dedicated preflight workflow. It never calls
 football providers, changes prediction inputs, or writes to either database.
@@ -15,6 +15,8 @@ from typing import Any
 from urllib.parse import urlparse
 
 import requests
+
+from openfooty_contract import OpenFootyContractError, validate_openfooty_response
 
 
 class OpenFootyTriggerError(RuntimeError):
@@ -110,6 +112,134 @@ class OpenFootyTriggerClient:
             },
         )
         return self._wait_for_response(request["request_id"])
+
+    def request_fixture_data(self, fixture_request: dict[str, Any]) -> dict[str, Any]:
+        """Dispatch a stored-data lookup and validate both returned response envelopes."""
+        request = self.validate_request(fixture_request)
+        request_json = json.dumps(request, separators=(",", ":"), ensure_ascii=False)
+        dispatch_url = self._url(f"actions/workflows/{self.WORKFLOW}/dispatches")
+        self._request(
+            "POST",
+            dispatch_url,
+            expected=(204,),
+            json={
+                "ref": "main",
+                "inputs": {
+                    "request_id": request["request_id"],
+                    "request_json": request_json,
+                },
+            },
+        )
+        return self._wait_for_data_response(request["request_id"])
+
+    def _wait_for_data_response(self, request_id: str) -> dict[str, Any]:
+        runs_url = self._url(
+            f"actions/workflows/{self.WORKFLOW}/runs"
+            "?event=workflow_dispatch&branch=main&per_page=30"
+        )
+        deadline = time.monotonic() + self.max_wait_seconds
+        while time.monotonic() < deadline:
+            response = self._request("GET", runs_url, expected=(200,))
+            payload = response.json()
+            matching = None
+            for candidate in payload.get("workflow_runs", []):
+                title = str(candidate.get("display_title") or candidate.get("name") or "")
+                if request_id in title:
+                    matching = candidate
+                    break
+            if matching and matching.get("status") == "completed":
+                if matching.get("conclusion") != "success":
+                    raise OpenFootyTriggerError(
+                        "OpenFooty stored-data workflow did not complete successfully."
+                    )
+                return self._download_data_responses(matching, request_id)
+            time.sleep(self.poll_interval_seconds)
+        raise OpenFootyTriggerError(
+            "Timed out waiting for the matching OpenFooty stored-data response."
+        )
+
+    def _download_data_responses(
+        self, run: dict[str, Any], request_id: str
+    ) -> dict[str, Any]:
+        run_id = run.get("id")
+        if not isinstance(run_id, int):
+            raise OpenFootyTriggerError("OpenFooty returned a workflow run without a valid ID.")
+        artifacts_url = self._url(f"actions/runs/{run_id}/artifacts")
+        response = self._request("GET", artifacts_url, expected=(200,))
+        artifact_name = f"prediction-request-{run_id}"
+        artifacts = response.json().get("artifacts", [])
+        artifact = next(
+            (item for item in artifacts if item.get("name") == artifact_name and not item.get("expired")),
+            None,
+        )
+        if not artifact or not artifact.get("archive_download_url"):
+            raise OpenFootyTriggerError("OpenFooty stored-data response artifact is missing or expired.")
+        archive_url = artifact["archive_download_url"]
+        parsed_url = urlparse(archive_url)
+        if parsed_url.scheme != "https" or parsed_url.hostname != "api.github.com":
+            raise OpenFootyTriggerError("OpenFooty returned an unexpected artifact download host.")
+        archive = self._request("GET", archive_url, expected=(200,))
+        if len(archive.content) > 2_000_000:
+            raise OpenFootyTriggerError("OpenFooty response ZIP exceeds the allowed download size.")
+        try:
+            with zipfile.ZipFile(io.BytesIO(archive.content)) as bundle:
+                def read_json_file(filename: str) -> dict[str, Any]:
+                    matches = [name for name in bundle.namelist() if name.endswith(filename)]
+                    if len(matches) != 1:
+                        raise OpenFootyTriggerError(
+                            f"Response artifact must contain exactly one {filename}."
+                        )
+                    if bundle.getinfo(matches[0]).file_size > 1_000_000:
+                        raise OpenFootyTriggerError(
+                            f"Response artifact file {filename} exceeds the allowed size."
+                        )
+                    value = json.loads(bundle.read(matches[0]).decode("utf-8"))
+                    if not isinstance(value, dict):
+                        raise OpenFootyTriggerError(
+                            f"Response artifact file {filename} must contain a JSON object."
+                        )
+                    return value
+
+                preflight = read_json_file("prediction_request_response.json")
+                data_payload = read_json_file("prediction_data_response.json")
+        except (zipfile.BadZipFile, UnicodeDecodeError, json.JSONDecodeError) as error:
+            raise OpenFootyTriggerError(
+                "OpenFooty response artifact is not valid JSON ZIP data."
+            ) from error
+
+        if preflight.get("request_id") != request_id:
+            raise OpenFootyTriggerError("OpenFooty preflight request_id does not match this request.")
+        if preflight.get("request_status") not in {
+            "BLOCKED_NOT_PREDICTION_READY",
+            "READY_FOR_STORED_DATA_PREDICTION",
+            "REJECTED_INVALID_REQUEST",
+        }:
+            raise OpenFootyTriggerError("OpenFooty returned an unknown preflight status.")
+        if (
+            preflight.get("data_returned") is not False
+            or preflight.get("prediction_ready") is not False
+            or preflight.get("provider_requests_attempted") != 0
+        ):
+            raise OpenFootyTriggerError(
+                "Preflight response indicates unexpected provider activity or prediction execution."
+            )
+        try:
+            data_response = validate_openfooty_response(
+                data_payload, expected_request_id=request_id
+            )
+        except OpenFootyContractError as error:
+            raise OpenFootyTriggerError(
+                f"OpenFooty data response failed contract validation: {error}"
+            ) from error
+        return {
+            "preflight_response": preflight,
+            "data_response": data_response,
+            "workflow_run": {
+                "id": run_id,
+                "url": run.get("html_url"),
+                "conclusion": run.get("conclusion"),
+            },
+        }
 
     def _wait_for_response(self, request_id: str) -> dict[str, Any]:
         runs_url = self._url(
