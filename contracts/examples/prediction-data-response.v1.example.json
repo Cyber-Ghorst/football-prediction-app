@@ -1,0 +1,92 @@
+{
+  "contract_version": "openfooty-prediction-data-v1",
+  "request_id": "request-20261128-001",
+  "generated_at_utc": "2026-11-28T08:00:00Z",
+  "response_status": "DATA_AVAILABLE",
+  "fixture": {
+    "fixture_id": "canonical-fixture-001",
+    "competition_id": "canonical-league-001",
+    "season_id": "canonical-season-2026-27",
+    "home_team_id": "canonical-team-home",
+    "away_team_id": "canonical-team-away",
+    "home_team": "Home Example FC",
+    "away_team": "Away Example FC",
+    "kickoff_at_utc": "2026-11-29T15:00:00Z",
+    "status": "scheduled",
+    "source_provenance": [
+      {
+        "source_id": "example-source",
+        "source_record_id": "native-fixture-001",
+        "source_url": null,
+        "retrieved_at_utc": "2026-11-28T07:45:00Z",
+        "source_updated_at_utc": null,
+        "payload_sha256": null,
+        "parser_version": "example-parser-v1",
+        "validation_status": "verified",
+        "raw_evidence_ref": "artifact://example-source/fixture-001"
+      }
+    ]
+  },
+  "team_profiles": {
+    "home": {
+      "team_id": "canonical-team-home",
+      "team_name": "Home Example FC",
+      "recent_matches": [
+        {
+          "fixture_id": "canonical-history-001",
+          "kickoff_at_utc": "2026-11-20T19:00:00Z",
+          "venue": "home",
+          "opponent_id": "canonical-opponent-001",
+          "opponent_name": "Opponent FC",
+          "goals_for": 2,
+          "goals_against": 1,
+          "opponent_strength": 65.5,
+          "statistics": {
+            "Ball Possession": 54.2,
+            "Shots on Target": 6
+          },
+          "source_provenance": [
+            {
+              "source_id": "example-source",
+              "source_record_id": "native-history-001",
+              "source_url": null,
+              "retrieved_at_utc": "2026-11-21T00:00:00Z",
+              "source_updated_at_utc": "2026-11-20T21:00:00Z",
+              "payload_sha256": null,
+              "parser_version": "example-parser-v1",
+              "validation_status": "verified",
+              "raw_evidence_ref": "artifact://example-source/history-001"
+            }
+          ]
+        }
+      ],
+      "availability": {
+        "status": "unknown",
+        "players": [],
+        "source_provenance": []
+      },
+      "source_provenance": []
+    },
+    "away": {
+      "team_id": "canonical-team-away",
+      "team_name": "Away Example FC",
+      "recent_matches": [],
+      "availability": {
+        "status": "unknown",
+        "players": [],
+        "source_provenance": []
+      },
+      "source_provenance": []
+    }
+  },
+  "diagnostics": {
+    "missing_fields": [
+      "team_profiles.away.recent_matches"
+    ],
+    "invalid_observations": [],
+    "conflicts": [],
+    "warnings": [
+      "Example fixture only; availability has not been verified."
+    ]
+  }
+}
