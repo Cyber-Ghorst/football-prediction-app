@@ -112,6 +112,47 @@ def _tactical_rating(team: Dict, compatibility: float | None) -> tuple[float | N
     total_weight = sum(TACTICAL_WEIGHTS[k] for k in known)
     return sum(v * TACTICAL_WEIGHTS[k] for k, v in known.items()) / total_weight, known
 
+def build_prediction_component_readiness(home: Dict, away: Dict, tactical_compatibility: Dict[str, float] | None = None) -> Dict:
+    """Assess strict standard-prediction eligibility without imputing data."""
+    overrides = tactical_compatibility or {}
+    required = ["recent_form", "goals_scored", "goals_conceded", "home_away", "strength_of_schedule", "player_availability", "tactical"]
+    tactical_required = ["playing_style", "defensive_structure", "attacking_approach", "tactical_compatibility"]
+    teams = {}
+    for side, profile, venue_key in (("home", home, "home_rating"), ("away", away, "away_rating")):
+        errors = []
+        try:
+            _validate_team(profile, f"{side.title()} team")
+            if not isinstance(overrides, dict):
+                raise ValueError("tactical_compatibility overrides must be an object.")
+            if overrides.get(side) is not None:
+                _validated_number(overrides[side], f"tactical_compatibility.{side}", minimum=0, maximum=100)
+            components = _team_components(profile, venue_key)
+            _, tactical_parts = _tactical_rating(profile, overrides.get(side))
+            tactical_status = {key: key in tactical_parts for key in tactical_required}
+            status = {key: key in components for key in required if key != "tactical"}
+            status["tactical"] = all(tactical_status.values())
+        except (ValueError, TypeError, AttributeError) as exc:
+            errors.append(str(exc))
+            status = {key: False for key in required}
+            tactical_status = {key: False for key in tactical_required}
+        missing = [key for key in required if not status.get(key, False)]
+        missing_tactical = [key for key in tactical_required if not tactical_status.get(key, False)]
+        teams[side] = {
+            "team": profile.get("name") if isinstance(profile, dict) else None,
+            "eligible": not missing and not errors,
+            "top_level_components": status,
+            "tactical_subcomponents": tactical_status,
+            "missing_components": missing,
+            "missing_tactical_subcomponents": missing_tactical,
+            "available_weight": round(sum(WEIGHTS[key] for key, ok in status.items() if ok), 3),
+            "validation_errors": errors,
+        }
+    eligible = all(item["eligible"] for item in teams.values())
+    return {"policy_version": "strict-component-readiness-v1", "prediction_type": "standard",
+            "status": "eligible" if eligible else "blocked", "eligible": eligible,
+            "required_top_level_components": required, "required_tactical_subcomponents": tactical_required,
+            "weights_redistributed": False, "missing_data_imputed": False, "teams": teams}
+
 def _rating(components: dict, tactical: float | None) -> float:
     weighted = sum(components[k] * WEIGHTS[k] for k in components)
     known_weight = sum(WEIGHTS[k] for k in components)
@@ -216,16 +257,19 @@ def build_prediction_feature_snapshot(
 
 
 def predict_match(home: Dict, away: Dict, max_goals: int = 8, tactical_compatibility: Dict[str, float] | None = None) -> Dict:
-    _validate_team(home, "Home team"); _validate_team(away, "Away team")
+    readiness = build_prediction_component_readiness(home, away, tactical_compatibility)
+    if not readiness["eligible"]:
+        reasons = []
+        for side, report in readiness["teams"].items():
+            if report["missing_components"]:
+                reasons.append(f"{side}: {', '.join(report['missing_components'])}")
+            if report["missing_tactical_subcomponents"]:
+                reasons.append(f"{side} tactical: {', '.join(report['missing_tactical_subcomponents'])}")
+            reasons.extend(report["validation_errors"])
+        raise ValueError("Standard prediction blocked by strict readiness policy; " + "; ".join(reasons))
     home_comp = _team_components(home, "home_rating")
     away_comp = _team_components(away, "away_rating")
     overrides = tactical_compatibility or {}
-    if not isinstance(overrides, dict):
-        raise ValueError("tactical_compatibility overrides must be an object.")
-    for side in ("home", "away"):
-        if overrides.get(side) is not None:
-            _validated_number(overrides[side], f"tactical_compatibility.{side}",
-                              minimum=0, maximum=100)
     home_tac, home_tac_parts = _tactical_rating(home, overrides.get("home"))
     away_tac, away_tac_parts = _tactical_rating(away, overrides.get("away"))
     home_rating = _rating(home_comp, home_tac)
@@ -265,5 +309,5 @@ def predict_match(home: Dict, away: Dict, max_goals: int = 8, tactical_compatibi
         "tactical_compatibility_used":{k:round(v,1) if v is not None else None for k,v in used.items()},
         "data_coverage":{"home_known_weight":round(sum(WEIGHTS[k] for k in home_comp)+(WEIGHTS['tactical'] if home_tac is not None else 0),3),
                          "away_known_weight":round(sum(WEIGHTS[k] for k in away_comp)+(WEIGHTS['tactical'] if away_tac is not None else 0),3)},
-        "note":"Probabilities are model estimates, not guarantees. Missing components were excluded and remaining known weights normalized. Validate with historical backtesting."
+        "note":"Probabilities are model estimates, not guarantees. Strict readiness requires all agreed components; missing weights are never redistributed. Validate with historical backtesting."
     }

@@ -34,9 +34,31 @@ class PredictionEngineTests(unittest.TestCase):
         home = dict(self.teams["Arsenal"])
         away = dict(self.teams["Chelsea"])
         home["player_availability"] = None
-        result = predict_match(home, away)
-        snapshot = build_prediction_feature_snapshot(home, away, result)
+        snapshot = build_prediction_feature_snapshot(home, away, {})
         self.assertIsNone(snapshot["teams"]["home"]["player_availability"])
+
+    def test_strict_readiness_accepts_complete_profiles(self):
+        from engine import build_prediction_component_readiness
+        report = build_prediction_component_readiness(self.teams["Arsenal"], self.teams["Chelsea"])
+        self.assertTrue(report["eligible"])
+        self.assertEqual(report["policy_version"], "strict-component-readiness-v1")
+        self.assertFalse(report["weights_redistributed"])
+
+    def test_strict_readiness_blocks_missing_top_level_and_tactical_components(self):
+        from engine import build_prediction_component_readiness
+        home, away = dict(self.teams["Arsenal"]), dict(self.teams["Chelsea"])
+        home["player_availability"] = None
+        away["tactical_compatibility"] = None
+        report = build_prediction_component_readiness(home, away)
+        self.assertFalse(report["eligible"])
+        self.assertIn("player_availability", report["teams"]["home"]["missing_components"])
+        self.assertIn("tactical_compatibility", report["teams"]["away"]["missing_tactical_subcomponents"])
+
+    def test_standard_prediction_is_blocked_when_required_component_is_missing(self):
+        home = dict(self.teams["Arsenal"])
+        home["player_availability"] = None
+        with self.assertRaisesRegex(ValueError, "strict readiness policy"):
+            predict_match(home, self.teams["Chelsea"])
 
     def test_probabilities_sum_to_approximately_100(self):
         r = predict_match(self.teams["Arsenal"], self.teams["Chelsea"])

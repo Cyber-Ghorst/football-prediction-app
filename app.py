@@ -103,7 +103,7 @@ try:
         fixtures_for_utc_date,
     )
     from provider_core import normalize_team_name
-    from engine import predict_match, build_prediction_feature_snapshot, WEIGHTS, most_likely_outcome
+    from engine import predict_match, build_prediction_feature_snapshot, build_prediction_component_readiness, WEIGHTS, most_likely_outcome
     from tvd import run_tvd
     from temporary_fixture_store import search_temporary_upcoming_fixtures
     from provider_config import provider_readiness
@@ -397,6 +397,8 @@ def _load_database_ledger():
         return
     try:
         database_records = load_prediction_ledger(DATABASE_URL)
+        prediction_row["prediction_readiness"] = component_readiness
+        prediction_row["readiness_policy_version"] = component_readiness["policy_version"]
         st.session_state["prediction_ledger"] = merge_prediction_records(
             database_records, st.session_state["prediction_ledger"]
         )
@@ -3999,6 +4001,17 @@ try:
             )
         elif automatic_tvd and not tvd_result:
             st.info("Automatic TVD evidence is insufficient for this team pairing; tactical compatibility remains unknown.")
+        component_readiness = build_prediction_component_readiness(home, away, tactical_compatibility=overrides)
+        component_readiness["evaluated_at_utc"] = datetime.now(timezone.utc).isoformat()
+        st.session_state["last_prediction_readiness"] = component_readiness
+        try:
+            _upload_report_once("prediction_readiness", component_readiness)
+        except Exception as readiness_report_error:
+            st.warning("Readiness decision could not be archived: " f"{type(readiness_report_error).__name__}.")
+        if not component_readiness["eligible"]:
+            st.error("Standard prediction blocked: all seven agreed components and all four tactical subcomponents must be available for both teams. Missing evidence is not imputed and weights are not redistributed.")
+            st.json(component_readiness)
+            st.stop()
         try:
             result=predict_match(home,away,tactical_compatibility=overrides)
         except ValueError as exc:
@@ -4622,5 +4635,5 @@ with st.expander("Layer 2 data rules"):
     - Injuries are displayed, but no arbitrary availability score is assigned.
     - Tactical indicators use returned statistics only; absent metrics remain unknown.
     - Existing Layer 1 component weights and TVD logic are retained.
-    - Missing components are excluded and the known weights are normalized for the rating.
+    - Standard predictions require all seven agreed top-level components and all four tactical subcomponents for both teams. Missing required evidence blocks the standard prediction; weights are never redistributed and missing data is never imputed.
     """)
