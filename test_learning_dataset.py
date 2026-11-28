@@ -171,6 +171,33 @@ class LearningDatasetTests(unittest.TestCase):
         self.assertEqual([row["split"] for row in rows[:14]], ["train"] * 14)
         self.assertEqual(dataset["sample_gate"]["status"], "insufficient_sample")
 
+
+    def test_prediction_feature_snapshot_v2_is_accepted_and_schema_is_preserved(self):
+        row = self._record()
+        snapshot = json.loads(row["feature_snapshot_json"])
+        snapshot["schema_version"] = "prediction-features-v2"
+        snapshot["target_fixture"] = {"id": "fixture-target-1", "identity_status": "identified"}
+        snapshot["teams"]["home"]["recent_matches"] = [{
+            "history_index": 0,
+            "identity": {"status": "identified", "fixture_id": "history-1",
+                         "kickoff_at": "2026-11-01T12:00:00+00:00", "venue": "home"},
+            "observations": {
+                "goals_for": {"status": "observed", "value": 2, "raw_value": 2},
+                "goals_against": {"status": "observed", "value": 1, "raw_value": 1},
+                "opponent_strength": {"status": "missing", "value": None, "raw_value": None},
+            },
+            "source_provenance": {"source_provider": "provider-x",
+                                  "provider_updated_at": "2026-11-01T13:00:00+00:00"},
+        }]
+        row["feature_snapshot_json"] = json.dumps(snapshot)
+        dataset = build_learning_dataset([row])
+        self.assertEqual(dataset["audit"]["unique_verified_fixtures"], 1)
+        exported = dataset["rows"][0]
+        self.assertEqual(exported["feature_schema_version"], "prediction-features-v2")
+        self.assertEqual(exported["features"]["teams"]["home"]["recent_matches"][0]["identity"]["fixture_id"], "history-1")
+        self.assertIn("prediction-features-v2", dataset["feature_schema_versions_supported"])
+
+
     def test_missing_or_unsupported_feature_schema_is_rejected(self):
         row = self._record()
         snapshot = json.loads(row["feature_snapshot_json"])

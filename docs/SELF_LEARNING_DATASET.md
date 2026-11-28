@@ -1,8 +1,8 @@
 # Layer 5 — Leakage-Safe Learning Dataset
 
 **Implementation:** `learning_dataset.py`  
-**Dataset schema:** `football-learning-dataset-v1`  
-**Accepted feature schema:** `prediction-features-v1`
+**Dataset schema:** `football-learning-dataset-v2`  
+**Accepted feature schemas:** `prediction-features-v1` and `prediction-features-v2`
 
 ## Purpose
 
@@ -15,10 +15,14 @@ A row is accepted only when all of the following are true:
 - It has a stable prediction record ID and a fixture ID from Sportmonks or one of the five supported free fixture providers.
 - The prediction timestamp is valid and strictly before kickoff.
 - The result has the exact independently verified provider-specific verification marker, matching result provider and source fixture ID, valid verification timestamp, and a valid non-negative integer final 90-minute score. Free-source fixture IDs must match the ledger's provider-namespaced ID.
-- The versioned feature snapshot is valid JSON with schema `prediction-features-v1`.
+- The versioned feature snapshot is valid JSON with schema `prediction-features-v1` or `prediction-features-v2`.
 - The snapshot timestamp is valid, no later than the prediction timestamp, and strictly before kickoff.
 - Both team feature objects and the calculated feature object are present.
 - The snapshot contains valid 1X2 baseline probabilities and no NaN/Infinity values.
+
+
+
+Feature schema v2 retains match-level fixture identity, kickoff, venue, source IDs and provider/collection timestamps where upstream profiles supply them. Numeric observations are represented with explicit `observed`, `missing` or `invalid` status. The dataset preserves this versioned structure and records the source feature schema per row; it does not reinterpret missing or invalid observations as numeric values. Raw provider payloads are not assumed to exist in the prediction profile and are not fabricated by the dataset builder.
 
 The builder recomputes eligibility from timestamps and verification fields. It does not trust imported boolean flags. It never reconstructs historical features from current provider data.
 

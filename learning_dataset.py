@@ -25,8 +25,8 @@ from prediction_evaluation import (
 
 SUPPORTED_LEARNING_FIXTURE_PROVIDERS = frozenset({"sportmonks"}) | FREE_FIXTURE_RESULT_PROVIDERS
 
-DATASET_SCHEMA_VERSION = "football-learning-dataset-v1"
-FEATURE_SCHEMA_VERSION = "prediction-features-v1"
+DATASET_SCHEMA_VERSION = "football-learning-dataset-v2"
+FEATURE_SCHEMA_VERSIONS = frozenset({"prediction-features-v1", "prediction-features-v2"})
 MINIMUM_OFFLINE_EXPERIMENT_FIXTURES = 30
 
 
@@ -40,7 +40,8 @@ def _load_feature_snapshot(row: Mapping[str, Any]) -> tuple[dict[str, Any] | Non
         return None, "invalid_feature_snapshot_json"
     if not isinstance(snapshot, dict):
         return None, "invalid_feature_snapshot_shape"
-    if snapshot.get("schema_version") != FEATURE_SCHEMA_VERSION:
+    schema_version = snapshot.get("schema_version")
+    if schema_version not in FEATURE_SCHEMA_VERSIONS:
         return None, "unsupported_feature_schema"
     captured_at = _parse_datetime(snapshot.get("captured_at"))
     predicted_at = _parse_datetime(row.get("predicted_at"))
@@ -70,6 +71,7 @@ def _load_feature_snapshot(row: Mapping[str, Any]) -> tuple[dict[str, Any] | Non
         key: value for key, value in calculated.items() if key != "probabilities"
     }
     features = {
+        "schema_version": schema_version,
         "recency_policy": snapshot.get("recency_policy"),
         "teams": teams,
         "calculated": calculated_features,
@@ -87,6 +89,7 @@ def _load_feature_snapshot(row: Mapping[str, Any]) -> tuple[dict[str, Any] | Non
         "away_win": round(probabilities["away_win"] * 100.0, 6),
     }
     return {
+        "schema_version": schema_version,
         "captured_at": captured_at.isoformat(),
         "features": features,
         "baseline_probabilities": baseline,
@@ -124,6 +127,7 @@ def _eligible_row(row: Mapping[str, Any]) -> tuple[dict[str, Any] | None, str | 
         "kickoff_at": kickoff_at.isoformat(),
         "predicted_at": predicted_at.isoformat(),
         "feature_snapshot_at": snapshot["captured_at"],
+        "feature_schema_version": snapshot["schema_version"],
         "competition": str(row.get("competition") or "Unknown"),
         "country": str(row.get("country") or ""),
         "season": str(row.get("season") or ""),
@@ -225,7 +229,7 @@ def build_learning_dataset(
     enough_for_offline_experiment = count >= minimum_experiment_fixtures
     return {
         "dataset_schema_version": DATASET_SCHEMA_VERSION,
-        "feature_schema_version": FEATURE_SCHEMA_VERSION,
+        "feature_schema_versions_supported": sorted(FEATURE_SCHEMA_VERSIONS),
         "split_policy": {
             "method": "chronological_by_kickoff",
             "train_fraction": 0.70,
