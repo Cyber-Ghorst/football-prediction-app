@@ -105,7 +105,7 @@ try:
     from provider_core import normalize_team_name
     from engine import predict_match, build_prediction_feature_snapshot, build_prediction_component_readiness, WEIGHTS, most_likely_outcome
     from tvd import run_tvd
-    from openfooty_client import OpenFootyTriggerClient, OpenFootyTriggerError
+    from openfooty_client import OpenFootyTriggerClient
     from temporary_fixture_store import search_temporary_upcoming_fixtures
     from provider_config import provider_readiness
     from free_fixture_adapters import BzzoiroAdapter
@@ -268,6 +268,7 @@ with st.expander("OpenFooty stored fixture search — read-only", expanded=False
                     search_term=of_search_term,
                     window_days=int(of_window_days),
                 )
+                st.session_state.pop("openfooty_catalogue_selected_fixture", None)
                 st.session_state.pop("openfooty_fixture_data_result", None)
             except Exception as of_error:
                 st.error(
@@ -343,6 +344,8 @@ with st.expander("OpenFooty stored fixture search — read-only", expanded=False
                             of_client.close()
             else:
                 st.info("No stored fixture candidates matched this search window.")
+            if of_catalogue.get("error"):
+                st.warning(str(of_catalogue["error"].get("message", "Stored catalogue unavailable.")))
             of_diagnostics = of_catalogue.get("diagnostics", {})
             for of_warning in of_diagnostics.get("warnings", []):
                 st.caption(f"Catalogue note: {of_warning}")
