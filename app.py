@@ -105,6 +105,7 @@ try:
     from provider_core import normalize_team_name
     from engine import predict_match, build_prediction_feature_snapshot, build_prediction_component_readiness, WEIGHTS, most_likely_outcome
     from tvd import run_tvd
+    from openfooty_client import OpenFootyTriggerClient, OpenFootyTriggerError
     from temporary_fixture_store import search_temporary_upcoming_fixtures
     from provider_config import provider_readiness
     from free_fixture_adapters import BzzoiroAdapter
@@ -234,6 +235,128 @@ if "github_runtime_log_upload_error" in st.session_state:
         + str(st.session_state.pop("github_runtime_log_upload_error"))
     )
 st.caption("Layer 2 • Sportmonks current-season / API-Football historical data collection + weighted prediction engine + TVD")
+
+with st.expander("OpenFooty stored fixture search — read-only", expanded=False):
+    st.caption(
+        "Searches the engine's latest stored current-season snapshot. Catalogue rows are "
+        "date candidates only: lifecycle remains unknown and no prediction is run from this panel."
+    )
+    try:
+        openfooty_token = st.secrets.get("OPENFOOTY_GITHUB_TOKEN", "")
+    except Exception:
+        openfooty_token = ""
+    if not openfooty_token:
+        st.info(
+            "Add OPENFOOTY_GITHUB_TOKEN to Streamlit Secrets to enable this read-only search. "
+            "The token is used only for the dedicated OpenFooty GitHub Actions workflows."
+        )
+    else:
+        of_search_term = st.text_input(
+            "Search by team name", key="openfooty_catalogue_search_term"
+        )
+        of_window_days = st.selectbox(
+            "Source-calendar date horizon", [3, 7, 14], index=1,
+            key="openfooty_catalogue_window_days",
+        )
+        if st.button("Search stored OpenFooty fixtures", key="openfooty_catalogue_search_button"):
+            of_client = None
+            try:
+                of_client = OpenFootyTriggerClient(openfooty_token, max_wait_seconds=180)
+                of_request_id = f"catalogue-{time.time_ns()}"
+                st.session_state["openfooty_catalogue_result"] = of_client.search_fixtures(
+                    request_id=of_request_id,
+                    search_term=of_search_term,
+                    window_days=int(of_window_days),
+                )
+                st.session_state.pop("openfooty_fixture_data_result", None)
+            except Exception as of_error:
+                st.error(
+                    "OpenFooty catalogue search failed: "
+                    f"{type(of_error).__name__}: {of_error}"
+                )
+            finally:
+                if of_client:
+                    of_client.close()
+
+        of_catalogue_result = st.session_state.get("openfooty_catalogue_result")
+        if isinstance(of_catalogue_result, dict):
+            of_catalogue = of_catalogue_result.get("catalogue_response", {})
+            of_rows = of_catalogue.get("fixtures", [])
+            st.caption(
+                f"Catalogue status: {of_catalogue.get('response_status', 'unknown')} · "
+                f"returned {len(of_rows)} candidate(s)"
+            )
+            if of_rows:
+                of_table = pd.DataFrame([
+                    {
+                        "Date (source calendar)": row.get("source_calendar_date"),
+                        "Home": row.get("home_team"),
+                        "Away": row.get("away_team"),
+                        "Source clock": row.get("source_clock_time"),
+                        "Timezone": row.get("source_timezone"),
+                        "Kickoff UTC": row.get("kickoff_at_utc"),
+                        "Lifecycle": row.get("lifecycle_status"),
+                        "Prediction ready": row.get("prediction_ready"),
+                        "Fixture ID": row.get("fixture_id"),
+                    }
+                    for row in of_rows
+                ])
+                st.dataframe(of_table, use_container_width=True)
+                of_options = {
+                    (
+                        f"{row.get('home_team')} vs {row.get('away_team')} · "
+                        f"{row.get('source_calendar_date')} · {row.get('fixture_id')}"
+                    ): row
+                    for row in of_rows
+                }
+                of_selected_label = st.selectbox(
+                    "Select a stored fixture candidate",
+                    list(of_options),
+                    key="openfooty_catalogue_selected_fixture",
+                )
+                of_selected_row = of_options[of_selected_label]
+                if st.button(
+                    "Inspect selected fixture's stored data",
+                    key="openfooty_catalogue_inspect_button",
+                ):
+                    of_client = None
+                    try:
+                        of_client = OpenFootyTriggerClient(openfooty_token, max_wait_seconds=180)
+                        of_request = {
+                            "request_id": f"fixture-{time.time_ns()}",
+                            "competition_id": of_selected_row["competition_id"],
+                            "season_id": of_selected_row["season_id"],
+                            "home_team": of_selected_row["home_team"],
+                            "away_team": of_selected_row["away_team"],
+                            "kickoff_date": of_selected_row["source_calendar_date"],
+                        }
+                        st.session_state["openfooty_fixture_data_result"] = (
+                            of_client.request_fixture_data(of_request)
+                        )
+                    except Exception as of_error:
+                        st.error(
+                            "OpenFooty fixture inspection failed: "
+                            f"{type(of_error).__name__}: {of_error}"
+                        )
+                    finally:
+                        if of_client:
+                            of_client.close()
+            else:
+                st.info("No stored fixture candidates matched this search window.")
+            of_diagnostics = of_catalogue.get("diagnostics", {})
+            for of_warning in of_diagnostics.get("warnings", []):
+                st.caption(f"Catalogue note: {of_warning}")
+
+        of_data_result = st.session_state.get("openfooty_fixture_data_result")
+        if isinstance(of_data_result, dict):
+            of_data = of_data_result.get("data_response", {})
+            st.write("Stored-data response")
+            st.write(f"Status: **{of_data.get('response_status', 'unknown')}**")
+            st.json(of_data)
+            st.info(
+                "This inspection does not populate prediction inputs or create a forecast. "
+                "The existing strict model-readiness gate remains authoritative."
+            )
 report_download_slot = st.empty()
 report_download_slot.info("Collect data and predict to generate the system report. Its download shortcut will appear here.")
 st.session_state.setdefault("prediction_ledger", [])
