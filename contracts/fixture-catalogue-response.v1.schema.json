@@ -1,0 +1,287 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:openfooty:contracts:fixture-catalogue-response:v1",
+  "title": "OpenFooty stored fixture catalogue response",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "request_id",
+    "generated_at_utc",
+    "source_calendar_window",
+    "response_status",
+    "fixtures",
+    "diagnostics"
+  ],
+  "properties": {
+    "contract_version": {
+      "const": "openfooty-fixture-catalogue-v1"
+    },
+    "request_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{7,79}$"
+    },
+    "generated_at_utc": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "source_calendar_window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start_date",
+        "end_date",
+        "window_days"
+      ],
+      "properties": {
+        "start_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "window_days": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 14
+        }
+      }
+    },
+    "response_status": {
+      "enum": [
+        "CATALOGUE_AVAILABLE",
+        "NO_FIXTURES_FOUND",
+        "ERROR"
+      ]
+    },
+    "fixtures": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/fixture"
+      }
+    },
+    "diagnostics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "matched_count",
+        "returned_count",
+        "truncated",
+        "warnings"
+      ],
+      "properties": {
+        "matched_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "returned_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "truncated": {
+          "type": "boolean"
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "fixture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_id",
+        "competition_id",
+        "season_id",
+        "home_team_id",
+        "away_team_id",
+        "home_team",
+        "away_team",
+        "source_calendar_date",
+        "source_clock_time",
+        "source_timezone",
+        "kickoff_at_utc",
+        "source_status_value",
+        "lifecycle_status",
+        "prediction_ready",
+        "missing_fields",
+        "source_provenance"
+      ],
+      "properties": {
+        "fixture_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "competition_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "season_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "home_team_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "away_team_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "home_team": {
+          "type": "string",
+          "minLength": 1
+        },
+        "away_team": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_calendar_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "source_clock_time": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_timezone": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "kickoff_at_utc": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "source_status_value": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "lifecycle_status": {
+          "const": "unknown"
+        },
+        "prediction_ready": {
+          "const": false
+        },
+        "missing_fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "source_provenance": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/provenance"
+          }
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "source_record_id",
+        "source_url",
+        "retrieved_at_utc",
+        "source_updated_at_utc",
+        "payload_sha256",
+        "parser_version",
+        "validation_status",
+        "raw_evidence_ref"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_record_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "retrieved_at_utc": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "source_updated_at_utc": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "payload_sha256": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "parser_version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "validation_status": {
+          "enum": [
+            "verified",
+            "accepted",
+            "quarantined",
+            "invalid",
+            "conflict"
+          ]
+        },
+        "raw_evidence_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}
