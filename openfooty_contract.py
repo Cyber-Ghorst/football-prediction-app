@@ -96,12 +96,16 @@ def _team_profile(profile: Any, side: str, expected_team_id: str) -> None:
         path = f"{field}.recent_matches[{index}]"
         if not isinstance(match, Mapping):
             raise OpenFootyContractError(f"{path} must be an object.")
-        for key in ("fixture_id", "kickoff_at_utc", "venue", "goals_for",
-                    "goals_against", "opponent_strength", "statistics", "source_provenance"):
+        for key in ("fixture_id", "kickoff_at_utc", "venue", "opponent_id",
+                    "opponent_name", "goals_for", "goals_against",
+                    "opponent_strength", "statistics", "source_provenance"):
             if key not in match:
                 raise OpenFootyContractError(f"{path}.{key} is required.")
         if not isinstance(match["fixture_id"], str) or not match["fixture_id"].strip():
             raise OpenFootyContractError(f"{path}.fixture_id must be non-empty.")
+        for key in ("opponent_id", "opponent_name"):
+            if match[key] is not None and not isinstance(match[key], str):
+                raise OpenFootyContractError(f"{path}.{key} must be a string or null.")
         _utc_timestamp(match["kickoff_at_utc"], f"{path}.kickoff_at_utc")
         if match["venue"] not in {"home", "away", "neutral", "unknown"}:
             raise OpenFootyContractError(f"{path}.venue is unsupported.")
@@ -188,6 +192,13 @@ def validate_openfooty_response(
     for key in ("missing_fields", "invalid_observations", "conflicts", "warnings"):
         if not isinstance(diagnostics.get(key), list):
             raise OpenFootyContractError(f"diagnostics.{key} must be an array.")
+    for key in ("missing_fields", "warnings"):
+        if any(not isinstance(item, str) for item in diagnostics[key]):
+            raise OpenFootyContractError(f"diagnostics.{key} entries must be strings.")
+    for key in ("invalid_observations", "conflicts"):
+        for index, item in enumerate(diagnostics[key]):
+            if not isinstance(item, Mapping) or not isinstance(item.get("field"), str) or not isinstance(item.get("reason"), str):
+                raise OpenFootyContractError(f"diagnostics.{key}[{index}] requires field and reason strings.")
 
     if "error" in payload and payload["error"] is not None:
         error = payload["error"]
