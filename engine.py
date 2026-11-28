@@ -35,6 +35,8 @@ def _weighted_recent(values: List[float]) -> float:
     return sum(v*w for v, w in zip(values, weights)) / sum(weights)
 
 def _weighted_optional(values: list[float | None]) -> float | None:
+    # Keep each observation's original match index so missing values cannot
+    # shift older observations into the latest-five weighting window.
     pairs = [(i, float(v)) for i, v in enumerate(values[:10]) if v is not None]
     if not pairs: return None
     weights = [1.5 if i < 5 else 1.0 for i, _ in pairs]

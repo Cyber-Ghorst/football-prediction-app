@@ -90,6 +90,26 @@ class PredictionEngineTests(unittest.TestCase):
         self.assertAlmostEqual(_weighted_recent([100] * 5 + [0] * 5), 60.0)
         self.assertAlmostEqual(_weighted_recent([0] * 5 + [100] * 5), 40.0)
 
+    def test_optional_recency_weights_keep_original_indices_when_recent_values_are_missing(self):
+        from engine import _weighted_optional
+
+        # Only original match positions 1, 3 and 5 are present.
+        # Positions 1 and 3 remain in the latest-five group; position 5 does not.
+        self.assertAlmostEqual(_weighted_optional([None, 10, None, 30, None, 50]), 27.5)
+
+    def test_optional_recency_weights_keep_original_indices_when_older_values_are_missing(self):
+        from engine import _weighted_optional
+
+        values = [10, 20, 30, 40, 50, None, 70, None, 90, None]
+        expected = (10 * 1.5 + 20 * 1.5 + 30 * 1.5 + 40 * 1.5
+                    + 50 * 1.5 + 70 + 90) / 9.5
+        self.assertAlmostEqual(_weighted_optional(values), expected)
+
+    def test_optional_recency_returns_none_when_all_observations_are_missing(self):
+        from engine import _weighted_optional
+
+        self.assertIsNone(_weighted_optional([None] * 10))
+
     def test_partial_tactical_inputs_are_renormalized_without_imputation(self):
         from engine import _tactical_rating
 
