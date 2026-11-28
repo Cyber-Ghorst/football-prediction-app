@@ -196,42 +196,105 @@ def build_prediction_feature_snapshot(
     *,
     tactical_compatibility: Dict[str, float] | None = None,
     captured_at: str | None = None,
+    fixture_context: Dict | None = None,
 ) -> Dict:
-    """Capture the exact engine inputs and calculated features for one forecast.
+    """Capture model inputs with match-level identity and provenance (schema v2).
 
-    The returned object is an audit snapshot, not a new source of model inputs.
-    Only fields consumed by predict_match plus available source metadata are kept.
+    This is an immutable audit representation of the inputs supplied to the
+    engine. It does not fetch, repair, infer, or replace source observations.
+    Raw source payloads are referenced only when an upstream profile supplies
+    an explicit evidence reference; they are never fabricated here.
     """
     overrides = tactical_compatibility or {}
+    provenance_keys = (
+        "source", "provider", "data_source", "fetched_at",
+        "statistics_source", "statistics_fetched_at",
+        "matches_source", "matches_fetched_at", "last_updated_at",
+        "source_provider", "collection_fetched_at",
+        "repository_collected_at", "provider_updated_at",
+        "source_team_id", "provider_team_id", "canonical_team_id",
+    )
+    match_provenance_keys = (
+        "source_provider", "provider", "source", "collection_fetched_at",
+        "repository_collected_at", "collected_at", "provider_updated_at",
+        "source_fixture_id", "provider_fixture_id", "source_team_id",
+        "provider_team_id", "source_opponent_id", "provider_opponent_id",
+        "raw_evidence_ref", "source_record_id", "provider_record_id",
+    )
+
+    def safe_raw(value):
+        if value is None or isinstance(value, (str, int, float, bool)):
+            return value
+        return str(value)
+
+    def observed(value, field: str) -> Dict:
+        if value is None:
+            return {"status": "missing", "value": None, "raw_value": None}
+        number = _snapshot_number(value)
+        if number is None:
+            return {"status": "invalid", "value": None, "raw_value": safe_raw(value)}
+        return {"status": "observed", "value": number, "raw_value": safe_raw(value)}
 
     def team_snapshot(team: Dict, side: str, venue_key: str) -> Dict:
-        provenance_keys = (
-            "source", "provider", "data_source", "fetched_at",
-            "statistics_source", "statistics_fetched_at",
-            "matches_source", "matches_fetched_at", "last_updated_at",
-        )
         provenance = {
-            key: str(team[key]) for key in provenance_keys
+            key: safe_raw(team[key]) for key in provenance_keys
             if team.get(key) not in (None, "")
         }
         matches = []
-        for match in team.get("matches", [])[:10]:
+        for index, match in enumerate(team.get("matches", [])[:10]):
+            if not isinstance(match, dict):
+                matches.append({
+                    "history_index": index,
+                    "identity": {"status": "invalid", "fixture_id": None},
+                    "observations": {
+                        key: {"status": "invalid", "value": None, "raw_value": str(match)}
+                        for key in ("goals_for", "goals_against", "opponent_strength")
+                    },
+                    "source_provenance": {},
+                })
+                continue
+            fixture_id = match.get("fixture_id")
+            kickoff = (
+                match.get("kickoff_at") or match.get("starting_at")
+                or match.get("date") or match.get("kickoff")
+            )
+            venue = match.get("venue") or match.get("team_venue")
+            identity_ok = fixture_id not in (None, "") and kickoff not in (None, "")
+            source_provenance = {
+                key: safe_raw(match[key]) for key in match_provenance_keys
+                if match.get(key) not in (None, "")
+            }
             matches.append({
-                "goals_for": _snapshot_number(match.get("goals_for")),
-                "goals_against": _snapshot_number(match.get("goals_against")),
-                "opponent_strength": _snapshot_number(match.get("opponent_strength")),
+                "history_index": index,
+                "identity": {
+                    "status": "identified" if identity_ok else "incomplete",
+                    "fixture_id": safe_raw(fixture_id),
+                    "kickoff_at": safe_raw(kickoff),
+                    "venue": safe_raw(venue),
+                    "home_team_id": safe_raw(match.get("home_team_id")),
+                    "away_team_id": safe_raw(match.get("away_team_id")),
+                    "opponent_id": safe_raw(match.get("opponent_id")),
+                    "opponent_name": safe_raw(match.get("opponent_name")),
+                    "season_id": safe_raw(match.get("season_id")),
+                    "competition_id": safe_raw(match.get("competition_id")),
+                },
+                "observations": {
+                    key: observed(match.get(key), key)
+                    for key in ("goals_for", "goals_against", "opponent_strength")
+                },
+                "source_provenance": source_provenance,
             })
         return {
             "team_name": team.get("name", "Home" if side == "home" else "Away"),
-            "team_id": str(team.get("id")) if team.get("id") is not None else None,
-            "venue_rating": _snapshot_number(team.get(venue_key)),
-            "player_availability": _snapshot_number(team.get("player_availability")),
-            "playing_style": _snapshot_number(team.get("playing_style")),
-            "defensive_structure": _snapshot_number(team.get("defensive_structure")),
-            "attacking_approach": _snapshot_number(team.get("attacking_approach")),
-            "tactical_compatibility": _snapshot_number(
+            "team_id": safe_raw(team.get("id")),
+            "venue_rating": observed(team.get(venue_key), venue_key),
+            "player_availability": observed(team.get("player_availability"), "player_availability"),
+            "playing_style": observed(team.get("playing_style"), "playing_style"),
+            "defensive_structure": observed(team.get("defensive_structure"), "defensive_structure"),
+            "attacking_approach": observed(team.get("attacking_approach"), "attacking_approach"),
+            "tactical_compatibility": observed(
                 overrides.get(side) if overrides.get(side) is not None
-                else team.get("tactical_compatibility")
+                else team.get("tactical_compatibility"), "tactical_compatibility"
             ),
             "recent_matches": matches,
             "source_provenance": provenance,
@@ -244,17 +307,44 @@ def build_prediction_feature_snapshot(
         "data_coverage", "probabilities",
     )
     calculated = {key: result.get(key) for key in output_keys if key in result}
+    fixture = fixture_context if isinstance(fixture_context, dict) else {}
+    fixture_keys = (
+        "id", "fixture_id", "starting_at", "starting_at_timestamp",
+        "season_id", "league_id", "home_team_id", "away_team_id",
+        "source_provider", "provider", "provider_fixture_id",
+        "source_fixture_id", "provider_updated_at", "collection_fetched_at",
+        "repository_collected_at",
+    )
+    target_fixture = {
+        key: safe_raw(fixture[key]) for key in fixture_keys
+        if fixture.get(key) not in (None, "")
+    }
+    target_fixture["identity_status"] = (
+        "identified" if target_fixture.get("id", target_fixture.get("fixture_id")) is not None
+        and (target_fixture.get("starting_at") is not None
+             or target_fixture.get("starting_at_timestamp") is not None)
+        else "incomplete"
+    )
     return {
-        "schema_version": "prediction-features-v1",
+        "schema_version": "prediction-features-v2",
         "captured_at": captured_at or "",
         "recency_policy": "latest_5_60pct_previous_5_40pct",
+        "history_order": "newest_first_by_input_order",
+        "target_fixture": target_fixture,
         "teams": {
             "home": team_snapshot(home, "home", "home_rating"),
             "away": team_snapshot(away, "away", "away_rating"),
         },
         "calculated": calculated,
+        "provenance_contract": {
+            "raw_source_payload_embedded": False,
+            "raw_source_payload_note": (
+                "Raw payloads are not available in every profile. Explicit evidence "
+                "references are retained when supplied; source observations are not rewritten."
+            ),
+            "missing_and_invalid_distinguished": True,
+        },
     }
-
 
 def predict_match(home: Dict, away: Dict, max_goals: int = 8, tactical_compatibility: Dict[str, float] | None = None) -> Dict:
     readiness = build_prediction_component_readiness(home, away, tactical_compatibility)
