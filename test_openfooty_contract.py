@@ -3,7 +3,11 @@ import json
 import unittest
 from pathlib import Path
 
-from openfooty_contract import OpenFootyContractError, validate_openfooty_response
+from openfooty_contract import (
+    OpenFootyContractError,
+    validate_openfooty_catalogue,
+    validate_openfooty_response,
+)
 
 
 ROOT = Path(__file__).resolve().parent
@@ -68,6 +72,40 @@ class OpenFootyContractTests(unittest.TestCase):
         with self.assertRaisesRegex(OpenFootyContractError, "version"):
             validate_openfooty_response(
                 payload, expected_request_id=EXAMPLE["request_id"]
+            )
+
+
+    def test_valid_catalogue_golden_response_is_accepted(self):
+        payload = json.loads(
+            (ROOT / "contracts" / "examples" /
+             "fixture-catalogue-response.v1.example.json").read_text(encoding="utf-8")
+        )
+        result = validate_openfooty_catalogue(
+            payload, expected_request_id=payload["request_id"]
+        )
+        self.assertEqual(result, payload)
+        self.assertIsNot(result, payload)
+        self.assertFalse(result["fixtures"][0]["prediction_ready"])
+
+    def test_catalogue_request_id_mismatch_is_rejected(self):
+        payload = json.loads(
+            (ROOT / "contracts" / "examples" /
+             "fixture-catalogue-response.v1.example.json").read_text(encoding="utf-8")
+        )
+        with self.assertRaisesRegex(OpenFootyContractError, "does not match"):
+            validate_openfooty_catalogue(
+                payload, expected_request_id="catalogue-20261128-99"
+            )
+
+    def test_catalogue_cannot_claim_prediction_readiness(self):
+        payload = json.loads(
+            (ROOT / "contracts" / "examples" /
+             "fixture-catalogue-response.v1.example.json").read_text(encoding="utf-8")
+        )
+        payload["fixtures"][0]["prediction_ready"] = True
+        with self.assertRaisesRegex(OpenFootyContractError, "prediction_ready false"):
+            validate_openfooty_catalogue(
+                payload, expected_request_id=payload["request_id"]
             )
 
 
