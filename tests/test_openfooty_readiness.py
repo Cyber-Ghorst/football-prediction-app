@@ -1,7 +1,6 @@
 """Offline tests for the fail-closed OpenFooty readiness adapter."""
 from __future__ import annotations
 
-import copy
 import json
 from pathlib import Path
 
