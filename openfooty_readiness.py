@@ -87,8 +87,8 @@ def assess_openfooty_readiness(
 ) -> dict[str, Any]:
     """Validate and report readiness without imputing or calculating model scores.
 
-    freshness_limits_hours may define separate `fixture` and `availability`
-    limits. Missing limits fail closed rather than silently assuming freshness.
+    freshness_limits_hours may define separate `fixture`, `availability` and
+    `history` limits. Missing limits fail closed rather than silently assuming freshness.
     """
     response = validate_openfooty_response(
         payload, expected_request_id=expected_request_id
@@ -96,7 +96,7 @@ def assess_openfooty_readiness(
     now = _parse_utc(now_utc) if now_utc else datetime.now(timezone.utc)
     limits = dict(freshness_limits_hours or {})
     for key, value in limits.items():
-        if key not in {"fixture", "availability"}:
+        if key not in {"fixture", "availability", "history"}:
             raise ValueError(f"unsupported freshness policy key: {key}")
         if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value <= 0:
             raise ValueError(f"freshness limit for {key} must be a finite positive number")
@@ -130,7 +130,16 @@ def assess_openfooty_readiness(
         valid_matches = []
         chronology_ok = True
         previous: datetime | None = None
+        if "history" not in limits:
+            blockers.append(f"{side}:recent_history:freshness_policy_not_supplied")
         for index, match in enumerate(matches):
+            if "history" in limits:
+                blockers.extend(_freshness_blockers(
+                    match.get("source_provenance"),
+                    now=now,
+                    max_age_hours=limits["history"],
+                    field=f"{side}:recent_match[{index}]",
+                ))
             try:
                 timestamp = _parse_utc(match["kickoff_at_utc"])
             except (KeyError, TypeError, ValueError):
@@ -236,5 +245,5 @@ def assess_openfooty_readiness(
         "blockers": sorted(set(blockers)),
         "diagnostics": response["diagnostics"],
         "freshness_limits_hours": dict(limits),
-        "freshness_policy_complete": {"fixture", "availability"}.issubset(limits),
+        "freshness_policy_complete": {"fixture", "availability", "history"}.issubset(limits),
     }
