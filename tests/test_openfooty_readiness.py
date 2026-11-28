@@ -75,6 +75,10 @@ class OpenFootyReadinessTests(unittest.TestCase):
         self.assertIn(
             "home:availability:freshness_policy_not_supplied", report["blockers"]
         )
+        self.assertIn(
+            "home:recent_history:freshness_policy_not_supplied", report["blockers"]
+        )
+        self.assertFalse(report["freshness_policy_complete"])
 
     def test_post_kickoff_history_is_blocked(self):
         payload = _payload()
@@ -112,6 +116,48 @@ class OpenFootyReadinessTests(unittest.TestCase):
             item.startswith("home:recent_match_not_pre_kickoff")
             for item in report["blockers"]
         ))
+        self.assertEqual(report["status"], "blocked")
+
+
+    def test_stale_recent_match_evidence_is_blocked(self):
+        payload = _payload()
+        payload["team_profiles"]["home"]["recent_matches"][0][
+            "source_provenance"
+        ][0]["retrieved_at_utc"] = "2026-11-20T07:45:00Z"
+        report = assess_openfooty_readiness(
+            payload,
+            expected_request_id=payload["request_id"],
+            now_utc="2026-11-28T08:00:00Z",
+            freshness_limits_hours={
+                "fixture": 36,
+                "availability": 24,
+                "history": 36,
+            },
+        )
+        self.assertIn(
+            "home:recent_match[0]:stale_evidence[0]", report["blockers"]
+        )
+        self.assertEqual(report["status"], "blocked")
+
+    def test_future_dated_recent_match_evidence_is_blocked(self):
+        payload = _payload()
+        payload["team_profiles"]["home"]["recent_matches"][0][
+            "source_provenance"
+        ][0]["retrieved_at_utc"] = "2026-11-28T09:00:00Z"
+        report = assess_openfooty_readiness(
+            payload,
+            expected_request_id=payload["request_id"],
+            now_utc="2026-11-28T08:00:00Z",
+            freshness_limits_hours={
+                "fixture": 36,
+                "availability": 24,
+                "history": 36,
+            },
+        )
+        self.assertIn(
+            "home:recent_match[0]:future_retrieval_timestamp[0]",
+            report["blockers"],
+        )
         self.assertEqual(report["status"], "blocked")
 
     def test_conflict_diagnostics_block_readiness(self):
