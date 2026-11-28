@@ -41,3 +41,12 @@ tests, and strict component-readiness integration are complete. The prediction
 app must continue to reject unverified, stale, conflicting, or held observations.
 The current OpenFooty CSV fixture data may still lack verified timezone/kickoff
 instants; such rows correctly return `DATA_INCOMPLETE` and must not be guessed.
+
+
+## Read-only catalogue panel
+
+The app now exposes an optional **OpenFooty stored fixture search — read-only** panel. It calls the dedicated current-season catalogue workflow, displays source-calendar date candidates and allows the user to inspect one candidate's fixture-specific stored-data response.
+
+The panel requires `OPENFOOTY_GITHUB_TOKEN` in Streamlit Secrets. It does not run automatically on page load, does not replace the existing provider-based fixture selector, does not merge OpenFooty data into prediction profiles, and does not create a forecast. It is a separate diagnostic/search path while the full fixture-selection and model integration is qualified.
+
+Catalogue rows deliberately retain `lifecycle_status=unknown` and `prediction_ready=false`. Missing kickoff timezone is displayed as missing; the UI never converts source-local time to UTC by guessing. The fixture inspection action can return `DATA_INCOMPLETE`; even `DATA_AVAILABLE` remains subject to the existing strict component-readiness gate.

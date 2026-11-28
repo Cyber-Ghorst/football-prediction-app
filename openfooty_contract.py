@@ -209,3 +209,120 @@ def validate_openfooty_response(
         return json.loads(json.dumps(dict(payload), ensure_ascii=False, allow_nan=False))
     except (TypeError, ValueError):
         raise OpenFootyContractError("Response must contain only finite JSON values.") from None
+
+
+def validate_openfooty_catalogue(
+    payload: Mapping[str, Any],
+    *,
+    expected_request_id: str,
+) -> dict[str, Any]:
+    """Validate the read-only current-season fixture catalogue response."""
+    import json
+    from datetime import date
+
+    if not isinstance(payload, Mapping):
+        raise OpenFootyContractError("Catalogue response must be a JSON object.")
+    allowed = {
+        "contract_version", "request_id", "generated_at_utc",
+        "source_calendar_window", "response_status", "fixtures",
+        "diagnostics", "error",
+    }
+    required = allowed - {"error"}
+    if set(payload) - allowed:
+        raise OpenFootyContractError("Catalogue response contains unsupported fields.")
+    missing = required - set(payload)
+    if missing:
+        raise OpenFootyContractError(
+            "Catalogue response is missing required fields: " + ", ".join(sorted(missing))
+        )
+    if payload.get("contract_version") != "openfooty-fixture-catalogue-v1":
+        raise OpenFootyContractError("Unsupported OpenFooty catalogue contract version.")
+    request_id = payload.get("request_id")
+    if not isinstance(request_id, str) or not REQUEST_ID_PATTERN.fullmatch(request_id):
+        raise OpenFootyContractError("Catalogue request_id is invalid.")
+    if request_id != expected_request_id:
+        raise OpenFootyContractError("Catalogue request_id does not match the originating request.")
+    _utc_timestamp(payload.get("generated_at_utc"), "generated_at_utc")
+    status = payload.get("response_status")
+    if status not in {"CATALOGUE_AVAILABLE", "NO_FIXTURES_FOUND", "ERROR"}:
+        raise OpenFootyContractError("Catalogue response_status is unsupported.")
+
+    window = payload.get("source_calendar_window")
+    if not isinstance(window, Mapping) or set(window) != {"start_date", "end_date", "window_days"}:
+        raise OpenFootyContractError("source_calendar_window is malformed.")
+    try:
+        start = date.fromisoformat(window["start_date"])
+        end = date.fromisoformat(window["end_date"])
+    except (TypeError, ValueError, KeyError):
+        raise OpenFootyContractError("Catalogue source-calendar dates must be ISO dates.") from None
+    days = window.get("window_days")
+    if isinstance(days, bool) or not isinstance(days, int) or not 1 <= days <= 14 or end < start:
+        raise OpenFootyContractError("Catalogue source-calendar window is invalid.")
+
+    fixtures = payload.get("fixtures")
+    if not isinstance(fixtures, list):
+        raise OpenFootyContractError("Catalogue fixtures must be an array.")
+    fixture_fields = {
+        "fixture_id", "competition_id", "season_id", "home_team_id", "away_team_id",
+        "home_team", "away_team", "source_calendar_date", "source_clock_time",
+        "source_timezone", "kickoff_at_utc", "source_status_value", "lifecycle_status",
+        "prediction_ready", "missing_fields", "source_provenance",
+    }
+    for index, fixture in enumerate(fixtures):
+        path = f"fixtures[{index}]"
+        if not isinstance(fixture, Mapping) or set(fixture) != fixture_fields:
+            raise OpenFootyContractError(f"{path} has an invalid field set.")
+        for key in (
+            "fixture_id", "competition_id", "season_id", "home_team_id",
+            "away_team_id", "home_team", "away_team",
+        ):
+            if not isinstance(fixture.get(key), str) or not fixture[key].strip():
+                raise OpenFootyContractError(f"{path}.{key} must be non-empty.")
+        try:
+            fixture_date = date.fromisoformat(fixture["source_calendar_date"])
+        except (TypeError, ValueError):
+            raise OpenFootyContractError(f"{path}.source_calendar_date must be an ISO date.") from None
+        if not start <= fixture_date <= end:
+            raise OpenFootyContractError(f"{path} lies outside the declared source-calendar window.")
+        for key in ("source_clock_time", "source_timezone", "source_status_value"):
+            if fixture[key] is not None and not isinstance(fixture[key], str):
+                raise OpenFootyContractError(f"{path}.{key} must be a string or null.")
+        if fixture["kickoff_at_utc"] is not None:
+            _utc_timestamp(fixture["kickoff_at_utc"], f"{path}.kickoff_at_utc")
+        if fixture["lifecycle_status"] != "unknown" or fixture["prediction_ready"] is not False:
+            raise OpenFootyContractError(
+                f"{path} must remain lifecycle unknown and prediction_ready false."
+            )
+        if not isinstance(fixture["missing_fields"], list) or any(
+            not isinstance(value, str) for value in fixture["missing_fields"]
+        ):
+            raise OpenFootyContractError(f"{path}.missing_fields must be a string array.")
+        _provenance(fixture["source_provenance"], f"{path}.source_provenance")
+
+    diagnostics = payload.get("diagnostics")
+    if not isinstance(diagnostics, Mapping):
+        raise OpenFootyContractError("Catalogue diagnostics must be an object.")
+    if (
+        isinstance(diagnostics.get("matched_count"), bool)
+        or not isinstance(diagnostics.get("matched_count"), int)
+        or isinstance(diagnostics.get("returned_count"), bool)
+        or not isinstance(diagnostics.get("returned_count"), int)
+        or not isinstance(diagnostics.get("truncated"), bool)
+        or not isinstance(diagnostics.get("warnings"), list)
+        or any(not isinstance(item, str) for item in diagnostics["warnings"])
+    ):
+        raise OpenFootyContractError("Catalogue diagnostics fields are invalid.")
+    if diagnostics["returned_count"] != len(fixtures) or diagnostics["matched_count"] < len(fixtures):
+        raise OpenFootyContractError("Catalogue diagnostics counts do not match returned fixtures.")
+    if status == "NO_FIXTURES_FOUND" and fixtures:
+        raise OpenFootyContractError("NO_FIXTURES_FOUND cannot contain fixture rows.")
+    if status == "CATALOGUE_AVAILABLE" and not fixtures:
+        raise OpenFootyContractError("CATALOGUE_AVAILABLE requires at least one fixture.")
+    if status == "ERROR":
+        error = payload.get("error")
+        if not isinstance(error, Mapping) or not isinstance(error.get("code"), str) or not isinstance(error.get("message"), str):
+            raise OpenFootyContractError("ERROR catalogue response requires an error code and message.")
+    try:
+        return json.loads(json.dumps(dict(payload), ensure_ascii=False, allow_nan=False))
+    except (TypeError, ValueError):
+        raise OpenFootyContractError("Catalogue response must contain only finite JSON values.") from None

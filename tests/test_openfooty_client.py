@@ -227,5 +227,130 @@ class OpenFootyClientTests(unittest.TestCase):
             )
 
 
+    def test_catalogue_dispatch_uses_dedicated_read_only_workflow(self):
+        class Response:
+            status_code = 204
+
+        class Session:
+            def __init__(self):
+                self.headers = {}
+                self.calls = []
+
+            def request(self, method, url, **kwargs):
+                self.calls.append((method, url, kwargs))
+                return Response()
+
+            def close(self):
+                pass
+
+        session = Session()
+        client = OpenFootyTriggerClient("test-token", session=session)
+        client._wait_for_catalogue_response = lambda request_id: {"request_id": request_id}
+        result = client.search_fixtures(
+            request_id="catalogue-20261128-01",
+            search_term="Arsenal",
+            window_days=7,
+        )
+        self.assertEqual(result["request_id"], "catalogue-20261128-01")
+        method, url, kwargs = session.calls[0]
+        self.assertEqual(method, "POST")
+        self.assertTrue(url.endswith("/actions/workflows/prediction-fixture-catalogue.yml/dispatches"))
+        payload = json.loads(kwargs["json"]["inputs"]["request_json"])
+        self.assertEqual(payload["search_term"], "Arsenal")
+        self.assertEqual(payload["window_days"], 7)
+
+    def test_catalogue_artifact_validates_v1_and_never_marks_rows_ready(self):
+        request_id = "catalogue-20261128-01"
+        payload = json.loads(
+            (Path(__file__).parent.parent / "contracts" / "examples" /
+             "fixture-catalogue-response.v1.example.json").read_text(encoding="utf-8")
+        )
+        payload["request_id"] = request_id
+        stream = io.BytesIO()
+        with zipfile.ZipFile(stream, "w") as bundle:
+            bundle.writestr("fixture_catalogue_response.json", json.dumps(payload))
+
+        class Response:
+            status_code = 200
+
+            def __init__(self, body=None, content=b""):
+                self._body = body or {}
+                self.content = content
+
+            def json(self):
+                return self._body
+
+        class Session:
+            headers = {}
+
+            def request(self, method, url, **kwargs):
+                if url.endswith("/artifacts"):
+                    return Response(body={"artifacts": [{
+                        "name": "prediction-catalogue-123",
+                        "expired": False,
+                        "archive_download_url": "https://api.github.com/repos/example/repo/actions/artifacts/123/zip",
+                    }]})
+                if url.endswith("/actions/artifacts/123/zip"):
+                    return Response(content=stream.getvalue())
+                raise AssertionError(url)
+
+            def close(self):
+                pass
+
+        client = OpenFootyTriggerClient("test-token", session=Session())
+        result = client._download_catalogue_response(
+            {"id": 123, "html_url": "https://github.com/run", "conclusion": "success"},
+            request_id,
+        )
+        fixture = result["catalogue_response"]["fixtures"][0]
+        self.assertFalse(fixture["prediction_ready"])
+        self.assertEqual(fixture["lifecycle_status"], "unknown")
+        self.assertEqual(result["workflow_run"]["id"], 123)
+
+    def test_catalogue_artifact_rejects_prediction_ready_claim(self):
+        request_id = "catalogue-20261128-01"
+        payload = json.loads(
+            (Path(__file__).parent.parent / "contracts" / "examples" /
+             "fixture-catalogue-response.v1.example.json").read_text(encoding="utf-8")
+        )
+        payload["request_id"] = request_id
+        payload["fixtures"][0]["prediction_ready"] = True
+        stream = io.BytesIO()
+        with zipfile.ZipFile(stream, "w") as bundle:
+            bundle.writestr("fixture_catalogue_response.json", json.dumps(payload))
+
+        class Response:
+            status_code = 200
+
+            def __init__(self, body=None, content=b""):
+                self._body = body or {}
+                self.content = content
+
+            def json(self):
+                return self._body
+
+        class Session:
+            headers = {}
+
+            def request(self, method, url, **kwargs):
+                if url.endswith("/artifacts"):
+                    return Response(body={"artifacts": [{
+                        "name": "prediction-catalogue-123", "expired": False,
+                        "archive_download_url": "https://api.github.com/repos/example/repo/actions/artifacts/123/zip",
+                    }]})
+                if url.endswith("/actions/artifacts/123/zip"):
+                    return Response(content=stream.getvalue())
+                raise AssertionError(url)
+
+            def close(self):
+                pass
+
+        client = OpenFootyTriggerClient("test-token", session=Session())
+        with self.assertRaisesRegex(OpenFootyTriggerError, "contract validation"):
+            client._download_catalogue_response(
+                {"id": 123, "conclusion": "success"}, request_id
+            )
+
+
 if __name__ == "__main__":
     unittest.main()
