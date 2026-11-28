@@ -28,7 +28,7 @@ The assessment fails closed when:
 - availability is unknown/unverified or a validated availability impact score is not available;
 - the approved home/away rating or tactical evidence is absent.
 
-The current v1 response contains recent-match venue labels and raw statistics, but does not define an approved home/away score, player-availability impact score, playing-style score, defensive-structure score, attacking-approach score or fixture-specific tactical-compatibility score. The adapter therefore reports those components as missing; it does not invent calculations.
+The caller must supply separate maximum-age limits for fixture evidence, availability evidence and every recent-match history row. No default age threshold is invented. The current v1 response contains recent-match venue labels and raw statistics, but does not define an approved home/away score, player-availability impact score, playing-style score, defensive-structure score, attacking-approach score or fixture-specific tactical-compatibility score. The adapter therefore reports those components as missing; it does not invent calculations.
 
 ## Fixed model policy
 
