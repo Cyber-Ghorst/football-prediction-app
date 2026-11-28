@@ -106,6 +106,7 @@ try:
     from engine import predict_match, build_prediction_feature_snapshot, build_prediction_component_readiness, WEIGHTS, most_likely_outcome
     from tvd import run_tvd
     from openfooty_client import OpenFootyTriggerClient, catalogue_status_message
+    from openfooty_readiness import assess_openfooty_readiness
     from temporary_fixture_store import search_temporary_upcoming_fixtures
     from provider_config import provider_readiness
     from free_fixture_adapters import BzzoiroAdapter
@@ -361,9 +362,28 @@ with st.expander("OpenFooty stored fixture search — read-only", expanded=False
             st.write(f"Status: **{of_data.get('response_status', 'unknown')}**")
             st.json(of_data)
             st.info(
-                "This inspection does not populate prediction inputs or create a forecast. "
-                "The existing strict model-readiness gate remains authoritative."
+                "This inspection does not populate prediction inputs, run the model or create a forecast."
             )
+            try:
+                of_preflight = of_data_result.get("preflight_response", {})
+                of_readiness = assess_openfooty_readiness(
+                    of_data,
+                    expected_request_id=of_preflight.get("request_id", ""),
+                    now_utc=datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+                )
+                st.subheader("Strict prediction readiness")
+                st.warning(
+                    "Standard prediction remains blocked until every required component "
+                    "and an explicit freshness policy are validated."
+                    if of_readiness["status"] == "blocked"
+                    else "Readiness evidence is complete; prediction execution remains disabled in this panel."
+                )
+                st.json(of_readiness)
+            except Exception as of_readiness_error:
+                st.error(
+                    "Read-only readiness assessment failed: "
+                    f"{type(of_readiness_error).__name__}: {of_readiness_error}"
+                )
 report_download_slot = st.empty()
 report_download_slot.info("Collect data and predict to generate the system report. Its download shortcut will appear here.")
 st.session_state.setdefault("prediction_ledger", [])
