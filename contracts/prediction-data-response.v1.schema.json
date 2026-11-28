@@ -1,0 +1,444 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:openfooty:contracts:prediction-data-response:v1",
+  "title": "OpenFooty prediction data response",
+  "description": "Read-only, stored-data response from OpenFooty Data Engine to the prediction app. DATA_AVAILABLE does not imply model readiness.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "request_id",
+    "generated_at_utc",
+    "response_status",
+    "fixture",
+    "team_profiles",
+    "diagnostics"
+  ],
+  "properties": {
+    "contract_version": {
+      "const": "openfooty-prediction-data-v1"
+    },
+    "request_id": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 80,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{7,79}$"
+    },
+    "generated_at_utc": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
+    "response_status": {
+      "enum": [
+        "DATA_AVAILABLE",
+        "FIXTURE_NOT_FOUND",
+        "FIXTURE_AMBIGUOUS",
+        "DATA_INCOMPLETE",
+        "ERROR"
+      ]
+    },
+    "fixture": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/fixture"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "team_profiles": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "home",
+        "away"
+      ],
+      "properties": {
+        "home": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/teamProfile"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "away": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/teamProfile"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "diagnostics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "missing_fields",
+        "invalid_observations",
+        "conflicts",
+        "warnings"
+      ],
+      "properties": {
+        "missing_fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "invalid_observations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/diagnostic"
+          }
+        },
+        "conflicts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/diagnostic"
+          }
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "error": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "utcTimestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "nullableNumber": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "nullableString": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "fixture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_id",
+        "competition_id",
+        "season_id",
+        "home_team_id",
+        "away_team_id",
+        "home_team",
+        "away_team",
+        "kickoff_at_utc",
+        "status",
+        "source_provenance"
+      ],
+      "properties": {
+        "fixture_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "competition_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "season_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "home_team_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "away_team_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "home_team": {
+          "type": "string",
+          "minLength": 1
+        },
+        "away_team": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kickoff_at_utc": {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        "status": {
+          "enum": [
+            "scheduled",
+            "postponed",
+            "cancelled",
+            "live",
+            "completed",
+            "unknown"
+          ]
+        },
+        "source_provenance": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/provenance"
+          }
+        }
+      }
+    },
+    "teamProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "team_id",
+        "team_name",
+        "recent_matches",
+        "availability",
+        "source_provenance"
+      ],
+      "properties": {
+        "team_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "team_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "recent_matches": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/recentMatch"
+          }
+        },
+        "availability": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "players",
+            "source_provenance"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "verified",
+                "partial",
+                "unknown",
+                "conflict",
+                "invalid"
+              ]
+            },
+            "players": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "player_id",
+                  "status"
+                ],
+                "properties": {
+                  "player_id": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "enum": [
+                      "available",
+                      "unavailable",
+                      "questionable",
+                      "suspended",
+                      "unknown"
+                    ]
+                  },
+                  "reason": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            },
+            "source_provenance": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/provenance"
+              }
+            }
+          }
+        },
+        "source_provenance": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/provenance"
+          }
+        }
+      }
+    },
+    "recentMatch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_id",
+        "kickoff_at_utc",
+        "venue",
+        "opponent_id",
+        "opponent_name",
+        "goals_for",
+        "goals_against",
+        "opponent_strength",
+        "statistics",
+        "source_provenance"
+      ],
+      "properties": {
+        "fixture_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kickoff_at_utc": {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        "venue": {
+          "enum": [
+            "home",
+            "away",
+            "neutral",
+            "unknown"
+          ]
+        },
+        "opponent_id": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "opponent_name": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "goals_for": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "goals_against": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "opponent_strength": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "statistics": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/nullableNumber"
+          }
+        },
+        "source_provenance": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/provenance"
+          }
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "retrieved_at_utc",
+        "validation_status"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_record_id": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "source_url": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "retrieved_at_utc": {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        "source_updated_at_utc": {
+          "$ref": "#/$defs/nullableUtcTimestamp"
+        },
+        "payload_sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^([a-fA-F0-9]{64})?$"
+        },
+        "parser_version": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "validation_status": {
+          "enum": [
+            "verified",
+            "accepted",
+            "quarantined",
+            "invalid",
+            "conflict"
+          ]
+        },
+        "raw_evidence_ref": {
+          "$ref": "#/$defs/nullableString"
+        }
+      }
+    },
+    "diagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "field",
+        "reason"
+      ],
+      "properties": {
+        "field": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "nullableUtcTimestamp": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "pattern": "Z$"
+    }
+  }
+}
