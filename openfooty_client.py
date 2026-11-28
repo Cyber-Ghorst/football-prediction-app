@@ -16,7 +16,11 @@ from urllib.parse import urlparse
 
 import requests
 
-from openfooty_contract import OpenFootyContractError, validate_openfooty_response
+from openfooty_contract import (
+    OpenFootyContractError,
+    validate_openfooty_catalogue,
+    validate_openfooty_response,
+)
 
 
 class OpenFootyTriggerError(RuntimeError):
@@ -27,6 +31,7 @@ class OpenFootyTriggerClient:
     API_ROOT = "https://api.github.com"
     REPOSITORY = "jacksonader003-ship-it/OpenFooty-Data-Engine"
     WORKFLOW = "prediction-fixture-request.yml"
+    CATALOGUE_WORKFLOW = "prediction-fixture-catalogue.yml"
     REQUEST_FIELDS = {
         "request_id", "competition_id", "season_id",
         "home_team", "away_team", "kickoff_date",
@@ -234,6 +239,123 @@ class OpenFootyTriggerClient:
         return {
             "preflight_response": preflight,
             "data_response": data_response,
+            "workflow_run": {
+                "id": run_id,
+                "url": run.get("html_url"),
+                "conclusion": run.get("conclusion"),
+            },
+        }
+
+    def search_fixtures(
+        self,
+        *,
+        request_id: str,
+        search_term: str = "",
+        competition_id: str = "",
+        season_id: str = "",
+        window_days: int = 7,
+    ) -> dict[str, Any]:
+        """Search the stored current-season fixture catalogue without provider access."""
+        if not isinstance(request_id, str) or not re.fullmatch(
+            r"[A-Za-z0-9][A-Za-z0-9._:-]{7,79}", request_id
+        ):
+            raise OpenFootyTriggerError("request_id must be 8-80 safe identifier characters.")
+        if not isinstance(search_term, str) or len(search_term.strip()) > 100:
+            raise OpenFootyTriggerError("search_term must be a string of at most 100 characters.")
+        if not isinstance(competition_id, str) or not isinstance(season_id, str):
+            raise OpenFootyTriggerError("competition_id and season_id must be strings.")
+        if isinstance(window_days, bool) or not isinstance(window_days, int) or not 1 <= window_days <= 14:
+            raise OpenFootyTriggerError("window_days must be an integer from 1 through 14.")
+        request = {
+            "request_id": request_id,
+            "search_term": search_term.strip(),
+            "competition_id": competition_id.strip(),
+            "season_id": season_id.strip(),
+            "window_days": window_days,
+        }
+        dispatch_url = self._url(f"actions/workflows/{self.CATALOGUE_WORKFLOW}/dispatches")
+        self._request(
+            "POST",
+            dispatch_url,
+            expected=(204,),
+            json={
+                "ref": "main",
+                "inputs": {
+                    "request_id": request_id,
+                    "request_json": json.dumps(request, separators=(",", ":"), ensure_ascii=False),
+                },
+            },
+        )
+        return self._wait_for_catalogue_response(request_id)
+
+    def _wait_for_catalogue_response(self, request_id: str) -> dict[str, Any]:
+        runs_url = self._url(
+            f"actions/workflows/{self.CATALOGUE_WORKFLOW}/runs"
+            "?event=workflow_dispatch&branch=main&per_page=30"
+        )
+        deadline = time.monotonic() + self.max_wait_seconds
+        while time.monotonic() < deadline:
+            response = self._request("GET", runs_url, expected=(200,))
+            payload = response.json()
+            matching = None
+            for candidate in payload.get("workflow_runs", []):
+                title = str(candidate.get("display_title") or candidate.get("name") or "")
+                if request_id in title:
+                    matching = candidate
+                    break
+            if matching and matching.get("status") == "completed":
+                if matching.get("conclusion") != "success":
+                    raise OpenFootyTriggerError("OpenFooty catalogue workflow did not complete successfully.")
+                return self._download_catalogue_response(matching, request_id)
+            time.sleep(self.poll_interval_seconds)
+        raise OpenFootyTriggerError("Timed out waiting for the OpenFooty fixture catalogue response.")
+
+    def _download_catalogue_response(
+        self, run: dict[str, Any], request_id: str
+    ) -> dict[str, Any]:
+        run_id = run.get("id")
+        if not isinstance(run_id, int):
+            raise OpenFootyTriggerError("OpenFooty returned a catalogue workflow run without a valid ID.")
+        artifacts_url = self._url(f"actions/runs/{run_id}/artifacts")
+        response = self._request("GET", artifacts_url, expected=(200,))
+        artifact_name = f"prediction-catalogue-{run_id}"
+        artifacts = response.json().get("artifacts", [])
+        artifact = next(
+            (item for item in artifacts if item.get("name") == artifact_name and not item.get("expired")),
+            None,
+        )
+        if not artifact or not artifact.get("archive_download_url"):
+            raise OpenFootyTriggerError("OpenFooty catalogue artifact is missing or expired.")
+        archive_url = artifact["archive_download_url"]
+        parsed_url = urlparse(archive_url)
+        if parsed_url.scheme != "https" or parsed_url.hostname != "api.github.com":
+            raise OpenFootyTriggerError("OpenFooty returned an unexpected catalogue download host.")
+        archive = self._request("GET", archive_url, expected=(200,))
+        if len(archive.content) > 2_000_000:
+            raise OpenFootyTriggerError("OpenFooty catalogue ZIP exceeds the allowed download size.")
+        try:
+            with zipfile.ZipFile(io.BytesIO(archive.content)) as bundle:
+                matches = [
+                    name for name in bundle.namelist()
+                    if name.endswith("fixture_catalogue_response.json")
+                ]
+                if len(matches) != 1:
+                    raise OpenFootyTriggerError("Catalogue artifact has an unexpected file layout.")
+                if bundle.getinfo(matches[0]).file_size > 1_000_000:
+                    raise OpenFootyTriggerError("Catalogue response exceeds the allowed size.")
+                payload = json.loads(bundle.read(matches[0]).decode("utf-8"))
+        except (zipfile.BadZipFile, UnicodeDecodeError, json.JSONDecodeError) as error:
+            raise OpenFootyTriggerError("OpenFooty catalogue artifact is not valid JSON ZIP data.") from error
+        try:
+            catalogue = validate_openfooty_catalogue(
+                payload, expected_request_id=request_id
+            )
+        except OpenFootyContractError as error:
+            raise OpenFootyTriggerError(
+                f"OpenFooty catalogue response failed contract validation: {error}"
+            ) from error
+        return {
+            "catalogue_response": catalogue,
             "workflow_run": {
                 "id": run_id,
                 "url": run.get("html_url"),
