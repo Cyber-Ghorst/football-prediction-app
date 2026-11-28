@@ -53,6 +53,54 @@ class PredictionEngineTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             predict_match(bad, self.teams["Chelsea"])
 
+    def test_rejects_malformed_match_record(self):
+        bad = dict(self.teams["Arsenal"])
+        bad["matches"] = [None] + bad["matches"][1:]
+        with self.assertRaisesRegex(ValueError, "matches\\[0\\].*malformed"):
+            predict_match(bad, self.teams["Chelsea"])
+
+    def test_rejects_malformed_required_goal_value(self):
+        bad = dict(self.teams["Arsenal"])
+        bad["matches"] = [dict(match) for match in bad["matches"]]
+        bad["matches"][0]["goals_for"] = "not-a-number"
+        with self.assertRaisesRegex(ValueError, "goals_for.*malformed"):
+            predict_match(bad, self.teams["Chelsea"])
+
+    def test_rejects_non_finite_goal_value(self):
+        bad = dict(self.teams["Arsenal"])
+        bad["matches"] = [dict(match) for match in bad["matches"]]
+        bad["matches"][0]["goals_against"] = float("nan")
+        with self.assertRaisesRegex(ValueError, "goals_against.*non-finite"):
+            predict_match(bad, self.teams["Chelsea"])
+
+    def test_rejects_out_of_range_optional_component(self):
+        bad = dict(self.teams["Arsenal"])
+        bad["player_availability"] = 101
+        with self.assertRaisesRegex(ValueError, "player_availability.*out of range"):
+            predict_match(bad, self.teams["Chelsea"])
+
+    def test_rejects_invalid_opponent_strength(self):
+        bad = dict(self.teams["Arsenal"])
+        bad["matches"] = [dict(match) for match in bad["matches"]]
+        bad["matches"][2]["opponent_strength"] = -1
+        with self.assertRaisesRegex(ValueError, "opponent_strength.*out of range"):
+            predict_match(bad, self.teams["Chelsea"])
+
+    def test_rejects_invalid_tactical_compatibility_override(self):
+        with self.assertRaisesRegex(ValueError, "tactical_compatibility.home.*out of range"):
+            predict_match(self.teams["Arsenal"], self.teams["Chelsea"],
+                          tactical_compatibility={"home": 120})
+
+    def test_optional_missing_components_remain_missing(self):
+        from engine import _team_components
+
+        profile = dict(self.teams["Arsenal"])
+        profile["player_availability"] = None
+        profile["home_rating"] = None
+        components = _team_components(profile, "home_rating")
+        self.assertNotIn("player_availability", components)
+        self.assertNotIn("home_away", components)
+
     def test_most_likely_outcome_labels(self):
         from engine import most_likely_outcome
         home = most_likely_outcome({"home_win": 48, "draw": 27, "away_win": 25}, "Brighton", "Fulham")
