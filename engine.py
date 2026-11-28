@@ -15,19 +15,55 @@ BASE_GOALS = 1.45
 def _clamp(value: float, low: float = 0.05, high: float = 3.8) -> float:
     return max(low, min(high, value))
 
+def _validated_number(value, field: str, *, minimum: float | None = None,
+                      maximum: float | None = None) -> float:
+    """Parse a supplied numeric value and reject malformed or non-finite data."""
+    if isinstance(value, bool):
+        raise ValueError(f"{field} is malformed: boolean values are not numeric observations.")
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        raise ValueError(f"{field} is malformed: expected a finite number.") from None
+    if not isfinite(number):
+        raise ValueError(f"{field} is non-finite: expected a finite number.")
+    if minimum is not None and number < minimum:
+        raise ValueError(f"{field} is out of range: minimum is {minimum}.")
+    if maximum is not None and number > maximum:
+        raise ValueError(f"{field} is out of range: maximum is {maximum}.")
+    return number
+
+
+def _validate_optional_score(team: Dict, key: str, name: str) -> None:
+    value = team.get(key)
+    if value is not None:
+        _validated_number(value, f"{name}.{key}", minimum=0, maximum=100)
+
+
 def _validate_team(team: Dict, name: str) -> None:
+    if not isinstance(team, dict):
+        raise ValueError(f"{name}: team profile must be an object.")
     matches = team.get("matches")
-    if not isinstance(matches, list) or len(matches) < 5:
-        raise ValueError(f"{name}: only {len(matches or [])} completed matches available; at least 5 are required (10 recommended).")
-    for i, m in enumerate(matches[:10]):
-        if m.get("goals_for") is None or m.get("goals_against") is None:
-            raise ValueError(f"{name}: match {i+1} is missing goals_for/goals_against.")
-        if float(m["goals_for"]) < 0 or float(m["goals_against"]) < 0:
-            raise ValueError(f"{name}: goals cannot be negative.")
-    for key in ("playing_style", "defensive_structure", "attacking_approach"):
-        value = team.get(key)
-        if value is not None and not 0 <= float(value) <= 100:
-            raise ValueError(f"{name}: {key} must be between 0 and 100.")
+    if not isinstance(matches, list):
+        raise ValueError(f"{name}: matches must be a list.")
+    if len(matches) < 5:
+        raise ValueError(f"{name}: only {len(matches)} completed matches available; at least 5 are required (10 recommended).")
+
+    for i, match in enumerate(matches[:10]):
+        prefix = f"{name}.matches[{i}]"
+        if not isinstance(match, dict):
+            raise ValueError(f"{prefix} is malformed: expected a match object.")
+        for key in ("goals_for", "goals_against"):
+            if key not in match or match[key] is None:
+                raise ValueError(f"{prefix}.{key} is missing.")
+            _validated_number(match[key], f"{prefix}.{key}", minimum=0)
+        if match.get("opponent_strength") is not None:
+            _validated_number(match["opponent_strength"],
+                              f"{prefix}.opponent_strength", minimum=0, maximum=100)
+
+    for key in ("home_rating", "away_rating", "player_availability",
+                "playing_style", "defensive_structure", "attacking_approach",
+                "tactical_compatibility"):
+        _validate_optional_score(team, key, name)
 
 def _weighted_recent(values: List[float]) -> float:
     values = values[:10]
@@ -184,6 +220,12 @@ def predict_match(home: Dict, away: Dict, max_goals: int = 8, tactical_compatibi
     home_comp = _team_components(home, "home_rating")
     away_comp = _team_components(away, "away_rating")
     overrides = tactical_compatibility or {}
+    if not isinstance(overrides, dict):
+        raise ValueError("tactical_compatibility overrides must be an object.")
+    for side in ("home", "away"):
+        if overrides.get(side) is not None:
+            _validated_number(overrides[side], f"tactical_compatibility.{side}",
+                              minimum=0, maximum=100)
     home_tac, home_tac_parts = _tactical_rating(home, overrides.get("home"))
     away_tac, away_tac_parts = _tactical_rating(away, overrides.get("away"))
     home_rating = _rating(home_comp, home_tac)
