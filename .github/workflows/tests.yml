@@ -10,23 +10,39 @@ on:
       - main
       - feature/multi-source-api-architecture
 
+permissions:
+  contents: read
+
+concurrency:
+  group: python-tests-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
-    runs-on: ubuntu-latest
+    name: Python 3.11 checks
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    timeout-minutes: 20
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+
       - name: Compile application and modules
         run: python -m compileall -q .
+
       - name: Run unit tests
         run: python -m unittest discover -v
+
       - name: Smoke-check app entrypoint and internal imports
         run: python deployment_smoke_check.py

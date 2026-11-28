@@ -94,7 +94,7 @@ class FreeFixtureObservationPipelineTests(unittest.TestCase):
         }]
         client.fixtures.return_value = [{
             "id": "event-9",
-            "date": "2026-11-26T19:00:00+00:00",
+            "date": (datetime.now(timezone.utc) + timedelta(days=1)).isoformat(),
             "status": {"type": {"name": "STATUS_SCHEDULED"}},
             "season": {"id": "season-26"},
             "competitions": [{"id": "league-1", "competitors": [
