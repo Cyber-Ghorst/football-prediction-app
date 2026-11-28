@@ -10,4 +10,4 @@ The consumer rejects unsupported contract versions, mismatched request IDs, non-
 
 A valid `DATA_AVAILABLE` response is only a structurally valid data envelope. It does not establish freshness or model-component completeness. The prediction app must still apply its own data freshness checks and strict component-readiness policy. Observations with `quarantined`, `invalid` or `conflict` provenance must not be used as model inputs.
 
-This consumer is not wired into the live prediction path yet. The global integration switch remains OFF until the engine stored-data adapter, artifact retrieval, cross-repository golden tests and failure/retry acceptance tests are complete.
+The selected-fixture inspection panel now passes the validated response to `openfooty_readiness.py` and displays a machine-readable, fail-closed component report. It does not populate model inputs or call `predict_match`. Missing freshness policy, incomplete component evidence, invalid lifecycle, stale/future provenance or engine diagnostics keep the report blocked. The panel remains read-only; prediction execution and ledger writes remain disabled.
