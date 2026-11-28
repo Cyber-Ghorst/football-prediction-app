@@ -122,7 +122,7 @@ class OpenFootyClientTests(unittest.TestCase):
             "provider_requests_attempted": 0,
         }
         data_payload = json.loads(
-            (Path(__file__).parent / "contracts" / "examples" /
+            (Path(__file__).parent.parent / "contracts" / "examples" /
              "prediction-data-response.v1.example.json").read_text(encoding="utf-8")
         )
         data_payload["request_id"] = request_id
