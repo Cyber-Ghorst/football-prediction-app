@@ -1,4 +1,4 @@
-"""Read-only GitHub Actions client for OpenFooty fixture-request preflight.
+"""Read-only GitHub Actions client for OpenFooty stored fixture data responses.
 
 This client dispatches only the dedicated preflight workflow. It never calls
 football providers, changes prediction inputs, or writes to either database.
