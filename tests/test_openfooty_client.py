@@ -111,10 +111,6 @@ class OpenFootyClientTests(unittest.TestCase):
         self.assertEqual(result["workflow_run"]["id"], 123)
 
 
-if __name__ == "__main__":
-    unittest.main()
-
-
 
     def test_data_response_artifact_validates_contract_and_correlation(self):
         request_id = request()["request_id"]
@@ -229,3 +225,7 @@ if __name__ == "__main__":
             client._download_data_responses(
                 {"id": 123, "conclusion": "success"}, request_id
             )
+
+
+if __name__ == "__main__":
+    unittest.main()
