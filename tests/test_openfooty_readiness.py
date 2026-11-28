@@ -141,7 +141,7 @@ class OpenFootyReadinessTests(unittest.TestCase):
 
     def test_future_dated_recent_match_evidence_is_blocked(self):
         payload = _payload()
-        payload["team_profiles"]["away"]["recent_matches"][0][
+        payload["team_profiles"]["home"]["recent_matches"][0][
             "source_provenance"
         ][0]["retrieved_at_utc"] = "2026-11-28T09:00:00Z"
         report = assess_openfooty_readiness(
@@ -155,7 +155,7 @@ class OpenFootyReadinessTests(unittest.TestCase):
             },
         )
         self.assertIn(
-            "away:recent_match[0]:future_retrieval_timestamp[0]",
+            "home:recent_match[0]:future_retrieval_timestamp[0]",
             report["blockers"],
         )
         self.assertEqual(report["status"], "blocked")
