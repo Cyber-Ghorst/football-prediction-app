@@ -1,0 +1,54 @@
+{
+  "contract_version": "openfooty-fixture-catalogue-v1",
+  "request_id": "catalogue-20261128-01",
+  "generated_at_utc": "2026-11-28T12:00:00Z",
+  "source_calendar_window": {
+    "start_date": "2026-11-28",
+    "end_date": "2026-12-05",
+    "window_days": 7
+  },
+  "response_status": "CATALOGUE_AVAILABLE",
+  "fixtures": [
+    {
+      "fixture_id": "fixture-001",
+      "competition_id": "eng-pl",
+      "season_id": "eng-pl:2026-27",
+      "home_team_id": "ars",
+      "away_team_id": "che",
+      "home_team": "Arsenal",
+      "away_team": "Chelsea",
+      "source_calendar_date": "2026-12-01",
+      "source_clock_time": "20:00",
+      "source_timezone": null,
+      "kickoff_at_utc": null,
+      "source_status_value": "scheduled",
+      "lifecycle_status": "unknown",
+      "prediction_ready": false,
+      "missing_fields": [
+        "kickoff_timezone_missing"
+      ],
+      "source_provenance": [
+        {
+          "source_id": "openfootball",
+          "source_record_id": null,
+          "source_url": "https://github.com/openfootball/football.json",
+          "retrieved_at_utc": "2026-11-28T10:00:00Z",
+          "source_updated_at_utc": null,
+          "payload_sha256": null,
+          "parser_version": "openfootball-parser-v1",
+          "validation_status": "accepted",
+          "raw_evidence_ref": null
+        }
+      ]
+    }
+  ],
+  "diagnostics": {
+    "matched_count": 1,
+    "returned_count": 1,
+    "truncated": false,
+    "warnings": [
+      "Source-calendar dates are not UTC dates.",
+      "Rows are candidates only; prediction_ready is always false."
+    ]
+  }
+}
