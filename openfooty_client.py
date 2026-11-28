@@ -23,6 +23,25 @@ from openfooty_contract import (
 )
 
 
+def catalogue_status_message(payload: dict[str, Any]) -> str:
+    """Return a user-facing message that distinguishes an empty search from an unavailable snapshot."""
+    if not isinstance(payload, dict):
+        return "OpenFooty catalogue response is unavailable."
+    status = payload.get("response_status")
+    if status == "ERROR":
+        error = payload.get("error")
+        if isinstance(error, dict):
+            code = str(error.get("code") or "CATALOGUE_UNAVAILABLE")
+            message = str(error.get("message") or "No eligible canonical snapshot is available.")
+            return f"OpenFooty catalogue unavailable ({code}): {message}"
+        return "OpenFooty catalogue unavailable: the engine returned an error without details."
+    if status == "NO_FIXTURES_FOUND":
+        return "No stored fixture candidates matched this search window."
+    if status == "CATALOGUE_AVAILABLE":
+        return "Stored OpenFooty fixture candidates are available."
+    return "OpenFooty catalogue returned an unrecognized status."
+
+
 class OpenFootyTriggerError(RuntimeError):
     """Raised when an OpenFooty preflight request cannot be completed safely."""
 

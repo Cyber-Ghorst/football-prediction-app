@@ -4,7 +4,11 @@ import unittest
 import zipfile
 from pathlib import Path
 
-from openfooty_client import OpenFootyTriggerClient, OpenFootyTriggerError
+from openfooty_client import (
+    OpenFootyTriggerClient,
+    OpenFootyTriggerError,
+    catalogue_status_message,
+)
 
 
 def request():
@@ -354,3 +358,19 @@ class OpenFootyClientTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+
+def test_catalogue_status_message_distinguishes_unavailable_snapshot_from_empty_search():
+    unavailable = {
+        "response_status": "ERROR",
+        "error": {
+            "code": "NO_FRESH_CANONICAL_SNAPSHOT",
+            "message": "Required canonical fixtures.csv is not available.",
+        },
+    }
+    assert "NO_FRESH_CANONICAL_SNAPSHOT" in catalogue_status_message(unavailable)
+    assert "fixtures.csv" in catalogue_status_message(unavailable)
+    assert catalogue_status_message({"response_status": "NO_FIXTURES_FOUND"}) == (
+        "No stored fixture candidates matched this search window."
+    )
