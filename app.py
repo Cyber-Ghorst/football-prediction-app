@@ -107,6 +107,7 @@ try:
     from tvd import run_tvd
     from openfooty_client import OpenFootyTriggerClient, catalogue_status_message
     from openfooty_readiness import assess_openfooty_readiness
+    from openfooty_freshness_policy import load_openfooty_freshness_limits
     from temporary_fixture_store import search_temporary_upcoming_fixtures
     from provider_config import provider_readiness
     from free_fixture_adapters import BzzoiroAdapter
@@ -370,6 +371,9 @@ with st.expander("OpenFooty stored fixture search — read-only", expanded=False
                     of_data,
                     expected_request_id=of_preflight.get("request_id", ""),
                     now_utc=datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+                    freshness_limits_hours=load_openfooty_freshness_limits(
+                        os.environ, st.secrets
+                    ),
                 )
                 st.subheader("Strict prediction readiness")
                 st.warning(

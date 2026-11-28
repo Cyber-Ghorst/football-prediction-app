@@ -37,3 +37,18 @@ The adapter reports the existing seven top-level components and four tactical su
 ## Activation status
 
 This PR adds the assessment and offline tests only. It does not wire the assessment into live fixture selection or prediction execution. Prediction execution and ledger writes remain disabled for this integration milestone.
+
+
+## Explicit freshness-policy configuration
+
+The read-only app panel reads optional operator-supplied limits from Streamlit Secrets or environment variables. Environment variables take precedence when both sources define a value:
+
+| Evidence class | Configuration key |
+|---|---|
+| Fixture evidence | `OPENFOOTY_FIXTURE_MAX_AGE_HOURS` |
+| Availability evidence | `OPENFOOTY_AVAILABILITY_MAX_AGE_HOURS` |
+| Every recent-history observation | `OPENFOOTY_HISTORY_MAX_AGE_HOURS` |
+
+Values must be finite positive numbers expressed in hours. There are deliberately **no defaults**. A missing key leaves that evidence class blocked by the strict readiness assessment; an invalid configured value causes the panel to report a configuration error and does not enable prediction. Configure each limit only after an explicit policy decision by the project operator.
+
+This configuration only supplies freshness limits to the read-only readiness report. It does not enable prediction execution, ledger writes, provider calls, data mutation, or any model feature.
