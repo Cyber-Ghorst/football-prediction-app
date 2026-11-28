@@ -61,6 +61,7 @@ class OpenFootyClientTests(unittest.TestCase):
         self.assertEqual(result["request_id"], request()["request_id"])
         method, url, kwargs = session.calls[0]
         self.assertEqual(method, "POST")
+        self.assertIn("/repos/OpenFooty-Data-Engine/OpenFooty-Data-Engine/", url)
         self.assertTrue(url.endswith("/actions/workflows/prediction-fixture-request.yml/dispatches"))
         self.assertEqual(kwargs["json"]["ref"], "main")
         inputs = kwargs["json"]["inputs"]
