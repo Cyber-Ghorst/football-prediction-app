@@ -48,7 +48,7 @@ class OpenFootyTriggerError(RuntimeError):
 
 class OpenFootyTriggerClient:
     API_ROOT = "https://api.github.com"
-    REPOSITORY = "jacksonader003-ship-it/OpenFooty-Data-Engine"
+    REPOSITORY = "OpenFooty-Data-Engine/OpenFooty-Data-Engine"
     WORKFLOW = "prediction-fixture-request.yml"
     CATALOGUE_WORKFLOW = "prediction-fixture-catalogue.yml"
     REQUEST_FIELDS = {
