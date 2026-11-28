@@ -6,6 +6,7 @@ The v1 contract currently carries evidence, not every approved app-side score.
 from __future__ import annotations
 
 from datetime import datetime, timezone
+import math
 from typing import Any, Mapping
 
 from openfooty_contract import (
@@ -93,7 +94,12 @@ def assess_openfooty_readiness(
         payload, expected_request_id=expected_request_id
     )
     now = _parse_utc(now_utc) if now_utc else datetime.now(timezone.utc)
-    limits = freshness_limits_hours or {}
+    limits = dict(freshness_limits_hours or {})
+    for key, value in limits.items():
+        if key not in {"fixture", "availability"}:
+            raise ValueError(f"unsupported freshness policy key: {key}")
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value <= 0:
+            raise ValueError(f"freshness limit for {key} must be a finite positive number")
     blockers: list[str] = []
     fixture = response.get("fixture")
     if response["response_status"] != "DATA_AVAILABLE" or not isinstance(fixture, Mapping):
